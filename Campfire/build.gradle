@@ -3,16 +3,17 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 33
+    compileSdk 33
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdk 33
         versionCode 13010
         versionName "1.31"
-        applicationId "com.dzen.campfire"
+        applicationId "sh.sit.bonfire"
     }
 
     buildTypes {
@@ -44,5 +45,3 @@ tasks.withType(KotlinCompile).configureEach {
         jvmTarget = "1.8"
     }
 }
-
-apply plugin: 'com.google.gms.google-services'

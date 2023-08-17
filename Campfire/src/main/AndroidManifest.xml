@@ -38,13 +38,10 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="sayzen.ru" android:pathPattern="/r.*" android:scheme="http"/>
-                <data android:host="sayzen.ru" android:pathPattern="/r.*" android:scheme="https"/>
-                <data android:host="sayzen.ru" android:pathPattern="/r.*" android:scheme="android-app"/>
-                <data android:host="campfiresayzen.net" android:pathPattern="/r.*" android:scheme="http"/>
-                <data android:host="campfiresayzen.net" android:pathPattern="/r.*" android:scheme="https"/>
-                <data android:host="campfiresayzen.net" android:pathPattern="/r.*" android:scheme="android-app"/>
-                <data android:scheme="http"/>
+                <data android:scheme="https" />
+                <data android:host="bonfire.moe" />
+                <data android:pathPattern="/r/*" />
+                <data android:scheme="https" />
             </intent-filter>
 
             <intent-filter>
