@@ -50,13 +50,14 @@
                 android:id="@+id/vHe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="22dp">
+                android:layout_marginEnd="22dp">
 
                 <ImageView
                     android:id="@+id/vImage_he"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:layout_marginBottom="32dp" />
+                    android:layout_marginBottom="32dp"
+                    android:importantForAccessibility="no" />
 
                 <com.sup.dev.android.views.views.ViewButton
                     android:id="@+id/vText_he"
@@ -66,7 +67,7 @@
                     android:minHeight="40dp"
                     android:textSize="11sp"
                     android:layout_marginTop="4dp"
-                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
                     android:layout_gravity="bottom|center"/>
 
 
@@ -76,13 +77,14 @@
                 android:id="@+id/vShe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="22dp">
+                android:layout_marginStart="22dp">
 
                 <ImageView
                     android:id="@+id/vImage_she"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:layout_marginBottom="32dp" />
+                    android:layout_marginBottom="32dp"
+                    android:importantForAccessibility="no" />
 
                 <com.sup.dev.android.views.views.ViewButton
                     android:id="@+id/vText_she"
@@ -92,7 +94,34 @@
                     android:textSize="11sp"
                     android:minHeight="40dp"
                     android:layout_marginTop="4dp"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_gravity="bottom|center" />
+
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/vOther"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="22dp">
+
+                <ImageView
+                    android:id="@+id/vImage_other"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginBottom="32dp"
+                    android:importantForAccessibility="no" />
+
+                <com.sup.dev.android.views.views.ViewButton
+                    android:id="@+id/vText_other"
+                    style="@style/Button.Outlined"
+                    android:layout_width="70dp"
+                    android:gravity="center"
+                    android:textSize="11sp"
+                    android:minHeight="40dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="8dp"
                     android:layout_gravity="bottom|center" />
 
 

@@ -97,14 +97,12 @@ class SSettingsSecurity(
                 .setMin_1(API.ACCOUNT_PASSOWRD_L_MIN)
                 .setMin_2(API.ACCOUNT_PASSOWRD_L_MIN)
                 .setOnCancel(t(API_TRANSLATE.app_cancel))
-                .setOnEnter(t(API_TRANSLATE.app_change)) { w, t1, t2 ->
-                    val passwordOldSha512 = ToolsCryptography.getSHA512(t1)
-                    val passwordNewSha512 = ToolsCryptography.getSHA512(t2)
+                .setOnEnter(t(API_TRANSLATE.app_change)) { w, passwordOld, passwordNew ->
                     val auth = FirebaseAuth.getInstance()
                     val progress = ToolsView.showProgressDialog()
 
                     val updatePassword = {
-                        auth.currentUser!!.updatePassword(passwordNewSha512)
+                        auth.currentUser!!.updatePassword(passwordNew)
                             .addOnSuccessListener {
                                 ToolsToast.show(t(API_TRANSLATE.app_done))
                             }
@@ -117,7 +115,7 @@ class SSettingsSecurity(
                     }
 
                     if (auth.currentUser == null) {
-                        auth.signInWithEmailAndPassword(resp.email, passwordOldSha512)
+                        auth.signInWithEmailAndPassword(resp.email, passwordOld)
                             .addOnSuccessListener {
                                 updatePassword()
                             }
@@ -129,7 +127,7 @@ class SSettingsSecurity(
                     }
 
                     auth.currentUser!!.reauthenticate(EmailAuthProvider.getCredential(
-                        auth.currentUser!!.email!!, passwordOldSha512
+                        auth.currentUser!!.email!!, passwordOld
                     ))
                         .addOnSuccessListener {
                             updatePassword()

@@ -88,10 +88,9 @@ class SIntroEmailRegistration(
     fun onEnterNew() {
         val password = vPass1.getText()
         val email = vEmail.getText()
-        val passwordSha512 = ToolsCryptography.getSHA512(password)
 
         val progressDialog = ToolsView.showProgressDialog()
-        fbAuth.createUserWithEmailAndPassword(email, passwordSha512)
+        fbAuth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener { authResult ->
                 authResult.user!!.sendEmailVerification()
                     .addOnSuccessListener {

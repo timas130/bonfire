@@ -18,12 +18,12 @@ android {
 
     buildTypes {
         release {
-            manifestPlaceholders = [crashlyticsEnabled: true]
+            manifestPlaceholders = [crashlyticsEnabled: false]
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            manifestPlaceholders = [crashlyticsEnabled: true]
+            manifestPlaceholders = [crashlyticsEnabled: false]
         }
     }
     flavorDimensions "version"

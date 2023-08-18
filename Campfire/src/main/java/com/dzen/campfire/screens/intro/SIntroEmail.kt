@@ -63,10 +63,9 @@ class SIntroEmail : Screen(R.layout.screen_intro_email){
     fun enter(){
         val password = vPass.getText()
         val email = vEmail.getText()
-        val passwordSha512 = ToolsCryptography.getSHA512(password)
 
         val progress = ToolsView.showProgressDialog()
-        fbAuth.signInWithEmailAndPassword(email, passwordSha512)
+        fbAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener { authResult ->
                 if (!authResult.user!!.isEmailVerified) {
                     Navigator.replace(SIntroEmailVerify(false))
