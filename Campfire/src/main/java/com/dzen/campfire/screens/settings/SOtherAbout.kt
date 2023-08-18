@@ -62,7 +62,7 @@ class SOtherAbout : Screen(R.layout.screen_other_about) {
         vAdminsEvents.setOnClickListener{ Navigator.to(SAdministrationAdminsEvents())}
         vPrison.setOnClickListener{ Navigator.to(SAdministrationPrison())}
         vGallery.setOnClickListener{ Navigator.to(SGallery())}
-        vPolicy.setOnClickListener { ToolsIntent.openLink("http://campfiresayzen.net/page/privacy") }
+        vPolicy.setOnClickListener { ToolsIntent.openLink("https://bonfire.moe/page/privacy") }
         vMail.setOnClickListener { ToolsIntent.startMail("zeooon@ya.ru") }
     }
 
