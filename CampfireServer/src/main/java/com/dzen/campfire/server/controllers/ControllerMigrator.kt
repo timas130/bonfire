@@ -1,23 +1,34 @@
 package com.dzen.campfire.server.controllers
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.chat.PublicationChatMessage
 import com.dzen.campfire.server.app.App
 import com.dzen.campfire.server.tables.TPublications
 import com.dzen.campfire.server.tables.TTranslates
+import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.debug.info
 import com.sup.dev.java.tools.ToolsCryptography
 import com.sup.dev.java.tools.ToolsThreads
 import com.sup.dev.java_pc.sql.*
+import java.io.File
+import java.lang.Exception
 
 
 object ControllerMigrator {
 
     fun start() {
-        if (!App.test) {
-            for (i in API_TRANSLATE.map.values) {
-                if (i.serverFlag_WillUpload) ru(i.key, i.text)
+        for (i in API_TRANSLATE.map.values) {
+            ru(i.key, i.text)
+        }
+
+        for (image in API_RESOURCES.imageMappings) {
+            try {
+                ControllerResources.replace(image.key, File("${App.patchPrefix}res/${image.value}").readBytes(), 0)
+            } catch (e: Exception) {
+                err("failed to insert image id ${image.key}")
+                e.printStackTrace()
             }
         }
     }
