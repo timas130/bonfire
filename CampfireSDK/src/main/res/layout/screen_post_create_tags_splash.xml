@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView style="@style/Scroll.Splash">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.sup.dev.android.views.settings.SettingsCheckBox
+                android:id="@+id/vNotifyFollowers"
+                android:layout_gravity="center|left"
+                android:layout_width="match_parent"
+                app:Settings_lineVisible="false"
+                android:layout_height="wrap_content"/>
+
+            <com.sup.dev.android.views.settings.SettingsCheckBox
+                android:id="@+id/vPending"
+                android:layout_gravity="center|left"
+                android:layout_width="match_parent"
+                app:Settings_lineVisible="false"
+                android:layout_height="wrap_content"/>
+
+            <com.sup.dev.android.views.settings.SettingsCheckBox
+                android:id="@+id/vClose"
+                android:layout_gravity="center|left"
+                android:layout_width="match_parent"
+                app:Settings_lineVisible="false"
+                android:layout_height="wrap_content"/>
+
+            <com.sup.dev.android.views.settings.SettingsCheckBox
+                android:id="@+id/vMultilingual"
+                android:layout_gravity="center|left"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.sup.dev.android.views.settings.Settings
+                android:id="@+id/vRubric"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"/>
+
+            <com.sup.dev.android.views.settings.Settings
+                android:id="@+id/vRelayRace"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"/>
+
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="8dp"
+        android:orientation="horizontal">
+
+        <com.sup.dev.android.views.views.ViewButton
+            android:id="@+id/vEnter"
+            style="@style/Button.Text"/>
+
+    </LinearLayout>
+
+</LinearLayout>

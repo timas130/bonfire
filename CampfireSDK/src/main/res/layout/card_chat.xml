@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sup.dev.android.views.views.ViewSwipe
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/vSwipe"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?colorContentScreen"
+    android:src="@drawable/ic_done_all_white_24dp"
+    app:ViewSwipe_background="@color/blue_700">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.sup.dev.android.views.views.ViewAvatarTitle
+                android:id="@+id/vAvatar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:clickable="false"
+                android:focusable="false"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp"
+                app:ViewAvatarTitle_title="Campfire"
+                app:ViewAvatar_chipText="EN" />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="6dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/vMessageDate"
+                    style="@style/Base.TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="18dp"
+                    android:gravity="top|center" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="18dp">
+
+                    <com.sup.dev.android.views.views.ViewChipMini
+                        android:id="@+id/vMessagesCounter"
+                        style="@style/ChipMini"
+                        android:layout_gravity="center"
+                        android:layout_margin="8dp" />
+
+                    <View
+                        android:id="@+id/vNotRead"
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/shape_circle_secondary" />
+
+                </FrameLayout>
+
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+</com.sup.dev.android.views.views.ViewSwipe>

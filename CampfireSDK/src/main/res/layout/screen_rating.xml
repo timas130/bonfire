@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Root.Content"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        style="@style/AppBar">
+
+        <androidx.appcompat.widget.Toolbar
+            style="@style/Toolbar">
+
+            <com.sup.dev.android.views.views.pager.ViewPagerIndicatorTitles
+                android:id="@+id/viIndicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:ViewPagerIndicator_pager="@id/vPager"
+                app:ViewPagerIndicatorViews_offset_left="64dp"/>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        style="@style/Pager"/>
+
+</LinearLayout>
+

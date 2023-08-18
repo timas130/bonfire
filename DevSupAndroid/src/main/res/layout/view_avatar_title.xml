@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+    <com.sup.dev.android.views.views.ViewAvatar
+        android:id="@+id/vDevSupAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="8dp"
+        android:paddingRight="16dp"
+        android:orientation="vertical">
+
+        <com.sup.dev.android.views.views.ViewText
+            android:id="@+id/vDevSupTitle"
+            style="@style/Base.TextAppearance.AppCompat.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"/>
+
+        <com.sup.dev.android.views.views.ViewText
+            android:id="@+id/vDevSupSubtitle"
+            android:layout_marginTop="-2dp"
+            style="@style/Base.TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"/>
+
+    </LinearLayout>
+
+</LinearLayout>

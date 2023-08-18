@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/vRoot"
+    android:background="#FF000000"
+    style="@style/Root">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.sup.dev.android.views.views.cropper.ViewCropImage
+            android:id="@+id/vCrop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+
+        <LinearLayout
+            android:id="@+id/vBackgroundPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="?colorContentScreen"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="16dp">
+
+                <com.sup.dev.android.views.views.ViewIcon
+                    android:id="@+id/vBackgroundPanelColor"
+                    style="@style/Icon"
+                    android:layout_gravity="center"
+                    app:ViewIcon_circleColor="@color/focus_dark"
+                    app:ViewIcon_circleSize="2dp" />
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="0" />
+
+                <SeekBar
+                    android:id="@+id/vBackgroundPanelSeek"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text="100" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="8dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/vBackgroundPanelCancel"
+                    style="@style/Fab.Mini"
+                    android:layout_marginRight="8dp"
+                    app:backgroundTint="@color/red_700"
+                    android:src="@drawable/ic_clear_white_24dp" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/vBackgroundPanelEnter"
+                    style="@style/Fab.Mini"
+                    app:backgroundTint="@color/green_700"
+                    android:src="@drawable/ic_done_white_24dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|bottom"
+            android:orientation="horizontal">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/vRotate"
+                style="@style/Fab"
+                android:layout_marginRight="0dp"
+                app:backgroundTint="@color/focus_dark"
+                android:src="@drawable/ic_rotate_right_white_24dp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/vAll"
+                style="@style/Fab"
+                app:backgroundTint="@color/focus_dark"
+                android:src="@drawable/ic_fullscreen_white_24dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:orientation="horizontal">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                style="@style/Fab"
+                app:backgroundTint="@color/green_700"
+                android:src="@drawable/ic_check_white_24dp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/vBackground"
+                style="@style/Fab"
+                android:layout_gravity="left|bottom"
+                android:src="@drawable/ic_all_out_white_24dp" />
+
+
+        </LinearLayout>
+
+        <com.sup.dev.android.views.views.ViewIcon style="@style/Icon.Shadow.Back" />
+
+    </FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

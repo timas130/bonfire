@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:windowBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <com.google.android.material.appbar.AppBarLayout style="@style/AppBar">
+
+                <androidx.appcompat.widget.Toolbar style="@style/Toolbar.NoScroll">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="-16dp"
+                        android:orientation="horizontal">
+
+                        <com.sup.dev.android.views.views.ViewAvatarTitle
+                            android:id="@+id/vAvatarTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <LinearLayout
+                            android:id="@+id/vToolbarIconsContainer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal" />
+
+                    </LinearLayout>
+
+
+                </androidx.appcompat.widget.Toolbar>
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <ImageView
+                android:id="@+id/vChatBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                style="@style/Recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <FrameLayout
+                android:layout_marginRight="4dp"
+                android:layout_marginBottom="18dp"
+                android:layout_gravity="right|bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/vBottomArrow"
+                    style="@style/Fab.Mini"
+                    android:elevation="0dp"
+                    app:elevation="0dp"
+                    android:layout_marginRight="12dp"
+                    android:src="@drawable/ic_keyboard_arrow_down_white_24dp" />
+
+                <com.sup.dev.android.views.views.ViewChip
+                    android:id="@+id/vBottomArrowText"
+                    style="@style/Chip.Mini"
+                    android:elevation="1dp"
+                    app:elevation="1dp"
+                    android:layout_gravity="right|bottom"
+                    app:chipBackgroundColor="@color/blue_700" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/vTypingText"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/focus"
+                android:paddingLeft="8dp"
+                android:paddingTop="2dp"
+                android:paddingRight="2dp"
+                android:paddingBottom="2dp"
+                android:textColor="?attr/colorReversVariant" />
+
+            <FrameLayout
+                android:id="@+id/vEmptySubContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <View
+                android:id="@+id/vLine"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_gravity="bottom" />
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="?colorPrimary"
+            android:orientation="vertical"
+            android:padding="4dp">
+
+            <LinearLayout
+                android:id="@+id/vQuoteContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.sup.dev.android.views.views.ViewText
+                    android:id="@+id/vQuoteText"
+                    style="@style/TextAppearance.AppCompat.Caption"
+                    android:maxLines="9"
+                    android:ellipsize="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="16dp"
+                    android:textColor="?colorOnPrimary" />
+
+                <com.sup.dev.android.views.views.ViewIcon
+                    android:id="@+id/vQuoteRemove"
+                    style="@style/Icon.18"
+                    android:layout_gravity="top"
+                    android:src="@drawable/ic_clear_white_24dp"
+                    app:ViewIcon_filter="?colorOnPrimary" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/vAttachRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:orientation="horizontal" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/vFieldContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <com.sup.dev.android.views.views.ViewIcon
+                            android:id="@+id/vAttach"
+                            style="@style/Icon"
+                            android:layout_gravity="top"
+                            android:src="@drawable/ic_attach_file_white_24dp"
+                            app:ViewIcon_filter="?colorOnPrimary" />
+
+                        <com.sup.dev.android.views.views.ViewEditText
+                            android:id="@+id/vText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="8dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:inputType="textCapSentences|textMultiLine|textAutoCorrect|textAutoComplete"
+                            android:maxLines="9"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp"
+                            android:textColor="?colorOnPrimary" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/vVoiceContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/vVoiceLabel"
+                            style="@style/TextAppearance.AppCompat.Body1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="16dp"
+                            android:layout_weight="1"
+                            android:textColor="?colorOnPrimary" />
+
+                        <com.sup.dev.android.views.views.ViewIcon
+                            android:id="@+id/vVoicePlay"
+                            style="@style/Icon"
+                            android:layout_gravity="bottom"
+                            android:layout_marginRight="8dp"
+                            android:src="@drawable/ic_play_arrow_white_24dp"
+                            app:ViewIcon_filter="?colorOnPrimary" />
+
+                        <com.sup.dev.android.views.views.ViewIcon
+                            android:id="@+id/vVoiceRemove"
+                            style="@style/Icon"
+                            android:layout_gravity="bottom"
+                            android:layout_marginRight="8dp"
+                            android:src="@drawable/ic_clear_white_24dp"
+                            app:ViewIcon_filter="?colorOnPrimary" />
+
+
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:id="@+id/vSendContainer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <com.sup.dev.android.views.views.ViewIcon
+                            android:id="@+id/vSend"
+                            style="@style/Icon"
+                            android:layout_gravity="bottom"
+                            android:src="@drawable/ic_send_white_24dp"
+                            app:ViewIcon_filter="?colorOnPrimary" />
+
+                    </FrameLayout>
+
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/vBlackListAlert"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="72dp"
+        android:background="#AAD32F2F"
+        android:gravity="center"
+        android:maxWidth="240dp"
+        android:padding="4dp" />
+
+
+    <com.sup.dev.android.views.views.ViewVoiceRecord
+        android:id="@+id/vVoiceRecorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="4dp"
+        android:clickable="true"
+        android:focusable="true" />
+
+</FrameLayout>

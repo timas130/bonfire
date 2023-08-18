@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/Root.Content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.appbar.AppBarLayout style="@style/AppBar">
+
+        <androidx.appcompat.widget.Toolbar style="@style/Toolbar.NoScroll">
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        style="@style/Recycler"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/Fab"
+        android:src="@drawable/ic_done_white_24dp"
+        app:backgroundTint="@color/green_400"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

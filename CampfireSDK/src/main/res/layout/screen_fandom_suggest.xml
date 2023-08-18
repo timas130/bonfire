@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Root.Content">
+
+    <com.google.android.material.appbar.AppBarLayout style="@style/AppBar">
+
+        <androidx.appcompat.widget.Toolbar
+            style="@style/Toolbar"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <ScrollView style="@style/Scroll"
+        android:background="@null"
+        android:foreground="@null">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical">
+
+            <com.sup.dev.android.views.views.layouts.LayoutAspectRatio
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:LayoutAspectRatio_h="1"
+                app:LayoutAspectRatio_w="2">
+
+                <ImageView
+                    android:id="@+id/vImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:foreground="?selectableItemBackground"
+                    android:src="@color/focus" />
+
+                <ImageView
+                    android:id="@+id/vImagePlus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_add_white_24dp" />
+
+            </com.sup.dev.android.views.views.layouts.LayoutAspectRatio>
+
+            <com.sup.dev.android.views.views.ViewAvatarTitle
+                android:id="@+id/vSuggestUser"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.sup.dev.android.views.views.ViewCircleImage
+                        android:id="@+id/vImageMini"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:foreground="?selectableItemBackground"
+                        android:src="@color/focus"/>
+
+                    <ImageView
+                        android:id="@+id/vImageMiniPlus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_add_white_24dp" />
+
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.sup.dev.android.views.settings.SettingsField
+                        android:id="@+id/vName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="textCapSentences|textAutoCorrect"
+                        android:layout_gravity="center"
+                        android:singleLine="true" />
+
+                    <ProgressBar
+                        android:id="@+id/vSearchProgress"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <com.sup.dev.android.views.views.layouts.LayoutFlow
+                android:id="@+id/vFandomsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                app:LayoutFlow_horizontal="4dp"
+                app:LayoutFlow_vertical="4dp" />
+
+            <com.sup.dev.android.views.settings.SettingsField
+                android:id="@+id/vFandomSuggestionNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+                android:textColor="?android:textColorPrimary" />
+            <!-- Specified the textColor explicitly to make the text white even if the
+                 field is disabled (see SFandomSuggest.kt) -->
+
+            <com.sup.dev.android.views.settings.SettingsCheckBox
+                android:id="@+id/vFandomIsClosed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/vCategoriesTitle"
+                style="@style/Base.TextAppearance.AppCompat.SearchResult.Subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="16dp" />
+
+            <com.sup.dev.android.views.views.layouts.LayoutFlow
+                android:id="@+id/vCategoriesContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                app:LayoutFlow_horizontal="4dp"
+                app:LayoutFlow_vertical="4dp" />
+
+            <LinearLayout
+                android:id="@+id/vContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="120dp"/>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/vFab2"
+        style="@style/Fab"
+        android:layout_marginRight="92dp"
+        android:src="@drawable/ic_clear_white_24dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/Fab"
+        android:src="@drawable/ic_done_white_24dp" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

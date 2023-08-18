@@ -1,0 +1,41 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+dependencies {
+    api project(':CampfireApiMedia')
+    api project(':DevSupJava')
+    api project(':DevSupJavaPc')
+    api project(':CampfireApi')
+}
+
+
+jar {
+    manifest.attributes('Main-Class': "com.dzen.campfire.server_media.app.App")
+    from {
+//        configurations.implementation.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+tasks.withType(KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}

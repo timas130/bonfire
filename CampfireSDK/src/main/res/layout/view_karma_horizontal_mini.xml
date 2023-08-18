@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:id="@+id/vTouch"
+    android:background="?selectableItemBackgroundBorderless"
+    android:layout_height="wrap_content">
+
+    <com.sup.dev.android.views.views.ViewIcon
+        android:id="@+id/view_karma_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginRight="-10dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_keyboard_arrow_down_white_18dp"/>
+
+    <TextView
+        android:id="@+id/vViewKarmaText"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:text="10"/>
+
+    <com.sup.dev.android.views.views.ViewIcon
+        android:id="@+id/view_karma_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="-10dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_keyboard_arrow_up_white_18dp"/>
+
+</LinearLayout>

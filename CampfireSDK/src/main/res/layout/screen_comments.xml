@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/Root.Content">
+
+    <com.google.android.material.appbar.AppBarLayout
+            style="@style/AppBar">
+
+        <androidx.appcompat.widget.Toolbar
+                style="@style/Toolbar"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+            style="@style/Recycler"
+            android:background="?colorSurface"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/Fab"
+            android:src="@drawable/ic_mode_comment_white_24dp"/>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

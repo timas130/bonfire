@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/vTouch"
+    style="@style/Touchable"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <com.sup.dev.android.views.views.ViewAvatar
+            android:id="@+id/vImage"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@color/blue_700"
+            app:ViewAvatar_chipBackground="@color/green_700" />
+
+        <LinearLayout
+            android:id="@+id/vImagesContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:orientation="vertical">
+
+            <com.sup.dev.android.views.views.ViewAvatar
+                android:id="@+id/vImage1"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@color/blue_700"
+                app:ViewAvatar_chipBackground="@color/green_700"
+                app:ViewAvatar_chipSize="16dp" />
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="+" />
+
+            <com.sup.dev.android.views.views.ViewChipMini
+                android:id="@+id/vChip2"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:background="@color/green_700"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/vText"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp">
+
+                <com.sup.dev.android.views.views.ViewProgressLine
+                    android:id="@+id/vLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:id="@+id/vProgress"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center"
+                    android:textSize="10sp"
+                    android:layout_marginRight="16dp" />
+
+            </FrameLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,12 @@
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/vDevSupTitle"
+    style="@style/Base.TextAppearance.AppCompat.Body2"
+    android:textColor="#AAAAAA"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    android:layout_marginLeft="24dp"
+    android:layout_marginTop="4dp"
+    android:padding="16dp"
+    android:text="Settings title"/>

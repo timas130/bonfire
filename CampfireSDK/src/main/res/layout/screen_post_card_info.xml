@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|left"
+                android:layout_marginRight="116dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal">
+
+                <com.sup.dev.android.views.views.ViewAvatar
+                    android:id="@+id/vFandom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.sup.dev.android.views.views.ViewAvatarTitle
+                    android:id="@+id/vAvatar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="-14dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|left"
+                    android:layout_marginRight="-12dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/vReports"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:drawableTint="?colorOnPrimaryIcons"
+                        android:drawableLeft="@drawable/ic_security_white_18dp"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/vComments"
+                        android:layout_width="wrap_content"
+                        app:drawableTint="?colorOnPrimaryIcons"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_mode_comment_white_18dp"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
+                <com.sayzen.campfiresdk.views.ViewKarmaHorizontal
+                    android:id="@+id/vKarma"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|right"/>
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <com.sup.dev.android.views.views.layouts.LayoutFlow
+            android:id="@+id/vFlow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            app:LayoutFlow_horizontal="4dp"
+            app:LayoutFlow_vertical="4dp"/>
+
+
+    </LinearLayout>
+
+    <View style="@style/Divider"/>
+
+</FrameLayout>
+

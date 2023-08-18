@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Root.Content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout style="@style/AppBar"
+        app:elevation="0dp"
+        android:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            style="@style/Toolbar">
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vCreate"
+                style="@style/Button.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center"/>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView style="@style/Scroll">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/vTitle"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorStroke" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/TextInputLayout.Outlined"
+                android:layout_marginBottom="8dp">
+
+                <EditText
+                    android:id="@+id/vPgeTitle"
+                    style="@style/Field"
+                    android:inputType="textCapSentences|textAutoComplete|textAutoCorrect" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/vOptionsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorStroke" />
+
+            <LinearLayout
+                android:id="@+id/vContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vAdd"
+                style="@style/Button.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="-6dp"
+                android:layout_marginRight="-6dp">
+
+                <com.sup.dev.android.views.settings.SettingsTitle
+                    android:id="@+id/vTitleLimit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:Settings_lineVisible="false"/>
+
+                <com.sup.dev.android.views.settings.SettingsField
+                    android:id="@+id/vLvl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    app:Settings_maxLength="3" />
+
+                <com.sup.dev.android.views.settings.SettingsField
+                    android:id="@+id/vKarma"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    app:Settings_maxLength="3" />
+
+                <com.sup.dev.android.views.settings.SettingsField
+                    android:id="@+id/vDays"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    app:Settings_maxLength="4" />
+
+
+                <com.sup.dev.android.views.settings.SettingsTitle
+                    android:id="@+id/vBlackListTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    app:Settings_lineVisible="false" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/vBlackListUsers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/vBlackListAdd"
+                style="@style/Button.Text" />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
+        style="@style/Scroll.Splash">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:minHeight="72dp">
+
+            <TextView
+                android:id="@+id/vText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                style="@style/Base.TextAppearance.AppCompat.Body1"/>
+
+
+        </FrameLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp">
+
+        <TextView
+            android:id="@+id/vCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|start"
+            android:layout_marginStart="16dp"
+            style="@style/Base.TextAppearance.AppCompat.Caption"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center|end">
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vCancel"
+                style="@style/Button.Text"
+                android:layout_marginEnd="8dp"/>
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vAccept"
+                style="@style/Button.Text"
+                android:layout_width="108dp"/>
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+</LinearLayout>

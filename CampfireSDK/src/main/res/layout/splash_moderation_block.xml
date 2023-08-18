@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
+        style="@style/Scroll.Splash">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.sup.dev.android.views.settings.SettingsArrow
+                android:id="@+id/vPunishments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"/>
+
+            <com.sup.dev.android.views.settings.SettingsCheckBox
+                android:id="@+id/vRemovePublications"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"/>
+
+            <com.sup.dev.android.views.settings.SettingsSelection
+                android:id="@+id/vBlockUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"/>
+
+            <com.sup.dev.android.views.settings.SettingsCheckBox
+                android:id="@+id/vBlockInApp"
+                android:layout_width="match_parent"
+                app:Settings_lineVisible="false"
+                android:layout_height="wrap_content"/>
+
+            <com.sup.dev.android.views.settings.SettingsField
+                android:id="@+id/vComment"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"
+                android:inputType="textMultiLine|textCapSentences|textAutoCorrect|textAutoComplete"/>
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vTemplate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                style="@style/Button.Text"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="8dp"
+        android:orientation="horizontal">
+
+        <com.sup.dev.android.views.views.ViewButton
+            android:id="@+id/vCancel"
+            style="@style/Button.Text"
+            android:layout_marginEnd="8dp"/>
+
+        <com.sup.dev.android.views.views.ViewButton
+            android:id="@+id/vEnter"
+            style="@style/Button.Text"/>
+
+    </LinearLayout>
+
+</LinearLayout>

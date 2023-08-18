@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/vRefreshCard"
+        style="@style/SwipeRefresh">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/vRecyclerCard"
+            style="@style/Recycler" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/vMessage"
+        android:layout_gravity="center"
+        android:layout_width="240dp"
+        android:gravity="center"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/Fab"
+        app:layout_behavior="com.sup.dev.android.views.support.behavior.BehaviorCollapseFull" />
+
+</FrameLayout>

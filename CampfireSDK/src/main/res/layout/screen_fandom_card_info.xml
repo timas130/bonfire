@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sup.dev.android.views.views.layouts.LayoutCorned xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="12dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginRight="12dp"
+    android:background="?colorSurface"
+    app:LayoutCorned_cornedSize="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/vShowMoreTouch"
+            style="@style/Touchable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/vShowMore"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_height="wrap_content"/>
+
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/vContainerInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/vKarmaCof_Touch"
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/vKarmaCof_Title"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="20dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/vDescription_Container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/vDescription_Text"
+                        style="@style/Base.TextAppearance.AppCompat.Body1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center" />
+
+                    <com.sup.dev.android.views.views.ViewIcon
+                        android:id="@+id/vDescription_Change"
+                        style="@style/Icon.12"
+                        android:layout_gravity="right"
+                        android:background="@drawable/shape_circle_focus_dark"
+                        android:src="@drawable/ic_mode_edit_white_24dp" />
+
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/vDescription_Names"
+                    style="@style/Base.TextAppearance.AppCompat.Caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="?selectableItemBackground"
+                    android:gravity="center"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/vParams1_Root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.sup.dev.android.views.views.layouts.LayoutFlow
+                    android:id="@+id/vParams1_vContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="8dp"
+                    app:LayoutFlow_horizontal="4dp"
+                    app:LayoutFlow_vertical="4dp" />
+
+                <TextView
+                    android:id="@+id/vParams1_vEmptyText"
+                    style="@style/Base.TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="16dp" />
+
+                <com.sup.dev.android.views.views.ViewIcon
+                    android:id="@+id/vParams1_vAdd"
+                    style="@style/Icon.18"
+                    android:layout_gravity="bottom|right"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/ic_add_white_18dp"
+                    app:ViewIcon_background="@color/focus_dark" />
+
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/vParams2_Root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.sup.dev.android.views.views.layouts.LayoutFlow
+                    android:id="@+id/vParams2_vContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="8dp"
+                    app:LayoutFlow_horizontal="4dp"
+                    app:LayoutFlow_vertical="4dp" />
+
+                <TextView
+                    android:id="@+id/vParams2_vEmptyText"
+                    style="@style/Base.TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="16dp" />
+
+                <com.sup.dev.android.views.views.ViewIcon
+                    android:id="@+id/vParams2_vAdd"
+                    style="@style/Icon.18"
+                    android:layout_gravity="bottom|right"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/ic_add_white_18dp"
+                    app:ViewIcon_background="@color/focus_dark" />
+
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/vParams3_Root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.sup.dev.android.views.views.layouts.LayoutFlow
+                    android:id="@+id/vParams3_vContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="8dp"
+                    app:LayoutFlow_horizontal="4dp"
+                    app:LayoutFlow_vertical="4dp" />
+
+                <TextView
+                    android:id="@+id/vParams3_vEmptyText"
+                    style="@style/Base.TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="16dp" />
+
+                <com.sup.dev.android.views.views.ViewIcon
+                    android:id="@+id/vParams3_vAdd"
+                    style="@style/Icon.18"
+                    android:layout_gravity="bottom|right"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/ic_add_white_18dp"
+                    app:ViewIcon_background="@color/focus_dark" />
+
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/vParams4_Root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.sup.dev.android.views.views.layouts.LayoutFlow
+                    android:id="@+id/vParams4_vContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="8dp"
+                    app:LayoutFlow_horizontal="4dp"
+                    app:LayoutFlow_vertical="4dp" />
+
+                <TextView
+                    android:id="@+id/vParams4_vEmptyText"
+                    style="@style/Base.TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="16dp" />
+
+                <com.sup.dev.android.views.views.ViewIcon
+                    android:id="@+id/vParams4_vAdd"
+                    style="@style/Icon.18"
+                    android:layout_gravity="bottom|right"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/ic_add_white_18dp"
+                    app:ViewIcon_background="@color/focus_dark" />
+
+            </FrameLayout>
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.sup.dev.android.views.views.ViewImagesSwipe
+                    android:id="@+id/vGallery_Images"
+                    android:layout_width="match_parent"
+                    android:layout_height="124dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/vGallery_Text"
+                    style="@style/Base.TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+
+                <com.sup.dev.android.views.views.ViewIcon
+                    android:id="@+id/vGallery_Add"
+                    style="@style/Icon.18"
+                    android:layout_gravity="bottom|right"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/ic_add_white_18dp"
+                    app:ViewIcon_background="@color/focus_dark" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                style="@style/Touchable"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/vLinks_vEmptyText"
+                    style="@style/Base.TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp" />
+
+                <LinearLayout
+                    android:id="@+id/vLinks_vLinksContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="8dp" />
+
+                <com.sup.dev.android.views.views.ViewIcon
+                    android:id="@+id/vLinks_vAdd"
+                    style="@style/Icon.18"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/ic_add_white_18dp"
+                    app:ViewIcon_background="@color/focus_dark" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.sup.dev.android.views.views.layouts.LayoutCorned>
+

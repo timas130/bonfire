@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_weight="1"
+        style="@style/TextInputLayout.Outlined">
+
+        <EditText
+            android:id="@+id/vText"
+            style="@style/Field"
+            android:inputType="textAutoCorrect|textCapSentences|textMultiLine"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.sup.dev.android.views.views.ViewIcon
+        android:id="@+id/vRemove"
+        style="@style/Icon.18"
+        android:layout_gravity="center"
+        android:layout_marginLeft="4dp"
+        android:src="@drawable/ic_clear_white_18dp"/>
+
+</LinearLayout>
+

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+>
+    <LinearLayout
+        android:id="@+id/vTouch"
+        style="@style/TouchableForeground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?colorSurface"
+        android:orientation="vertical"
+        android:paddingBottom="4dp"
+    >
+        <com.sup.dev.android.views.views.ViewAvatarTitle
+            android:id="@+id/vAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp" />
+        <com.sup.dev.android.views.views.ViewText
+            android:id="@+id/vDescription"
+            style="@style/Base.TextAppearance.AppCompat.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="16dp"
+            android:paddingTop="0dp" />
+        <com.sup.dev.android.views.views.ViewButton
+            android:id="@+id/vPublish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="-8dp"
+            android:layout_marginEnd="8dp"
+            style="@style/Button.Text" />
+
+        <LinearLayout
+            android:id="@+id/vInfoContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/vReports"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|start"
+                android:layout_marginEnd="2dp"
+                app:drawableTint="?colorOnPrimaryIcons"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:padding="6dp"
+                android:textColor="@color/grey_700"
+                app:drawableStartCompat="@drawable/ic_security_white_18dp"/>
+
+            <TextView
+                android:id="@+id/vComments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|start"
+                app:drawableTint="?colorOnPrimaryIcons"
+                android:drawablePadding="6dp"
+                android:textColor="@color/grey_700"
+                android:gravity="center"
+                android:padding="6dp"
+                android:layout_marginEnd="-10dp"
+                app:drawableStartCompat="@drawable/ic_mode_comment_white_18dp"/>
+
+            <com.sayzen.campfiresdk.views.ViewKarmaHorizontal
+                android:id="@+id/vKarma"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|end" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.sup.dev.android.views.views.ViewIcon
+        android:id="@+id/vMore"
+        style="@style/Icon.18"
+        android:layout_gravity="end"
+        android:layout_margin="8dp"
+        android:background="@drawable/shape_circle_focus_dark"
+        android:src="@drawable/ic_mode_edit_white_24dp" />
+</FrameLayout>

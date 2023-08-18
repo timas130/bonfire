@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/vTitle"
+        style="@style/Base.TextAppearance.AppCompat.Subhead"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:textSize="20sp"/>
+
+    <com.sup.dev.android.views.settings.SettingsField
+        android:id="@+id/vField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_weight="1"
+        android:inputType="textCapSentences|textAutoCorrect"/>
+    <com.sup.dev.android.views.settings.SettingsSelection
+        android:id="@+id/vSelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:orientation="horizontal"
+        android:layout_margin="8dp">
+
+        <!-- SplashQuestVariable's superclass looks for this, so we'll keep it. lol -->
+        <com.sup.dev.android.views.views.ViewIcon
+            android:id="@+id/vIcon"
+            style="@style/Icon"
+            android:visibility="gone"
+            android:layout_gravity="center|start"
+            android:src="@drawable/ic_content_copy_white_24dp"/>
+
+        <com.sup.dev.android.views.views.ViewButton
+            android:id="@+id/vCancel"
+            style="@style/Button.Text"
+            android:layout_marginRight="8dp"/>
+
+        <com.sup.dev.android.views.views.ViewButton
+            android:id="@+id/vEnter"
+            style="@style/Button.Text" />
+
+    </LinearLayout>
+</LinearLayout>

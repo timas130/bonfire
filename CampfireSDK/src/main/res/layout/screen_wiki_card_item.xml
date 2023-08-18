@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/TouchableForeground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vImage"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+
+        <TextView
+            android:id="@+id/vName"
+            android:layout_marginLeft="16dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/vSectionIcon"
+            style="@style/Icon"
+            android:src="@drawable/ic_keyboard_arrow_right_white_24dp"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/vSelectFab"
+            style="@style/Fab.Mini"
+            android:src="@drawable/ic_done_white_24dp" />
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/vTouch"
+    style="@style/Touchable"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|left"
+        android:padding="16dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/vIndex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minWidth="28dp"
+            style="@style/Base.TextAppearance.AppCompat.Title"
+            android:layout_gravity="center"
+            android:layout_marginRight="16dp"
+            />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.sup.dev.android.views.views.ViewCircleImage
+                android:id="@+id/vImageBackground"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:src="@color/yellow_500"/>
+
+            <com.sup.dev.android.views.views.ViewAvatar
+                android:id="@+id/vImage"
+                android:layout_width="48dp"
+                android:layout_gravity="center"
+                android:layout_height="48dp"
+                android:src="@color/red_700"/>
+
+        </FrameLayout>
+
+
+        <TextView
+            android:id="@+id/vName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Base.TextAppearance.AppCompat.Body1"
+            android:text="UserName"
+            android:layout_marginLeft="16dp"
+            android:layout_gravity="center"/>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/vText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|right"
+        android:layout_margin="16dp"
+        style="@style/TextAppearance.AppCompat.Body2"/>
+
+</FrameLayout>

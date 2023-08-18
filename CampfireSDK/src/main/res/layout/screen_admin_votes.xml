@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Root.Content">
+
+    <com.sup.dev.android.views.views.ViewIcon
+        style="@style/Icon.Shadow.Back"
+        android:background="@null"
+        />
+
+    <ScrollView
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        style="@style/Scroll">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.sup.dev.android.views.views.ViewAvatar
+                android:id="@+id/vAvatar"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="48dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/vAvatarText"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="24dp"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <com.sup.dev.android.views.views.ViewText
+                android:id="@+id/vActionText"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="24dp"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <com.sup.dev.android.views.views.ViewText
+                android:id="@+id/vCommentText"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="24dp"
+                android:gravity="center"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="32dp">
+
+                <com.sup.dev.android.views.views.ViewButton
+                    android:id="@+id/vCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|left"
+                    android:textColor="@color/red_700"
+                    style="@style/Button.Text"/>
+
+                <com.sup.dev.android.views.views.ViewButton
+                    android:id="@+id/vAccept"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|right"
+                    android:textColor="@color/green_700"
+                    style="@style/Button.Text"/>
+
+
+            </FrameLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

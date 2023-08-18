@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Root.Content"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        style="@style/AppBar">
+
+        <androidx.appcompat.widget.Toolbar
+            style="@style/Toolbar"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        style="@style/Scroll">
+
+        <LinearLayout
+            android:id="@+id/vSettingsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical">
+
+            <com.sup.dev.android.views.settings.SettingsTitle
+                android:id="@+id/vAppTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"/>
+
+            <com.sup.dev.android.views.settings.SettingsArrow
+                android:id="@+id/vSecurity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_icon="@drawable/ic_lock_white_24dp"
+                app:Settings_icon_background="@color/orange_500"
+                app:Settings_lineVisible="false" />
+
+            <com.sup.dev.android.views.settings.SettingsArrow
+                android:id="@+id/vStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_icon="@drawable/ic_brush_white_24dp"
+                app:Settings_icon_background="@color/deep_purple_500"
+                app:Settings_lineVisible="false" />
+
+            <com.sup.dev.android.views.settings.Settings
+                android:id="@+id/vLanguage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"
+                app:Settings_icon="@drawable/ic_translate_white_24dp"
+                app:Settings_icon_background="@color/cyan_500"/>
+
+            <com.sup.dev.android.views.settings.SettingsSwitcher
+                android:id="@+id/vAnonRates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"
+                app:Settings_icon="@drawable/ic_thumbs_up_down_white_24dp"
+                app:Settings_icon_background="@color/light_green_500"/>
+
+            <com.sup.dev.android.views.settings.SettingsTitle
+                android:id="@+id/vActionsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"/>
+
+            <com.sup.dev.android.views.settings.Settings
+                android:id="@+id/vLongPlus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"
+                app:Settings_icon="@drawable/ic_add_white_24dp"
+                app:Settings_icon_background="@color/blue_500"/>
+
+            <com.sup.dev.android.views.settings.Settings
+                android:id="@+id/vFastPost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_icon="@drawable/ic_share_white_24dp"
+                app:Settings_icon_background="@color/light_blue_500"
+                app:Settings_lineVisible="false"/>
+
+            <com.sup.dev.android.views.settings.SettingsTitle
+                android:id="@+id/vVoiceTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"/>
+
+            <com.sup.dev.android.views.settings.SettingsSwitcher
+                android:id="@+id/vVoiceAutoLock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_icon="@drawable/ic_lock_white_24dp"
+                app:Settings_lineVisible="false"
+                app:Settings_icon_background="@color/green_500"/>
+
+            <com.sup.dev.android.views.settings.SettingsSwitcher
+                android:id="@+id/vVoiceAutoSend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_icon="@drawable/ic_send_white_24dp"
+                app:Settings_lineVisible="false"
+                app:Settings_icon_background="@color/light_green_500"/>
+
+            <com.sup.dev.android.views.settings.SettingsSwitcher
+                android:id="@+id/vVoiceIgnore"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_icon="@drawable/ic_volume_off_white_24dp"
+                app:Settings_lineVisible="false"
+                app:Settings_icon_background="@color/lime_500"/>
+
+            <com.sup.dev.android.views.settings.SettingsTitle
+                android:id="@+id/vChatsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"/>
+
+            <com.sup.dev.android.views.settings.SettingsSwitcher
+                android:id="@+id/vConferenceAllow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_icon="@drawable/account_plus"
+                app:Settings_lineVisible="false"
+                app:Settings_icon_background="@color/lime_500" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

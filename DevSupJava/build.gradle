@@ -1,0 +1,30 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21'
+    implementation files('libs/json.jar')
+}
+
+jar {
+    from {
+//        configurations.implementation.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+tasks.withType(KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}

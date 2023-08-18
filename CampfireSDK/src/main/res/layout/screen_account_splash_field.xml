@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/vTitle"
+        style="@style/Base.TextAppearance.AppCompat.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Please input text"
+        android:textSize="20sp"/>
+
+    <com.sup.dev.android.views.views.layouts.LayoutFlow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_margin="16dp"
+        app:LayoutFlow_horizontal="4dp"
+        app:LayoutFlow_vertical="4dp"
+
+        android:orientation="horizontal">
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorRed"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true" />
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorPink"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true" />
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorPurple"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true" />
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorDeepPurple"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true"/>
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorIndigo"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true" />
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorBlue"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true" />
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorLightBlue"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true" />
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorCyan"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true" />
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorTeal"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true" />
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorGreen"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true"/>
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorLightGreen"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true" />
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorLime"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true"/>
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorYellow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true" />
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorAmber"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true" />
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorOrange"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true" />
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorDeepOrange"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true" />
+
+        <com.sup.dev.android.views.views.ViewCircleImage
+            android:id="@+id/vColorBrown"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:ViewCircleImage_circleMod="true"/>
+
+
+    </com.sup.dev.android.views.views.layouts.LayoutFlow>
+
+    <com.sup.dev.android.views.settings.SettingsField
+        android:id="@+id/vField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_weight="1"
+        android:inputType="textMultiLine|textCapSentences|textAutoCorrect"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp">
+
+        <com.sup.dev.android.views.views.ViewIcon
+            android:id="@+id/vIcon"
+            style="@style/Icon"
+            android:layout_gravity="center|start"
+            android:src="@drawable/ic_content_copy_white_24dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:orientation="horizontal">
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vCancel"
+                style="@style/Button.Text"
+                android:layout_marginRight="8dp"
+                android:text="Cancel"/>
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vEnter"
+                style="@style/Button.Text"
+                android:text="Action"/>
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+
+</LinearLayout>

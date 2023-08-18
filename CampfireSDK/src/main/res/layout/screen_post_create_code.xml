@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Root.Content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout style="@style/AppBar"
+        app:elevation="0dp"
+        android:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            style="@style/Toolbar">
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- TODO: подсветка кода в редакторе -->
+    <EditText
+        android:id="@+id/vField"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:importantForAutofill="no" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="?colorPrimary">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|left"
+            android:orientation="horizontal"
+            android:layout_marginLeft="8dp">
+
+            <com.sup.dev.android.views.views.ViewIcon
+                android:id="@+id/vCodeLanguage"
+                style="@style/Icon.18.Filtered"
+                android:src="@drawable/ic_translate_white_24dp" />
+
+            <TextView
+                android:id="@+id/vCodeLanguageText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/Fab.Mini"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_done_white_24dp" />
+
+    </FrameLayout>
+
+</LinearLayout>

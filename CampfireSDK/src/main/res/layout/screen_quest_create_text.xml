@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Root.Content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout style="@style/AppBar"
+        app:elevation="0dp"
+        android:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            style="@style/Toolbar">
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vCreate"
+                style="@style/Button.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center"/>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView style="@style/Scroll">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- === Название при разработке === -->
+            <com.sup.dev.android.views.settings.SettingsField
+                android:id="@+id/vPartDevName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
+                app:Settings_lineVisible="false"
+                android:inputType="textCapSentences|textAutoComplete|textAutoCorrect" />
+
+            <!-- === Заголовок страницы === -->
+            <com.sup.dev.android.views.settings.SettingsField
+                android:id="@+id/vPartTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
+                app:Settings_lineVisible="false"
+                android:inputType="textCapSentences|textAutoComplete|textAutoCorrect" />
+
+            <!-- === Картинка === -->
+            <com.sup.dev.android.views.settings.SettingsTitle
+                android:id="@+id/vTitleImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false" />
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center">
+
+                <com.sup.dev.android.views.views.layouts.LayoutCorned
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    app:LayoutCorned_cornedBL="true"
+                    app:LayoutCorned_cornedBR="true"
+                    app:LayoutCorned_cornedSize="16dp"
+                    app:LayoutCorned_cornedTL="true"
+                    app:LayoutCorned_cornedTR="true">
+
+                    <com.sup.dev.android.views.views.layouts.LayoutAspectRatio
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:LayoutAspectRatio_h="1"
+                        app:LayoutAspectRatio_w="2">
+
+                        <ImageView
+                            android:id="@+id/vImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"
+                            android:src="@color/focus_dark" />
+
+                    </com.sup.dev.android.views.views.layouts.LayoutAspectRatio>
+
+                </com.sup.dev.android.views.views.layouts.LayoutCorned>
+
+                <com.sup.dev.android.views.views.ViewIcon
+                    android:id="@+id/vImageIcon"
+                    style="@style/Icon.18"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_add_white_18dp" />
+
+            </FrameLayout>
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vImageRemove"
+                style="@style/Button.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
+
+            <!-- === Кнопка перехода к редактору текста === -->
+            <com.sup.dev.android.views.settings.SettingsTitle
+                android:id="@+id/vTitleContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false" />
+            <com.sup.dev.android.views.views.ViewText
+                android:id="@+id/vPartContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorStroke"
+                android:maxLines="3"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end" />
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vEditContent"
+                style="@style/Button.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
+
+            <!-- === Поля для ввода === -->
+            <com.sup.dev.android.views.settings.SettingsTitle
+                android:id="@+id/vTitleInputs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false" />
+            <LinearLayout
+                android:id="@+id/vInputsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vAddInput"
+                style="@style/Button.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
+
+            <!-- === Кнопки === -->
+            <com.sup.dev.android.views.settings.SettingsTitle
+                android:id="@+id/vTitleButtons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false" />
+            <LinearLayout
+                android:id="@+id/vButtonsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vAddButton"
+                style="@style/Button.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
+
+            <!-- === Эффекты === -->
+            <com.sup.dev.android.views.settings.SettingsTitle
+                android:id="@+id/vTitleEffects"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false" />
+            <LinearLayout
+                android:id="@+id/vEffectsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vAddEffect"
+                style="@style/Button.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>

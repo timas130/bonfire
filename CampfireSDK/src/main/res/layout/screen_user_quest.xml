@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/Root.Content"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        style="@style/AppBar"
+        app:elevation="0dp"
+        android:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            style="@style/Toolbar">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|end">
+
+                <com.sup.dev.android.views.views.ViewIcon
+                    android:id="@+id/vDebugButton"
+                    style="@style/Icon.Toolbar.Filtered" />
+
+                <com.sup.dev.android.views.views.ViewIcon
+                    android:id="@+id/vSaveState"
+                    style="@style/Icon.Toolbar.Filtered"
+                    android:src="@drawable/baseline_save_24" />
+
+            </LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.sup.dev.android.views.views.layouts.LayoutCorned
+        android:id="@+id/vImageWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="16dp"
+        app:LayoutCorned_cornedBL="true"
+        app:LayoutCorned_cornedBR="true"
+        app:LayoutCorned_cornedSize="16dp"
+        app:LayoutCorned_cornedTL="true"
+        app:LayoutCorned_cornedTR="true">
+
+        <com.sup.dev.android.views.views.layouts.LayoutAspectRatio
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:LayoutAspectRatio_h="1"
+            app:LayoutAspectRatio_w="2">
+
+            <ImageView
+                android:id="@+id/vTitleImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"/>
+
+        </com.sup.dev.android.views.views.layouts.LayoutAspectRatio>
+
+    </com.sup.dev.android.views.views.layouts.LayoutCorned>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        style="@style/Scroll.Splash"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/vTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp" />
+
+            <com.sup.dev.android.views.views.ViewText
+                android:id="@+id/vText"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:gravity="center" />
+
+
+            <LinearLayout
+                android:id="@+id/vInputContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical">
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/vButtonContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:orientation="vertical">
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Root">
+
+    <com.google.android.material.appbar.AppBarLayout
+        style="@style/AppBar">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            style="@style/CollapsingToolbar"
+            app:titleEnabled="false">
+
+            <com.sup.dev.android.views.views.layouts.LayoutAspectRatio
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:LayoutAspectRatio_w="2"
+                app:LayoutAspectRatio_h="1"
+                app:layout_collapseMode="parallax">
+
+                <ImageView
+                    android:id="@+id/vImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <ImageView
+                    android:id="@+id/vImageHoliday"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <View
+                    android:id="@+id/vToolbarCollapsingShadow"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp" />
+
+            </com.sup.dev.android.views.views.layouts.LayoutAspectRatio>
+
+
+            <androidx.appcompat.widget.Toolbar
+                style="@style/Toolbar.Collapse">
+
+                <TextView
+                    android:id="@+id/vToolbarTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?colorOnPrimary"
+                    style="@style/TextAppearance.AppCompat.Title"/>
+
+                <com.sup.dev.android.views.views.ViewIcon
+                    style="@style/Icon.Toolbar.Filtered"
+                    android:id="@+id/vMore"
+                    android:src="@drawable/ic_more_vert_white_24dp"/>
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        style="@style/Recycler"
+        android:layout_marginTop="-24dp"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

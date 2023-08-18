@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Root.Content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout style="@style/AppBar"
+        app:elevation="0dp"
+        android:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            style="@style/Toolbar">
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vCreate"
+                style="@style/Button.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center"/>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView style="@style/Scroll">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- === Название при разработке === -->
+            <com.sup.dev.android.views.settings.SettingsField
+                android:id="@+id/vPartDevName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
+                app:Settings_lineVisible="false"
+                android:inputType="textCapSentences|textAutoComplete|textAutoCorrect" />
+
+            <!-- Действие -->
+            <com.sup.dev.android.views.settings.SettingsSelection
+                android:id="@+id/vAction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false" />
+
+            <!-- Переменная -->
+            <com.sayzen.campfiresdk.screens.quests.edit.SettingsVariableSelector
+                android:id="@+id/vVariable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp" />
+
+            <!-- Поля -->
+            <com.sup.dev.android.views.settings.SettingsField
+                android:id="@+id/vSField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
+                android:inputType="textCapSentences|textAutoComplete|textAutoCorrect" />
+            <com.sup.dev.android.views.settings.SettingsCheckBox
+                android:id="@+id/vSFieldBool"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false" />
+            <com.sup.dev.android.views.settings.SettingsField
+                android:id="@+id/vLField1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp" />
+            <com.sup.dev.android.views.settings.SettingsField
+                android:id="@+id/vLField2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp" />
+            <com.sayzen.campfiresdk.screens.quests.edit.SettingsVariableSelector
+                android:id="@+id/vAnotherVariable1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false" />
+            <com.sayzen.campfiresdk.screens.quests.edit.SettingsVariableSelector
+                android:id="@+id/vAnotherVariable2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false" />
+
+            <com.sayzen.campfiresdk.screens.quests.edit.SettingsPartSelector
+                android:id="@+id/vNextPart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false" />
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>

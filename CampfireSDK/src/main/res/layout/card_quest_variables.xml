@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:paddingTop="8dp"
+             android:paddingBottom="8dp">
+    <LinearLayout
+        android:id="@+id/vRootContainer"
+        style="@style/TouchableForeground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?colorSurface"
+        android:orientation="vertical"
+        android:paddingBottom="4dp"
+    >
+        <com.sup.dev.android.views.views.ViewText
+            android:id="@+id/vTitle"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp" />
+        <LinearLayout
+            android:id="@+id/vList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+        <com.sup.dev.android.views.views.ViewButton
+            android:id="@+id/vAdd"
+            style="@style/Button.Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp" />
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sup.dev.android.views.views.layouts.LayoutCorned
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/vStickerContainer"
+    android:layout_width="160dp"
+    android:layout_height="160dp"
+    android:layout_marginLeft="12dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginRight="12dp">
+
+    <ImageView
+        android:id="@+id/vImage"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true" />
+
+    <ProgressBar
+        android:id="@+id/vGifProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+</com.sup.dev.android.views.views.layouts.LayoutCorned>

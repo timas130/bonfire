@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.sup.dev.android.views.views.ViewText
+        android:id="@+id/vQuoteText"
+        android:maxLines="9"
+        android:ellipsize="end"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="4dp"
+        android:padding="16dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/vAttachRecycler"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"/>
+
+    <LinearLayout
+        android:id="@+id/vFieldContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:minHeight="48dp"
+        android:orientation="horizontal">
+
+        <com.sup.dev.android.views.views.ViewIcon
+            android:id="@+id/vAttach"
+            style="@style/Icon.Filtered"
+            android:layout_gravity="top"
+            android:src="@drawable/ic_attach_file_white_24dp"/>
+
+        <com.sup.dev.android.views.views.ViewEditText
+            android:id="@+id/vText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:inputType="textCapSentences|textMultiLine|textAutoCorrect|textAutoComplete"
+            android:maxLines="9"/>
+
+        <FrameLayout
+            android:id="@+id/vSendContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <com.sup.dev.android.views.views.ViewIcon
+                android:id="@+id/vSend"
+                style="@style/Icon.Filtered"
+                android:layout_gravity="bottom"
+                android:src="@drawable/ic_send_white_24dp"/>
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

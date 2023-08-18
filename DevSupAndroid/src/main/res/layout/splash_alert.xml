@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:focusable="false"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
+        android:focusable="false"
+        android:defaultFocusHighlightEnabled="false"
+        android:descendantFocusability="blocksDescendants"
+        style="@style/Scroll.Splash">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/vTopContainer"
+                android:focusable="false"
+                android:layout_width="match_parent"
+                android:layout_height="108dp">
+
+                <com.sup.dev.android.views.views.ViewCircleImage
+                    android:id="@+id/vTopImage"
+                    android:focusable="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+
+                <TextView
+                    android:id="@+id/vTopTitle"
+                    android:focusable="false"
+                    style="@style/TextAppearance.AppCompat.Display1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"/>
+
+            </FrameLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:focusable="false"
+                android:layout_height="4dp"/>
+
+            <TextView
+                android:id="@+id/vTitle"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="24dp"
+                android:paddingTop="24dp"
+                android:paddingRight="24dp"
+                android:focusable="false"
+                android:textSize="20sp"/>
+
+            <com.sup.dev.android.views.views.ViewText
+                android:id="@+id/vText"
+                android:textSize="16sp"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="24dp"
+                android:focusable="false"
+                android:layout_marginRight="24dp"/>
+
+            <CheckBox
+                android:id="@+id/vCheckBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="24dp"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:layout_margin="8dp">
+
+        <com.sup.dev.android.views.views.ViewButton
+            android:id="@+id/vInfo"
+            android:minWidth="40dp"
+            android:layout_marginLeft="8dp"
+            style="@style/Button.Text"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:focusable="false"
+            android:orientation="horizontal">
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vCancel"
+                style="@style/Button.Text"
+                android:layout_marginRight="8dp"/>
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vEnter"
+                style="@style/Button.Text"/>
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+
+</LinearLayout>

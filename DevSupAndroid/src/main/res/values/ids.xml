@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="vScreenRoot"/>
+    <item type="id" name="vToolbar"/>
+    <item type="id" name="vCollapsingToolbar"/>
+    <item type="id" name="vAppBar"/>
+    <item type="id" name="vFab"/>
+    <item type="id" name="vDim"/>
+    <item type="id" name="vSheet"/>
+    <item type="id" name="vRecycler"/>
+    <item type="id" name="vScroll"/>
+    <item type="id" name="vPager"/>
+    <item type="id" name="vBack"/>
+    <item type="id" name="vRefresh"/>
+    <item type="id" name="vDialogLayoutMaxSizes"/>
+    <item type="id" name="vChipGroup"/>
+    <item type="id" name="vEmptySubContainer"/>
+    <item type="id" name="vSwipeIcon"/>
+    <item type="id" name="vDivider"/>
+
+    <item type="id" name="image"/>
+
+</resources>

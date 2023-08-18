@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/vRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/vContainer"
+        android:minHeight="320dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            style="@style/Recycler"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbars="vertical"/>
+
+        <LinearLayout
+            android:id="@+id/vEmptyContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="24dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/vMessage"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.AppCompat.Subhead"/>
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Button.Text"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"/>
+
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/vProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
+
+
+    </FrameLayout>
+
+</LinearLayout>

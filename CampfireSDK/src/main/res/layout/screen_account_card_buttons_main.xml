@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sup.dev.android.views.views.layouts.LayoutCorned
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="12dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginRight="12dp"
+    android:background="?colorSurface"
+    android:padding="8dp"
+    app:LayoutCorned_cornedSize="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+    >
+        <TextView
+            android:id="@+id/vFollowsYou"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/vButtonsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vMessage"
+                style="@style/Button.Text"
+                android:textSize="13sp"
+                android:layout_marginRight="12dp"/>
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vFollow"
+                android:textSize="13sp"
+                style="@style/Button.Text"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</com.sup.dev.android.views.views.layouts.LayoutCorned>

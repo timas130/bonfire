@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sup.dev.android.views.views.layouts.LayoutCorned
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/vContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="12dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginRight="12dp"
+    android:background="?colorSurface"
+    android:padding="16dp"
+    app:LayoutCorned_cornedSize="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.sup.dev.android.views.views.ViewText
+            android:id="@+id/vNote"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp"/>
+
+        <TextView
+            android:id="@+id/vBanText"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="12dp"
+            android:textColor="@color/red_700"/>
+
+        <FrameLayout
+            android:id="@+id/vStatusContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <com.sup.dev.android.views.views.ViewText
+                android:id="@+id/vStatus"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"/>
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+
+</com.sup.dev.android.views.views.layouts.LayoutCorned>

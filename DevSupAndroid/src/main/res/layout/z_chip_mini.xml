@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sup.dev.android.views.views.ViewChip style="@style/Chip.Mini"
+    app:rippleColor="@color/focus"
+    xmlns:app="http://schemas.android.com/apk/res-auto" />

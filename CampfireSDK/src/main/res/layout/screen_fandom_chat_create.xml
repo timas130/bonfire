@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Root.Content">
+
+    <com.google.android.material.appbar.AppBarLayout
+        style="@style/AppBar">
+
+        <androidx.appcompat.widget.Toolbar
+            style="@style/Toolbar.NoScroll"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:layout_gravity="center">
+
+            <com.sup.dev.android.views.views.ViewCircleImage
+                android:id="@+id/vImage"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@color/focus_dark"/>
+
+            <com.sup.dev.android.views.views.ViewIcon
+                android:id="@+id/vImageIcon"
+                style="@style/Icon.18"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_add_white_18dp"/>
+
+        </FrameLayout>
+
+        <com.sup.dev.android.views.settings.SettingsField
+            android:id="@+id/vName"
+            android:layout_marginLeft="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:inputType="textCapSentences|textAutoComplete|textAutoCorrect"/>
+
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout style="@style/TextInputLayout.Outlined"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+
+
+        <EditText
+            android:id="@+id/vField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="3"
+            android:inputType="textMultiLine|textCapSentences|textAutoCorrect"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.sup.dev.android.views.views.ViewButton
+        android:id="@+id/vFinish"
+        style="@style/Button.Outlined"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp" />
+
+</LinearLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/vSplashRoot"
+    android:background="#70000000"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.sup.dev.android.views.views.layouts.LayoutCorned
+        android:id="@+id/vSplashViewContainer"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </com.sup.dev.android.views.views.layouts.LayoutCorned>
+
+</FrameLayout>

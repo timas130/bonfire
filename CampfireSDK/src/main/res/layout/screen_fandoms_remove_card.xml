@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/vTouch"
+            style="@style/Touchable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <com.sup.dev.android.views.views.ViewAvatarTitle
+                android:id="@+id/vAvatar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:clickable="false"
+                android:focusable="false"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/vSubscribers"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="6dp"
+                app:drawableTint="?colorOnPrimaryIcons"
+                android:drawableRight="@drawable/ic_person_white_18dp"
+                android:drawablePadding="4dp"/>
+
+        </LinearLayout>
+
+        <com.sup.dev.android.views.views.ViewAvatarTitle
+            android:id="@+id/vAccount"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp">
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|left"
+                android:textColor="@color/red_700"
+                style="@style/Button.Text"/>
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vAccept"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:textColor="@color/green_700"
+                style="@style/Button.Text"/>
+
+
+        </FrameLayout>
+    </LinearLayout>
+
+</FrameLayout>

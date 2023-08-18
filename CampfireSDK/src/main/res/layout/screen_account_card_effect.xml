@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sup.dev.android.views.views.layouts.LayoutCorned
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="12dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginRight="12dp"
+    android:background="?colorSurface"
+    app:LayoutCorned_cornedSize="12dp">
+
+    <LinearLayout
+        android:id="@+id/vButtonsContainer"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.sup.dev.android.views.views.ViewText
+            android:id="@+id/vTitle"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/yellow_700"
+            style="@style/TextAppearance.AppCompat.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.sup.dev.android.views.views.ViewText
+            android:id="@+id/vDescription"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.sup.dev.android.views.views.ViewText
+            android:id="@+id/vComment"
+            android:layout_marginTop="8dp"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.sup.dev.android.views.views.ViewText
+            android:id="@+id/vLabel_1"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.sup.dev.android.views.views.ViewText
+            android:id="@+id/vLabel_2"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <com.sup.dev.android.views.views.ViewIcon
+        android:id="@+id/vRemove"
+        android:layout_gravity="right|top"
+        style="@style/Icon.18.Filtered"
+        android:src="@drawable/ic_clear_white_24dp"/>
+
+
+</com.sup.dev.android.views.views.layouts.LayoutCorned>

@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="SplashViewSheet">
+        <attr name="Sheet_dimId" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="ViewPagerIndicator">
+        <attr name="ViewPagerIndicator_color" format="color"/>
+        <attr name="ViewPagerIndicator_colorSelected" format="color"/>
+        <attr name="ViewPagerIndicator_offset" format="dimension"/>
+        <attr name="ViewPagerIndicator_pager" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="ViewPagerIndicatorViews">
+        <attr name="ViewPagerIndicator_color"/>
+        <attr name="ViewPagerIndicator_colorSelected"/>
+        <attr name="ViewPagerIndicatorViews_offset_left" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="ViewIcon">
+        <attr name="android:src"/>
+        <attr name="android:enabled"/>
+        <attr name="ViewIcon_srcSelect" format="reference"/>
+        <attr name="ViewIcon_filter" format="color"/>
+        <attr name="ViewIcon_filterSelect" format="color"/>
+        <attr name="ViewIcon_secondaryColor" format="color"/>
+        <attr name="ViewIcon_focusColor" format="color"/>
+        <attr name="ViewIcon_padding" format="dimension"/>
+        <attr name="ViewIcon_background" format="color"/>
+        <attr name="ViewIcon_useActiveBackground" format="boolean"/>
+        <attr name="ViewIcon_circleColor" format="color"/>
+        <attr name="ViewIcon_circleSize" format="dimension"/>
+        <attr name="ViewIcon_transparent_on_disabled" format="boolean"/>
+        <attr name="ViewIcon_focus_animation_enabled" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="ViewSwipe">
+        <attr name="android:src"/>
+        <attr name="ViewSwipe_background" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="ViewCropImage">
+        <attr name="cropGuidelines">
+            <enum name="off" value="0"/>
+            <enum name="onTouch" value="1"/>
+            <enum name="on" value="2"/>
+        </attr>
+        <attr name="cropScaleType">
+            <enum name="fitCenter" value="0"/>
+            <enum name="center" value="1"/>
+            <enum name="centerCrop" value="2"/>
+            <enum name="centerInside" value="3"/>
+        </attr>
+        <attr name="cropShape">
+            <enum name="rectangle" value="0"/>
+            <enum name="oval" value="1"/>
+        </attr>
+        <attr name="cropAutoZoomEnabled" format="boolean"/>
+        <attr name="cropMaxZoom" format="integer"/>
+        <attr name="cropMultiTouchEnabled" format="boolean"/>
+        <attr name="cropFixAspectRatio" format="boolean"/>
+        <attr name="cropAspectRatioX" format="integer"/>
+        <attr name="cropAspectRatioY" format="integer"/>
+        <attr name="cropInitialCropWindowPaddingRatio" format="float"/>
+        <attr name="cropBorderLineThickness" format="dimension"/>
+        <attr name="cropBorderLineColor" format="color"/>
+        <attr name="cropBorderCornerThickness" format="dimension"/>
+        <attr name="cropBorderCornerOffset" format="dimension"/>
+        <attr name="cropBorderCornerLength" format="dimension"/>
+        <attr name="cropBorderCornerColor" format="color"/>
+        <attr name="cropGuidelinesThickness" format="dimension"/>
+        <attr name="cropGuidelinesColor" format="color"/>
+        <attr name="cropBackgroundColor" format="color"/>
+        <attr name="cropSnapRadius" format="dimension"/>
+        <attr name="cropTouchRadius" format="dimension"/>
+        <attr name="cropSaveBitmapToInstanceState" format="boolean"/>
+        <attr name="cropShowCropOverlay" format="boolean"/>
+        <attr name="cropShowProgressBar" format="boolean"/>
+        <attr name="cropMinCropWindowWidth" format="dimension"/>
+        <attr name="cropMinCropWindowHeight" format="dimension"/>
+        <attr name="cropMinCropResultWidthPX" format="float"/>
+        <attr name="cropMinCropResultHeightPX" format="float"/>
+        <attr name="cropMaxCropResultWidthPX" format="float"/>
+        <attr name="cropMaxCropResultHeightPX" format="float"/>
+        <attr name="cropFlipHorizontally" format="boolean"/>
+        <attr name="cropFlipVertically" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="ViewProgressLine">
+        <attr name="ViewProgressLine_progress" format="integer"/>
+        <attr name="ViewProgressLine_color" format="color"/>
+        <attr name="ViewProgressLine_colorBackground" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="ViewAvatar">
+        <attr name="android:src"/>
+        <attr name="ViewAvatar_chipText" format="string"/>
+        <attr name="ViewAvatar_chipBackground" format="color"/>
+        <attr name="ViewAvatar_chipSize" format="dimension"/>
+        <attr name="ViewAvatar_chipIcon" format="reference"/>
+        <attr name="ViewAvatar_chipIconPadding" format="dimension"/>
+        <attr name="ViewAvatar_avatarBackground" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="ViewAvatarTitle">
+        <attr name="android:src"/>
+        <attr name="ViewAvatarTitle_title" format="string"/>
+        <attr name="ViewAvatarTitle_subtitle" format="string"/>
+        <attr name="ViewAvatarTitle_chipBackground" format="color"/>
+        <attr name="ViewAvatarTitle_chipSize" format="dimension"/>
+        <attr name="ViewAvatarTitle_chipText" format="string"/>
+        <attr name="ViewAvatarTitle_chipIcon" format="reference"/>
+        <attr name="ViewAvatarTitle_chipIconPadding"  format="dimension"/>
+        <attr name="ViewAvatarTitle_avatarBackground" format="color"/>
+        <attr name="ViewAvatarTitle_avatarPadding" format="dimension"/>
+        <attr name="ViewAvatarTitle_chipMode" format="boolean"/>
+        <attr name="ViewAvatarTitle_subtitleSingleLine" format="boolean"/>
+        <attr name="ViewAvatarTitle_subtitleEllipsizeEnd" format="boolean"/>
+        <attr name="ViewAvatarTitle_avatarHeight" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="ViewChipMini">
+        <attr name="android:text"/>
+        <attr name="android:textColor"/>
+    </declare-styleable>
+
+    <!--           -->
+    <!--  Layouts  -->
+    <!--           -->
+
+    <declare-styleable name="LayoutMaxSizes">
+        <attr name="LayoutMaxSizes_maxHeight" format="dimension"/>
+        <attr name="LayoutMaxSizes_maxWidth" format="dimension"/>
+        <attr name="LayoutMaxSizes_reserveHeight" format="dimension"/>
+        <attr name="LayoutMaxSizes_reserveWidth" format="dimension"/>
+        <attr name="LayoutMaxSizes_maxHeightParentPercent" format="float"/>
+        <attr name="LayoutMaxSizes_maxWidthParentPercent" format="float"/>
+        <attr name="LayoutMaxSizes_alwaysMaxW" format="boolean"/>
+        <attr name="LayoutMaxSizes_alwaysMaxH" format="boolean"/>
+        <attr name="LayoutMaxSizes_childAlwaysMaxW" format="boolean"/>
+        <attr name="LayoutMaxSizes_childAlwaysMaxH" format="boolean"/>
+        <attr name="LayoutMaxSizes_useScreenWidthAsParent" format="boolean"/>
+        <attr name="LayoutMaxSizes_useScreenHeightAsParent" format="boolean"/>
+        <attr name="LayoutMaxSizes_fadeWSize" format="dimension"/>
+        <attr name="LayoutMaxSizes_fadeHSize" format="dimension"/>
+        <attr name="LayoutMaxSizes_fadeColor" format="color"/>
+        <attr name="LayoutMaxSizes_allowChildMaxW" format="boolean"/>
+        <attr name="LayoutMaxSizes_allowChildMaxH" format="boolean"/>
+        <attr name="LayoutMaxSizes_ignoreParentW" format="boolean"/>
+        <attr name="LayoutMaxSizes_ignoreParentH" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="LayoutExpandable">
+        <attr name="LayoutExpandable_duration" format="integer"/>
+        <attr name="LayoutExpandable_clickToToggle" format="boolean"/>
+        <attr name="LayoutExpandable_expanded" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="LayoutFlow">
+        <attr name="LayoutFlow_horizontal" format="dimension"/>
+        <attr name="LayoutFlow_vertical" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="LayoutCorned">
+        <attr name="LayoutCorned_cornedTR" format="boolean"/>
+        <attr name="LayoutCorned_cornedTL" format="boolean"/>
+        <attr name="LayoutCorned_cornedBR" format="boolean"/>
+        <attr name="LayoutCorned_cornedBL" format="boolean"/>
+        <attr name="LayoutCorned_chipMode" format="boolean"/>
+        <attr name="LayoutCorned_circleMode" format="boolean"/>
+        <attr name="LayoutCorned_cornedSize" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="LayoutFlow_LayoutParams">
+        <attr name="LayoutFlow_LayoutParams_breakLine" format="boolean"/>
+        <attr name="LayoutFlow_LayoutParams_horizontalSpacing" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="LayoutMirrorSize">
+        <attr name="LayoutMirrorSize_mirrorView" format="reference"/>
+        <attr name="LayoutMirrorSize_mirrorView_2" format="reference"/>
+        <attr name="LayoutMirrorSize_wPercent" format="integer"/>
+        <attr name="LayoutMirrorSize_hPercent" format="integer"/>
+        <attr name="LayoutMirrorSize_mode" format="enum">
+            <enum name="bigger_wh" value="1"/>
+            <enum name="smaller_wh" value="2"/>
+            <enum name="whom_bigger_w" value="3"/>
+            <enum name="whom_smaller_w" value="4"/>
+            <enum name="whom_bigger_h" value="5"/>
+            <enum name="whom_smaller_h" value="6"/>
+            <enum name="use_1_if_no_zero" value="7"/>
+            <enum name="use_2_if_no_zero" value="8"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="LayoutAspectRatio">
+        <attr name="LayoutAspectRatio_w" format="float"/>
+        <attr name="LayoutAspectRatio_h" format="float"/>
+    </declare-styleable>
+
+    <declare-styleable name="ViewCircleImage">
+        <attr name="ViewCircleImage_circleMod" format="boolean"/>
+        <attr name="ViewCircleImage_squareMod" format="boolean"/>
+        <attr name="ViewCircleImage_corned" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="LayoutZoom">
+        <attr name="LayoutZoom_maxZoom" format="float"/>
+        <attr name="LayoutZoom_minZoom" format="float"/>
+        <attr name="LayoutZoom_overMoveX" format="dimension"/>
+        <attr name="LayoutZoom_overMoveY" format="dimension"/>
+        <attr name="LayoutZoom_doubleTouchRadius" format="dimension"/>
+        <attr name="LayoutZoom_animateTimeMs" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="LayoutImportance_Layout">
+        <attr name="LayoutImportance_Layout_importance" format="integer"/>
+    </declare-styleable>
+
+    <!--            -->
+    <!--  Settings  -->
+    <!--            -->
+
+    <declare-styleable name="Settings">
+        <attr name="android:focusable"/>
+        <attr name="Settings_lineVisible" format="boolean"/>
+        <attr name="Settings_title" format="string"/>
+        <attr name="Settings_subtitle" format="string"/>
+        <attr name="Settings_icon" format="reference"/>
+        <attr name="Settings_icon_background" format="color"/>
+        <attr name="Settings_icon_padding" format="dimension"/>
+        <attr name="Settings_icon_filter" format="color"/>
+        <attr name="Settings_checked" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="SettingsField">
+        <attr name="android:inputType"/>
+        <attr name="android:singleLine"/>
+        <attr name="android:hint"/>
+        <attr name="android:textColor"/>
+        <attr name="Settings_text" format="string"/>
+        <attr name="Settings_maxLength" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="SettingsSeek">
+        <attr name="Settings_minProgress" format="integer"/>
+        <attr name="Settings_maxProgress" format="integer"/>
+        <attr name="Settings_progress" format="integer"/>
+        <attr name="Settings_dpad_step" format="integer"/>
+    </declare-styleable>
+
+</resources>

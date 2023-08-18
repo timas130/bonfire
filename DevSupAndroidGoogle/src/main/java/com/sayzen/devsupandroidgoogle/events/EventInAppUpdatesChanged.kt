@@ -1,0 +1,3 @@
+package com.sayzen.devsupandroidgoogle.events
+
+class EventInAppUpdatesChanged

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sup.dev.android.views.views.layouts.LayoutCorned
+    android:id="@+id/vImageContainer"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="12dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginRight="12dp">
+
+    <com.sup.dev.android.views.views.layouts.LayoutMaxSizes
+        android:id="@+id/vMaxSizes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        app:LayoutMaxSizes_maxHeight="200dp"
+        app:LayoutMaxSizes_maxWidth="200dp">
+
+        <ImageView
+            android:id="@+id/vImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"/>
+
+    </com.sup.dev.android.views.views.layouts.LayoutMaxSizes>
+
+    <ProgressBar
+        android:id="@+id/vGifProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+</com.sup.dev.android.views.views.layouts.LayoutCorned>
+

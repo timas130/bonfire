@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Root.Content"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout style="@style/AppBar">
+
+        <androidx.appcompat.widget.Toolbar
+            style="@style/Toolbar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        style="@style/Scroll"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="24dp"
+            android:paddingLeft="24dp"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/TextInputLayout.Outlined"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp">
+
+                <EditText
+                    android:id="@+id/vName"
+                    style="@style/Field"
+                    android:inputType="textCapSentences|textAutoComplete|textAutoCorrect" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/TextInputLayout.Outlined"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp">
+
+                <EditText
+                    android:id="@+id/vDescription"
+                    style="@style/Field"
+                    android:layout_height="wrap_content"
+                    android:minHeight="148dp"
+                    android:gravity="top"
+                    android:inputType="textCapSentences|textAutoComplete|textAutoCorrect|textMultiLine" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.sup.dev.android.views.views.ViewAvatarTitle
+                android:id="@+id/vFandom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginTop="16dp" />
+
+            <com.sup.dev.android.views.views.ViewAvatarTitle
+                android:id="@+id/vUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:id="@+id/vError"
+                android:layout_marginTop="32dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/red_700"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <com.sup.dev.android.views.views.ViewButton
+                android:id="@+id/vFinish"
+                style="@style/Button.Outlined"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="32dp" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

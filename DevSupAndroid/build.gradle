@@ -1,0 +1,40 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdk 33
+    defaultConfig {
+        minSdk 21
+        targetSdk 33
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    namespace 'com.sup.dev.android'
+}
+
+dependencies {
+    api 'androidx.appcompat:appcompat:1.5.1'
+    api 'com.google.android.material:material:1.7.0'
+    api 'com.github.bumptech.glide:glide:4.8.0'
+    api 'io.github.waynejo:androidndkgif:0.3.4'
+    api "androidx.media:media:1.6.0"
+    api 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    api project(':DevSupJava')
+}
+
+tasks.withType(KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}

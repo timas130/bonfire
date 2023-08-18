@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/Root.Content"
+    android:orientation="vertical">
+
+    <com.sup.dev.android.views.views.layouts.LayoutCorned
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="16dp"
+        app:LayoutCorned_cornedBL="true"
+        app:LayoutCorned_cornedBR="true"
+        app:LayoutCorned_cornedSize="16dp"
+        app:LayoutCorned_cornedTL="true"
+        app:LayoutCorned_cornedTR="true">
+
+        <com.sup.dev.android.views.views.layouts.LayoutAspectRatio
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:LayoutAspectRatio_h="1"
+            app:LayoutAspectRatio_w="2">
+
+            <ImageView
+                android:id="@+id/vTitleImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"/>
+
+        </com.sup.dev.android.views.views.layouts.LayoutAspectRatio>
+
+    </com.sup.dev.android.views.views.layouts.LayoutCorned>
+
+    <TextView
+        android:id="@+id/vLabel"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="4dp"
+        android:gravity="center" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="72dp"/>
+
+    <ScrollView
+        android:layout_height="wrap_content"
+        style="@style/Scroll.Splash"
+        android:layout_weight="1">
+
+        <com.sup.dev.android.views.views.ViewText
+            android:id="@+id/vText"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:gravity="center" />
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/vButtonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/vButton_1"
+            style="@style/Button.Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="48dp"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/vButton_2"
+            style="@style/Button.Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/vButton_3"
+            style="@style/Button.Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/vButton_4"
+            style="@style/Button.Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+</LinearLayout>

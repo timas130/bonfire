@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        style="@style/Scroll.Splash">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="264dp">
+
+            <ProgressBar
+                android:id="@+id/vLoading"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:id="@+id/vInfoContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_height="wrap_content">
+
+                    <com.sup.dev.android.views.views.ViewAvatarTitle
+                        android:id="@+id/vAvatar"
+                        android:layout_gravity="left|center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/vTimeInApp"
+                        style="@style/TextAppearance.AppCompat.Caption"
+                        android:layout_gravity="right|center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="16dp">
+
+                    <com.sup.dev.android.views.views.ViewText
+                        android:id="@+id/vStatus"
+                        android:layout_gravity="center"
+                        style="@style/TextAppearance.AppCompat.Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/vBan"
+                        android:layout_gravity="center"
+                        style="@style/TextAppearance.AppCompat.Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <com.sup.dev.android.views.views.ViewText
+                        android:id="@+id/vNote"
+                        android:layout_gravity="center"
+                        style="@style/TextAppearance.AppCompat.Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <com.sup.dev.android.views.settings.SettingsMini
+                    android:id="@+id/vKarmaButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:Settings_icon="@drawable/ic_star_white_24dp"
+                    app:Settings_lineVisible="false" />
+
+                <com.sup.dev.android.views.settings.SettingsMini
+                    android:id="@+id/vPunishmentsButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:Settings_icon="@drawable/ic_security_white_24dp"
+                    app:Settings_lineVisible="false" />
+
+                <TextView
+                    android:id="@+id/vSex"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?selectableItemBackground"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/vAge"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?selectableItemBackground"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp" />
+
+                <com.sup.dev.android.views.views.ViewText
+                    android:id="@+id/vInfo"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"/>
+
+            </LinearLayout>
+        </FrameLayout>
+
+
+    </ScrollView>
+
+</FrameLayout>

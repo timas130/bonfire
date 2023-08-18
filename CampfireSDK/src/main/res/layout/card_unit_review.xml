@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:id="@+id/vTouch"
+             style="@style/TouchableForeground"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:background="?colorSurface">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@id/vTopContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.sup.dev.android.views.views.ViewAvatarTitle
+                android:id="@+id/vAvatarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"/>
+
+        </FrameLayout>
+
+        <com.sup.dev.android.views.views.ViewText
+            android:id="@+id/vText"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            style="@style/TextAppearance.AppCompat.SearchResult.Subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="16dp"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_gravity="center|left"
+                android:layout_marginLeft="16dp"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/vStar1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:src="@drawable/ic_star_white_24dp"/>
+                <ImageView
+                    android:id="@+id/vStar2"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_star_white_24dp"/>
+                <ImageView
+                    android:id="@+id/vStar3"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_star_white_24dp"/>
+                <ImageView
+                    android:id="@+id/vStar4"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_star_white_24dp"/>
+                <ImageView
+                    android:id="@+id/vStar5"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_star_white_24dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_gravity="center|right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/vReports"
+                    style="@style/Base.TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginRight="4dp"
+                    android:drawableLeft="@drawable/ic_security_white_18dp"
+                    android:drawablePadding="2dp"/>
+
+                <com.sayzen.campfiresdk.views.ViewKarmaHorizontal
+                    android:id="@+id/vKarma"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+    <com.sup.dev.android.views.views.ViewIcon
+        android:id="@+id/vMenu"
+        style="@style/Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:src="@drawable/ic_more_vert_white_18dp"/>
+
+</FrameLayout>

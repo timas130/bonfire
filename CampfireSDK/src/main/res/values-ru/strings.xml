@@ -1,0 +1,19 @@
+<resources>
+
+    <string name="google_message">Добро пожаловать, пожалуйства выберите способ входа</string>
+    <string name="app_google_account">Google Аккаунт</string>
+    <string name="app_email_account">Email</string>
+    <string name="app_email">Email</string>
+    <string name="app_password">Пароль</string>
+    <string name="app_password_repeat">Пароль еще раз</string>
+    <string name="app_registration">Регистрация</string>
+    <string name="app_login">Войти</string>
+    <string name="app_choose">Выбрать</string>
+    <string name="connection_error">Ошибка подключения</string>
+    <string name="retry">Повторить</string>
+    <string name="app_change_account">Изменить аккаунт</string>
+    <string name="app_email_verify">Найдите в своём почтовом ящике письмо для подтверждения почты и вернитесь в приложение, когда подтвердите свой адрес.</string>
+    <string name="app_continue">Продолжить</string>
+    <string name="app_error">Ошибка</string>
+
+</resources>

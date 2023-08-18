@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/vRefreshCard"
+    style="@style/SwipeRefresh">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/vRecyclerCard"
+        style="@style/Recycler"/>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

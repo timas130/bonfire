@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sup.dev.android.views.views.layouts.LayoutCorned xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="12dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginRight="12dp"
+    android:background="?colorSurface"
+    app:LayoutCorned_cornedSize="12dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp">
+
+        <TextView
+            android:id="@+id/vTitle"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top"
+            android:layout_marginTop="8dp"/>
+
+        <com.sup.dev.android.views.views.ViewAvatarTitle
+            android:id="@+id/vAvatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp" />
+
+        <com.sup.dev.android.views.views.ViewIcon
+            android:id="@+id/vMenu"
+            style="@style/Icon.18"
+            android:layout_gravity="right|center"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_more_vert_white_18dp" />
+
+        <TextView
+            android:id="@+id/vLoading"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/vEmpty"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"/>
+
+        <com.sup.dev.android.views.views.ViewButton
+            android:id="@+id/vRetry"
+            style="@style/Button.Outlined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp" />
+
+    </FrameLayout>
+
+</com.sup.dev.android.views.views.layouts.LayoutCorned>

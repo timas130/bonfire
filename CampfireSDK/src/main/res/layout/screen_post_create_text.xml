@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NOTE: this layout is also used in SQuestPartTextEditor with vOptionsContainer hidden -->
+<!-- Если сделать другой контейнер на Xiaomi текст будет отрезаться снизу-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Root.Content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout style="@style/AppBar"
+        app:elevation="0dp"
+        android:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            style="@style/Toolbar">
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <EditText
+        android:id="@+id/vField"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="?colorPrimary">
+
+        <LinearLayout
+            android:id="@+id/vOptionsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|left"
+            android:orientation="horizontal">
+
+            <com.sup.dev.android.views.views.ViewIcon
+                android:id="@+id/vTextTitle"
+                style="@style/Icon.18.Filtered"
+                android:src="@drawable/ic_text_fields_white_24dp" />
+
+            <com.sup.dev.android.views.views.ViewIcon
+                android:id="@+id/vIconAttach"
+                style="@style/Icon.18.Filtered" />
+
+            <com.sup.dev.android.views.views.ViewIcon
+                android:id="@+id/vLink"
+                style="@style/Icon.18.Filtered"
+                android:src="@drawable/ic_insert_link_white_24dp" />
+
+            <View
+                style="@style/Divider"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp" />
+
+            <com.sup.dev.android.views.views.ViewIcon
+                android:id="@+id/vAlignLeft"
+                style="@style/Icon.18.Filtered"
+                android:layout_marginLeft="4dp"
+                android:src="@drawable/ic_format_align_left_white_24dp" />
+
+            <com.sup.dev.android.views.views.ViewIcon
+                android:id="@+id/vAlignCenter"
+                style="@style/Icon.18.Filtered"
+                android:src="@drawable/ic_format_align_center_white_24dp" />
+
+            <com.sup.dev.android.views.views.ViewIcon
+                android:id="@+id/vAlignRight"
+                style="@style/Icon.18.Filtered"
+                android:src="@drawable/ic_format_align_right_white_24dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/vQuestOptionsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|start"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:layout_marginStart="8dp">
+
+            <com.sup.dev.android.views.views.ViewIcon
+                android:id="@+id/vInsertVariable"
+                style="@style/Icon.18.Filtered"
+                android:src="@drawable/outline_rtt_24" />
+
+            <com.sup.dev.android.views.views.ViewIcon
+                android:id="@+id/vSaveText"
+                style="@style/Icon.18.Filtered"
+                android:src="@drawable/outline_save_24" />
+
+            <com.sup.dev.android.views.views.ViewIcon
+                android:id="@+id/vLoadText"
+                style="@style/Icon.18.Filtered"
+                android:src="@drawable/outline_folder_open_24" />
+
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/Fab.Mini"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_done_white_24dp" />
+
+    </FrameLayout>
+
+</LinearLayout>

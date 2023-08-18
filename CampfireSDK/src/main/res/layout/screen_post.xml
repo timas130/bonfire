@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?colorSurface"
+    style="@style/Root.Content">
+
+    <com.google.android.material.appbar.AppBarLayout
+        style="@style/AppBar">
+
+        <androidx.appcompat.widget.Toolbar
+            style="@style/Toolbar">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|end">
+
+                <com.sup.dev.android.views.views.ViewIcon
+                    android:id="@+id/vShare"
+                    style="@style/Icon.Toolbar.Filtered"
+                    android:src="@drawable/ic_share_white_24dp"/>
+
+                <com.sup.dev.android.views.views.ViewIcon
+                    android:id="@+id/vMenu"
+                    style="@style/Icon.Toolbar.Filtered"
+                    android:src="@drawable/ic_more_vert_white_24dp"/>
+
+            </LinearLayout>
+
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        style="@style/Recycler"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/Fab"
+        android:src="@drawable/ic_mode_comment_white_24dp"/>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

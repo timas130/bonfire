@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
+        style="@style/Scroll"
+        android:paddingTop="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/vTitle"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="20dp"
+                android:text="Title"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal">
+
+                <com.sup.dev.android.views.views.ViewButton
+                    android:id="@+id/vStart"
+                    style="@style/Button.Outlined"
+                    android:layout_gravity="center"
+                    android:text="12:00"/>
+
+                <TextView
+                    style="@style/Base.TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text=" - "/>
+
+                <com.sup.dev.android.views.views.ViewButton
+                    android:id="@+id/vEnd"
+                    style="@style/Button.Outlined"
+                    android:layout_gravity="center"
+                    android:text="12:00"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="8dp"
+        android:orientation="horizontal">
+
+        <com.sup.dev.android.views.views.ViewButton
+            android:id="@+id/vCancel"
+            style="@style/Button.Text"
+            android:text="Cancel"
+            android:layout_marginRight="8dp"/>
+
+        <com.sup.dev.android.views.views.ViewButton
+            android:id="@+id/vEnter"
+            style="@style/Button.Text"
+            android:text="Action"/>
+
+    </LinearLayout>
+
+</LinearLayout>
