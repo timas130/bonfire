@@ -311,7 +311,7 @@ object ToolsText {
         return if (s.contains("https://") || s.contains("http://"))
             s
         else
-            "http://$s"
+            "https://$s"
     }
 
     fun clearWebLinkPrefix(s: String): String {

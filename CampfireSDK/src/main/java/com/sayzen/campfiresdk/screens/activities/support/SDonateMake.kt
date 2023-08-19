@@ -116,8 +116,8 @@ class SDonateMake : Screen(R.layout.screen_donate_make){
         val type = if (vIcon_yandex.isIconSelected) "PC" else if (vIcon_card.isIconSelected) "AC" else "MC"
 
         val url = HttpRequest()
-                .setUrl("https://money.yandex.ru/quickpay/confirm.xml")
-                .param("receiver", "410011747883287")
+                .setUrl("https://yoomoney.ru/quickpay/confirm.xml")
+                .param("receiver", "410018997847699")
                 .param("quickpay-form", "donate")
                 .param("paymentType", type)
                 .param("sum", "$sum")

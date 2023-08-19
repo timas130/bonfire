@@ -39,7 +39,7 @@ object API_TRANSLATE {
         map[t.key] = t
     }
 
-    val app_whoops = Translate("Уупс!")
+    val app_whoops = Translate("Упс!")
     val app_retry = Translate("Повторить")
     val app_cancel = Translate("Отмена")
     val app_continue = Translate("Продолжить")
@@ -289,6 +289,7 @@ object API_TRANSLATE {
 
     val he = Translate("Он")
     val she = Translate("Она")
+    val genderOther = Translate("Другое")
     val he_baned = Translate("заблокирован")
     val she_baned = Translate("заблокирована")
     val he_blocked = Translate("заблокировал")

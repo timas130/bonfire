@@ -137,7 +137,12 @@ class SplashAccountInfo(account: Account) : Splash(R.layout.splash_account_info)
         ControllerApi.makeTextHtml(vKarmaButton.vSubtitle!!)
 
 
-        vSex.text = t(API_TRANSLATE.profile_appeal, if (xAccount.getSex() == 0L) tCap(API_TRANSLATE.he) else tCap(API_TRANSLATE.she))
+        vSex.text = t(API_TRANSLATE.profile_appeal, when (xAccount.getSex()) {
+            0L -> tCap(API_TRANSLATE.he)
+            1L -> tCap(API_TRANSLATE.she)
+            2L -> tCap(API_TRANSLATE.genderOther)
+            else -> tCap(API_TRANSLATE.genderOther)
+        })
         vAge.text = t(API_TRANSLATE.profile_age, if (age == 0L) t(API_TRANSLATE.profile_age_not_set) else age)
         vDescription.text = if (description.isEmpty()) t(API_TRANSLATE.profile_bio_empty) else description
 

@@ -74,7 +74,6 @@ object ControllerCampfireSDK {
         ControllerActivities.init()
         ControllerChats.init()
         ControllerNotifications.init(logoColored, logoWhite)
-        ControllerFirebaseAnalytics.init()
         ControllerAlive.init()
         ControllerGoogleAuth.init("778141366343-nhhulg4af7ptf44rirm7m3iuqpnncoir.apps.googleusercontent.com", onLoginFailed)
 

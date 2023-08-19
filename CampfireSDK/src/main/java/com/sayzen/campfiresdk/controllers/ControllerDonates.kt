@@ -12,7 +12,7 @@ object ControllerDonates {
         val need = NEED
         val countX = totalCount / 100.0
         vLine.setProgress(countX.toLong(), need)
-        vCounter.setText("${ToolsText.numToStringRoundAndTrim(countX, 2)} / ${need} \u20BD")
+        vCounter.text = "${ToolsText.numToStringRoundAndTrim(countX, 2)} / $need \u20BD"
     }
 
 }

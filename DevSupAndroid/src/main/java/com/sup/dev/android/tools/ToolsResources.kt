@@ -13,19 +13,18 @@ import com.sup.dev.java.tools.ToolsColor
 import java.util.*
 import kotlin.collections.ArrayList
 
-
 object ToolsResources {
 
-    fun sex(sex: Long, @StringRes m: Int, @StringRes w: Int) = if (sex == 0L) s(m) else s(w)
+    fun sex(sex: Long, @StringRes m: Int, @StringRes w: Int) = if (sex != 1L) s(m) else s(w)
 
-    fun sex(sex: Long, @StringRes m: String, @StringRes w: String) = if (sex == 0L) m else w
+    fun sex(sex: Long, m: String, w: String) = if (sex != 1L) m else w
 
     fun sCap(@StringRes r: Int, vararg args: Any): String {
-        return s(r, *args).capitalize()
+        return s(r, *args).replaceFirstChar { it.uppercase() }
     }
 
     fun sCap(r: String, vararg args: Any): String {
-        return s(r, *args).capitalize()
+        return s(r, *args).replaceFirstChar { it.uppercase() }
     }
 
     /*

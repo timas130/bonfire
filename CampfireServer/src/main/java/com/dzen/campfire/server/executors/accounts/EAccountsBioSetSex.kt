@@ -11,7 +11,7 @@ import com.sup.dev.java_pc.sql.SqlQueryUpdate
 class EAccountsBioSetSex : RAccountsBioSetSex(0) {
 
     override fun check() {
-        if(sex != 0L && sex != 1L) throw ApiException(E_BAD_SEX)
+        if (sex != 0L && sex != 1L && sex != 2L) throw ApiException(E_BAD_SEX)
         ControllerAccounts.checkAccountBanned(apiAccount.id)
     }
 

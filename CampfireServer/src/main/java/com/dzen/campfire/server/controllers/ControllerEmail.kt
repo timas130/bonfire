@@ -14,7 +14,7 @@ object ControllerEmail {
         ).hasNext()
     }
 
-    fun getAccountId(email:String, passwordSha512:String):Long{
+    fun getAccountId(email:String, password: String):Long{
 
         val rows = Database.select("ControllerEmail.getAccountId 1",
                 SqlQuerySelect(TAccountsEmails.NAME, TAccountsEmails.account_id, TAccountsEmails.account_password)
@@ -25,15 +25,7 @@ object ControllerEmail {
             val accountId = rows.nextLongOrZero()
             val realPasswordBCrypt = rows.next<String>()
 
-            if(realPasswordBCrypt.length == 32){
-                //  Обратная совместимость
-                if(realPasswordBCrypt == passwordSha512) {
-                    return accountId
-                }
-                return 0
-            }
-
-            if(ToolsCryptography.bcryptCheck(passwordSha512, realPasswordBCrypt)){
+            if (ToolsCryptography.bcryptCheck(password, realPasswordBCrypt)) {
                 return accountId
             }
         }
@@ -41,19 +33,19 @@ object ControllerEmail {
         return 0
     }
 
-    fun insert(accountId:Long, email:String, passwordSha512:String){
+    fun insert(accountId:Long, email:String, password: String){
         Database.insert("ControllerEmail.insert", TAccountsEmails.NAME,
                 TAccountsEmails.account_id, accountId,
                 TAccountsEmails.account_email, email,
-                TAccountsEmails.account_password, ToolsCryptography.bcrypt(passwordSha512),
+                TAccountsEmails.account_password, ToolsCryptography.bcrypt(password),
                 TAccountsEmails.date_create, System.currentTimeMillis())
 
     }
 
-    fun setPassword(accountId:Long, email:String, passwordSha512:String){
+    fun setPassword(accountId:Long, email:String, password:String){
         Database.update("ControllerEmail.setPassword", SqlQueryUpdate(TAccountsEmails.NAME)
             .where(TAccountsEmails.account_id, "=", accountId)
-            .updateValue(TAccountsEmails.account_password, ToolsCryptography.bcrypt(passwordSha512))
+            .updateValue(TAccountsEmails.account_password, ToolsCryptography.bcrypt(password))
             .whereValue(TAccountsEmails.account_email, "=", email))
     }
 

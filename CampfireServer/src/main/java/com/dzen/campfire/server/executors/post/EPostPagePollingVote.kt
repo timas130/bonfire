@@ -36,6 +36,7 @@ class EPostPagePollingVote : RPostPagePollingVote(0, 0, 0, 0, 0) {
 
     @Throws(ApiException::class)
     override fun check() {
+        ControllerAccounts.checkAccountBanned(apiAccount.id)
         val polling = getPolling(sourceType, sourceId, sourceIdSub, pollingId)
 
         if (polling == null) throw ApiException(API.ERROR_GONE)
