@@ -58,7 +58,7 @@ class EPublicationsRemove : RPublicationsRemove(0) {
                 ControllerChats.onMessagesRemoved((publication as PublicationChatMessage).chatTag(), 1)
             }
         }
-        if (publication.publicationType == API.PUBLICATION_TYPE_POST) {
+        if (publication.publicationType == API.PUBLICATION_TYPE_POST && publication.status != API.STATUS_DRAFT) {
             ControllerAccounts.updatePostsCount(apiAccount.id, -1)
         }
 
