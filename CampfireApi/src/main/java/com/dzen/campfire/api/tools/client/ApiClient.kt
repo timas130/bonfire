@@ -16,14 +16,14 @@ import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLProtocolException
 
 abstract class ApiClient(
-        val projectKey: String,
+    val projectKey: String,
     private val tokenProvider: TokenProvider,
     val host: String,
     private val portHttps: Int,
     private val portCertificate: Int,
     private val saver: (String, String?) -> Unit,
     private val loader: (String) -> String?,
-    private val onError: (Throwable) -> Unit = {},
+    private val onErrorCb: (Throwable) -> Unit = {},
 ) {
 
     companion object {
@@ -66,7 +66,7 @@ abstract class ApiClient(
             } catch (eN: NumberFormatException) {
 
             } catch (e: Exception) {
-                onError(e)
+                onErrorCb(e)
                 err(e)
             }
         }
@@ -118,7 +118,7 @@ abstract class ApiClient(
             if (!request.isSubscribed()) return
             Action(request, stackTrace, callbackInMain)
         } catch (th: Throwable) {
-            onError(th)
+            onErrorCb(th)
             err(th)
             err(stackTrace)
         }
@@ -178,13 +178,13 @@ abstract class ApiClient(
                 } else {
                     val j = Json()
                     request.json(true, j)
-                    this@ApiClient.onError(e)
+                    this@ApiClient.onErrorCb(e)
                 }
             } finally {
                 try {
                     connections?.close()
                 } catch (e: IOException) {
-                    this@ApiClient.onError(e)
+                    this@ApiClient.onErrorCb(e)
                     err(e)
                 }
 
@@ -296,7 +296,7 @@ abstract class ApiClient(
 
         private fun onError(e: Exception) {
             if(!request.noErrorLogs) {
-                onError(e)
+                this@ApiClient.onErrorCb(e)
                 err(e)
                 err(stackTrace)
             }
@@ -336,7 +336,7 @@ abstract class ApiClient(
                     )
                     request.onApiErrorList.invoke(ex)
                 } else {
-                    onError(ex)
+                    onErrorCb(ex)
                     request.onNetworkErrorList.invoke()
                 }
                 request.onErrorList.invoke(ex)
