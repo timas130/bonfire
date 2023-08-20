@@ -178,13 +178,13 @@ abstract class ApiClient(
                 } else {
                     val j = Json()
                     request.json(true, j)
-                    onError(e)
+                    this@ApiClient.onError(e)
                 }
             } finally {
                 try {
                     connections?.close()
                 } catch (e: IOException) {
-                    onError(e)
+                    this@ApiClient.onError(e)
                     err(e)
                 }
 
