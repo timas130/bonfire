@@ -94,30 +94,36 @@ class SWikiList(
 
     override fun classOfCard() = CardWikiItem::class
 
-    override fun map(item: WikiTitle) = CardWikiItem(item, prefLanguageId, onSelectSection.let {
-        if (it != null) {
-            {
-                Navigator.to(SWikiList(
+    override fun map(item: WikiTitle) = CardWikiItem(
+        wikiItem = item,
+        prefLanguageId = prefLanguageId,
+        onClick = onSelectSection.let {
+            if (it != null) {
+                {
+                    Navigator.to(SWikiList(
                         item.fandomId, 0, item.itemId,
                         item.getName(ControllerApi.getLanguageCode())
-                ) { item ->
+                    ) { item ->
+                        Navigator.remove(this)
+                        it(item)
+                    })
+                }
+            } else {
+                null
+            }
+        },
+        onSelectSection = onSelectSection.let {
+            if (it != null) {
+                { item ->
                     Navigator.remove(this)
                     it(item)
-                })
+                }
+            } else {
+                null
             }
-        } else {
-            null
-        }
-    }, onSelectSection.let {
-        if (it != null) {
-            { item ->
-                Navigator.remove(this)
-                it(item)
-            }
-        } else {
-            null
-        }
-    }) {
-        adapter.directItems().map { (it as CardWikiItem).wikiItem }
-    }
+        },
+        listGetter = {
+            adapter.directItems().mapNotNull { (it as? CardWikiItem)?.wikiItem }
+        },
+    )
 }
