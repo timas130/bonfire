@@ -211,7 +211,7 @@ object ControllerCampfireSDK {
                 .setHint(t(API_TRANSLATE.app_message))
                 .setOnCancel(t(API_TRANSLATE.app_cancel))
                 .setOnEnter(t(API_TRANSLATE.app_share)) { _, text ->
-                    ToolsIntent.shareText("$text\n\rhttps://play.google.com/store/apps/details?id=com.dzen.campfire")
+                    ToolsIntent.shareText("$text\n\rhttps://bonfire.moe/")
                     ToolsThreads.main(10000) { RAchievementsOnFinish(API.ACHI_APP_SHARE.index).send(api) }
                 }
                 .asSheetShow()
@@ -284,8 +284,8 @@ object ControllerCampfireSDK {
                 .setTitleImage(R.drawable.logo_campfire_128x128)
                 .setImageBackground(ToolsColor.argb(255, 49, 49, 49))
                 .setText(t(API_TRANSLATE.message_alert_campfire_profile))
-                .setOnEnter("Google Play"){
-                    ToolsIntent.openLink("https://play.google.com/store/apps/details?id=com.dzen.campfire")
+                .setOnEnter(t(API_TRANSLATE.app_site)) {
+                    ToolsIntent.openLink("https://bonfire.moe")
                 }
                 .setOnCancel(t(API_TRANSLATE.app_cancel))
                 .asSheetShow()
