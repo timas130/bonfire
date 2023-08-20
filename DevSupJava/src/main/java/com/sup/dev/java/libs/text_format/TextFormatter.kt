@@ -17,7 +17,7 @@ class TextFormatter(
             "blue" to "1976D2", "cyan" to "0097A7", "teal" to "00796B", "green" to "388E3C",
             "lime" to "689F38", "yellow" to "FBC02D", "amber" to "FFA000", "orange" to "F57C00",
             "brown" to "5D4037", "grey" to "616161", "campfire" to "FF6D00", "rainbow" to "-",
-            "gay" to "-", "xmas" to "-", "christmas" to "-",
+            "gay" to "-", "xmas" to "-", "christmas" to "-", "bonfire" to "FF6D00",
         )
     }
 
