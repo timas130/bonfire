@@ -35,10 +35,7 @@ object ControllerFandom {
         return ids
     }
 
-    fun getViceroyId(fandomId: Long, languageId: Long) = Database.select("ControllerFandom getViceRoyId", SqlQuerySelect(TCollisions.NAME, TCollisions.value_1)
-            .where(TCollisions.owner_id, "=", fandomId)
-            .where(TCollisions.collision_id, "=", languageId)
-            .where(TCollisions.collision_type, "=", API.COLLISION_FANDOM_VICEROY)).nextLongOrZero()
+    fun getViceroyId(fandomId: Long, languageId: Long) = ControllerCollisions.getCollisionValue1(fandomId, languageId, API.COLLISION_FANDOM_VICEROY)
 
     fun updateSubscribers(fandomId: Long) {
         Database.update("ControllerFandom.updateSubscribers", SqlQueryUpdate(TFandoms.NAME)
