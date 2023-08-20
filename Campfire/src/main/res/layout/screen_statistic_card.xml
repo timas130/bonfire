@@ -20,17 +20,17 @@
             <TextView
                 android:id="@+id/vTitle"
                 style="@style/TextAppearance.AppCompat.Title"
-                android:layout_marginRight="24dp"
+                android:layout_marginEnd="64dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left|center" />
+                android:layout_gravity="start|center" />
 
             <TextView
                 android:id="@+id/vNow"
                 style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|center" />
+                android:layout_gravity="end|center" />
 
         </FrameLayout>
 
