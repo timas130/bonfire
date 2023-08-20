@@ -34,16 +34,8 @@ class SRulesModerators : Screen(R.layout.screen_other_rules_moderators) {
 
     private fun addCard(num:Int?, text: Translate) {
         val view: View = ToolsView.inflate(R.layout.view_card_rules)
-        val vLabelForbidden: TextView = view.findViewById(R.id.vLabelForbidden)
-        val vLabelAllowed: TextView = view.findViewById(R.id.vLabelAllowed)
         val vText: TextView = view.findViewById(R.id.vText)
         val vNum: TextView = view.findViewById(R.id.vNum)
-        val vForbiddenContainer: View = view.findViewById(R.id.vForbiddenContainer)
-        val vAllowedContainer: View = view.findViewById(R.id.vAllowedContainer)
-        vLabelForbidden.text = t(API_TRANSLATE.app_forbidden)
-        vLabelAllowed.text = t(API_TRANSLATE.app_allowed)
-        vForbiddenContainer.visibility = View.GONE
-        vAllowedContainer.visibility = View.GONE
         vText.setTextIsSelectable(true)
         vText.setText(t(text))
         vNum.text = "$num"
