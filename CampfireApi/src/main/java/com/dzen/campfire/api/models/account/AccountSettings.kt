@@ -18,7 +18,7 @@ class AccountSettings() : JsonParsable {
     var theme = 0
     var interfaceType = 0
     var fullscreen = false
-    var isProfileListStyle = false
+    var isProfileListStyle = true
     //  App
     var watchPost = false
     var appLanguage = ""
