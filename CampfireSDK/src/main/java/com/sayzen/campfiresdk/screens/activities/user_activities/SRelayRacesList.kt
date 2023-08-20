@@ -38,7 +38,7 @@ class SRelayRacesList constructor(
         setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_26)
 
         val vFab: FloatingActionButton = findViewById(R.id.vFab)
-        (vFab as View).visibility = if (ControllerApi.account.getLevel() >= API.LVL_MODERATOR_RELAY_RACE.lvl) View.VISIBLE else View.GONE
+        (vFab as View).visibility = if (ControllerApi.can(fandomId, languageId, API.LVL_MODERATOR_RELAY_RACE)) View.VISIBLE else View.GONE
         vFab.setImageResource(R.drawable.ic_add_white_24dp)
         vFab.setOnClickListener {
             Navigator.to(SRelayRaceCreate(null))
