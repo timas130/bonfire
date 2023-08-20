@@ -26,6 +26,7 @@ import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.tools.ToolsThreads
+import io.sentry.Sentry
 import java.io.IOException
 
 class SIntroConnection : Screen(R.layout.screen_intro_connection){

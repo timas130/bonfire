@@ -35,7 +35,7 @@ object ToolsPermission {
         for (r in requests) {
             if (r.code == requestCode) {
                 var permissionCounter = 0
-                for (i in 0 until permissions.size) {
+                for (i in permissions.indices) {
                     if (grantResults[i] == PERMISSION_GRANTED) {
                         permissionCounter++
                         r.onGranted.invoke(permissions[i])
@@ -108,7 +108,11 @@ object ToolsPermission {
     //
 
     fun requestReadPermission(onGranted: (String) -> Unit) {
-        requestPermission(READ_EXTERNAL_STORAGE, onGranted)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions(arrayOf(READ_MEDIA_IMAGES, READ_MEDIA_VIDEO), onGranted)
+        } else {
+            requestPermission(READ_EXTERNAL_STORAGE, onGranted)
+        }
     }
 
     fun requestWritePermission(onGranted: (String) -> Unit) {
@@ -116,7 +120,11 @@ object ToolsPermission {
     }
 
     fun requestReadPermission(onGranted: (String) -> Unit, onPermissionRestriction: (String) -> Unit) {
-        requestPermission(READ_EXTERNAL_STORAGE, onGranted, onPermissionRestriction)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions(arrayOf(READ_MEDIA_IMAGES, READ_MEDIA_VIDEO), onGranted, onPermissionRestriction)
+        } else {
+            requestPermission(READ_EXTERNAL_STORAGE, onGranted, onPermissionRestriction)
+        }
     }
 
     fun requestWritePermission(onGranted: (String) -> Unit, onPermissionRestriction: (String) -> Unit) {

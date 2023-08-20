@@ -45,44 +45,23 @@ class SRulesUser(
 
     private fun addTitle(num: Int?, text:Translate) {
         val view: View = ToolsView.inflate(R.layout.view_card_rules)
-        val vLabelAllowed: TextView = view.findViewById(R.id.vLabelAllowed)
-        val vLabelForbidden: TextView = view.findViewById(R.id.vLabelForbidden)
         val vText: TextView = view.findViewById(R.id.vText)
         val vNum: TextView = view.findViewById(R.id.vNum)
-        val vForbiddenContainer: View = view.findViewById(R.id.vForbiddenContainer)
-        val vAllowedContainer: View = view.findViewById(R.id.vAllowedContainer)
-        vLabelAllowed.text = t(API_TRANSLATE.app_allowed)
-        vForbiddenContainer.visibility = View.GONE
-        vLabelForbidden.text = t(API_TRANSLATE.app_forbidden)
-        vAllowedContainer.visibility = View.GONE
         vText.setTextIsSelectable(true)
         vText.text = t(text)
         vNum.text = "$num"
         vNum.visibility = if (num == null) View.GONE else View.VISIBLE
         vContainer.addView(view)
     }
+
     private fun addCard(num: Int?, rule:Rule) {
         val view: View = ToolsView.inflate(R.layout.view_card_rules)
-        val vLabelAllowed: TextView = view.findViewById(R.id.vLabelAllowed)
-        val vLabelForbidden: TextView = view.findViewById(R.id.vLabelForbidden)
         val vText: TextView = view.findViewById(R.id.vText)
-        val vForbidden: TextView = view.findViewById(R.id.vForbidden)
-        val vAllowed: TextView = view.findViewById(R.id.vAllowed)
         val vNum: TextView = view.findViewById(R.id.vNum)
-        val vForbiddenContainer: View = view.findViewById(R.id.vForbiddenContainer)
-        val vAllowedContainer: View = view.findViewById(R.id.vAllowedContainer)
-        vLabelAllowed.text = t(API_TRANSLATE.app_allowed)
-        vForbiddenContainer.visibility = View.VISIBLE
-        vLabelForbidden.text = t(API_TRANSLATE.app_forbidden)
-        vAllowedContainer.visibility = View.VISIBLE
         vText.setTextIsSelectable(true)
         vText.text = t(rule.text)
         vNum.text = "$num"
         vNum.visibility = if (num == null) View.GONE else View.VISIBLE
         vContainer.addView(view)
-
-        vForbidden.text = t(rule.incorrect)
-        vAllowed.text = t(rule.correct)
     }
-
 }

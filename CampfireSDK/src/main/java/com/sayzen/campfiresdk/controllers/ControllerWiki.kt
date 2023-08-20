@@ -34,8 +34,8 @@ object ControllerWiki {
                 .add(t(API_TRANSLATE.app_remove)) { removeWikiItem(wikiTitle.itemId) }.backgroundRes(R.color.blue_700).condition(ControllerApi.can(wikiTitle.fandomId, ControllerApi.getLanguage("en").id, API.LVL_MODERATOR_WIKI_EDIT))
                 .add(t(API_TRANSLATE.app_edit)) { toEditArticle(wikiTitle.itemId, languageId)}.backgroundRes(R.color.blue_700).condition(wikiTitle.itemType == API.WIKI_TYPE_ARTICLE && ControllerApi.can(wikiTitle.fandomId, languageId, API.LVL_MODERATOR_WIKI_EDIT))
                 .add(t(API_TRANSLATE.wiki_change_language)) {changeLanguage(wikiTitle.itemId, languageId)}.backgroundRes(R.color.blue_700).condition(wikiTitle.itemType == API.WIKI_TYPE_ARTICLE && ControllerApi.can(wikiTitle.fandomId, languageId, API.LVL_MODERATOR_WIKI_EDIT))
-                .add(t(API_TRANSLATE.app_display_before)) { displayBefore(wikiTitle, items!!) }.backgroundRes(R.color.blue_700).condition(items != null && items.size > 1 && ControllerApi.can(wikiTitle.fandomId, API.LANGUAGE_EN, API.LVL_MODERATOR_WIKI_EDIT))
-                .add(t(API_TRANSLATE.app_move)) { moveTitle(wikiTitle) }.backgroundRes(R.color.blue_700).condition(ControllerApi.can(wikiTitle.fandomId, API.LANGUAGE_EN, API.LVL_MODERATOR_WIKI_EDIT))
+                .add(t(API_TRANSLATE.app_display_before)) { displayBefore(wikiTitle, items!!) }.backgroundRes(R.color.blue_700).condition(items != null && items.size > 1 && ControllerApi.can(wikiTitle.fandomId, languageId, API.LVL_MODERATOR_WIKI_EDIT))
+                .add(t(API_TRANSLATE.app_move)) { moveTitle(wikiTitle) }.backgroundRes(R.color.blue_700).condition(ControllerApi.can(wikiTitle.fandomId, languageId, API.LVL_MODERATOR_WIKI_EDIT))
     }
 
     private fun displayBefore(wikiTitle: WikiTitle, items: List<WikiTitle>) {

@@ -1,6 +1,7 @@
 package com.sayzen.campfiresdk.controllers
 
 import android.content.Intent
+import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.models.notifications.project.NotificationAlive
 import com.dzen.campfire.api.requests.project.RProjectVersionGet
 import com.dzen.campfire.api_media.requests.RResourcesGet
@@ -57,7 +58,7 @@ object ControllerAlive {
     }
 
     private fun checkServerMedia(tryCount: Int = 10) {
-        RResourcesGet(1)
+        RResourcesGet(API_RESOURCES.AVATAR_1)
                 .onComplete {
                     info("ControllerAlive", "Check media server done")
                 }

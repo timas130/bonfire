@@ -25,7 +25,7 @@ object App {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        val patchPrefix = secretsConfig.getString("patch_prefix")
+        val patchPrefix = secretsConfig.getString("patch_prefix_b")
         val databaseLogin = secretsConfig.getString("database_media_login")
         val databasePassword = secretsConfig.getString("database_media_password")
         val databaseName = secretsConfig.getString("database_media_name")

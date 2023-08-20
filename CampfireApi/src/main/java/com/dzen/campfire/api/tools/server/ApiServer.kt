@@ -187,7 +187,7 @@ class ApiServer(
     private var lastIpsClear = 0L
     private var ipRuntimeLastClear = 0L
     private val ipRuntimeWatchTime = 1000L * 60 * 5
-    private val ipRuntimeMaxPercent = 0.30
+    private val ipRuntimeMaxPercent = 0.50
     private val ipsRuntime = HashMap<String, Long>()
     private val ipRuntimeBanTime = 1000L * 60 * 60 * 1
     private val ipRuntimeBanList = HashMap<String, Long>()
@@ -252,7 +252,7 @@ class ApiServer(
 
             val tt = System.currentTimeMillis() - t
             statisticCollector.invoke(key, tt, request.requestApiVersion)
-            info("[${request.requestProjectKey}] ${apiAccount?.name ?: "null"} [$ip]${if(request.botToken != null)" BOT[${request.botToken}]" else ""} ${request.javaClass.simpleName} $tt ms runtime[${((ipsRuntime[ip]?:0L).toDouble()/ipRuntimeWatchTime*100).toInt()}%]")
+            info("[${request.requestProjectKey}] ${apiAccount?.name}(${apiAccount?.id}) [$ip]${if(request.botToken != null)" BOT[${request.botToken}]" else ""} ${request.javaClass.simpleName} $tt ms runtime[${((ipsRuntime[ip]?:0L).toDouble()/ipRuntimeWatchTime*100).toInt()}%]")
 
 
             synchronized(ipsRuntime) {

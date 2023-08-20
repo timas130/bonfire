@@ -22,15 +22,6 @@ object ControllerMigrator {
         for (i in API_TRANSLATE.map.values) {
             ru(i.key, i.text)
         }
-
-        for (image in API_RESOURCES.imageMappings) {
-            try {
-                ControllerResources.replace(image.key, File("${App.patchPrefix}res/${image.value}").readBytes(), 0)
-            } catch (e: Exception) {
-                err("failed to insert image id ${image.key}")
-                e.printStackTrace()
-            }
-        }
     }
 
     fun addImagePasswords() {
@@ -74,12 +65,11 @@ object ControllerMigrator {
 
     fun x(languageId: Long, key: String, text: String) {
         info("Upload languageId[$languageId] key[$key], text[$text]")
-        val v = Database.select(
-            "xxx", SqlQuerySelect(TTranslates.NAME, TTranslates.id)
+        Database.remove(
+            "xxx", SqlQueryRemove(TTranslates.NAME)
                 .where(TTranslates.language_id, "=", languageId)
                 .whereValue(TTranslates.translate_key, "=", key)
         )
-        if (!v.isEmpty) return
         Database.insert(
             "xxx", TTranslates.NAME,
             TTranslates.language_id, languageId,

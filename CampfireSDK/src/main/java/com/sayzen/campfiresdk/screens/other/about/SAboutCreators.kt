@@ -17,26 +17,30 @@ import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.android.views.splash.SplashMenu
 
-class SAboutCreators : Screen(R.layout.screen_other_abount_creators){
+class SAboutCreators : Screen(R.layout.screen_other_abount_creators) {
+    private val vCopyLink: View = findViewById(R.id.vCopyLink)
 
-    private val vCopyLink:View = findViewById(R.id.vCopyLink)
-
+    private val vMoreSit: View = findViewById(R.id.vMoreSit)
+    private val vMoreNiki: View = findViewById(R.id.vMoreNiki)
     private val vMoreZeon: View = findViewById(R.id.vMoreZeon)
     private val vMoreSaynok: View = findViewById(R.id.vMoreSaynok)
     private val vMoreEgor: View = findViewById(R.id.vMoreEgor)
-    private val vMoreTurbo: View = findViewById(R.id.vMoreTurbo)
-    private val vMoreZYMixx: View = findViewById(R.id.vMoreZYMixx)
 
+    private val vPhotoSit: ViewAvatarTitle = findViewById(R.id.vPhotoSit)
+    private val vPhotoNiki: ViewAvatarTitle = findViewById(R.id.vPhotoNiki)
     private val vPhotoZeon: ViewAvatarTitle = findViewById(R.id.vPhotoZeon)
     private val vPhotoSaynok: ViewAvatarTitle = findViewById(R.id.vPhotoSaynok)
     private val vPhotoEgor: ViewAvatarTitle = findViewById(R.id.vPhotoEgor)
-    private val vPhotoTurbo: ViewAvatarTitle = findViewById(R.id.vPhotoTurbo)
-    private val vPhotoZYMixx: ViewAvatarTitle = findViewById(R.id.vPhotoZYMixx)
-
 
     init {
         setTitle(t(API_TRANSLATE.about_creators))
         disableNavigation()
+
+        vPhotoSit.setTitle(t(API_TRANSLATE.about_creators_sit))
+        vPhotoSit.setSubtitle(t(API_TRANSLATE.about_creators_sit_subtitle))
+
+        vPhotoNiki.setTitle(t(API_TRANSLATE.about_creators_niki))
+        vPhotoNiki.setSubtitle(t(API_TRANSLATE.about_creators_niki_subtitle))
 
         vPhotoZeon.setTitle(t(API_TRANSLATE.about_creators_zeon))
         vPhotoZeon.setSubtitle(t(API_TRANSLATE.about_creators_zeon_subtitle))
@@ -47,50 +51,39 @@ class SAboutCreators : Screen(R.layout.screen_other_abount_creators){
         vPhotoEgor.setTitle(t(API_TRANSLATE.about_creators_egor))
         vPhotoEgor.setSubtitle(t(API_TRANSLATE.about_creators_egor_subtitle))
 
-        vPhotoTurbo.setTitle(t(API_TRANSLATE.about_creators_turbo))
-        vPhotoTurbo.setSubtitle(t(API_TRANSLATE.about_creators_turbo_subtitle))
+        vMoreSit.setOnClickListener {
+            SplashMenu()
+                .add(t(API_TRANSLATE.app_campfire)) { SProfile.instance(1, Navigator.TO) }
+                .add(t(API_TRANSLATE.app_email)) { ToolsIntent.startMail("me@bonfire.moe") }
+                .add(t(API_TRANSLATE.app_site)) { ToolsIntent.openLink("https://sit.sh") }
+                .asSheetShow()
+        }
 
-        vPhotoZYMixx.setTitle(t(API_TRANSLATE.about_creators_zymixx))
-        vPhotoZYMixx.setSubtitle(t(API_TRANSLATE.about_creators_zymixx_subtitle))
+        vMoreNiki.setOnClickListener {
+            SplashMenu()
+                .add(t(API_TRANSLATE.app_campfire)) { SProfile.instance(12, Navigator.TO) }
+                .asSheetShow()
+        }
 
         vMoreZeon.setOnClickListener {
             SplashMenu()
-                    .add(t(API_TRANSLATE.app_campfire)){SProfile.instance(1, Navigator.TO)  }
-                    .add(t(API_TRANSLATE.app_email)){ToolsIntent.startMail("zeooon@ya.ru")  }
-                    .add(t(API_TRANSLATE.app_vkontakte)){ControllerLinks.openLink("https://vk.com/zeooon")   }
-                    .asSheetShow()
+                .add(t(API_TRANSLATE.app_email)) { ToolsIntent.startMail("zeooon@ya.ru")  }
+                .add(t(API_TRANSLATE.app_vkontakte)) { ControllerLinks.openLink("https://vk.com/zeooon") }
+                .asSheetShow()
         }
 
         vMoreSaynok.setOnClickListener {
             SplashMenu()
-                    .add(t(API_TRANSLATE.app_campfire)){SProfile.instance(2720, Navigator.TO)  }
-                    .add(t(API_TRANSLATE.app_email)){ToolsIntent.startMail("saynokdeveloper@gmail.com")  }
-                    .add(t(API_TRANSLATE.app_vkontakte)){ControllerLinks.openLink("https://vk.com/saynok")   }
-                    .asSheetShow()
+                .add(t(API_TRANSLATE.app_email)) { ToolsIntent.startMail("saynokdeveloper@gmail.com") }
+                .add(t(API_TRANSLATE.app_vkontakte)) { ControllerLinks.openLink("https://vk.com/saynok") }
+                .asSheetShow()
         }
 
         vMoreEgor.setOnClickListener {
             SplashMenu()
-                    .add(t(API_TRANSLATE.app_campfire)){SProfile.instance(9447, Navigator.TO)  }
-                    .add(t(API_TRANSLATE.app_email)){ToolsIntent.startMail("georgepro036@gmail.com")  }
-                    .add(t(API_TRANSLATE.app_vkontakte)){ControllerLinks.openLink("https://vk.com/id216069359")   }
-                    .asSheetShow()
-        }
-
-        vMoreTurbo.setOnClickListener {
-            SplashMenu()
-                    .add(t(API_TRANSLATE.app_campfire)){SProfile.instance(8083, Navigator.TO)  }
-                    .add(t(API_TRANSLATE.app_email)){ToolsIntent.startMail("turboRO99@gmail.com")  }
-                    .add(t(API_TRANSLATE.app_vkontakte)){ControllerLinks.openLink("https://vk.com/turboa99")   }
-                    .asSheetShow()
-        }
-
-        vMoreZYMixx.setOnClickListener {
-            SplashMenu()
-                    .add(t(API_TRANSLATE.app_campfire)){SProfile.instance(6236, Navigator.TO)  }
-                    .add(t(API_TRANSLATE.app_email)){ToolsIntent.startMail("zymiix@gmail.com")  }
-                    .add(t(API_TRANSLATE.app_vkontakte)){ControllerLinks.openLink("https://vk.com/zymixx")   }
-                    .asSheetShow()
+                .add(t(API_TRANSLATE.app_email)) { ToolsIntent.startMail("georgepro036@gmail.com") }
+                .add(t(API_TRANSLATE.app_vkontakte)) { ControllerLinks.openLink("https://vk.com/id216069359") }
+                .asSheetShow()
         }
 
         vCopyLink.setOnClickListener {
@@ -98,17 +91,17 @@ class SAboutCreators : Screen(R.layout.screen_other_abount_creators){
             ToolsToast.show(t(API_TRANSLATE.app_copied))
         }
 
+        ImageLoader.load(API_RESOURCES.DEVELOPER_SIT).into(vPhotoSit)
+        ImageLoader.load(API_RESOURCES.DEVELOPER_NIKI).into(vPhotoNiki)
         ImageLoader.load(API_RESOURCES.DEVELOPER_ZEON).into(vPhotoZeon)
         ImageLoader.load(API_RESOURCES.DEVELOPER_SAYNOK).into(vPhotoSaynok)
         ImageLoader.load(API_RESOURCES.DEVELOPER_EGOR).into(vPhotoEgor)
-        ImageLoader.load(API_RESOURCES.DEVELOPER_TURBO).into(vPhotoTurbo)
-        ImageLoader.load(API_RESOURCES.DEVELOPER_ZYMIXX).into(vPhotoZYMixx)
 
+        ControllerLinks.makeLinkable(vPhotoSit.vTitle)
+        ControllerLinks.makeLinkable(vPhotoNiki.vTitle)
         ControllerLinks.makeLinkable(vPhotoZeon.vTitle)
         ControllerLinks.makeLinkable(vPhotoSaynok.vTitle)
         ControllerLinks.makeLinkable(vPhotoEgor.vTitle)
-        ControllerLinks.makeLinkable(vPhotoTurbo.vTitle)
-        ControllerLinks.makeLinkable(vPhotoZYMixx.vTitle)
     }
 
 }

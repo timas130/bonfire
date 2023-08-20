@@ -15,31 +15,25 @@ import com.sup.dev.java.tools.ToolsText
 
 object CampfireConstants {
 
-    val GREEN = "388E3C"
-    val YELLOW = "FBC02D"
-    val RED = "D32F2F"
+    const val GREEN = "388E3C"
+    const val YELLOW = "FBC02D"
+    const val RED = "D32F2F"
 
-    val RATE_TIME = 2000L
-    val VOTE_TIME = 2000L
+    const val RATE_TIME = 2000L
+    const val VOTE_TIME = 2000L
 
-    val CHECK_RULES_ACCEPTED = "CHECK_RULES_ACCEPTED"
+    const val CHECK_RULES_ACCEPTED = "CHECK_RULES_ACCEPTED"
 
     private val RULES_USER_BODIES = API_TRANSLATE.getAllSame("rules_users_%s", 0)
     private val RULES_USER_TITLES = API_TRANSLATE.getAllSame("rules_users_%s_title", RULES_USER_BODIES.size)
-    private val RULES_USER_CORRECT = API_TRANSLATE.getAllSame("rules_users_%s_correct", 0)
-    private val RULES_USER_INCORRECT = API_TRANSLATE.getAllSame("rules_users_%s_incorrect", 0)
     val RULES_USER = Array(RULES_USER_TITLES.size) {
-        return@Array Rule(RULES_USER_TITLES[it], RULES_USER_BODIES[it], RULES_USER_CORRECT[it], RULES_USER_INCORRECT[it])
+        return@Array Rule(RULES_USER_TITLES[it], RULES_USER_BODIES[it])
     }
     val RULES_MODER = arrayOf(
             API_TRANSLATE.rules_moderators_1,
             API_TRANSLATE.rules_moderators_2,
-            API_TRANSLATE.rules_moderators_4,
-            API_TRANSLATE.rules_moderators_6,
-            API_TRANSLATE.rules_moderators_7,
             API_TRANSLATE.rules_moderators_3,
-            API_TRANSLATE.rules_moderators_5,
-            API_TRANSLATE.rules_moderators_8
+            API_TRANSLATE.rules_moderators_4,
     )
 
     val TEXT_ICONS = arrayOf(0/*Stub wikiTitle*/,

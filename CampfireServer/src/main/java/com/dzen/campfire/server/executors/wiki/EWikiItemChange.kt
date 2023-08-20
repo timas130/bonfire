@@ -25,7 +25,6 @@ class EWikiItemChange : RWikiItemChange(WikiTitle(), 0, null, null) {
         if(oldItem.fandomId != item.fandomId) throw ApiException(API.ERROR_ACCESS)
         if(oldItem.itemType != item.itemType) throw ApiException(API.ERROR_ACCESS)
         if(oldItem.dateCreate != item.dateCreate) throw ApiException(API.ERROR_ACCESS)
-        if(oldItem.name != item.name) ControllerFandom.checkCan(apiAccount, item.fandomId, 1, API.LVL_MODERATOR_WIKI_EDIT)
 
         newItem.itemId = oldItem.itemId
         newItem.parentItemId = oldItem.parentItemId
@@ -55,9 +54,8 @@ class EWikiItemChange : RWikiItemChange(WikiTitle(), 0, null, null) {
             newItem.translates = ToolsCollections.add(t, newItem.translates)
         }
 
-        for(i in languagesIds) {
-            ControllerFandom.checkCan(apiAccount, item.fandomId, i, API.LVL_MODERATOR_WIKI_EDIT)
-        }
+        val permissionGranted = languagesIds.any { ControllerFandom.can(apiAccount, newItem.fandomId, it, API.LVL_MODERATOR_WIKI_EDIT) }
+        if (!permissionGranted) throw ApiException(API.ERROR_ACCESS)
 
         if(imageMini != null) {
             if (ToolsImage.isGIF(imageMini!!)) {

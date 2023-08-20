@@ -22,7 +22,8 @@ abstract class ApiClient(
     private val portHttps: Int,
     private val portCertificate: Int,
     private val saver: (String, String?) -> Unit,
-    private val loader: (String) -> String?
+    private val loader: (String) -> String?,
+    private val onError: (Throwable) -> Unit = {},
 ) {
 
     companion object {
@@ -65,6 +66,7 @@ abstract class ApiClient(
             } catch (eN: NumberFormatException) {
 
             } catch (e: Exception) {
+                onError(e)
                 err(e)
             }
         }
@@ -116,6 +118,7 @@ abstract class ApiClient(
             if (!request.isSubscribed()) return
             Action(request, stackTrace, callbackInMain)
         } catch (th: Throwable) {
+            onError(th)
             err(th)
             err(stackTrace)
         }
@@ -181,6 +184,7 @@ abstract class ApiClient(
                 try {
                     connections?.close()
                 } catch (e: IOException) {
+                    onError(e)
                     err(e)
                 }
 
@@ -292,6 +296,7 @@ abstract class ApiClient(
 
         private fun onError(e: Exception) {
             if(!request.noErrorLogs) {
+                onError(e)
                 err(e)
                 err(stackTrace)
             }
@@ -331,6 +336,7 @@ abstract class ApiClient(
                     )
                     request.onApiErrorList.invoke(ex)
                 } else {
+                    onError(ex)
                     request.onNetworkErrorList.invoke()
                 }
                 request.onErrorList.invoke(ex)

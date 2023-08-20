@@ -66,7 +66,7 @@ class SWikiList(
         if (itemName.isEmpty()) setTitle(t(API_TRANSLATE.app_wiki)) else setTitle(itemName)
         setTextEmpty(t(API_TRANSLATE.wiki_list_empty))
         setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_29)
-        (vFab as View).visibility = if (ControllerApi.can(fandomId, ControllerApi.getLanguage("en").id, API.LVL_MODERATOR_WIKI_EDIT)) View.VISIBLE else View.GONE
+        (vFab as View).visibility = if (API.LANGUAGES.any { ControllerApi.can(fandomId, it.id, API.LVL_MODERATOR_WIKI_EDIT) }) View.VISIBLE else View.GONE
         if (onSelectSection != null) {
             vFab.setImageResource(R.drawable.ic_done_white_24dp)
             vFab.setOnClickListener {

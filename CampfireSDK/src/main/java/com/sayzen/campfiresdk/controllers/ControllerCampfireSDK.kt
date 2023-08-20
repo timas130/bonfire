@@ -75,7 +75,7 @@ object ControllerCampfireSDK {
         ControllerChats.init()
         ControllerNotifications.init(logoColored, logoWhite)
         ControllerAlive.init()
-        ControllerGoogleAuth.init("778141366343-nhhulg4af7ptf44rirm7m3iuqpnncoir.apps.googleusercontent.com", onLoginFailed)
+        ControllerGoogleAuth.init("778141366343-bmunivg1shmt12gk3tf6svcj5cj8koun.apps.googleusercontent.com", onLoginFailed)
 
         SAlert.GLOBAL_SHOW_WHOOPS = false
 

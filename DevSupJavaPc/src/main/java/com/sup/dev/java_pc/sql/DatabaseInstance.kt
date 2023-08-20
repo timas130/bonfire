@@ -30,7 +30,7 @@ class DatabaseInstance(
             this.databaseKey = System.currentTimeMillis()
             if (oldMysql) {
                 Class.forName("com.mysql.jdbc.Driver").newInstance()
-                connection = DriverManager.getConnection("jdbc:mysql://$postgres_url/$base?useSSL=false", login, pass)
+                connection = DriverManager.getConnection("jdbc:mysql://$postgres_url/$base?allowPublicKeyRetrieval=true&useSSL=false", login, pass)
                 execute("SET GLOBAL connect_timeout=1000000")
                 execute("SET GLOBAL wait_timeout=1000000")
                 execute("SET GLOBAL interactive_timeout=1000000")

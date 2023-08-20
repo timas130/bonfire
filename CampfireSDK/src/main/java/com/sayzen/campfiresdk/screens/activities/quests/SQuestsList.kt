@@ -22,7 +22,7 @@ class SQuestsList : Screen(R.layout.screen_quests_list) {
         vRelayRace.setOnClickListener { Navigator.to(SQuestNewYear()) }
 
         vRubrics.setTitle("Однажды зимней ночью")
-        vRubrics.setSubtitle("Квест от пользователей Campfire")
+        vRubrics.setSubtitle("Квест от пользователей Bonfire")
         vRubrics.setOnClickListener { Navigator.to(SQuestDanTank()) }
 
 

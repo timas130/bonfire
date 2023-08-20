@@ -227,25 +227,30 @@ object ControllerFandom {
         ControllerAccounts.checkAccountBanned(account.id)
     }
 
-    fun checkCan(account: ApiAccount, fandomId: Long, languageId: Long, moderateInfo: LvlInfoModeration) {
-        if (ControllerOptimizer.isProtoadmin(account.id)) return
-        ControllerAccounts.checkAccountBanned(account.id, fandomId, languageId)
-        if (OptimizerEffects.get(account.id, API.EFFECT_INDEX_ADMIN_BAN) != null) throw ApiException(API.ERROR_ACCESS)
-        if (account.id == getViceroyId(fandomId, languageId)) return
-        if (account.accessTag < moderateInfo.lvl || ControllerAccounts.isBot(account)) throw ApiException(API.ERROR_ACCESS)
+    fun can(account: ApiAccount, fandomId: Long, languageId: Long, moderateInfo: LvlInfoModeration): Boolean {
+        if (ControllerOptimizer.isProtoadmin(account.id)) return true
+        if (ControllerAccounts.isAccountBaned(account.id, fandomId, languageId)) return false
+        if (OptimizerEffects.get(account.id, API.EFFECT_INDEX_ADMIN_BAN) != null) return false
+        if (account.id == getViceroyId(fandomId, languageId)) return true
+        if (account.accessTag < moderateInfo.lvl || ControllerAccounts.isBot(account)) return false
         try {
-            checkCan(account, API.LVL_ADMIN_MODER)
-            return
+            if (!can(account, API.LVL_ADMIN_MODER)) return false
         } catch (e: ApiException) {
-            if (moderateInfo.karmaCount > 0 && getKarma30(account.id, fandomId, languageId) < moderateInfo.karmaCount) throw ApiException(API.ERROR_ACCESS)
+            if (moderateInfo.karmaCount > 0 && getKarma30(account.id, fandomId, languageId) < moderateInfo.karmaCount)
+                return false
         }
+        return true
+    }
+
+    fun checkCan(account: ApiAccount, fandomId: Long, languageId: Long, moderateInfo: LvlInfoModeration) {
+        if (!can(account, fandomId, languageId, moderateInfo)) throw ApiException(API.ERROR_ACCESS)
     }
 
     fun checkCanModerate(account: ApiAccount, targetAccountId: Long): Boolean {
         //
-        //  Это запрет  на модерацию тех, у кого больше кармы.
+        //  Это запрет на модерацию тех, у кого больше кармы.
         //  В конце 2019 года пользователи попросили убрать его.
-        //  Но я оставил код, потомучто пофиг что они там попросили.
+        //  Но я оставил код, потому что пофиг что они там попросили.
         //
 
         /* if (ControllerOptimizer.isProtoadmin(account.id)) return true

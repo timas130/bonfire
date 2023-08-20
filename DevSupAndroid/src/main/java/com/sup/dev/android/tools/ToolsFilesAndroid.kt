@@ -154,6 +154,7 @@ object ToolsFilesAndroid {
     //  Bitmap
     //
 
+    @Deprecated("don't")
     fun saveImageInCameraFolder(bitmap: Bitmap, onResult: (String)->Unit, onPermissionPermissionRestriction: (String)->Unit={}) {
         ToolsPermission.requestWritePermission({
             val file = createJpgFileInCameraFolder()

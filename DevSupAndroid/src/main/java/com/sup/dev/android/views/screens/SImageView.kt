@@ -1,5 +1,6 @@
 package com.sup.dev.android.views.screens
 
+import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
 import androidx.viewpager.widget.ViewPager
 import android.view.View
@@ -20,6 +21,7 @@ import com.sup.dev.android.views.splash.SplashField
 import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsColor
 import com.sup.dev.java.tools.ToolsThreads
+import java.io.ByteArrayOutputStream
 
 class SImageView private constructor()
     : Screen(R.layout.screen_image_view) {
@@ -143,14 +145,30 @@ disableNavigation()
             val dialog = ToolsView.showProgressDialog(SupAndroid.TEXT_APP_DOWNLOADING)
             ToolsThreads.thread {
                 imageLoader.intoBytes { bytes ->
-                    if (!ToolsBytes.isGif(bytes))
-                        ToolsStorage.saveImageInDownloadFolder(ToolsBitmap.decode(bytes)!!) { }
-                    else
-                        ToolsStorage.saveFileInDownloadFolder(bytes!!, "gif", { }, { ToolsToast.show(SupAndroid.TEXT_ERROR_PERMISSION_FILES) })
-
+                    try {
+                        if (ToolsBytes.isGif(bytes)) {
+                            ToolsStorage.saveToPictures(bytes!!, "image/gif")
+                        } else {
+                            val bitmap = ToolsBitmap.decode(bytes!!)
+                            if (bitmap == null) {
+                                ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
+                                return@intoBytes
+                            }
+                            val outBytes = ByteArrayOutputStream()
+                            if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outBytes)) {
+                                ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
+                                return@intoBytes
+                            }
+                            ToolsStorage.saveToPictures(outBytes.toByteArray(), "image/jpeg")
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        ToolsToast.show(SupAndroid.TEXT_ERROR_PERMISSION_FILES)
+                        return@intoBytes
+                    }
+                    ToolsToast.show(SupAndroid.TEXT_APP_DOWNLOADED)
                 }
                 dialog.hide()
-                ToolsToast.show(SupAndroid.TEXT_APP_DOWNLOADED)
             }
 
         }

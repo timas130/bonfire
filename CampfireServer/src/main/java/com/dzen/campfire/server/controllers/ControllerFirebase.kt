@@ -80,11 +80,6 @@ object ControllerFirebase {
     ).takeIf { !it.isEmpty }?.nextMayNull()
 
     fun createAccount(uid: String): Long {
-
-        if (true) {
-            return 0
-        }
-
         if (getAccountId(uid) != 0L) return 0
 
         var image = ToolsFiles.readFileSalient("${App.patchPrefix}res/def_image.png")

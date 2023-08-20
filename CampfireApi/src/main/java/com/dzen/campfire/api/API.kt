@@ -14,14 +14,15 @@ import com.sup.dev.java.tools.ToolsText
 import java.util.*
 
 class API(
-        projectKey: String,
-        tokenProvider: TokenProvider,
-        host: String,
-        portHttps: Int,
-        portCertificate: Int,
-        saver: (String, String?) -> Unit,
-        loader: (String) -> String?
-) : ApiClient(projectKey, tokenProvider, host, portHttps, portCertificate, saver, loader) {
+    projectKey: String,
+    tokenProvider: TokenProvider,
+    host: String,
+    portHttps: Int,
+    portCertificate: Int,
+    saver: (String, String?) -> Unit,
+    loader: (String) -> String?,
+    onError: (Throwable) -> Unit = {},
+) : ApiClient(projectKey, tokenProvider, host, portHttps, portCertificate, saver, loader, onError) {
 
     companion object {
 
@@ -336,46 +337,46 @@ class API(
         const val FANDOM_CHAT_TEXT_MIN_L = 1
         const val FANDOM_CHAT_TEXT_MAX_L = 5000
 
-        val ACHI_APP_SHARE = AchievementInfo(2, 3 * 5, 1)
-        val ACHI_CONTENT_SHARE = AchievementInfo(3, 3 * 5, 1, 10, 30)
-        val ACHI_ADD_RECRUITER = AchievementInfo(4, 3 * 10, 1)
+        val ACHI_APP_SHARE = AchievementInfo(2, 5, 1)
+        val ACHI_CONTENT_SHARE = AchievementInfo(3, 5, 1, 10, 30)
+        val ACHI_ADD_RECRUITER = AchievementInfo(4, 2 * 10, 1)
         val ACHI_ENTERS = AchievementInfo(5, 3 * 5, *IntArray(500) { (it + 1) * 5 })
-        val ACHI_KARMA_COUNT = AchievementInfo(6, 3 * 5, *IntArray(20) { (it + 1) * 20000 })
-        val ACHI_REFERRALS_COUNT = AchievementInfo(7, 3 * 10, 3, 12, 36)
+        val ACHI_KARMA_COUNT = AchievementInfo(6, 4 * 5, *IntArray(20) { (it + 1) * 20000 })
+        val ACHI_REFERRALS_COUNT = AchievementInfo(7, 2 * 10, 3, 12, 36)
         val ACHI_RATES_COUNT = AchievementInfo(8, 3 * 5, 100)
-        val ACHI_COMMENTS_KARMA = AchievementInfo(12, 3 * 10, 5000, 25000, 50000)
-        val ACHI_POSTS_COUNT = AchievementInfo(15, 3 * 5, 10, 50, 200)
-        val ACHI_COMMENTS_COUNT = AchievementInfo(16, 3 * 5, 100)
-        val ACHI_LOGIN = AchievementInfo(28, 3 * 5, 1)
+        val ACHI_COMMENTS_KARMA = AchievementInfo(12, 35, 5000, 15000, 20000, 30000)
+        val ACHI_POSTS_COUNT = AchievementInfo(15, 4 * 5, 10, 20, 50, 100, 150)
+        val ACHI_COMMENTS_COUNT = AchievementInfo(16, 4 * 5, 100)
+        val ACHI_LOGIN = AchievementInfo(28, 2 * 5, 1)
         val ACHI_CHAT = AchievementInfo(29, 3 * 5, 1)
         val ACHI_COMMENT = AchievementInfo(30, 3 * 5, 1)
         val ACHI_ANSWER = AchievementInfo(31, 3 * 5, 1)
         val ACHI_RATE = AchievementInfo(32, 3 * 5, 1)
         val ACHI_CHANGE_PUBLICATION = AchievementInfo(33, 3 * 5, 1)
         val ACHI_CHANGE_COMMENT = AchievementInfo(34, 3 * 5, 1)
-        val ACHI_POST_KARMA = AchievementInfo(36, 3 * 10, 10000, 50000, 100000)
-        val ACHI_FIRST_POST = AchievementInfo(37, 3 * 5, 1)
+        val ACHI_POST_KARMA = AchievementInfo(36, 4 * 10, 10000, 40000, 70000)
+        val ACHI_FIRST_POST = AchievementInfo(37, 4 * 5, 1)
         val ACHI_SUBSCRIBE = AchievementInfo(38, 3 * 5, 1)
         val ACHI_TAGS_SEARCH = AchievementInfo(39, 3 * 5, 1)
         val ACHI_LANGUAGE = AchievementInfo(40, 3 * 5, 1)
         val ACHI_TITLE_IMAGE = AchievementInfo(41, 3 * 5, 1)
         val ACHI_CREATE_TAG = AchievementInfo(42, 3 * 5, 1)
-        val ACHI_QUESTS = AchievementInfo(43, 3 * 2, *IntArray(500) { it + 1 })
-        val ACHI_FANDOMS = AchievementInfo(44, 3 * 10, 1, 3, 5, 10, 20)
-        val ACHI_RULES_USER = AchievementInfo(45, 3 * 5, 1)
-        val ACHI_RULES_MODERATOR = AchievementInfo(46, 3 * 5, 1)
-        val ACHI_FOLLOWERS = AchievementInfo(47, 3 * 5, 10, 100, 250, 500, 1000, 5000, 10000)
+        val ACHI_QUESTS = AchievementInfo(43, 3 * 2, *IntArray(15) { it + 1 })
+        val ACHI_FANDOMS = AchievementInfo(44, 1 * 10, 1, 5, 10, 20)
+        val ACHI_RULES_USER = AchievementInfo(45, 4 * 5, 1)
+        val ACHI_RULES_MODERATOR = AchievementInfo(46, 2 * 5, 1)
+        val ACHI_FOLLOWERS = AchievementInfo(47, 5, 10, 100, 200, 400, 600, 800, 1000, 3000)
         val ACHI_MODER_CHANGE_POST_TAGS = AchievementInfo(48, 3 * 5, 1)
         val ACHI_FIREWORKS = AchievementInfo(50, 3 * 1, 1)
-        val ACHI_MAKE_MODER = AchievementInfo(51, 3 * 5, 1)
-        val ACHI_CREATE_CHAT = AchievementInfo(52, 3 * 5, 1)
-        val ACHI_REVIEW_MODER_ACTION = AchievementInfo(53, 3 * 5, 1)
-        val ACHI_ACCEPT_FANDOM = AchievementInfo(54, 3 * 5, 1)
-        val ACHI_MODERATOR_COUNT = AchievementInfo(55, 3 * 5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-        val ACHI_MODERATOR_ACTION_KARMA = AchievementInfo(56, 3 * 5, 5000, 10000, 20000, 50000, 100000)
-        val ACHI_KARMA_30 = AchievementInfo(57, 3 * 5, 50000, 100000, 200000, 400000, 800000, 1500000, 3000000)
-        val ACHI_UP_RATES = AchievementInfo(58, 3 * 2, 10, 50, 150, 300, 500)
-        val ACHI_UP_RATES_OVER_DOWN = AchievementInfo(59, 3 * 2, 5, 20, 50, 150, 300, 500)
+        val ACHI_MAKE_MODER = AchievementInfo(51, 5, 1)
+        val ACHI_CREATE_CHAT = AchievementInfo(52, 2 * 5, 1)
+        val ACHI_REVIEW_MODER_ACTION = AchievementInfo(53, 2 * 5, 1)
+        val ACHI_ACCEPT_FANDOM = AchievementInfo(54, 2 * 5, 1)
+        val ACHI_MODERATOR_COUNT = AchievementInfo(55, 2 * 5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+        val ACHI_MODERATOR_ACTION_KARMA = AchievementInfo(56, 2 * 5, 5000, 8000, 10000, 25000, 40000)
+        val ACHI_KARMA_30 = AchievementInfo(57, 3 * 5, 50000, 75000, 100000, 130000, 160000, 200000, 250000)
+        val ACHI_UP_RATES = AchievementInfo(58, 4 * 2, 10, 50, 150, 300, 500, 750, 1000)
+        val ACHI_UP_RATES_OVER_DOWN = AchievementInfo(59, 3 * 2, 5, 20, 50, 150, 300, 500, 750)
         val ACHI_CHAT_SUBSCRIBE = AchievementInfo(60, 3 * 2, 1)
         val ACHI_STICKERS_KARMA = AchievementInfo(61, 3 * 10, 5000, 25000, 50000)
         val ACHI_UNKNOWN = AchievementInfo(62, 3 * 0, 0)

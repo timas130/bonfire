@@ -2,11 +2,14 @@ package com.sup.dev.android.tools
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonArray
@@ -175,6 +178,7 @@ object ToolsStorage {
     //  Files
     //
 
+    @Deprecated("don't")
     fun saveImageInDownloadFolder(bitmap: Bitmap, onComplete: (File) -> Unit = {}) {
         ToolsPermission.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 onGranted = {
@@ -206,11 +210,13 @@ object ToolsStorage {
 
     }
 
+    @Deprecated("don't")
     fun saveFileInDownloadFolder(bytes: ByteArray, ex: String, onComplete: (File) -> Unit, onPermissionPermissionRestriction: (String) -> Unit = {}) {
         saveFile(File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "/" + externalFileNamePrefix + "_" + System.currentTimeMillis() + "." + ex).absolutePath,
                 bytes, onComplete, onPermissionPermissionRestriction)
     }
 
+    @Deprecated("don't")
     fun saveFile(patch: String, bytes: ByteArray, onComplete: (File) -> Unit, onPermissionPermissionRestriction: (String) -> Unit = {}) {
         ToolsPermission.requestWritePermission({
             val f = File(patch)
@@ -225,5 +231,19 @@ object ToolsStorage {
                 throw RuntimeException(e)
             }
         }, onPermissionPermissionRestriction)
+    }
+
+    fun saveToPictures(bytes: ByteArray, mime: String) {
+        val contentValues = ContentValues()
+        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, externalFileNamePrefix + "_" + System.currentTimeMillis())
+        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, mime)
+        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+        val resolver = SupAndroid.appContext!!.contentResolver
+        val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            ?: throw RuntimeException("Can't create uri")
+        val outputStream = resolver.openOutputStream(uri)
+            ?: throw RuntimeException("Can't open output stream")
+        outputStream.write(bytes)
+        outputStream.close()
     }
 }

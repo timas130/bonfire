@@ -101,7 +101,7 @@
                 app:Settings_icon="@drawable/ic_email_white_24dp"
                 app:Settings_icon_background="@color/pink_500"
                 app:Settings_lineVisible="false"
-                app:Settings_subtitle="zeooon@ya.ru"/>
+                app:Settings_subtitle="me@bonfire.moe"/>
 
             <com.sup.dev.android.views.settings.SettingsArrow
                 android:id="@+id/vPolicy"

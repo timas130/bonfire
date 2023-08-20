@@ -59,15 +59,17 @@ import com.sup.dev.java.libs.json.JsonArray
 import com.sup.dev.java.libs.text_format.TextFormatter
 import com.sup.dev.java.tools.ToolsMapper
 import com.sup.dev.java.tools.ToolsThreads
+import io.sentry.Sentry
 
 val api: API = API(
-        ControllerCampfireSDK.projectKey,
-        instanceTokenProvider(),
-        if (ControllerCampfireSDK.IS_DEBUG) ("192.168.0.132") else API.IP,
-        API.PORT_HTTPS,
-        API.PORT_CERTIFICATE,
-        { key, token -> ToolsStorage.put(key, token) },
-        { ToolsStorage.getString(it, null) }
+    ControllerCampfireSDK.projectKey,
+    instanceTokenProvider(),
+    API.IP,
+    API.PORT_HTTPS,
+    API.PORT_CERTIFICATE,
+    { key, token -> ToolsStorage.put(key, token) },
+    { ToolsStorage.getString(it, null) },
+    { err -> Sentry.captureException(err) }
 )
 
 val apiMedia: APIMedia = APIMedia(
@@ -190,7 +192,7 @@ object ControllerApi {
 
     fun getLanguage() = getLanguage(getLanguageCode())
 
-    fun getLanguageCode() = getLanguage(ToolsAndroid.getLanguageCode().toLowerCase()).code
+    fun getLanguageCode() = getLanguage(ToolsAndroid.getLanguageCode().lowercase()).code
 
     fun getLanguage(code: String) = API.getLanguage(code)
 
