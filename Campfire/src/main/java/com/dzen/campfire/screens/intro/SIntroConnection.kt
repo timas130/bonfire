@@ -207,13 +207,11 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection){
         ToolsThreads.thread {
             var imgBytes: ByteArray? = null
             try {
-                val photoUrl = ControllerGoogleAuth.getGooglePhotoUrl()
-                if (photoUrl == null) return@thread
-                val photo = ToolsBitmap.getFromURL(photoUrl)
-                if (photo == null) return@thread
+                val photoUrl = ControllerGoogleAuth.getGooglePhotoUrl() ?: throw RuntimeException("photoUrl is null")
+                val photo = ToolsBitmap.getFromURL(photoUrl) ?: throw RuntimeException("photo is null")
                 val bitmap = ToolsBitmap.resize(photo, API.ACCOUNT_IMG_SIDE)
                 imgBytes = ToolsBitmap.toBytes(bitmap, API.ACCOUNT_IMG_WEIGHT)
-            } catch (e: IOException) {
+            } catch (e: Exception) {
                 err(e)
             }
 

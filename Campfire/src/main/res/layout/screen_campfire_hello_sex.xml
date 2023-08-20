@@ -50,25 +50,23 @@
                 android:id="@+id/vHe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="22dp">
+                android:layout_marginEnd="16dp">
 
                 <ImageView
                     android:id="@+id/vImage_he"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:layout_marginBottom="32dp"
                     android:importantForAccessibility="no" />
 
                 <com.sup.dev.android.views.views.ViewButton
                     android:id="@+id/vText_he"
                     style="@style/Button.Outlined"
-                    android:layout_width="70dp"
-                    android:gravity="center"
+                    android:layout_width="80dp"
+                    android:layout_gravity="bottom|center"
                     android:minHeight="40dp"
                     android:textSize="11sp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_gravity="bottom|center"/>
+                    android:layout_marginTop="4dp" />
 
 
             </FrameLayout>
@@ -77,25 +75,23 @@
                 android:id="@+id/vShe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="22dp">
+                android:layout_gravity="center">
 
                 <ImageView
                     android:id="@+id/vImage_she"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:layout_marginBottom="32dp"
                     android:importantForAccessibility="no" />
 
                 <com.sup.dev.android.views.views.ViewButton
                     android:id="@+id/vText_she"
                     style="@style/Button.Outlined"
-                    android:layout_width="70dp"
-                    android:gravity="center"
+                    android:layout_width="80dp"
+                    android:layout_gravity="bottom|center"
                     android:textSize="11sp"
                     android:minHeight="40dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_gravity="bottom|center" />
+                    android:layout_marginTop="4dp" />
 
 
             </FrameLayout>
@@ -104,25 +100,24 @@
                 android:id="@+id/vOther"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="22dp">
+                android:layout_marginStart="16dp"
+                android:layout_gravity="center">
 
                 <ImageView
                     android:id="@+id/vImage_other"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:layout_marginBottom="32dp"
                     android:importantForAccessibility="no" />
 
                 <com.sup.dev.android.views.views.ViewButton
                     android:id="@+id/vText_other"
                     style="@style/Button.Outlined"
-                    android:layout_width="70dp"
-                    android:gravity="center"
+                    android:layout_width="80dp"
+                    android:layout_gravity="bottom|center"
                     android:textSize="11sp"
                     android:minHeight="40dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_gravity="bottom|center" />
+                    android:layout_marginTop="4dp" />
 
 
             </FrameLayout>
