@@ -172,6 +172,7 @@ object ControllerApi {
     fun isOldVersion() = version.isNotEmpty() && version != API.VERSION
 
     fun isUnsupportedVersion(): Boolean {
+        return false
         try {
             val versionSupportedS = if (supported.contains('b')) supported.substring(0, supported.length - 1) else supported
             val versionS = if (version.contains('b')) version.substring(0, version.length - 1) else version
