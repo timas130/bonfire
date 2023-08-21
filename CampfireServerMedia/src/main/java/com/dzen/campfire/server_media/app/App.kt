@@ -11,6 +11,8 @@ import com.sup.dev.java.tools.ToolsFiles
 import com.sup.dev.java.tools.ToolsThreads
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.DatabasePool
+import com.sup.dev.java_pc.storage.S3StorageProvider
+import com.sup.dev.java_pc.storage.StorageProvider
 import java.io.File
 import java.nio.charset.Charset
 
@@ -20,7 +22,10 @@ object App {
     val secretsBotsTokens = secrets.getStrings("bots_tokens")!!.map { it?:"" }.toTypedArray()
     val secretsConfig = secrets.getJson("config")!!
     val secretsKeys = secrets.getJson("keys")!!
+    val secretsS3 = secrets.getJson("s3")!!
     val test = secretsConfig.getString("build_type")!="release"
+
+    lateinit var storage: StorageProvider
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -43,6 +48,12 @@ object App {
             info("Charset: " + Charset.defaultCharset())
             info("API Version: " + APIMedia.VERSION)
 
+            storage = S3StorageProvider.create(
+                secretsS3.getString("endpoint"),
+                secretsS3.getString("access_key"),
+                secretsS3.getString("secret_key"),
+                secretsS3.getString("bucket"),
+            )
 
             val requestFactory = RequestFactory(jarFile, File("").absolutePath + "\\CampfireServerMedia\\src\\main\\java")
 

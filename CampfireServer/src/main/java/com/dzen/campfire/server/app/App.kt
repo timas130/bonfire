@@ -23,6 +23,7 @@ object App {
     val secretsBotsTokens = secrets.getStrings("bots_tokens")!!.map { it?:"" }.toTypedArray()
     val secretsConfig = secrets.getJson("config")!!
     val secretsKeys = secrets.getJson("keys")!!
+    val secretsS3 = secrets.getJson("s3")!!
     val test = secretsConfig.getString("build_type")!="release"
     val hcaptchaSiteKey = secretsKeys.getString("hcaptcha_site_key")
     val hcaptchaSecret = secretsKeys.getString("hcaptcha_secret")
