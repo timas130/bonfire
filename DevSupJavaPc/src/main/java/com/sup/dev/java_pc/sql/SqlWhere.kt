@@ -83,6 +83,7 @@ class SqlWhere {
         constructor(column: String, not: Boolean, values: Array<out Any?>) : this(column, "AND", not, values)
 
         override fun toQuery(): String {
+            if (values.isEmpty()) return if (not) "1=1" else "1=0"
             var s = "IN("
             if (not)
                 s = "not $s"
