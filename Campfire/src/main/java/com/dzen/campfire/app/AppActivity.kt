@@ -1,5 +1,6 @@
 package com.dzen.campfire.app
 
+import android.Manifest.permission.POST_NOTIFICATIONS
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -321,6 +322,9 @@ class AppActivity : SActivity() {
 
     override fun toMainScreen() {
         setFeedStack()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ToolsPermission.requestPermission(POST_NOTIFICATIONS) {}
+        }
         Navigator.set(SFeed())
     }
 
