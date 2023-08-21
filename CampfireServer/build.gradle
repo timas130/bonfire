@@ -9,7 +9,7 @@ dependencies {
     implementation project(':CampfireApi')
     implementation project(':DevSupJava')
     implementation project(':DevSupJavaPc')
-    implementation 'com.google.firebase:firebase-admin:9.0.0'
+    implementation 'com.google.firebase:firebase-admin:9.2.0'
 }
 
 jar {

@@ -23,6 +23,20 @@ object ControllerNotifications {
 
     }
 
+    fun subscribe(accountId: Long, topic: String) = subscribe(arrayOf(accountId), topic)
+    fun subscribe(accountIds: Array<Long>, topic: String) {
+        ControllerSubThread.inSub("ControllerNotifications.subscribe") {
+            GoogleNotification.subscribe(topic, getPushTokens(accountIds).mapNotNull { it.a2 })
+        }
+    }
+
+    fun unsubscribe(accountId: Long, topic: String) = unsubscribe(arrayOf(accountId), topic)
+    fun unsubscribe(accountsIds: Array<Long>, topic: String) {
+        ControllerSubThread.inSub("ControllerNotifications.unsubscribe") {
+            GoogleNotification.unsubscribe(topic, getPushTokens(accountsIds).mapNotNull { it.a2 })
+        }
+    }
+
     fun instanceSelect(): SqlQuerySelect {
         return SqlQuerySelect(TAccountsNotification.NAME,
             TAccountsNotification.notification_json,
