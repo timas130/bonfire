@@ -10,11 +10,10 @@ import com.dzen.campfire.api.requests.project.RProjectSupportGetInfo
 import com.sayzen.campfiresdk.controllers.ControllerDonates
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
-import com.sayzen.campfiresdk.screens.activities.support.SDonateMake
 import com.sup.dev.android.libs.image_loader.ImageLoader
-import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsStorage
 import com.sup.dev.android.views.cards.Card
+import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.android.views.views.ViewProgressLine
 import com.sup.dev.java.tools.ToolsDate
 
@@ -51,7 +50,12 @@ class CardDonate() : Card(R.layout.screen_feed_card_donate){
         ImageLoader.load(API_RESOURCES.IMAGE_BACKGROUND_25).noHolder().into(vImage)
         ControllerDonates.setupLine(totalCount, vLine, vCounter)
 
-        vContainer.setOnClickListener { Navigator.to(SDonateMake()) }
+        vContainer.setOnClickListener {
+            SplashAlert()
+                .setOnEnter(t(API_TRANSLATE.app_ok))
+                .setText(t(API_TRANSLATE.donates_restricted))
+                .asSheetShow()
+        }
         vRemove.setOnClickListener {
             ToolsStorage.put(KEY, true)
             update()

@@ -16,8 +16,7 @@ import com.sayzen.campfiresdk.models.events.notifications.EventNotification
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
-import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.ToolsResources
+import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.android.views.support.adapters.pager.PagerCardAdapter
 import com.sup.dev.android.views.views.ViewProgressLine
 import com.sup.dev.android.views.views.pager.ViewPagerIndicatorTitles
@@ -77,7 +76,12 @@ class SDonate private constructor(
         } else
             vTitles.setTitles(t(API_TRANSLATE.activities_support_title_donates), t(API_TRANSLATE.activities_support_title_rating_30), t(API_TRANSLATE.activities_support_title_rating_total))
 
-        vButton.setOnClickListener { Navigator.to(SDonateMake()) }
+        vButton.setOnClickListener {
+            SplashAlert()
+                .setOnEnter(t(API_TRANSLATE.app_ok))
+                .setText(t(API_TRANSLATE.donates_restricted))
+                .asSheetShow()
+        }
 
         updateSum()
 

@@ -2396,6 +2396,8 @@ object API_TRANSLATE {
     val quests_publish_q_not_yet = Translate("Не надо")
     val quests_mod_clear_reports_q = Translate("Удалить все жалобы на этот квест?")
 
+    val donates_restricted = Translate("Из-за ограничений Google Play, мы не можем принимать пожертвования в приложении.")
+
     val post_page_code_languages = hashMapOf(
             "c" to "C", "cs" to "C#", "java" to "Java", "bash" to "Bash", "python" to "Python",
             "perl" to "Perl", "ruby" to "Ruby", "js" to "JavaScript", "coffee" to "CoffeeScript",

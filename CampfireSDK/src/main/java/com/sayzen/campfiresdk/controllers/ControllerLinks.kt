@@ -71,7 +71,10 @@ object ControllerLinks {
             when (linkV) {
                 API.LINK_ABOUT.link -> Navigator.to(Navigator.to(SWikiList(API.FANDOM_CAMPFIRE_ID, ControllerApi.getLanguageId(), 0, "")))
                 API.LINK_DONATE.link -> SDonate.instance(Navigator.TO)
-                API.LINK_DONATE_MAKE.link -> Navigator.to(SDonateMake())
+                API.LINK_DONATE_MAKE.link -> SplashAlert()
+                    .setOnEnter(t(API_TRANSLATE.app_ok))
+                    .setText(t(API_TRANSLATE.donates_restricted))
+                    .asSheetShow()
                 API.LINK_RULES_MODER.link -> Navigator.to(SRulesModerators())
                 API.LINK_RULES_USER.link -> Navigator.to(SRulesUser())
                 API.LINK_TRANSLATES.link -> Navigator.to(STranslates())
