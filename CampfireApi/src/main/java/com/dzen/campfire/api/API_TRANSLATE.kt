@@ -615,7 +615,7 @@ object API_TRANSLATE {
     val feed_loading_3 = Translate("Помогите, меня здесь держат насильно!")
     val feed_loading_4 = Translate("Красной кнопки не существует!")
     val feed_loading_5 = Translate("Вперёд и вниз!")
-    val feed_loading_6 = Translate("В любой непонятной ситуации пиши Zeon\'у")
+    val feed_loading_6 = Translate("В любой непонятной ситуации виноват Zeon")
     val feed_loading_7 = Translate("Когда уже будет сайт!?")
     val feed_loading_8 = Translate("На 90% безопаснее обычных приложений")
     val feed_loading_9 = Translate("Не обновляйте ленту слишком часто, вы сломаете сервер!")
