@@ -37,6 +37,7 @@ object App {
         val databaseName = secretsConfig.getString("database_name")
         val databaseAddress = secretsConfig.getString("database_address")
 
+        val googleNotificationKey = secretsKeys.getString("google_notification_key")
         val googleAuth = secretsKeys.m(false, "google_auth", arrayOf(), Array<GoogleAuth.GoogleAuthCreds>::class)!!
         val jksPassword = secretsKeys.getString("jks_password")
 
@@ -50,6 +51,7 @@ object App {
             System.err.println("Charset: " + Charset.defaultCharset())
             System.err.println("API Version: " + API.VERSION)
 
+            GoogleNotification.init(googleNotificationKey, arrayOf("https://push.33rd.dev/push"))
             GoogleAuth.init(googleAuth)
 
             val requestFactory = RequestFactory(jarFile, File("").absolutePath + "\\CampfireServer\\src\\main\\java")
@@ -97,8 +99,6 @@ object App {
             ControllerServerTranslates.start()
             System.err.println("Starting daemons [ControllerFirebase]")
             ControllerFirebase.start()
-            System.err.println("Starting daemons [GoogleNotification]")
-            GoogleNotification.init(ControllerFirebase.app)
 
             System.err.println("Update karma category")
             ControllerOptimizer.karmaCategoryUpdateIfNeed()
