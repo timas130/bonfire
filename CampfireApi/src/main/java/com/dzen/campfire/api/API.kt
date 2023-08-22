@@ -32,7 +32,7 @@ class API(
         const val IP = "cf.bonfire.moe"
         const val DOMEN = "https://bonfire.moe/r/"
         const val DOMEN_OLD = "https://bonfire.moe/r/r.php?a=" // fixme: tech debt
-        const val VERSION = "2.0.2"
+        const val VERSION = "2.0"
         const val SUPPORTED_VERSION = "2.0"
 
         const val PROJECT_KEY_CAMPFIRE = "Campfire"
