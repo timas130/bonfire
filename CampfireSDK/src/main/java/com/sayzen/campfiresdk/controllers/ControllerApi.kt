@@ -169,7 +169,7 @@ object ControllerApi {
 
     fun getApiInfo() = apiInfo
 
-    fun isOldVersion() = version.isNotEmpty() && version != API.VERSION
+    fun isOldVersion() = false
 
     fun isUnsupportedVersion(): Boolean {
         return false
