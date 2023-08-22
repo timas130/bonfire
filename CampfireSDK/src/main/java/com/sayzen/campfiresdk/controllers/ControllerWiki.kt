@@ -31,7 +31,7 @@ object ControllerWiki {
                 .add(t(API_TRANSLATE.app_history)) { Navigator.to(SWikiArticleHistory(wikiTitle, languageId)) }
                 .spoiler(t(API_TRANSLATE.app_moderator))
                 .add(t(API_TRANSLATE.wiki_edit_title)) { Navigator.to(SWikiItemCreate(wikiTitle.fandomId, wikiTitle.parentItemId, wikiTitle)) }.backgroundRes(R.color.blue_700).condition(ControllerApi.can(wikiTitle.fandomId, ControllerApi.getLanguage("en").id, API.LVL_MODERATOR_WIKI_EDIT))
-                .add(t(API_TRANSLATE.app_remove)) { removeWikiItem(wikiTitle.itemId) }.backgroundRes(R.color.blue_700).condition(ControllerApi.can(wikiTitle.fandomId, ControllerApi.getLanguage("en").id, API.LVL_MODERATOR_WIKI_EDIT))
+                .add(t(API_TRANSLATE.app_remove)) { removeWikiItem(wikiTitle.itemId) }.backgroundRes(R.color.blue_700).condition(API.LANGUAGES.any { ControllerApi.can(wikiTitle.fandomId, it.id, API.LVL_MODERATOR_WIKI_EDIT) })
                 .add(t(API_TRANSLATE.app_edit)) { toEditArticle(wikiTitle.itemId, languageId)}.backgroundRes(R.color.blue_700).condition(wikiTitle.itemType == API.WIKI_TYPE_ARTICLE && ControllerApi.can(wikiTitle.fandomId, languageId, API.LVL_MODERATOR_WIKI_EDIT))
                 .add(t(API_TRANSLATE.wiki_change_language)) {changeLanguage(wikiTitle.itemId, languageId)}.backgroundRes(R.color.blue_700).condition(wikiTitle.itemType == API.WIKI_TYPE_ARTICLE && ControllerApi.can(wikiTitle.fandomId, languageId, API.LVL_MODERATOR_WIKI_EDIT))
                 .add(t(API_TRANSLATE.app_display_before)) { displayBefore(wikiTitle, items!!) }.backgroundRes(R.color.blue_700).condition(items != null && items.size > 1 && ControllerApi.can(wikiTitle.fandomId, languageId, API.LVL_MODERATOR_WIKI_EDIT))
