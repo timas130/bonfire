@@ -48,11 +48,15 @@ class EPublicationsKarmaAdd : RPublicationsKarmaAdd(0, false, 0, false) {
     }
 
     override fun execute(): Response {
+        val doubleKarmaStart = 1692738000000L
+        val doubleKarmaEnd = doubleKarmaStart + 1000L * 3600L * 24L * 4L
+        val isGlobalDoubleKarma = System.currentTimeMillis() in doubleKarmaStart..doubleKarmaEnd
 
         val rubricKarmaCof = if (publication!!.publicationType == API.PUBLICATION_TYPE_POST && publication!!.tag_6 > 0) ControllerOptimizer.getRubricKarmaCof(publication!!.tag_6) - 100 else 0
         val fandomKarmaCof = if (publication!!.fandom.id < 1) 100 else ControllerOptimizer.getFandomKarmaCof(publication!!.fandom.id)
         val questKarmaCof  = if (publication!!.publicationType == API.PUBLICATION_TYPE_QUEST) 50 else 0
-        val karmaCof = fandomKarmaCof + rubricKarmaCof + questKarmaCof
+        val globalKarmaCof = if (isGlobalDoubleKarma) 100 else 0
+        val karmaCof = fandomKarmaCof + rubricKarmaCof + questKarmaCof + globalKarmaCof
         val karmaForceD = ControllerKarma.getKarmaForce(apiAccount, up) * (karmaCof / 100.0)
         val karmaForce = if (karmaForceD > 0) {
             if (karmaForceD < 100) 100
