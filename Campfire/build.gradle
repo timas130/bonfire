@@ -12,8 +12,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdk 33
-        versionCode 2_01_00
-        versionName "2.1.0"
+        versionCode 2_01_01
+        versionName "2.1.1"
         applicationId "sh.sit.bonfire"
     }
 
