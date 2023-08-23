@@ -9,7 +9,9 @@ dependencies {
     implementation project(':CampfireApi')
     implementation project(':DevSupJava')
     implementation project(':DevSupJavaPc')
+    implementation project(':BonfireServerNetworking')
     implementation 'com.google.firebase:firebase-admin:9.0.0'
+    implementation 'org.slf4j:slf4j-simple:2.0.7'
 }
 
 jar {

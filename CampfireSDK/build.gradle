@@ -27,6 +27,7 @@ dependencies {
     api project(':CampfireApi')
     api project(':CampfireApiMedia')
     api project(':DevSupAndroidGoogle')
+    api project(':BonfireNetworking')
     implementation 'io.sentry:sentry-android:6.28.0'
     implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')

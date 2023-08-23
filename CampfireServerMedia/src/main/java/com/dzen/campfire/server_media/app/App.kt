@@ -13,6 +13,7 @@ import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.DatabasePool
 import com.sup.dev.java_pc.storage.S3StorageProvider
 import com.sup.dev.java_pc.storage.StorageProvider
+import sh.sit.bonfire.server.networking.startJavalin
 import java.io.File
 import java.nio.charset.Charset
 
@@ -84,8 +85,16 @@ object App {
 
             System.err.println("Media Server")
             System.err.println("------------ (\\/)._.(\\/) ------------")
-            apiServer.startServer()
 
+            ToolsThreads.thread {
+                apiServer.startJavalin(
+                    jksPath = "secrets/Certificate.jks",
+                    jksPassword = secretsKeys["jks_password"]!!,
+                    portV1 = APIMedia.PORT_SERV_JL_V1,
+                    portV2 = APIMedia.PORT_SERV_JL,
+                )
+            }
+            apiServer.startServer()
         } catch (th: Throwable) {
             err(th)
         }

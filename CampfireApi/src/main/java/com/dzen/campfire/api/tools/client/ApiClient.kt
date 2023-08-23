@@ -1,19 +1,14 @@
 package com.dzen.campfire.api.tools.client
 
 import com.dzen.campfire.api.tools.ApiException
-import com.sup.dev.java.classes.items.Connections
 import com.sup.dev.java.classes.items.Item
 import com.sup.dev.java.libs.debug.Debug
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsThreads
-import java.io.DataInputStream
-import java.io.DataOutputStream
-import java.io.IOException
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
-import javax.net.ssl.SSLProtocolException
 
 abstract class ApiClient(
     val projectKey: String,
@@ -52,19 +47,21 @@ abstract class ApiClient(
     }
 
     private val threadPool: ThreadPoolExecutor =
-        ThreadPoolExecutor(4, 4, 1, TimeUnit.MINUTES, LinkedBlockingQueue())
-    val client = HTTPSClient(host, portHttps, portCertificate)
+        ThreadPoolExecutor(1, 4, 1, TimeUnit.MINUTES, LinkedBlockingQueue())
+
+    var networkingProvider: NetworkingProvider = HttpsClientNetworkingProvider(
+        HTTPSClient(host, portHttps, portCertificate)
+    )
 
     fun getAccessToken(): String? {
         val s = loader.invoke("ApiClient_access_token")
-        if (s != null && s.isNotEmpty()) {
+        if (!s.isNullOrEmpty()) {
             try {
                 val time = (loader.invoke("ApiClient_access_token_time_save") ?: "0").toLong()
                 if (time + TOKEN_ACCESS_LIFETIME > System.currentTimeMillis()) {
                     return s
                 }
-            } catch (eN: NumberFormatException) {
-
+            } catch (_: NumberFormatException) {
             } catch (e: Exception) {
                 onErrorCb(e)
                 err(e)
@@ -116,7 +113,7 @@ abstract class ApiClient(
         Debug.info("XRequest [$request")
         try {
             if (!request.isSubscribed()) return
-            Action(request, stackTrace, callbackInMain)
+            Action(request, stackTrace, callbackInMain).start()
         } catch (th: Throwable) {
             onErrorCb(th)
             err(th)
@@ -134,19 +131,17 @@ abstract class ApiClient(
         private val stackTrace: Throwable,
         private val callbackInMain: Boolean
     ) {
-
-        private var accessToken:String? = request.accessToken
+        private var accessToken: String? = request.accessToken
         private var loginToken: String? = request.loginToken
 
-        init {
-            start()
-        }
+        fun start(retry: Int = 3) {
+            val realAccessToken = accessToken ?: getAccessToken()
 
-        private fun start() {
-            if ((request.tokenRequired || request.tokenDesirable)
-                && (accessToken == null && getAccessToken() == null)
-                && getRefreshToken() == null
-                && loginToken == null
+            if (
+                (request.tokenRequired || request.tokenDesirable) &&
+                realAccessToken == null &&
+                getRefreshToken() == null &&
+                loginToken == null
             ) {
                 val result = Item(false)
                 tokenProvider.getToken { token ->
@@ -156,79 +151,55 @@ abstract class ApiClient(
                 while ((!result.a)) ToolsThreads.sleep(10)
             }
 
-            if (request.tokenRequired && (accessToken == null && getAccessToken() == null) && getRefreshToken() == null && loginToken == null) {
+            if (
+                request.tokenRequired &&
+                realAccessToken == null &&
+                getRefreshToken() == null &&
+                loginToken == null
+            ) {
                 ToolsThreads.main { tokenProvider.onLoginFailed() }
                 onError(IllegalStateException("Can't get the access token"))
-            } else {
-                socket()
+                return
             }
 
-        }
-
-        private fun socket(retry:Int = 20) {  //  retry - Костыль. На эмеляторе регулярно вылетает SSLProtocolException
-            var connections: Connections? = null
-
-            try {
-                connections = client.connect()
-                send(connections)
-            } catch (e: Exception) {
-                if(e is SSLProtocolException && retry > 0){
-                    ToolsThreads.sleep(100)
-                    socket(retry-1)
-                } else {
-                    val j = Json()
-                    request.json(true, j)
-                    this@ApiClient.onErrorCb(e)
-                }
-            } finally {
-                try {
-                    connections?.close()
-                } catch (e: IOException) {
-                    this@ApiClient.onErrorCb(e)
-                    err(e)
-                }
-
-            }
-        }
-
-        @Throws(IOException::class)
-        private fun send(connections: Connections) {
             val json = Json()
             request.json(true, json)
             when {
-                (accessToken != null || getAccessToken() != null) -> json.put(J_API_ACCESS_TOKEN, if(accessToken != null) accessToken else getAccessToken())
-                getRefreshToken() != null -> json.put(J_API_REFRESH_TOKEN, getRefreshToken())
-                loginToken != null -> json.put(J_API_LOGIN_TOKEN, loginToken)
+                (accessToken != null || getAccessToken() != null) -> {
+                    json.put(J_API_ACCESS_TOKEN, realAccessToken)
+                }
+                getRefreshToken() != null -> {
+                    json.put(J_API_REFRESH_TOKEN, getRefreshToken())
+                }
+                loginToken != null -> {
+                    json.put(J_API_LOGIN_TOKEN, loginToken)
+                }
             }
 
             val bytes = json.toBytes()
-            val dos = DataOutputStream(connections.out)
-            dos.writeInt(bytes.size)
-            dos.write(bytes)
-            dos.flush()
 
-            if (request.requestType == REQUEST_TYPE_REQUEST) {
-                if (request.dataOutput.isNotEmpty()) {
-                    val dataOutputStream = DataOutputStream(connections.out)
-                    for (i in request.dataOutput.indices) if (request.dataOutput[i] != null) dataOutputStream.write(
-                        request.dataOutput[i]!!
-                    )
-                    dataOutputStream.flush()
+            val resp = try {
+                networkingProvider.sendRequest(bytes, request.dataOutput.toList())
+            } catch (e: Exception) {
+                if (retry > 0) {
+                    err(e)
+                    err("retrying #$retry")
+                    start(retry - 1)
+                    return
+                } else {
+                    onError(e)
+                    return
                 }
-
-                val inputStream = DataInputStream(connections.input)
-                val l = inputStream.readInt()
-                val bytes = ByteArray(l)
-                inputStream.readFully(bytes, 0, l)
-                val answerJson = Json(bytes)
-                parseResponse(answerJson)
             }
-            if (request.requestType == REQUEST_TYPE_DATA_LOAD) {
-                val inputStream = DataInputStream(connections.input)
-                val l = inputStream.readInt()
-                val bytes = ByteArray(l)
-                inputStream.readFully(bytes, 0, l)
-                parseResponseData(bytes)
+
+            when (request.requestType) {
+                REQUEST_TYPE_REQUEST -> {
+                    val answerJson = Json(resp)
+                    parseResponse(answerJson)
+                }
+                REQUEST_TYPE_DATA_LOAD -> {
+                    parseResponseData(resp)
+                }
             }
         }
 
@@ -236,7 +207,6 @@ abstract class ApiClient(
             val status = responseJson.get<String>(J_STATUS)
 
             if (status == J_STATUS_OK) {
-
                 if (responseJson.containsKey(J_API_ACCESS_TOKEN)) setAccessToken(
                     responseJson.getString(
                         J_API_ACCESS_TOKEN
@@ -251,14 +221,12 @@ abstract class ApiClient(
                 val response = request.instanceResponse(responseJson.getJson(J_RESPONSE)!!)
 
                 callbackComplete(response)
-
             } else {
                 val ex = ApiException(responseJson.getJson(J_RESPONSE)!!)
 
                 if (parseApiError(ex)) return
 
                 callbackError(ex)
-
             }
         }
 
@@ -295,7 +263,7 @@ abstract class ApiClient(
         }
 
         private fun onError(e: Exception) {
-            if(!request.noErrorLogs) {
+            if (!request.noErrorLogs) {
                 this@ApiClient.onErrorCb(e)
                 err(e)
                 err(stackTrace)
@@ -305,7 +273,6 @@ abstract class ApiClient(
                 parseApiError(e)
             } else {
                 callbackError(e)
-
             }
         }
 

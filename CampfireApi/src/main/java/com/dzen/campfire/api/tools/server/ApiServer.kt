@@ -11,9 +11,10 @@ import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsBytes
 import java.io.*
 import java.net.Socket
-import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 
 class ApiServer(
@@ -70,44 +71,23 @@ class ApiServer(
         try {
             val inputStream = DataInputStream(socket.getInputStream())
 
-            var l = inputStream.readInt()
+            val l = inputStream.readInt()
+            val bytes = ByteArray(l)
+            inputStream.readFully(bytes, 0, l)
+            val json = Json(bytes)
 
-            var isHttpFormat = false;
-            val json =
-            if(l == 1347375956){
-                isHttpFormat = true
-                val inp = BufferedReader(InputStreamReader(socket.getInputStream()))
-                do {
-                    val s = inp.readLine()
-                    var index = s.lowercase(Locale.getDefault())
-                        .indexOf("Content-Length: ".lowercase(Locale.getDefault()))
-                    if (index > -1) {
-                        index += "Content-Length: ".length
-                        l = s.substring(index).toInt()
-                    }
-                } while (!s.isNullOrEmpty())
-
-                if(l == 0){
-                    writeHttpOptions(socket.getOutputStream())
-                    return
-                }
-
-                val chars = CharArray(l)
-                inp.read(chars)
-                Json(String(chars))
-            } else {
-                isHttpFormat = false
-                val bytes = ByteArray(l)
-                inputStream.readFully(bytes, 0, l)
-                Json(bytes)
-            }
-
-            parseConnection(
-                    socket, json,
-                    onKeyFounded = { key = it },
-                    jsonResponse = { writeHttps(socket.getOutputStream(), it, isHttpFormat) },
-                    dataResponse = { writeData(socket.getOutputStream(), it, isHttpFormat) },
+            val resp = parseConnection(
+                json = json,
+                ip = socket.inetAddress.hostAddress,
+                additional = inputStream,
+                onKeyFound = { key = it },
             )
+
+            when (resp) {
+                is ResponseType.Json -> writeHttps(socket.getOutputStream(), resp.json)
+                is ResponseType.Data -> writeData(socket.getOutputStream(), resp.data)
+            }
+        } catch (_: TooManyRequestsException) {
         } catch (th: Throwable) {
             onError.invoke(key, th)
         } finally {
@@ -119,171 +99,132 @@ class ApiServer(
         }
     }
 
-    fun writeHttpOptions(os: OutputStream) {
-        val out = BufferedWriter(OutputStreamWriter(os))
-
-        out.write("HTTP/1.0 200 OK\r\n")
-        out.write("Access-Control-Allow-Origin: *\r\n")
-        out.write("Access-Control-Allow-Credentials: true\r\n")
-        out.write("Access-Control-Allow-Headers: *\r\n")
-        out.write("Access-Control-Allow-Methods: *\r\n")
-        out.write("\r\n")
-        out.flush()
+    private fun writeHttps(os: OutputStream, json: Json) {
+        val dos = DataOutputStream(os)
+        val bytes = json.toBytes()
+        dos.writeInt(bytes.size)
+        dos.write(bytes)
+        dos.flush()
     }
 
-    fun writeHttps(os: OutputStream, json: Json, isHttpFormat: Boolean) {
-        if(isHttpFormat){
-            val body = json.toString()
-
-            val out = BufferedWriter(OutputStreamWriter(os))
-
-            out.write("HTTP/1.0 200 OK\r\n");
-            out.write("Access-Control-Allow-Origin: *\r\n")
-            out.write("Access-Control-Allow-Credentials: true\r\n")
-            out.write("Access-Control-Allow-Headers: *\r\n")
-            out.write("Access-Control-Allow-Methods: *\r\n")
-            out.write("Content-Type: application/json\r\n")
-            out.write("Content-Length: ${body.toByteArray().size}\r\n")
-            out.write("\r\n")
-            out.write(body)
-            out.flush()
-        }else{
-            val dos = DataOutputStream(os)
-            val bytes = json.toBytes()
-            dos.writeInt(bytes.size)
-            dos.write(bytes)
-            dos.flush()
-        }
-    }
-
-    fun writeData(os: OutputStream, bytes: ByteArray, isHttpFormat: Boolean) {
-        if(isHttpFormat){
-            val out = BufferedWriter(OutputStreamWriter(os))
-
-            out.write("HTTP/1.0 200 OK\r\n")
-            out.write("Access-Control-Allow-Origin: *\r\n")
-            out.write("Access-Control-Allow-Credentials: true\r\n")
-            out.write("Access-Control-Allow-Headers: *\r\n")
-            out.write("Access-Control-Allow-Methods: *\r\n")
-            out.write("Content-Length: ${bytes.size}\r\n")
-            out.write("\r\n")
-            out.flush()
-            os.write(bytes)
-            os.flush()
-
-        } else {
-            val dos = DataOutputStream(os)
-            dos.writeInt(bytes.size)
-            dos.write(bytes)
-            dos.flush()
-        }
+    private fun writeData(os: OutputStream, bytes: ByteArray) {
+        val dos = DataOutputStream(os)
+        dos.writeInt(bytes.size)
+        dos.write(bytes)
+        dos.flush()
     }
 
     //
     //  Parsing
     //
 
-    private val ips = HashMap<String, ArrayList<Long>>()
-    private var lastIpsClear = 0L
-    private var ipRuntimeLastClear = 0L
-    private val ipRuntimeWatchTime = 1000L * 60 * 5
-    private val ipRuntimeMaxPercent = 0.50
-    private val ipsRuntime = HashMap<String, Long>()
-    private val ipRuntimeBanTime = 1000L * 60 * 60 * 1
-    private val ipRuntimeBanList = HashMap<String, Long>()
-    private val ipSynchronizedList = HashMap<String, String>()
-
-    private fun parseConnection(socket: Socket, json: Json,
-                                onKeyFounded: (String)->Unit,
-                                jsonResponse: (Json)->Unit,
-                                dataResponse: (ByteArray)->Unit,
-    ) {
-        val ip:String = socket.inetAddress.hostAddress
-
-        synchronized(ipRuntimeBanList){
-            if(ipRuntimeBanList[ip]?:0L > System.currentTimeMillis()){
-                info("Ip blocked by runtime ip[$ip]")
-                return
-            }
-        }
-        synchronized(ipSynchronizedList){
-            ipSynchronizedList[ip] = ip
-        }
-
-        synchronized(ipSynchronizedList[ip]?:"none"){
-            val request = requestFactory.instanceRequest(json)
-            val key = "[${request.requestProjectKey}] ${request.javaClass.simpleName}"
-            onKeyFounded.invoke(key)
-            request.accessToken = json.get(ApiClient.J_API_ACCESS_TOKEN)
-            request.refreshToken = json.get(ApiClient.J_API_REFRESH_TOKEN)
-            request.loginToken = json.get(ApiClient.J_API_LOGIN_TOKEN)
-            request.botToken = json.get(ApiClient.J_API_BOT_TOKEN)
-
-            val apiAccount = accountProvider.getAccount(request.accessToken, request.refreshToken, request.loginToken)
-            request.apiAccount = apiAccount ?: ApiAccount()
-
-
-            if(!botTokensList.contains(request.botToken)) {
-                synchronized(ips) {
-                    if (request.apiAccount.id > 0) {
-                        if (lastIpsClear < System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 7) {
-                            lastIpsClear = System.currentTimeMillis()
-                            ips.clear()
-                        }
-                        var list = ips[ip]
-                        if (list == null) {
-                            list = ArrayList()
-                            ips[ip] = list
-                        }
-                        if (!list.contains(request.apiAccount.id)) {
-                            list.add(request.apiAccount.id)
-                        }
-                        if (list.size > 5) {
-                            return
-                        }
-                    }
-                }
-            }
-
-
-            val t = System.currentTimeMillis()
-            if (request.requestType == ApiClient.REQUEST_TYPE_REQUEST) jsonResponse.invoke(parseRequestConnection(socket, request, apiAccount))
-            if (request.requestType == ApiClient.REQUEST_TYPE_DATA_LOAD) dataResponse.invoke(parseDataOutConnection(request)!!)
-
-            val tt = System.currentTimeMillis() - t
-            statisticCollector.invoke(key, tt, request.requestApiVersion)
-            info("[${request.requestProjectKey}] ${apiAccount?.name}(${apiAccount?.id}) [$ip]${if(request.botToken != null)" BOT[${request.botToken}]" else ""} ${request.javaClass.simpleName} $tt ms runtime[${((ipsRuntime[ip]?:0L).toDouble()/ipRuntimeWatchTime*100).toInt()}%]")
-
-
-            synchronized(ipsRuntime) {
-                if (ipRuntimeLastClear < System.currentTimeMillis() - ipRuntimeWatchTime) {
-                    ipRuntimeLastClear = System.currentTimeMillis()
-                    ipsRuntime.clear()
-                }
-                ipsRuntime[ip] = (ipsRuntime[ip] ?: 0L) + tt
-                if ((ipsRuntime[ip] ?: 0L).toDouble() / ipRuntimeWatchTime > ipRuntimeMaxPercent) {
-                    synchronized(ipRuntimeBanList){
-                        ipRuntimeBanList[ip] = System.currentTimeMillis() + ipRuntimeBanTime
-                    }
-                }
-            }
-        }
+    private val rateLimitTimeTaker = 1000 * 60 * 4
+    private val rateLimitExecutor = Executors.newSingleThreadScheduledExecutor()
+    private val timeRateLimiter = ConcurrentHashMap<String, Long>().also {
+        rateLimitExecutor.scheduleAtFixedRate({ it.clear() }, 0, 10, TimeUnit.MINUTES)
+    }
+    private val accountRateLimiter = ConcurrentHashMap<String, MutableList<Long>>().also {
+        rateLimitExecutor.scheduleAtFixedRate({ it.clear() }, 0, 10, TimeUnit.MINUTES)
     }
 
-    private fun parseRequestConnection(socket: Socket, request: Request<*>, apiAccount: ApiAccount?): Json {
+    class TooManyRequestsException : Exception("too many requests")
+    sealed class ResponseType {
+        class Json(val json: com.sup.dev.java.libs.json.Json) : ResponseType()
+        class Data(val data: ByteArray) : ResponseType()
+    }
 
-        if (request.dataOutput.isNotEmpty()) {
-            val inputStream = DataInputStream(socket.getInputStream())
-            for (i in request.dataOutput.indices) if (request.dataOutput[i] != null) inputStream.readFully(request.dataOutput[i], 0, request.dataOutput[i]!!.size)
+    @Suppress("NewApi") // I hate him for that
+    fun parseConnection(
+        json: Json,
+        ip: String,
+        additional: InputStream,
+        onKeyFound: (String) -> Unit,
+    ): ResponseType {
+        val timeRateLimitValue = timeRateLimiter[ip] ?: 0
+        if (timeRateLimitValue > rateLimitTimeTaker) {
+            throw TooManyRequestsException()
         }
-        if(request.dataOutputBase64.isNotEmpty()){
+
+        val request = requestFactory.instanceRequest(json)
+        val key = "[${request.requestProjectKey}] ${request.javaClass.simpleName}"
+        onKeyFound.invoke(key)
+        request.accessToken = json[ApiClient.J_API_ACCESS_TOKEN]
+        request.refreshToken = json[ApiClient.J_API_REFRESH_TOKEN]
+        request.loginToken = json[ApiClient.J_API_LOGIN_TOKEN]
+        request.botToken = json[ApiClient.J_API_BOT_TOKEN]
+
+        val allowedAccounts = accountRateLimiter[ip] ?: listOf()
+        val apiAccount = accountProvider.getAccount(request.accessToken, request.refreshToken, request.loginToken)
+        request.apiAccount = apiAccount ?: ApiAccount()
+
+        if (!botTokensList.contains(request.botToken)) {
+            if (
+                allowedAccounts.size >= 3 &&
+                request.apiAccount.id != 0L &&
+                !allowedAccounts.contains(request.apiAccount.id)
+            ) {
+                throw TooManyRequestsException()
+            }
+
+            accountRateLimiter.compute(ip) { _, list ->
+                if (list == null) {
+                    mutableListOf(request.apiAccount.id)
+                } else {
+                    list.add(request.apiAccount.id)
+                    list
+                }
+            }
+        }
+
+        val start = System.currentTimeMillis()
+        val resp = when (request.requestType) {
+            ApiClient.REQUEST_TYPE_REQUEST -> ResponseType.Json(parseRequestConnection(additional, request, apiAccount))
+            ApiClient.REQUEST_TYPE_DATA_LOAD -> ResponseType.Data(parseDataOutConnection(request)!!)
+            else -> throw RuntimeException("no enums moment")
+        }
+        val timeTook = System.currentTimeMillis() - start
+
+        statisticCollector.invoke(key, timeTook, request.requestApiVersion)
+        info(
+            "[${request.requestProjectKey}] " +
+            "${apiAccount?.name}(${apiAccount?.id}) " +
+            "[$ip] " +
+            "BOT[${request.botToken}] " +
+            "${request.javaClass.simpleName} " +
+            "${timeTook}ms => " +
+            "${timeRateLimitValue}ms"
+        )
+
+        timeRateLimiter.compute(ip) { _, value ->
+            if (value == null) {
+                timeTook
+            } else {
+                timeTook + value
+            }
+        }
+
+        return resp
+    }
+
+    private fun parseRequestConnection(additional: InputStream, request: Request<*>, apiAccount: ApiAccount?): Json {
+        if (request.dataOutput.isNotEmpty()) {
+            val inputStream = DataInputStream(additional)
+            for (i in request.dataOutput.indices) {
+                if (request.dataOutput[i] == null) continue
+                inputStream.readFully(request.dataOutput[i]!!, 0, request.dataOutput[i]!!.size)
+            }
+        }
+
+        if (request.dataOutputBase64.isNotEmpty()) {
             request.dataOutput = arrayOfNulls(request.dataOutputBase64.size)
-            for(index in request.dataOutputBase64.indices){
-                val database64 = request.dataOutputBase64[index]?:""
-                if(database64.isNotEmpty() && database64.lowercase(Locale.getDefault()) != "none" && database64.lowercase(
-                        Locale.getDefault()
-                    ) != "null") {
-                    request.dataOutput[index] = ToolsBytes.fromBase64(database64)
+            for (index in request.dataOutputBase64.indices) {
+                val dataEncoded = request.dataOutputBase64[index] ?: ""
+                if (
+                    dataEncoded.isNotEmpty() &&
+                    dataEncoded.lowercase() != "none" &&
+                    dataEncoded.lowercase() != "null"
+                ) {
+                    request.dataOutput[index] = ToolsBytes.fromBase64(dataEncoded)
                 }
             }
         }

@@ -25,6 +25,9 @@ class API(
 ) : ApiClient(projectKey, tokenProvider, host, portHttps, portCertificate, saver, loader, onError) {
 
     companion object {
+        const val PORT_SERV_JL_V1 = 7070
+        const val PORT_SERV_JL = 7071
+        const val SERV_ROOT = "https://cf2.bonfire.moe/"
 
         const val PORT_HTTPS = 4026
         const val PORT_HTTP = 4028

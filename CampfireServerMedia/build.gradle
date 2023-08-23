@@ -5,10 +5,12 @@ apply plugin: 'kotlin'
 apply plugin: 'application'
 
 dependencies {
-    api project(':CampfireApiMedia')
-    api project(':DevSupJava')
-    api project(':DevSupJavaPc')
-    api project(':CampfireApi')
+    implementation project(':CampfireApiMedia')
+    implementation project(':DevSupJava')
+    implementation project(':DevSupJavaPc')
+    implementation project(':CampfireApi')
+    implementation project(':BonfireServerNetworking')
+    implementation 'org.slf4j:slf4j-simple:2.0.7'
 }
 
 

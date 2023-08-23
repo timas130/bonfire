@@ -13,6 +13,7 @@ import com.sup.dev.java_pc.google.GoogleAuth
 import com.sup.dev.java_pc.google.GoogleNotification
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.DatabasePool
+import sh.sit.bonfire.server.networking.startJavalin
 import java.io.File
 import java.nio.charset.Charset
 
@@ -104,6 +105,14 @@ object App {
             ControllerOptimizer.karmaCategoryUpdateIfNeed()
             System.err.println("------------ (\\/)._.(\\/) ------------")
 
+            ToolsThreads.thread {
+                apiServer.startJavalin(
+                    jksPath = "secrets/Certificate.jks",
+                    jksPassword = secretsKeys["jks_password"]!!,
+                    portV1 = API.PORT_SERV_JL_V1,
+                    portV2 = API.PORT_SERV_JL
+                )
+            }
             apiServer.startServer()
 
         } catch (th: Throwable) {

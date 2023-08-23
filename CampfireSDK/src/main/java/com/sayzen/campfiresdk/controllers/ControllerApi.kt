@@ -20,6 +20,8 @@ import com.dzen.campfire.api.requests.publications.RPublicationsOnShare
 import com.dzen.campfire.api.requests.publications.RPublicationsRemove
 import com.dzen.campfire.api.requests.publications.RPublicationsReport
 import com.dzen.campfire.api.tools.ApiException
+import com.dzen.campfire.api.tools.client.HTTPSClient
+import com.dzen.campfire.api.tools.client.HttpsClientNetworkingProvider
 import com.dzen.campfire.api.tools.client.Request
 import com.dzen.campfire.api.tools.client.TokenProvider
 import com.dzen.campfire.api_media.APIMedia
@@ -60,6 +62,8 @@ import com.sup.dev.java.libs.text_format.TextFormatter
 import com.sup.dev.java.tools.ToolsMapper
 import com.sup.dev.java.tools.ToolsThreads
 import io.sentry.Sentry
+import sh.sit.bonfire.networking.CombinedNetworkingProvider
+import sh.sit.bonfire.networking.OkHttpNetworkingProvider
 
 val api: API = API(
     ControllerCampfireSDK.projectKey,
@@ -70,7 +74,16 @@ val api: API = API(
     { key, token -> ToolsStorage.put(key, token) },
     { ToolsStorage.getString(it, null) },
     { err -> Sentry.captureException(err) }
-)
+).apply {
+    networkingProvider = CombinedNetworkingProvider(
+        HttpsClientNetworkingProvider(HTTPSClient(API.IP, API.PORT_HTTPS, API.PORT_CERTIFICATE)),
+        OkHttpNetworkingProvider(
+            SupAndroid.appContext!!,
+            API.SERV_ROOT,
+            "CampfireSDK/${API.VERSION}"
+        ),
+    )
+}
 
 val apiMedia: APIMedia = APIMedia(
         ControllerCampfireSDK.projectKey,
@@ -79,7 +92,16 @@ val apiMedia: APIMedia = APIMedia(
         APIMedia.PORT_HTTPS,
         APIMedia.PORT_CERTIFICATE,
         { _, _ -> }, { "" }
-)
+).apply {
+    networkingProvider = CombinedNetworkingProvider(
+        HttpsClientNetworkingProvider(HTTPSClient(APIMedia.IP, APIMedia.PORT_HTTPS, APIMedia.PORT_CERTIFICATE)),
+        OkHttpNetworkingProvider(
+            SupAndroid.appContext!!,
+            APIMedia.SERV_ROOT,
+            "CampfireSDK/M${API.VERSION}"
+        ),
+    )
+}
 
 fun instanceTokenProvider(): TokenProvider {
     return object : TokenProvider {

@@ -14,6 +14,9 @@ class APIMedia(
 ) : ApiClient(projectKey, tokenProvider, host, portHttps, portCertificate, saver, loader) {
 
     companion object {
+        const val PORT_SERV_JL_V1 = 7080
+        const val PORT_SERV_JL = 7081
+        const val SERV_ROOT = "https://cf2.bonfire.moe/media"
 
         const val PORT_HTTPS = 4023
         const val PORT_HTTP = 4022
