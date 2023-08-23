@@ -25,6 +25,7 @@ android {
         }
         debug {
             manifestPlaceholders = [crashlyticsEnabled: false]
+            applicationIdSuffix ".debug"
         }
     }
     flavorDimensions "version"
