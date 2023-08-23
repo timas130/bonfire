@@ -1931,7 +1931,7 @@ object API_TRANSLATE {
     val notification_quest_comment = Translate("%s %s ваш квест")
     val notification_quest_comment_watch = Translate("%s %s квест, за которым вы следите")
     val notification_profile_follows_add = Translate("%s %s на вас")
-    val notification_profile_follows_remove = Translate("%s %s на вас")
+    val notification_profile_follows_remove = Translate("%s %s от вас")
     val notification_comments_answer = Translate("%s %s на ваш комментарий%s")
     val notification_reaction_comment = Translate("%s %s на ваш комментарий%s")
     val notification_reaction_message = Translate("%s %s на ваше сообщение%s")
