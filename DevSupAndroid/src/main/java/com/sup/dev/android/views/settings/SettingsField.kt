@@ -3,10 +3,10 @@ package com.sup.dev.android.views.settings
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.annotation.StringRes
-import com.google.android.material.textfield.TextInputLayout
 import android.util.AttributeSet
 import android.view.View
+import androidx.annotation.StringRes
+import com.google.android.material.textfield.TextInputLayout
 import com.sup.dev.android.R
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
@@ -125,6 +125,7 @@ class SettingsField constructor(
 
     fun setHint(hint: String?) {
         vFieldLayout.hint = hint
+        vFieldLayout.contentDescription = hint
     }
 
     fun setInputType(inputType: Int) {
