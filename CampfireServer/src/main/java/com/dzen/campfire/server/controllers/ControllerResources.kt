@@ -36,8 +36,9 @@ object ControllerResources : IControllerResources {
     }
 
     fun removeAndPut(resourceId: Long, resource: ByteArray, publicationId:Long): Long {
+        val id = put(resource, publicationId)
         remove(resourceId)
-        return put(resource, publicationId)
+        return id
     }
 
     fun replace(resourceId: Long, resource: ByteArray, publicationId:Long): Long {
@@ -46,7 +47,7 @@ object ControllerResources : IControllerResources {
         return if (checkExist(resourceId)) {
             database.update("ControllerResources.replace", SqlQueryUpdate(TResources.NAME)
                 .where(TResources.id, "=", resourceId)
-                .updateValue(TResources.size, resource.size))
+                .update(TResources.size, resource.size))
             storage.put(resourceId, resource)
             resourceId
         } else {
