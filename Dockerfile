@@ -2,9 +2,9 @@ FROM gradle:8.0-jdk17 AS builder
 
 COPY . /app
 WORKDIR /app/
-RUN gradle CampfireServer:build CampfireServerMedia:build
+RUN gradle CampfireServer:build CampfireServerMedia:build --no-daemon
 
-FROM amazoncorretto:17-alpine AS runner
+FROM amazoncorretto:17 AS runner
 
 WORKDIR /app/
 RUN mkdir -p /app/CampfireServer/res /app/lib
@@ -13,7 +13,7 @@ COPY --from=builder /app/docker-entrypoint.sh /app/
 COPY --from=builder /app/CampfireServer/build/distributions/CampfireServer.tar /app/
 COPY --from=builder /app/CampfireServerMedia/build/distributions/CampfireServerMedia.tar /app/
 COPY --from=builder /app/CampfireServer/res /app/CampfireServer/res
-RUN apk add tar openssl curl bash
+RUN yum install -y tar openssl curl bash
 RUN tar -xf CampfireServer.tar && rm CampfireServer.tar
 RUN tar -xf CampfireServerMedia.tar && rm CampfireServerMedia.tar
 RUN curl -o /app/bcprov.jar https://downloads.bouncycastle.org/java/bcprov-jdk15on-170.jar
