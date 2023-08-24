@@ -495,9 +495,11 @@ object ControllerAccounts {
     }
 
     fun updateRelayRaceMyRacePostsCount(accountId: Long, change: Int) {
-        updateCollisionIncr(accountId, change.toLong(), API.COLLISION_ACHIEVEMENT_RELAY_RACE_MY_RACE_POSTS_COUNT) {
-
-            val v = Database.select("ControllerAccounts.updateRelayRaceMyRacePostsCount select_1", SqlQuerySelect(TActivities.NAME, TActivities.id)
+        // i set change to 0 because it's so buggy
+        updateCollisionIncr(accountId, 0, API.COLLISION_ACHIEVEMENT_RELAY_RACE_MY_RACE_POSTS_COUNT) {
+            val v = Database.select(
+                "ControllerAccounts.updateRelayRaceMyRacePostsCount select_1",
+                SqlQuerySelect(TActivities.NAME, TActivities.id)
                     .where(TActivities.creator_id, "=", accountId)
                     .where(TActivities.type, "=", API.ACTIVITIES_TYPE_RELAY_RACE)
             )
@@ -505,23 +507,16 @@ object ControllerAccounts {
             val myIds = Array<Long>(v.rowsCount) { v.next() }
             if (myIds.isEmpty()) return@updateCollisionIncr 0
 
-            val vv = Database.select("ControllerAccounts.updateRelayRaceMyRacePostsCount select_2", SqlQuerySelect(TActivitiesCollisions.NAME, TActivitiesCollisions.id)
-                    .where(SqlWhere.WhereIN(TActivitiesCollisions.account_id, myIds))
+            val vv = Database.select(
+                "ControllerAccounts.updateRelayRaceMyRacePostsCount select_2",
+                SqlQuerySelect(TActivitiesCollisions.NAME, Sql.COUNT)
+                    .where(SqlWhere.WhereIN(TActivitiesCollisions.tag_1, myIds))
                     .where(TActivitiesCollisions.type, "=", API.ACTIVITIES_COLLISION_TYPE_RELAY_RACE_POST)
             )
 
-            val hash = HashMap<Long, Long>()
-            var max = 0L
-
-            while (vv.hasNext()) {
-                val id: Long = vv.next()
-                val count = hash[id] ?: 0L + 1
-                hash[id] = count
-                if (count > max) max = count
-            }
-
-            return@updateCollisionIncr max
+            return@updateCollisionIncr vv.nextLongOrZero()
         }
+        ControllerAchievements.addAchievementWithCheck(accountId, API.ACHI_RELAY_RACE_MY_RACE_POSTS_COUNT)
     }
 
     fun updateRates(accountId: Long, change: Long) {
