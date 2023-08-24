@@ -44,6 +44,9 @@ object ControllerResources : IControllerResources {
         if (resourceId == 0L) return put(resource, publicationId)
 
         return if (checkExist(resourceId)) {
+            database.update("ControllerResources.replace", SqlQueryUpdate(TResources.NAME)
+                .where(TResources.id, "=", resourceId)
+                .updateValue(TResources.size, resource.size))
             storage.put(resourceId, resource)
             resourceId
         } else {
