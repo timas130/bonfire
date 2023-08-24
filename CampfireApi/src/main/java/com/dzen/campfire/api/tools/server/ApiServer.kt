@@ -118,13 +118,19 @@ class ApiServer(
     //  Parsing
     //
 
-    private val rateLimitTimeTaker = 1000 * 60 * 4
+    private val rateLimitTimeTaker = 1000 * 60 * 5
     private val rateLimitExecutor = Executors.newSingleThreadScheduledExecutor()
     private val timeRateLimiter = ConcurrentHashMap<String, Long>().also {
-        rateLimitExecutor.scheduleAtFixedRate({ it.clear() }, 0, 10, TimeUnit.MINUTES)
+        rateLimitExecutor.scheduleAtFixedRate({
+            info("> clearing timeRateLimiter")
+            it.clear()
+        }, 0, 10, TimeUnit.MINUTES)
     }
-    private val accountRateLimiter = ConcurrentHashMap<String, MutableList<Long>>().also {
-        rateLimitExecutor.scheduleAtFixedRate({ it.clear() }, 0, 10, TimeUnit.MINUTES)
+    private val accountRateLimiter = ConcurrentHashMap<String, MutableSet<Long>>().also {
+        rateLimitExecutor.scheduleAtFixedRate({
+            info("> clearing accountRateLimiter")
+            it.clear()
+        }, 0, 10, TimeUnit.MINUTES)
     }
 
     class TooManyRequestsException : Exception("too many requests")
@@ -142,6 +148,7 @@ class ApiServer(
     ): ResponseType {
         val timeRateLimitValue = timeRateLimiter[ip] ?: 0
         if (timeRateLimitValue > rateLimitTimeTaker) {
+            info("> block for tmr from $ip ($timeRateLimitValue > $rateLimitTimeTaker)")
             throw TooManyRequestsException()
         }
 
@@ -163,12 +170,13 @@ class ApiServer(
                 request.apiAccount.id != 0L &&
                 !allowedAccounts.contains(request.apiAccount.id)
             ) {
+                info("> block for tmr from $ip ($allowedAccounts)")
                 throw TooManyRequestsException()
             }
 
             accountRateLimiter.compute(ip) { _, list ->
                 if (list == null) {
-                    mutableListOf(request.apiAccount.id)
+                    mutableSetOf(request.apiAccount.id)
                 } else {
                     list.add(request.apiAccount.id)
                     list

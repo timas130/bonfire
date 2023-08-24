@@ -55,7 +55,7 @@ fun ApiServer.startJavalin(jksPath: String, jksPassword: String, portV1: Int, po
         }
         .attribute(MAX_REQUEST_SIZE_KEY, 10L * 1024 * 1024)
         .post("/") { ctx ->
-            NaiveRateLimit.requestPerTimeUnit(ctx, 200, TimeUnit.MINUTES)
+            NaiveRateLimit.requestPerTimeUnit(ctx, 300, TimeUnit.MINUTES)
             ctx.throwContentTooLargeIfContentTooLarge()
             val input = DataInputStream(ctx.bodyInputStream())
 
@@ -82,7 +82,7 @@ fun ApiServer.startJavalin(jksPath: String, jksPassword: String, portV1: Int, po
                 }
                 return@post
             } catch (e: ApiServer.TooManyRequestsException) {
-                throw HttpResponseException(HttpStatus.TOO_MANY_REQUESTS)
+                throw HttpResponseException(HttpStatus.TOO_MANY_REQUESTS, "Really, too many requests")
             } catch (e: Throwable) {
                 onError(key, e)
                 throw HttpResponseException(HttpStatus.INTERNAL_SERVER_ERROR)
