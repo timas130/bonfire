@@ -17,7 +17,7 @@ class PageText : Page() {
     var size = 0
     var align = 0
     var icon = 0
-    var newFormatting = true
+    var newFormatting = false
 
     override fun getType() = API.PAGE_TYPE_TEXT
 
