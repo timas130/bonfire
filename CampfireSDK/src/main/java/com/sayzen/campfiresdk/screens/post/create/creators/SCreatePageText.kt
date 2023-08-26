@@ -208,6 +208,7 @@ class SCreatePageText(
         page.size = size
         page.align = align
         page.icon = icon
+        page.newFormatting = newFormatting
         if (oldPage == null)
             requestPutPage.invoke(page, this, ToolsView.showProgressDialog(), { page1 -> CardPageText(null, page1 as PageText) }) {}
         else
