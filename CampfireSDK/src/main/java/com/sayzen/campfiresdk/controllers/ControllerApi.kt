@@ -20,8 +20,6 @@ import com.dzen.campfire.api.requests.publications.RPublicationsOnShare
 import com.dzen.campfire.api.requests.publications.RPublicationsRemove
 import com.dzen.campfire.api.requests.publications.RPublicationsReport
 import com.dzen.campfire.api.tools.ApiException
-import com.dzen.campfire.api.tools.client.HTTPSClient
-import com.dzen.campfire.api.tools.client.HttpsClientNetworkingProvider
 import com.dzen.campfire.api.tools.client.Request
 import com.dzen.campfire.api.tools.client.TokenProvider
 import com.dzen.campfire.api_media.APIMedia
@@ -62,7 +60,6 @@ import com.sup.dev.java.libs.text_format.TextFormatter
 import com.sup.dev.java.tools.ToolsMapper
 import com.sup.dev.java.tools.ToolsThreads
 import io.sentry.Sentry
-import sh.sit.bonfire.networking.CombinedNetworkingProvider
 import sh.sit.bonfire.networking.OkHttpNetworkingProvider
 
 val api: API = API(
