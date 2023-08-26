@@ -72,7 +72,7 @@ class API(
         val LINK_CHAT = Link("chat")
         val LINK_CONF = Link("conf")
         val LINK_FANDOM = Link("fandom")
-        val LINK_PROFILE_ID = Link("profile-id")
+        val LINK_PROFILE_ID = Link("profileid")
         val LINK_MODERATION = Link("moderation")
         val LINK_STICKER = Link("sticker")
         val LINK_STICKERS_PACK = Link("stickers")

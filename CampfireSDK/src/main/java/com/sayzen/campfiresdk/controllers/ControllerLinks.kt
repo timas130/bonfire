@@ -61,15 +61,25 @@ object ControllerLinks {
 
             val s1 = t.split('-')
             val linkV = s1[0]
-            val params: List<String> = if (s1.size > 1) s1[1].split("_") else emptyList()
+            val params: List<String> = if (s1.size > 1) s1[1].split("-") else emptyList()
 
-            when (linkV) {
-                API.LINK_ABOUT.link -> Navigator.to(SWikiList(API.FANDOM_CAMPFIRE_ID, ControllerApi.getLanguageId(), 0, ""))
+            var passed: Boolean = true
+            when (t) {
+                API.LINK_ABOUT.link -> Navigator.to(
+                    SWikiList(
+                        API.FANDOM_CAMPFIRE_ID,
+                        ControllerApi.getLanguageId(),
+                        0,
+                        ""
+                    )
+                )
+
                 API.LINK_DONATE.link -> SDonate.instance(Navigator.TO)
                 API.LINK_DONATE_MAKE.link -> SplashAlert()
                     .setOnEnter(t(API_TRANSLATE.app_ok))
                     .setText(t(API_TRANSLATE.donates_restricted))
                     .asSheetShow()
+
                 API.LINK_RULES_MODER.link -> Navigator.to(SRulesModerators())
                 API.LINK_RULES_USER.link -> Navigator.to(SRulesUser())
                 API.LINK_TRANSLATES.link -> Navigator.to(STranslates())
@@ -79,6 +89,7 @@ object ControllerLinks {
                     ControllerScreenAnimations.fireworks()
                     ToolsThreads.main(10000) { RAchievementsOnFinish(API.ACHI_FIREWORKS.index).send(api) }
                 }
+
                 API.LINK_BOX_WITH_SUMMER.link -> ControllerScreenAnimations.addAnimationWithClear(DrawAnimationSummer())
                 API.LINK_BOX_WITH_AUTUMN.link -> ControllerScreenAnimations.addAnimationWithClear(DrawAnimationAutumn())
                 API.LINK_BOX_WITH_WINTER.link -> ControllerScreenAnimations.addAnimationWithClear(DrawAnimationWinter())
@@ -88,15 +99,30 @@ object ControllerLinks {
                 API.LINK_BOX_WITH_MINIGAME.link -> SMinigame.instance(Navigator.TO)
                 API.LINK_BOX_WITH_MAGIC_SCREEN_X2.link -> Navigator.to(SMagic(2f))
                 API.LINK_BOX_WITH_MAGIC_SCREEN.link -> Navigator.to(SMagic())
-                API.LINK_BOX_WITH_MAGIC_X2.link -> ControllerScreenAnimations.addAnimationWithClear(DrawAnimationMagic(2f))
+                API.LINK_BOX_WITH_MAGIC_X2.link -> ControllerScreenAnimations.addAnimationWithClear(
+                    DrawAnimationMagic(
+                        2f
+                    )
+                )
+
                 API.LINK_BOX_WITH_MAGIC.link -> ControllerScreenAnimations.addAnimationWithClear(DrawAnimationMagic())
                 API.LINK_BOX_WITH_GOOSE.link -> ControllerScreenAnimations.addAnimationWithClear(DrawAnimationGoose())
-                API.LINK_BOX_WITH_CONFETTI.link -> ControllerScreenAnimations.addAnimationWithClear(DrawAnimationConfetti())
-                API.LINK_BOX_WITH_BOX.link -> {
-                    var counter = 0
-                    for (i in params) if (i == "box") counter++
-                    ControllerScreenAnimations.box(ToolsMath.max(1, counter + 1))
-                }
+                API.LINK_BOX_WITH_CONFETTI.link -> ControllerScreenAnimations.addAnimationWithClear(
+                    DrawAnimationConfetti()
+                )
+                else -> passed = false
+            }
+
+            if (passed) return true
+
+            if (linkV == "box" && params.getOrNull(0) == "with" && params.getOrNull(0) == "box") {
+                var counter = 0
+                for (i in params) if (i == "box") counter++
+                ControllerScreenAnimations.box(ToolsMath.max(1, counter + 1))
+                return true
+            }
+
+            when (linkV) {
                 API.LINK_STICKER.link -> SStickersView.instanceBySticker(params[0].toLong(), Navigator.TO)
                 API.LINK_STICKERS_PACK.link -> {
                     if (params.size == 1) SStickersView.instance(params[0].toLong(), Navigator.TO)
@@ -140,10 +166,8 @@ object ControllerLinks {
                     info("ControllerExecutorLinks link wasn't found [$link][$t]")
                     return false
                 }
-
             }
             return true
-
         } catch (e: Throwable) {
             err(e)
             return false
@@ -158,7 +182,7 @@ object ControllerLinks {
             val linkV = s1[0]
             val params: List<String> = if (s1.size > 1) s1[1].split("_") else emptyList()
 
-            return when (linkV) {
+            val v = when (t) {
                 API.LINK_ABOUT.link -> true
                 API.LINK_DONATE.link -> true
                 API.LINK_DONATE_MAKE.link -> true
@@ -175,13 +199,22 @@ object ControllerLinks {
                 API.LINK_BOX_WITH_CRASH.link -> true
                 API.LINK_BOX_WITH_SNOW.link -> true
                 API.LINK_BOX_WITH_MINIGAME.link -> true
-                API.LINK_BOX_WITH_BOX.link -> true
                 API.LINK_BOX_WITH_MAGIC.link -> true
                 API.LINK_BOX_WITH_MAGIC_SCREEN.link -> true
                 API.LINK_BOX_WITH_MAGIC_X2.link -> true
                 API.LINK_BOX_WITH_MAGIC_SCREEN_X2.link -> true
                 API.LINK_BOX_WITH_GOOSE.link -> true
                 API.LINK_BOX_WITH_CONFETTI.link -> true
+                else -> false
+            }
+
+            if (v) return true
+
+            if (linkV == "box" && params.getOrNull(0) == "with" && params.getOrNull(0) == "box") {
+                return true
+            }
+
+            return when (linkV) {
                 API.LINK_STICKER.link -> true
                 API.LINK_PROFILE_ID.link -> true
                 API.LINK_TAG_PROFILE_NAME -> true
@@ -201,10 +234,11 @@ object ControllerLinks {
                 API.LINK_QUEST.link -> true
                 else -> {
                     if (ToolsText.isOnly(t, API.ACCOUNT_LOGIN_CHARS)) {
-                        return true
+                        true
+                    } else {
+                        info("ControllerExecutorLinks link wasn't found [$link][$t]")
+                        false
                     }
-                    info("ControllerExecutorLinks link wasn't found [$link][$t]")
-                    return false
                 }
 
             }
