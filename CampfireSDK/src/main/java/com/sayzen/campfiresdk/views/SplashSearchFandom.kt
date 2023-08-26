@@ -15,8 +15,8 @@ open class SplashSearchFandom(
 ) : SplashSearch() {
 
     override fun instanceAdapter()
-            = RecyclerCardAdapterLoading<CardFandom, Fandom>(CardFandom::class) {
-        val card = CardFandom(it) { if(field != null)onSelected.invoke(field!!, it); hide() }
+            = RecyclerCardAdapterLoading<CardFandom, Fandom>(CardFandom::class) { fandom ->
+        val card = CardFandom(fandom, onClick = { if(field != null) onSelected.invoke(field!!, fandom); hide() })
         card.setAvatarSize(ToolsView.dpToPx(32).toInt())
         card.setShowSubscribes(false)
         card
