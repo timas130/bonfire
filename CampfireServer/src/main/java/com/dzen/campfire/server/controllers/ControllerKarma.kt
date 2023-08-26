@@ -123,7 +123,7 @@ object ControllerKarma {
                 }
             }
 
-            if(ControllerOptimizer.canUpRateNotification(apiAccount.id, publication.creator.id)){
+            if (ControllerOptimizer.canUpRateNotification(apiAccount.id, publication.creator.id)) {
                 val notification = NotificationKarmaAdd(if (anon) 0 else apiAccount.imageId, publication.id, publication.publicationType, publication.parentPublicationId, karmaCount, if (anon) 0 else apiAccount.id, if (anon) 0 else apiAccount.sex, publication.parentPublicationType,
                         if (anon) "" else apiAccount.name, publication.tag_s_1, ControllerPublications.getMaskText(publication), ControllerPublications.getMaskPageType(publication))
                 ControllerNotifications.push(publication.creator.id, notification)

@@ -6,6 +6,7 @@ import com.dzen.campfire.server.tables.*
 import com.sup.dev.java.classes.items.Item2
 import com.sup.dev.java.tools.ToolsDate
 import com.sup.dev.java_pc.sql.*
+import java.util.concurrent.ConcurrentHashMap
 
 object ControllerOptimizer {
 
@@ -13,25 +14,19 @@ object ControllerOptimizer {
     //  Up rates notifications lock
     //
 
-    private val upRatesNotificationsCash = HashMap<String, Int>()
+    private val upRatesNotificationsCounts = ConcurrentHashMap<String, Int>()
     private var upRatesNotificationsLastDrop = 0L
 
-    fun canUpRateNotification(accountId: Long, targetAccountId: Long):Boolean {
-        var b = true;
+    fun canUpRateNotification(accountId: Long, targetAccountId: Long): Boolean {
         val key = "${accountId}_$targetAccountId"
-        synchronized(upRatesNotificationsCash){
-            if(upRatesNotificationsLastDrop < System.currentTimeMillis() - 1000L * 60 * 5){
-                upRatesNotificationsCash.clear()
-                upRatesNotificationsLastDrop = System.currentTimeMillis()
-            }
-            val count = upRatesNotificationsCash[key] ?:0
-            if(count >= 5){
-                b = false
-            }else{
-                upRatesNotificationsCash[key] = count+1
-            }
+        if (upRatesNotificationsLastDrop < System.currentTimeMillis() - 1000L * 60 * 5) {
+            upRatesNotificationsCounts.clear()
+            upRatesNotificationsLastDrop = System.currentTimeMillis()
         }
-        return b
+        val resultCount = upRatesNotificationsCounts.compute(key) { _, v -> if (v == null) 1 else v + 1 } ?: 0
+        if (resultCount > 5) return false
+        if (!ControllerAccounts.getSettings(targetAccountId).notificationsFilterKarma) return false
+        return true
     }
 
     //
