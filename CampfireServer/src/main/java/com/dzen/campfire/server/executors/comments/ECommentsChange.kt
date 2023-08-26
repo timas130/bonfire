@@ -7,7 +7,7 @@ import com.dzen.campfire.api.requests.comments.RCommentsChange
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
 
-class ECommentsChange : RCommentsChange(0, "", 0) {
+class ECommentsChange : RCommentsChange(0, "", 0, false) {
 
     private var publication: PublicationComment? = null
 
@@ -34,6 +34,7 @@ class ECommentsChange : RCommentsChange(0, "", 0) {
         publication!!.quoteId = 0
         publication!!.quoteText = ""
         publication!!.quoteImages = emptyArray()
+        publication!!.newFormatting = newFormatting
 
         if (quoteId != 0L) {
             val quoteUnit = ControllerPublications.getPublication(quoteId, apiAccount.id)

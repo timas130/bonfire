@@ -5,9 +5,10 @@ import com.sup.dev.java.libs.json.Json
 
 
 open class RCommentsChange(
-        var commentId: Long,
-        var text: String,
-        var quoteId: Long
+    var commentId: Long,
+    var text: String,
+    var quoteId: Long,
+    var newFormatting: Boolean,
 ) : Request<RCommentsChange.Response>() {
 
     companion object {
@@ -18,6 +19,7 @@ open class RCommentsChange(
         commentId = json.m(inp, "commentId", commentId)
         quoteId = json.m(inp, "quoteId", quoteId)
         text = json.m(inp, "text", text)
+        newFormatting = json.m(inp, "newFormatting", newFormatting)
     }
 
     override fun instanceResponse(json: Json): Response {

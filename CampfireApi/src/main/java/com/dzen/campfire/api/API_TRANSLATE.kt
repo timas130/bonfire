@@ -1510,6 +1510,9 @@ object API_TRANSLATE {
     val comment_error_gone_remove = Translate("Комментарий удалён пользователем.")
     val comment_error_gone_block = Translate("Комментарий заблокирован доблестными модераторами Bonfire.")
 
+    val send_new_formatting = Translate("Отправить в новом форматировании")
+    val send_old_formatting = Translate("Отправить в старом форматировании")
+
     val fandom_chat_creation_hint = Translate("Текст главной страницы чата")
     val fandom_chat_remove_alert = Translate("Удалить этот чат?")
     val fandom_chat_remove_background_alert = Translate("Удалить фон этого чата?")

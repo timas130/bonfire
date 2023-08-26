@@ -145,10 +145,10 @@ class ColorExtension : Parser.ParserExtension {
 }
 
 @PrismBundle(include = ["json"], grammarLocatorClassName = ".BFMGrammarLocator")
-class BFMCorePlugin : CorePlugin() {
+class BFMCorePlugin(val inlineOnly: Boolean) : CorePlugin() {
     companion object {
         @JvmStatic
-        fun create(): BFMCorePlugin = BFMCorePlugin()
+        fun create(inlineOnly: Boolean): BFMCorePlugin = BFMCorePlugin(inlineOnly)
 
         private val textWidthProp = Prop.of<Float>("bfm-text-width")
         private val colorProp = Prop.of<Int>("bfm-color")
@@ -157,6 +157,9 @@ class BFMCorePlugin : CorePlugin() {
 
     override fun configureParser(builder: Parser.Builder) {
         builder.extensions(setOf(ColorExtension(), AutolinkExtension.create()))
+        if (inlineOnly) {
+            builder.enabledBlockTypes(setOf())
+        }
     }
 
     override fun configureSpansFactory(builder: MarkwonSpansFactory.Builder) {

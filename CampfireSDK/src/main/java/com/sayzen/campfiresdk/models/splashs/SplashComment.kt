@@ -2,11 +2,10 @@ package com.sayzen.campfiresdk.models.splashs
 
 import android.graphics.Bitmap
 import android.net.Uri
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.PublicationComment
 import com.dzen.campfire.api.models.publications.stickers.PublicationSticker
@@ -24,18 +23,18 @@ import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sup.dev.android.tools.ToolsBitmap
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
+import com.sup.dev.android.views.splash.Splash
+import com.sup.dev.android.views.splash.SplashAlert
+import com.sup.dev.android.views.splash.SplashMenu
 import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.views.ViewEditText
 import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.android.views.views.ViewText
-import com.sup.dev.android.views.splash.Splash
-import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsNetwork
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
-import java.lang.Exception
 
 class SplashComment constructor(
         private val publicationId: Long,
@@ -54,6 +53,8 @@ class SplashComment constructor(
     private val vQuoteText: ViewText = findViewById(R.id.vQuoteText)
     private val vFieldContainer: ViewGroup = findViewById(R.id.vFieldContainer)
     private val vSendContainer: ViewGroup = findViewById(R.id.vSendContainer)
+
+    private var newFormatting = true
 
     private var attach = Attach(vAttach, vAttachRecycler,
             { updateSendEnabled() },
@@ -81,6 +82,7 @@ class SplashComment constructor(
             vText.setSelection(vText.text!!.length)
             quoteText = changeComment.quoteText
             quoteId = changeComment.quoteId
+            newFormatting = changeComment.newFormatting
         } else if (answer != null && quoteId == 0L) {
             vText.setText(answer.creator.name + ", ")
             vText.setSelection(vText.text!!.length)
@@ -94,9 +96,21 @@ class SplashComment constructor(
         vText.addTextChangedListener(TextWatcherChanged { updateSendEnabled() })
 
         vSend.setOnClickListener { onSendClicked() }
+        vSend.setOnLongClickListener {
+            SplashMenu()
+                .add(t(API_TRANSLATE.send_new_formatting)) {
+                    newFormatting = true
+                    onSendClicked()
+                }
+                .add(t(API_TRANSLATE.send_old_formatting)) {
+                    newFormatting = false
+                    onSendClicked()
+                }
+                .asPopupShow(it)
+            true
+        }
         vSend.setImageResource(if (changeComment == null) R.drawable.ic_send_white_24dp else R.drawable.ic_done_white_24dp)
         vAttach.visibility = if (changeComment == null) View.VISIBLE else View.GONE
-
 
         vFieldContainer.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             if (vFieldContainer.height >= ToolsView.dpToPx(130)) {
@@ -208,21 +222,36 @@ class SplashComment constructor(
 
 
     private fun sendText(text: String, parentId: Long) {
-        SGoogleRules.acceptRulesDialog() {
-            ApiRequestsSupporter.executeEnabled(this, RCommentsCreate(publicationId, text, null, null, parentId, ControllerSettings.watchPost, quoteId, 0)) { r ->
+        SGoogleRules.acceptRulesDialog {
+            ApiRequestsSupporter.executeEnabled(
+                this,
+                RCommentsCreate(
+                    publicationId,
+                    text,
+                    null,
+                    null,
+                    parentId,
+                    ControllerSettings.watchPost,
+                    quoteId,
+                    0,
+                    newFormatting,
+                )
+            ) { r ->
                 afterSend(r.comment)
+            }.onApiError(RCommentsCreate.E_BAD_PUBLICATION_STATUS) {
+                ToolsToast.show(t(API_TRANSLATE.error_gone))
+            }.onApiError(RCommentsCreate.E_PARENT_COMMENT_DONT_EXIST) {
+                ToolsToast.show(t(API_TRANSLATE.comment_error_gone_parent))
             }
-                    .onApiError(RCommentsCreate.E_BAD_PUBLICATION_STATUS) { ToolsToast.show(t(API_TRANSLATE.error_gone)) }
-                    .onApiError(RCommentsCreate.E_PARENT_COMMENT_DONT_EXIST) { ToolsToast.show(t(API_TRANSLATE.comment_error_gone_parent)) }
         }
 
     }
 
     private fun sendChange(text: String) {
-        SGoogleRules.acceptRulesDialog() {
+        SGoogleRules.acceptRulesDialog {
             ApiRequestsSupporter.executeEnabled(
-                    this,
-                    RCommentsChange(changeComment!!.id, text, quoteId)
+                this,
+                RCommentsChange(changeComment!!.id, text, quoteId, newFormatting)
             ) {
                 ToolsToast.show(t(API_TRANSLATE.app_changed))
                 EventBus.post(EventCommentChange(changeComment.id, text, quoteId, quoteText))
@@ -278,18 +307,25 @@ class SplashComment constructor(
                 ToolsThreads.main {
                     ApiRequestsSupporter.executeProgressDialog(
                             RCommentsCreate(
-                                    publicationId,
-                                    text,
-                                    bytes,
-                                    gif,
-                                    parentId,
-                                    ControllerSettings.watchPost,
-                                    quoteId,
-                                    0
-                            )) { r -> afterSend(r.comment) }
-                            .onApiError(RCommentsCreate.E_BAD_PUBLICATION_STATUS) { ToolsToast.show(t(API_TRANSLATE.error_gone)) }
-                            .onApiError(RCommentsCreate.E_PARENT_COMMENT_DONT_EXIST) { ToolsToast.show(t(API_TRANSLATE.comment_error_gone_parent)) }
-                            .onFinish { setEnabled(true) }
+                                publicationId,
+                                text,
+                                bytes,
+                                gif,
+                                parentId,
+                                ControllerSettings.watchPost,
+                                quoteId,
+                                0,
+                                newFormatting
+                            )
+                    ) { r ->
+                        afterSend(r.comment)
+                    }.onApiError(RCommentsCreate.E_BAD_PUBLICATION_STATUS) {
+                        ToolsToast.show(t(API_TRANSLATE.error_gone))
+                    }.onApiError(RCommentsCreate.E_PARENT_COMMENT_DONT_EXIST) {
+                        ToolsToast.show(t(API_TRANSLATE.comment_error_gone_parent))
+                    }.onFinish {
+                        setEnabled(true
+                        ) }
                 }
             }
 
@@ -304,24 +340,30 @@ class SplashComment constructor(
             return
         }
 
-        SGoogleRules.acceptRulesDialog() {
+        SGoogleRules.acceptRulesDialog {
             setEnabled(false)
 
             ApiRequestsSupporter.executeProgressDialog(
                     RCommentsCreate(
-                            publicationId,
-                            text,
-                            null,
-                            null,
-                            answer?.id ?: 0,
-                            ControllerSettings.watchPost,
-                            quoteId,
-                            sticker.id
+                        publicationId,
+                        text,
+                        null,
+                        null,
+                        answer?.id ?: 0,
+                        ControllerSettings.watchPost,
+                        quoteId,
+                        sticker.id,
+                        newFormatting,
                     )
-            ) { r -> afterSend(r.comment) }
-                    .onApiError(RCommentsCreate.E_BAD_PUBLICATION_STATUS) { ToolsToast.show(t(API_TRANSLATE.error_gone)) }
-                    .onApiError(RCommentsCreate.E_PARENT_COMMENT_DONT_EXIST) { ToolsToast.show(t(API_TRANSLATE.comment_error_gone_parent)) }
-                    .onFinish { setEnabled(true) }
+            ) { r ->
+                afterSend(r.comment)
+            }.onApiError(RCommentsCreate.E_BAD_PUBLICATION_STATUS) {
+                ToolsToast.show(t(API_TRANSLATE.error_gone))
+            }.onApiError(RCommentsCreate.E_PARENT_COMMENT_DONT_EXIST) {
+                ToolsToast.show(t(API_TRANSLATE.comment_error_gone_parent))
+            }.onFinish {
+                setEnabled(true)
+            }
         }
     }
 

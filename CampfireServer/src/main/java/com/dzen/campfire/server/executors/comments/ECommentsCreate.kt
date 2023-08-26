@@ -20,7 +20,7 @@ import com.sup.dev.java_pc.sql.SqlQueryUpdate
 import com.sup.dev.java_pc.sql.SqlWhere
 import com.sup.dev.java_pc.tools.ToolsImage
 
-class ECommentsCreate : RCommentsCreate(0, "", null, null, 0, false, 0, 0) {
+class ECommentsCreate : RCommentsCreate(0, "", null, null, 0, false, 0, 0, false) {
 
     private var sticker = PublicationSticker()
     private val comment = PublicationComment()
@@ -105,6 +105,7 @@ class ECommentsCreate : RCommentsCreate(0, "", null, null, 0, false, 0, 0) {
         } else {
             comment.type = PublicationComment.TYPE_TEXT
         }
+        comment.newFormatting = newFormatting
 
         if (quoteId != 0L) {
             val quotePublication = ControllerPublications.getPublication(quoteId, apiAccount.id)

@@ -5,27 +5,26 @@ import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
 open class RCommentsCreate(
-        var publicationId: Long,
-        var text: String,
-        var imageArray: Array<ByteArray>?,
-        var gif: ByteArray?,
-        var parentCommentId: Long,
-        var watchPost: Boolean,
-        var quoteId: Long,
-        var stickerId: Long
+    var publicationId: Long,
+    var text: String,
+    var imageArray: Array<ByteArray>?,
+    var gif: ByteArray?,
+    var parentCommentId: Long,
+    var watchPost: Boolean,
+    var quoteId: Long,
+    var stickerId: Long,
+    var newFormatting: Boolean,
 ) : Request<RCommentsCreate.Response>() {
-
     companion object {
-
-        val E_BAD_TEXT_SIZE = "E_BAD_TEXT_SIZE"
-        val E_PARENT_COMMENT_DONT_EXIST = "E_PARENT_COMMENT_DONT_EXIST"
-        val E_BAD_PUBLICATION_TYPE = "E_BAD_PUBLICATION_TYPE"
-        val E_BAD_PUBLICATION_STATUS = "E_BAD_PUBLICATION_STATUS"
-        val E_BAD_PARENT_COMMENT_TYPE = "E_BAD_PARENT_COMMENT_TYPE"
-        val E_BAD_PARENT_COMMENT_TARGET_PUBLICATION_ID = "E_BAD_PARENT_COMMENT_TARGET_PUBLICATION_ID"
-        val E_BAD_IMAGE = "E_BAD_IMAGE"
-        val E_BAD_GIF = "E_BAD_GIF"
-        val E_BAD_DATA = "E_BAD_DATA"
+        const val E_BAD_TEXT_SIZE = "E_BAD_TEXT_SIZE"
+        const val E_PARENT_COMMENT_DONT_EXIST = "E_PARENT_COMMENT_DONT_EXIST"
+        const val E_BAD_PUBLICATION_TYPE = "E_BAD_PUBLICATION_TYPE"
+        const val E_BAD_PUBLICATION_STATUS = "E_BAD_PUBLICATION_STATUS"
+        const val E_BAD_PARENT_COMMENT_TYPE = "E_BAD_PARENT_COMMENT_TYPE"
+        const val E_BAD_PARENT_COMMENT_TARGET_PUBLICATION_ID = "E_BAD_PARENT_COMMENT_TARGET_PUBLICATION_ID"
+        const val E_BAD_IMAGE = "E_BAD_IMAGE"
+        const val E_BAD_GIF = "E_BAD_GIF"
+        const val E_BAD_DATA = "E_BAD_DATA"
     }
 
     init {
@@ -47,6 +46,7 @@ open class RCommentsCreate(
         watchPost = json.m(inp, "watchPost", watchPost)
         quoteId = json.m(inp, "quoteId", quoteId)
         stickerId = json.m(inp, "stickerId", stickerId)
+        newFormatting = json.m(inp, "newFormatting", newFormatting)
     }
 
     override fun instanceResponse(json: Json): Response {
@@ -55,7 +55,7 @@ open class RCommentsCreate(
 
     class Response : Request.Response {
 
-        var comment  = PublicationComment()
+        var comment = PublicationComment()
 
         constructor(json: Json) {
             json(false, json)

@@ -4,15 +4,12 @@ import com.dzen.campfire.api.API
 import com.sup.dev.java.libs.json.Json
 
 class PublicationComment : Publication {
-
     companion object {
-
-        val TYPE_TEXT = 0L
-        val TYPE_IMAGE = 3L
-        val TYPE_GIF = 4L
-        val TYPE_IMAGES = 5L
-        val TYPE_STICKER = 6L
-
+        const val TYPE_TEXT = 0L
+        const val TYPE_IMAGE = 3L
+        const val TYPE_GIF = 4L
+        const val TYPE_IMAGES = 5L
+        const val TYPE_STICKER = 6L
     }
 
     var parentCommentId = 0L
@@ -26,6 +23,7 @@ class PublicationComment : Publication {
     var quoteCreatorName = ""
     var answerName = ""
 
+    var newFormatting = false
     //  TYPE_TEXT
     var text = ""
     //  TYPE_IMAGE
@@ -81,6 +79,8 @@ class PublicationComment : Publication {
         stickerId = json.m(inp, "stickerId", stickerId)
         stickerImageId = json.m(inp, "stickerImageId", stickerImageId)
         stickerGifId = json.m(inp, "stickerGifId", stickerGifId)
+
+        newFormatting = json.m(inp, "newFormatting", newFormatting)
 
         return json
     }

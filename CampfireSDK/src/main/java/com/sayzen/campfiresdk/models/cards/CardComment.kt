@@ -43,6 +43,7 @@ import com.sup.dev.java.classes.collections.HashList
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.libs.text_format.TextFormatter
 import com.sup.dev.java.tools.ToolsDate
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 open class CardComment protected constructor(
         publication: PublicationComment,
@@ -263,28 +264,41 @@ open class CardComment protected constructor(
         val vText: ViewText = view.findViewById(R.id.vText)
 
         var text = publication.text
-        if (text.length > maxTextSize) {
-            val parsedText = TextFormatter(text).parseNoTags()
-            if (parsedText.length > maxTextSize) {
-                text = "${parsedText.subSequence(0, maxTextSize)}..."
+        if (!publication.newFormatting) {
+            if (text.length > maxTextSize) {
+                val parsedText = TextFormatter(text).parseNoTags()
+                if (parsedText.length > maxTextSize) {
+                    text = "${parsedText.subSequence(0, maxTextSize)}..."
+                }
             }
-        }
-        vText.text = text
-        ControllerLinks.makeLinkable(vText) {
-            val myName = ControllerApi.account.getName() + ","
-            if (publication.text.startsWith(myName)) {
-                vText.text = "{ff6d00 $myName}" + "${vText.text}".substring(myName.length)
-            } else {
-                if (publication.answerName.isNotEmpty()) {
-                    val otherName = publication.answerName + ","
-                    if (publication.text.startsWith(otherName)) {
-                        vText.text = "{90A4AE $otherName}" + "${vText.text}".substring(otherName.length)
+            vText.text = text
+            ControllerLinks.makeLinkable(vText) {
+                val myName = ControllerApi.account.getName() + ","
+                if (publication.text.startsWith(myName)) {
+                    vText.text = "{ff6d00 $myName}" + "${vText.text}".substring(myName.length)
+                } else {
+                    if (publication.answerName.isNotEmpty()) {
+                        val otherName = publication.answerName + ","
+                        if (publication.text.startsWith(otherName)) {
+                            vText.text = "{90A4AE $otherName}" + "${vText.text}".substring(otherName.length)
+                        }
                     }
                 }
             }
+        } else {
+            BonfireMarkdown.setMarkdownInline(vText, text)
+            ControllerLinks.linkifyShort(vText)
+            if (text.length > maxTextSize) {
+                // no spans lost! zeon is in tears!
+                vText.text = vText.text.subSequence(0, maxTextSize)
+            }
         }
-        vText.visibility = if (publication.text.isEmpty()) View.GONE else View.VISIBLE
-        (vText.layoutParams as ViewGroup.MarginLayoutParams).topMargin = if (publication.quoteId > 0) 0 else ToolsView.dpToPx(8).toInt()
+
+        (vText.layoutParams as ViewGroup.MarginLayoutParams).topMargin = if (publication.quoteId > 0) {
+            0
+        } else {
+            ToolsView.dpToPx(8).toInt()
+        }
     }
 
     fun updateSwipe() {

@@ -17,9 +17,9 @@ import me.saket.bettermovementmethod.BetterLinkMovementMethod
 import java.util.concurrent.Executors
 
 object BonfireMarkdown {
-    private fun createMarkwon(context: Context): Markwon {
+    private fun createMarkwon(context: Context, inlineOnly: Boolean = false): Markwon {
         return Markwon.builder(context)
-            .usePlugin(BFMCorePlugin.create())
+            .usePlugin(BFMCorePlugin.create(inlineOnly))
             .usePlugin(TaskListPlugin.create(context))
             .usePlugin(StrikethroughPlugin())
             .usePlugin(SimpleExtPlugin.create { plugin ->
@@ -43,9 +43,11 @@ object BonfireMarkdown {
     }
 
     private lateinit var markwon: Markwon
+    private lateinit var markwonInline: Markwon
 
     fun init(context: Context) {
         markwon = createMarkwon(context)
+        markwonInline = createMarkwon(context, inlineOnly = true)
     }
 
     fun setMarkdown(view: TextView, text: String) {
@@ -53,6 +55,10 @@ object BonfireMarkdown {
         view.post {
             view.movementMethod = BetterLinkMovementMethod.getInstance()
         }
+    }
+
+    fun setMarkdownInline(view: TextView, text: String) {
+        markwonInline.setMarkdown(view, text)
     }
 
     fun getEditorTextChangedListener(view: EditText): TextWatcher {
