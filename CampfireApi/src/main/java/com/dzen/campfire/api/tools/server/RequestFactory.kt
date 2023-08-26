@@ -2,25 +2,18 @@
 
 package com.dzen.campfire.api.tools.server
 
-import com.sup.dev.java.libs.anatations.ToolsAnatations
 import com.dzen.campfire.api.tools.client.Request
+import com.sup.dev.java.libs.anatations.ToolsAnatations
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.debug.info
-import com.sup.dev.java.libs.debug.log
 import com.sup.dev.java.libs.json.Json
 import java.io.File
-import java.lang.ClassCastException
 import java.lang.reflect.Constructor
 import java.lang.reflect.InvocationTargetException
-import java.util.HashMap
 import kotlin.reflect.KClass
 
 
-class RequestFactory(
-        val jarName: String?,
-        val srcPatch: String?
-) {
-
+class RequestFactory(jarName: String?, srcPatch: String?) {
     private val requests = HashMap<String, Constructor<out Request<*>>>()
     private val supportNamesMapper = HashMap<String, String>()
 
