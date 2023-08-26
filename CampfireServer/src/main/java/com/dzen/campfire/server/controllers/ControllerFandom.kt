@@ -6,19 +6,16 @@ import com.dzen.campfire.api.models.fandoms.FandomLink
 import com.dzen.campfire.api.models.lvl.LvlInfoAdmin
 import com.dzen.campfire.api.models.lvl.LvlInfoModeration
 import com.dzen.campfire.api.models.lvl.LvlInfoUser
+import com.dzen.campfire.api.tools.ApiAccount
+import com.dzen.campfire.api.tools.ApiException
+import com.dzen.campfire.server.optimizers.OptimizerEffects
 import com.dzen.campfire.server.tables.TAccounts
 import com.dzen.campfire.server.tables.TCollisions
 import com.dzen.campfire.server.tables.TFandoms
 import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java.classes.collections.AnyArray
-import com.dzen.campfire.api.tools.ApiAccount
-import com.dzen.campfire.api.tools.ApiException
-import com.dzen.campfire.server.optimizers.OptimizerEffects
 import com.sup.dev.java.classes.items.Item2
-import com.sup.dev.java.libs.debug.log
 import com.sup.dev.java_pc.sql.*
-import java.lang.Exception
-import java.lang.RuntimeException
 
 
 object ControllerFandom {
@@ -230,13 +227,8 @@ object ControllerFandom {
         if (OptimizerEffects.get(account.id, API.EFFECT_INDEX_ADMIN_BAN) != null) return false
         if (account.id == getViceroyId(fandomId, languageId)) return true
         if (account.accessTag < moderateInfo.lvl || ControllerAccounts.isBot(account)) return false
-        try {
-            if (!can(account, API.LVL_ADMIN_MODER)) return false
-        } catch (e: ApiException) {
-            if (moderateInfo.karmaCount > 0 && getKarma30(account.id, fandomId, languageId) < moderateInfo.karmaCount)
-                return false
-        }
-        return true
+        if (can(account, API.LVL_ADMIN_MODER)) return true
+        return moderateInfo.karmaCount <= 0 || getKarma30(account.id, fandomId, languageId) >= moderateInfo.karmaCount
     }
 
     fun checkCan(account: ApiAccount, fandomId: Long, languageId: Long, moderateInfo: LvlInfoModeration) {
