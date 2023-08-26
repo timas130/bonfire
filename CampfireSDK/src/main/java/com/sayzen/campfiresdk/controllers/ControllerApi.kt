@@ -75,13 +75,10 @@ val api: API = API(
     { ToolsStorage.getString(it, null) },
     { err -> Sentry.captureException(err) }
 ).apply {
-    networkingProvider = CombinedNetworkingProvider(
-        HttpsClientNetworkingProvider(HTTPSClient(API.IP, API.PORT_HTTPS, API.PORT_CERTIFICATE)),
-        OkHttpNetworkingProvider(
-            SupAndroid.appContext!!,
-            API.SERV_ROOT,
-            "CampfireSDK/${API.VERSION}"
-        ),
+    networkingProvider = OkHttpNetworkingProvider(
+        SupAndroid.appContext!!,
+        API.SERV_ROOT,
+        "CampfireSDK/${API.VERSION}"
     )
 }
 
@@ -93,13 +90,10 @@ val apiMedia: APIMedia = APIMedia(
         APIMedia.PORT_CERTIFICATE,
         { _, _ -> }, { "" }
 ).apply {
-    networkingProvider = CombinedNetworkingProvider(
-        HttpsClientNetworkingProvider(HTTPSClient(APIMedia.IP, APIMedia.PORT_HTTPS, APIMedia.PORT_CERTIFICATE)),
-        OkHttpNetworkingProvider(
-            SupAndroid.appContext!!,
-            APIMedia.SERV_ROOT,
-            "CampfireSDK/M${API.VERSION}"
-        ),
+    networkingProvider = OkHttpNetworkingProvider(
+        SupAndroid.appContext!!,
+        APIMedia.SERV_ROOT,
+        "CampfireSDK/M${API.VERSION}"
     )
 }
 
