@@ -4,10 +4,11 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.notifications.account.NotificationAccountsFollowsAdd
 import com.dzen.campfire.api.models.notifications.account.NotificationAccountsFollowsRemove
 import com.dzen.campfire.api.requests.accounts.RAccountsFollowsChange
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerAchievements
-import com.dzen.campfire.server.controllers.ControllerNotifications
 import com.dzen.campfire.server.controllers.ControllerCollisions
+import com.dzen.campfire.server.controllers.ControllerNotifications
 import com.dzen.campfire.server.tables.TCollisions
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQuerySelect
@@ -16,6 +17,7 @@ class EAccountsFollowsChange : RAccountsFollowsChange(0, false) {
 
     override fun check() {
         ControllerAccounts.checkAccountBanned(apiAccount.id)
+        if (apiAccount.id == accountId) throw ApiException(API.ERROR_ACCESS)
     }
 
     override fun execute(): Response {
