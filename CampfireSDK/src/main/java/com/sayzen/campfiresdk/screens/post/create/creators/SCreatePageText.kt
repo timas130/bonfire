@@ -18,12 +18,14 @@ import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.cards.Card
-import com.sup.dev.android.views.support.watchers.TextWatcherChanged
-import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashFieldTwo
 import com.sup.dev.android.views.splash.SplashGreed
+import com.sup.dev.android.views.splash.SplashMenu
+import com.sup.dev.android.views.support.watchers.TextWatcherChanged
+import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.java.tools.ToolsText
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class SCreatePageText(
         private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((Card) -> Unit)) -> Unit,
@@ -32,6 +34,7 @@ class SCreatePageText(
         private val oldPage: PageText?
 ) : Screen(R.layout.screen_post_create_text) {
 
+    private val vMore: ViewIcon = findViewById(R.id.vMore)
     private val vField: EditText = findViewById(R.id.vField)
     private val vFab: FloatingActionButton = findViewById(R.id.vFab)
     private val vTextTitle: ViewIcon = findViewById(R.id.vTextTitle)
@@ -44,9 +47,12 @@ class SCreatePageText(
     private var size = PageText.SIZE_0
     private var align = PageText.ALIGN_LEFT
     private var icon = 0
+    private var newFormatting = true
 
     private val maxL: Int
         get() = if (size == PageText.SIZE_0) API.PAGE_TEXT_MAX_L else API.PAGE_TEXT_TITLE_MAX_L
+
+    private val markdownListener = BonfireMarkdown.getEditorTextChangedListener(vField)
 
     init {
         disableShadows()
@@ -57,6 +63,7 @@ class SCreatePageText(
         vField.setSingleLine(false)
         vField.imeOptions = EditorInfo.IME_FLAG_NO_ENTER_ACTION
         vField.gravity = Gravity.TOP
+
         vField.addTextChangedListener(TextWatcherChanged { update() })
         ControllerMention.startFor(vField)
 
@@ -67,13 +74,13 @@ class SCreatePageText(
                 onTextSizeClicked(PageText.SIZE_1)
         }
 
-
         if (oldPage != null) {
             vField.setText(this.oldPage.text)
             vField.setSelection(vField.text.length)
             onTextSizeClicked(this.oldPage.size)
             icon = this.oldPage.icon
             align = this.oldPage.align
+            newFormatting = this.oldPage.newFormatting
         } else {
             onTextSizeClicked(size)
         }
@@ -95,9 +102,40 @@ class SCreatePageText(
         vAlignRight.setOnClickListener { setAlign(PageText.ALIGN_RIGHT) }
         vLink.setOnClickListener { addLink() }
 
+        vMore.setOnClickListener {
+            SplashMenu()
+                .apply {
+                    if (newFormatting) {
+                        add(t(API_TRANSLATE.post_page_text_new_formatting_off)) {
+                            newFormatting = false
+                            updateFormattingType()
+                        }
+                    } else {
+                        add(t(API_TRANSLATE.post_page_text_new_formatting_on)) {
+                            newFormatting = true
+                            updateFormattingType()
+                        }
+                    }
+                }
+                .asPopupShow(it)
+        }
+
         updateIcon()
         update()
         updateAlign()
+        updateFormattingType()
+    }
+
+    private fun updateFormattingType() {
+        vTextTitle.visibility = if (newFormatting) GONE else VISIBLE
+
+        vField.removeTextChangedListener(markdownListener)
+        if (newFormatting) {
+            vField.addTextChangedListener(markdownListener)
+            markdownListener.afterTextChanged(vField.editableText)
+        } else {
+            vField.setText(vField.text.toString())
+        }
     }
 
     private fun addLink() {
@@ -113,7 +151,11 @@ class SCreatePageText(
                 .addChecker_2(t(API_TRANSLATE.error_not_url)) { ToolsText.isWebLink(it) }
                 .setOnEnter(t(API_TRANSLATE.app_add)) { w, name, link ->
                     val text = vField.text.toString()
-                    val linkS = "[$name]$link"
+                    val linkS = if (newFormatting) {
+                        "[$name]($link)"
+                    } else {
+                        "[$name]$link"
+                    }
                     vField.setText(text.substring(0, s1) + linkS + text.subSequence(s2, text.length))
                     vField.setSelection(s1 + linkS.length)
                 }

@@ -22,9 +22,8 @@ import com.sayzen.campfiresdk.screens.achievements.SAchievements
 import com.sayzen.campfiresdk.screens.fandoms.moderation.view.SModerationView
 import com.sayzen.campfiresdk.screens.post.create.SPostCreate
 import com.sayzen.campfiresdk.screens.post.view.SPost
-import com.sayzen.devsupandroidgoogle.ControllerFirebaseAnalytics
-import com.sayzen.devsupandroidgoogle.ControllerGoogleAuth
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.devsupandroidgoogle.ControllerGoogleAuth
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.tools.ToolsIntent
@@ -40,6 +39,7 @@ import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsColor
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 object ControllerCampfireSDK {
 
@@ -76,6 +76,7 @@ object ControllerCampfireSDK {
         ControllerNotifications.init(logoColored, logoWhite)
         ControllerAlive.init()
         ControllerGoogleAuth.init("778141366343-bmunivg1shmt12gk3tf6svcj5cj8koun.apps.googleusercontent.com", onLoginFailed)
+        BonfireMarkdown.init(SupAndroid.appContext!!)
 
         SAlert.GLOBAL_SHOW_WHOOPS = false
 

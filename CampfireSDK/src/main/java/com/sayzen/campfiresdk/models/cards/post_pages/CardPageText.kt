@@ -2,12 +2,10 @@ package com.sayzen.campfiresdk.models.cards.post_pages
 
 import android.view.Gravity
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
-import com.dzen.campfire.api.models.publications.PagesContainer
 import com.dzen.campfire.api.models.notifications.publications.NotificationMention
-
+import com.dzen.campfire.api.models.publications.PagesContainer
 import com.dzen.campfire.api.models.publications.post.PageText
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
@@ -16,25 +14,26 @@ import com.sayzen.campfiresdk.controllers.ControllerNotifications
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.views.ViewText
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class CardPageText(
         pagesContainer: PagesContainer?,
         page: PageText
 ) : CardPage(R.layout.card_page_text, pagesContainer, page) {
-
-    var maxLines = Integer.MAX_VALUE
-
     override fun bindView(view: View) {
         super.bindView(view)
         val page = page as PageText
         val vText: ViewText = view.findViewById(R.id.vText)
         val vTextIcon: ImageView = view.findViewById(R.id.vTextIcon)
-        vText.setTextIsSelectable(clickable)
-        vText.maxLines = maxLines
 
         vText.text = page.text
-        vText.textSize = (if (page.size == PageText.SIZE_0) 14 else 21).toFloat()
-        ControllerLinks.makeLinkable(vText)
+        vText.setTextIsSelectable(clickable)
+        if (page.newFormatting) {
+            BonfireMarkdown.setMarkdown(vText, page.text)
+        } else {
+            vText.textSize = (if (page.size == PageText.SIZE_0) 16 else 21).toFloat()
+            ControllerLinks.makeLinkable(vText)
+        }
 
         if (page.icon > 0 && page.icon < CampfireConstants.TEXT_ICONS.size) {
             vTextIcon.setImageDrawable(ToolsResources.getDrawable(CampfireConstants.TEXT_ICONS[page.icon]))
@@ -45,8 +44,6 @@ class CardPageText(
             vTextIcon.visibility = View.GONE
             (vText.layoutParams as LinearLayout.LayoutParams).leftMargin = ToolsView.dpToPx(0).toInt()
         }
-
-
 
         vText.gravity = Gravity.LEFT or Gravity.TOP
         if (page.align == PageText.ALIGN_CENTER) vText.gravity = Gravity.CENTER or Gravity.TOP

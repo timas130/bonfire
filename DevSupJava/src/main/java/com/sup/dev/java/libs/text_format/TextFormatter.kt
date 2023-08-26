@@ -7,10 +7,10 @@ class TextFormatter(
         val text: String
 ) {
     companion object {
-        private val char_protector = '\\'
-        private val char_protector_word = '@'
-        private val char_no_format = "[noFormat]"
-        private val char_no_format_end = "[/noFormat]"
+        private const val char_protector = '\\'
+        private const val char_protector_word = '@'
+        private const val char_no_format = "[noFormat]"
+        private const val char_no_format_end = "[/noFormat]"
         private val chars_spec = arrayOf(char_protector, char_protector_word, '*', '^', '~', '_', '{', '}')
         private val colors = hashMapOf(
             "red" to "D32F2F", "pink" to "C2185B", "purple" to "7B1FA2", "indigo" to "303F9F",

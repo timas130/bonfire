@@ -4,22 +4,20 @@ import com.dzen.campfire.api.API
 import com.sup.dev.java.libs.json.Json
 
 class PageText : Page() {
-
     companion object {
-
         val SIZE_0 = 0
         val SIZE_1 = 1
 
         val ALIGN_LEFT = 0
         val ALIGN_RIGHT = 1
         val ALIGN_CENTER = 2
-
     }
 
     var text = ""
     var size = 0
     var align = 0
     var icon = 0
+    var newFormatting = true
 
     override fun getType() = API.PAGE_TYPE_TEXT
 
@@ -27,6 +25,7 @@ class PageText : Page() {
         text = json.m(inp, "J_TEXT", text)
         icon = json.m(inp, "icon", icon)
         align = json.m(inp, "align", align)
+        newFormatting = json.m(inp, "newFormatting", newFormatting)
 
         if (inp)
             json.put("J_SIZE", size)

@@ -82,6 +82,18 @@
                 style="@style/Icon.18.Filtered"
                 android:src="@drawable/ic_format_align_right_white_24dp" />
 
+            <View
+                style="@style/Divider"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp" />
+
+            <com.sup.dev.android.views.views.ViewIcon
+                android:id="@+id/vMore"
+                style="@style/Icon.18.Filtered"
+                android:src="@drawable/ic_more_vert_white_18dp" />
+
         </LinearLayout>
 
         <LinearLayout

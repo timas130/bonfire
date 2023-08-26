@@ -12,7 +12,9 @@
         android:layout_marginTop="4dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="4dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <ImageView
             android:id="@+id/vTextIcon"

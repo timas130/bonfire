@@ -1300,6 +1300,8 @@ object API_TRANSLATE {
     val post_confirm_to_draft_enter = Translate("Вернуть")
     val post_page_text = Translate("Текст")
     val post_page_text_hint = Translate("Введите текст страницы")
+    val post_page_text_new_formatting_off = Translate("Отключить новое форматирование")
+    val post_page_text_new_formatting_on = Translate("Включить новое форматирование")
     val post_page_image = Translate("Картинка")
     val post_page_video = Translate("Видео")
     val post_page_images = Translate("Список картинок")

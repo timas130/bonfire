@@ -1,3 +1,13 @@
-include ':Campfire', ':DevSupJava', ':DevSupJavaPc', ':DevSupAndroid', ':DevSupAndroidGoogle', ':CampfireServer', ':CampfireSDK', ':CampfireApi', ':CampfireServerMedia', ':CampfireApiMedia'
-include ':BonfireNetworking'
-include ':BonfireServerNetworking'
+include ':Campfire',
+        ':DevSupJava',
+        ':DevSupJavaPc',
+        ':DevSupAndroid',
+        ':DevSupAndroidGoogle',
+        ':CampfireServer',
+        ':CampfireSDK',
+        ':CampfireApi',
+        ':CampfireServerMedia',
+        ':CampfireApiMedia',
+        ':BonfireNetworking',
+        ':BonfireServerNetworking',
+        ':BonfireFormatting'
