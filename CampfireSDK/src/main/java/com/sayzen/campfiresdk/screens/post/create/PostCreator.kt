@@ -25,8 +25,8 @@ import com.sup.dev.android.tools.ToolsBitmap
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.cards.CardSpace
-import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapter
 import com.sup.dev.android.views.splash.Splash
+import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapter
 import com.sup.dev.java.tools.ToolsMapper
 import com.sup.dev.java.tools.ToolsThreads
 

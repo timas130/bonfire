@@ -5,13 +5,13 @@ import com.dzen.campfire.BuildConfig
 import com.dzen.campfire.R
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_RESOURCES
-import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
 import com.dzen.campfire.screens.intro.SIntro
 import com.google.firebase.FirebaseApp
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.ControllerPost
 import com.sayzen.campfiresdk.controllers.ControllerSettings
+import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
 import com.sayzen.campfiresdk.screens.other.rules.SGoogleRules
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sup.dev.android.app.SupAndroid
@@ -48,7 +48,7 @@ class App : Application() {
         ToolsAndroid.setLanguage(applicationContext, ControllerSettings.appLanguage)
 
         SActivity.onUrlClicked = {
-            if (!ControllerLinks.parseLink(it)) ControllerLinks.openLink(it)
+            ControllerLinks.openLink(it)
         }
 
         ImageLoaderId(API_RESOURCES.IMAGE_BACKGROUND_17).immortalCash().intoCash()

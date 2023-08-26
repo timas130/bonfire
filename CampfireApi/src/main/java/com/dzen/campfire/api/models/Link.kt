@@ -8,6 +8,4 @@ class Link(val link: String, val isInnerLink: Boolean = false) {
 
     fun asWeb() = "${API.DOMEN}$link-"
 
-    fun asWebOld() = "${API.DOMEN_OLD}$link-"
-
 }

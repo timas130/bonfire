@@ -1974,7 +1974,7 @@ object API_TRANSLATE {
     val message_publication_rules_1 = Translate("правилам Bonfire")
     val message_publication_rules_2 = Translate("правилам Google")
     val message_publication_rules_3 = Translate("политику конфиденциальности Bonfire")
-    val message_link = Translate("Перейдя по этой ссылке вы покинете приложение. Мы не несем ответственности за материалы и возможные угрозы, вызванные ресурсом находящемся по этой ссылке.")
+    val message_link = Translate("Перейдя по этой ссылке, вы покинете приложение. Мы не несем ответственности за материалы и возможные угрозы, вызванные ресурсом находящемся по этой ссылке.")
     val message_removed_by_server = Translate("Удалено сервером для экономии памяти")
     val message_do_ban_user = Translate("%s пользователя")
     val message_lvl_dialog = Translate("Вы получили новый уровень, перейдите в раздел привилегий чтобы проверить новые способности.")

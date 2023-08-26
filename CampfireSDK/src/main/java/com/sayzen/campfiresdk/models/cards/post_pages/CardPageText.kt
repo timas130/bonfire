@@ -30,6 +30,7 @@ class CardPageText(
         vText.setTextIsSelectable(clickable)
         if (page.newFormatting) {
             BonfireMarkdown.setMarkdown(vText, page.text)
+            ControllerLinks.linkifyShort(vText)
         } else {
             vText.textSize = (if (page.size == PageText.SIZE_0) 16 else 21).toFloat()
             ControllerLinks.makeLinkable(vText)

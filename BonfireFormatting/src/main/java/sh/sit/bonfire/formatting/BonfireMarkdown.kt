@@ -50,7 +50,9 @@ object BonfireMarkdown {
 
     fun setMarkdown(view: TextView, text: String) {
         markwon.setMarkdown(view, text)
-        view.movementMethod = BetterLinkMovementMethod.getInstance()
+        view.post {
+            view.movementMethod = BetterLinkMovementMethod.getInstance()
+        }
     }
 
     fun getEditorTextChangedListener(view: EditText): TextWatcher {

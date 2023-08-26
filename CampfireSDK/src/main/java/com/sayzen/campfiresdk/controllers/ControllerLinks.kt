@@ -3,6 +3,7 @@ package com.sayzen.campfiresdk.controllers
 import android.text.util.Linkify
 import android.view.Gravity
 import android.widget.TextView
+import androidx.core.text.util.LinkifyCompat
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.chat.ChatTag
@@ -13,7 +14,6 @@ import com.sayzen.campfiresdk.models.animations.*
 import com.sayzen.campfiresdk.screens.account.profile.SProfile
 import com.sayzen.campfiresdk.screens.account.stickers.SStickersView
 import com.sayzen.campfiresdk.screens.activities.support.SDonate
-import com.sayzen.campfiresdk.screens.activities.support.SDonateMake
 import com.sayzen.campfiresdk.screens.activities.user_activities.relay_race.SRelayRaceInfo
 import com.sayzen.campfiresdk.screens.chat.SChat
 import com.sayzen.campfiresdk.screens.comments.SComments
@@ -45,31 +45,26 @@ import com.sup.dev.java.tools.ToolsThreads
 import java.util.regex.Pattern
 
 object ControllerLinks {
-
-    var LINKS_ENABLED = true
+    private fun getRawLink(link: CharSequence): String {
+        return (if (link.startsWith("@") || link.startsWith("#")) {
+            link.substring(1)
+        } else if (link.startsWith(API.DOMEN)) {
+            link.substring(API.DOMEN.length)
+        } else {
+            link.toString()
+        }).replace('_', '-')
+    }
 
     fun parseLink(link: String): Boolean {
-        if (!LINKS_ENABLED) return false
         try {
+            val t = getRawLink(link)
 
-            var t: String
-            if (link.startsWith("@")) {
-                t = link.substring(1)
-            } else if (link.startsWith(API.DOMEN)) {
-                t = link.substring(API.DOMEN.length)
-            } else if (link.startsWith(API.DOMEN_OLD)) {
-                t = link.substring(API.DOMEN_OLD.length)
-            } else {
-                t = link.substring("http://@".length)
-                t = t.replace("_", "-")
-            }
-
-            val s1 = t.split("-")
+            val s1 = t.split('-')
             val linkV = s1[0]
             val params: List<String> = if (s1.size > 1) s1[1].split("_") else emptyList()
 
             when (linkV) {
-                API.LINK_ABOUT.link -> Navigator.to(Navigator.to(SWikiList(API.FANDOM_CAMPFIRE_ID, ControllerApi.getLanguageId(), 0, "")))
+                API.LINK_ABOUT.link -> Navigator.to(SWikiList(API.FANDOM_CAMPFIRE_ID, ControllerApi.getLanguageId(), 0, ""))
                 API.LINK_DONATE.link -> SDonate.instance(Navigator.TO)
                 API.LINK_DONATE_MAKE.link -> SplashAlert()
                     .setOnEnter(t(API_TRANSLATE.app_ok))
@@ -138,11 +133,11 @@ object ControllerLinks {
                 API.LINK_RUBRIC.link -> SRubricPosts.instance(params[0].toLong(), Navigator.TO)
                 API.LINK_QUEST.link -> SQuest.instance(params[0].toLong(), Navigator.TO)
                 else -> {
-                    if (link.startsWith("@") && ToolsText.isOnly(t, API.ACCOUNT_LOGIN_CHARS)) {
+                    if (ToolsText.isOnly(t, API.ACCOUNT_LOGIN_CHARS)) {
                         SProfile.instance(t, Navigator.TO)
                         return true
                     }
-                    info("ControllerExecutorLinks link was't found [$link]")
+                    info("ControllerExecutorLinks link wasn't found [$link][$t]")
                     return false
                 }
 
@@ -155,23 +150,11 @@ object ControllerLinks {
         }
     }
 
-    fun isCorrectLink(link: String): Boolean {
-        if (!LINKS_ENABLED) return false
+    fun isCorrectLink(link: CharSequence): Boolean {
         try {
+            val t = getRawLink(link)
 
-            var t: String
-            if (link.startsWith("@")) {
-                t = link.substring(1)
-            } else if (link.startsWith(API.DOMEN)) {
-                t = link.substring(API.DOMEN.length)
-            } else if (link.startsWith(API.DOMEN_OLD)) {
-                t = link.substring(API.DOMEN_OLD.length)
-            } else {
-                t = link.substring("http://@".length)
-                t = t.replace("_", "-")
-            }
-
-            val s1 = t.split("-")
+            val s1 = t.split('-')
             val linkV = s1[0]
             val params: List<String> = if (s1.size > 1) s1[1].split("_") else emptyList()
 
@@ -215,11 +198,12 @@ object ControllerLinks {
                 API.LINK_MODERATION.link -> params.size == 1 || params.size == 2
                 API.LINK_CHAT.link -> params.size == 1 || params.size == 2
                 API.LINK_CONF.link -> params.size == 1 || params.size == 2
+                API.LINK_QUEST.link -> true
                 else -> {
-                    if (link.startsWith("@") && ToolsText.isOnly(t, API.ACCOUNT_LOGIN_CHARS)) {
+                    if (ToolsText.isOnly(t, API.ACCOUNT_LOGIN_CHARS)) {
                         return true
                     }
-                    info("ControllerExecutorLinks link was't found [$link]")
+                    info("ControllerExecutorLinks link wasn't found [$link][$t]")
                     return false
                 }
 
@@ -282,7 +266,6 @@ object ControllerLinks {
     fun makeLinkable(vText: ViewText, onReplace: () -> Unit = {}) {
 
         for (i in API.LINKS_ARRAY) replaceLinkable(vText, i.asLink(), i.asWeb())
-        for (i in API.LINKS_ARRAY) replaceLinkable(vText, i.asLink(), i.asWebOld())
         replaceLinkable(vText, API.LINK_SHORT_PROFILE, API.LINK_PROFILE_NAME)
 
 
@@ -336,5 +319,16 @@ object ControllerLinks {
         })
     }
 
+    private val linkRegex by lazy { Pattern.compile("[#@]([A-Za-z0-9-_#]+)") }
 
+    fun linkifyShort(vText: TextView) {
+        LinkifyCompat.addLinks(
+            vText,
+            linkRegex,
+            API.DOMEN,
+            null,
+            { link, start, end -> isCorrectLink(link.subSequence(start, end)) },
+            { match, _ -> "https://bonfire.moe/r/${match.group(1)}" }
+        )
+    }
 }
