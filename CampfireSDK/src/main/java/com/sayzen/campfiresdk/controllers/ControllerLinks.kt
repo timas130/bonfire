@@ -159,8 +159,8 @@ object ControllerLinks {
                 API.LINK_RUBRIC.link -> SRubricPosts.instance(params[0].toLong(), Navigator.TO)
                 API.LINK_QUEST.link -> SQuest.instance(params[0].toLong(), Navigator.TO)
                 else -> {
-                    if (ToolsText.isOnly(t, API.ACCOUNT_LOGIN_CHARS)) {
-                        SProfile.instance(t, Navigator.TO)
+                    if (ToolsText.isOnly(link, API.ACCOUNT_LOGIN_CHARS)) {
+                        SProfile.instance(link, Navigator.TO)
                         return true
                     }
                     info("ControllerExecutorLinks link wasn't found [$link][$t]")
@@ -233,7 +233,7 @@ object ControllerLinks {
                 API.LINK_CONF.link -> params.size == 1 || params.size == 2
                 API.LINK_QUEST.link -> true
                 else -> {
-                    if (ToolsText.isOnly(t, API.ACCOUNT_LOGIN_CHARS)) {
+                    if (ToolsText.isOnly(link.toString(), API.ACCOUNT_LOGIN_CHARS)) {
                         true
                     } else {
                         info("ControllerExecutorLinks link wasn't found [$link][$t]")
