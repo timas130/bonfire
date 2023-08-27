@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <color name="bonfire">#F97316</color>
+    <color name="bonfire_light">#FB812C</color>
 
     <!-- Text Colors -->
     <color name="textLight_87">#DDFFFFFF</color>

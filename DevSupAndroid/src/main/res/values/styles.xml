@@ -29,8 +29,8 @@
         <item name="colorOnPrimaryIconsVariant">@color/grey_500</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorOnPrimaryVariant">@color/white</item>
-        <item name="colorSecondary">@color/orange_a_700</item>
-        <item name="colorSecondaryVariant">@color/orange_a_400</item>
+        <item name="colorSecondary">@color/bonfire</item>
+        <item name="colorSecondaryVariant">@color/bonfire_light</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSurface">@color/grey_900</item>
         <item name="colorOnSurface">@color/white</item>
@@ -69,8 +69,8 @@
         <item name="colorOnPrimaryVariant">@color/grey_700</item>
         <item name="colorOnPrimaryIcons">@color/grey_700</item>
         <item name="colorOnPrimaryIconsVariant">@color/grey_500</item>
-        <item name="colorSecondary">@color/orange_a_700</item>
-        <item name="colorSecondaryVariant">@color/orange_a_400</item>
+        <item name="colorSecondary">@color/bonfire</item>
+        <item name="colorSecondaryVariant">@color/bonfire_light</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSurface">@color/white</item>
         <item name="colorOnSurface">@color/white</item>

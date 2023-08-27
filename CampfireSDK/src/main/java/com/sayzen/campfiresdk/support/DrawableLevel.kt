@@ -42,7 +42,7 @@ class DrawableLevel(
                 color_def = ToolsResources.getColor(R.color.black)
             }
             xAccount.isProtoadmin() -> {
-                color_def = ToolsResources.getColor(R.color.orange_a_700)
+                color_def = ToolsResources.getColor(R.color.bonfire)
             }
             xAccount.isAdmin() -> {
                 color_def = ToolsResources.getColor(R.color.red_700)
