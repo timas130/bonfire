@@ -52,7 +52,7 @@ object ControllerLinks {
             link.substring(API.DOMEN.length)
         } else {
             link.toString()
-        }).replace('_', '-')
+        }).replace('_', '-').removeSuffix("-")
     }
 
     fun parseLink(link: String): Boolean {
