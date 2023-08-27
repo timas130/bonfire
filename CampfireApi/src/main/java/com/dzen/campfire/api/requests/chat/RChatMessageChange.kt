@@ -18,6 +18,7 @@ open class RChatMessageChange(
         publicationId = json.m(inp, "unitId", publicationId)
         quoteMessageId = json.m(inp, "quoteMessageId", quoteMessageId)
         text = json.m(inp, "text", text)
+        newFormatting = json.m(inp, "newFormatting", newFormatting)
     }
 
     override fun instanceResponse(json: Json): Response {

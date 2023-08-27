@@ -47,6 +47,7 @@ open class RChatMessageCreate(
         parentMessageId = json.m(inp, "parentMessageId", parentMessageId)
         quoteMessageId = json.m(inp, "quoteMessageId", quoteMessageId)
         stickerId = json.m(inp, "stickerId", stickerId)
+        newFormatting = json.m(inp, "newFormatting", newFormatting)
     }
 
     override fun instanceResponse(json: Json): Response {
