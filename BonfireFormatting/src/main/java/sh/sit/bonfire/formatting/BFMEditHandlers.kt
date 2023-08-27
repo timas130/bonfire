@@ -194,10 +194,12 @@ class ColorEditHandler : AbstractEditHandler<ForegroundColorSpan>() {
         spanTextLength: Int
     ) {
         val contentStart = input.indexOf(' ', spanStart)
+        val contentEnd = input.indexOf('}', contentStart)
+        if (contentStart == -1 || contentEnd == -1) return
         editable.setSpan(
             span,
             contentStart,
-            input.indexOf('}', contentStart),
+            contentEnd,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
     }
