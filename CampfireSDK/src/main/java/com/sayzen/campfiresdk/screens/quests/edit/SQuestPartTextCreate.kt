@@ -101,6 +101,7 @@ class SQuestPartTextCreate(
         vEditContent.setOnClickListener {
             Navigator.to(SQuestPartTextEditor(this.part.text, details) {
                 this.part.text = it
+                this.part.newFormatting = true
                 vPartContent.text = part.text.ifEmpty { t(API_TRANSLATE.app_empty) }
                 ControllerLinks.makeLinkable(vPartContent)
             })

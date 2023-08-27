@@ -33,6 +33,7 @@ import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.android.views.views.layouts.LayoutCorned
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsMath
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class SQuestPlayer(
     private val details: QuestDetails,
@@ -220,9 +221,14 @@ class SQuestPlayer(
             text = text.replace("{${details.variablesMap!![id]?.devName}}", value, ignoreCase = true)
             text = text.replace("{$id}", value, ignoreCase = true)
         }
-        
-        vText.text = text
-        ControllerLinks.makeLinkable(vText)
+
+        if (part.newFormatting) {
+            BonfireMarkdown.setMarkdown(vText, text)
+            ControllerLinks.linkifyShort(vText)
+        } else {
+            vText.text = text
+            ControllerLinks.makeLinkable(vText)
+        }
 
         part.inputs.forEach {
             val field = if (it.type == API.QUEST_TYPE_BOOL) SettingsCheckBox(context)

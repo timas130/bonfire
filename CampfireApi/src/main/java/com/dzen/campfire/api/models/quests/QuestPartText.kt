@@ -14,6 +14,7 @@ class QuestPartText : QuestPart() {
     var h = 0
     var insertBytes: ByteArray? = null
 
+    var newFormatting = false
     var title = ""
     var text = ""
     var inputs = emptyArray<QuestInput>()
@@ -24,6 +25,7 @@ class QuestPartText : QuestPart() {
         imageId = json.m(inp, "imageId", imageId)
         w = json.m(inp, "w", w)
         h = json.m(inp, "h", h)
+        newFormatting = json.m(inp, "newFormatting", newFormatting)
         title = json.m(inp, "title", title)
         text = json.m(inp, "text", text)
         inputs = json.m(inp, "inputs", inputs, Array<QuestInput>::class)

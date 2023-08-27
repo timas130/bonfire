@@ -22,6 +22,7 @@ import com.sup.dev.android.views.splash.SplashMenu
 import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.java.libs.json.Json
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class SQuestPartTextEditor(
     val oldText: String = "",
@@ -47,6 +48,8 @@ class SQuestPartTextEditor(
         vField.imeOptions = EditorInfo.IME_FLAG_NO_ENTER_ACTION
         vField.gravity = Gravity.TOP
         vField.setText(oldText)
+
+        vField.addTextChangedListener(BonfireMarkdown.getEditorTextChangedListener(vField))
         vField.addTextChangedListener(TextWatcherChanged { update() })
         ControllerMention.startFor(vField)
 
