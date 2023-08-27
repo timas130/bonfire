@@ -510,8 +510,9 @@ object ControllerAccounts {
             val vv = Database.select(
                 "ControllerAccounts.updateRelayRaceMyRacePostsCount select_2",
                 SqlQuerySelect(TActivitiesCollisions.NAME, Sql.COUNT)
-                    .where(SqlWhere.WhereIN(TActivitiesCollisions.tag_1, myIds))
+                    .where(SqlWhere.WhereIN(TActivitiesCollisions.activity_id, myIds))
                     .where(TActivitiesCollisions.type, "=", API.ACTIVITIES_COLLISION_TYPE_RELAY_RACE_POST)
+                    .where(TActivitiesCollisions.POST_STATUS, "=", API.STATUS_PUBLIC)
             )
 
             return@updateCollisionIncr vv.nextLongOrZero()

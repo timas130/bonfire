@@ -26,4 +26,6 @@ object TActivitiesCollisions {
     val ACCOUNT_LOST = Sql.IFNULL("(SELECT " + tag_1 + " FROM $NAME as t WHERE t." + account_id + "=" + NAME + "." + account_id + " AND " + "t." + activity_id + "=" + NAME + "." + account_id + " AND " + "t." + type + "=" + API.ACTIVITIES_COLLISION_TYPE_RELAY_RACE_POST + " ${Sql.LIMIT} 1)", "0")
     val ACCOUNT_SUBSCRIBE_STATUS = Sql.IFNULL("(SELECT " + tag_1 + " FROM $NAME as t WHERE t." + account_id + "=" + NAME + "." + account_id + " AND " + "t." + activity_id + "=" + NAME + "." + account_id + " AND " + "t." + type + "=" + API.ACTIVITIES_COLLISION_TYPE_SUBSCRIBE + " ${Sql.LIMIT} 1)", "0")
 
+    // i hate this...
+    val POST_STATUS = Sql.IFNULL("(SELECT ${TPublications.status} FROM ${TPublications.NAME} WHERE ${TPublications.id}=$NAME.$tag_1)", "0")
 }
