@@ -353,9 +353,7 @@ open class CardComment protected constructor(
         vQuoteContainer.setOnClickListener { if (onGoTo != null) onGoTo!!.invoke(publication.quoteId) }
         vQuoteContainer.setOnLongClickListener { showMenu(vQuoteContainer, it.x, it.y);true }
 
-        val quoteTextRaw = TextFormatter(publication.quoteText).parseNoTags()
-        val quoteText = if (quoteTextRaw.length > 100) "${quoteTextRaw.substring(0, 100)}..." else quoteTextRaw
-        vQuoteText.text = quoteText
+        val quoteText = publication.quoteText
         if (publication.quoteCreatorName.isNotEmpty()) {
             val otherName = publication.quoteCreatorName + ":"
             if (quoteText.startsWith(otherName)) {
@@ -363,7 +361,9 @@ open class CardComment protected constructor(
                 vQuoteText.text = "{$color $otherName}" + quoteText.substring(otherName.length)
             }
         }
-        ControllerLinks.makeLinkable(vQuoteText)
+        BonfireMarkdown.setMarkdownInline(vQuoteText, quoteText)
+        ControllerLinks.linkifyShort(vQuoteText)
+        vQuoteText.text = vQuoteText.text.subSequence(0, (100).coerceAtMost(vQuoteText.text.length))
 
         vQuoteImage.clear()
         vQuoteImage.visibility = View.VISIBLE

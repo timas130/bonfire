@@ -47,7 +47,6 @@ import com.sup.dev.android.views.views.*
 import com.sup.dev.android.views.views.layouts.LayoutCorned
 import com.sup.dev.java.classes.collections.HashList
 import com.sup.dev.java.libs.eventBus.EventBus
-import com.sup.dev.java.libs.text_format.TextFormatter
 import com.sup.dev.java.tools.ToolsColor
 import com.sup.dev.java.tools.ToolsDate
 import com.sup.dev.java.tools.ToolsText
@@ -509,11 +508,8 @@ open class CardChatMessage constructor(
         vQuoteContainer.setOnClickListener { if (onGoTo != null) onGoTo!!.invoke(publication.quoteId) }
         vQuoteContainer.setOnLongClickListener { showMenu(vQuoteContainer, it.x, it.y);true }
 
-        val quoteTextRaw = TextFormatter(publication.quoteText).parseNoTags()
-        val quoteText = if (quoteTextRaw.length > 100) "${quoteTextRaw.substring(0, 100)}..."
-        else if (publication.type == PublicationChatMessage.TYPE_VOICE) t(API_TRANSLATE.app_voice_message)
-        else quoteTextRaw
-        vQuoteText.text = quoteText
+        val quoteText = if (publication.type == PublicationChatMessage.TYPE_VOICE) t(API_TRANSLATE.app_voice_message)
+        else publication.quoteText
         if (publication.quoteCreatorName.isNotEmpty()) {
             val otherName = publication.quoteCreatorName + ":"
             if (quoteText.startsWith(otherName)) {
@@ -521,7 +517,9 @@ open class CardChatMessage constructor(
                 vQuoteText.text = "{$color $otherName}" + quoteText.substring(otherName.length)
             }
         }
-        ControllerLinks.makeLinkable(vQuoteText)
+        BonfireMarkdown.setMarkdownInline(vQuoteText, quoteText)
+        ControllerLinks.linkifyShort(vQuoteText)
+        vQuoteText.text = vQuoteText.text.subSequence(0, (100).coerceAtMost(vQuoteText.text.length))
 
         vQuoteImage.clear()
         vQuoteImage.visibility = View.VISIBLE
