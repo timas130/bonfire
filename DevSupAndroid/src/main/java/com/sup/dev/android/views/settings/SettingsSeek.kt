@@ -4,15 +4,10 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import android.util.AttributeSet
 import android.view.View
 import android.widget.SeekBar
-import android.widget.TextView
 import com.sup.dev.android.R
-import com.sup.dev.android.tools.ToolsView
-import com.sup.dev.android.views.views.ViewIcon
 
 
 class SettingsSeek @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : Settings(context, attrs, R.layout.settings_seek), SeekBar.OnSeekBarChangeListener {
@@ -29,7 +24,7 @@ class SettingsSeek @JvmOverloads constructor(context: Context, attrs: AttributeS
     var progress: Int
         get() = vSeekBar.progress + compatMin
         set(progress) {
-            vSeekBar.progress = progress
+            vSeekBar.progress = progress - compatMin
         }
 
     //

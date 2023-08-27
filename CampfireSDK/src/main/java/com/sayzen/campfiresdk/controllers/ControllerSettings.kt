@@ -158,6 +158,13 @@ object ControllerSettings {
             onSettingsUpdated()
         }
 
+    var postFontSize: Int
+        get() = accountSettings.postFontSize
+        set(b) {
+            accountSettings.postFontSize = b
+            onSettingsUpdated()
+        }
+
     //
     //  App
     //

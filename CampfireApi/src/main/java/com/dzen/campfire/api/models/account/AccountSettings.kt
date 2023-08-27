@@ -19,6 +19,7 @@ class AccountSettings() : JsonParsable {
     var interfaceType = 0
     var fullscreen = false
     var isProfileListStyle = true
+    var postFontSize = 15
     //  App
     var watchPost = false
     var appLanguage = ""
@@ -119,6 +120,7 @@ class AccountSettings() : JsonParsable {
         interfaceType = json.m(inp, "interfaceType", interfaceType)
         fullscreen = json.m(inp, "fullscreen", fullscreen)
         isProfileListStyle = json.m(inp, "isProfileListStyle", isProfileListStyle)
+        postFontSize = json.m(inp, "postFontSize", postFontSize)
 
         watchPost = json.m(inp, "watchPost", watchPost)
         appLanguage = json.m(inp, "appLanguage", appLanguage)

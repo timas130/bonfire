@@ -11,6 +11,7 @@ import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.ControllerNotifications
+import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.views.ViewText
@@ -28,7 +29,11 @@ class CardPageText(
 
         vText.text = page.text
         vText.setTextIsSelectable(clickable)
-        vText.textSize = (if (page.size == PageText.SIZE_0) 16 else 21).toFloat()
+        vText.textSize = (if (page.size == PageText.SIZE_0) {
+            ControllerSettings.postFontSize
+        } else {
+            ControllerSettings.postFontSize * 3 / 2
+        }).toFloat()
         if (page.newFormatting) {
             BonfireMarkdown.setMarkdown(vText, page.text)
             ControllerLinks.linkifyShort(vText)

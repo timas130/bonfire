@@ -11,11 +11,13 @@ import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.animations.DrawAnimationSnow
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomBackgroundImageChangedModeration
 import com.sup.dev.android.app.SupAndroid
-import com.sup.dev.android.models.EventStyleChanged
 import com.sup.dev.android.libs.screens.Screen
-import com.sup.dev.android.tools.ToolsResources
+import com.sup.dev.android.models.EventStyleChanged
 import com.sup.dev.android.tools.ToolsView
-import com.sup.dev.android.views.settings.*
+import com.sup.dev.android.views.settings.Settings
+import com.sup.dev.android.views.settings.SettingsSeek
+import com.sup.dev.android.views.settings.SettingsSelection
+import com.sup.dev.android.views.settings.SettingsSwitcher
 import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.java.libs.eventBus.EventBus
 
@@ -27,6 +29,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
     private val vRounding: SettingsSeek = findViewById(R.id.vRounding)
     private val vChatBackground: SettingsSwitcher = findViewById(R.id.vChatBackground)
     private val vRoundingChat: SettingsSeek = findViewById(R.id.vRoundingChat)
+    private val vPostFontSize: SettingsSeek = findViewById(R.id.vPostFontSize)
     private val vDefault: Settings = findViewById(R.id.vDefault)
     private val vTheme: SettingsSelection = findViewById(R.id.vTheme)
     private val vActivityType: SettingsSelection = findViewById(R.id.vActivityType)
@@ -53,6 +56,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vRounding.setTitle(t(API_TRANSLATE.settings_style_rounding))
         vRoundingChat.setTitle(t(API_TRANSLATE.settings_style_rounding_chat))
         vChatBackground.setTitle(t(API_TRANSLATE.settings_fandom_background))
+        vPostFontSize.setTitle(t(API_TRANSLATE.settings_style_post_font_size))
         vHolidayTitle.setTitle(t(API_TRANSLATE.settings_style_holidays))
         vNewYearAvatars.setTitle(t(API_TRANSLATE.settings_style_new_year_avatars))
         vNewYearSnow.setTitle(t(API_TRANSLATE.settings_style_new_year_snow))
@@ -109,6 +113,12 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vRoundingChat.setMaxProgress(28)
         vRoundingChat.setOnProgressChanged {
             ControllerSettings.styleChatRounding = vRoundingChat.progress
+        }
+
+        vPostFontSize.setMaxProgress(18)
+        vPostFontSize.setMinProgress(12)
+        vPostFontSize.setOnProgressChanged {
+            ControllerSettings.postFontSize = vPostFontSize.progress
         }
 
         vDefault.setOnClickListener {
@@ -216,9 +226,8 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vRounding.isEnabled = !vCircles.isChecked()
         vChatBackground.setChecked(ControllerSettings.fandomBackground)
         vRoundingChat.progress = ControllerSettings.styleChatRounding
+        vPostFontSize.progress = ControllerSettings.postFontSize
         if (vTheme.getTitles().size > ControllerSettings.styleTheme) vTheme.setCurrentIndex(ControllerSettings.styleTheme) else vTheme.setCurrentIndex(0)
         vActivityType.setCurrentIndex(ControllerSettings.interfaceType)
     }
-
-
 }
