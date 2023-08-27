@@ -12,7 +12,10 @@ import com.dzen.campfire.api.models.publications.stickers.PublicationSticker
 import com.dzen.campfire.api.requests.comments.RCommentsChange
 import com.dzen.campfire.api.requests.comments.RCommentsCreate
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.controllers.*
+import com.sayzen.campfiresdk.controllers.ControllerMention
+import com.sayzen.campfiresdk.controllers.ControllerSettings
+import com.sayzen.campfiresdk.controllers.ControllerStoryQuest
+import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.AttacheAgent
 import com.sayzen.campfiresdk.models.events.publications.EventCommentAdd
 import com.sayzen.campfiresdk.models.events.publications.EventCommentChange
@@ -35,6 +38,7 @@ import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsNetwork
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class SplashComment constructor(
         private val publicationId: Long,
@@ -72,7 +76,6 @@ class SplashComment constructor(
     constructor(publicationId: Long, answer: PublicationComment?, showToast: Boolean, onCreated: (PublicationComment) -> Unit) : this(publicationId, answer, null, 0, "", showToast, onCreated)
 
     init {
-
         ControllerMention.startFor(vText)
 
         vText.hint = t(API_TRANSLATE.app_message)
@@ -88,9 +91,10 @@ class SplashComment constructor(
             vText.setSelection(vText.text!!.length)
         }
 
+        vText.addTextChangedListener(BonfireMarkdown.getInlineEditorTextChangedListener(vText))
+
         vQuoteText.visibility = if (quoteText.isEmpty()) View.GONE else View.VISIBLE
-        vQuoteText.text = quoteText
-        ControllerApi.makeTextHtml(vQuoteText)
+        BonfireMarkdown.setMarkdownInline(vQuoteText, quoteText)
 
         if (changeComment == null) vText.setCallback { link -> sendLink(link, getParentId(), false) }
         vText.addTextChangedListener(TextWatcherChanged { updateSendEnabled() })
@@ -112,7 +116,7 @@ class SplashComment constructor(
         vSend.setImageResource(if (changeComment == null) R.drawable.ic_send_white_24dp else R.drawable.ic_done_white_24dp)
         vAttach.visibility = if (changeComment == null) View.VISIBLE else View.GONE
 
-        vFieldContainer.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+        vFieldContainer.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
             if (vFieldContainer.height >= ToolsView.dpToPx(130)) {
                 if (vFieldContainer.indexOfChild(vAttach) != -1) {
                     vSendContainer.addView(ToolsView.removeFromParent(vAttach), 0)

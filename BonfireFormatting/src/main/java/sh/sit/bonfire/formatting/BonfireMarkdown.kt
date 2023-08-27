@@ -6,6 +6,7 @@ import android.text.style.UnderlineSpan
 import android.widget.EditText
 import android.widget.TextView
 import io.noties.markwon.Markwon
+import io.noties.markwon.SoftBreakAddsNewLinePlugin
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.MarkwonEditorTextWatcher
 import io.noties.markwon.editor.handler.EmphasisEditHandler
@@ -21,6 +22,7 @@ object BonfireMarkdown {
         return Markwon.builder(context)
             .usePlugin(BFMCorePlugin.create(inlineOnly))
             .usePlugin(TaskListPlugin.create(context))
+            .usePlugin(SoftBreakAddsNewLinePlugin.create())
             .usePlugin(StrikethroughPlugin())
             .usePlugin(SimpleExtPlugin.create { plugin ->
                 plugin.addExtension(2, '_') { _, _ -> UnderlineSpan() }
@@ -63,6 +65,13 @@ object BonfireMarkdown {
 
     fun getEditorTextChangedListener(view: EditText): TextWatcher {
         val editor = createEditor(view.context, markwon)
+        return MarkwonEditorTextWatcher.withPreRender(
+            editor, Executors.newCachedThreadPool(), view
+        )
+    }
+
+    fun getInlineEditorTextChangedListener(view: EditText): TextWatcher {
+        val editor = createEditor(view.context, markwonInline)
         return MarkwonEditorTextWatcher.withPreRender(
             editor, Executors.newCachedThreadPool(), view
         )
