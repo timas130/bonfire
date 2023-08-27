@@ -7,24 +7,24 @@ import com.sup.dev.java.libs.json.Json
 
 
 open class RChatMessageCreate(
-        var tag : ChatTag,
-        var text: String,
-        var imageArray: Array<ByteArray>?,
-        var gif: ByteArray?,
-        var voice: ByteArray?,
-        var parentMessageId: Long,
-        var quoteMessageId: Long,
-        var stickerId: Long
+    var tag: ChatTag,
+    var text: String,
+    var imageArray: Array<ByteArray>?,
+    var gif: ByteArray?,
+    var voice: ByteArray?,
+    var parentMessageId: Long,
+    var quoteMessageId: Long,
+    var stickerId: Long,
+    var newFormatting: Boolean,
 ) : Request<RChatMessageCreate.Response>() {
-
     companion object {
-        val E_BAD_DATA = "E_BAD_DATA"
-        val E_BAD_TEXT = "E_BAD_TEXT"
-        val E_BAD_IMAGE = "E_BAD_IMAGE"
-        val E_BAD_GIF = "E_BAD_GIF"
-        val E_BAD_CHAT_TYPE = "E_BAD_CHAT_TYPE"
-        val E_BLACK_LIST = "E_BLACK_LIST"
-        val E_IS_IGNORE_VOICE_MESSAGES = "E_IS_IGNORE_VOICE_MESSAGES"
+        const val E_BAD_DATA = "E_BAD_DATA"
+        const val E_BAD_TEXT = "E_BAD_TEXT"
+        const val E_BAD_IMAGE = "E_BAD_IMAGE"
+        const val E_BAD_GIF = "E_BAD_GIF"
+        const val E_BAD_CHAT_TYPE = "E_BAD_CHAT_TYPE"
+        const val E_BLACK_LIST = "E_BLACK_LIST"
+        const val E_IS_IGNORE_VOICE_MESSAGES = "E_IS_IGNORE_VOICE_MESSAGES"
     }
 
     init {

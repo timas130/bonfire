@@ -50,7 +50,8 @@ class MessageReplyReceiver : BroadcastReceiver() {
             init(api)
             execute(RChatMessageCreate(
                 tag = chatTag, text = reply.toString(), imageArray = null, gif = null,
-                voice = null, parentMessageId = 0, quoteMessageId = 0, stickerId = 0
+                voice = null, parentMessageId = 0, quoteMessageId = 0, stickerId = 0,
+                newFormatting = true
             )) { response ->
                 ControllerChats.incrementMessages(chatTag, response.message, true)
 

@@ -25,8 +25,7 @@ class EChatMessageCreate(
         gif: ByteArray?,
         voice: ByteArray?,
         parentMessageId: Long
-) : RChatMessageCreate(tag, text, images, gif, voice, parentMessageId, 0, 0) {
-
+) : RChatMessageCreate(tag, text, images, gif, voice, parentMessageId, 0, 0, false) {
     constructor() : this(ChatTag(), "", null, null, null, 0)
 
     private var sticker = PublicationSticker()
@@ -139,7 +138,7 @@ class EChatMessageCreate(
     }
 
     override fun execute(): Response {
-
+        message.newFormatting = newFormatting
         message.text = text
 
         when {

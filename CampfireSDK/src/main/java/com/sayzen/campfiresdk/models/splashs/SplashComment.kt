@@ -99,7 +99,10 @@ class SplashComment constructor(
         if (changeComment == null) vText.setCallback { link -> sendLink(link, getParentId(), false) }
         vText.addTextChangedListener(TextWatcherChanged { updateSendEnabled() })
 
-        vSend.setOnClickListener { onSendClicked() }
+        vSend.setOnClickListener {
+            newFormatting = true
+            onSendClicked()
+        }
         vSend.setOnLongClickListener {
             SplashMenu()
                 .add(t(API_TRANSLATE.send_new_formatting)) {

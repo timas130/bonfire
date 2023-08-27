@@ -9,7 +9,7 @@ import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
 import com.sup.dev.java.libs.json.Json
 
-class EChatMessageChange : RChatMessageChange(0, 0, "") {
+class EChatMessageChange : RChatMessageChange(0, 0, "", false) {
 
     private var publication = PublicationChatMessage()
 
@@ -29,13 +29,13 @@ class EChatMessageChange : RChatMessageChange(0, 0, "") {
     }
 
     override fun execute(): Response {
-
         val oldText = publication.text
         publication.text = text
         publication.changed = true
         publication.quoteId = 0
         publication.quoteText = ""
         publication.quoteImages = emptyArray()
+        publication.newFormatting = newFormatting
 
         if (quoteMessageId != 0L) {
             val quoteUnit = ControllerPublications.getPublication(quoteMessageId, apiAccount.id)

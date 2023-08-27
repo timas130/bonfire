@@ -5,13 +5,13 @@ import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
 open class RChatMessageChange(
-        var publicationId: Long,
-        var quoteMessageId: Long,
-        var text: String
+    var publicationId: Long,
+    var quoteMessageId: Long,
+    var text: String,
+    var newFormatting: Boolean
 ) : Request<RChatMessageChange.Response>() {
-
     companion object {
-        val E_BAD_TEXT_SIZE = "E_BAD_TEXT_SIZE"
+        const val E_BAD_TEXT_SIZE = "E_BAD_TEXT_SIZE"
     }
 
     override fun jsonSub(inp: Boolean, json: Json) {

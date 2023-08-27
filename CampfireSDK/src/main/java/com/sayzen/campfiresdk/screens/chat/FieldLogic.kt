@@ -22,17 +22,18 @@ import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.utils.UtilsAudioPlayer
-import com.sup.dev.android.views.views.ViewVoiceRecord
+import com.sup.dev.android.views.splash.SplashMenu
 import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.views.ViewEditText
 import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.android.views.views.ViewText
-import com.sup.dev.java.libs.debug.log
+import com.sup.dev.android.views.views.ViewVoiceRecord
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsNetwork
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class FieldLogic(
         val screen: SChat
@@ -69,14 +70,33 @@ class FieldLogic(
     private var quoteId = 0L
     private var voiceBytes: ByteArray? = null
 
+    private var newFormatting = true
+
     init {
         vVoiceContainer.visibility = View.GONE
         vQuoteContainer.visibility = View.GONE
         vQuoteRemove.setOnClickListener { setQuote("") }
-        vSend.setOnClickListener { onSendClicked() }
+        vSend.setOnClickListener {
+            newFormatting = true
+            onSendClicked()
+        }
+        vSend.setOnLongClickListener {
+            SplashMenu()
+                .add(t(API_TRANSLATE.send_new_formatting)) {
+                    newFormatting = true
+                    onSendClicked()
+                }
+                .add(t(API_TRANSLATE.send_old_formatting)) {
+                    newFormatting = false
+                    onSendClicked()
+                }
+                .asPopupShow(it)
+            true
+        }
         vText.setHint(t(API_TRANSLATE.app_message))
-        vText.addTextChangedListener(TextWatcherChanged { onTextChanged() })
 
+        vText.addTextChangedListener(BonfireMarkdown.getInlineEditorTextChangedListener(vText))
+        vText.addTextChangedListener(TextWatcherChanged { onTextChanged() })
         ControllerMention.startFor(vText)
 
         vVoiceRecorder.maxRecordingTimeMs = API.CHAT_MESSAGE_VOICE_MAX_MS
@@ -269,13 +289,13 @@ class FieldLogic(
         val quoteIdV = quoteId
         val voiceBytes = this.voiceBytes
         beforeSend()
-        screen.addCard(CardSending(screen, RChatMessageCreate(screen.chat.tag, "", null, null, voiceBytes, 0L, quoteIdV, 0)))
+        screen.addCard(CardSending(screen, RChatMessageCreate(screen.chat.tag, "", null, null, voiceBytes, 0L, quoteIdV, 0, newFormatting)))
     }
 
     private fun sendText(text: String, parentId: Long) {
         val quoteIdV = quoteId
         beforeSend()
-        screen.addCard(CardSending(screen, RChatMessageCreate(screen.chat.tag, text, null, null, null, parentId, quoteIdV, 0)))
+        screen.addCard(CardSending(screen, RChatMessageCreate(screen.chat.tag, text, null, null, null, parentId, quoteIdV, 0, newFormatting)))
     }
 
     private fun sendChange(text: String) {
@@ -285,11 +305,11 @@ class FieldLogic(
         beforeSend()
         ToolsToast.show(t(API_TRANSLATE.app_changed))
         EventBus.post(EventChatMessageChanged(publicationChangeId, text, quoteIdV, quoteTextV))
-        ApiRequestsSupporter.execute(RChatMessageChange(publicationChangeId, quoteIdV, text)) {
+        ApiRequestsSupporter.execute(RChatMessageChange(publicationChangeId, quoteIdV, text, newFormatting)) {
             EventBus.post(EventChatMessageChanged(publicationChangeId, it.message.text, quoteIdV, quoteTextV))
+        }.onApiError(API.ERROR_ACCESS) {
+            ToolsToast.show(t(API_TRANSLATE.error_chat_access))
         }
-                .onApiError(API.ERROR_ACCESS) { ToolsToast.show(t(API_TRANSLATE.error_chat_access)) }
-
     }
 
     private fun sendLink(text: String, parentId: Long, send: Boolean) {
@@ -333,7 +353,7 @@ class FieldLogic(
             ToolsThreads.main {
                 val quoteIdV = quoteId
                 beforeSend()
-                screen.addCard(CardSending(screen, RChatMessageCreate(screen.chat.tag, textV, bytes, gif, null, parentId, quoteIdV, 0)))
+                screen.addCard(CardSending(screen, RChatMessageCreate(screen.chat.tag, textV, bytes, gif, null, parentId, quoteIdV, 0, newFormatting)))
             }
         }
     }
@@ -342,7 +362,7 @@ class FieldLogic(
         val quoteIdV = quoteId
         val parentId = getParentId()
         beforeSend()
-        screen.addCard(CardSending(screen, RChatMessageCreate(screen.chat.tag, "", null, null, null, parentId, quoteIdV, sticker.id)))
+        screen.addCard(CardSending(screen, RChatMessageCreate(screen.chat.tag, "", null, null, null, parentId, quoteIdV, sticker.id, newFormatting)))
     }
 
     private fun sendTyping() {

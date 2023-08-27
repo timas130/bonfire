@@ -43,7 +43,7 @@ class PublicationChatMessage : Publication {
     var changed = false
     var randomTag = 0L
     var answerName = ""
-
+    var newFormatting = false
 
     //  TYPE_TEXT
     var text: String = ""
@@ -99,6 +99,7 @@ class PublicationChatMessage : Publication {
 
     override fun jsonDBLocal(inp: Boolean, json: Json): Json {
         text = json.m(inp, "J_TEXT", text)
+        newFormatting = json.m(inp, "newFormatting", newFormatting)
 
         if (inp) json.put("J_TYPE", type)
         else type = json.getLong("J_TYPE", TYPE_TEXT)

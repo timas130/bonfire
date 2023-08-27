@@ -51,6 +51,7 @@ import com.sup.dev.java.libs.text_format.TextFormatter
 import com.sup.dev.java.tools.ToolsColor
 import com.sup.dev.java.tools.ToolsDate
 import com.sup.dev.java.tools.ToolsText
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 open class CardChatMessage constructor(
         publication: PublicationChatMessage,
@@ -408,24 +409,32 @@ open class CardChatMessage constructor(
         val vText: ViewText = view.findViewById(R.id.vText) ?: return
         val publication = xPublication.publication as PublicationChatMessage
 
-        vText.text = publication.text
         vText.visibility = if (publication.text.isEmpty()) View.GONE else View.VISIBLE
-        (vText.layoutParams as ViewGroup.MarginLayoutParams).topMargin = if(publication.quoteId > 0) 0 else ToolsView.dpToPx(8).toInt()
+        (vText.layoutParams as ViewGroup.MarginLayoutParams).topMargin = if (publication.quoteId > 0) {
+            0
+        } else {
+            ToolsView.dpToPx(8).toInt()
+        }
 
-        ControllerLinks.makeLinkable(vText) {
-            val myName = ControllerApi.account.getName() + ","
-            if (publication.text.startsWith(myName)) {
-                vText.text = "{ff6d00 $myName}" + "${vText.text}".substring(myName.length)
-            } else {
-                if (publication.answerName.isNotEmpty()) {
-                    val otherName = publication.answerName + ","
-                    if (publication.text.startsWith(otherName)) {
-                        vText.text = "{90A4AE $otherName}" + "${vText.text}".substring(otherName.length)
+        if (!publication.newFormatting) {
+            vText.text = publication.text
+            ControllerLinks.makeLinkable(vText) {
+                val myName = ControllerApi.account.getName() + ","
+                if (publication.text.startsWith(myName)) {
+                    vText.text = "{ff6d00 $myName}" + "${vText.text}".substring(myName.length)
+                } else {
+                    if (publication.answerName.isNotEmpty()) {
+                        val otherName = publication.answerName + ","
+                        if (publication.text.startsWith(otherName)) {
+                            vText.text = "{90A4AE $otherName}" + "${vText.text}".substring(otherName.length)
+                        }
                     }
                 }
             }
+        } else {
+            BonfireMarkdown.setMarkdownInline(vText, publication.text)
+            ControllerLinks.linkifyShort(vText)
         }
-
     }
 
     fun updateBase() {
