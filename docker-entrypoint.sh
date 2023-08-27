@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "[docker] Campfire for Docker by sit"
+echo "[docker] Bonfire for Docker by sit"
 
 if [ -e "/app/secrets/Secrets.json" ]; then
     echo "[docker] found Secrets.json, skipping"

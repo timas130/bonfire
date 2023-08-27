@@ -1,11 +1,12 @@
 # CampfireSDK
 
-Library for integrating Campfire in the Android app
+Library for integrating Bonfire in an Android app
 
 License
 --------
 
-Copyright 2098 Sayzen Studio
+Copyright 2018 Sayzen Studio
+Copyright 2023 Bonfire Studio
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

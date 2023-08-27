@@ -24,7 +24,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="8dp"
-            app:ViewAvatarTitle_title="Campfire"
+            app:ViewAvatarTitle_title="Bonfire"
             app:ViewAvatar_chipText="EN"/>
 
         <TextView

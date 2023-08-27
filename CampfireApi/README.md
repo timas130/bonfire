@@ -1,12 +1,13 @@
 Info
 --------
 
-Campfire Api
+Bonfire API
 
 License
 --------
 
 Copyright 2018 Sayzen Studio
+Copyright 2023 Bonfire Studio
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
