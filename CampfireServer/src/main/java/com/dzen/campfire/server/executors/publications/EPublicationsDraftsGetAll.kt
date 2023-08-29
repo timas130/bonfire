@@ -2,9 +2,9 @@ package com.dzen.campfire.server.executors.publications
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.requests.publications.RPublicationsDraftsGetAll
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.tables.TPublications
-import com.dzen.campfire.api.tools.ApiException
 import com.sup.dev.java_pc.sql.Database
 
 class EPublicationsDraftsGetAll : RPublicationsDraftsGetAll(0, "", "", 0) {
@@ -28,8 +28,8 @@ class EPublicationsDraftsGetAll : RPublicationsDraftsGetAll(0, "", "", 0) {
         select.offset_count(offset, COUNT)
         select.sort(TPublications.date_create, false)
 
-        val publications = ControllerPublications.parseSelect(Database.select("EPublicationsDraftsGetAll", select))
-        ControllerPublications.loadSpecDataForPosts(apiAccount.id, publications)
+        var publications = ControllerPublications.parseSelect(Database.select("EPublicationsDraftsGetAll", select))
+        publications = ControllerPublications.loadSpecDataForPosts(apiAccount.id, publications)
 
         return Response(publications)
     }

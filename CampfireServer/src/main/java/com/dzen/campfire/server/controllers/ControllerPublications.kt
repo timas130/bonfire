@@ -177,11 +177,12 @@ object ControllerPublications {
         )
     }
 
-    fun loadSpecDataForPosts(accountId: Long, posts: Array<Publication>) {
+    fun loadSpecDataForPosts(accountId: Long, posts: Array<Publication>): Array<Publication> {
         loadBestCommentsForPosts(accountId, posts)
         loadRubricsForPosts(posts)
         loadUserActivity(accountId, posts)
         loadBlacklists(accountId, posts)
+        return loadShadowBans(posts)
     }
 
     fun loadBlacklists(accountId: Long, pubs: Array<Publication>) {
@@ -198,10 +199,33 @@ object ControllerPublications {
         }
     }
 
+    fun loadShadowBans(pubs: Array<Publication>): Array<Publication> {
+        val v = Database.select(
+            "ControllerPublications.loadShadowBans",
+            SqlQuerySelect(TShadowBans.NAME, TShadowBans.account_id)
+                .where(SqlWhere.WhereIN(TShadowBans.account_id, pubs.map { it.creator.id }.toTypedArray()))
+        )
+
+        val accounts = HashSet<Long>(v.rowsCount)
+        while (v.hasNext()) {
+            val accountId = v.next<Long>()
+            accounts.add(accountId)
+        }
+
+        return pubs
+            .filterNot { accounts.contains(it.creator.id) }
+            .toTypedArray()
+    }
+
     private fun loadUserActivity(accountId: Long, posts: Array<Publication>) {
         val list = ArrayList<PublicationPost>()
         val listIds = ArrayList<Long>()
-        for (post in posts) if (post is PublicationPost) {;list.add(post);listIds.add(post.id); }
+        for (post in posts) {
+            if (post is PublicationPost) {
+                list.add(post)
+                listIds.add(post.id)
+            }
+        }
 
         if (listIds.isEmpty()) return
 

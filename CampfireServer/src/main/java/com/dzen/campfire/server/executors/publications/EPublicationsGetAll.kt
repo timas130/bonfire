@@ -2,9 +2,9 @@ package com.dzen.campfire.server.executors.publications
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.requests.publications.RPublicationsGetAll
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.tables.TPublications
-import com.dzen.campfire.api.tools.ApiException
 import com.sup.dev.java.tools.ToolsCollections
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlWhere
@@ -65,8 +65,8 @@ class EPublicationsGetAll : RPublicationsGetAll() {
         else if (order == ORDER_DOWNLOADS)
             select.sort("downloads_count", false)
 
-        val publications = ControllerPublications.parseSelect( Database.select("EPublicationsGetAll",select))
-        ControllerPublications.loadSpecDataForPosts(apiAccount.id, publications)
+        var publications = ControllerPublications.parseSelect( Database.select("EPublicationsGetAll",select))
+        publications = ControllerPublications.loadSpecDataForPosts(apiAccount.id, publications)
 
         return Response(publications)
     }

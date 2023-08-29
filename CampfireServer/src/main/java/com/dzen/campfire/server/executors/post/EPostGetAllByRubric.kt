@@ -2,10 +2,10 @@ package com.dzen.campfire.server.executors.post
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.requests.post.RPostGetAllByRubric
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerOptimizer
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.tables.TPublications
-import com.dzen.campfire.api.tools.ApiException
 import com.sup.dev.java_pc.sql.Database
 
 class EPostGetAllByRubric : RPostGetAllByRubric(0, 0) {
@@ -25,9 +25,8 @@ class EPostGetAllByRubric : RPostGetAllByRubric(0, 0) {
 
         ControllerOptimizer.putCollisionWithCheck(apiAccount.id, API.COLLISION_ACHIEVEMENT_TAG_SEARCH)
 
-        val array = ControllerPublications.parseSelect(Database.select("EPostGetAllByRubric", select))
-
-        ControllerPublications.loadSpecDataForPosts(apiAccount.id, array)
+        var array = ControllerPublications.parseSelect(Database.select("EPostGetAllByRubric", select))
+        array = ControllerPublications.loadSpecDataForPosts(apiAccount.id, array)
 
         return Response(array)
     }

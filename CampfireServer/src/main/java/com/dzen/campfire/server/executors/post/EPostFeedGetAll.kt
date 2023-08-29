@@ -55,8 +55,8 @@ class EPostFeedGetAll : RPostFeedGetAll(0, emptyArray(), emptyArray(), false, 0,
         if (categoriesId.isNotEmpty()) select.where(SqlWhere.WhereIN(TPublications.publication_category, categoriesId))
         if (ignoreFandomsIds.isNotEmpty()) select.where(SqlWhere.WhereIN(TPublications.fandom_id, true, ignoreFandomsIds))
 
-        val posts = ControllerPublications.parseSelect(Database.select("EPostFeedGetAll", select))
-        ControllerPublications.loadSpecDataForPosts(apiAccount.id, posts)
+        var posts = ControllerPublications.parseSelect(Database.select("EPostFeedGetAll", select))
+        posts = ControllerPublications.loadSpecDataForPosts(apiAccount.id, posts)
 
         return Response(posts)
     }

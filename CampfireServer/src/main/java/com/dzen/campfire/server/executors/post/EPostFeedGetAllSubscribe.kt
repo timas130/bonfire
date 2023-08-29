@@ -6,7 +6,6 @@ import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.tables.TAccounts
 import com.dzen.campfire.server.tables.TPublications
-import com.sup.dev.java.libs.debug.Debug
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlWhere
 
@@ -39,8 +38,8 @@ class EPostFeedGetAllSubscribe : RPostFeedGetAllSubscribe(0, 0) {
                         " OR (${TPublications.language_id}=-1 AND ${TPublications.fandom_id} IN($subscribeTagFandoms)))"
         ))
 
-        val posts = ControllerPublications.parseSelect(Database.select("EPostFeedGetAll", select))
-        ControllerPublications.loadSpecDataForPosts(apiAccount.id, posts)
+        var posts = ControllerPublications.parseSelect(Database.select("EPostFeedGetAll", select))
+        posts = ControllerPublications.loadSpecDataForPosts(apiAccount.id, posts)
 
         return Response(posts)
     }
