@@ -61,9 +61,9 @@ object ControllerLinks {
 
             val s1 = t.split('-')
             val linkV = s1[0]
-            val params: List<String> = if (s1.size > 1) s1[1].split("-") else emptyList()
+            val params: List<String> = if (s1.size > 1) s1.subList(1, s1.size) else emptyList()
 
-            var passed: Boolean = true
+            var passed = true
             when (t) {
                 API.LINK_ABOUT.link -> Navigator.to(
                     SWikiList(
@@ -115,7 +115,7 @@ object ControllerLinks {
 
             if (passed) return true
 
-            if (linkV == "box" && params.getOrNull(0) == "with" && params.getOrNull(0) == "box") {
+            if (linkV == "box" && params.getOrNull(0) == "with" && params.getOrNull(1) == "box") {
                 var counter = 0
                 for (i in params) if (i == "box") counter++
                 ControllerScreenAnimations.box(ToolsMath.max(1, counter + 1))
@@ -159,8 +159,8 @@ object ControllerLinks {
                 API.LINK_RUBRIC.link -> SRubricPosts.instance(params[0].toLong(), Navigator.TO)
                 API.LINK_QUEST.link -> SQuest.instance(params[0].toLong(), Navigator.TO)
                 else -> {
-                    if (ToolsText.isOnly(link, API.ACCOUNT_LOGIN_CHARS)) {
-                        SProfile.instance(link, Navigator.TO)
+                    if (ToolsText.isOnly(t, API.ACCOUNT_LOGIN_CHARS)) {
+                        SProfile.instance(t, Navigator.TO)
                         return true
                     }
                     info("ControllerExecutorLinks link wasn't found [$link][$t]")
@@ -180,7 +180,7 @@ object ControllerLinks {
 
             val s1 = t.split('-')
             val linkV = s1[0]
-            val params: List<String> = if (s1.size > 1) s1[1].split("_") else emptyList()
+            val params: List<String> = if (s1.size > 1) s1.subList(1, s1.size) else emptyList()
 
             val v = when (t) {
                 API.LINK_ABOUT.link -> true
@@ -210,7 +210,7 @@ object ControllerLinks {
 
             if (v) return true
 
-            if (linkV == "box" && params.getOrNull(0) == "with" && params.getOrNull(0) == "box") {
+            if (linkV == "box" && params.getOrNull(0) == "with" && params.getOrNull(1) == "box") {
                 return true
             }
 
@@ -233,7 +233,7 @@ object ControllerLinks {
                 API.LINK_CONF.link -> params.size == 1 || params.size == 2
                 API.LINK_QUEST.link -> true
                 else -> {
-                    if (ToolsText.isOnly(link.toString(), API.ACCOUNT_LOGIN_CHARS)) {
+                    if (ToolsText.isOnly(t, API.ACCOUNT_LOGIN_CHARS)) {
                         true
                     } else {
                         info("ControllerExecutorLinks link wasn't found [$link][$t]")
