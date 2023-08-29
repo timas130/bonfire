@@ -182,7 +182,7 @@ object ControllerPublications {
         loadRubricsForPosts(posts)
         loadUserActivity(accountId, posts)
         loadBlacklists(accountId, posts)
-        return loadShadowBans(posts)
+        return loadShadowBans(accountId, posts)
     }
 
     fun loadBlacklists(accountId: Long, pubs: Array<Publication>) {
@@ -199,7 +199,7 @@ object ControllerPublications {
         }
     }
 
-    fun loadShadowBans(pubs: Array<Publication>): Array<Publication> {
+    fun loadShadowBans(accountId: Long, pubs: Array<Publication>): Array<Publication> {
         val v = Database.select(
             "ControllerPublications.loadShadowBans",
             SqlQuerySelect(TShadowBans.NAME, TShadowBans.account_id)
@@ -208,12 +208,11 @@ object ControllerPublications {
 
         val accounts = HashSet<Long>(v.rowsCount)
         while (v.hasNext()) {
-            val accountId = v.next<Long>()
-            accounts.add(accountId)
+            accounts.add(v.next())
         }
 
         return pubs
-            .filterNot { accounts.contains(it.creator.id) }
+            .filter { it.creator.id == accountId || !accounts.contains(it.creator.id) }
             .toTypedArray()
     }
 
