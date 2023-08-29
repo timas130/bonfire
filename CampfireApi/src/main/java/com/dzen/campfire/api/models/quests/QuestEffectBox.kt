@@ -9,7 +9,8 @@ class QuestEffectBox : QuestEffect() {
     override fun getEffectType(): Long = API.QUEST_EFFECT_TYPE_BOX
 
     override fun json(inp: Boolean, json: Json): Json {
-        box = API.LINKS_ARRAY.find { it.link == json.m(inp, "box", box.link) } ?: API.LINK_BOX_WITH_BOX
+        val linkStr = json.m(inp, "box", box.link).replace('_', '-')
+        box = API.LINKS_ARRAY.find { it.link == linkStr } ?: API.LINK_BOX_WITH_BOX
         return super.json(inp, json)
     }
 }

@@ -24,13 +24,20 @@ object ControllerUserQuests {
                     return false
             }
             is QuestEffectBox -> {
-                if (!effect.box.link.startsWith("box_")) return false
+                if (
+                    !effect.box.link.startsWith("box_") &&
+                    !effect.box.link.startsWith("box-")
+                ) {
+                    return false
+                }
                 if (arrayOf(
-                        API.LINK_BOX_WITH_MINIGAME,
-                        API.LINK_BOX_WITH_CRASH,
-                        API.LINK_BOX_WITH_MAGIC_SCREEN,
-                        API.LINK_BOX_WITH_MAGIC_SCREEN_X2,
-                    ).contains(effect.box)) return false
+                    API.LINK_BOX_WITH_MINIGAME,
+                    API.LINK_BOX_WITH_CRASH,
+                    API.LINK_BOX_WITH_MAGIC_SCREEN,
+                    API.LINK_BOX_WITH_MAGIC_SCREEN_X2,
+                ).contains(effect.box)) {
+                    return false
+                }
             }
             is QuestEffectBoxReset -> {
                 // no fields
