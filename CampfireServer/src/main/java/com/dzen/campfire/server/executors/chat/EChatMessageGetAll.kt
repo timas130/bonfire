@@ -38,9 +38,12 @@ class EChatMessageGetAll : RChatMessageGetAll(ChatTag(), 0, false, 0) {
         list.add(targetMessage as PublicationChatMessage)
         for (i in select_2) list.add(i)
 
-        ControllerPublications.loadBlacklists(apiAccount.id, list.map { it as Publication }.toTypedArray())
+        var array = list.map { it as Publication }.toTypedArray()
+        ControllerPublications.loadBlacklists(apiAccount.id, array)
+        array = ControllerPublications.loadShadowBans(apiAccount.id, array)
 
-        return Response(list.toTypedArray())
+        @Suppress("UNCHECKED_CAST")
+        return Response(array as Array<PublicationChatMessage>)
     }
 
     private fun select(count: Int, old: Boolean, offsetDate: Long): Array<PublicationChatMessage> {
