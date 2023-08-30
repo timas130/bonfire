@@ -258,12 +258,12 @@ open class CardComment protected constructor(
         }
     }
 
-    fun updateText() {
+    private fun updateText() {
         val view = getView() ?: return
         val publication = xPublication.publication as PublicationComment
         val vText: ViewText = view.findViewById(R.id.vText)
 
-        var text = publication.text
+        var text = ControllerLinks.getAnswerText(publication.answerName, publication.text)
         if (!publication.newFormatting) {
             if (text.length > maxTextSize) {
                 val parsedText = TextFormatter(text).parseNoTags()
@@ -272,19 +272,7 @@ open class CardComment protected constructor(
                 }
             }
             vText.text = text
-            ControllerLinks.makeLinkable(vText) {
-                val myName = ControllerApi.account.getName() + ","
-                if (publication.text.startsWith(myName)) {
-                    vText.text = "{ff6d00 $myName}" + "${vText.text}".substring(myName.length)
-                } else {
-                    if (publication.answerName.isNotEmpty()) {
-                        val otherName = publication.answerName + ","
-                        if (publication.text.startsWith(otherName)) {
-                            vText.text = "{90A4AE $otherName}" + "${vText.text}".substring(otherName.length)
-                        }
-                    }
-                }
-            }
+            ControllerLinks.makeLinkable(vText)
         } else {
             BonfireMarkdown.setMarkdownInline(vText, text)
             ControllerLinks.linkifyShort(vText)
@@ -353,14 +341,7 @@ open class CardComment protected constructor(
         vQuoteContainer.setOnClickListener { if (onGoTo != null) onGoTo!!.invoke(publication.quoteId) }
         vQuoteContainer.setOnLongClickListener { showMenu(vQuoteContainer, it.x, it.y);true }
 
-        val quoteText = publication.quoteText
-        if (publication.quoteCreatorName.isNotEmpty()) {
-            val otherName = publication.quoteCreatorName + ":"
-            if (quoteText.startsWith(otherName)) {
-                val color = if (publication.quoteCreatorName == ControllerApi.account.getName()) "FF6D00" else "90A4AE"
-                vQuoteText.text = "{$color $otherName}" + quoteText.substring(otherName.length)
-            }
-        }
+        val quoteText = ControllerLinks.getQuoteText(publication.quoteCreatorName, publication.quoteText)
         BonfireMarkdown.setMarkdownInline(vQuoteText, quoteText)
         ControllerLinks.linkifyShort(vQuoteText)
         vQuoteText.text = vQuoteText.text.subSequence(0, (100).coerceAtMost(vQuoteText.text.length))

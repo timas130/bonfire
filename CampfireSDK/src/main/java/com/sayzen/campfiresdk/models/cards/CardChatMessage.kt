@@ -415,25 +415,23 @@ open class CardChatMessage constructor(
             ToolsView.dpToPx(8).toInt()
         }
 
+        val text = ControllerLinks.getAnswerText(publication.answerName, publication.text)
         if (!publication.newFormatting) {
-            vText.text = publication.text
-            ControllerLinks.makeLinkable(vText) {
-                val myName = ControllerApi.account.getName() + ","
-                if (publication.text.startsWith(myName)) {
-                    vText.text = "{ff6d00 $myName}" + "${vText.text}".substring(myName.length)
-                } else {
-                    if (publication.answerName.isNotEmpty()) {
-                        val otherName = publication.answerName + ","
-                        if (publication.text.startsWith(otherName)) {
-                            vText.text = "{90A4AE $otherName}" + "${vText.text}".substring(otherName.length)
-                        }
-                    }
-                }
-            }
+            vText.text = text
+            ControllerLinks.makeLinkable(vText)
         } else {
-            BonfireMarkdown.setMarkdownInline(vText, publication.text)
+            BonfireMarkdown.setMarkdownInline(vText, text)
             ControllerLinks.linkifyShort(vText)
         }
+    }
+
+    private fun getQuoteText(publication: PublicationChatMessage): String {
+        val quoteText = if (publication.type == PublicationChatMessage.TYPE_VOICE) {
+            t(API_TRANSLATE.app_voice_message)
+        } else {
+            publication.quoteText
+        }
+        return ControllerLinks.getQuoteText(publication.quoteCreatorName, quoteText)
     }
 
     fun updateBase() {
@@ -508,15 +506,7 @@ open class CardChatMessage constructor(
         vQuoteContainer.setOnClickListener { if (onGoTo != null) onGoTo!!.invoke(publication.quoteId) }
         vQuoteContainer.setOnLongClickListener { showMenu(vQuoteContainer, it.x, it.y);true }
 
-        val quoteText = if (publication.type == PublicationChatMessage.TYPE_VOICE) t(API_TRANSLATE.app_voice_message)
-        else publication.quoteText
-        if (publication.quoteCreatorName.isNotEmpty()) {
-            val otherName = publication.quoteCreatorName + ":"
-            if (quoteText.startsWith(otherName)) {
-                val color = if(publication.quoteCreatorName == ControllerApi.account.getName()) "FF6D00" else "90A4AE"
-                vQuoteText.text = "{$color $otherName}" + quoteText.substring(otherName.length)
-            }
-        }
+        val quoteText = getQuoteText(publication)
         BonfireMarkdown.setMarkdownInline(vQuoteText, quoteText)
         ControllerLinks.linkifyShort(vQuoteText)
         vQuoteText.text = vQuoteText.text.subSequence(0, (100).coerceAtMost(vQuoteText.text.length))

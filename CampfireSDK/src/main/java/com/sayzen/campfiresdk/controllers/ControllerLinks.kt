@@ -365,4 +365,24 @@ object ControllerLinks {
             { match, _ -> "https://bonfire.moe/r/${match.group(1)}" }
         )
     }
+
+    fun getAnswerText(answerName: String, text: String): String {
+        val myName = ControllerApi.account.getName()
+        return if (text.startsWith("$myName, ")) {
+            "{bonfire $myName}, ${text.substring(myName.length + 2)}"
+        } else if (answerName.isNotEmpty() && text.startsWith("$answerName, ")) {
+            "{90A4AE $answerName}, ${text.substring(answerName.length + 2)}"
+        } else {
+            text
+        }
+    }
+
+    fun getQuoteText(quoteCreatorName: String, quoteText: String): String {
+        return if (quoteCreatorName.isEmpty() || !quoteText.startsWith("$quoteCreatorName: ")) {
+            quoteText
+        } else {
+            val color = if (quoteCreatorName == ControllerApi.account.getName()) "FF6D00" else "90A4AE"
+            "{$color $quoteCreatorName}: " + quoteText.substring(quoteCreatorName.length + 2)
+        }
+    }
 }
