@@ -27,13 +27,16 @@ Thumbs.db
 *.iml
 .idea
 
-#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
+# .idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 .gradle
 build/
 .navigation
 captures/
 output.json 
 
-#NDK
+# NDK
 obj/
 .externalNativeBuild
+
+# Rust
+target/

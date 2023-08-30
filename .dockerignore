@@ -30,7 +30,7 @@ Thumbs.db
 .idea/
 */.idea/
 
-#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
+# .idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 .gradle
 build/
 */build/
@@ -38,10 +38,14 @@ build/
 captures/
 output.json
 
-#NDK
+# NDK
 obj/
 .externalNativeBuild
+
+# Rust
+target/
 
 .git/
 .gitignore
 Dockerfile
+
