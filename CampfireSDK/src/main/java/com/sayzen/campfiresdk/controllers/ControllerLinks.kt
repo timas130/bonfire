@@ -1,6 +1,5 @@
 package com.sayzen.campfiresdk.controllers
 
-import android.text.util.Linkify
 import android.view.Gravity
 import android.widget.TextView
 import androidx.core.text.util.LinkifyCompat
@@ -34,7 +33,6 @@ import com.sayzen.campfiresdk.screens.wiki.SWikiArticleView
 import com.sayzen.campfiresdk.screens.wiki.SWikiList
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsIntent
-import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.java.libs.debug.err
@@ -297,60 +295,9 @@ object ControllerLinks {
     fun linkToQuest(questId: Long) = API.LINK_QUEST.asWeb() + questId
     fun linkToQuestComment(questId: Long, commentId: Long) = API.LINK_QUEST.asWeb() + questId + "_" + commentId
 
-    fun makeLinkable(vText: ViewText, onReplace: () -> Unit = {}) {
-
-        for (i in API.LINKS_ARRAY) replaceLinkable(vText, i.asLink(), i.asWeb())
-        replaceLinkable(vText, API.LINK_SHORT_PROFILE, API.LINK_PROFILE_NAME)
-
-
-        onReplace.invoke()
+    fun makeLinkable(vText: ViewText) {
         ControllerApi.makeTextHtml(vText)
-
-        for (i in API.LINKS_ARRAY)
-            if (i == API.LINK_BOX_WITH_BOX) makeLinkable(vText, i.asLink(), i.asWeb(), "([_with_box]*)")
-            else if (i.isInnerLink) makeLinkableInner(vText, i.asLink(), i.asWeb())
-            else makeLinkable(vText, i.asLink(), i.asWeb())
-
-        makeLinkable(vText, API.LINK_SHORT_PROFILE, API.LINK_PROFILE_NAME, "([A-Za-z0-9#]+)")
-
-        Linkify.addLinks(vText, Pattern.compile("${API.LINK_SHORT_PROFILE_SECOND}([A-Za-z0-9#]+)"), API.LINK_PROFILE_NAME,
-                {s,i1,i2 ->
-                    if(i1 == 0) return@addLinks true
-                    if(s[i1-1] != ' ' && s[i1-1] != '.' && s[i1-1] != '!' && s[i1-1] != '?' && s[i1-1] != ',') return@addLinks false
-                    return@addLinks true
-                },
-                { _, url ->
-                    API.LINK_PROFILE_NAME + url.substring(API.LINK_SHORT_PROFILE_SECOND.length)
-                })
-
-        if (ControllerHoliday.isBirthday()) {
-            ToolsView.addLink(vText, "День рождения") { ControllerScreenAnimations.parseHolidayClick() }
-            ToolsView.addLink(vText, "Днём рождения") { ControllerScreenAnimations.parseHolidayClick() }
-            ToolsView.addLink(vText, "Birthday") { ControllerScreenAnimations.parseHolidayClick() }
-            ToolsView.addLink(vText, "день рождения") { ControllerScreenAnimations.parseHolidayClick() }
-            ToolsView.addLink(vText, "днём рождения") { ControllerScreenAnimations.parseHolidayClick() }
-            ToolsView.addLink(vText, "birthday") { ControllerScreenAnimations.parseHolidayClick() }
-        }
-
-        ToolsView.makeLinksClickable(vText)
-    }
-
-    private fun replaceLinkable(vText: TextView, short: String, link: String) {
-        vText.text = vText.text.toString().replace(link, short)
-    }
-
-    private fun makeLinkableInner(vText: TextView, short: String, link: String) {
-        makeLinkable(vText, short, link, "(?!\\_)")
-    }
-
-    private fun makeLinkable(vText: TextView, short: String, link: String) {
-        makeLinkable(vText, short, link, "([A-Za-z0-9_-]+)")
-    }
-
-    private fun makeLinkable(vText: TextView, short: String, link: String, spec: String) {
-        Linkify.addLinks(vText, Pattern.compile("$short$spec"), link, null, { _, url ->
-            link + url.substring(short.length)
-        })
+        linkifyShort(vText)
     }
 
     private val linkRegex by lazy { Pattern.compile("[#@]([A-Za-z0-9-_#]+)") }
