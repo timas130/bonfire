@@ -12,9 +12,10 @@ import com.dzen.campfire.api.models.publications.chat.Chat
 import com.dzen.campfire.api.models.publications.chat.PublicationChatMessage
 import com.dzen.campfire.api.requests.chat.RChatGet
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.controllers.*
-import com.sayzen.campfiresdk.support.adapters.XAccount
-import com.sayzen.campfiresdk.support.adapters.XFandom
+import com.sayzen.campfiresdk.controllers.ControllerApi
+import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
+import com.sayzen.campfiresdk.controllers.ControllerChats
+import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.chat.*
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomBackgroundImageChanged
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomChatChanged
@@ -24,8 +25,10 @@ import com.sayzen.campfiresdk.models.objects.MChatMessagesPool
 import com.sayzen.campfiresdk.screens.chat.SChat
 import com.sayzen.campfiresdk.screens.chat.create.SChatCreate
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
-import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sayzen.campfiresdk.support.adapters.XAccount
+import com.sayzen.campfiresdk.support.adapters.XFandom
 import com.sup.dev.android.libs.image_loader.ImageLoader
+import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.cards.Card
 import com.sup.dev.android.views.views.ViewAvatarTitle
@@ -34,6 +37,7 @@ import com.sup.dev.android.views.views.ViewSwipe
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsDate
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class CardChat(
         var chat: Chat
@@ -99,23 +103,24 @@ class CardChat(
         vSwipe.onLongClick = { showMenu(vSwipe, it.x, it.y) }
         vSwipe.onSwipe = { if (hasUnread) ControllerChats.readRequest(chat.tag) }
 
-        if (chat.tag.chatType == API.CHAT_TYPE_FANDOM_ROOT) {
-            xFandom.setView(vAvatar.vAvatar)
-            vAvatar.vAvatar.vChip.visibility = View.VISIBLE
-        } else if (chat.tag.chatType == API.CHAT_TYPE_PRIVATE) {
-            xAccount.setView(vAvatar.vAvatar)
-            vAvatar.vAvatar.vChip.visibility = View.VISIBLE
-        } else {
-            ImageLoader.load(chat.customImageId).into(vAvatar.vAvatar.vImageView)
-            vAvatar.setTitle(chat.customName)
-            vAvatar.vAvatar.setOnClickListener { SChatCreate.instance(chat.tag.targetId, Navigator.TO) }
-            vAvatar.vAvatar.vChip.visibility = View.GONE
-        }
-
         when (chat.tag.chatType) {
-            API.CHAT_TYPE_FANDOM_ROOT -> vAvatar.setTitle(xFandom.getName())
-            API.CHAT_TYPE_PRIVATE -> vAvatar.setTitle(xAccount.getName())
-            else -> vAvatar.setTitle(chat.customName)
+            API.CHAT_TYPE_FANDOM_ROOT -> {
+                xFandom.setView(vAvatar.vAvatar)
+                vAvatar.vAvatar.vChip.visibility = View.VISIBLE
+                vAvatar.setTitle(xFandom.getName())
+            }
+            API.CHAT_TYPE_PRIVATE -> {
+                xAccount.setView(vAvatar.vAvatar)
+                vAvatar.vAvatar.vChip.visibility = View.VISIBLE
+                vAvatar.setTitle(xAccount.getName())
+            }
+            else -> {
+                ImageLoader.load(chat.customImageId).into(vAvatar.vAvatar.vImageView)
+                vAvatar.setTitle(chat.customName)
+                vAvatar.vAvatar.setOnClickListener { SChatCreate.instance(chat.tag.targetId, Navigator.TO) }
+                vAvatar.vAvatar.vChip.visibility = View.GONE
+                vAvatar.setTitle(chat.customName)
+            }
         }
 
         if (chat.chatMessage.id != 0L) {
@@ -137,7 +142,8 @@ class CardChat(
                     chat.chatMessage.type == PublicationChatMessage.TYPE_SYSTEM -> ControllerChats.getSystemText(chat.chatMessage)
                     else -> chat.chatMessage.text
                 }
-                vAvatar.setSubtitle(t)
+                vAvatar.vSubtitle.visibility = View.VISIBLE
+                BonfireMarkdown.setMarkdownInline(vAvatar.vSubtitle, t)
             }
             vMessageDate.text = ToolsDate.dateToString(chat.chatMessage.dateCreate)
         } else {
@@ -150,9 +156,6 @@ class CardChat(
 
         vMessagesCounter.setBackgroundColor(if (chat.subscribed) ToolsResources.getSecondaryColor(view.context) else ToolsResources.getColor(R.color.grey_600))
         vMessagesCounter.visibility = if (messagesCount < 1) View.GONE else View.VISIBLE
-
-        ControllerLinks.makeLinkable(vAvatar.vSubtitle)
-
     }
 
     private fun showMenu(vSwipe: View, x: Float, y: Float) {
