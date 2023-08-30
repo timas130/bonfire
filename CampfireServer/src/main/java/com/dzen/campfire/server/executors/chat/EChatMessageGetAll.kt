@@ -71,8 +71,11 @@ class EChatMessageGetAll : RChatMessageGetAll(ChatTag(), 0, false, 0) {
 
         val v = Database.select("EChatMessageGetAll", select)
 
-        val publications = ControllerPublications.parseSelect(v)
+        var publications = ControllerPublications.parseSelect(v)
         if (old || offsetDate == 0L) publications.reverse()
+
+        ControllerPublications.loadBlacklists(apiAccount.id, publications)
+        publications = ControllerPublications.loadShadowBans(apiAccount.id, publications)
 
         return Array(publications.size) { publications[it] as PublicationChatMessage }
     }
