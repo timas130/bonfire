@@ -1,5 +1,6 @@
 package com.sayzen.campfiresdk.controllers
 
+import android.text.util.Linkify
 import android.view.Gravity
 import android.widget.TextView
 import androidx.core.text.util.LinkifyCompat
@@ -297,6 +298,7 @@ object ControllerLinks {
 
     fun makeLinkable(vText: ViewText) {
         ControllerApi.makeTextHtml(vText)
+        LinkifyCompat.addLinks(vText, Linkify.WEB_URLS)
         linkifyShort(vText)
     }
 
