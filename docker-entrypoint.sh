@@ -36,6 +36,16 @@ fi
 echo "[docker] starting java"
 cd /app/ || exit
 
+if [ "$START_RUST" != "false" ]; then
+    if [ "$START_MEDIA" != "false" ] || [ "$START_SERVER" != "false" ]; then
+        /app/rust-bonfire &
+    else
+        /app/rust-bonfire
+    fi
+else
+    echo "[docker] rust-bonfire start prevented, START_RUST is false"
+fi
+
 if [ "$START_SERVER" != "false" ]; then
     if [ "$START_MEDIA" != "false" ]; then
         /app/CampfireServer/bin/CampfireServer &
