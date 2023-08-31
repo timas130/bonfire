@@ -47,7 +47,7 @@ object ControllerAchievements {
             }
         }
 
-        ControllerCollisions.putCollisionValue2(
+        ControllerCollisions.updateOrCreateValue2(
             ownerId = accountId,
             collisionType = API.COLLISION_ACCOUNT_ACHIEVEMENTS,
             value2 = report.json(true, Json()).toString(),
