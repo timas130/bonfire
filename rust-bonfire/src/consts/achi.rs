@@ -62,6 +62,7 @@ pub enum AchiIndex {
     ViceroyImages = 75,
     ViceroyDescription = 76,
     QuestKarma = 77,
+    Bonus = 78,
 }
 
 pub struct AchiDef<'a> {
@@ -140,6 +141,7 @@ pub const ACHI_VICEROY_LINK: AchiDef = AchiDef::new_static(AchiIndex::ViceroyLin
 pub const ACHI_VICEROY_IMAGES: AchiDef = AchiDef::new_static(AchiIndex::ViceroyImages, 3, &[1]);
 pub const ACHI_VICEROY_DESCRIPTION: AchiDef = AchiDef::new_static(AchiIndex::ViceroyDescription, 3, &[1]);
 pub const ACHI_QUEST_KARMA: AchiDef = AchiDef::new_static(AchiIndex::QuestKarma, 3 * 15, &[7000, 14000, 25000, 37000]);
+pub const ACHI_BONUS: AchiDef = AchiDef::new_static(AchiIndex::Bonus, 10, &collect_const!(u64 => (1..=500)));
 
 lazy_static! {
     pub static ref ACHIEVEMENTS: HashMap<AchiIndex, AchiDef<'static>> = {
@@ -200,6 +202,7 @@ lazy_static! {
         hm.insert(AchiIndex::ViceroyImages, ACHI_VICEROY_IMAGES);
         hm.insert(AchiIndex::ViceroyDescription, ACHI_VICEROY_DESCRIPTION);
         hm.insert(AchiIndex::QuestKarma, ACHI_QUEST_KARMA);
+        hm.insert(AchiIndex::Bonus, ACHI_BONUS);
         hm
     };
 }

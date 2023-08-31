@@ -244,7 +244,11 @@ async fn get_counts(
     hm.insert(AchiIndex::StickersKarma, sticker_packs.max_karma);
 
     let account = sqlx::query!(
-        "select name, img_title_id, coalesce(recruiter_id, 0) as \"recruiter_id!\", karma_count
+        "select name,
+                img_title_id,
+                coalesce(recruiter_id, 0) as \"recruiter_id!\",
+                karma_count,
+                date_create
          from accounts
          where id = $1",
         user_id
@@ -256,6 +260,11 @@ async fn get_counts(
     hm.insert(AchiIndex::TitleImage, i64::from(account.img_title_id > 0));
     hm.insert(AchiIndex::AddRecruiter, i64::from(account.recruiter_id > 0));
     hm.insert(AchiIndex::Karma30, account.karma_count);
+
+    // earlier than Fri Sep 01 2023 00:00:00 GMT+0300
+    if account.date_create < 1693515600000 {
+        hm.insert(AchiIndex::Bonus, 10);
+    }
 
     hm.insert(
         AchiIndex::Fandoms,
