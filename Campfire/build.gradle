@@ -40,7 +40,9 @@ android {
 dependencies {
     implementation project(':CampfireSDK')
     implementation 'io.sentry:sentry-android:6.28.0'
-    implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
+    implementation('com.google.firebase:firebase-auth-ktx:21.1.0') {
+        exclude group: 'com.google.android.gms', module: 'play-services-safetynet'
+    }
 }
 
 tasks.withType(KotlinCompile).configureEach {
