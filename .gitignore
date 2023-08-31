@@ -3,6 +3,8 @@ secrets/
 #built application files
 *.apk
 *.ap_
+*.aab
+output-metadata.json
 
 # files for the dex VM
 *.dex
