@@ -339,6 +339,18 @@ class API(
         const val FANDOM_CHAT_TEXT_MIN_L = 1
         const val FANDOM_CHAT_TEXT_MAX_L = 5000
 
+        //  #     #    #    ######  #     # ### #     #  #####
+        //  #  #  #   # #   #     # ##    #  #  ##    # #     #
+        //  #  #  #  #   #  #     # # #   #  #  # #   # #
+        //  #  #  # #     # ######  #  #  #  #  #  #  # #  ####
+        //  #  #  # ####### #   #   #   # #  #  #   # # #     #
+        //  #  #  # #     # #    #  #    ##  #  #    ## #     #
+        //   ## ##  #     # #     # #     # ### #     #  #####
+        //
+        // If you are going to add an achievement, don't forget to add
+        // the counting code into rust-bonfire!
+        //
+        // Contact @sit for assistance.
         val ACHI_APP_SHARE = AchievementInfo(2, 5, 1)
         val ACHI_CONTENT_SHARE = AchievementInfo(3, 5, 1, 10, 30)
         val ACHI_ADD_RECRUITER = AchievementInfo(4, 2 * 10, 1)
@@ -700,6 +712,7 @@ class API(
         const val COLLISION_ACHIEVEMENT_RELAY_RACE_FIRST_NEXT_MEMBER = 10020L
         const val COLLISION_ACHIEVEMENT_RELAY_RACE_FIRST_CREATE = 10021L
         const val COLLISION_ACHIEVEMENT_RELAY_RACE_POSTS_COUNT = 10022L
+        @Deprecated("recounted in rust-bonfire")
         const val COLLISION_ACHIEVEMENT_RELAY_RACE_MY_RACE_POSTS_COUNT = 10023L
         const val COLLISION_ACHIEVEMENT_VICEROY_ASSIGN = 10024L
         const val COLLISION_ACHIEVEMENT_VICEROY_LINK = 10025L
@@ -748,6 +761,7 @@ class API(
         const val COLLISION_ACCOUNT_STICKERS = 30024L
         const val COLLISION_ACCOUNT_PROJECT_INIT = 30025L
         const val COLLISION_ACCOUNT_QUESTS_KARMA = 30026L
+        const val COLLISION_ACCOUNT_ACHIEVEMENTS = 30027L
         const val COLLISION_PROJECT_AB_PARAMS = 40000L
         const val COLLISION_PROJECT_KEY = 40001L
         const val COLLISION_PROJECT_MINIGAME_HUMANS = 40002L

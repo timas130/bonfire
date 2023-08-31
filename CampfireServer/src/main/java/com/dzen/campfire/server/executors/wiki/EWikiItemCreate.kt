@@ -78,7 +78,10 @@ class EWikiItemCreate : RWikiItemCreate(0, 0, WikiTitle(), null, null) {
         ControllerWiki.insert(newItem, apiAccount.id)
 
         ControllerSubThread.inSub("EWikiItemCreate viceroy"){
-            for(i in API.LANGUAGES) ControllerAchievements.addAchievementWithCheck(ControllerViceroy.getViceroyId(fandomId, i.id), API.ACHI_VICEROY_WIKI_COUNT, true, false)
+            for(i in API.LANGUAGES) ControllerAchievements.addAchievementWithCheck(
+                ControllerViceroy.getViceroyId(fandomId, i.id),
+                API.ACHI_VICEROY_WIKI_COUNT
+            )
         }
 
         return Response(newItem)

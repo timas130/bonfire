@@ -1,22 +1,19 @@
 package com.dzen.campfire.server.executors.achievements
 
-
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.AchievementInfo
-import com.dzen.campfire.api.requests.achievements.RAchievementsInfo
 import com.dzen.campfire.api.requests.achievements.RAchievementsPack
-import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerAchievements
-import com.dzen.campfire.server.tables.TAccounts
-import com.sup.dev.java.libs.debug.Debug
-
+import com.dzen.campfire.server.rust.RustAchievements
 
 class EAchievementsPack : RAchievementsPack(0, 0) {
+    private lateinit var report: RustAchievements.LevelRecountReport
 
-    val indexes = ArrayList<Long>()
-    val progress = ArrayList<Long>()
+    private val indexes = mutableListOf<Long>()
+    private val progress = mutableListOf<Long>()
 
     override fun execute(): Response {
+        report = ControllerAchievements.recount(accountId)
 
         if (packIndex == 1 || packIndex == 0) for (i in API.ACHI_PACK_1) load(i)
         if (packIndex == 2 || packIndex == 0) for (i in API.ACHI_PACK_2) load(i)
@@ -29,9 +26,9 @@ class EAchievementsPack : RAchievementsPack(0, 0) {
     }
 
     private fun load(a: AchievementInfo) {
-        indexes.add(a.index)
-        val v = ControllerAchievements.getValue(accountId, a)
-        progress.add(v)
+        if (report.achievements.containsKey(a.index)) {
+            indexes.add(a.index)
+            progress.add(report.achievements[a.index]!!.count)
+        }
     }
-
 }

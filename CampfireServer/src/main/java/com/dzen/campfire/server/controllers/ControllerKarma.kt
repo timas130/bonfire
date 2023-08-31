@@ -53,8 +53,8 @@ object ControllerKarma {
         Database.update("ControllerKarma.recountKarma30 update_2", updateProfile)
 
         if (accountId > 0L) {
-            ControllerAchievements.addAchievementWithCheck(accountId, API.ACHI_KARMA_30, false, true)
-            ControllerAchievements.addAchievementWithCheck(accountId, API.ACHI_MODERATOR_COUNT, false, true)
+            ControllerAchievements.addAchievementWithCheck(accountId, API.ACHI_KARMA_30)
+            ControllerAchievements.addAchievementWithCheck(accountId, API.ACHI_MODERATOR_COUNT)
         } else {
             val v = Database.select("ControllerKarma.recountKarma30 select", SqlQuerySelect(TAccounts.NAME, TAccounts.id))
             while (v.hasNext()) {

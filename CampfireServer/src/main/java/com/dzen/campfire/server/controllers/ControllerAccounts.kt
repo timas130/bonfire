@@ -494,29 +494,7 @@ object ControllerAccounts {
         updateCollisionIncr(accountId, change, API.COLLISION_ACCOUNT_DAILY_ENTERS_COUNT) { getUniqueDayEnters(accountId) }
     }
 
-    fun updateRelayRaceMyRacePostsCount(accountId: Long, change: Int) {
-        // i set change to 0 because it's so buggy
-        updateCollisionIncr(accountId, 0, API.COLLISION_ACHIEVEMENT_RELAY_RACE_MY_RACE_POSTS_COUNT) {
-            val v = Database.select(
-                "ControllerAccounts.updateRelayRaceMyRacePostsCount select_1",
-                SqlQuerySelect(TActivities.NAME, TActivities.id)
-                    .where(TActivities.creator_id, "=", accountId)
-                    .where(TActivities.type, "=", API.ACTIVITIES_TYPE_RELAY_RACE)
-            )
-
-            val myIds = Array<Long>(v.rowsCount) { v.next() }
-            if (myIds.isEmpty()) return@updateCollisionIncr 0
-
-            val vv = Database.select(
-                "ControllerAccounts.updateRelayRaceMyRacePostsCount select_2",
-                SqlQuerySelect(TActivitiesCollisions.NAME, Sql.COUNT)
-                    .where(SqlWhere.WhereIN(TActivitiesCollisions.activity_id, myIds))
-                    .where(TActivitiesCollisions.type, "=", API.ACTIVITIES_COLLISION_TYPE_RELAY_RACE_POST)
-                    .where(TActivitiesCollisions.POST_STATUS, "=", API.STATUS_PUBLIC)
-            )
-
-            return@updateCollisionIncr vv.nextLongOrZero()
-        }
+    fun updateRelayRaceMyRacePostsCount(accountId: Long) {
         ControllerAchievements.addAchievementWithCheck(accountId, API.ACHI_RELAY_RACE_MY_RACE_POSTS_COUNT)
     }
 

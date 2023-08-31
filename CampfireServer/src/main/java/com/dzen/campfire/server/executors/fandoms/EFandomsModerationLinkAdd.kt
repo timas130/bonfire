@@ -30,7 +30,10 @@ class EFandomsModerationLinkAdd : RFandomsModerationLinkAdd(0, 0, "", "", 0, "")
 
         ControllerPublications.moderation(ModerationLinkAdd(comment, title, url, iconIndex), apiAccount.id, fandomId, languageId, 0)
         ControllerCollisions.putCollisionWithCheck(apiAccount.id, 1, API.COLLISION_ACHIEVEMENT_VICEROY_LINK)
-        ControllerAchievements.addAchievementWithCheck(ControllerViceroy.getViceroyId(fandomId, languageId), API.ACHI_VICEROY_LINK)
+        ControllerAchievements.addAchievementWithCheck(
+            ControllerViceroy.getViceroyId(fandomId, languageId),
+            API.ACHI_VICEROY_LINK
+        )
 
         return Response(linkIndex)
     }

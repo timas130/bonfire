@@ -336,23 +336,38 @@ object ControllerOptimizer {
 
             ControllerCollisions.incrementCollisionValueOrCreate(transaction.publication.creator.id, transaction.publication.fandom.id, transaction.publication.fandom.languageId, API.COLLISION_KARMA_30, transaction.karmaCount)
             ControllerAccounts.updateKarmaCount(transaction.publication.creator.id, transaction.karmaCount)
-            ControllerAchievements.addAchievementWithCheck(ControllerViceroy.getViceroyId(transaction.publication.fandom.id, transaction.publication.fandom.languageId), API.ACHI_VICEROY_KARMA_COUNT)
+            ControllerAchievements.addAchievementWithCheck(
+                ControllerViceroy.getViceroyId(transaction.publication.fandom.id, transaction.publication.fandom.languageId),
+                API.ACHI_VICEROY_KARMA_COUNT
+            )
         }
 
         if (transaction.publication.id > 0) {
             if (transaction.publication.publicationType == API.PUBLICATION_TYPE_POST) ControllerAccounts.updatePostKarma(transaction.publication.creator.id, transaction.publication.karmaCount)
             if (transaction.publication.publicationType == API.PUBLICATION_TYPE_POST && transaction.publication.dateCreate > ToolsDate.getStartOfDay()) ControllerQuests.setQuestProgressIfLess(transaction.publication.creator.id, transaction.publication.creator.lvl, API.QUEST_POST_KARMA, transaction.publication.karmaCount / 100)
-            if (transaction.publication.publicationType == API.PUBLICATION_TYPE_POST) ControllerAchievements.addAchievementWithCheck(transaction.publication.creator.id, API.ACHI_POST_KARMA)
+            if (transaction.publication.publicationType == API.PUBLICATION_TYPE_POST) ControllerAchievements.addAchievementWithCheck(
+                transaction.publication.creator.id,
+                API.ACHI_POST_KARMA
+            )
 
             if (transaction.publication.publicationType == API.PUBLICATION_TYPE_COMMENT) ControllerAccounts.updateCommentsKarma(transaction.publication.creator.id, transaction.publication.karmaCount)
             if (transaction.publication.publicationType == API.PUBLICATION_TYPE_COMMENT && transaction.publication.dateCreate > ToolsDate.getStartOfDay()) ControllerQuests.addQuestProgress(transaction.publication.creator.id, transaction.publication.creator.lvl, API.QUEST_COMMENTS_KARMA, transaction.publication.karmaCount / 100)
-            if (transaction.publication.publicationType == API.PUBLICATION_TYPE_COMMENT) ControllerAchievements.addAchievementWithCheck(transaction.publication.creator.id, API.ACHI_COMMENTS_KARMA)
+            if (transaction.publication.publicationType == API.PUBLICATION_TYPE_COMMENT) ControllerAchievements.addAchievementWithCheck(
+                transaction.publication.creator.id,
+                API.ACHI_COMMENTS_KARMA
+            )
 
             if (transaction.publication.publicationType == API.PUBLICATION_TYPE_MODERATION) ControllerAccounts.updateModerationsKarma(transaction.publication.creator.id, transaction.publication.karmaCount)
-            if (transaction.publication.publicationType == API.PUBLICATION_TYPE_MODERATION) ControllerAchievements.addAchievementWithCheck(transaction.publication.creator.id, API.ACHI_MODERATOR_ACTION_KARMA)
+            if (transaction.publication.publicationType == API.PUBLICATION_TYPE_MODERATION) ControllerAchievements.addAchievementWithCheck(
+                transaction.publication.creator.id,
+                API.ACHI_MODERATOR_ACTION_KARMA
+            )
 
             if (transaction.publication.publicationType == API.PUBLICATION_TYPE_STICKERS_PACK) ControllerAccounts.updateStickersKarma(transaction.publication.creator.id, transaction.publication.karmaCount)
-            if (transaction.publication.publicationType == API.PUBLICATION_TYPE_STICKERS_PACK) ControllerAchievements.addAchievementWithCheck(transaction.publication.creator.id, API.ACHI_STICKERS_KARMA)
+            if (transaction.publication.publicationType == API.PUBLICATION_TYPE_STICKERS_PACK) ControllerAchievements.addAchievementWithCheck(
+                transaction.publication.creator.id,
+                API.ACHI_STICKERS_KARMA
+            )
 
             if (transaction.publication.publicationType == API.PUBLICATION_TYPE_QUEST) {
                 ControllerAccounts.updateQuestKarma(transaction.publication.creator.id, transaction.publication.karmaCount)
@@ -366,7 +381,10 @@ object ControllerOptimizer {
 
             ControllerAccounts.updateRates(transaction.publication.creator.id, transaction.upRatesCount)
 
-            if (transaction.changeAccountKarma) ControllerAchievements.addAchievementWithCheck(transaction.publication.creator.id, API.ACHI_KARMA_COUNT)
+            if (transaction.changeAccountKarma) ControllerAchievements.addAchievementWithCheck(
+                transaction.publication.creator.id,
+                API.ACHI_KARMA_COUNT
+            )
             if (transaction.publication.dateCreate > ToolsDate.getStartOfDay()) ControllerQuests.setQuestProgressIfLess(transaction.publication.creator.id, transaction.publication.creator.lvl, API.QUEST_KARMA, transaction.publication.karmaCount / 100)
         }
     }

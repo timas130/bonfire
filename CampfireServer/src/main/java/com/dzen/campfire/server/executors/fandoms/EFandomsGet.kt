@@ -2,7 +2,6 @@ package com.dzen.campfire.server.executors.fandoms
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.fandoms.Fandom
-import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.fandoms.RFandomsGet
 import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.server.tables.*

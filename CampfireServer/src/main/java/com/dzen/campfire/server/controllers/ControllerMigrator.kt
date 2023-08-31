@@ -2,13 +2,27 @@ package com.dzen.campfire.server.controllers
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.server.tables.TAccounts
 import com.dzen.campfire.server.tables.TTranslates
 import com.sup.dev.java.libs.debug.info
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryRemove
+import com.sup.dev.java_pc.sql.SqlQuerySelect
 
 object ControllerMigrator {
     fun start() {
+        val users = Database.select(
+            "ControllerMigrator recountAll",
+            SqlQuerySelect(TAccounts.NAME, TAccounts.id, TAccounts.lvl).sort(TAccounts.id, true)
+        )
+        while (users.hasNext()) {
+            val id = users.next<Long>()
+            val previousLevel = users.next<Long>()
+            val start = System.currentTimeMillis()
+            val report = ControllerAchievements.recount(id)
+            info("recounted $id in ${System.currentTimeMillis() - start}ms from $previousLevel to ${report.totalLevel}")
+        }
+
         for (i in API_TRANSLATE.map.values) {
             ru(i.key, i.text)
         }

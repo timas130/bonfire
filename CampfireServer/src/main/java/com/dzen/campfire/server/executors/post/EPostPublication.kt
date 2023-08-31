@@ -132,7 +132,10 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
             ControllerPublications.watchComments(apiAccount.id, publicationId, true)
             ControllerPublicationsHistory.put(publicationId, HistoryPublish(apiAccount.id, apiAccount.imageId, apiAccount.name))
 
-            ControllerAchievements.addAchievementWithCheck(ControllerViceroy.getViceroyId(publication!!.fandom.id, publication!!.fandom.languageId), API.ACHI_VICEROY_POSTS_COUNT)
+            ControllerAchievements.addAchievementWithCheck(
+                ControllerViceroy.getViceroyId(publication!!.fandom.id, publication!!.fandom.languageId),
+                API.ACHI_VICEROY_POSTS_COUNT
+            )
 
             if (notifyFollowers && publication!!.tag_3 == 0L && pendingTime == 0L) ControllerPublications.notifyFollowers(apiAccount, publication!!.id)
 
@@ -149,7 +152,7 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
                     ControllerAchievements.addAchievementWithCheck(apiAccount.id, API.ACHI_RELAY_RACE_FIRST_POST)
                     ControllerAchievements.addAchievementWithCheck(apiAccount.id, API.ACHI_RELAY_RACE_POSTS_COUNT)
                     ControllerAccounts.updateRelayRacePostsCount(apiAccount.id, 1)
-                    if (activity.creatorId > 0) ControllerAccounts.updateRelayRaceMyRacePostsCount(activity.creatorId, 1)
+                    if (activity.creatorId > 0) ControllerAccounts.updateRelayRaceMyRacePostsCount(activity.creatorId)
                     ControllerActivities.notifyFollowers(activity.id, publication!!.id, apiAccount.id)
                     ControllerQuests.addQuestProgress(apiAccount, API.QUEST_ACTIVITIES, 1)
                 }

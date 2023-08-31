@@ -29,7 +29,10 @@ class EFandomsModerationDescriptionChange : RFandomsModerationDescriptionChange(
         ControllerPublications.moderation(ModerationDescription(comment, description), apiAccount.id, fandomId, languageId, 0)
 
         ControllerCollisions.putCollisionWithCheck(apiAccount.id, 1, API.COLLISION_ACHIEVEMENT_VICEROY_DESCRIPTIONS)
-        ControllerAchievements.addAchievementWithCheck(ControllerViceroy.getViceroyId(fandomId, languageId), API.ACHI_VICEROY_DESCRIPTION)
+        ControllerAchievements.addAchievementWithCheck(
+            ControllerViceroy.getViceroyId(fandomId, languageId),
+            API.ACHI_VICEROY_DESCRIPTION
+        )
 
         return Response()
     }

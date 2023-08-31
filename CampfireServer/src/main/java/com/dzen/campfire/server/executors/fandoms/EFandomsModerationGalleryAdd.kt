@@ -30,7 +30,10 @@ class EFandomsModerationGalleryAdd : RFandomsModerationGalleryAdd(0, 0, null, ""
 
         ControllerPublications.moderation(ModerationGalleryAdd(comment, imageId), apiAccount.id, fandomId, languageId, 0)
         ControllerCollisions.putCollisionWithCheck(apiAccount.id, 1, API.COLLISION_ACHIEVEMENT_VICEROY_IMAGES)
-        ControllerAchievements.addAchievementWithCheck(ControllerViceroy.getViceroyId(fandomId, languageId), API.ACHI_VICEROY_IMAGES)
+        ControllerAchievements.addAchievementWithCheck(
+            ControllerViceroy.getViceroyId(fandomId, languageId),
+            API.ACHI_VICEROY_IMAGES
+        )
 
         return Response(imageId)
     }

@@ -1,7 +1,6 @@
 package com.dzen.campfire.server.controllers
 
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.activities.UserActivity
 import com.dzen.campfire.api.models.fandoms.Fandom
 import com.dzen.campfire.api.models.notifications.activities.NotificationActivitiesRelayRaceLost

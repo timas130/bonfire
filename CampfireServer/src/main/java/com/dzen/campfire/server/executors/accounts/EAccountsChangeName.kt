@@ -30,7 +30,7 @@ class EAccountsChangeName : RAccountsChangeName("", false) {
 
         apiAccount.name = name
 
-        ControllerAchievements.addAchievementWithCheck(apiAccount.id, API.ACHI_LOGIN, achievementNotificationEnabled)
+        ControllerAchievements.addAchievementWithCheck(apiAccount.id, API.ACHI_LOGIN)
 
         return Response()
     }

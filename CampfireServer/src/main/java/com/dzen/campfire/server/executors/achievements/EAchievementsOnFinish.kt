@@ -3,7 +3,6 @@ package com.dzen.campfire.server.executors.achievements
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.requests.achievements.RAchievementsOnFinish
 import com.dzen.campfire.server.controllers.ControllerAchievements
-import com.dzen.campfire.server.controllers.ControllerCollisions
 import com.dzen.campfire.server.controllers.ControllerOptimizer
 
 class EAchievementsOnFinish : RAchievementsOnFinish(0) {
