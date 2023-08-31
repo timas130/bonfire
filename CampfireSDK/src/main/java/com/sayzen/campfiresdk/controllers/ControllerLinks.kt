@@ -297,6 +297,10 @@ object ControllerLinks {
     fun linkToQuestComment(questId: Long, commentId: Long) = API.LINK_QUEST.asWeb() + questId + "_" + commentId
 
     fun makeLinkable(vText: ViewText) {
+        // fixme: don't do this maybe?
+        vText.text = vText.text.toString()
+            .replace(API.LINK_PROFILE_NAME, "@")
+            .replace(API.DOMEN, "@")
         ControllerApi.makeTextHtml(vText)
         LinkifyCompat.addLinks(vText, Linkify.WEB_URLS)
         linkifyShort(vText)

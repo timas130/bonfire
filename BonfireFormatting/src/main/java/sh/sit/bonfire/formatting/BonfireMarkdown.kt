@@ -53,14 +53,18 @@ object BonfireMarkdown {
     }
 
     fun setMarkdown(view: TextView, text: String) {
-        markwon.setMarkdown(view, text)
+        // fixme: maybe don't do this?
+        markwon.setMarkdown(view, text.replace("https://bonfire.moe/r/", "@"))
         view.post {
             view.movementMethod = BetterLinkMovementMethod.getInstance()
         }
     }
 
     fun setMarkdownInline(view: TextView, text: String) {
-        markwonInline.setMarkdown(view, text)
+        markwonInline.setMarkdown(view, text.replace("https://bonfire.moe/r/", "@"))
+        view.post {
+            view.movementMethod = BetterLinkMovementMethod.getInstance()
+        }
     }
 
     fun getEditorTextChangedListener(view: EditText): TextWatcher {
