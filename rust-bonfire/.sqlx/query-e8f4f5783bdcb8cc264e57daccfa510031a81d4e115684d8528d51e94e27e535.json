@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*)\n             from collisions fc\n             inner join collisions vc on fc.collision_id = vc.owner_id and fc.collision_sub_id = vc.collision_id\n             where vc.collision_type = $1 and fc.collision_type = $2 and\n                   vc.value_1 = $3",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "e8f4f5783bdcb8cc264e57daccfa510031a81d4e115684d8528d51e94e27e535"
+}

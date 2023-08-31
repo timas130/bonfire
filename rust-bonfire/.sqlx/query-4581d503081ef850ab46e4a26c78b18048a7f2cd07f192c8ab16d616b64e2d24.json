@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*)\n             from collisions c\n             inner join accounts a on a.id = c.owner_id\n             where collision_type = $1 and collision_id = $2 and to_timestamp(a.ban_date / 1000) < now()",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "4581d503081ef850ab46e4a26c78b18048a7f2cd07f192c8ab16d616b64e2d24"
+}
