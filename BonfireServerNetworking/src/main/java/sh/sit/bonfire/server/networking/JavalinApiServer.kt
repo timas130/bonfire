@@ -62,7 +62,7 @@ fun ApiServer.startJavalin(jksPath: String, jksPassword: String, portV1: Int, po
             val jsonSize = input.readInt()
             if (jsonSize > ctx.contentLength()) throw HttpResponseException(HttpStatus.CONTENT_TOO_LARGE, "Content-Length doesn't match")
             val jsonBytes = ByteArray(jsonSize)
-            input.read(jsonBytes, 0, jsonSize)
+            input.readFully(jsonBytes, 0, jsonSize)
             val json = Json(jsonBytes)
 
             val ip = ctx.header("X-Forwarded-For")?.split(",")?.get(0) ?: ctx.ip()

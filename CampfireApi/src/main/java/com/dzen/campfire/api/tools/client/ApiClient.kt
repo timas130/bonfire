@@ -111,12 +111,13 @@ abstract class ApiClient(
         callbackInMain: Boolean
     ) {
         Debug.info("XRequest [$request")
+        val action = Action(request, stackTrace, callbackInMain)
         try {
             if (!request.isSubscribed()) return
-            Action(request, stackTrace, callbackInMain).start()
-        } catch (th: Throwable) {
-            onErrorCb(th)
-            err(th)
+            action.start()
+        } catch (e: Exception) {
+            action.callbackError(e)
+            err(e)
             err(stackTrace)
         }
 
@@ -290,7 +291,7 @@ abstract class ApiClient(
             }
         }
 
-        private fun callbackError(ex: Exception) {
+        fun callbackError(ex: Exception) {
             if (callbackInMain) ToolsThreads.main { callbackErrorNow(ex) }
             else callbackErrorNow(ex)
         }

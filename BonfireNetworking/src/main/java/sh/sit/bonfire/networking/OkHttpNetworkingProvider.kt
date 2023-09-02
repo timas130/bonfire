@@ -28,7 +28,7 @@ class OkHttpNetworkingProvider(
 
     @WorkerThread
     override fun sendRequest(data: ByteArray, additional: List<ByteArray?>): ByteArray {
-        val body = ByteArrayOutputStream(additional.sumOf { it?.size ?: 0 } + data.size)
+        val body = ByteArrayOutputStream(additional.sumOf { it?.size ?: 0 } + data.size + 4)
             .apply {
                 val dos = DataOutputStream(this)
                 dos.writeInt(data.size)
