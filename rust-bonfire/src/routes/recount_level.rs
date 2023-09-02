@@ -357,7 +357,7 @@ async fn get_counts(
         i64::from(
             sqlx::query_scalar!(
                 "select collision_id from collisions
-                 where owner_id = $1 and collision_type = $2
+                 where value_1 = $1 and collision_type = $2
                  limit 1",
                 user_id,
                 collisions::COLLISION_FANDOM_VICEROY,
