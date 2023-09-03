@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select collision_id from collisions\n                 where owner_id = $1 and collision_type = $2\n                 limit 1",
+  "query": "select collision_id from collisions\n                 where value_1 = $1 and collision_type = $2\n                 limit 1",
   "describe": {
     "columns": [
       {
@@ -19,5 +19,5 @@
       false
     ]
   },
-  "hash": "f82ffc519697e08e03774216be12f0dd35389197155de1026b20d50d7c02ad05"
+  "hash": "09f95f69e21e46be51105a17ee7ab6fad978234b9b9d23f9fd4e33f09c0937b9"
 }
