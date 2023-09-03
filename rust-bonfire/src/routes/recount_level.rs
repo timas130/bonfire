@@ -164,6 +164,18 @@ async fn get_counts(
         .unwrap_or(0),
     );
     hm.insert(
+        AchiIndex::Quests,
+        sqlx::query_scalar!(
+            "select count(*) from collisions where owner_id = $1 and collision_type = $2",
+            user_id,
+            collisions::COLLISION_ACCOUNT_QUEST,
+        )
+        .fetch_one(&context.pool)
+        .await?
+        .unwrap_or(0),
+    );
+
+    hm.insert(
         AchiIndex::ReferralsCount,
         sqlx::query_scalar!(
             "select count(*) from accounts
