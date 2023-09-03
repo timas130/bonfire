@@ -250,7 +250,6 @@ async fn get_counts(
     hm.insert(AchiIndex::PostsCount, posts.count);
     hm.insert(AchiIndex::PostKarma, posts.max_karma);
     hm.insert(AchiIndex::FirstPost, i64::from(posts.count > 0));
-    hm.insert(AchiIndex::Quests, quests.count);
     hm.insert(AchiIndex::QuestKarma, quests.max_karma);
     hm.insert(AchiIndex::ModeratorActionKarma, moderation.count);
     hm.insert(AchiIndex::StickersKarma, sticker_packs.max_karma);
