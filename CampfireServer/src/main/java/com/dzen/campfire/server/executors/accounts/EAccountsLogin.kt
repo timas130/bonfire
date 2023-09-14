@@ -5,8 +5,8 @@ import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.account.AccountSettings
 import com.dzen.campfire.api.requests.accounts.RAccountsLogin
 import com.dzen.campfire.server.controllers.*
+import com.dzen.campfire.server.rust.RustDailyTask
 import com.sup.dev.java.libs.json.Json
-import java.lang.Exception
 
 class EAccountsLogin : RAccountsLogin("", 0, 0, 0) {
 
@@ -47,6 +47,8 @@ class EAccountsLogin : RAccountsLogin("", 0, 0, 0) {
         } else {
             ControllerServerTranslates.getMap(API.LANGUAGE_EN)
         }
+
+        RustDailyTask.checkIn(apiAccount.id)
 
         return Response(
                 API.VERSION, API.SUPPORTED_VERSION,

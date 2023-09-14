@@ -22,4 +22,8 @@ object RustDailyTask {
         val resp = ControllerRust.get("/user/$accountId/dt/task")
         return DailyTaskInfo().apply { json(false, resp) }
     }
+
+    fun checkIn(accountId: Long) {
+        ControllerRust.postEmpty("/user/$accountId/dt/check-in")
+    }
 }
