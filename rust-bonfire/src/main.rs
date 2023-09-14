@@ -1,4 +1,7 @@
 use crate::context::GlobalContext;
+use crate::routes::daily_task::check_in::dt_check_in;
+use crate::routes::daily_task::fandom_chances::get_dt_fandom_choices;
+use crate::routes::daily_task::task::get_daily_task;
 use crate::routes::recount_level::recount_level_route;
 use crate::secrets::SecretsConfig;
 use axum::extract::State;
@@ -7,7 +10,7 @@ use axum::headers::Authorization;
 use axum::http::{Request, StatusCode};
 use axum::middleware::Next;
 use axum::response::Response;
-use axum::routing::get;
+use axum::routing::{get, post};
 use axum::{middleware, Extension, Router, TypedHeader};
 use sqlx::postgres::{PgConnectOptions, PgPoolOptions};
 use std::sync::Arc;
@@ -15,6 +18,8 @@ use tracing::info;
 
 pub mod consts;
 pub mod context;
+pub mod mechanics;
+pub mod models;
 pub mod routes;
 pub mod secrets;
 
@@ -59,6 +64,9 @@ async fn main() -> anyhow::Result<()> {
 
     let app = Router::new()
         .route("/user/:id/recount-level", get(recount_level_route))
+        .route("/user/:id/dt/fandoms", get(get_dt_fandom_choices))
+        .route("/user/:id/dt/task", get(get_daily_task))
+        .route("/user/:id/dt/check-in", post(dt_check_in))
         .route_layer(middleware::from_fn_with_state(
             global_context.clone(),
             internal_auth_middleware,

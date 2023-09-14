@@ -344,14 +344,12 @@ object ControllerOptimizer {
 
         if (transaction.publication.id > 0) {
             if (transaction.publication.publicationType == API.PUBLICATION_TYPE_POST) ControllerAccounts.updatePostKarma(transaction.publication.creator.id, transaction.publication.karmaCount)
-            if (transaction.publication.publicationType == API.PUBLICATION_TYPE_POST && transaction.publication.dateCreate > ToolsDate.getStartOfDay()) ControllerQuests.setQuestProgressIfLess(transaction.publication.creator.id, transaction.publication.creator.lvl, API.QUEST_POST_KARMA, transaction.publication.karmaCount / 100)
             if (transaction.publication.publicationType == API.PUBLICATION_TYPE_POST) ControllerAchievements.addAchievementWithCheck(
                 transaction.publication.creator.id,
                 API.ACHI_POST_KARMA
             )
 
             if (transaction.publication.publicationType == API.PUBLICATION_TYPE_COMMENT) ControllerAccounts.updateCommentsKarma(transaction.publication.creator.id, transaction.publication.karmaCount)
-            if (transaction.publication.publicationType == API.PUBLICATION_TYPE_COMMENT && transaction.publication.dateCreate > ToolsDate.getStartOfDay()) ControllerQuests.addQuestProgress(transaction.publication.creator.id, transaction.publication.creator.lvl, API.QUEST_COMMENTS_KARMA, transaction.publication.karmaCount / 100)
             if (transaction.publication.publicationType == API.PUBLICATION_TYPE_COMMENT) ControllerAchievements.addAchievementWithCheck(
                 transaction.publication.creator.id,
                 API.ACHI_COMMENTS_KARMA
@@ -385,7 +383,6 @@ object ControllerOptimizer {
                 transaction.publication.creator.id,
                 API.ACHI_KARMA_COUNT
             )
-            if (transaction.publication.dateCreate > ToolsDate.getStartOfDay()) ControllerQuests.setQuestProgressIfLess(transaction.publication.creator.id, transaction.publication.creator.lvl, API.QUEST_KARMA, transaction.publication.karmaCount / 100)
         }
     }
 

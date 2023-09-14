@@ -375,7 +375,7 @@ class API(
         val ACHI_LANGUAGE = AchievementInfo(40, 3 * 5, 1)
         val ACHI_TITLE_IMAGE = AchievementInfo(41, 3 * 5, 1)
         val ACHI_CREATE_TAG = AchievementInfo(42, 3 * 5, 1)
-        val ACHI_QUESTS = AchievementInfo(43, 3 * 2, *IntArray(300) { it + 1 })
+        val ACHI_QUESTS = AchievementInfo(43, 1, *IntArray(2000) { it + 1 })
         val ACHI_FANDOMS = AchievementInfo(44, 5, 1, 5, 10, 20)
         val ACHI_RULES_USER = AchievementInfo(45, 4 * 5, 1)
         val ACHI_RULES_MODERATOR = AchievementInfo(46, 2 * 5, 1)
@@ -419,14 +419,23 @@ class API(
 
         const val DONATE_COMMENT_MAX_L = 300
 
+        @Deprecated("Switch to new daily quest system")
         val QUEST_POSTS = QuestInfo(1, false, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6)
+        @Deprecated("Switch to new daily quest system")
         val QUEST_POST_KARMA = QuestInfo(2, false, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120)
+        @Deprecated("Switch to new daily quest system")
         val QUEST_COMMENTS = QuestInfo(3, false, 2, 5, 8, 12, 16, 20, 24, 28, 30)
+        @Deprecated("Switch to new daily quest system")
         val QUEST_COMMENTS_KARMA = QuestInfo(4, false, 2, 5, 8, 12, 16, 20, 24, 28, 30)
+        @Deprecated("Switch to new daily quest system")
         val QUEST_CHAT = QuestInfo(5, false, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70)
+        @Deprecated("Switch to new daily quest system")
         val QUEST_RATES = QuestInfo(6, false, 6, 12, 18, 24, 28, 32, 36, 40, 48, 52, 58, 64)
+        @Deprecated("Switch to new daily quest system")
         val QUEST_KARMA = QuestInfo(7, false, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120)
+        @Deprecated("Switch to new daily quest system")
         val QUEST_UNKNOWN = QuestInfo(8, false, 0)
+        @Deprecated("Switch to new daily quest system")
         val QUEST_ACTIVITIES = QuestInfo(9, false, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2)
 
         val QUEST_STORY_START = StoryQuest(0)

@@ -1,8 +1,9 @@
 use crate::consts::achi::*;
-use crate::consts::publication_type::PublicationType;
+use crate::consts::publication::PublicationType;
 use crate::consts::status::Status;
 use crate::consts::{collisions, lvl};
 use crate::context::GlobalContext;
+use crate::mechanics::daily_task::get_dt_level;
 use axum::extract::Path;
 use axum::http::StatusCode;
 use axum::{Extension, Json};
@@ -10,6 +11,7 @@ use futures_util::TryStreamExt;
 use num_enum::TryFromPrimitive;
 use serde::Serialize;
 use std::collections::{HashMap, HashSet};
+use tracing::error;
 
 #[derive(Debug, Serialize)]
 pub struct LevelRecountReport {
@@ -60,9 +62,9 @@ impl AchievementRecountReport {
 }
 
 async fn get_counts(
-    context: GlobalContext,
+    context: &GlobalContext,
     user_id: i64,
-) -> anyhow::Result<HashMap<AchiIndex, i64>> {
+) -> error_stack::Result<HashMap<AchiIndex, i64>, sqlx::Error> {
     let mut hm = HashMap::new();
 
     #[rustfmt::skip]
@@ -163,17 +165,8 @@ async fn get_counts(
         .await?
         .unwrap_or(0),
     );
-    hm.insert(
-        AchiIndex::Quests,
-        sqlx::query_scalar!(
-            "select count(*) from collisions where owner_id = $1 and collision_type = $2",
-            user_id,
-            collisions::COLLISION_ACCOUNT_QUEST,
-        )
-        .fetch_one(&context.pool)
-        .await?
-        .unwrap_or(0),
-    );
+
+    hm.insert(AchiIndex::Quests, get_dt_level(context, user_id).await?);
 
     hm.insert(
         AchiIndex::ReferralsCount,
@@ -272,10 +265,24 @@ async fn get_counts(
     hm.insert(AchiIndex::AddRecruiter, i64::from(account.recruiter_id > 0));
     hm.insert(AchiIndex::Karma30, account.karma_count);
 
+    let mut bonus = 0;
+
     // earlier than Fri Sep 01 2023 00:00:00 GMT+0300
     if account.date_create < 1693515600000 {
-        hm.insert(AchiIndex::Bonus, 10);
+        bonus += 10;
     }
+
+    let legacy_quests_finished = sqlx::query_scalar!(
+        "select count(*) from collisions where owner_id = $1 and collision_type = $2",
+        user_id,
+        collisions::COLLISION_ACCOUNT_QUEST,
+    )
+    .fetch_one(&context.pool)
+    .await?
+    .unwrap_or(0);
+    bonus += legacy_quests_finished * 6 / 10;
+
+    hm.insert(AchiIndex::Bonus, bonus);
 
     hm.insert(
         AchiIndex::Fandoms,
@@ -446,9 +453,12 @@ pub async fn recount_level_route(
     Path(id): Path<i64>,
     Extension(context): Extension<GlobalContext>,
 ) -> Result<Json<LevelRecountReport>, StatusCode> {
-    let counts = get_counts(context, id)
+    let counts = get_counts(&context, id)
         .await
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+        .map_err(|err| {
+            error!("error recounting level: {err:?}");
+            StatusCode::INTERNAL_SERVER_ERROR
+        })?;
     let counts = counts
         .into_iter()
         .map(|(index, count)| (ACHIEVEMENTS.get(&index), count))

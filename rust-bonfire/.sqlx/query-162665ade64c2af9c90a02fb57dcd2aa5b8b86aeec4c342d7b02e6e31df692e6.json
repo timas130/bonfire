@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select lvl from accounts where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "lvl",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "162665ade64c2af9c90a02fb57dcd2aa5b8b86aeec4c342d7b02e6e31df692e6"
+}

@@ -3,6 +3,7 @@ package com.dzen.campfire.api.models.publications.events_user
 import com.dzen.campfire.api.API
 import com.sup.dev.java.libs.json.Json
 
+@Deprecated("Switch to new daily quest system")
 class ApiEventUserQuestFinish : ApiEventUser {
 
     var questIndex = 0L

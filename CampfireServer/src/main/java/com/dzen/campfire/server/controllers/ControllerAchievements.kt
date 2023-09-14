@@ -6,17 +6,16 @@ import com.dzen.campfire.api.models.notifications.account.NotificationAchievemen
 import com.dzen.campfire.api.models.publications.events_user.ApiEventUserAchievement
 import com.dzen.campfire.server.rust.RustAchievements
 import com.dzen.campfire.server.tables.TAccounts
-import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 object ControllerAchievements {
     fun recount(accountId: Long): RustAchievements.LevelRecountReport {
         val previousReportS = ControllerCollisions.getCollisionValue2(accountId, API.COLLISION_ACCOUNT_ACHIEVEMENTS)
         val previousReport = if (previousReportS.isNotEmpty()) {
-            RustAchievements.LevelRecountReport().apply {
-                json(false, Json(previousReportS))
-            }
+            Json.decodeFromString<RustAchievements.LevelRecountReport>(previousReportS)
         } else {
             null
         }
@@ -26,7 +25,7 @@ object ControllerAchievements {
             val previousLvl = ((previousReport?.achievements?.get(achievement.id)?.target ?: -1) + 1).toInt()
             val achievementTarget = ((achievement.target ?: -1) + 1).toInt()
 
-            if (previousLvl < achievementTarget && achievement.id != API.ACHI_QUESTS.index) {
+            if (previousLvl < achievementTarget) {
                 // on new achievement level
                 ControllerNotifications.push(accountId, NotificationAchievement(
                     achiIndex = achievement.id,
@@ -50,7 +49,7 @@ object ControllerAchievements {
         ControllerCollisions.updateOrCreateValue2(
             ownerId = accountId,
             collisionType = API.COLLISION_ACCOUNT_ACHIEVEMENTS,
-            value2 = report.json(true, Json()).toString(),
+            value2 = Json.encodeToString(report),
         )
 
         Database.update("ControllerAchievements.recount setLvl", SqlQueryUpdate(TAccounts.NAME)

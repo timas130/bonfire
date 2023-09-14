@@ -16,3 +16,11 @@ pub enum PublicationType {
     EventFandom = 19,
     Quest = 21,
 }
+
+#[derive(Hash, Debug, Copy, Clone, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[repr(i64)]
+pub enum PublicationImportance {
+    Important = -1,
+    Default = 0,
+    None = 1,
+}

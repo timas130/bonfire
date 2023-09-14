@@ -6,18 +6,17 @@ import com.dzen.campfire.api.models.notifications.post.NotificationModerationPos
 import com.dzen.campfire.api.models.publications.history.HistoryAdminChangeTags
 import com.dzen.campfire.api.models.publications.history.HistoryChangeTags
 import com.dzen.campfire.api.models.publications.history.HistoryPublish
-import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.models.publications.moderations.posts.ModerationPostTags
 import com.dzen.campfire.api.models.publications.post.PageText
+import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.models.publications.tags.PublicationTag
 import com.dzen.campfire.api.requests.post.RPostPublication
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.server.tables.TPublications
-import com.dzen.campfire.api.tools.ApiException
 import com.sup.dev.java.tools.ToolsMapper
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
-import java.util.*
 
 
 class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, false, 0, 0, 0) {
@@ -127,7 +126,6 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
 
             ControllerAchievements.addAchievementWithCheck(apiAccount.id, API.ACHI_POSTS_COUNT)
             ControllerAchievements.addAchievementWithCheck(apiAccount.id, API.ACHI_FIRST_POST)
-            ControllerQuests.addQuestProgress(apiAccount, API.QUEST_POSTS, 1)
 
             ControllerPublications.watchComments(apiAccount.id, publicationId, true)
             ControllerPublicationsHistory.put(publicationId, HistoryPublish(apiAccount.id, apiAccount.imageId, apiAccount.name))
@@ -154,7 +152,6 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
                     ControllerAccounts.updateRelayRacePostsCount(apiAccount.id, 1)
                     if (activity.creatorId > 0) ControllerAccounts.updateRelayRaceMyRacePostsCount(activity.creatorId)
                     ControllerActivities.notifyFollowers(activity.id, publication!!.id, apiAccount.id)
-                    ControllerQuests.addQuestProgress(apiAccount, API.QUEST_ACTIVITIES, 1)
                 }
             }
         } else {

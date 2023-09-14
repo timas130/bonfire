@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update daily_tasks\n                 set progress = $1\n                 where account_id = $2 and date = $3",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Float8",
+        "Int8",
+        "Date"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "d6b2daa30408c9095504caf781d1362c57f533007ec192f64fc3bfbec43ed917"
+}

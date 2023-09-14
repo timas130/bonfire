@@ -109,7 +109,7 @@ pub const ACHI_TAGS_SEARCH: AchiDef = AchiDef::new_static(AchiIndex::TagsSearch,
 pub const ACHI_LANGUAGE: AchiDef = AchiDef::new_static(AchiIndex::Language, 3 * 5, &[1]);
 pub const ACHI_TITLE_IMAGE: AchiDef = AchiDef::new_static(AchiIndex::TitleImage, 3 * 5, &[1]);
 pub const ACHI_CREATE_TAG: AchiDef = AchiDef::new_static(AchiIndex::CreateTag, 3 * 5, &[1]);
-pub const ACHI_QUESTS: AchiDef = AchiDef::new_static(AchiIndex::Quests, 3 * 2, &collect_const!(u64 => (1..=300)));
+pub const ACHI_QUESTS: AchiDef = AchiDef::new_static(AchiIndex::Quests, 1, &collect_const!(u64 => (1..=10000)));
 pub const ACHI_FANDOMS: AchiDef = AchiDef::new_static(AchiIndex::Fandoms, 5, &[1, 5, 10, 20]);
 pub const ACHI_RULES_USER: AchiDef = AchiDef::new_static(AchiIndex::RulesUser, 4 * 5, &[1]);
 pub const ACHI_RULES_MODERATOR: AchiDef = AchiDef::new_static(AchiIndex::RulesModerator, 2 * 5, &[1]);

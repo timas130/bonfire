@@ -1,0 +1,2 @@
+pub const FANDOM_ANYTHING_ID: i64 = 1627;
+pub const FANDOM_HELLO_ID: i64 = 2776;

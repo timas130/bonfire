@@ -5,9 +5,7 @@ import android.view.View
 import androidx.viewpager.widget.ViewPager
 import com.dzen.campfire.R
 import com.dzen.campfire.api.API_TRANSLATE
-import com.dzen.campfire.app.App
 import com.dzen.campfire.screens.feed.filters.SplashFilters
-import com.dzen.campfire.screens.hello.SCampfireHello
 import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerScreenAnimations
@@ -26,11 +24,10 @@ import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.tools.ToolsView
+import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.android.views.support.adapters.pager.PagerCardAdapter
 import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.android.views.views.pager.ViewPagerIndicatorTitles
-import com.sup.dev.android.views.splash.SplashAlert
-import com.sup.dev.java.libs.debug.log
 import com.sup.dev.java.tools.ToolsThreads
 
 
@@ -113,11 +110,6 @@ class SFeed : Screen(R.layout.screen_feed), PostList {
             ToolsThreads.main(100){
             }
         }
-    }
-
-    override fun onFirstShow() {
-        super.onFirstShow()
-        App.activity().cardQuest.load()
     }
 
     fun getLoadingText() = CampfireConstants.randomFeedText()

@@ -211,7 +211,6 @@ object ControllerChats {
 
         ControllerOptimizer.putCollisionWithCheck(apiAccount.id, API.COLLISION_ACHIEVEMENT_CHAT)
         ControllerAchievements.addAchievementWithCheck(apiAccount.id, API.ACHI_CHAT)
-        if (tag.chatType == API.CHAT_TYPE_FANDOM_ROOT) ControllerQuests.addQuestProgress(apiAccount, API.QUEST_CHAT, 1)
 
         ControllerPublications.parseMentions(message.text, message.id, message.publicationType, message.chatType, message.fandom.id, message.fandom.languageId, apiAccount, arrayOf(parentCreatorId))
     }

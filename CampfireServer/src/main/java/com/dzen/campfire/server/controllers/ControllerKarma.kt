@@ -128,8 +128,6 @@ object ControllerKarma {
                         if (anon) "" else apiAccount.name, publication.tag_s_1, ControllerPublications.getMaskText(publication), ControllerPublications.getMaskPageType(publication))
                 ControllerNotifications.push(publication.creator.id, notification)
             }
-
-            ControllerQuests.addQuestProgress(apiAccount, API.QUEST_RATES, 1)
         }
 
     }

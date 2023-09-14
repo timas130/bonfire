@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update daily_tasks set checked_in = true where account_id = $1 and date = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Date"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "f00ab8209a7afc07f6d2b0122691301dbf5c6b100a355572476509c5be9c815e"
+}

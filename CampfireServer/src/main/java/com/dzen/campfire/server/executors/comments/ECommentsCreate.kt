@@ -167,8 +167,6 @@ class ECommentsCreate : RCommentsCreate(0, "", null, null, 0, false, 0, 0, false
             ControllerOptimizer.putCollisionWithCheck(apiAccount.id, API.COLLISION_ACHIEVEMENT_ANSWER)
             ControllerAchievements.addAchievementWithCheck(apiAccount.id, API.ACHI_ANSWER)
         }
-
-        ControllerQuests.addQuestProgress(apiAccount, API.QUEST_COMMENTS, 1)
     }
 
     private fun notifications() {

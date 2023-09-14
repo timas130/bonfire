@@ -1,6 +1,7 @@
 package com.dzen.campfire.api
 
 import com.dzen.campfire.api.models.Link
+import com.dzen.campfire.api.models.daily_tasks.DailyTaskType
 import com.dzen.campfire.api.models.quests.QuestPart
 import com.dzen.campfire.api.models.quests.QuestPartAction
 import com.dzen.campfire.api.models.quests.QuestPartCondition
@@ -1337,6 +1338,7 @@ object API_TRANSLATE {
     val post_page_polling_remove_confirm = Translate("Удалить этот вариант?")
     val post_page_remove_confirm = Translate("Удалить эту страницу?")
     val post_rates_empty = Translate("Здесь еще нет оценок")
+    val post_page_download = Translate("Файл")
     val post_page_download_alert = Translate("Будьте осторожны при загрузке файлов из приложения, они могут навредить вашему устройству.")
     val post_page_download_unzip = Translate("Файл будет автоматически разархивирован.")
     val post_page_campfire_object_error = Translate("Невозможно загрузить объект")
@@ -1363,6 +1365,26 @@ object API_TRANSLATE {
     val post_close_confirm = Translate("Закрыть этот пост?")
     val post_open_confirm = Translate("Открыть этот пост?")
     val post_change_rubric = Translate("Изменить рубрику")
+    val post_page_user_activity = Translate("Эстафета")
+    val post_page_unknown = Translate("Неизвестный тип")
+
+    val pageTypeNames = hashMapOf(
+        API.PAGE_TYPE_TEXT to post_page_text,
+        API.PAGE_TYPE_IMAGE to post_page_image,
+        API.PAGE_TYPE_IMAGES to post_page_images,
+        API.PAGE_TYPE_LINK to post_page_link,
+        API.PAGE_TYPE_QUOTE to post_page_quote,
+        API.PAGE_TYPE_SPOILER to post_page_spoiler,
+        API.PAGE_TYPE_POLLING to post_page_polling,
+        API.PAGE_TYPE_VIDEO to post_page_video,
+        API.PAGE_TYPE_TABLE to post_page_table,
+        API.PAGE_TYPE_DOWNLOAD to post_page_download,
+        API.PAGE_TYPE_CAMPFIRE_OBJECT to post_page_campfire_object,
+        API.PAGE_TYPE_USER_ACTIVITY to post_page_user_activity,
+        API.PAGE_TYPE_LINK_IMAGE to post_page_link_image,
+        API.PAGE_TYPE_UNKNOWN to post_page_unknown,
+        API.PAGE_TYPE_CODE to post_page_code,
+    )
 
     val activities_new_year_quest = Translate("Квесты")
     val activities_support = Translate("Поддержать проект")
@@ -2405,18 +2427,62 @@ object API_TRANSLATE {
 
     val donates_restricted = Translate("Из-за ограничений Google Play, мы не можем принимать пожертвования в приложении.")
 
+    val tasks = Translate("Задания")
+    val daily_tasks = Translate("Ежедневные задания")
+    val daily_tasks_tutorial = Translate("Выполняйте ежедневные задания, чтобы заработать уровень. Задания обновляются каждый день. Выполняйте квесты несколько дней подряд, чтобы получить награды больше.")
+    val daily_task_create_posts = Translate("Опубликуйте посты")
+    val daily_task_earn_post_karma = Translate("Заработайте карму на постах")
+    val daily_task_post_comments = Translate("Опубликуйте несколько комментариев")
+    val daily_task_earn_any_karma = Translate("Заработайте карму на любых публикациях")
+    val daily_task_write_messages = Translate("Напишите несколько сообщений")
+    val daily_task_rate_publications = Translate("Оцените несколько публикаций")
+    val daily_task_login = Translate("Зайдите в приложение сегодня")
+    val daily_task_post_in_fandom = Translate("Опубликуйте посты в фэндоме %s")
+    val daily_task_comment_in_fandom = Translate("Опубликуйте комментарии в фэндоме %s")
+    val daily_task_answer_newbie_comment = Translate("Ответьте на комментарий пользователя с уровнем меньше %s")
+    val daily_task_comment_newbie_post = Translate("Прокомментируйте пост пользователя с уровнем меньше %s")
+    val daily_task_create_post_with_page = Translate("Опубликуйте пост со страницей \"%s\"")
+    val daily_task_unknonwn = Translate("Неизвестное задание. Пора обновиться!")
+    val daily_task_deleted_fandom = Translate("Удалённый фэндом")
+    val daily_task_reward_lvl = Translate("Награда: %s уровня")
+    val daily_task_progress = Translate("%d из %d")
+    val daily_task_newbie_bonus = Translate("Бонус новичка: +%s")
+    val daily_task_combo_bonus = Translate("Ежедневное выполнение: +%s")
+    val daily_task_newbie_explain = Translate("Чтобы вам было проще развиться на начальном уровне, награда за ежедневное задание повышена.")
+    val daily_task_combo_explain = Translate("Выполняя задания каждый день, вы можете повысить свои награды за ежедневные задания в два раза. Бонус увеличивается, если выполнить задание больше, чем на половину.")
+
+    val dailyTaskNames = hashMapOf(
+        DailyTaskType.CreatePosts to daily_task_create_posts,
+        DailyTaskType.EarnPostKarma to daily_task_earn_post_karma,
+        DailyTaskType.PostComments to daily_task_post_comments,
+        DailyTaskType.EarnAnyKarma to daily_task_earn_any_karma,
+        DailyTaskType.WriteMessages to daily_task_write_messages,
+        DailyTaskType.RatePublications to daily_task_rate_publications,
+        DailyTaskType.Login to daily_task_login,
+        DailyTaskType.PostInFandom to daily_task_post_in_fandom,
+        DailyTaskType.CommentInFandom to daily_task_comment_in_fandom,
+        DailyTaskType.AnswerNewbieComment to daily_task_answer_newbie_comment,
+        DailyTaskType.CommentNewbiePost to daily_task_comment_newbie_post,
+        DailyTaskType.CreatePostWithPageType to daily_task_create_post_with_page,
+        DailyTaskType.Unknown to daily_task_unknonwn,
+    )
+
+    val events = Translate("События")
+    val events_tutorial = Translate("События — специальные задания, ограниченные по времени, с большими наградами.")
+    val events_empty = Translate("Пока событий нет! Подпишитесь на фэндом Bonfire, чтобы узнать о них первым.")
+
     val post_page_code_languages = hashMapOf(
-            "c" to "C", "cs" to "C#", "java" to "Java", "bash" to "Bash", "python" to "Python",
-            "perl" to "Perl", "ruby" to "Ruby", "js" to "JavaScript", "coffee" to "CoffeeScript",
-            "rust" to "Rust", "basic" to "Basic", "clj" to "Clojure", "css" to "CSS",
-            "dart" to "Dart", "erlang" to "Erlang", "go" to "Go", "hs" to "Haskell",
-            "lisp" to "Lisp", "llvm" to "LLVM", "lua" to "Lua", "matlab" to "Matlab",
-            "fs" to "ML (OCaml, SML, F#)", "mumps" to "Mumps", "n" to "Nemerle",
-            "pascal" to "Pascal", "r" to "R", "rd" to "Rd", "scala" to "Scala", "sql" to "SQL",
-            "tex" to "Tex", "vb" to "Visual Basic", "vhdl" to "VHDL", "apollo" to "Apollo",
-            "tcl" to "Tcl", "wiki.meta" to "Wiki", "xq" to "XQuery", "yaml" to "YAML",
-            "md" to "Markdown", "json" to "JSON", "xml" to "XML/HTML", "proto" to "Protobuf",
-            "regex" to "Regex",
+        "c" to "C", "cs" to "C#", "java" to "Java", "bash" to "Bash", "python" to "Python",
+        "perl" to "Perl", "ruby" to "Ruby", "js" to "JavaScript", "coffee" to "CoffeeScript",
+        "rust" to "Rust", "basic" to "Basic", "clj" to "Clojure", "css" to "CSS",
+        "dart" to "Dart", "erlang" to "Erlang", "go" to "Go", "hs" to "Haskell",
+        "lisp" to "Lisp", "llvm" to "LLVM", "lua" to "Lua", "matlab" to "Matlab",
+        "fs" to "ML (OCaml, SML, F#)", "mumps" to "Mumps", "n" to "Nemerle",
+        "pascal" to "Pascal", "r" to "R", "rd" to "Rd", "scala" to "Scala", "sql" to "SQL",
+        "tex" to "Tex", "vb" to "Visual Basic", "vhdl" to "VHDL", "apollo" to "Apollo",
+        "tcl" to "Tcl", "wiki.meta" to "Wiki", "xq" to "XQuery", "yaml" to "YAML",
+        "md" to "Markdown", "json" to "JSON", "xml" to "XML/HTML", "proto" to "Protobuf",
+        "regex" to "Regex",
     )
 
 

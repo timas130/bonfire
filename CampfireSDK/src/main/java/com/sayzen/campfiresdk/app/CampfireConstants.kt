@@ -4,7 +4,6 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.AchievementInfo
-import com.dzen.campfire.api.models.QuestInfo
 import com.dzen.campfire.api.models.project.StoryQuest
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerTranslate
@@ -165,6 +164,7 @@ object CampfireConstants {
             AppLevel(API_TRANSLATE.lvl_protoadmin, API.LVL_PROTOADMIN, R.color.orange_700)
     )
 
+    @Deprecated("Switch to new daily quest system")
     val QUESTS = arrayOf(
             Quest(API.QUEST_RATES, API_TRANSLATE.quests_text_rates),
             Quest(API.QUEST_KARMA, API_TRANSLATE.quests_text_karma),
@@ -266,10 +266,7 @@ object CampfireConstants {
         return Achievement(API.ACHI_UNKNOWN, API_TRANSLATE.error_unknown, R.color.red_500, true, API_RESOURCES.IMAGE_ICHI_10)
     }
 
-    fun getQuest(info: QuestInfo): Quest {
-        return getQuest(info.index)
-    }
-
+    @Deprecated("Switch to new daily quest system")
     fun getQuest(index: Long): Quest {
         for (a in QUESTS)
             if (a.quest.index == index)

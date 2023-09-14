@@ -6,15 +6,15 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.events_user.*
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.cards.CardPublication
 import com.sayzen.campfiresdk.screens.account.profile.SProfile
 import com.sayzen.campfiresdk.screens.fandoms.moderation.view.SModerationView
 import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
-import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sup.dev.android.libs.image_loader.ImageLoader
+import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.views.ViewAvatar
@@ -64,6 +64,7 @@ class CardPublicationEventUser(
 
         xPublication.xAccount.setLevel(0)    //  Чтоб везде небыло уровней а не на 90% крточек
 
+        @Suppress("DEPRECATION")
         when (e) {
             is ApiEventUserAchievement -> {
                 vName.visibility = View.GONE

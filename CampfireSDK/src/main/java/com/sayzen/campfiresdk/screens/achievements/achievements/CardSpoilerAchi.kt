@@ -40,10 +40,9 @@ class CardSpoilerAchi(
             if (pageAchievements.achiLvl(i.index) == (CampfireConstants.getAchievement(i.index)).info.maxLvl.toLong()) finCount++
         }
 
-        if (karmaCount > 0)
-            setRightText(finCount.toString() + " / " + pack.size + " (${ToolsText.numToStringRoundAndTrim(karmaCount, 2)})")
-        else
-            setRightText(finCount.toString() + " / " + pack.size)
+        if (karmaCount > 0) {
+            setRightText(ToolsText.numToStringRoundAndTrim(karmaCount, 2))
+        }
         setRightTextColor(if (finCount > 0 && finCount == pack.size) ToolsResources.getColor(R.color.green_700) else 0)
     }
 

@@ -1,0 +1,19 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into daily_tasks (\n                 account_id, date, json_db, progress,\n                 combo_multiplier, level_multiplier\n             ) values (\n                 $1, $2, $3, $4, $5, $6\n             )",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Date",
+        "Jsonb",
+        "Float8",
+        "Float8",
+        "Float8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "76e0d3bca692f4f105100921015eef86cc1924fd5a0b0816dc46a58ce3c89646"
+}

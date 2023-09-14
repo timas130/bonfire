@@ -1,0 +1,42 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select date, json_db, progress, combo_multiplier\n         from daily_tasks\n         where account_id = $1 and\n               date <= $2 and date >= $3\n         order by date",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "date",
+        "type_info": "Date"
+      },
+      {
+        "ordinal": 1,
+        "name": "json_db",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 2,
+        "name": "progress",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 3,
+        "name": "combo_multiplier",
+        "type_info": "Float8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Date",
+        "Date"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "c50c1446a7fa29676ac2ca56ffa6995c76dc1c383f55bb4d18a195580bd5234c"
+}
