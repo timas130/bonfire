@@ -11,7 +11,6 @@ import com.sup.dev.android.tools.ToolsIntent
 import com.sup.dev.java.classes.callbacks.CallbacksList1
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.tools.ToolsThreads
-import java.lang.RuntimeException
 import java.util.concurrent.TimeUnit
 
 object ControllerGoogleAuth {
@@ -88,7 +87,7 @@ object ControllerGoogleAuth {
     //
 
 
-    fun getGoogleIdToken(tryCount: Int = 5, onResult: (String?) -> Unit) {
+    fun getGoogleIdToken(tryCount: Int = 1, onResult: (String?) -> Unit) {
         if (googleAccount != null) {
             onResult.invoke(googleAccount!!.idToken)
             return
@@ -100,7 +99,7 @@ object ControllerGoogleAuth {
             } else {
                 if (ToolsAndroid.isDebug()) {
                     if (googleAccount?.idToken == null || googleAccount.idToken!!.isEmpty()) {
-                        err("GOOGLE DONT'T PROVIDE TOKEN [${googleAccount?.idToken}] [${googleAccount}]")
+                        err("GOOGLE DON'T PROVIDE TOKEN [${googleAccount?.idToken}] [${googleAccount}]")
                     }
                 }
                 onResult.invoke(googleAccount?.idToken)
