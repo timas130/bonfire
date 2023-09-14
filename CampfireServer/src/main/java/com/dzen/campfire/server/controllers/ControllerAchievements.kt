@@ -10,6 +10,7 @@ import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.util.concurrent.ConcurrentSkipListSet
 
 object ControllerAchievements {
     fun recount(accountId: Long): RustAchievements.LevelRecountReport {
@@ -59,10 +60,14 @@ object ControllerAchievements {
         return report
     }
 
+    private val activeRecounts = ConcurrentSkipListSet<Long>()
+
     fun addAchievementWithCheck(accountId: Long, achievementInfo: AchievementInfo) {
         if (accountId < 1) return
         ControllerSubThread.inSub("ControllerAchievements.addAchievementWithCheck(${achievementInfo.index})") {
+            if (!activeRecounts.add(accountId)) return@inSub
             recount(accountId)
+            activeRecounts.remove(accountId)
         }
     }
 }
