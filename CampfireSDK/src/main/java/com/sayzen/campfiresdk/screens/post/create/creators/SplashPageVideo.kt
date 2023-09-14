@@ -16,8 +16,8 @@ import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.settings.SettingsField
-import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.splash.Splash
+import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.java.tools.ToolsText
 
 class SplashPageVideo(
@@ -63,12 +63,16 @@ class SplashPageVideo(
         vEnter.isEnabled = id != null
     }
 
-    private fun getVideoId():String?{
+    companion object {
+        private val linkRegex = Regex(
+            "(?:https?:)?(?://)?(?:[0-9A-Z-]+\\.)?(?:youtu\\.be/|youtube(?:-nocookie)?\\.com\\S*?[^\\w\\s-])" +
+            "([\\w-]{11})(?=[^\\w-]|\$)(?![?=&+%\\w.-]*(?:['\"][^<>]*>|</a>))[?=&+%\\w.-]*"
+        )
+    }
+
+    private fun getVideoId(): String? {
         val text = vLink.getText()
-        if(ToolsText.isLinkToYoutube(text) && text.length >= 11){
-            return text.substring(text.length - 11)
-        }
-        return null
+        return linkRegex.find(text)?.groupValues?.get(1)
     }
 
     private fun onEnter() {

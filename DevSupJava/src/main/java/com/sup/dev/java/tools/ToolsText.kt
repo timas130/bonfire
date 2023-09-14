@@ -302,11 +302,6 @@ object ToolsText {
         return sw.toString()
     }
 
-    fun isLinkToYoutube(s: String): Boolean {
-        val sV = clearWebLinkPrefix(s)
-        return sV.contains("youtube.com/watch?v=") || sV.contains("youtu.be/")
-    }
-
     fun castToWebLink(s: String): String {
         return if (s.contains("https://") || s.contains("http://"))
             s
