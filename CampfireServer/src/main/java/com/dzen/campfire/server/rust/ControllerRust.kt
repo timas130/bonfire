@@ -12,7 +12,7 @@ object ControllerRust {
     private val apiPassword = App.secretsKeys.getString("internal_key")
     private val authorization = "Basic ${ToolsBytes.toBase64("J_SYSTEM:$apiPassword".toByteArray())}"
 
-    fun get(path: String): Json {
+    fun getBytes(path: String): ByteArray {
         val conn = URL(apiRoot + path).openConnection() as HttpURLConnection
         conn.setRequestProperty("Authorization", authorization)
         conn.setRequestProperty("Accept", "application/json")
@@ -23,6 +23,10 @@ object ControllerRust {
             throw RuntimeException("Rust server error: code ${conn.responseCode}")
         }
 
-        return Json(conn.inputStream.use { it.readBytes() })
+        return conn.inputStream.use { it.readBytes() }
+    }
+
+    fun get(path: String): Json {
+        return Json(getBytes(path))
     }
 }

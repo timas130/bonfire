@@ -11,7 +11,6 @@ import android.util.Pair
 import androidx.annotation.RequiresApi
 import com.sup.dev.java.libs.debug.err
 import java.io.*
-import java.lang.NullPointerException
 import java.lang.ref.WeakReference
 import javax.microedition.khronos.egl.EGL10
 import javax.microedition.khronos.egl.EGLConfig
@@ -326,7 +325,7 @@ internal object BitmapUtils {
         var outputStream: OutputStream? = null
         try {
             outputStream = context.contentResolver.openOutputStream(uri!!)
-            bitmap.compress(compressFormat, compressQuality, outputStream)
+            bitmap.compress(compressFormat, compressQuality, outputStream!!)
         } finally {
             closeSafe(outputStream)
         }
@@ -558,13 +557,13 @@ internal object BitmapUtils {
     }
 
     private fun cropForRotatedImage(
-            bitmap: Bitmap?,
+            bitmap: Bitmap,
             points: FloatArray,
             rect: Rect,
             degreesRotated: Int,
             fixAspectRatio: Boolean,
             aspectRatioX: Int,
-            aspectRatioY: Int): Bitmap? {
+            aspectRatioY: Int): Bitmap {
         var bitmapV = bitmap
         if (degreesRotated % 90 != 0) {
 
@@ -595,9 +594,9 @@ internal object BitmapUtils {
             }
 
             val bitmapTmp = bitmapV
-            bitmapV = Bitmap.createBitmap(bitmapV!!, rect.left, rect.top, rect.width(), rect.height())
+            bitmapV = Bitmap.createBitmap(bitmapV, rect.left, rect.top, rect.width(), rect.height())
             if (bitmapTmp != bitmapV) {
-                bitmapTmp!!.recycle()
+                bitmapTmp.recycle()
             }
         }
         return bitmapV

@@ -387,9 +387,8 @@ class ViewMiniGame @JvmOverloads constructor(
     //  Drawing
     //
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        if (canvas == null) return
 
         canvas.drawLine(0f, 0f, width.toFloat(), 0f, paint)
         canvas.drawLine(0f, 0f, 0f, height.toFloat(), paint)

@@ -24,10 +24,10 @@ class ViewProgressCircle @JvmOverloads constructor(context: Context, attrs: Attr
         paint.color = ToolsResources.getSecondaryColor(context)
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        if (progressPercent > 0L && canvas != null) {
+        if (progressPercent > 0L) {
 
             val x = paint.strokeWidth
             val y = paint.strokeWidth

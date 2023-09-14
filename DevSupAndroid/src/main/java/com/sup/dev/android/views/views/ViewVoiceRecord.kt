@@ -15,7 +15,6 @@ import com.sup.dev.android.tools.ToolsPermission
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.utils.UtilsVoiceRecorder
-import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.java.tools.ToolsMath
 import com.sup.dev.java.tools.ToolsThreads
 import kotlin.math.max
@@ -54,7 +53,7 @@ class ViewVoiceRecord @JvmOverloads constructor(context: Context, attrs: Attribu
         stopRecording()
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         if (isRecordingMode) {

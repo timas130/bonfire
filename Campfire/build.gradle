@@ -7,11 +7,11 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.sentry.android.gradle'
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         minSdkVersion 21
-        targetSdk 33
+        targetSdk 34
         versionCode 2_04_06
         versionName "2.4.6"
         applicationId "sh.sit.bonfire"

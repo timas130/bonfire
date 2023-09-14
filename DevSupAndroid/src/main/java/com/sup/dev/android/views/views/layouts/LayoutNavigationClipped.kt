@@ -2,21 +2,15 @@ package com.sup.dev.android.views.views.layouts
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.sup.dev.android.R
 import com.sup.dev.android.tools.ToolsResources
-import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.views.ViewIcon
-import java.lang.IllegalArgumentException
 
 class LayoutNavigationClipped @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs) {
 
@@ -48,14 +42,14 @@ class LayoutNavigationClipped @JvmOverloads constructor(context: Context, attrs:
         vIconMain.findViewById<ViewIcon>(R.id.vNavigationItemIcon).setPadding(ToolsView.dpToPx(16).toInt(), ToolsView.dpToPx(16).toInt(), ToolsView.dpToPx(16).toInt(), ToolsView.dpToPx(16).toInt())
     }
 
-    override fun onDraw(canvas: Canvas?) {
-        canvas?.translate(0f, -DP)
+    override fun onDraw(canvas: Canvas) {
+        canvas.translate(0f, -DP)
         paint.color = 0x30000000
-        canvas?.drawPath(pathShadow, paint)
-        canvas?.translate(0f, DP)
-        canvas?.drawPath(pathShadow_2, paint)
+        canvas.drawPath(pathShadow, paint)
+        canvas.translate(0f, DP)
+        canvas.drawPath(pathShadow_2, paint)
         paint.color = ToolsResources.getColorAttr(R.attr.colorPrimary)
-        canvas?.drawPath(path, paint)
+        canvas.drawPath(path, paint)
         super.onDraw(canvas)
     }
 

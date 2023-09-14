@@ -4,12 +4,11 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
-import androidx.annotation.LayoutRes
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
-
+import androidx.annotation.LayoutRes
 import com.dzen.campfire.api.API
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
@@ -115,10 +114,10 @@ abstract class ViewKarma(
         vText.setTextColor(if ((karmaCount / 100) == 0L) textColor else if (karmaCount < 0) red else green)
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        if (rateStartTime != 0L && canvas != null) {
+        if (rateStartTime != 0L) {
 
             val x: Float
             val y: Float

@@ -6,7 +6,6 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
@@ -52,13 +51,11 @@ open class LayoutCorned @JvmOverloads constructor(context: Context, attrs: Attri
         setLayerType(View.LAYER_TYPE_SOFTWARE, null)
     }
 
-    override fun draw(canvas: Canvas?) {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            if (cornedSize > 0 && (cornedTL || cornedTR || cornedBL || cornedBR || chipMode || circleMode)) {
-                canvas?.clipPath(path)
-            }
-            if (paint != null && paint!!.color != 0) canvas?.drawPath(path, paint!!)
+    override fun draw(canvas: Canvas) {
+        if (cornedSize > 0 && (cornedTL || cornedTR || cornedBL || cornedBR || chipMode || circleMode)) {
+            canvas.clipPath(path)
         }
+        if (paint != null && paint!!.color != 0) canvas.drawPath(path, paint!!)
 
         super.draw(canvas)
     }

@@ -2,6 +2,7 @@ package com.dzen.campfire.server.controllers
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.server.app.App
 import com.dzen.campfire.server.tables.TAccounts
 import com.dzen.campfire.server.tables.TTranslates
 import com.sup.dev.java.libs.debug.info
@@ -23,8 +24,10 @@ object ControllerMigrator {
             info("recounted $id in ${System.currentTimeMillis() - start}ms from $previousLevel to ${report.totalLevel}")
         }
 
-        for (i in API_TRANSLATE.map.values) {
-            ru(i.key, i.text)
+        if (!App.test) {
+            for (i in API_TRANSLATE.map.values) {
+                ru(i.key, i.text)
+            }
         }
     }
 
