@@ -369,7 +369,7 @@ object ControllerAccounts {
     }
 
     fun getAccountBanDate(accountId: Long): Long {
-        return get(accountId, TAccounts.ban_date).get<Any>(0) as Long
+        return get(accountId, TAccounts.ban_date)[0] ?: 0
     }
 
     fun getAccountBanDate(accountId: Long, fandomId: Long, languageId: Long): Long {

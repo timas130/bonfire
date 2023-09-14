@@ -189,6 +189,12 @@ class EChatMessageCreate(
 
         ControllerChats.putMessage(apiAccount, message, tag)
 
+        if (tag.chatType == API.CHAT_TYPE_PRIVATE && tag.getAnotherId() == API.ACCOUNT_CONTENT_GUY_ID) {
+            ControllerSubThread.inSub("ControllerChatBot", apiAccount.id) {
+                ControllerChatBot.handleMessage(apiAccount.id, text.trim().lowercase())
+            }
+        }
+
         return Response(message.id, message)
     }
 

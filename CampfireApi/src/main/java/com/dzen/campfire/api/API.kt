@@ -339,6 +339,8 @@ class API(
         const val FANDOM_CHAT_TEXT_MIN_L = 1
         const val FANDOM_CHAT_TEXT_MAX_L = 5000
 
+        const val ACCOUNT_CONTENT_GUY_ID = 128L
+
         //  #     #    #    ######  #     # ### #     #  #####
         //  #  #  #   # #   #     # ##    #  #  ##    # #     #
         //  #  #  #  #   #  #     # # #   #  #  # #   # #
