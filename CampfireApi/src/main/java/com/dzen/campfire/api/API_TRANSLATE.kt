@@ -2442,6 +2442,7 @@ object API_TRANSLATE {
     val daily_task_answer_newbie_comment = Translate("Ответьте на комментарий пользователя с уровнем меньше %s")
     val daily_task_comment_newbie_post = Translate("Прокомментируйте пост пользователя с уровнем меньше %s")
     val daily_task_create_post_with_page = Translate("Опубликуйте пост со страницей \"%s\"")
+    val daily_task_answer_in_chat = Translate("Ответьте на несколько разных сообщений в чате")
     val daily_task_unknonwn = Translate("Неизвестное задание. Пора обновиться!")
     val daily_task_deleted_fandom = Translate("Удалённый фэндом")
     val daily_task_reward_lvl = Translate("Награда: %s уровня")
@@ -2464,6 +2465,7 @@ object API_TRANSLATE {
         DailyTaskType.AnswerNewbieComment to daily_task_answer_newbie_comment,
         DailyTaskType.CommentNewbiePost to daily_task_comment_newbie_post,
         DailyTaskType.CreatePostWithPageType to daily_task_create_post_with_page,
+        DailyTaskType.AnswerInChat to daily_task_answer_in_chat,
         DailyTaskType.Unknown to daily_task_unknonwn,
     )
 

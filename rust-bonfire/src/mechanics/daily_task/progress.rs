@@ -154,7 +154,8 @@ pub async fn get_task_progress(
              inner join units pu on (u.unit_json::json->>'J_PARENT_COMMENT_ID')::bigint = pu.id
              inner join accounts pua on pu.creator_id = pua.id
              where u.creator_id = $1 and u.status = $2 and u.unit_type = $3 and
-                   u.date_create >= $4 and u.date_create <= $5 and pua.lvl < $6",
+                   u.date_create >= $4 and u.date_create <= $5 and pua.lvl < $6 and
+                   pu.creator_id != u.creator_id",
             user_id,
             i64::from(Status::Public),
             i64::from(PublicationType::Comment),
@@ -172,7 +173,8 @@ pub async fn get_task_progress(
              inner join units pu on u.parent_unit_id = pu.id
              inner join accounts pua on pu.creator_id = pua.id
              where u.creator_id = $1 and u.status = $2 and u.unit_type = $3 and
-                   u.date_create >= $4 and u.date_create <= $5 and pua.lvl < $6",
+                   u.date_create >= $4 and u.date_create <= $5 and pua.lvl < $6 and
+                   pu.creator_id != u.creator_id",
             user_id,
             i64::from(Status::Public),
             i64::from(PublicationType::Comment),
@@ -208,12 +210,13 @@ pub async fn get_task_progress(
              inner join units qu on (u.unit_json::json->>'quoteId')::bigint = qu.id
              where u.creator_id = $1 and u.status = $2 and u.unit_type = $3 and
                    u.date_create >= $4 and u.date_create <= $5 and qu.status = $2 and
-                   qu.creator_id != $1",
+                   qu.creator_id != $1 and u.tag_1 = $6",
             user_id,
             i64::from(Status::Public),
             i64::from(PublicationType::ChatMessage),
             date_start,
             date_end,
+            i64::from(ChatType::FandomRoot),
         )
         .fetch_one(&context.pool)
         .await?

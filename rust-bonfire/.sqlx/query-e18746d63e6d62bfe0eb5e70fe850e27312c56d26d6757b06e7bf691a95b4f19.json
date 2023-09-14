@@ -1,0 +1,27 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*) from units u\n             /* yep. postgresql json, here i come */\n             inner join units pu on (u.unit_json::json->>'J_PARENT_COMMENT_ID')::bigint = pu.id\n             inner join accounts pua on pu.creator_id = pua.id\n             where u.creator_id = $1 and u.status = $2 and u.unit_type = $3 and\n                   u.date_create >= $4 and u.date_create <= $5 and pua.lvl < $6 and\n                   pu.creator_id != u.creator_id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "e18746d63e6d62bfe0eb5e70fe850e27312c56d26d6757b06e7bf691a95b4f19"
+}

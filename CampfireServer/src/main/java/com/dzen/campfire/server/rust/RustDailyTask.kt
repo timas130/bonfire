@@ -8,7 +8,7 @@ import kotlinx.serialization.json.Json
 object RustDailyTask {
     @Serializable
     data class DailyTaskFandom(
-        @SerialName("fandom_id")
+        @SerialName("id")
         val fandomId: Long,
         val multiplier: Float,
     )

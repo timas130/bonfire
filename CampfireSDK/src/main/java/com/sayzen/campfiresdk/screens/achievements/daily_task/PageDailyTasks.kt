@@ -58,7 +58,7 @@ private fun DailyTaskBonuses(modifier: Modifier = Modifier, taskInfo: DailyTaskI
             label = {
                 Text(t(
                     API_TRANSLATE.daily_task_combo_bonus,
-                    "${(taskInfo.levelMultiplier * 100 - 100).toInt()}%"
+                    "${(taskInfo.comboMultiplier * 100 - 100).toInt()}%"
                 ))
             }
         )
