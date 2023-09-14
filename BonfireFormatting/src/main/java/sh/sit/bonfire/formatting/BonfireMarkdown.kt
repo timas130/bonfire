@@ -52,16 +52,21 @@ object BonfireMarkdown {
         markwonInline = createMarkwon(context, inlineOnly = true)
     }
 
+    // fixme: maybe don't do this?
+    private val shortReplacerRegex: Regex = Regex("([^]][^(])https://bonfire\\.moe/r/")
+    private fun replaceLongLink(text: String): String {
+        return text.replace(shortReplacerRegex) { match -> match.groupValues[1] + "@" }
+    }
+
     fun setMarkdown(view: TextView, text: String) {
-        // fixme: maybe don't do this?
-        markwon.setMarkdown(view, text.replace("https://bonfire.moe/r/", "@"))
+        markwon.setMarkdown(view, replaceLongLink(text))
         view.post {
             view.movementMethod = BetterLinkMovementMethod.getInstance()
         }
     }
 
     fun setMarkdownInline(view: TextView, text: String) {
-        markwonInline.setMarkdown(view, text.replace("https://bonfire.moe/r/", "@"))
+        markwonInline.setMarkdown(view, replaceLongLink(text))
         view.post {
             view.movementMethod = BetterLinkMovementMethod.getInstance()
         }
