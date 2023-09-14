@@ -13,15 +13,17 @@ import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.settings.SettingsField
-import com.sup.dev.java.tools.ToolsCryptography
+import com.sup.dev.android.views.splash.SplashAlert
+import com.sup.dev.android.views.splash.SplashProgressTransparent
+import com.sup.dev.android.views.views.ViewButton
 
 class SIntroEmail : Screen(R.layout.screen_intro_email){
-
-    val vEmail: SettingsField = findViewById(R.id.vEmail)
-    val vPass: SettingsField = findViewById(R.id.vPass)
-    val vEnter: Button = findViewById(R.id.vEnter)
-    val vRegistration: Button = findViewById(R.id.vRegistration)
-    val vLogo: View = findViewById(R.id.vLogo)
+    private val vEmail: SettingsField = findViewById(R.id.vEmail)
+    private val vPass: SettingsField = findViewById(R.id.vPass)
+    private val vEnter: Button = findViewById(R.id.vEnter)
+    private val vRegistration: Button = findViewById(R.id.vRegistration)
+    private val vLogo: View = findViewById(R.id.vLogo)
+    private val vForgotPassword: ViewButton = findViewById(R.id.vForgotPassword)
 
     var bestHeight = 0
 
@@ -31,17 +33,48 @@ class SIntroEmail : Screen(R.layout.screen_intro_email){
 
         vEmail.setHint(R.string.app_email)
         vPass.setHint(R.string.app_password)
-        vEnter.text = ToolsResources.s(R.string.app_login)
-        vRegistration.text = ToolsResources.s(R.string.app_registration)
+        vEnter.setText(R.string.app_login)
+        vRegistration.setText(R.string.app_registration)
+        vForgotPassword.setText(R.string.reset_password)
 
         vEmail.addOnTextChanged { updateEnterEnabled() }
         vPass.addOnTextChanged { updateEnterEnabled() }
 
         vEnter.setOnClickListener { enter() }
         vRegistration.setOnClickListener {
-            ControllerTranslate.loadLanguage(ControllerApi.getLanguageId(),
-                    { Navigator.to(SIntroEmailRegistration(), Navigator.Animation.ALPHA) },
-                    { ToolsToast.show(R.string.connection_error) })
+            ControllerTranslate.loadLanguage(
+                languageId = ControllerApi.getLanguageId(),
+                onLoaded = { Navigator.to(SIntroEmailRegistration(), Navigator.Animation.ALPHA) },
+                onError = { ToolsToast.show(R.string.connection_error) }
+            )
+        }
+
+        vForgotPassword.setOnClickListener {
+            val email = vEmail.getText()
+            if (email.isBlank()) {
+                ToolsToast.show(R.string.enter_email)
+                return@setOnClickListener
+            }
+
+            val loading = SplashProgressTransparent()
+            loading.asSplashShow()
+
+            fbAuth.sendPasswordResetEmail(email)
+                .addOnSuccessListener {
+                    SplashAlert()
+                        .setText(R.string.recover_email_sent)
+                        .setOnEnter(android.R.string.ok)
+                        .asSheetShow()
+                }
+                .addOnFailureListener {
+                    SplashAlert()
+                        .setText(it.localizedMessage)
+                        .setOnEnter(android.R.string.ok)
+                        .asSheetShow()
+                }
+                .addOnCompleteListener {
+                    loading.hide()
+                }
         }
 
         updateEnterEnabled()
@@ -54,13 +87,17 @@ class SIntroEmail : Screen(R.layout.screen_intro_email){
         vLogo.visibility = if(height < bestHeight) View.GONE else View.VISIBLE
     }
 
-    fun updateEnterEnabled(){
+    private fun updateEnterEnabled() {
         vEnter.isEnabled = vEmail.getText().length >= 3 && vPass.getText().length >= 6
     }
 
-    val fbAuth by lazy { FirebaseAuth.getInstance() }
+    private val fbAuth by lazy {
+        FirebaseAuth.getInstance().apply {
+            useAppLanguage()
+        }
+    }
 
-    fun enter(){
+    private fun enter() {
         val password = vPass.getText()
         val email = vEmail.getText()
 

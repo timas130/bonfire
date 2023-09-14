@@ -79,6 +79,7 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection){
 
 
             val auth = FirebaseAuth.getInstance()
+            auth.useAppLanguage()
             setState(State.PROGRESS)
             if (auth.currentUser != null) {
                 auth.currentUser?.getIdToken(true)

@@ -99,6 +99,7 @@ class SSettingsSecurity(
                 .setOnCancel(t(API_TRANSLATE.app_cancel))
                 .setOnEnter(t(API_TRANSLATE.app_change)) { w, passwordOld, passwordNew ->
                     val auth = FirebaseAuth.getInstance()
+                    auth.useAppLanguage()
                     val progress = ToolsView.showProgressDialog()
 
                     val updatePassword = {

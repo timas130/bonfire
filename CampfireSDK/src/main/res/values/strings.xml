@@ -1,12 +1,12 @@
 <resources>
 
     <string name="google_message">Welcome, please select your account</string>
-    <string name="app_google_account">Google Account</string>
+    <string name="app_google_account">Google</string>
     <string name="app_email_account">Email</string>
     <string name="app_email">Email</string>
     <string name="app_password">Password</string>
     <string name="app_password_repeat">Repeat password</string>
-    <string name="app_registration">Registration</string>
+    <string name="app_registration">Register</string>
     <string name="app_login">Login</string>
     <string name="app_choose">Choose</string>
     <string name="connection_error">Connection error</string>
@@ -15,5 +15,8 @@
     <string name="app_change_account">Change account</string>
     <string name="app_email_verify">Check your inbox for the verification email and return to the app once you verify your address.</string>
     <string name="app_continue">Continue</string>
+    <string name="enter_email">Please enter your email</string>
+    <string name="recover_email_sent">Recovery link sent, please check your inbox. Don\'t forget to check the spam folder, too.</string>
+    <string name="reset_password">Reset password</string>
 
 </resources>
