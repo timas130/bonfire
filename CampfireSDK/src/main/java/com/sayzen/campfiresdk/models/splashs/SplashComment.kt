@@ -12,6 +12,7 @@ import com.dzen.campfire.api.models.publications.stickers.PublicationSticker
 import com.dzen.campfire.api.requests.comments.RCommentsChange
 import com.dzen.campfire.api.requests.comments.RCommentsCreate
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.controllers.ControllerMention
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.ControllerStoryQuest
@@ -78,7 +79,7 @@ class SplashComment constructor(
     init {
         ControllerMention.startFor(vText)
 
-        vText.hint = t(API_TRANSLATE.app_message)
+        vText.hint = t(CampfireConstants.randomCommentPlaceholder())
 
         if (changeComment != null) {
             vText.setText(changeComment.text)

@@ -5,6 +5,7 @@ import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.AchievementInfo
 import com.dzen.campfire.api.models.project.StoryQuest
+import com.dzen.campfire.api.models.translate.Translate
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerTranslate
 import com.sayzen.campfiresdk.controllers.t
@@ -520,4 +521,16 @@ object CampfireConstants {
         }
     }
 
+    private val commentPlaceholders = arrayOf(
+        API_TRANSLATE.comment_placeholder_1,
+        API_TRANSLATE.comment_placeholder_2,
+        API_TRANSLATE.comment_placeholder_3,
+        API_TRANSLATE.comment_placeholder_4,
+        API_TRANSLATE.comment_placeholder_5,
+        API_TRANSLATE.comment_placeholder_6,
+    )
+
+    fun randomCommentPlaceholder(): Translate {
+        return ToolsCollections.random(commentPlaceholders)
+    }
 }
