@@ -40,7 +40,6 @@ class EChatMessageGetAll : RChatMessageGetAll(ChatTag(), 0, false, 0) {
 
         var array = list.map { it as Publication }.toTypedArray()
         ControllerPublications.loadBlacklists(apiAccount.id, array)
-        array = ControllerPublications.loadShadowBans(apiAccount.id, array)
 
         @Suppress("UNCHECKED_CAST")
         return Response(array as Array<PublicationChatMessage>)

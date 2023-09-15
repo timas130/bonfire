@@ -35,8 +35,9 @@ class ECommentsGetAll : RCommentsGetAll(0, 0, false, false) {
 
         val v = Database.select("ECommentsGetAll",select)
 
-        val publications = ControllerPublications.parseSelect(v)
+        var publications = ControllerPublications.parseSelect(v)
         ControllerPublications.loadBlacklists(apiAccount.id, publications)
+        publications = ControllerPublications.loadShadowBans(apiAccount.id, publications)
 
         if(startFromBottom) {
             return Response(Array(publications.size) { publications[publications.size - it - 1] as PublicationComment })
