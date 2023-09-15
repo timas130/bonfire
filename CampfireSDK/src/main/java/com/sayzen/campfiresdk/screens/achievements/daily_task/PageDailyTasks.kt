@@ -97,7 +97,9 @@ private fun DailyTask(modifier: Modifier = Modifier, taskInfo: DailyTaskInfo) {
         Text(
             taskName,
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(bottom = 8.dp).padding(horizontal = 16.dp),
+            modifier = Modifier
+                .padding(bottom = 8.dp)
+                .padding(horizontal = 16.dp),
         )
 
         // task progress indicator
@@ -194,6 +196,7 @@ class PageDailyTasks(private val taskInfo: DailyTaskInfo) : ComposeCard() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
+                        .padding(bottom = 64.dp)
                 )
             }
         }

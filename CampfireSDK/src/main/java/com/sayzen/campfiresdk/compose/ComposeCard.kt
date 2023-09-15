@@ -1,11 +1,10 @@
 package com.sayzen.campfiresdk.compose
 
 import android.view.View
-import androidx.compose.foundation.layout.fillMaxSize
+import android.view.ViewGroup
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import com.sayzen.campfiresdk.R
 import com.sup.dev.android.app.SupAndroid
@@ -15,6 +14,10 @@ abstract class ComposeCard : Card(0) {
     override fun instanceView(): View {
         return ComposeView(SupAndroid.activity!!).apply {
             id = R.id.vSheet
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
         }
     }
 
@@ -22,7 +25,7 @@ abstract class ComposeCard : Card(0) {
         val composeView: ComposeView = view.findViewById(R.id.vSheet)
         composeView.setContent {
             BonfireTheme {
-                Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                Surface(color = MaterialTheme.colorScheme.background) {
                     Content()
                 }
             }
