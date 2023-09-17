@@ -1,21 +1,21 @@
 package com.dzen.campfire.server.controllers
 
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.models.chat.ChatTag
 import com.dzen.campfire.api.models.chat.ChatMember
 import com.dzen.campfire.api.models.chat.ChatParamsConf
+import com.dzen.campfire.api.models.chat.ChatTag
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatAnswer
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessage
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatRead
 import com.dzen.campfire.api.models.publications.chat.Chat
 import com.dzen.campfire.api.models.publications.chat.PublicationChatMessage
 import com.dzen.campfire.api.models.publications.history.HistoryCreate
+import com.dzen.campfire.api.tools.ApiAccount
 import com.dzen.campfire.server.tables.TChats
 import com.dzen.campfire.server.tables.TChatsSubscriptions
 import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java.classes.collections.AnyArray
 import com.sup.dev.java.classes.items.Item2
-import com.dzen.campfire.api.tools.ApiAccount
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java_pc.sql.*
 
@@ -189,8 +189,11 @@ object ControllerChats {
         var parentCreatorId = 0L
         if (message.parentPublicationId != 0L) {
             parentCreatorId = ControllerPublications.getCreatorId(message.parentPublicationId)
-            val subscribed = if (message.chatType != API.CHAT_TYPE_FANDOM_ROOT) true else isSubscribed(parentCreatorId, tag)
-            ControllerNotifications.push(parentCreatorId, NotificationChatAnswer(message, tag, subscribed))
+            val isMember = getMemberStatus(parentCreatorId, tag.targetId) == API.CHAT_MEMBER_STATUS_ACTIVE
+            if (isMember) {
+                val subscribed = isSubscribed(parentCreatorId, tag)
+                ControllerNotifications.push(parentCreatorId, NotificationChatAnswer(message, tag, subscribed))
+            }
         }
 
         ControllerNotifications.push(NotificationChatMessage(message, tag, true), getConfChatSubscribersIdsWithTokensSubscribed(tag.targetId, tag.targetSubId, message.creator.id, parentCreatorId))
