@@ -732,11 +732,14 @@ object API_TRANSLATE {
     val feed_categories = Translate("Категории")
 
     val comment_placeholder_1 = Translate("О да, прокомментируй меня")
-    val comment_placeholder_2 = Translate("Будь добр к своему собеседнику")
+    val comment_placeholder_2 = Translate("Будь добр к собеседнику")
     val comment_placeholder_3 = Translate("О чём он вообще говорил?")
     val comment_placeholder_4 = Translate("Введите свой комментарий")
-    val comment_placeholder_5 = Translate("Это будет начало великого спора")
-    val comment_placeholder_6 = Translate("Тут ещё пусто, но комментарий отличный!")
+    val comment_placeholder_5 = Translate("Это будет начало спора")
+    val comment_placeholder_6 = Translate("Отличный комментарий")
+    val comment_placeholder_7 = Translate("Оглянись!")
+    val comment_placeholder_8 = Translate("И зачем я это пишу?")
+    val comment_placeholder_9 = Translate("Цени этот момент, друг")
 
     val category_games = Translate("Игры")
     val category_anime = Translate("Аниме")

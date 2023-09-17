@@ -528,6 +528,9 @@ object CampfireConstants {
         API_TRANSLATE.comment_placeholder_4,
         API_TRANSLATE.comment_placeholder_5,
         API_TRANSLATE.comment_placeholder_6,
+        API_TRANSLATE.comment_placeholder_7,
+        API_TRANSLATE.comment_placeholder_8,
+        API_TRANSLATE.comment_placeholder_9,
     )
 
     fun randomCommentPlaceholder(): Translate {
