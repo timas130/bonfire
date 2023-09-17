@@ -92,7 +92,7 @@ class ColorDelimiterProcessor : DelimiterProcessor {
             val colors = colorText
                 .split(':')
                 .map { color ->
-                    val named = colors[color]
+                    val named = colors[color.lowercase()]
                     if (named != null) return@map named
 
                     val match = colorRegex.matchEntire(color)
