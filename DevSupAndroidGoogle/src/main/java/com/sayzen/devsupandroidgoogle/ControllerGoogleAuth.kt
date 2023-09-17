@@ -87,7 +87,7 @@ object ControllerGoogleAuth {
     //
 
 
-    fun getGoogleIdToken(tryCount: Int = 1, onResult: (String?) -> Unit) {
+    fun getGoogleIdToken(tryCount: Int = 0, onResult: (String?) -> Unit) {
         if (googleAccount != null) {
             onResult.invoke(googleAccount!!.idToken)
             return
@@ -125,7 +125,11 @@ object ControllerGoogleAuth {
             } else {
 
                 ToolsIntent.startIntentForResult(Auth.GoogleSignInApi.getSignInIntent(googleApiClient)) { resultCode, intent ->
-                    val result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent!!)
+                    if (intent == null) {
+                        onComplete.invoke(null)
+                        return@startIntentForResult
+                    }
+                    val result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent)
 
                     if (result == null || result.signInAccount?.idToken == null) {
                         err("ERROR google result is null result[$result] idToken[${result?.signInAccount?.idToken}]")
