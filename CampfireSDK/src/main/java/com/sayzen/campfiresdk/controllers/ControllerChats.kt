@@ -301,15 +301,19 @@ object ControllerChats {
         return list
     }
 
+    fun saveChat(chat: Chat) {
+        ToolsStorage.put(
+            "ControllerChats.tag.${chat.tag.asTag()}",
+            Json().apply { chat.json(true, this) }
+        )
+    }
+
     fun getChat(tag: ChatTag, cb: (Chat) -> Unit) {
         val chat = ToolsStorage.getJson("ControllerChats.tag.${tag.asTag()}")
         if (chat == null) {
             ApiRequestsSupporter.execute(RChatGet(tag, 0)) {
+                saveChat(it.chat)
                 cb(it.chat)
-                ToolsStorage.put(
-                    "ControllerChats.tag.${tag.asTag()}",
-                    Json().apply { it.chat.json(true, this) }
-                )
             }.onApiError {
                 ToolsToast.show(t(API_TRANSLATE.error_unknown))
             }

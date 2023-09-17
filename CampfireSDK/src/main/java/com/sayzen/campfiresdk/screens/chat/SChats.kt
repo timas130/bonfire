@@ -8,6 +8,7 @@ import com.dzen.campfire.api.models.publications.chat.PublicationChatMessage
 import com.dzen.campfire.api.requests.chat.RChatsGetAll
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
+import com.sayzen.campfiresdk.controllers.ControllerChats
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.CardChat
@@ -60,7 +61,12 @@ class SChats constructor(
 
     private fun sendRequest(onLoad: (Array<Chat>?) -> Unit, cards: ArrayList<CardChat>) {
         RChatsGetAll(cards.size)
-                .onComplete { r -> onLoad.invoke(r.publications) }
+                .onComplete { r ->
+                    for (chat in r.publications) {
+                        ControllerChats.saveChat(chat)
+                    }
+                    onLoad.invoke(r.publications)
+                }
                 .onNetworkError { onLoad.invoke(null) }
                 .send(api)
     }
