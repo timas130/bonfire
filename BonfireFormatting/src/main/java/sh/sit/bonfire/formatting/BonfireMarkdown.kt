@@ -53,7 +53,7 @@ object BonfireMarkdown {
     }
 
     // fixme: maybe don't do this?
-    private val shortReplacerRegex: Regex = Regex("([^]][^(])https://bonfire\\.moe/r/")
+    private val shortReplacerRegex: Regex = Regex("([^]][^(]|^.?)https://bonfire\\.moe/r/")
     private fun replaceLongLink(text: String): String {
         return text.replace(shortReplacerRegex) { match -> match.groupValues[1] + "@" }
     }
