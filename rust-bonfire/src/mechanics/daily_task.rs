@@ -142,7 +142,7 @@ pub async fn get_dt_level(context: &GlobalContext, user_id: i64) -> error_stack:
     }
 
     for task in &task_history {
-        let progress = get_task_progress(context, &task.task, user_id, &today).await?;
+        let progress = get_task_progress(context, &task.task, user_id, &task.date).await?;
         let progress_f = progress as f64 / task.task.get_amount() as f64;
 
         if task.progress != progress_f {
