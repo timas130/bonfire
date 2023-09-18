@@ -70,7 +70,7 @@ val api: API = API(
     API.PORT_CERTIFICATE,
     { key, token -> ToolsStorage.put(key, token) },
     { ToolsStorage.getString(it, null) },
-    { err -> Sentry.captureException(err) }
+    { err -> err(err) }
 ).apply {
     networkingProvider = OkHttpNetworkingProvider(
         SupAndroid.appContext!!,
