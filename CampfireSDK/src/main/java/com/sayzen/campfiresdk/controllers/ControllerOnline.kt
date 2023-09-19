@@ -32,7 +32,7 @@ object ControllerOnline {
 
         if (lastState != isOnline) {
             item.a2 = isOnline
-            EventBus.post(EventAccountOnlineChanged(accountId, lastOnlineTile))
+            EventBus.post(EventAccountOnlineChanged(accountId, lastOnlineTile), deferred = true)
         }
 
         return lastOnlineTile
@@ -50,7 +50,7 @@ object ControllerOnline {
             online[accountId] = Item2(time, isOnlineCheck(time))
         }
 
-        EventBus.post(EventAccountOnlineChanged(accountId, time))
+        EventBus.post(EventAccountOnlineChanged(accountId, time), deferred = true)
     }
 
 

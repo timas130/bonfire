@@ -6,7 +6,6 @@ import com.sup.dev.java.classes.items.Item2
 import com.sup.dev.java.tools.ToolsThreads
 import java.io.Serializable
 import java.lang.ref.WeakReference
-import java.util.ArrayList
 import kotlin.reflect.KClass
 
 
@@ -67,8 +66,8 @@ object EventBus {
     //  Post
     //
 
-    fun post(event: Any) {
-        ToolsThreads.main {
+    fun post(event: Any, deferred: Boolean = false) {
+        ToolsThreads.main(deferred) {
             val list = subscribersHard.getAllOriginal(event::class)
             if (list != null) {
                 var i = 0
