@@ -8,12 +8,12 @@ import com.dzen.campfire.api.models.publications.chat.PublicationChatMessage
 import com.dzen.campfire.api.requests.accounts.RAccountsPunishmentsGetInfo
 import com.dzen.campfire.api.requests.fandoms.RFandomsModerationBlock
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.models.events.publications.EventPublicationRemove
 import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerTranslate
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.publications.EventPublicationBlocked
+import com.sayzen.campfiresdk.models.events.publications.EventPublicationRemove
 import com.sayzen.campfiresdk.screens.punishments.SPunishments
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -23,9 +23,9 @@ import com.sup.dev.android.views.settings.SettingsArrow
 import com.sup.dev.android.views.settings.SettingsCheckBox
 import com.sup.dev.android.views.settings.SettingsField
 import com.sup.dev.android.views.settings.SettingsSelection
-import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashMenu
+import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsColor
 
@@ -121,10 +121,12 @@ class SplashModerationBlock(
     private fun showTemplateSplashNow(){
         val w = SplashMenu()
         CampfireConstants.RULES_USER
-        for (i in CampfireConstants.RULES_USER) {
-            val t1 = ControllerTranslate.t(publication.fandom.languageId, i.title)?:""
-            val t2 = ControllerTranslate.t(publication.fandom.languageId, i.text)?:""
-            if (t1.isNotEmpty() && t2.isNotEmpty()) w.add(t1) { vComment.setText(t2) }
+        for (template in CampfireConstants.MOD_COMMENT_TEMPLATES) {
+            val label = ControllerTranslate.t(publication.fandom.languageId, template.first) ?: t(template.first)
+            val fullText = ControllerTranslate.t(publication.fandom.languageId, template.second) ?: t(template.second)
+            w.add(label) {
+                vComment.setText(fullText)
+            }
         }
         w.asSheetShow()
     }

@@ -213,6 +213,20 @@ object CampfireConstants {
             FandomParam(API.CATEGORY_OTHER,  API_TRANSLATE.category_other)
     )
 
+    val MOD_COMMENT_TEMPLATES = arrayOf(
+        API_TRANSLATE.mod_comment_1_label to API_TRANSLATE.mod_comment_1_full,
+        API_TRANSLATE.mod_comment_2_label to API_TRANSLATE.mod_comment_2_full,
+        API_TRANSLATE.mod_comment_3_label to API_TRANSLATE.mod_comment_3_full,
+        API_TRANSLATE.mod_comment_4_label to API_TRANSLATE.mod_comment_4_full,
+        API_TRANSLATE.mod_comment_5_label to API_TRANSLATE.mod_comment_5_full,
+        API_TRANSLATE.mod_comment_6_label to API_TRANSLATE.mod_comment_6_full,
+        API_TRANSLATE.mod_comment_7_label to API_TRANSLATE.mod_comment_7_full,
+        API_TRANSLATE.mod_comment_8_label to API_TRANSLATE.mod_comment_8_full,
+        API_TRANSLATE.mod_comment_9_label to API_TRANSLATE.mod_comment_9_full,
+        API_TRANSLATE.mod_comment_10_label to API_TRANSLATE.mod_comment_10_full,
+        API_TRANSLATE.mod_comment_11_label to API_TRANSLATE.mod_comment_11_full,
+    )
+
     private val GAMES_1_ARRAY = API_TRANSLATE.getAllSame("games_genres_")
     val GAMES_1 = Array(GAMES_1_ARRAY.size) { FandomParam(it.toLong(), GAMES_1_ARRAY[it]) }
     private val GAMES_2_ARRAY = API_TRANSLATE.getAllSame("games_platform_")

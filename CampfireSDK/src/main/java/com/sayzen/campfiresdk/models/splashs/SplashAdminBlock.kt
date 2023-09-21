@@ -3,8 +3,8 @@ package com.sayzen.campfiresdk.models.splashs
 import android.widget.Button
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
-import com.dzen.campfire.api.requests.accounts.RAccountsPunishmentsGetInfo
 import com.dzen.campfire.api.requests.accounts.RAccountsAdminBan
+import com.dzen.campfire.api.requests.accounts.RAccountsPunishmentsGetInfo
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.controllers.ControllerApi
@@ -18,9 +18,9 @@ import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.settings.SettingsArrow
 import com.sup.dev.android.views.settings.SettingsField
 import com.sup.dev.android.views.settings.SettingsSelection
-import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashMenu
+import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsColor
 
@@ -92,10 +92,8 @@ class SplashAdminBlock(
 
         vTemplate.setOnClickListener {
             val w = SplashMenu()
-            for (i in CampfireConstants.RULES_USER) {
-                val t1 = t(i.title)
-                val t2 = t(i.text)
-                if (t1.isNotEmpty() && t2.isNotEmpty())  w.add(t1) { setText(t2) }
+            for (template in CampfireConstants.MOD_COMMENT_TEMPLATES) {
+                w.add(t(template.first)) { setText(t(template.second)) }
             }
             w.asSheetShow()
         }
