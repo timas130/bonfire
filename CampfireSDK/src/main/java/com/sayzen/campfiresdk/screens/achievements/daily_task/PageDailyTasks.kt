@@ -128,14 +128,15 @@ private fun DailyTask(modifier: Modifier = Modifier, taskInfo: DailyTaskInfo) {
                 style = MaterialTheme.typography.bodyMedium,
             )
 
+            val progress = taskInfo.progress.coerceAtMost(taskInfo.total)
             if (taskInfo.task.type.karmaTask) {
                 Text(
-                    t(API_TRANSLATE.daily_task_progress, taskInfo.progress / 100, taskInfo.total / 100),
+                    t(API_TRANSLATE.daily_task_progress, progress / 100, taskInfo.total / 100),
                     style = MaterialTheme.typography.bodyMedium,
                 )
             } else {
                 Text(
-                    t(API_TRANSLATE.daily_task_progress, taskInfo.progress, taskInfo.total),
+                    t(API_TRANSLATE.daily_task_progress, progress, taskInfo.total),
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
