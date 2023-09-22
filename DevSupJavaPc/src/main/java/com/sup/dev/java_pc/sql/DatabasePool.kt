@@ -4,20 +4,19 @@ import com.sup.dev.java.classes.items.Item2
 import com.sup.dev.java.tools.ToolsThreads
 
 class DatabasePool(
-        login: String,
-        pass: String,
-        base: String,
-        mysql_url: String,
-        poolSize: Int,
-        oldMysql: Boolean = false,
-        private var statisticCollector: (String, Long) -> Unit  = { tag, time -> }
+    login: String,
+    pass: String,
+    base: String,
+    postgresUrl: String,
+    poolSize: Int,
+    private var statisticCollector: (String, Long) -> Unit  = { tag, time -> }
 ) {
 
     private var pool = ArrayList<Item2<DatabaseInstance, Boolean>>()
 
     init{
         for (i in 0 until poolSize) {
-            pool.add(Item2(DatabaseInstance(login, pass, base, mysql_url, oldMysql), false))
+            pool.add(Item2(DatabaseInstance(login, pass, base, postgresUrl), false))
         }
     }
 

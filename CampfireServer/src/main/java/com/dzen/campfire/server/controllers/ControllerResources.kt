@@ -17,7 +17,7 @@ object ControllerResources : IControllerResources {
     private val databaseName = App.secretsConfig.getString("database_media_name")
     private val databaseAddress = App.secretsConfig.getString("database_media_address")
     val database = DatabasePool(databaseLogin, databasePassword, databaseName, databaseAddress,
-                                poolSize = 8, oldMysql = true)
+                                poolSize = if (App.test) 1 else 8)
 
     val storage: StorageProvider = S3StorageProvider.create(
         App.secretsS3.getString("endpoint"),

@@ -73,7 +73,7 @@ object App {
             while (true) {
                 try {
                     Database.setGlobal(DatabasePool(databaseLogin, databasePassword, databaseName,
-                        databaseAddress, if(test) 1 else 8, oldMysql = true) { key, time -> })
+                        databaseAddress, if(test) 1 else 8) { key, time -> })
                     break
                 } catch (ex: Exception) {
                     ex.printStackTrace()
