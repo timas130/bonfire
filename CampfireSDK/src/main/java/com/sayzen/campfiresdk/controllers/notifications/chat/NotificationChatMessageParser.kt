@@ -1,16 +1,16 @@
 package com.sayzen.campfiresdk.controllers.notifications.chat
 
+import android.Manifest
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.*
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.app.Person
-import androidx.core.app.RemoteInput
+import androidx.annotation.WorkerThread
+import androidx.core.app.*
 import androidx.core.graphics.drawable.IconCompat
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
@@ -33,6 +33,7 @@ import com.sup.dev.java.libs.debug.Debug
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.text_format.TextFormatter
+import com.sup.dev.java.tools.ToolsThreads
 
 class MessageReplyReceiver : BroadcastReceiver() {
     companion object {
@@ -55,12 +56,14 @@ class MessageReplyReceiver : BroadcastReceiver() {
             )) { response ->
                 ControllerChats.incrementMessages(chatTag, response.message, true)
 
-                NotificationChatMessageParser.sendNotification(
-                    chatTag, ControllerNotifications.canSoundBySettings(NotificationChatMessage(
-                        // canSoundBySettings doesn't actually care, but still
-                        response.message, chatTag, true
-                    ))
-                )
+                ToolsThreads.thread {
+                    NotificationChatMessageParser.sendNotification(
+                        chatTag, ControllerNotifications.canSoundBySettings(NotificationChatMessage(
+                            // canSoundBySettings doesn't actually care, but still
+                            response.message, chatTag, true
+                        ))
+                    )
+                }
             }.onApiError {
                 ToolsToast.show(t(API_TRANSLATE.error_unknown))
             }
@@ -100,6 +103,7 @@ fun Bitmap.getRounded(): Bitmap {
     return output
 }
 
+@WorkerThread
 fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound: Boolean = true) {
     val chatMessages = ControllerChats.getMessages(tag)
     if (chatMessages.isEmpty()) {
@@ -109,6 +113,11 @@ fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound
 
     ApiRequestsSupporter.init(api)
     ControllerChats.getChat(tag) { chat ->
+        if (ActivityCompat.checkSelfPermission(SupAndroid.appContext!!,
+                Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            return@getChat
+        }
+
         val icon = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             ControllerNotifications.logoWhite
         else ControllerNotifications.logoColored
@@ -148,7 +157,6 @@ fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound
                         .setKey(message.creator.id.toString())
                         .setName(message.creator.name)
                         .setIcon(kotlin.run {
-                            // TODO: Download avatars in the background
                             val avatar = ImageLoader.load(message.creator.imageId).startLoad()
                             if (avatar != null) IconCompat.createWithBitmap(
                                 ToolsBitmap.decode(avatar)!!.getRounded()
@@ -210,7 +218,9 @@ class NotificationChatMessageParser(override val n: NotificationChatMessage) : C
     companion object;
 
     override fun post(icon: Int, intent: Intent, text: String, title: String, tag: String, sound: Boolean) {
-        sendNotification(n.tag, sound)
+        ToolsThreads.thread {
+            sendNotification(n.tag, sound)
+        }
     }
 
     override fun asString(html: Boolean): String {

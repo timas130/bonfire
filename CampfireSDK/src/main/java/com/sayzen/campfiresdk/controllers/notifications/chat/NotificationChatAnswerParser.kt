@@ -4,20 +4,21 @@ import android.content.Intent
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.chat.ChatTag
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatAnswer
-import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerNotifications
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.screens.chat.SChat
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.ToolsResources
+import com.sup.dev.java.tools.ToolsThreads
 
 
 public class NotificationChatAnswerParser(override val n: NotificationChatAnswer) : ControllerNotifications.Parser(n) {
 
     override fun post(icon: Int, intent: Intent, text: String, title: String, tag: String, sound: Boolean) {
-        NotificationChatMessageParser.sendNotification(n.tag, sound)
+        ToolsThreads.thread {
+            NotificationChatMessageParser.sendNotification(n.tag, sound)
+        }
     }
 
     override fun asString(html: Boolean): String {
