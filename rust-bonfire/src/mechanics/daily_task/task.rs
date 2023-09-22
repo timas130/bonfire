@@ -18,8 +18,8 @@ const TASK_CHANCES: &[(DailyTaskType, i32)] = &[
     (DailyTaskType::Login, 1),
     (DailyTaskType::PostInFandom, 15),
     (DailyTaskType::CommentInFandom, 20),
-    (DailyTaskType::AnswerNewbieComment, 20),
-    (DailyTaskType::CommentNewbiePost, 20),
+    (DailyTaskType::AnswerNewbieComment, 10),
+    (DailyTaskType::CommentNewbiePost, 10),
     (DailyTaskType::CreatePostWithPageType, 10),
     (DailyTaskType::AnswerInChat, 12),
 ];
