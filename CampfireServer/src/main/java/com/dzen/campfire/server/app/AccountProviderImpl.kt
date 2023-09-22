@@ -3,10 +3,13 @@ package com.dzen.campfire.server.app
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.tools.ApiAccount
 import com.dzen.campfire.api.tools.server.AccountProvider
+import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerFirebase
 import com.dzen.campfire.server.controllers.ControllerOptimizer
 import com.dzen.campfire.server.tables.TAccounts
 import com.sup.dev.java.libs.debug.err
+import com.sup.dev.java.tools.ToolsMath
+import com.sup.dev.java.tools.ToolsThreads
 import com.sup.dev.java_pc.google.GoogleAuth
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQuerySelect
@@ -93,6 +96,10 @@ class AccountProviderImpl : AccountProvider() {
     override fun onAccountLoaded(account: ApiAccount) {
         account.lastOnlineTime = System.currentTimeMillis()
         ControllerOptimizer.insertOnline(account.id, account.lastOnlineTime)
+
+        if (ControllerAccounts.isAccountShadowBanned(account.id)) {
+            ToolsThreads.sleep(ToolsMath.randomLong(2000, 4000))
+        }
     }
 
     private fun instanceSelect() = SqlQuerySelect(TAccounts.NAME,
