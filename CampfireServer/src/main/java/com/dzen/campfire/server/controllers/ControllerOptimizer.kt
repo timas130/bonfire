@@ -202,6 +202,12 @@ object ControllerOptimizer {
     private val online_cash = HashMap<Long, Long>()
     private var online_lastCashUpdate = System.currentTimeMillis()
 
+    fun isOnline(accountId: Long): Boolean {
+        synchronized(online_cash) {
+            return online_cash.containsKey(accountId)
+        }
+    }
+
     fun removeOnline(accountId: Long) {
         synchronized(online_cash) {
             if (online_cash.containsKey(accountId)) online_cash.remove(accountId)

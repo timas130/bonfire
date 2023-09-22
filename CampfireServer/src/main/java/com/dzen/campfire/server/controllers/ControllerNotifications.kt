@@ -2,7 +2,6 @@ package com.dzen.campfire.server.controllers
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.notifications.Notification
-import com.dzen.campfire.server.app.App
 import com.dzen.campfire.server.tables.TAccountsNotification
 import com.dzen.campfire.server.tables.TCollisions
 import com.sup.dev.java.classes.items.Item2
@@ -76,16 +75,8 @@ object ControllerNotifications {
 
             val tokensS = ArrayList<String>()
             for (i in tokens) {
-                if(!notification.isNeedForcePush()){
-                    val accounts = App.accountProvider.getAccounts(i.a1)
-                    var found = false
-                    for (account in accounts) {
-                        if(account.lastOnlineTime > System.currentTimeMillis() - 1000L * 60){
-                            found = true
-                            break
-                        }
-                    }
-                    if(!found) continue
+                if (!notification.isNeedForcePush() && !ControllerOptimizer.isOnline(i.a1)) {
+                    continue
                 }
                 if (i.a2 != null) {
                     tokensS.add(i.a2!!)

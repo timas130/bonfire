@@ -2,56 +2,32 @@ package com.dzen.campfire.api.tools.server
 
 import com.dzen.campfire.api.tools.ApiAccount
 import com.dzen.campfire.api.tools.client.ApiClient
-import com.sup.dev.java.classes.collections.Cash
+import com.sup.dev.java.classes.collections.Cache
 import com.sup.dev.java.classes.items.Item2
 import com.sup.dev.java.tools.ToolsMath
 import java.security.SecureRandom
 
 abstract class AccountProvider {
-
-    private val accessCash: Cash<String, Item2<ApiAccount, Long>> = Cash(10000)
+    private val accessCache: Cache<String, Item2<ApiAccount, Long>> = Cache(10000)
+    private val onlineCache: Cache<Long, Long> = Cache(10000)
 
     open fun getAccount(accessToken: String?, refreshToken: String?, loginToken: String?): ApiAccount? {
-
-        if (loginToken != null && loginToken.isNotEmpty()) {
+        if (!loginToken.isNullOrEmpty()) {
             return loginByLogin(loginToken)
-        } else if (refreshToken != null && refreshToken.isNotEmpty()) {
+        } else if (!refreshToken.isNullOrEmpty()) {
             return loginByRefresh(refreshToken)
-        } else if (accessToken != null && accessToken.isNotEmpty()) {
+        } else if (!accessToken.isNullOrEmpty()) {
             return loginByAccess(accessToken)
         } else return null
-
-    }
-
-    open fun getAccount(accountId: Long): ApiAccount? {
-        for(a in accessCash.getItemsCopy()) if(a?.a1?.id == accountId) return a.a1
-        return null
-    }
-
-    open fun getAccounts(accountId: Long): ArrayList<ApiAccount> {
-        val accounts = ArrayList<ApiAccount>()
-        for(a in accessCash.getItemsCopy()) if(a?.a1?.id == accountId) accounts.add(a.a1)
-        return accounts
-    }
-
-    fun clearCash(accessToken: String) {
-        accessCash.put(accessToken, null)
     }
 
     fun clearCash(accountId: Long) {
-        accessCash.lock {
-            val remveList = ArrayList<String>()
-            for (i in accessCash.keySet()) {
-                val x = accessCash[i]
-                if (x != null && x.a1.id == accountId) remveList.add(i)
-            }
-            for (i in remveList) accessCash.put(i, null)
-        }
+        // TODO: remove before 2.5.3
+        throw NotImplementedError()
     }
 
     private fun loginByLogin(token: String): ApiAccount? {
-        val account = getByLoginToken(token)
-        if (account == null) return null
+        val account = getByLoginToken(token) ?: return null
 
         updateAccessTokens(account)
         if (account.refreshToken == null) updateRefreshToken(account)
@@ -61,8 +37,7 @@ abstract class AccountProvider {
     }
 
     private fun loginByRefresh(token: String): ApiAccount? {
-        val account = getByRefreshToken(token)
-        if (account == null) return null
+        val account = getByRefreshToken(token) ?: return null
 
         updateAccessTokens(account)
         onAccountLoaded(account)
@@ -74,8 +49,7 @@ abstract class AccountProvider {
         val byAccessToken = getByAccessToken(token)
         if (byAccessToken != null) return byAccessToken
 
-        val pair = accessCash[token]
-        if (pair == null) return null
+        val pair = accessCache[token] ?: return null
         if (pair.a2 + ApiClient.TOKEN_ACCESS_LIFETIME < System.currentTimeMillis()) return null
 
         onAccountLoaded(pair.a1)
@@ -85,7 +59,7 @@ abstract class AccountProvider {
 
     private fun updateAccessTokens(account: ApiAccount) {
         account.accessToken = createToken(account)
-        accessCash.put(account.accessToken!!, Item2(account, System.currentTimeMillis()))
+        accessCache.put(account.accessToken!!, Item2(account, System.currentTimeMillis()))
     }
 
     private fun updateRefreshToken(account: ApiAccount) {

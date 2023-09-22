@@ -1,6 +1,6 @@
 package com.sup.dev.java_pc.google
 
-import com.sup.dev.java.classes.collections.Cash
+import com.sup.dev.java.classes.collections.Cache
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.http_api.HttpRequest
 import com.sup.dev.java.libs.json.Json
@@ -21,7 +21,7 @@ object GoogleAuth {
     }
 
     private lateinit var creds: Array<GoogleAuthCreds>
-    private var cash: Cash<String, String> = Cash(10000)
+    private var cache: Cache<String, String> = Cache(10000)
 
     @Deprecated("use init(Array<GoogleAuth.GoogleAuthCreds>)")
     fun init(serverClientId: String, serverClientSecret: String) {
@@ -33,13 +33,13 @@ object GoogleAuth {
     }
 
     fun getGoogleId(token: String, clientIndex: Int = 0): String? {
-        var googleId = cash[token]
+        var googleId = cache[token]
         if (googleId != null) return googleId
 
         googleId = if (token.startsWith("4/")) requestByIdServerAuthCode(token, clientIndex)
         else requestByIdToken(token)
 
-        cash.put(token, googleId)
+        cache.put(token, googleId)
         return googleId
     }
 

@@ -4,7 +4,7 @@ import com.dzen.campfire.api.tools.ApiAccount
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.api.tools.client.ApiClient
 import com.dzen.campfire.api.tools.client.Request
-import com.sup.dev.java.classes.collections.Cash
+import com.sup.dev.java.classes.collections.Cache
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.debug.info
 import com.sup.dev.java.libs.json.Json
@@ -29,7 +29,7 @@ class ApiServer(
         private val botTokensList: Array<String>,
 ) {
 
-    private val cash: Cash<Long, Json> = Cash(10000)
+    private val cache: Cache<Long, Json> = Cache(10000)
     private val threadPool: ThreadPoolExecutor = Executors.newCachedThreadPool() as ThreadPoolExecutor
     var onError: (String, Throwable) -> Unit = { _,ex -> err(ex) }
     var statisticCollector: (String, Long, String) -> Unit = { _, _, _ -> }
@@ -249,7 +249,7 @@ class ApiServer(
             responseJson.put(ApiClient.J_RESPONSE, responseJsonContent)
         } else {
 
-            responseJson = if (request.cashAvailable) cash.get(request.dateCreated) else null
+            responseJson = if (request.cashAvailable) cache.get(request.dateCreated) else null
 
             if (responseJson == null) {
 
@@ -275,7 +275,7 @@ class ApiServer(
 
                 responseJson.put(ApiClient.J_RESPONSE, responseJsonContent)
                 if (request.cashAvailable)
-                    cash.put(request.dateCreated, responseJson)
+                    cache.put(request.dateCreated, responseJson)
             }
         }
 

@@ -19,8 +19,7 @@ class PAdminVoteAccountChangeName {
             .updateValue(TAccounts.name, m.newName)
             .where(TAccounts.id, "=", m.targetAccount.id))
 
-        val cashAccount = App.accountProvider.getAccount(m.targetAccount.id)
-        if(cashAccount != null) cashAccount.name = m.newName
+        App.accountProvider.clearCash(m.targetAccount.id)
 
         ControllerPublications.event(ApiEventAdminChangeName(m.adminAccount.id, m.adminAccount.name, m.adminAccount.imageId, m.adminAccount.sex, m.targetAccount.id, m.newName, m.targetAccount.imageId, m.targetAccount.sex, m.comment, oldName), m.adminAccount.id)
         ControllerPublications.event(ApiEventUserAdminNameChanged(m.targetAccount.id, m.newName, m.targetAccount.imageId, m.targetAccount.sex, m.adminAccount.id, m.adminAccount.name, m.adminAccount.imageId, m.adminAccount.sex, m.comment, oldName), m.targetAccount.id)
