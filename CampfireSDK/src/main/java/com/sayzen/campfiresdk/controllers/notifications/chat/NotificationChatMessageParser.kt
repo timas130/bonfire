@@ -158,9 +158,13 @@ fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound
                         .setName(message.creator.name)
                         .setIcon(kotlin.run {
                             val avatar = ImageLoader.load(message.creator.imageId).startLoad()
-                            if (avatar != null) IconCompat.createWithBitmap(
-                                ToolsBitmap.decode(avatar)!!.getRounded()
-                            ) else null
+                            if (avatar != null) {
+                                ToolsBitmap.decode(avatar)?.getRounded()?.let { bitmap ->
+                                    IconCompat.createWithBitmap(bitmap)
+                                }
+                            } else {
+                                null
+                            }
                         })
                         .build()
                 ))
