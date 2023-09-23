@@ -3,7 +3,6 @@ package com.dzen.campfire.api.requests.fandoms
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
-
 open class RFandomsChange(
         var fandomId: Long,
         var name: String?,
@@ -16,14 +15,22 @@ open class RFandomsChange(
         var params3: Array<Long>?,
         var params4: Array<Long>?
 ) : Request<RFandomsChange.Response>() {
-
     companion object {
+        const val E_BAD_IMG_WEIGHT = "E_BAD_IMG_WEIGHT"
+        const val E_BAD_IMG_MINI_WEIGHT = "E_BAD_IMG_MINI_WEIGHT"
+        const val E_BAD_IMG_SIZE = "E_BAD_IMG_SIZE"
+        const val E_BAD_IMG_MINI_SIZE = "E_BAD_IMG_MINI_SIZE"
+        const val E_BAD_NAME_L = "E_BAD_NAME_L"
+    }
 
-        val E_BAD_IMG_WEIGHT = "E_BAD_IMG_WEIGHT"
-        val E_BAD_IMG_MINI_WEIGHT = "E_BAD_IMG_MINI_WEIGHT"
-        val E_BAD_IMG_SIZE = "E_BAD_IMG_SIZE"
-        val E_BAD_IMG_MINI_SIZE = "E_BAD_IMG_MINI_SIZE"
-        val E_BAD_NAME_L = "E_BAD_NAME_L"
+    init {
+        addDataOutput(image)
+        addDataOutput(imageMini)
+    }
+
+    override fun updateDataOutput() {
+        image = dataOutput[0]
+        imageMini = dataOutput[1]
     }
 
     override fun jsonSub(inp: Boolean, json: Json) {
@@ -44,9 +51,6 @@ open class RFandomsChange(
     }
 
     class Response : Request.Response() {
-
         override fun json(inp: Boolean, json: Json) {}
-
     }
-
 }
