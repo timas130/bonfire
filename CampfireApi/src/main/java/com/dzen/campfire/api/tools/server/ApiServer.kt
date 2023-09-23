@@ -4,115 +4,24 @@ import com.dzen.campfire.api.tools.ApiAccount
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.api.tools.client.ApiClient
 import com.dzen.campfire.api.tools.client.Request
-import com.sup.dev.java.classes.collections.Cache
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.debug.info
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsBytes
-import java.io.*
-import java.net.Socket
+import java.io.DataInputStream
+import java.io.InputStream
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
-import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
 
 class ApiServer(
         private val requestFactory: RequestFactory,
         private val accountProvider: AccountProvider,
-        private val keyBytesJKS: ByteArray,
-        private val keyBytesBKS: ByteArray,
-        private val keyPassword: String,
-        private val portHttps: Int,
-        private val portHttp: Int,
-        private val portCertificate: Int,
         private val botTokensList: Array<String>,
 ) {
-
-    private val cache: Cache<Long, Json> = Cache(10000)
-    private val threadPool: ThreadPoolExecutor = Executors.newCachedThreadPool() as ThreadPoolExecutor
     var onError: (String, Throwable) -> Unit = { _,ex -> err(ex) }
     var statisticCollector: (String, Long, String) -> Unit = { _, _, _ -> }
-
-    //
-    //  Server
-    //
-
-    fun startServer() {
-        startServerHTTPS()
-        startServerHTTP()
-    }
-
-    fun startServerHTTP() {
-        val server = HTTPServer(portHttp) { socket ->
-            socket.keepAlive = false
-            socket.soTimeout = 3000
-            threadPool.submit { parseConnectionHttp(socket) }
-        }
-        server.threadProvider = { threadPool.submit { it.invoke() } }
-        server.onConnectionError = { err(it) }
-        server.startServer()
-    }
-
-
-    fun startServerHTTPS() {
-        val server = HTTPSServer(keyBytesJKS, keyBytesBKS, keyPassword, portHttps, portCertificate) { socket ->
-            socket.keepAlive = false
-            socket.soTimeout = 3000
-            threadPool.submit { parseConnectionHttp(socket) }
-        }
-        server.threadProvider = { threadPool.submit { it.invoke() } }
-        server.onConnectionError = { err(it) }
-        server.startServer()
-    }
-
-    private fun parseConnectionHttp(socket: Socket) {
-        var key = "Unknown"
-        try {
-            val inputStream = DataInputStream(socket.getInputStream())
-
-            val l = inputStream.readInt()
-            val bytes = ByteArray(l)
-            inputStream.readFully(bytes, 0, l)
-            val json = Json(bytes)
-
-            val resp = parseConnection(
-                json = json,
-                ip = socket.inetAddress.hostAddress,
-                additional = inputStream,
-                onKeyFound = { key = it },
-            )
-
-            when (resp) {
-                is ResponseType.Json -> writeHttps(socket.getOutputStream(), resp.json)
-                is ResponseType.Data -> writeData(socket.getOutputStream(), resp.data)
-            }
-        } catch (_: TooManyRequestsException) {
-        } catch (th: Throwable) {
-            onError.invoke(key, th)
-        } finally {
-            try {
-                socket.close()
-            } catch (e: IOException) {
-                err(e)
-            }
-        }
-    }
-
-    private fun writeHttps(os: OutputStream, json: Json) {
-        val dos = DataOutputStream(os)
-        val bytes = json.toBytes()
-        dos.writeInt(bytes.size)
-        dos.write(bytes)
-        dos.flush()
-    }
-
-    private fun writeData(os: OutputStream, bytes: ByteArray) {
-        val dos = DataOutputStream(os)
-        dos.writeInt(bytes.size)
-        dos.write(bytes)
-        dos.flush()
-    }
 
     //
     //  Parsing
@@ -238,45 +147,32 @@ class ApiServer(
         }
         request.updateDataOutput()
 
-        var responseJson: Json?
-        val responseJsonContent: Json
+        val responseJson = Json()
+        val responseJsonContent = Json()
 
         if ((request.tokenRequired && apiAccount == null) || (request.tokenDesirable && apiAccount == null && (request.accessToken != null || request.refreshToken != null))) {
-            responseJson = Json()
-            responseJsonContent = Json()
             responseJson.put(ApiClient.J_STATUS, ApiClient.J_STATUS_ERROR)
             ApiException(ApiClient.ERROR_UNAUTHORIZED).json(true, responseJsonContent)
             responseJson.put(ApiClient.J_RESPONSE, responseJsonContent)
         } else {
-
-            responseJson = if (request.cashAvailable) cache.get(request.dateCreated) else null
-
-            if (responseJson == null) {
-
-                responseJson = Json()
-                responseJsonContent = Json()
-
-                if (apiAccount != null) {
-                    responseJson.put(ApiClient.J_API_ACCESS_TOKEN, apiAccount.accessToken)
-                    if (request.loginToken != null || request.refreshToken != null)
-                        responseJson.put(ApiClient.J_API_REFRESH_TOKEN, apiAccount.refreshToken)
-                }
-
-                try {
-                    request.check()
-                    request.execute().json(true, responseJsonContent)
-
-                    responseJson.put(ApiClient.J_STATUS, ApiClient.J_STATUS_OK)
-                } catch (ex: ApiException) {
-                    err(ex)
-                    responseJson.put(ApiClient.J_STATUS, ApiClient.J_STATUS_ERROR)
-                    ex.json(true, responseJsonContent)
-                }
-
-                responseJson.put(ApiClient.J_RESPONSE, responseJsonContent)
-                if (request.cashAvailable)
-                    cache.put(request.dateCreated, responseJson)
+            if (apiAccount != null) {
+                responseJson.put(ApiClient.J_API_ACCESS_TOKEN, apiAccount.accessToken)
+                if (request.loginToken != null || request.refreshToken != null)
+                    responseJson.put(ApiClient.J_API_REFRESH_TOKEN, apiAccount.refreshToken)
             }
+
+            try {
+                request.check()
+                request.execute().json(true, responseJsonContent)
+
+                responseJson.put(ApiClient.J_STATUS, ApiClient.J_STATUS_OK)
+            } catch (ex: ApiException) {
+                err(ex)
+                responseJson.put(ApiClient.J_STATUS, ApiClient.J_STATUS_ERROR)
+                ex.json(true, responseJsonContent)
+            }
+
+            responseJson.put(ApiClient.J_RESPONSE, responseJsonContent)
         }
 
         return responseJson
@@ -285,5 +181,4 @@ class ApiServer(
     private fun parseDataOutConnection(request: Request<*>): ByteArray? {
         return request.execute().getData()
     }
-
 }

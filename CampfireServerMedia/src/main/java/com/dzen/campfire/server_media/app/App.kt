@@ -61,12 +61,6 @@ object App {
             val apiServer = ApiServer(
                     requestFactory,
                     AccountProviderImpl(),
-                    ToolsFiles.readFile(keyFileJKS),
-                    ToolsFiles.readFile(keyFileBKS),
-                    jksPassword,
-                    APIMedia.PORT_HTTPS,
-                    APIMedia.PORT_HTTP,
-                    APIMedia.PORT_CERTIFICATE,
                     secretsBotsTokens,
             )
 
@@ -86,15 +80,12 @@ object App {
             System.err.println("Media Server")
             System.err.println("------------ (\\/)._.(\\/) ------------")
 
-            ToolsThreads.thread {
-                apiServer.startJavalin(
-                    jksPath = "secrets/Certificate.jks",
-                    jksPassword = secretsKeys["jks_password"]!!,
-                    portV1 = APIMedia.PORT_SERV_JL_V1,
-                    portV2 = APIMedia.PORT_SERV_JL,
-                )
-            }
-            apiServer.startServer()
+            apiServer.startJavalin(
+                jksPath = "secrets/Certificate.jks",
+                jksPassword = secretsKeys["jks_password"]!!,
+                portV1 = APIMedia.PORT_SERV_JL_V1,
+                portV2 = APIMedia.PORT_SERV_JL,
+            )
         } catch (th: Throwable) {
             err(th)
         }

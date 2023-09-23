@@ -49,9 +49,7 @@ abstract class ApiClient(
     private val threadPool: ThreadPoolExecutor =
         ThreadPoolExecutor(1, 4, 1, TimeUnit.MINUTES, LinkedBlockingQueue())
 
-    var networkingProvider: NetworkingProvider = HttpsClientNetworkingProvider(
-        HTTPSClient(host, portHttps, portCertificate)
-    )
+    lateinit var networkingProvider: NetworkingProvider
 
     fun getAccessToken(): String? {
         val s = loader.invoke("ApiClient_access_token")

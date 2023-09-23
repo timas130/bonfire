@@ -57,14 +57,9 @@ object App {
 
             val requestFactory = RequestFactory(jarFile, File("").absolutePath + "\\CampfireServer\\src\\main\\java")
 
-            val apiServer = ApiServer(requestFactory,
+            val apiServer = ApiServer(
+                requestFactory,
                 accountProvider,
-                ToolsFiles.readFile(keyFileJKS),
-                ToolsFiles.readFile(keyFileBKS),
-                jksPassword,
-                API.PORT_HTTPS,
-                API.PORT_HTTP,
-                API.PORT_CERTIFICATE,
                 secretsBotsTokens,
             )
 
@@ -105,16 +100,12 @@ object App {
             ControllerOptimizer.karmaCategoryUpdateIfNeed()
             System.err.println("------------ (\\/)._.(\\/) ------------")
 
-            ToolsThreads.thread {
-                apiServer.startJavalin(
-                    jksPath = "secrets/Certificate.jks",
-                    jksPassword = secretsKeys["jks_password"]!!,
-                    portV1 = API.PORT_SERV_JL_V1,
-                    portV2 = API.PORT_SERV_JL
-                )
-            }
-            apiServer.startServer()
-
+            apiServer.startJavalin(
+                jksPath = "secrets/Certificate.jks",
+                jksPassword = secretsKeys["jks_password"]!!,
+                portV1 = API.PORT_SERV_JL_V1,
+                portV2 = API.PORT_SERV_JL
+            )
         } catch (th: Throwable) {
             err(th)
         }
