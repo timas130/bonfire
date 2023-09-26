@@ -66,7 +66,7 @@ class CardQuestDetails constructor(
             vPublish.visibility = View.GONE
         }
 
-        vDescription.text = questDetails.description.ifEmpty { "Нет описания" }
+        vDescription.text = questDetails.description.ifEmpty { t(API_TRANSLATE.quests_no_description) }
         ControllerLinks.makeLinkable(vDescription)
 
         if (showMore) vMore.visibility = View.VISIBLE

@@ -2276,6 +2276,7 @@ object API_TRANSLATE {
     val quests_continue = Translate("Продолжить")
     val quests_clear = Translate("Очистить прогресс")
     val quests_clear_q = Translate("Вы уверены, что хотите сбросить прогресс прохождения?")
+    val quests_no_description = Translate("Нет описания")
     val quests_cat_new = Translate("Новые")
     val quests_drafts = Translate("Черновики квестов")
     val quests_empty = Translate("Нет квестов")
