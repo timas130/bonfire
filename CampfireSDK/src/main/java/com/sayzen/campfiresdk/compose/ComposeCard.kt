@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import com.sayzen.campfiresdk.R
 import com.sup.dev.android.app.SupAndroid
@@ -25,7 +26,7 @@ abstract class ComposeCard : Card(0) {
         val composeView: ComposeView = view.findViewById(R.id.vSheet)
         composeView.setContent {
             BonfireTheme {
-                Surface(color = MaterialTheme.colorScheme.background) {
+                Surface(color = getBackground()) {
                     Content()
                 }
             }
@@ -34,4 +35,7 @@ abstract class ComposeCard : Card(0) {
 
     @Composable
     abstract fun Content()
+
+    @Composable
+    open fun getBackground(): Color = MaterialTheme.colorScheme.background
 }

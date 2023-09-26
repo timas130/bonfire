@@ -71,6 +71,17 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
+private val LegacyLightColors = lightColorScheme(
+    background = Color(0xFFF5F5F5),
+    onBackground = Color(0xFF161616),
+    primary = md_theme_light_primary,
+    onPrimary = md_theme_light_onPrimary,
+    primaryContainer = md_theme_light_primaryContainer,
+    onPrimaryContainer = md_theme_light_onPrimaryContainer,
+    surface = Color(0xFFE0E0E0),
+    surfaceVariant = md_theme_light_surfaceVariant,
+)
+
 // I have no idea blyat
 private val LegacyDarkColors = darkColorScheme(
     background = Color(0xFF252525),
@@ -79,6 +90,7 @@ private val LegacyDarkColors = darkColorScheme(
     onPrimary = md_theme_dark_onPrimary,
     primaryContainer = md_theme_dark_primaryContainer,
     onPrimaryContainer = md_theme_dark_onPrimaryContainer,
+    surface = Color(0xFF363636),
     surfaceVariant = md_theme_dark_surfaceVariant,
     onSurfaceVariant = Color(0xFFFFFFFF),
 )
@@ -96,7 +108,7 @@ fun BonfireTheme(
     val colors = if (useDarkTheme) {
         LegacyDarkColors
     } else {
-        LightColors
+        LegacyLightColors
     }
 
     MaterialTheme(

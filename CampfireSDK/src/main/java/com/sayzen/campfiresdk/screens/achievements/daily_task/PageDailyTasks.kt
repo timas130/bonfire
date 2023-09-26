@@ -24,7 +24,7 @@ import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.java.tools.ToolsText
 
 @Composable
-private fun DailyTaskBonuses(modifier: Modifier = Modifier, taskInfo: DailyTaskInfo) {
+private fun DailyTaskMultipliers(modifier: Modifier = Modifier, taskInfo: DailyTaskInfo) {
     Row(
         Modifier.horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -68,47 +68,47 @@ private fun DailyTaskBonuses(modifier: Modifier = Modifier, taskInfo: DailyTaskI
 }
 
 @Composable
-private fun DailyTask(modifier: Modifier = Modifier, taskInfo: DailyTaskInfo) {
+fun DailyTask(modifier: Modifier = Modifier, taskInfo: DailyTaskInfo?, compact: Boolean = false) {
     Column(modifier) {
         // task label
-        val taskName = when (taskInfo.task.type) {
-            DailyTaskType.PostInFandom, DailyTaskType.CommentInFandom -> {
-                t(
-                    API_TRANSLATE.dailyTaskNames[taskInfo.task.type] ?: API_TRANSLATE.daily_task_unknonwn,
-                    taskInfo.fandomName ?: t(API_TRANSLATE.daily_task_deleted_fandom),
-                )
-            }
-            DailyTaskType.CommentNewbiePost, DailyTaskType.AnswerNewbieComment -> {
-                t(
-                    API_TRANSLATE.dailyTaskNames[taskInfo.task.type] ?: API_TRANSLATE.daily_task_unknonwn,
-                    ToolsText.numToStringRound(taskInfo.task.maxLevel / 100.0, 2),
-                )
-            }
-            DailyTaskType.CreatePostWithPageType -> {
-                t(
-                    API_TRANSLATE.dailyTaskNames[taskInfo.task.type] ?: API_TRANSLATE.daily_task_unknonwn,
-                    t(API_TRANSLATE.pageTypeNames[taskInfo.task.pageType] ?: API_TRANSLATE.post_page_unknown),
-                )
-            }
-            else -> {
-                t(API_TRANSLATE.dailyTaskNames[taskInfo.task.type] ?: API_TRANSLATE.daily_task_unknonwn)
+        val taskName = taskInfo?.let {
+            when (it.task.type) {
+                DailyTaskType.PostInFandom, DailyTaskType.CommentInFandom -> {
+                    t(
+                        API_TRANSLATE.dailyTaskNames[it.task.type] ?: API_TRANSLATE.daily_task_unknonwn,
+                        it.fandomName ?: t(API_TRANSLATE.daily_task_deleted_fandom),
+                    )
+                }
+                DailyTaskType.CommentNewbiePost, DailyTaskType.AnswerNewbieComment -> {
+                    t(
+                        API_TRANSLATE.dailyTaskNames[it.task.type] ?: API_TRANSLATE.daily_task_unknonwn,
+                        ToolsText.numToStringRound(it.task.maxLevel / 100.0, 2),
+                    )
+                }
+                DailyTaskType.CreatePostWithPageType -> {
+                    t(
+                        API_TRANSLATE.dailyTaskNames[it.task.type] ?: API_TRANSLATE.daily_task_unknonwn,
+                        t(API_TRANSLATE.pageTypeNames[it.task.pageType] ?: API_TRANSLATE.post_page_unknown),
+                    )
+                }
+                else -> {
+                    t(API_TRANSLATE.dailyTaskNames[it.task.type] ?: API_TRANSLATE.daily_task_unknonwn)
+                }
             }
         }
         Text(
-            taskName,
-            style = MaterialTheme.typography.titleLarge,
+            taskName ?: t(API_TRANSLATE.app_loading_dots),
+            style = if (compact) MaterialTheme.typography.titleSmall else MaterialTheme.typography.titleLarge,
             modifier = Modifier
-                .padding(bottom = 8.dp)
-                .padding(horizontal = 16.dp),
+                .padding(bottom = if (compact) 4.dp else 8.dp),
         )
 
         // task progress indicator
         LinearProgressIndicator(
-            progress = taskInfo.progress.toFloat() / taskInfo.total.toFloat(),
+            progress = taskInfo?.let { it.progress.toFloat() / it.total.toFloat() } ?: 0f,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(16.dp)
-                .padding(horizontal = 16.dp)
                 .clip(RoundedCornerShape(8.dp)),
         )
 
@@ -116,34 +116,39 @@ private fun DailyTask(modifier: Modifier = Modifier, taskInfo: DailyTaskInfo) {
         Row(
             Modifier
                 .fillMaxWidth()
-                .padding(top = 4.dp, bottom = 8.dp)
-                .padding(horizontal = 16.dp),
+                .padding(top = 4.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
+            val textStyle = if (compact) MaterialTheme.typography.bodySmall else MaterialTheme.typography.bodyMedium
+
+            // keep this while taskInfo is still null, so it takes
+            // up space and there's no layout shift
+            // (unlike the old dt)
             Text(
-                t(
-                    API_TRANSLATE.daily_task_reward_lvl,
-                    ToolsText.numToStringRound(taskInfo.possibleReward / 100.0, 2)
-                ),
-                style = MaterialTheme.typography.bodyMedium,
+                taskInfo?.let {
+                    t(
+                        API_TRANSLATE.daily_task_reward_lvl,
+                        ToolsText.numToStringRound(it.possibleReward / 100.0, 2)
+                    )
+                } ?: " ",
+                style = textStyle,
             )
 
-            val progress = taskInfo.progress.coerceAtMost(taskInfo.total)
-            if (taskInfo.task.type.karmaTask) {
-                Text(
-                    t(API_TRANSLATE.daily_task_progress, progress / 100, taskInfo.total / 100),
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            } else {
-                Text(
-                    t(API_TRANSLATE.daily_task_progress, progress, taskInfo.total),
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+            if (taskInfo != null) {
+                val progress = taskInfo.progress.coerceAtMost(taskInfo.total)
+                if (taskInfo.task.type.karmaTask) {
+                    Text(
+                        t(API_TRANSLATE.daily_task_progress, progress / 100, taskInfo.total / 100),
+                        style = textStyle,
+                    )
+                } else {
+                    Text(
+                        t(API_TRANSLATE.daily_task_progress, progress, taskInfo.total),
+                        style = textStyle,
+                    )
+                }
             }
         }
-
-        // active multipliers
-        DailyTaskBonuses(taskInfo = taskInfo)
     }
 }
 
@@ -181,7 +186,10 @@ class PageDailyTasks(private val taskInfo: DailyTaskInfo) : ComposeCard() {
                 TasksDescription(t(API_TRANSLATE.daily_tasks_tutorial))
             }
             item {
-                DailyTask(Modifier.padding(top = 16.dp), taskInfo)
+                DailyTask(Modifier.padding(top = 16.dp, bottom = 8.dp, start = 16.dp, end = 16.dp), taskInfo)
+
+                // active multipliers
+                DailyTaskMultipliers(taskInfo = taskInfo)
             }
 
             // events

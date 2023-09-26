@@ -2518,6 +2518,7 @@ object API_TRANSLATE {
     val daily_task_combo_bonus = Translate("Ежедневное выполнение: +%s")
     val daily_task_newbie_explain = Translate("Чтобы вам было проще развиться на начальном уровне, награда за ежедневное задание повышена.")
     val daily_task_combo_explain = Translate("Выполняя задания каждый день, вы можете повысить свои награды за ежедневные задания в два раза. Бонус увеличивается, если выполнить задание больше, чем на половину.")
+    val daily_task_error_loading = Translate("Ошибка загрузки ежедневного задания")
 
     val dailyTaskNames = hashMapOf(
         DailyTaskType.CreatePosts to daily_task_create_posts,

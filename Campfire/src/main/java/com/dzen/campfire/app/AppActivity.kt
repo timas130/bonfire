@@ -26,6 +26,7 @@ import com.sayzen.campfiresdk.models.events.notifications.EventNotificationsCoun
 import com.sayzen.campfiresdk.screens.account.profile.SProfile
 import com.sayzen.campfiresdk.screens.account.search.SAccountSearch
 import com.sayzen.campfiresdk.screens.achievements.SAchievements
+import com.sayzen.campfiresdk.screens.achievements.daily_task.CardCompactDailyTask
 import com.sayzen.campfiresdk.screens.activities.SActivities
 import com.sayzen.campfiresdk.screens.chat.SChat
 import com.sayzen.campfiresdk.screens.chat.SChatSubscribers
@@ -75,6 +76,8 @@ class AppActivity : SActivity() {
     private var vQuests: SActivityType.NavigationItem? = null
     private var vOther: SActivityType.NavigationItem? = null
 
+    private val dailyTaskCard = CardCompactDailyTask()
+
     var stackChats: NavigatorStack? = null
     var stackFeed: NavigatorStack? = null
 
@@ -88,6 +91,7 @@ class AppActivity : SActivity() {
         val vTitleMenuContainer: ViewGroup = vNavigationTitleView!!.findViewById(R.id.vTitleMenuContainer)
         val vTitleMenuCorners: LayoutCorned = vNavigationTitleView!!.findViewById(R.id.vTitleMenuCorners)
         vTitleMenuContainer.setOnClickListener { SProfile.instance(ControllerApi.account.getAccount(), Navigator.TO) }
+        vTitleMenuContainer.addView(dailyTaskCard.createView(vTitleMenuContainer), 1)
         vTitleMenuCorners.makeSoftware()
         vNavigationTitle?.setChipMode(false)
         vNavigationTitle?.setCornedBL(false)
