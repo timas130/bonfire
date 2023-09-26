@@ -4,6 +4,7 @@ use crate::consts::status::Status;
 use crate::context::GlobalContext;
 use crate::models::daily_task::DailyTask;
 use chrono::{NaiveDate, NaiveTime};
+use crate::consts::fandoms::FANDOM_HELLO_ID;
 
 pub async fn get_task_progress(
     context: &GlobalContext,
@@ -50,12 +51,13 @@ pub async fn get_task_progress(
         DailyTask::PostComments { .. } => sqlx::query_scalar!(
             "select count(*) from campfire_db.units
              where creator_id = $1 and status = $2 and unit_type = $3 and
-                   date_create >= $4 and date_create <= $5",
+                   date_create >= $4 and date_create <= $5 and fandom_id != $6",
             user_id,
             i64::from(Status::Public),
             i64::from(PublicationType::Comment),
             date_start,
             date_end,
+            FANDOM_HELLO_ID,
         )
         .fetch_one(&context.pool)
         .await?
@@ -79,13 +81,15 @@ pub async fn get_task_progress(
         DailyTask::WriteMessages { .. } => sqlx::query_scalar!(
             "select count(*) from campfire_db.units
              where creator_id = $1 and status = $2 and unit_type = $3 and
-                   date_create >= $4 and date_create <= $5 and tag_1 = $6",
+                   date_create >= $4 and date_create <= $5 and tag_1 = $6 and
+                   fandom_id != $7",
             user_id,
             i64::from(Status::Public),
             i64::from(PublicationType::ChatMessage),
             date_start,
             date_end,
             i64::from(ChatType::FandomRoot),
+            FANDOM_HELLO_ID,
         )
         .fetch_one(&context.pool)
         .await?
