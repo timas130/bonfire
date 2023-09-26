@@ -25,6 +25,12 @@ class EPublicationsRemove : RPublicationsRemove(0) {
         this.publication = publicationX
         if (publication.creator.id != apiAccount.id) throw ApiException(API.ERROR_ACCESS)
 
+        if (publication.fandom.id != 0L) {
+            ControllerAccounts.checkAccountBanned(apiAccount.id, publication.fandom.id, publication.fandom.languageId)
+        } else {
+            ControllerAccounts.checkAccountBanned(apiAccount.id)
+        }
+
         if (publication.publicationType != API.PUBLICATION_TYPE_COMMENT
                 && publication.publicationType != API.PUBLICATION_TYPE_CHAT_MESSAGE
                 && publication.publicationType != API.PUBLICATION_TYPE_STICKERS_PACK
