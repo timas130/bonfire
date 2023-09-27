@@ -10,7 +10,47 @@
         android:layout_height="142dp"
         android:layout_gravity="center"
         android:layout_marginBottom="128dp"
-        android:src="@drawable/logo_alpha"/>
+        android:src="@drawable/logo_alpha"
+        android:contentDescription="@string/app_name" />
+
+    <ImageView
+        android:id="@+id/vBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:importantForAccessibility="no"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:id="@+id/vBackgroundInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="64dp"
+        android:visibility="gone"
+    >
+        <TextView
+            android:id="@+id/vTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:shadowColor="#6E000000"
+            android:shadowRadius="6"
+        />
+
+        <TextView
+            android:id="@+id/vSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="14sp"
+            android:textColor="#4DFFFFFF"
+            android:shadowColor="#6E000000"
+            android:shadowRadius="6"
+        />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="320dp"

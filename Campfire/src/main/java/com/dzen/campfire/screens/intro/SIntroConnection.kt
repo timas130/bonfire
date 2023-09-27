@@ -2,6 +2,7 @@ package com.dzen.campfire.screens.intro
 
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.dzen.campfire.R
 import com.dzen.campfire.api.API
@@ -12,6 +13,7 @@ import com.dzen.campfire.api.requests.accounts.RAccountsAddNotificationsToken
 import com.dzen.campfire.api.requests.accounts.RAccountsGetInfo
 import com.dzen.campfire.api.requests.accounts.RAccountsLogin
 import com.dzen.campfire.api.requests.accounts.RAccountsRegistration
+import com.dzen.campfire.api.requests.project.RProjectGetLoadingPictures
 import com.dzen.campfire.app.App
 import com.dzen.campfire.screens.hello.SCampfireHello
 import com.google.firebase.auth.FirebaseAuth
@@ -23,23 +25,28 @@ import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsBitmap
 import com.sup.dev.android.tools.ToolsResources
+import com.sup.dev.android.tools.ToolsStorage
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.java.libs.debug.err
+import com.sup.dev.java.libs.debug.info
 import com.sup.dev.java.tools.ToolsThreads
-import io.sentry.Sentry
-import java.io.IOException
 
 class SIntroConnection : Screen(R.layout.screen_intro_connection){
-
     enum class State {
         PROGRESS, ERROR
     }
 
+    private var loadedBackground = false
+
     private val vProgress: View = findViewById(R.id.vProgress)
+    private val vBackground: ImageView = findViewById(R.id.vBackground)
     private val vEmptyImage: ImageView = findViewById(R.id.vEmptyImage)
     private val vMessage: TextView = findViewById(R.id.vMessage)
     private val vRetry: TextView = findViewById(R.id.vRetry)
     private val vChangeAccount: TextView = findViewById(R.id.vChangeAccount)
+    private val vBackgroundInfo: LinearLayout = findViewById(R.id.vBackgroundInfo)
+    private val vTitle: TextView = findViewById(R.id.vTitle)
+    private val vSubtitle: TextView = findViewById(R.id.vSubtitle)
     private var feedCategories: Array<Long> = emptyArray()  //  Костыль. Загрузка настроек может перезаписать выбранные пользователем фильтры
 
     init {
@@ -62,6 +69,7 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection){
         App.activity().resetStacks()
         ControllerHoliday.onAppStart()
 
+        loadBackgroundImageData()
         sendLoginRequest()
     }
 
@@ -75,8 +83,6 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection){
         val account = ControllerApi.getLastAccount()
         if (account.id == 0L) {
             ControllerChats.clearMessagesCount()
-
-
 
             val auth = FirebaseAuth.getInstance()
             auth.useAppLanguage()
@@ -228,13 +234,21 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection){
     fun setState(state: State) {
         vRetry.visibility = if(state == State.ERROR) View.VISIBLE else View.GONE
         vChangeAccount.visibility = if(state == State.ERROR) View.VISIBLE else View.GONE
-        vProgress.visibility = if(state == State.PROGRESS) View.VISIBLE else View.GONE
         vMessage.visibility = if(state == State.ERROR) View.VISIBLE else View.GONE
 
+        vBackground.visibility = if(state == State.ERROR) View.GONE else View.VISIBLE
+        vBackgroundInfo.visibility = if(state == State.ERROR) View.GONE else View.VISIBLE
+
         if (state == State.ERROR) {
+            vProgress.visibility = View.GONE
+            vEmptyImage.visibility = View.VISIBLE
+            vProgress.visibility = View.VISIBLE
             ImageLoader.load(API_RESOURCES.IMAGE_BACKGROUND_20).noHolder().into(vEmptyImage)
         }
 
+        if (state == State.PROGRESS && !loadedBackground) {
+            vProgress.visibility = View.GONE
+        }
     }
 
     fun loadInfo(tryCount: Int = 3) {
@@ -256,4 +270,49 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection){
                 .send(api)
     }
 
+    companion object {
+        private const val LAST_UPDATE_TIME = "SIntroConnection.bg.update"
+        private const val LAST_UPDATE_DATA = "SIntroConnection.bg.data"
+    }
+
+    private fun loadBackgroundImageData() {
+        val lastUpdate = ToolsStorage.getLong(LAST_UPDATE_TIME, 0L)
+        // if the last update is more than 1 day old
+        if (lastUpdate <= System.currentTimeMillis() - 1000 * 3600 * 24) {
+            // refresh in the background
+            RProjectGetLoadingPictures()
+                .onComplete { r ->
+                    info("refreshed loading background image info")
+                    ToolsStorage.put(LAST_UPDATE_TIME, System.currentTimeMillis())
+                    ToolsStorage.put(LAST_UPDATE_DATA, r.pictures)
+                }
+                .onError { err ->
+                    err.printStackTrace()
+                }
+                .send(api)
+        }
+
+        val data = ToolsStorage.getJsonParsables(LAST_UPDATE_DATA, RProjectGetLoadingPictures.LoadingPicture::class)
+            ?: arrayOf()
+        val activeBackground = data.find { it.isActive() } ?: return
+
+        val title = ControllerTranslate.getMyMap()?.get(activeBackground.titleTranslation)?.text
+            ?: activeBackground.titleTranslation
+        val subtitle = ControllerTranslate.getMyMap()?.get(activeBackground.subtitleTranslation)?.text
+            ?: activeBackground.subtitleTranslation
+
+        val imageLink = ImageLoader.load(activeBackground.imageId)
+        ImageLoader.load(
+            link = imageLink,
+            vImage = vBackground,
+            onLoadedBitmap = {
+                vBackgroundInfo.visibility = View.VISIBLE
+                vTitle.text = title
+                vSubtitle.text = subtitle
+                vEmptyImage.visibility = View.GONE
+                vProgress.visibility = View.GONE
+                loadedBackground = true
+            }
+        )
+    }
 }

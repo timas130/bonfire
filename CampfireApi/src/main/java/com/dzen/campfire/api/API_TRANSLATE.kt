@@ -2541,6 +2541,11 @@ object API_TRANSLATE {
     val events_tutorial = Translate("События — специальные задания, ограниченные по времени, с большими наградами.")
     val events_empty = Translate("Пока событий нет! Подпишитесь на фэндом Bonfire, чтобы узнать о них первым.")
 
+    val loading_image_oct = Translate("А листья падают...")
+    val loading_image_nov = Translate("Ноябрь")
+    val loading_image_dec = Translate("С наступающим!")
+    val loading_image_author = Translate("Иллюстрация: Дарья")
+
     val post_page_code_languages = hashMapOf(
         "c" to "C", "cs" to "C#", "java" to "Java", "bash" to "Bash", "python" to "Python",
         "perl" to "Perl", "ruby" to "Ruby", "js" to "JavaScript", "coffee" to "CoffeeScript",
