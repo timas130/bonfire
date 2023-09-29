@@ -1,6 +1,7 @@
 package com.sayzen.campfiresdk.screens.activities.quests
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.requests.project.RProjectGetEffect
 import com.sayzen.campfiresdk.controllers.ControllerScreenAnimations
 import com.sayzen.campfiresdk.controllers.api
@@ -26,7 +27,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("1")
                 .setOnStart {
                     globalLabel = "Зимний лес"
-                    globalImage = "https://i.pinimg.com/736x/a5/ba/31/a5ba31dcdaa06194543dfd6bed7fcc05.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_1
                 }
                 .text("Глубокая ночь. По округе раздается тихий шум, разгоняющий снег по ветру.\nВы идёте по сугробам…")
                 .addButton("Посмотреть под ноги")
@@ -57,7 +58,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("Зайти в чащу")
                 .setOnStart {
                     globalLabel = "Чаща леса"
-                    globalImage = "https://i.pinimg.com/736x/9a/81/bc/9a81bc7d724c4c470f6ed1ded18c6609.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_2
                 }
                 .text("Ваши глаза стали всё реже различать цвета. Темнота леса сгущается и звуки стали напоминать нечто опасное… Эта чаща явно не для людского духа.")
                 .addButton("Напрячься")
@@ -143,7 +144,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("Отлично")
                 .setOnStart {
                     globalLabel = "Зимний лес"
-                    globalImage = "https://i.pinimg.com/736x/a5/ba/31/a5ba31dcdaa06194543dfd6bed7fcc05.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_3
                 }
                 .text("Через пару часов томительного похода сквозь густые сугробы, вы выходите до развилки пути: одна тропа расходится на две, ещё более маленькие…")
                 .addButton("Я не помню куда идти…")
@@ -162,7 +163,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("Повернуть на право")
                 .setOnStart {
                     globalLabel = "Около дома незнакомца"
-                    globalImage = "https://i.pinimg.com/736x/5e/ae/39/5eae3931a25c24a2f6e05b82b2c782b2.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_4
                 }
                 .text("Тропа извивалась различными путями прежде чем привела вас хоть куда-то из этой тихой и ночной лесной глуши зимой. Ваши латы тем временем промерзли уже до невозможного и казалось, что ещё час и вы превратитесь в ледышку.\n" +
                         "На конце же этой тропинки виднелся чей-то незнакомый деревянный дом.")
@@ -207,7 +208,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("Лезть в окно")
                 .setOnStart {
                     globalLabel = "внутри ночного дома"
-                    globalImage = "https://i.pinimg.com/736x/e9/aa/7d/e9aa7d24667c94b218f1b57402f437df.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_5
                 }
                 .text("По ощущениям эти десять минут были самыми долгими в вашей жизни, однако не смотря на очень неудобное окно, вы смогли полностью пролезть в него\n" +
                         "Но как только вы очутились в доме, то поняли, что случайно потушили единственную горящую свечу в помещении.")
@@ -330,7 +331,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("Свернуть на лево")
                 .setOnStart {
                     globalLabel = "Лес обитованный";
-                    globalImage = "https://i.pinimg.com/736x/ff/33/ef/ff33efbf606386c1ee2a5692db1f8b43.jpg";
+                    globalImage = API_RESOURCES.QUEST_TANK_6
                 }
                 .text("Тропа всё сужалась, лес становился ещё густее. Видимо память подвела вас и вы оказались на неизведанной вами тропинке.")
                 .addButton("И что же дальше?")
@@ -355,7 +356,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("Приготовится защищаться")
                 .setOnStart {
                     globalLabel = "Волк";
-                    globalImage = "https://i.pinimg.com/736x/d6/2d/1d/d62d1d14af6e1faeeeb0ed0c9b6d9a3b.jpg";
+                    globalImage = API_RESOURCES.QUEST_TANK_7
                 }
                 .text("И вот оно – прошло меньше минуты, как перед вами стоит один средненький серый волк. Его клыки скалиться вам, а сам он приготовился нападать.")
                 .addButton("Ну давай, подходи!")
@@ -372,7 +373,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("Побежать вперёд со всех сил")
                 .setOnStart {
                     globalLabel = "Волк"
-                    globalImage = "https://i.pinimg.com/736x/d6/2d/1d/d62d1d14af6e1faeeeb0ed0c9b6d9a3b.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_8
                 }
                 .text("Собрав все силы в кулак, вы ринулись в неизвестном направлении сквозь этот лес, однако волк быстрее и тут же нагнал вас, свалив в сугробы")
                 .addButton("Попробовать задушить его")
@@ -401,7 +402,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("Подойти ближе")
                 .setOnStart {
                     globalLabel = "Возле избушки"
-                    globalImage = "https://i.pinimg.com/736x/0e/52/a8/0e52a838f2a74d3764c137913e590760.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_9
                 }
                 .text("Вот уже и свет из окон виден, вот уже и небо рассветает. Конечно, из-за этого конфуза с чащей леса и волчьим нападением, вы заметно отстали, но всё равно сумели добраться до так нужного вам, дома. Дома вашей матушки…")
                 .addButton("Ускориться", "key4")
@@ -453,7 +454,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("Завтра будет новый день…")
                 .setOnStart {
                     globalLabel = "В доме"
-                    globalImage = "https://i.pinimg.com/736x/70/37/60/70376068c3d09846d102616b6c8c9422.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_10
                 }
                 .text("Вы ещё не открыли глаза, но уже ощутили прежнее тепло этого самого места… Оно вам знакомо, ведь это и есть ваш старый милый дом, а печь всё также греет это место…")
                 .addButton("Что ж, пора вставать")
@@ -663,7 +664,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("«Прощай Мам»")
                 .setOnStart {
                     globalLabel = "Утро у дома"
-                    globalImage = "https://i.pinimg.com/736x/f2/10/ea/f210eab768a3584c9946d5e87e31d027.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_11
                 }
                 .text("Вот и утро в самом разгаре. Лесные ели вокруг вас переливаются всеми красками зимы. Дорога на " +
                         "этот раз яркая и уже куда известнее, а небо всё такое же голубое, как и в прошлые дни этого " +
@@ -683,7 +684,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("«Это точно»")
                 .setOnStart {
                     globalLabel = "Конец"
-                    globalImage = "https://i.pinimg.com/736x/92/4f/6a/924f6a536a883eba461fc99c6b1e6b83.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_12
                 }
                 .text("...")
                 .addButton("В ленту", null) { toFirstItem();SupAndroid.activity!!.toMainScreen() }
@@ -693,7 +694,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("Лечь спать 2")
                 .setOnStart {
                     globalLabel = "Где-то в лесу"
-                    globalImage = "https://i.pinimg.com/736x/1b/e5/ef/1be5efecfff24ded6da878b43f9d1ac9.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_13
                 }
                 .text("«Г-где я?...» – Послышалось из высших уст. Вы лежали на снегу прямо в лесу, оперевшись о какоето дерево, а на дворе уже было утро.")
                 .addButton("«Что это за место?»")
@@ -718,7 +719,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("«Ничего, дым совсем близко…»")
                 .setOnStart {
                     globalLabel = "Возле дома охотника"
-                    globalImage = "https://i.pinimg.com/736x/5d/b8/bd/5db8bdd428a442eff98e59906c47e496.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_14
                 }
                 .text("Через десять минут пути вы радостно подняли руки вверх только от того, что увидели этот дом. Однако боль резко сменила радость на недомогание и вы быстро пошли в дом.")
                 .addButton("Подойти к дому")
@@ -751,7 +752,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("Войти в дом")
                 .setOnStart {
                     globalLabel = "В доме лесника"
-                    globalImage = "https://i.pinimg.com/736x/f7/12/c9/f712c9b415707bca03d2be0b74d19fda.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_15
                 }
                 .text("Похоже что владелец этого дома подпёр вас собою и вы медленно дошли до его спальни, где тот уложил вас на его кровать. «Ну что же вы так себя не бережёте то?» – Спросил он вас. ")
                 .addButton("«А что, так заметно?»")
@@ -942,7 +943,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("«Прощайте, Игнатий»")
                 .setOnStart {
                     globalLabel = "Зимний лес"
-                    globalImage = "https://i.pinimg.com/736x/cc/4a/32/cc4a3236489463657852745af9e2810b.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_16
                 }
                 .text("Выйдя во двор, а позже и в сам зимний лес, вы направились назад на службу. Всё-таки обратная " +
                         "дорога сильно большая и вы должны были успеть в самый срок. ")
@@ -989,7 +990,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("Пойти проверить")
                 .setOnStart {
                     globalLabel = "Нечто"
-                    globalImage = "https://i.pinimg.com/736x/e8/07/4a/e8074a41d2561b2c0da69a705c5d26af.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_17
                 }
                 .text("Вот вы подошли к этой штуке. Ею оказалось неведомое нечто, похожее то ли на барсука, то ли на " +
                         "большой комок шерсти с ртом и шипящее на вас. «Фу…» – Проранилось из ваших уст.")
@@ -1023,7 +1024,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("Продолжать путь")
                 .setOnStart {
                     globalLabel = "Дорога в метель"
-                    globalImage = "https://i.pinimg.com/736x/62/b3/dc/62b3dcf54ef53c95ef589c8750afb936.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_18
                 }
                 .text("Вот вы и пошли дальше под начинающуюся метель. Ваши шаги становились медленнее, но вы " +
                         "продолжали держать путь.")
@@ -1034,7 +1035,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("«Главное, что хотя бы я побывал здесь»")
                 .setOnStart {
                     globalLabel = "Конец"
-                    globalImage = "https://i.pinimg.com/736x/92/4f/6a/924f6a536a883eba461fc99c6b1e6b83.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_19
                 }
                 .text("...")
                 .addButton("В ленту", null) { toFirstItem();SupAndroid.activity!!.toMainScreen() }
@@ -1044,7 +1045,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("Лечь спать")
                 .setOnStart {
                     globalLabel = "В доме лесника"
-                    globalImage = "https://i.pinimg.com/736x/f7/12/c9/f712c9b415707bca03d2be0b74d19fda.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_20
                 }
                 .text("«Эй, мужик…» – Кто-то толкал вас в ноги. «Давай, вставай, не время спать…»")
                 .addButton("«Что… Ты кто?...»")
@@ -1208,7 +1209,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("«Хорошо»")
                 .setOnStart {
                     globalLabel = "Снежный лес"
-                    globalImage = "https://i.pinimg.com/736x/cc/4a/32/cc4a3236489463657852745af9e2810b.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_21
                 }
                 .text("Уже час вы бродили по самым заснеженным местам этого леса. Свет светил в вас переодически, " +
                         "сквозь эти нескончаемые еловые деревья, а суробы топили ваши ноги в мягких и пышных снегах… " +
@@ -1302,7 +1303,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("«Ах, какой хороший день»")
                 .setOnStart {
                     globalLabel = "Снежный лес"
-                    globalImage = "https://i.pinimg.com/736x/43/6e/23/436e231aa78e0648c0ff8781a68ce84f.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_22
                 }
                 .text("Вы шли по снегу, что каждую секунду становился всё больше из-за начинающейся метели. Ёлки " +
                         "пошатывались раз за разом и усиливающийся ветер всё разгуливал по этим лесным долинам.")
@@ -1329,7 +1330,7 @@ class SQuestDanTank : SQuest()  {
             QuestItem("«Хе-х… Вперёд и в даль»")
                 .setOnStart {
                     globalLabel = "Конец"
-                    globalImage = "https://i.pinimg.com/736x/92/4f/6a/924f6a536a883eba461fc99c6b1e6b83.jpg"
+                    globalImage = API_RESOURCES.QUEST_TANK_23
                 }
                 .text("...")
                 .addButton("В ленту", null) { toFirstItem();SupAndroid.activity!!.toMainScreen() }

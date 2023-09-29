@@ -209,6 +209,30 @@ object API_RESOURCES {
     const val QUEST_NEW_YEAR_9 = 435148L
     const val QUEST_NEW_YEAR_10 = 435140L
 
+    const val QUEST_TANK_1 = 1462329L
+    const val QUEST_TANK_2 = 1462330L
+    const val QUEST_TANK_3 = 1462331L
+    const val QUEST_TANK_4 = 1462332L
+    const val QUEST_TANK_5 = 1462333L
+    const val QUEST_TANK_6 = 1462334L
+    const val QUEST_TANK_7 = 1462335L
+    const val QUEST_TANK_8 = 1462336L
+    const val QUEST_TANK_9 = 1462337L
+    const val QUEST_TANK_10 = 1462338L
+    const val QUEST_TANK_11 = 1462339L
+    const val QUEST_TANK_12 = 1462340L
+    const val QUEST_TANK_13 = 1462341L
+    const val QUEST_TANK_14 = 1462342L
+    const val QUEST_TANK_15 = 1462343L
+    const val QUEST_TANK_16 = 1462344L
+    const val QUEST_TANK_17 = 1462345L
+    const val QUEST_TANK_18 = 1462346L
+    const val QUEST_TANK_19 = 1462347L
+    const val QUEST_TANK_20 = 1462348L
+    const val QUEST_TANK_21 = 1462349L
+    const val QUEST_TANK_22 = 1462350L
+    const val QUEST_TANK_23 = 1462351L
+
     val imageMappings = mapOf(
         IMAGE_NEW_YEAR_DEER_1 to "images/new_year/x_deer1.png",
         IMAGE_NEW_YEAR_DEER_2 to "images/new_year/x_deer2.png",
