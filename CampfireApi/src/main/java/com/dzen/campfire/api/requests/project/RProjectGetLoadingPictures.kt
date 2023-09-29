@@ -27,6 +27,8 @@ open class RProjectGetLoadingPictures : Request<RProjectGetLoadingPictures.Respo
             startTime = json.m(inp, "startTime", startTime)
             endTime = json.m(inp, "endTime", endTime)
             imageId = json.m(inp, "imageId", imageId)
+            titleTranslation = json.m(inp, "titleTranslation", titleTranslation)
+            subtitleTranslation = json.m(inp, "subtitleTranslation", subtitleTranslation)
             return json
         }
 

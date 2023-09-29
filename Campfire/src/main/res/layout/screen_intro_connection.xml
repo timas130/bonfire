@@ -24,6 +24,7 @@
         android:id="@+id/vBackgroundInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
         android:orientation="vertical"
         android:layout_marginBottom="64dp"
         android:visibility="gone"
