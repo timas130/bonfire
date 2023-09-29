@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select count(*) from campfire_db.units\n             where creator_id = $1 and status = $2 and unit_type = $3 and\n                   date_create >= $4 and date_create <= $5 and tag_1 = $6",
+  "query": "select count(*) from campfire_db.units\n             where creator_id = $1 and status = $2 and unit_type = $3 and\n                   date_create >= $4 and date_create <= $5 and tag_1 = $6 and\n                   fandom_id != $7",
   "describe": {
     "columns": [
       {
@@ -16,6 +16,7 @@
         "Int8",
         "Int8",
         "Int8",
+        "Int8",
         "Int8"
       ]
     },
@@ -23,5 +24,5 @@
       null
     ]
   },
-  "hash": "d4260a598ec4b097353361e21c74e2f7804166deb3a1995b5decb0c1d66ed091"
+  "hash": "2648a595cb33c4644b8b986a870778ff937e3862aca9cade1e2f78a1f79b6376"
 }
