@@ -19,7 +19,7 @@ class EProjectGetLoadingPictures : RProjectGetLoadingPictures() {
                 TLoadingPictures.image_id,
                 TLoadingPictures.title_text,
                 TLoadingPictures.subtitle_text
-            ).sort(TLoadingPictures.order, true)
+            ).sort(TLoadingPictures.id, true)
         )
 
         return Response(Array(v.rowsCount) {
