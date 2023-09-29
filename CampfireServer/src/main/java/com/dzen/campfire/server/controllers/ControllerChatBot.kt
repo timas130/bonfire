@@ -155,8 +155,8 @@ object ControllerChatBot {
                 }
                 respondTo(fromAccount, resp.toString())
             }
-            "фандомы" -> {
-                respondTo(fromAccount, "Не фандомы, а фэндомы. ;) Как минимум в Bonfire")
+            "фандомы", "фендомы" -> {
+                respondTo(fromAccount, "Не $lowerText, а фэндомы. ;) Как минимум в Bonfire")
             }
             "bug", "баг", "фича", "feature" -> {
                 val name = ControllerAccounts.getAccount(fromAccount)?.name ?: "<???>"
