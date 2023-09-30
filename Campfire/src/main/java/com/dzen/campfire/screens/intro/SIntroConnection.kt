@@ -278,7 +278,7 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection){
     private fun loadBackgroundImageData() {
         val lastUpdate = ToolsStorage.getLong(LAST_UPDATE_TIME, 0L)
         // if the last update is more than 1 day old
-        if (lastUpdate <= System.currentTimeMillis() - 1000 * 3600 * 24) {
+        if (lastUpdate <= System.currentTimeMillis() - 1000 * 3600) {
             // refresh in the background
             RProjectGetLoadingPictures()
                 .onComplete { r ->
