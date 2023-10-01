@@ -158,10 +158,19 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
             if (publication!!.creator.id == apiAccount.id) ControllerPublicationsHistory.put(publicationId, HistoryChangeTags(apiAccount.id, apiAccount.imageId, apiAccount.name))
         }
 
-
-        for (page in publication!!.pages) {
-            if (page is PageText) {
-                ControllerPublications.parseMentions(page.text, publication!!.id, publication!!.publicationType, 0, 0, 0, apiAccount, emptyArray())
+        if (pendingTime == 0L) {
+            for (page in publication!!.pages) {
+                if (page !is PageText) continue
+                ControllerPublications.parseMentions(
+                    text = page.text,
+                    publicationId = publication!!.id,
+                    publicationType = publication!!.publicationType,
+                    tag1 = 0,
+                    tag2 = 0,
+                    tag3 = 0,
+                    fromAccount = apiAccount,
+                    exclude = emptyArray()
+                )
             }
         }
 

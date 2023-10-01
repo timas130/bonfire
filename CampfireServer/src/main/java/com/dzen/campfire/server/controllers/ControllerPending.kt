@@ -1,8 +1,11 @@
 package com.dzen.campfire.server.controllers
 
 import com.dzen.campfire.api.API
-import com.dzen.campfire.server.tables.TPublications
+import com.dzen.campfire.api.models.publications.post.PageText
+import com.dzen.campfire.api.models.publications.post.PublicationPost
+import com.dzen.campfire.api.tools.ApiAccount
 import com.dzen.campfire.api.tools.ApiException
+import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java.tools.ToolsThreads
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQuerySelect
@@ -32,18 +35,35 @@ object ControllerPending {
                 .where(TPublications.tag_4, "<", System.currentTimeMillis())
         )
 
-
         while (v.hasNext()){
-            val id:Long = v.next()
+            val id: Long = v.next()
             val fandomId:Long = v.next()
             val languageId:Long = v.next()
             val willNotify:Long = v.next()
             val creatorId:Long = v.next()
 
-            try{
+            try {
+                val pub = ControllerPublications.getPublication(id, 0)!! as PublicationPost
+
+                for (page in pub.pages) {
+                    if (page !is PageText) continue
+                    ControllerPublications.parseMentions(
+                        text = page.text,
+                        publicationId = pub.id,
+                        publicationType = pub.publicationType,
+                        tag1 = 0,
+                        tag2 = 0,
+                        tag3 = 0,
+                        fromAccount = ApiAccount(pub.creator),
+                        exclude = emptyArray()
+                    )
+                }
+            } catch (_: Exception) {}
+
+            try {
                 ControllerAccounts.checkAccountBanned(creatorId, fandomId, languageId)
                 ControllerPost.publish(id, willNotify, creatorId)
-            }catch (e:ApiException){
+            } catch (e: ApiException) {
                 Database.update("ControllerPending.posts update_2", SqlQueryUpdate(TPublications.NAME)
                         .where(TPublications.id, "=", id)
                         .update(TPublications.status, API.STATUS_DRAFT)
@@ -52,9 +72,7 @@ object ControllerPending {
                         .update(TPublications.tag_4, 0)
                 )
             }
-
         }
-
     }
 
 }
