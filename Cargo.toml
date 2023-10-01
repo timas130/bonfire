@@ -1,0 +1,11 @@
+[workspace]
+members = [
+    "rust-core",
+    "rust-auth",
+    "rust-bonfire",
+]
+default-members = ["rust-bonfire"]
+resolver = "2"
+
+[profile.dev.package.scrypt]
+opt-level = 3

@@ -44,7 +44,8 @@ pub async fn get_daily_task(
 
     let fandom_name = match task.get_fandom_id() {
         Some(fandom_id) => sqlx::query_scalar!("select name from fandoms where id = $1", fandom_id)
-            .fetch_optional(&context.pool).await
+            .fetch_optional(&context.pool)
+            .await
             .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?,
         None => None,
     };
@@ -61,7 +62,8 @@ pub async fn get_daily_task(
         combo_multiplier: task_record.combo_multiplier,
         level_multiplier: task_record.level_multiplier,
         possible_reward: ((task_record.combo_multiplier + task_record.level_multiplier)
-            * BASE_DT_LVL_REWARD as f64).round() as i64,
+            * BASE_DT_LVL_REWARD as f64)
+            .round() as i64,
         fandom_name,
     }))
 }

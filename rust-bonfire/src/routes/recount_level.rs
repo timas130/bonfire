@@ -453,12 +453,10 @@ pub async fn recount_level_route(
     Path(id): Path<i64>,
     Extension(context): Extension<GlobalContext>,
 ) -> Result<Json<LevelRecountReport>, StatusCode> {
-    let counts = get_counts(&context, id)
-        .await
-        .map_err(|err| {
-            error!("error recounting level: {err:?}");
-            StatusCode::INTERNAL_SERVER_ERROR
-        })?;
+    let counts = get_counts(&context, id).await.map_err(|err| {
+        error!("error recounting level: {err:?}");
+        StatusCode::INTERNAL_SERVER_ERROR
+    })?;
     let counts = counts
         .into_iter()
         .map(|(index, count)| (ACHIEVEMENTS.get(&index), count))
