@@ -1,0 +1,30 @@
+@use c_core::prelude::chrono::{DateTime, Utc};
+@use std::net::IpAddr;
+
+@(username: &str, time: &DateTime<Utc>, ip: &IpAddr, user_agent: &str)
+
+<p>Здравствуйте, @username!</p>
+
+<p>Кто-то вошёл в ваш аккаунт Bonfire.</p>
+
+<p>
+  Время: @time<br>
+  IP-адрес: @ip <br>
+  Браузер: @user_agent
+</p>
+
+<p>
+  Если это были не вы, вам следует как может скорее
+  изменить пароль от вашего аккаунта. Пожалуйста,
+  держите его в безопасности.
+</p>
+
+<p>
+  Если у вас остались какие-то вопросы, свяжитесь с нами
+  по адресу <a href="mailto:me@@bonfire.moe">me@@bonfire.moe</a>.
+</p>
+
+<p>
+  С уважением,<br>
+  команда Bonfire
+</p>

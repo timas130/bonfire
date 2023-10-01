@@ -1,0 +1,31 @@
+[package]
+name = "c-auth"
+version = "0.1.0"
+edition = "2021"
+license = "AGPL-3.0-or-later"
+
+[dependencies]
+c-core = { path = "../rust-core" }
+fast_chemail = "0.9"
+lazy_static = "1.4"
+regex = "1.7"
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "chrono"] }
+scrypt = "0.11"
+jsonwebtoken = "8.2"
+nanoid = "0.4"
+woothee = "0.13"
+itertools = "0.10"
+reqwest = { version = "0.11", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+petname = "1.1"
+rand = "0.8"
+totp-rs = { version = "5.2", features = ["gen_secret"] }
+async-trait = "0.1"
+openidconnect = "3.3"
+
+[dev-dependencies]
+c-email = { path = "../rust-email" }
+
+[features]
+default = []

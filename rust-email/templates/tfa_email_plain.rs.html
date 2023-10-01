@@ -1,0 +1,27 @@
+@use c_core::services::auth::TfaAction;
+@(username: &str, link: &str, action: &TfaAction)
+@match action {
+    TfaAction::Login => {
+        # Подтвердите, что вы пытаетесь войти в Bonfire
+    }
+    TfaAction::PasswordChange(_) => {
+        # Подтвердите, что вы пытаетесь изменить пароль от Bonfire
+    }
+}
+Здравствуйте, @username!
+
+@match action {
+    TfaAction::Login => { Кто-то пытается войти в ваш аккаунт Bonfire. }
+    TfaAction::PasswordChange(_) => { Кто-то пытается изменить пароль от вашего аккаунта Bonfire. }
+}
+
+Пожалуйста, пройдите по этой ссылке, если это были вы:
+
+@link
+
+Если вы этого не делали, вам следует срочно изменить ваш пароль от Bonfire. Пожалуйста, держите ваш аккаунт в безопасности.
+
+Если у вас остались какие-то вопросы, свяжитесь с нами по адресу me@@bonfire.moe.
+
+С уважением,
+команда Bonfire

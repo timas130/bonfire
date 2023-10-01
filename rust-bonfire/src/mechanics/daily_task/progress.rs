@@ -1,10 +1,10 @@
 use crate::consts::chat::ChatType;
+use crate::consts::fandoms::FANDOM_HELLO_ID;
 use crate::consts::publication::PublicationType;
 use crate::consts::status::Status;
 use crate::context::GlobalContext;
 use crate::models::daily_task::DailyTask;
 use chrono::{NaiveDate, NaiveTime};
-use crate::consts::fandoms::FANDOM_HELLO_ID;
 
 pub async fn get_task_progress(
     context: &GlobalContext,

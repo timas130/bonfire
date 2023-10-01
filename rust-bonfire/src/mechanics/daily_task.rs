@@ -51,7 +51,10 @@ fn get_level_multiplier(level: i64) -> f64 {
     }
 }
 
-pub async fn get_dt_level(context: &GlobalContext, user_id: i64) -> error_stack::Result<i64, sqlx::Error> {
+pub async fn get_dt_level(
+    context: &GlobalContext,
+    user_id: i64,
+) -> error_stack::Result<i64, sqlx::Error> {
     let mut tx = context.pool.begin().await?;
 
     struct Task {

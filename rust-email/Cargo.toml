@@ -1,0 +1,21 @@
+[package]
+name = "c-email"
+version = "0.1.0"
+edition = "2021"
+license = "AGPL-3.0-or-later"
+
+[dependencies]
+c-core = { path = "../rust-core" }
+itertools = "0.11"
+nanoid = "0.4"
+crossbeam-queue = "0.3"
+reqwest = "0.11"
+tracing = "0.1"
+
+[dependencies.lettre]
+version = "0.10"
+default-features = false
+features = ["tokio1", "smtp-transport", "builder", "tokio1-rustls-tls"]
+
+[build-dependencies]
+ructe = "0.17"
