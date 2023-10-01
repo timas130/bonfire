@@ -85,8 +85,9 @@ class CardCompactDailyTask : ComposeCard() {
         Surface(color = Color.Transparent, contentColor = MaterialTheme.colorScheme.onSurface) {
             if (isError) {
                 Text(
-                    t(API_TRANSLATE.daily_task_combo_bonus),
-                    style = MaterialTheme.typography.bodyMedium
+                    t(API_TRANSLATE.daily_task_error_loading),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(top = 8.dp),
                 )
             } else {
                 DailyTask(
