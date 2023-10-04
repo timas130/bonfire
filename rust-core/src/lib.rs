@@ -10,6 +10,7 @@ pub mod prelude;
 pub mod services;
 pub mod twoway;
 pub mod util;
+pub mod models;
 
 pub type DBPool = Pool<Postgres>;
 

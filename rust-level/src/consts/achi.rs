@@ -4,7 +4,7 @@ use lazy_static::lazy_static;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq, IntoPrimitive, TryFromPrimitive, Hash)]
-#[repr(u64)]
+#[repr(i64)]
 pub enum AchiIndex {
     AppShare = 2,
     ContentShare = 3,

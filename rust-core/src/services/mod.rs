@@ -1,6 +1,7 @@
 pub mod auth;
 pub mod email;
 pub mod images;
+pub mod level;
 
 #[macro_export]
 macro_rules! host_tcp {
