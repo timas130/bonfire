@@ -38,6 +38,7 @@ pub struct PortsConfig {
     pub auth: u16,
     pub email: u16,
     pub images: u16,
+    pub level: u16,
 }
 
 #[derive(Clone, Debug, Deserialize)]

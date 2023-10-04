@@ -2,9 +2,10 @@
 members = [
     "rust-core",
     "rust-auth",
-    "rust-bonfire",
+    "rust-level",
+    "rust-melior"
 ]
-default-members = ["rust-bonfire"]
+default-members = ["rust-melior"]
 resolver = "2"
 
 [profile.dev.package.scrypt]

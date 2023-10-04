@@ -18,10 +18,7 @@ payment_webhook = "http://localhost:8000/payments/hook/"
 auth = 31001
 email = 31002
 images = 31003
-profiles = 31004
-market = 31005
-chat = 31006
-payments = 31007
+level = 31004
 
 [email]
 host = "unused"
