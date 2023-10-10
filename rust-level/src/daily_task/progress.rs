@@ -3,8 +3,8 @@ use crate::consts::fandoms::FANDOM_HELLO_ID;
 use crate::consts::publication::PublicationType;
 use crate::consts::status::Status;
 use crate::LevelServer;
-use chrono::{NaiveDate, NaiveTime};
 use c_core::services::level::{DailyTask, LevelError};
+use chrono::{NaiveDate, NaiveTime};
 
 impl LevelServer {
     pub(crate) async fn get_task_progress(

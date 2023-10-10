@@ -1,10 +1,13 @@
+use b_level::LevelServer;
+use c_auth::AuthServer;
 use c_core::ServiceBase;
-use c_core::services::auth::AuthService;
-use c_core::services::email::EmailService;
-use c_core::services::level::LevelService;
+use c_email::EmailServer;
 
 macro_rules! start_svc {
-    ($base: expr, $server: ty) => {
+    ($base: expr, $server: ty) => {{
+        use c_core::prelude::tokio;
+        use tracing::{error, info};
+
         let base1 = $base.clone();
         tokio::spawn(async {
             let server = <$server>::with_base(base1).await;
@@ -21,11 +24,11 @@ macro_rules! start_svc {
             error!("{} stopped! exit(1): {result:?}", stringify!($server));
             std::process::exit(1);
         });
-    };
+    }};
 }
 
-pub fn start_backends(base: ServiceBase) {
-    start_svc!(base, EmailService);
-    start_svc!(base, AuthService);
-    start_svc!(base, LevelService);
+pub fn start_backends(base: &ServiceBase) {
+    start_svc!(base, EmailServer);
+    start_svc!(base, AuthServer);
+    start_svc!(base, LevelServer);
 }

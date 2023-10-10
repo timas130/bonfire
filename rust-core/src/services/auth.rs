@@ -200,7 +200,7 @@ pub struct RegisterEmailOptions {
     /// The password to use for logging in
     pub password: String,
     /// The username to show to other users
-    pub username: String,
+    pub username: Option<String>,
     /// Information about the user registering.
     ///
     /// Only use `None` when the initiator is an
@@ -291,16 +291,22 @@ pub struct SecuritySettings {
 )]
 #[repr(i32)]
 pub enum OAuthProvider {
+    /// Old Firebase authentication method. Not actually OAuth
     LegacyFirebase = 1,
+    /// `accounts.google.com`
     Google = 2,
 }
 
 /// Client information to log in with an OAuth provider
 #[derive(Debug, Deserialize, Serialize)]
 pub struct OAuthUrl {
+    /// Full URL for the browser
     pub url: String,
+    /// Requested scopes
     pub scope: String,
+    /// Unique CSRF token from the URL
     pub state: String,
+    /// Unique nonce from the URL
     pub nonce: String,
 }
 
@@ -317,6 +323,17 @@ pub enum OAuthResult {
         /// The refresh token
         refresh_token: String,
     },
+}
+
+/// Result of registering via email
+#[derive(Debug, Deserialize, Serialize)]
+pub struct RegisterEmailResponse {
+    /// Newly registered user ID
+    pub user_id: i64,
+    /// The session access token
+    pub access_token: String,
+    /// The session refresh token
+    pub refresh_token: String,
 }
 
 /// The authentication service interface
@@ -336,7 +353,7 @@ pub trait AuthService {
         provider: OAuthProvider,
         nonce: String,
         code: String,
-        context: Option<UserContext>,
+        user_context: Option<UserContext>,
     ) -> Result<OAuthResult, AuthError>;
 
     /// Link an OAuth account to a user.
@@ -350,7 +367,8 @@ pub trait AuthService {
     //// Registering
 
     /// Register an account via email.
-    async fn register_email(opts: RegisterEmailOptions) -> Result<i64, AuthError>;
+    async fn register_email(opts: RegisterEmailOptions)
+        -> Result<RegisterEmailResponse, AuthError>;
 
     /// Resend the verification email after registering.
     async fn resend_verification(address: String) -> Result<(), AuthError>;
@@ -359,8 +377,8 @@ pub trait AuthService {
     /// verify the account.
     async fn verify_email(
         token: String,
-        context: Option<UserContext>,
-    ) -> Result<LoginEmailResponse, AuthError>;
+        user_context: Option<UserContext>,
+    ) -> Result<i64, AuthError>;
 
     //// Logging in
 
@@ -394,7 +412,7 @@ pub trait AuthService {
     /// internal service.
     async fn login_refresh(
         refresh_token: String,
-        context: Option<UserContext>,
+        user_context: Option<UserContext>,
     ) -> Result<String, AuthError>;
 
     //// Password recovery
@@ -408,14 +426,14 @@ pub trait AuthService {
     /// not disclosed (it fails silently).
     async fn send_password_recovery(
         email: String,
-        context: Option<UserContext>,
+        user_context: Option<UserContext>,
     ) -> Result<(), AuthError>;
 
     /// Check if the recovery token provided is valid (e.g.
     /// not expired).
     ///
     /// Returns the username of the user.
-    async fn check_recovery_token(token: String) -> Result<String, AuthError>;
+    async fn check_recovery_token(token: String) -> Result<i64, AuthError>;
 
     /// Reset the password to the specified value using the
     /// recovery token.
@@ -441,7 +459,7 @@ pub trait AuthService {
         access_token: String,
         old_password: String,
         new_password: String,
-        context: Option<UserContext>,
+        user_context: Option<UserContext>,
     ) -> Result<Option<String>, AuthError>;
 
     /// Change this user's email.
@@ -477,6 +495,9 @@ pub trait AuthService {
 
     /// Get a user by their username.
     async fn get_by_name(name: String) -> Result<Option<AuthUser>, AuthError>;
+
+    /// Get users in bulk by their names.
+    async fn get_by_names(name: Vec<String>) -> Result<HashMap<String, AuthUser>, AuthError>;
 
     /// Use an access token to get its session ID and
     /// the [`AuthUser`] associated with it.

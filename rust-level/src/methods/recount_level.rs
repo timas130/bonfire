@@ -5,9 +5,9 @@ use crate::consts::{collisions, lvl};
 use crate::LevelServer;
 use c_core::prelude::sqlx;
 use c_core::services::level::{AchievementRecountResult, LevelError, LevelRecountResult};
-use std::collections::{HashMap, HashSet};
 use futures_util::TryStreamExt;
 use num_enum::TryFromPrimitive;
+use std::collections::{HashMap, HashSet};
 
 impl LevelServer {
     fn level_from_list(user_id: i64, list: Vec<AchievementRecountResult>) -> LevelRecountResult {

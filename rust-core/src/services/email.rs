@@ -27,8 +27,6 @@ pub enum EmailError {
 #[tarpc::service]
 pub trait EmailService {
     async fn send(address: String, email: EmailTemplate) -> Result<(), EmailError>;
-
-    async fn send_telegram(content: String) -> Result<(), EmailError>;
 }
 
 pub struct Email;

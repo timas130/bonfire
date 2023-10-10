@@ -342,14 +342,18 @@ version = "0.1.0"
 dependencies = [
  "async-graphql",
  "async-graphql-axum",
+ "async-trait",
  "axum",
  "b-level",
  "c-auth",
  "c-core",
  "c-email",
+ "o2o",
  "sentry",
  "sentry-tower",
+ "serde",
  "sqlx",
+ "thiserror",
  "tokio-stream",
  "tower-http",
  "tracing",
@@ -2101,6 +2105,37 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.37",
+]
+
+[[package]]
+name = "o2o"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "48f843eff3f529db2fe5ce1ae7b86da05c96fa34592841ac714b9df16cb7f713"
+dependencies = [
+ "o2o-impl",
+ "o2o-macros",
+]
+
+[[package]]
+name = "o2o-impl"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0b27d66f9aae68bd5279d9d293fb55c4712f80f99469ae1cefc8147baa410974"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 1.0.109",
+]
+
+[[package]]
+name = "o2o-macros"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7109c0f5dc569b42fff20a977631fc55b4df7f2a6e9274843877f271fa39b344"
+dependencies = [
+ "o2o-impl",
+ "syn 1.0.109",
 ]
 
 [[package]]

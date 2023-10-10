@@ -5,12 +5,11 @@ use sqlx::{Pool, Postgres};
 use std::sync::Arc;
 
 pub mod config;
+pub mod models;
 pub mod page_info;
 pub mod prelude;
 pub mod services;
-pub mod twoway;
 pub mod util;
-pub mod models;
 
 pub type DBPool = Pool<Postgres>;
 

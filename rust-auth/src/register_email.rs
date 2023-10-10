@@ -1,12 +1,12 @@
 use crate::AuthServer;
 use c_core::prelude::chrono::Utc;
-use c_core::prelude::tarpc::context;
 use c_core::prelude::tokio::time::{sleep_until, Instant};
 use c_core::prelude::{anyhow, tokio};
 use c_core::services::auth::jwt::TokenClaims;
-use c_core::services::auth::{AuthError, RegisterEmailOptions};
+use c_core::services::auth::{AuthError, RegisterEmailOptions, RegisterEmailResponse};
 use jsonwebtoken::{Algorithm, Validation};
 use lazy_static::lazy_static;
+use nanoid::nanoid;
 use scrypt::password_hash::rand_core::OsRng;
 use scrypt::password_hash::{PasswordHasher, SaltString};
 use scrypt::Scrypt;
@@ -64,14 +64,14 @@ impl AuthServer {
     pub(crate) async fn _register_email(
         &self,
         opts: RegisterEmailOptions,
-    ) -> Result<i64, AuthError> {
+    ) -> Result<RegisterEmailResponse, AuthError> {
         let deadline = Instant::now() + Duration::from_secs(3);
 
         let RegisterEmailOptions {
             email,
             password,
             username,
-            context: _,
+            context,
         } = opts;
 
         //// Check if data is valid
@@ -84,10 +84,12 @@ impl AuthServer {
         }
 
         // Check username
-        let username_valid = Self::is_username_valid(&username);
-        if !username_valid {
-            sleep_until(deadline).await;
-            return Err(AuthError::InvalidUsername);
+        if let Some(username) = &username {
+            let username_valid = Self::is_username_valid(username);
+            if !username_valid {
+                sleep_until(deadline).await;
+                return Err(AuthError::InvalidUsername);
+            }
         }
 
         // Check password
@@ -154,11 +156,12 @@ impl AuthServer {
 
         let mut tx = self.base.pool.begin().await?;
 
+        let temp_username = nanoid!(32);
         let user_id = sqlx::query_scalar!(
             "insert into users (username, email, password, email_verification_sent) \
              values ($1, $2, $3, $4) \
              returning id",
-            &username,
+            username.as_ref().unwrap_or(&temp_username),
             &email,
             hash,
             Utc::now(),
@@ -166,23 +169,27 @@ impl AuthServer {
         .fetch_one(&mut *tx)
         .await?;
 
-        self.email
-            .send_telegram(
-                context::current(),
-                format!(
-                    "[{}] Регистрация\
-                     \nПользователь: {} (ID {})\
-                     \nПочта: {}",
-                    &self.base.config.telegram.prefix, username, user_id, email,
-                ),
+        if username.is_none() {
+            sqlx::query!(
+                "update users set username = $1 where id = $2",
+                format!("User#{user_id}"),
+                user_id,
             )
-            .await
-            .map_err(|_| AuthError::VerificationEmailFail)?
-            .map_err(|_| AuthError::VerificationEmailFail)?;
+            .execute(&mut *tx)
+            .await?;
+        }
 
         tx.commit().await?;
 
-        Ok(user_id)
+        let (access_token, refresh_token) = self
+            .create_session(user_id, context.as_ref(), None, false)
+            .await?;
+
+        Ok(RegisterEmailResponse {
+            user_id,
+            access_token,
+            refresh_token,
+        })
     }
 }
 
@@ -212,7 +219,7 @@ mod tests {
                     RegisterEmailOptions {
                         email: email.to_string(),
                         password: password.to_string(),
-                        username: username.to_string(),
+                        username: Some(username.to_string()),
                         context: None,
                     },
                 )
@@ -228,7 +235,7 @@ mod tests {
                 RegisterEmailOptions {
                     email: "test_register1@bonfire.moe".to_string(),
                     password: "abcABC123!@#".to_string(),
-                    username: "test_register1".to_string(),
+                    username: Some("test_register1".to_string()),
                     context: None,
                 },
             )
@@ -242,14 +249,14 @@ mod tests {
                 RegisterEmailOptions {
                     email: "test_register2@bonfire.moe".to_string(),
                     password: "abcABC123!@#".to_string(),
-                    username: "test_register2".to_string(),
+                    username: Some("test_register2".to_string()),
                     context: None,
                 },
             )
             .await
             .unwrap();
 
-        assert_ne!(user_id1, user_id2);
+        assert_ne!(user_id1.user_id, user_id2.user_id);
 
         tokio::join!(
             should_fail(
@@ -293,12 +300,12 @@ mod tests {
 
         let server = server1.clone();
         server
-            .unsafe_delete_user(context::current(), user_id1)
+            .unsafe_delete_user(context::current(), user_id1.user_id)
             .await
             .expect("failed to cleanup");
         let server = server1.clone();
         server
-            .unsafe_delete_user(context::current(), user_id2)
+            .unsafe_delete_user(context::current(), user_id2.user_id)
             .await
             .expect("failed to cleanup");
     }

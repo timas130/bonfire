@@ -1,8 +1,8 @@
-use chrono::Utc;
-use c_core::prelude::anyhow::anyhow;
-use c_core::services::level::{DailyTask, DailyTaskInfo, LevelError};
 use crate::daily_task::BASE_DT_LVL_REWARD;
 use crate::LevelServer;
+use c_core::prelude::anyhow::anyhow;
+use c_core::services::level::{DailyTask, DailyTaskInfo, LevelError};
+use chrono::Utc;
 
 impl LevelServer {
     pub(crate) async fn _get_daily_task(&self, user_id: i64) -> Result<DailyTaskInfo, LevelError> {
@@ -22,9 +22,11 @@ impl LevelServer {
             .map_err(|e| anyhow!("dt deserialization failed: {e:?}"))?;
 
         let fandom_name = match task.get_fandom_id() {
-            Some(fandom_id) => sqlx::query_scalar!("select name from fandoms where id = $1", fandom_id)
-                .fetch_optional(&self.base.pool)
-                .await?,
+            Some(fandom_id) => {
+                sqlx::query_scalar!("select name from fandoms where id = $1", fandom_id)
+                    .fetch_optional(&self.base.pool)
+                    .await?
+            }
             None => None,
         };
 

@@ -33,14 +33,14 @@ mod util;
 mod vacuum;
 mod verify_email;
 
-use c_core::prelude::anyhow::anyhow;
 use c_core::prelude::tarpc::context::Context;
 use c_core::prelude::*;
 use c_core::services::auth::tfa::{TfaInfo, TfaStatus};
 use c_core::services::auth::user::{AuthUser, PermissionLevel};
 use c_core::services::auth::{
     AuthError, AuthService, LoginEmailOptions, LoginEmailResponse, MetaUsers, OAuthProvider,
-    OAuthResult, OAuthUrl, RegisterEmailOptions, SecuritySettings, Session, UserContext,
+    OAuthResult, OAuthUrl, RegisterEmailOptions, RegisterEmailResponse, SecuritySettings, Session,
+    UserContext,
 };
 #[cfg(not(test))]
 use c_core::services::email::Email;
@@ -138,12 +138,20 @@ impl AuthService for AuthServer {
         provider: OAuthProvider,
         nonce: String,
         code: String,
-        context: Option<UserContext>,
+        user_context: Option<UserContext>,
     ) -> Result<OAuthResult, AuthError> {
-        self._get_oauth_result(provider, nonce, code, context).await
+        self._get_oauth_result(provider, nonce, code, user_context)
+            .await
     }
 
-    async fn bind_oauth(self, _: Context, token: String, provider: OAuthProvider, nonce: String, code: String) -> Result<(), AuthError> {
+    async fn bind_oauth(
+        self,
+        _: Context,
+        token: String,
+        provider: OAuthProvider,
+        nonce: String,
+        code: String,
+    ) -> Result<(), AuthError> {
         self._bind_oauth(token, provider, nonce, code).await
     }
 
@@ -151,7 +159,7 @@ impl AuthService for AuthServer {
         self,
         _: Context,
         opts: RegisterEmailOptions,
-    ) -> Result<i64, AuthError> {
+    ) -> Result<RegisterEmailResponse, AuthError> {
         self._register_email(opts).await
     }
 
@@ -163,9 +171,9 @@ impl AuthService for AuthServer {
         self,
         _: Context,
         token: String,
-        context: Option<UserContext>,
-    ) -> Result<LoginEmailResponse, AuthError> {
-        self._verify_email(token, context).await
+        user_context: Option<UserContext>,
+    ) -> Result<i64, AuthError> {
+        self._verify_email(token, user_context).await
     }
 
     async fn login_email(
@@ -201,21 +209,21 @@ impl AuthService for AuthServer {
         self,
         _: Context,
         refresh_token: String,
-        context: Option<UserContext>,
+        user_context: Option<UserContext>,
     ) -> Result<String, AuthError> {
-        self._login_refresh(refresh_token, context).await
+        self._login_refresh(refresh_token, user_context).await
     }
 
     async fn send_password_recovery(
         self,
         _: Context,
         email: String,
-        context: Option<UserContext>,
+        user_context: Option<UserContext>,
     ) -> Result<(), AuthError> {
-        self._send_password_recovery(email, context).await
+        self._send_password_recovery(email, user_context).await
     }
 
-    async fn check_recovery_token(self, _: Context, token: String) -> Result<String, AuthError> {
+    async fn check_recovery_token(self, _: Context, token: String) -> Result<i64, AuthError> {
         self._check_recovery_token(token).await
     }
 
@@ -260,9 +268,9 @@ impl AuthService for AuthServer {
         access_token: String,
         old_password: String,
         new_password: String,
-        context: Option<UserContext>,
+        user_context: Option<UserContext>,
     ) -> Result<Option<String>, AuthError> {
-        self._change_password(access_token, old_password, new_password, context)
+        self._change_password(access_token, old_password, new_password, user_context)
             .await
     }
 
@@ -319,6 +327,10 @@ impl AuthService for AuthServer {
 
     async fn get_by_name(self, _: Context, name: String) -> Result<Option<AuthUser>, AuthError> {
         self._get_by_name(name).await
+    }
+
+    async fn get_by_names(self, _: Context, names: Vec<String>) -> Result<HashMap<String, AuthUser>, AuthError> {
+        self._get_by_names(&names).await
     }
 
     async fn get_by_token(self, _: Context, token: String) -> Result<(i64, AuthUser), AuthError> {

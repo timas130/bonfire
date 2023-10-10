@@ -1,12 +1,12 @@
 use crate::AuthServer;
-use c_core::services::auth::{AuthError, LoginEmailResponse, UserContext};
+use c_core::services::auth::{AuthError, UserContext};
 
 impl AuthServer {
     pub(crate) async fn _verify_email(
         &self,
         token: String,
-        context: Option<UserContext>,
-    ) -> Result<LoginEmailResponse, AuthError> {
+        user_context: Option<UserContext>,
+    ) -> Result<i64, AuthError> {
         let email = self.get_verify_token_email(token)?;
 
         let user = sqlx::query!(
@@ -40,12 +40,6 @@ impl AuthServer {
 
         tx.commit().await?;
 
-        let (access_token, refresh_token) =
-            self.create_session(user.id, context.as_ref(), None).await?;
-
-        Ok(LoginEmailResponse::Success {
-            access_token,
-            refresh_token,
-        })
+        Ok(user.id)
     }
 }
