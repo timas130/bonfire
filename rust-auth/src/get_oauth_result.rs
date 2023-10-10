@@ -51,7 +51,7 @@ impl AuthServer {
         };
 
         let (access_token, refresh_token) = self
-            .create_session(user_id, context, Some(OAuthProvider::LegacyFirebase))
+            .create_session(user_id, context, Some(OAuthProvider::LegacyFirebase), true)
             .await?;
 
         Ok(OAuthResult::Success {
@@ -128,7 +128,7 @@ impl AuthServer {
         tx.commit().await?;
 
         let (access_token, refresh_token) = self
-            .create_session(new_user_id, context.as_ref(), Some(provider))
+            .create_session(new_user_id, context.as_ref(), Some(provider), true)
             .await?;
 
         Ok(OAuthResult::Success {
@@ -218,7 +218,7 @@ impl AuthServer {
         };
 
         let (access_token, refresh_token) = self
-            .create_session(user_id, context.as_ref(), Some(provider))
+            .create_session(user_id, context.as_ref(), Some(provider), true)
             .await?;
 
         Ok(OAuthResult::Success {

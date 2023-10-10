@@ -57,6 +57,7 @@ impl AuthServer {
         user_id: i64,
         context: Option<&UserContext>,
         provider: Option<OAuthProvider>,
+        send_login_attempt: bool,
     ) -> Result<(String, String), AuthError> {
         let mut tx = self.base.pool.begin().await?;
 
@@ -84,18 +85,20 @@ impl AuthServer {
             .await?;
 
         if let Some(email) = user.email {
-            self.send_login_attempt(
-                email,
-                user.username,
-                context
-                    .map(|c| c.ip)
-                    .unwrap_or_else(|| IpAddr::V4(Ipv4Addr::LOCALHOST)),
-                context
-                    .as_ref()
-                    .map(|c| c.user_agent.as_str())
-                    .unwrap_or("[?]"),
-            )
-            .await?;
+            if send_login_attempt {
+                self.send_login_attempt(
+                    email,
+                    user.username,
+                    context
+                        .map(|c| c.ip)
+                        .unwrap_or_else(|| IpAddr::V4(Ipv4Addr::LOCALHOST)),
+                    context
+                        .as_ref()
+                        .map(|c| c.user_agent.as_str())
+                        .unwrap_or("[?]"),
+                )
+                .await?;
+            }
         }
 
         // 3. Create access token
@@ -140,7 +143,7 @@ impl AuthServer {
 
         let user = sqlx::query!(
             "select id, username, email, email_verified, hard_banned, password, tfa_mode, tfa_data \
-             from users where email = $1 or username = $1 limit 1",
+             from users where email = $1 limit 1",
             email
         )
         .fetch_optional(&self.base.pool)
@@ -202,8 +205,9 @@ impl AuthServer {
 
         match user.tfa_mode {
             Some(TFA_MODE_NONE) | None => {
-                let (access_token, refresh_token) =
-                    self.create_session(user.id, context.as_ref(), None).await?;
+                let (access_token, refresh_token) = self
+                    .create_session(user.id, context.as_ref(), None, true)
+                    .await?;
 
                 sleep_until(deadline).await;
                 Ok(LoginEmailResponse::Success {

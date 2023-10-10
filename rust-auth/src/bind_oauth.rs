@@ -15,8 +15,6 @@ impl AuthServer {
     ) -> Result<(), AuthError> {
         let AccessTokenInfo { user_id, .. } = self.get_access_token_info_secure(token).await?;
 
-        let client = self.get_oauth_client(provider)?;
-
         let (token_response, id_token) = self.get_token_response(provider, nonce, code).await?;
 
         let provider_id = id_token.subject().as_str();

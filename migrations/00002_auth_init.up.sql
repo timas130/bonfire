@@ -4,13 +4,15 @@ create table users (
     email text null unique,
     email_verification_sent timestamptz null default null,
     email_verified timestamptz null default null,
+    permission_level int not null default 1,
     hard_banned bool not null default false,
 
     password text null default null,
     tfa_mode int null default null,
     tfa_data text null default null,
 
-    created_at timestamptz not null default now()
+    created_at timestamptz not null default now(),
+    modified_at timestamptz not null default now()
 );
 
 create table auth_sources (
@@ -26,3 +28,23 @@ create table auth_sources (
 
     created_at timestamptz not null default now()
 );
+
+create function update_modified() returns trigger as $$
+begin
+    select now() into new.modified_at;
+    return new;
+end;
+$$ language plpgsql security definer;
+
+create trigger on_update_user
+    before update on users
+    for each row execute procedure update_modified();
+create trigger on_update_account
+    before update on accounts
+    for each row execute procedure update_modified();
+
+create function get_deleted_user_id() returns bigint as $$
+begin
+    return (select id from users where username = 'deleted');
+end;
+$$ language plpgsql;

@@ -1,6 +1,6 @@
-use chrono::Utc;
-use c_core::services::level::LevelError;
 use crate::LevelServer;
+use c_core::services::level::LevelError;
+use chrono::Utc;
 
 impl LevelServer {
     pub(crate) async fn _check_in(&self, user_id: i64) -> Result<(), LevelError> {

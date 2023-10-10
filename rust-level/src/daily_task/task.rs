@@ -1,10 +1,10 @@
+use crate::LevelServer;
+use c_core::models::PageType;
+use c_core::services::level::{DailyTask, DailyTaskType, LevelError};
 use chrono::NaiveDate;
 use rand::distributions::{Uniform, WeightedIndex};
 use rand::{Rng, SeedableRng};
 use rand_xoshiro::Xoshiro256PlusPlus;
-use c_core::models::PageType;
-use c_core::services::level::{DailyTask, DailyTaskType, LevelError};
-use crate::LevelServer;
 
 const NEWBIE_MAX_LEVEL: i64 = 400;
 const TASK_CHANCES: &[(DailyTaskType, i32)] = &[
@@ -33,8 +33,8 @@ impl LevelServer {
         let seed = self.get_seed_for_day(user_id, date).await?;
         let mut rng = Xoshiro256PlusPlus::from_seed(seed);
 
-        let task_dist =
-            WeightedIndex::new(TASK_CHANCES.iter().map(|it| it.1)).expect("invalid daily task chances");
+        let task_dist = WeightedIndex::new(TASK_CHANCES.iter().map(|it| it.1))
+            .expect("invalid daily task chances");
 
         loop {
             let task_type = TASK_CHANCES[rng.sample(&task_dist)].0;
@@ -123,8 +123,7 @@ impl LevelServer {
                 DailyTaskType::Login => DailyTask::Login,
                 DailyTaskType::PostInFandom => {
                     let amount = rng.sample(Uniform::new_inclusive(1, 2));
-                    let fandom_id =
-                        self.determine_dt_fandom(&mut rng, user_id, date).await?;
+                    let fandom_id = self.determine_dt_fandom(&mut rng, user_id, date).await?;
                     let Some(fandom_id) = fandom_id else {
                         continue;
                     };
@@ -132,8 +131,7 @@ impl LevelServer {
                 }
                 DailyTaskType::CommentInFandom => {
                     let amount = rng.sample(Uniform::new_inclusive(2, 6));
-                    let fandom_id =
-                        self.determine_dt_fandom(&mut rng, user_id, date).await?;
+                    let fandom_id = self.determine_dt_fandom(&mut rng, user_id, date).await?;
                     let Some(fandom_id) = fandom_id else {
                         continue;
                     };

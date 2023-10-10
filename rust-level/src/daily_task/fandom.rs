@@ -2,12 +2,12 @@ use crate::consts::collisions::{COLLISION_FANDOM_SUBSCRIBE, COLLISION_FANDOM_VIC
 use crate::consts::fandoms::{FANDOM_ANYTHING_ID, FANDOM_HELLO_ID};
 use crate::consts::publication::{PublicationImportance, PublicationType};
 use crate::consts::status::Status;
+use crate::LevelServer;
+use c_core::services::level::{DailyTaskFandom, LevelError};
 use chrono::{Days, NaiveDate, NaiveTime};
 use rand::distributions::WeightedIndex;
 use rand::Rng;
 use rand_xoshiro::Xoshiro256PlusPlus;
-use c_core::services::level::{DailyTaskFandom, LevelError};
-use crate::LevelServer;
 
 impl LevelServer {
     pub(crate) async fn get_possible_dt_fandoms(

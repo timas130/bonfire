@@ -1,7 +1,6 @@
-use c_core::prelude::futures::future::try_join_all;
 use c_core::prelude::tarpc::context;
 use c_core::prelude::tokio::time::sleep;
-use c_core::prelude::tracing::{info, instrument, span, warn, Instrument, Level, Span};
+use c_core::prelude::tracing::{info, span, warn, Instrument, Level, Span};
 use c_core::prelude::{anyhow, tarpc, tokio};
 use c_core::services::email::types::EmailTemplate;
 use c_core::services::email::{EmailError, EmailService};
@@ -16,7 +15,6 @@ use std::convert::Infallible;
 use std::ops::Deref;
 use std::sync::Arc;
 use std::time::Duration;
-use tracing::error;
 
 include!(concat!(env!("OUT_DIR"), "/templates.rs"));
 
@@ -88,10 +86,6 @@ impl EmailService for EmailServer {
         email: EmailTemplate,
     ) -> Result<(), EmailError> {
         self._send(address_raw, email).await
-    }
-
-    async fn send_telegram(self, _: context::Context, content: String) -> Result<(), EmailError> {
-        self._send_telegram(content).await
     }
 }
 
@@ -218,45 +212,6 @@ impl EmailServer {
 
             self.queue.push((span, message));
         }
-
-        Ok(())
-    }
-
-    #[instrument(skip_all)]
-    async fn _send_telegram(&self, content: String) -> Result<(), EmailError> {
-        let Some(key) = self.base.config.telegram.bot_key.clone() else {
-            info!("telegram not configured, skipping");
-            return Ok(());
-        };
-
-        let chat_ids = if content.starts_with("[verbose]") {
-            self.base
-                .config
-                .telegram
-                .verbose_chat_ids
-                .clone()
-                .unwrap_or_default()
-        } else {
-            self.base
-                .config
-                .telegram
-                .chat_ids
-                .clone()
-                .unwrap_or_default()
-        };
-
-        let futures = chat_ids.into_iter().map(move |chat_id| {
-            reqwest::Client::new()
-                .get(format!("https://api.telegram.org/bot{key}/sendMessage"))
-                .query(&[("chat_id", chat_id.as_str()), ("text", &content)])
-                .send()
-        });
-
-        tokio::spawn(async move {
-            let _ = try_join_all(futures)
-                .await
-                .map_err(|err| error!("failed to send tg notification: {err:?}"));
-        });
 
         Ok(())
     }

@@ -9,7 +9,7 @@ pub struct Session {
     pub id: i64,
     pub user_id: i64,
     pub account_id: Option<i64>,
-    pub provider: Option<String>,
+    pub provider: Option<i32>,
     pub ip: Option<IpNetwork>,
     pub expires: Option<DateTime<Utc>>,
     pub last_refreshed: DateTime<Utc>,

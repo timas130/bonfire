@@ -98,7 +98,7 @@ impl AuthServer {
             TfaAction::Login => {
                 let user_context = tfa_flow.user_context();
                 let (access_token, refresh_token) = self
-                    .create_session(user_id, user_context.as_ref(), None)
+                    .create_session(user_id, user_context.as_ref(), None, true)
                     .await?;
 
                 tx.commit().await?;

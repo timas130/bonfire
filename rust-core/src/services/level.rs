@@ -4,13 +4,13 @@
 //! While other services are not ready yet, it also handles
 //! some stuff that depends on karma, posts, etc.
 
-use std::collections::HashMap;
-use educe::Educe;
-use serde::{Deserialize, Serialize};
-use thiserror::Error;
 use crate::client_tcp;
 use crate::models::PageType;
 use crate::util::{anyhow_clone, anyhow_unknown, sqlx_clone, sqlx_unknown};
+use educe::Educe;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use thiserror::Error;
 
 /// Error from the leveling service
 #[derive(Error, Debug, Deserialize, Serialize, Educe)]
