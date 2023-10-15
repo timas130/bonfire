@@ -85,14 +85,26 @@ impl User {
 
 #[ComplexObject]
 impl User {
+    /// User's ID
+    ///
+    /// Note that it is not guaranteed to be an
+    /// integer.
+    /// It should be treated as one only
+    /// when another API requires it.
     async fn id(&self) -> ID {
         self._id.into()
     }
 
+    /// Get daily task information for this User
     async fn daily_task(&self, ctx: &Context<'_>) -> Result<DailyTaskInfo, RespError> {
         self._daily_task(ctx).await
     }
 
+    /// Get fandoms this user is active in
+    ///
+    /// These fandoms have a chance of appearing in
+    /// a daily task, their chance proportional to
+    /// the `multiplier` field in [`DailyTaskFandom`].
     async fn daily_task_fandoms(
         &self,
         ctx: &Context<'_>,

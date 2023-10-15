@@ -14,6 +14,8 @@ mod login_oauth;
 mod bind_oauth;
 mod user_by_id;
 mod user_by_slug;
+mod active_sessions;
+mod terminate_session;
 
 use crate::schema::auth::login_email::LoginEmailMutation;
 use crate::schema::auth::login_refresh::LoginRefreshMutation;
@@ -21,6 +23,7 @@ use crate::schema::auth::me::MeQuery;
 use crate::schema::auth::register_email::RegisterEmailMutation;
 use crate::schema::auth::verify_email::VerifyEmailMutation;
 use async_graphql::MergedObject;
+use crate::schema::auth::active_sessions::ActiveSessionsQuery;
 use crate::schema::auth::bind_oauth::BindOAuthMutation;
 use crate::schema::auth::change_password::ChangePasswordMutation;
 use crate::schema::auth::check_recovery::CheckRecoveryQuery;
@@ -36,6 +39,7 @@ pub struct AuthQuery(
     MeQuery,
     CheckRecoveryQuery,
     OAuthUrlQuery,
+    ActiveSessionsQuery,
 );
 
 #[derive(MergedObject, Default)]

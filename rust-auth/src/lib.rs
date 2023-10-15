@@ -32,6 +32,7 @@ mod unsafe_delete;
 mod util;
 mod vacuum;
 mod verify_email;
+mod login_internal;
 
 use c_core::prelude::tarpc::context::Context;
 use c_core::prelude::*;
@@ -182,6 +183,10 @@ impl AuthService for AuthServer {
         opts: LoginEmailOptions,
     ) -> Result<LoginEmailResponse, AuthError> {
         self._login_email(opts).await
+    }
+
+    async fn login_internal(self, _: Context, key: String) -> Result<(String, String), AuthError> {
+        self._login_internal(key).await
     }
 
     async fn check_tfa_status(self, _: Context, token: String) -> Result<TfaStatus, AuthError> {

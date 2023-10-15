@@ -385,6 +385,9 @@ pub trait AuthService {
     /// Login via email.
     async fn login_email(opts: LoginEmailOptions) -> Result<LoginEmailResponse, AuthError>;
 
+    /// Login as an internal service under the system account
+    async fn login_internal(key: String) -> Result<(String, String), AuthError>;
+
     //// TFA Actions
 
     /// Query the login status with the `tfa_wait_token` received

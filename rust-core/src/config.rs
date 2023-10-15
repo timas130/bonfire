@@ -6,6 +6,7 @@ pub struct GlobalConfig {
     pub database_url: String,
     pub jwt_secret: String,
     pub sentry_dsn: String,
+    pub internal_key: String,
 
     pub urls: UrlsConfig,
     pub ports: PortsConfig,

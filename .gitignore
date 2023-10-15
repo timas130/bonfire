@@ -42,3 +42,5 @@ obj/
 
 # Rust
 target/
+
+.env

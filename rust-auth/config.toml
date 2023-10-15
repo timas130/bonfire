@@ -3,6 +3,7 @@
 database_url = "postgres://postgres:postgres@localhost/canana"
 jwt_secret = "secretsecretsecret"
 sentry_dsn = ""
+internal_key = ""
 
 [urls]
 verify_link = "http://localhost:5173/auth/verify?t="
