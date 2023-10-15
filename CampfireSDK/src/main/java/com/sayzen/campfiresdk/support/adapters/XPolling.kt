@@ -54,43 +54,43 @@ class XPolling(
     private fun updateResultsButton(view: View) {
         val vPollResults: ViewButton = view.findViewById(R.id.vPollResults)
 
-        val resultsRecycler = object : SLoadingRecycler<CardAccount, RPostPagePollingGetVotes.PollingResultsItem>() {
-            init {
-                disableShadows()
-                disableNavigation()
+        vPollResults.text = t(API_TRANSLATE.post_page_polling_results)
+        vPollResults.setOnClickListener {
+            val resultsRecycler = object : SLoadingRecycler<CardAccount, RPostPagePollingGetVotes.PollingResultsItem>() {
+                init {
+                    disableShadows()
+                    disableNavigation()
 
-                setTitle(t(API_TRANSLATE.post_page_polling_results_full))
-                setTextEmpty(t(API_TRANSLATE.app_empty))
-                setBackgroundImage(419896L)
+                    setTitle(t(API_TRANSLATE.post_page_polling_results_full))
+                    setTextEmpty(t(API_TRANSLATE.app_empty))
+                    setBackgroundImage(419896L)
 
-                adapter.setBottomLoader { onLoad, cards ->
-                    if (pagesContainer == null) {
-                        onLoad(null)
-                        return@setBottomLoader
+                    adapter.setBottomLoader { onLoad, cards ->
+                        if (pagesContainer == null) {
+                            onLoad(null)
+                            return@setBottomLoader
+                        }
+                        subscription = RPostPagePollingGetVotes(
+                            pagesContainer.getSourceType(),
+                            pagesContainer.getSourceId(),
+                            pagesContainer.getSourceIdSub(),
+                            page.pollingId,
+                            cards.size
+                        )
+                            .onComplete { onLoad(it.results) }
+                            .onError { onLoad(null) }
+                            .send(api)
                     }
-                    subscription = RPostPagePollingGetVotes(
-                        pagesContainer.getSourceType(),
-                        pagesContainer.getSourceId(),
-                        pagesContainer.getSourceIdSub(),
-                        page.pollingId,
-                        cards.size
-                    )
-                        .onComplete { onLoad(it.results) }
-                        .onError { onLoad(null) }
-                        .send(api)
+                }
+
+                override fun classOfCard(): KClass<CardAccount> = CardAccount::class
+                override fun map(item: RPostPagePollingGetVotes.PollingResultsItem): CardAccount {
+                    val card = CardAccount(item.account)
+                    card.setSubtitle(page.options[item.itemId.toInt()])
+                    return card
                 }
             }
 
-            override fun classOfCard(): KClass<CardAccount> = CardAccount::class
-            override fun map(item: RPostPagePollingGetVotes.PollingResultsItem): CardAccount {
-                val card = CardAccount(item.account)
-                card.setSubtitle(page.options[item.itemId.toInt()])
-                return card
-            }
-        }
-
-        vPollResults.text = t(API_TRANSLATE.post_page_polling_results)
-        vPollResults.setOnClickListener {
             Navigator.to(resultsRecycler)
         }
     }
