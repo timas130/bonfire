@@ -19,9 +19,9 @@ import com.sup.dev.java_pc.sql.SqlQueryUpdate
 import com.sup.dev.java_pc.tools.ToolsImage
 
 class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyArray(), emptyArray(), ChatParamsConf()) {
-
     var myLvl = 0L
     var oldParams = ChatParamsConf()
+    lateinit var members: Array<ChatMember>
 
     override fun check() {
         if(name != null) name = ControllerCensor.cens(name!!)
@@ -31,6 +31,8 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
         myLvl = memberLevelAndStatus.a1
         val myStatus = memberLevelAndStatus.a2
         if (myStatus != API.CHAT_MEMBER_STATUS_ACTIVE) throw ApiException(API.ERROR_ACCESS)
+
+        members = ControllerChats.getMembers(chatId, true)
 
         if (image != null) {
             if (image!!.size > API.CHAT_IMG_WEIGHT) throw ApiException(API.ERROR_ACCESS)
@@ -44,8 +46,12 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
 
         val conferenceBlocks = arrayListOf<Long>()
         for (newAccount in newAccounts) {
-            if (! ControllerAccounts.getSettings(newAccount).allowAddingToConferences)
+            if (members.find { it.account.id == newAccount }?.memberStatus == API.CHAT_MEMBER_STATUS_ACTIVE) {
+                continue
+            }
+            if (! ControllerAccounts.getSettings(newAccount).allowAddingToConferences) {
                 conferenceBlocks.add(newAccount)
+            }
         }
         if (conferenceBlocks.isNotEmpty()) {
             throw ApiException(E_CONFERENCE_BLOCK, "", conferenceBlocks.map { it.toString() }.toTypedArray())
@@ -58,7 +64,6 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
         val nameOld: String = v.next()
 
         val tag = ChatTag(API.CHAT_TYPE_CONFERENCE, chatId, 0)
-        val memebers = ControllerChats.getMembers(chatId, true)
 
         if (name != null && name!!.isNotEmpty() && name != nameOld) {
             if (!oldParams.allowUserNameAndImage && myLvl == API.CHAT_MEMBER_LVL_USER) throw ApiException(API.ERROR_ACCESS)
@@ -79,7 +84,7 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
         if (removeAccounts.isNotEmpty()) {
             for (i in removeAccounts) {
                 var chatMember: ChatMember? = null
-                for (m in memebers) if (m.account.id == i) chatMember = m
+                for (m in members) if (m.account.id == i) chatMember = m
                 if (chatMember != null) {
                     var canRemove = false
                     if (myLvl == API.CHAT_MEMBER_LVL_ADMIN) canRemove = true
@@ -110,7 +115,7 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
             for (i in newAccounts) {
                 var chatMember: ChatMember? = null
                 var memberName = ""
-                for (m in memebers) if (m.account.id == i) chatMember = m
+                for (m in members) if (m.account.id == i) chatMember = m
 
 
                 if (chatMember == null) {
