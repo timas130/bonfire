@@ -10,6 +10,7 @@ import com.dzen.campfire.api.requests.quests.RQuestsGetParts
 import com.dzen.campfire.api.requests.quests.RQuestsNew
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
+import com.sayzen.campfiresdk.controllers.ControllerFandoms
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.CardQuestDetails
@@ -17,6 +18,7 @@ import com.sayzen.campfiresdk.models.events.publications.EventPostStatusChange
 import com.sayzen.campfiresdk.models.events.quests.EventQuestChanged
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.screens.SLoadingRecycler
 import com.sup.dev.android.views.splash.SplashField
 import com.sup.dev.android.views.splash.SplashMenu
@@ -49,6 +51,10 @@ class SQuestDrafts : SLoadingRecycler<CardQuestDetails, QuestDetails>() {
         vFab.visibility = View.VISIBLE
         vFab.setImageResource(R.drawable.ic_add_white_24dp)
         vFab.setOnClickListener {
+            if (!ControllerApi.can(API.LVL_CREATE_QUESTS)) {
+                ToolsToast.show(t(API_TRANSLATE.error_low_lvl))
+                return@setOnClickListener
+            }
             SplashField()
                 .setTitle(t(API_TRANSLATE.quests_new))
                 .setHint(t(API_TRANSLATE.quests_title))
