@@ -34,14 +34,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
-            <intent-filter>
+            <intent-filter android:autoVerify="true" tools:ignore="UnusedAttribute">
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="http" />
                 <data android:scheme="https" />
                 <data android:host="bonfire.moe" />
                 <data android:pathPattern="/r/*" />
-                <data android:scheme="https" />
             </intent-filter>
 
             <intent-filter>
