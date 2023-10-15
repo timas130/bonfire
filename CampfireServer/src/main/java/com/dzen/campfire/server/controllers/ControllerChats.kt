@@ -190,7 +190,7 @@ object ControllerChats {
         if (message.parentPublicationId != 0L) {
             parentCreatorId = ControllerPublications.getCreatorId(message.parentPublicationId)
             val isMember = getMemberStatus(parentCreatorId, tag.targetId) == API.CHAT_MEMBER_STATUS_ACTIVE
-            if (isMember) {
+            if (isMember && apiAccount.id != parentCreatorId) {
                 val subscribed = isSubscribed(parentCreatorId, tag)
                 ControllerNotifications.push(parentCreatorId, NotificationChatAnswer(message, tag, subscribed))
             }
