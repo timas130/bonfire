@@ -9,7 +9,7 @@ import android.content.IntentSender
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
+import android.os.Environment
 import android.os.Parcelable
 import android.provider.MediaStore
 import androidx.core.app.ActivityCompat
@@ -18,7 +18,6 @@ import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.java.classes.items.Item2
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.tools.ToolsText
-import com.sup.dev.java.tools.ToolsThreads
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -242,30 +241,30 @@ object ToolsIntent {
 
     fun getCameraImage(onResult: (ByteArray) -> Unit, onError: (Exception) -> Unit = {}) {
         try {
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            if (intent.resolveActivity(SupAndroid.appContext!!.packageManager) != null) {
-                startIntentForResult(Intent.createChooser(intent, null)) { resultCode, resultIntent ->
-                    if (resultCode != Activity.RESULT_OK || resultIntent == null) {
-                        onError.invoke(IllegalAccessException("Result is null or not OK"))
-                    } else {
-                        ToolsThreads.thread {
-                            try {
-                                val imageBitmap = resultIntent.extras!!.get("data") as Bitmap
-                                val bytes = ToolsBitmap.toBytes(imageBitmap)!!
-                                ToolsThreads.main { onResult.invoke(bytes) }
-                            } catch (e: Exception) {
-                                ToolsThreads.main { onError.invoke(e) }
-                            }
+            val dcimFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+            val imageFile = File.createTempFile("cam_", ".jpg", dcimFolder)
+            val imageUri = FileProvider.getUriForFile(
+                SupAndroid.activity!!,
+                "${SupAndroid.appContext!!.packageName}.fileprovider",
+                imageFile
+            )
 
-                        }
-                    }
+            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                .putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+            startIntentForResult(cameraIntent) { code, _ ->
+                if (code != Activity.RESULT_OK) {
+                    onError(RuntimeException("activity result not ok: code $code"))
+                    return@startIntentForResult
                 }
-            } else {
-                onError.invoke(IllegalAccessException("Cant find camera"))
+
+                try {
+                    onResult(imageFile.readBytes())
+                } catch (e: Exception) {
+                    onError(e)
+                }
             }
         } catch (e: Exception) {
-            onError.invoke(e)
-            return
+            onError(e)
         }
     }
 
