@@ -98,7 +98,7 @@ fun DailyTask(modifier: Modifier = Modifier, taskInfo: DailyTaskInfo?, compact: 
         }
         Text(
             taskName ?: t(API_TRANSLATE.app_loading_dots),
-            style = if (compact) MaterialTheme.typography.titleSmall else MaterialTheme.typography.titleLarge,
+            style = if (compact) MaterialTheme.typography.titleSmall else MaterialTheme.typography.titleMedium,
             modifier = Modifier
                 .padding(bottom = if (compact) 4.dp else 8.dp),
         )
@@ -156,7 +156,7 @@ fun DailyTask(modifier: Modifier = Modifier, taskInfo: DailyTaskInfo?, compact: 
 private fun TasksTitle(text: String) {
     Text(
         text,
-        style = MaterialTheme.typography.headlineMedium,
+        style = MaterialTheme.typography.headlineSmall,
         textAlign = TextAlign.Center,
         modifier = Modifier
             .padding(bottom = 8.dp, top = 16.dp)
@@ -169,7 +169,7 @@ private fun TasksTitle(text: String) {
 private fun TasksDescription(text: String) {
     Text(
         text,
-        style = MaterialTheme.typography.bodyLarge,
+        style = MaterialTheme.typography.bodyMedium,
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .alpha(0.7F)
@@ -200,7 +200,7 @@ class PageDailyTasks(private val taskInfo: DailyTaskInfo) : ComposeCard() {
             item {
                 Text(
                     t(API_TRANSLATE.events_empty),
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
