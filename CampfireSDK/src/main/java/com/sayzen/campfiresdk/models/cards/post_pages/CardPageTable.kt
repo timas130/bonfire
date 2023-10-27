@@ -10,6 +10,7 @@ import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.views.screens.SImageView
 import com.sup.dev.android.views.views.table.ViewTable
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class CardPageTable(
         pagesContainer: PagesContainer?,
@@ -24,7 +25,10 @@ class CardPageTable(
         val vTable:ViewTable = view.findViewById(R.id.vTable)
 
         vTable.clear()
-        vTable.textProcessor = { _, _, vText -> ControllerLinks.makeLinkable(vText) }
+        vTable.textProcessor = { _, text, vText ->
+            BonfireMarkdown.setMarkdown(vText, text)
+            ControllerLinks.linkifyShort(vText)
+        }
         vTable.setColumnsCount(page.columnsCount, true)
         vTable.createRows(page.rowsCount, true)
         for(c in page.cells) {

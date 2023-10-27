@@ -21,6 +21,7 @@ import com.sup.dev.android.views.views.table.ViewTableCell
 import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsCollections
 import com.sup.dev.java.tools.ToolsThreads
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class SCreatePageTable(
         private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage) -> Unit)) -> Unit,
@@ -44,7 +45,10 @@ class SCreatePageTable(
         setTitle(t(API_TRANSLATE.post_page_table))
         vCreate.text = t(API_TRANSLATE.app_create)
 
-        vTable.textProcessor = { _, _, vText -> ControllerLinks.makeLinkable(vText) }
+        vTable.textProcessor = { _, text, vText ->
+            BonfireMarkdown.setMarkdown(vText, text)
+            ControllerLinks.linkifyShort(vText)
+        }
 
         vBorderLeft.setOnClickListener {
             if (removeMode)
