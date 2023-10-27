@@ -1,0 +1,88 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.apollographql.apollo3' version '3.8.2'
+    id 'org.jetbrains.kotlin.plugin.serialization'
+}
+
+android {
+    namespace 'sh.sit.bonfire.auth'
+    compileSdk 34
+
+    defaultConfig {
+        minSdk 21
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.3"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+apollo {
+    service("melior") {
+        packageName.set("sh.sit.bonfire")
+
+        // use BonfireAuth:downloadMeliorApolloSchema to update schema
+        introspection {
+            endpointUrl.set("http://localhost:8000")
+            schemaFile.set(file("src/main/graphql/sh/sit/bonfire/schema.graphqls"))
+        }
+
+        mapScalar("DateTime", "sh.sit.bonfire.auth.DateTime", "sh.sit.bonfire.auth.DateTime.adapter")
+    }
+}
+
+dependencies {
+    api project(":BonfireNetworking")
+    api project(":DevSupAndroid")
+    api project(":CampfireApi")
+
+    implementation('com.google.firebase:firebase-auth-ktx:21.1.0') {
+        exclude group: 'com.google.android.gms', module: 'play-services-safetynet'
+    }
+
+    def composeBom = platform('androidx.compose:compose-bom:2023.10.01')
+    implementation composeBom
+    androidTestImplementation composeBom
+    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+    implementation 'androidx.compose.material:material-icons-core'
+    implementation 'androidx.compose.material:material-icons-extended'
+
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
+
+    implementation "androidx.credentials:credentials:1.3.0-alpha01"
+    implementation "androidx.credentials:credentials-play-services-auth:1.3.0-alpha01"
+    implementation "com.google.android.libraries.identity.googleid:googleid:1.1.0"
+    api 'com.google.android.gms:play-services-auth:20.7.0'
+
+    implementation 'io.sentry:sentry-android:6.28.0'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    implementation "com.apollographql.apollo3:apollo-runtime:3.8.2"
+    implementation "com.apollographql.apollo3:apollo-normalized-cache:3.8.2"
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0"
+
+    implementation "joda-time:joda-time:2.12.6"
+}

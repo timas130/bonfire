@@ -31,7 +31,7 @@ impl Guard for PermissionLevelGuard {
         if passes {
             Ok(())
         } else {
-            Err("hi data miner!".into())
+            Err("HiDataMiner".into())
         }
     }
 }

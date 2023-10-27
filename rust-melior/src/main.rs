@@ -9,7 +9,7 @@ pub(crate) mod utils;
 use crate::context::{GlobalContext, ReqContext};
 use crate::data_loaders::AuthUserLoader;
 use async_graphql::http::GraphiQLSource;
-use async_graphql::Schema;
+use async_graphql::{EmptySubscription, Schema};
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
 use axum::extract::ConnectInfo;
 use axum::headers::authorization::Bearer;
@@ -27,7 +27,7 @@ use tracing_subscriber::fmt::format::FmtSpan;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 
-type BSchema = Schema<schema::Query, schema::Mutation, schema::Subscription>;
+type BSchema = Schema<schema::Query, schema::Mutation, EmptySubscription>;
 
 async fn graphiql() -> impl IntoResponse {
     response::Html(
@@ -93,7 +93,7 @@ async fn main() -> anyhow::Result<()> {
     let schema = BSchema::build(
         schema::Query::default(),
         schema::Mutation::default(),
-        schema::Subscription::default(),
+        EmptySubscription,
     )
     .data(AuthUserLoader::data_loader(global_context.clone()))
     .finish();

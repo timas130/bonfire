@@ -1,0 +1,26 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select sum(ukt.karma_count)::bigint from campfire_db.units_karma_transactions ukt\n                 inner join campfire_db.units u on u.id = ukt.unit_id\n                 where target_account_id = $1 and u.status = $2 and u.unit_type = $3 and\n                       ukt.date_create >= $4 and ukt.date_create <= $5 and\n                       u.date_create >= $4 and u.date_create <= $5",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "sum",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "46a02b2a5cd106942c25644a07038877a5e8e844fdd7a805601ebf5fd822e43d"
+}

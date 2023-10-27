@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select id from users where username = $1 limit 1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "3d21ca190dba51dbd7afd168a32882c85fbd9020578666eadf06ab0c4256d784"
+}

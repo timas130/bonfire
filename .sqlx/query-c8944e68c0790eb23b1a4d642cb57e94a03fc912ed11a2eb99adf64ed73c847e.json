@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*)\n                 from activities_collisions ac\n                 inner join campfire_db.units u on ac.tag_1 = u.id\n                 where u.status = $1 and ac.account_id = $2 and ac.type = $3",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "c8944e68c0790eb23b1a4d642cb57e94a03fc912ed11a2eb99adf64ed73c847e"
+}

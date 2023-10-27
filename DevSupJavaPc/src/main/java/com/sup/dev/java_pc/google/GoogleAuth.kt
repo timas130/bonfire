@@ -11,6 +11,7 @@ import java.io.InputStreamReader
 import java.net.URL
 import java.nio.charset.Charset
 
+@Deprecated("migrate to melior")
 object GoogleAuth {
     class GoogleAuthCreds(var clientId: String = "", var clientSecret: String = "") : JsonParsable {
         override fun json(inp: Boolean, json: Json): Json {
@@ -22,11 +23,6 @@ object GoogleAuth {
 
     private lateinit var creds: Array<GoogleAuthCreds>
     private var cache: Cache<String, String> = Cache(10000)
-
-    @Deprecated("use init(Array<GoogleAuth.GoogleAuthCreds>)")
-    fun init(serverClientId: String, serverClientSecret: String) {
-        creds = arrayOf(GoogleAuthCreds(serverClientId, serverClientSecret))
-    }
 
     fun init(creds: Array<GoogleAuthCreds>) {
         this.creds = creds

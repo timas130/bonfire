@@ -1,10 +1,11 @@
 use crate::context::ReqContext;
 use crate::error::RespError;
-use async_graphql::{Context, Enum, InputObject, Interface, Object, SimpleObject};
+use async_graphql::{Context, Enum, InputObject, Object, SimpleObject, Union};
 use c_core::prelude::tarpc::context;
 use c_core::services::auth;
 use c_core::services::auth::{LoginEmailOptions, LoginEmailResponse};
 
+#[derive(Default)]
 pub struct LoginEmailMutation;
 
 /// Parameters for logging in via email
@@ -17,7 +18,7 @@ struct LoginEmailInput {
 }
 
 /// The result of logging in via email and password
-#[derive(Interface)]
+#[derive(Union)]
 enum LoginResult {
     Success(LoginResultSuccess),
     TfaRequired(LoginResultTfaRequired),
@@ -64,7 +65,7 @@ struct LoginResultTfaRequired {
 }
 
 /// A two-factor authentication method
-#[derive(Enum)]
+#[derive(Copy, Clone, Eq, PartialEq, Enum)]
 enum TfaType {
     /// The user should input a one-time code from
     /// their authenticator app.

@@ -9,35 +9,17 @@ import java.security.SecureRandom
 
 abstract class AccountProvider {
     private val accessCache: Cache<String, Item2<ApiAccount, Long>> = Cache(10000)
-    private val onlineCache: Cache<Long, Long> = Cache(10000)
 
-    open fun getAccount(accessToken: String?, refreshToken: String?, loginToken: String?): ApiAccount? {
-        if (!loginToken.isNullOrEmpty()) {
-            return loginByLogin(loginToken)
-        } else if (!refreshToken.isNullOrEmpty()) {
-            return loginByRefresh(refreshToken)
+    open fun getAccount(accessToken: String?, loginToken: String?): ApiAccount? {
+        return if (!loginToken.isNullOrEmpty()) {
+            loginByLogin(loginToken)
         } else if (!accessToken.isNullOrEmpty()) {
-            return loginByAccess(accessToken)
-        } else return null
-    }
-
-    fun clearCash(accountId: Long) {
-        // TODO: remove before 2.5.3
-        throw NotImplementedError()
+            loginByAccess(accessToken)
+        } else null
     }
 
     private fun loginByLogin(token: String): ApiAccount? {
         val account = getByLoginToken(token) ?: return null
-
-        updateAccessTokens(account)
-        if (account.refreshToken == null) updateRefreshToken(account)
-        onAccountLoaded(account)
-
-        return account
-    }
-
-    private fun loginByRefresh(token: String): ApiAccount? {
-        val account = getByRefreshToken(token) ?: return null
 
         updateAccessTokens(account)
         onAccountLoaded(account)
@@ -62,11 +44,6 @@ abstract class AccountProvider {
         accessCache.put(account.accessToken!!, Item2(account, System.currentTimeMillis()))
     }
 
-    private fun updateRefreshToken(account: ApiAccount) {
-        account.refreshToken = createToken(account)
-        setRefreshToken(account, account.refreshToken!!)
-    }
-
     private fun createToken(account: ApiAccount): String {
         var token = "" + account.id + "_"
         val random = SecureRandom()
@@ -83,10 +60,5 @@ abstract class AccountProvider {
         return null
     }
 
-    protected abstract fun getByRefreshToken(token: String): ApiAccount?
-
-    protected abstract fun setRefreshToken(account: ApiAccount, refreshToken: String)
-
     protected abstract fun getByLoginToken(token: String?): ApiAccount?
-
 }

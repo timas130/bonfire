@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*) from recovery_flows where user_id = $1 and expires > now() limit 1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "6a063ce73d79d9fe3c0565c77d5bb8226fb7fe56a2a112540349b4d8f841b81e"
+}

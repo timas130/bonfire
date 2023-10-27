@@ -191,6 +191,18 @@ pub struct UserContext {
     /// user agents in the form of `[Client Name]/[Version] [OS]/[Version]`.
     pub user_agent: String,
 }
+impl UserContext {
+    /// Is this user an internal service
+    ///
+    /// This is only checked by IP and you RFC 2119 MUST not
+    /// blindly trust this.
+    pub fn is_internal(&self) -> bool {
+        match &self.ip {
+            IpAddr::V4(ip) => ip.is_private() || ip.is_loopback(),
+            _ => false,
+        }
+    }
+}
 
 /// Options for [`AuthService::register_email`]
 #[derive(Debug, Deserialize, Serialize)]
@@ -283,11 +295,22 @@ pub struct MetaUsers {
 pub struct SecuritySettings {
     /// The 2FA type enabled for the user
     pub tfa_type: Option<TfaType>,
+    /// OAuth login settings for each [`OAuthProvider`[
+    pub oauth: HashMap<OAuthProvider, OAuthSettings>,
+}
+
+/// Details about an [`OAuthProvider`] bound to an account
+///
+/// Used in [`SecuritySettings`]
+#[derive(Debug, Deserialize, Serialize)]
+pub struct OAuthSettings {
+    /// Timestamp when the provider was bound to this account
+    pub created_at: DateTime<Utc>,
 }
 
 /// An OAuth auth provider
 #[derive(
-    Copy, Clone, Debug, Deserialize, Serialize, Eq, PartialEq, IntoPrimitive, TryFromPrimitive,
+    Copy, Clone, Debug, Deserialize, Serialize, Eq, PartialEq, IntoPrimitive, TryFromPrimitive, Hash,
 )]
 #[repr(i32)]
 pub enum OAuthProvider {
@@ -523,6 +546,9 @@ pub trait AuthService {
     /// Get the IDs of default users like `@system` and
     /// `@deleted`.
     async fn get_meta_users() -> Result<MetaUsers, AuthError>;
+
+    /// Update a user's name.
+    async fn change_name(user_id: i64, new_name: String) -> Result<(), AuthError>;
 
     /// Clean all leftover data that is no longer needed.
     async fn vacuum() -> Result<(), AuthError>;

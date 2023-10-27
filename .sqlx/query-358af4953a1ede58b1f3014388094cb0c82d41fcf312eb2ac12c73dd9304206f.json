@@ -1,0 +1,12 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "delete from totp_attempts where created_at < now() - '1 hour'::interval",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": []
+  },
+  "hash": "358af4953a1ede58b1f3014388094cb0c82d41fcf312eb2ac12c73dd9304206f"
+}

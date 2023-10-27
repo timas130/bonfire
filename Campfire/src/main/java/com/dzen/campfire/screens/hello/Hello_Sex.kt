@@ -6,13 +6,11 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import com.dzen.campfire.R
-import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.t
-import com.sup.dev.android.tools.ToolsBitmap
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
@@ -20,8 +18,8 @@ import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.java.tools.ToolsText
 
 class Hello_Sex(
-        val screen: SCampfireHello,
-        val demoMode: Boolean
+    val screen: SCampfireHello,
+    val demoMode: Boolean
 ) {
 
     val view: View = ToolsView.inflate(screen.vContainer, R.layout.screen_campfire_hello_sex)
@@ -90,15 +88,11 @@ class Hello_Sex(
 
     private fun updateFinishEnabled() {
         val name = vLogin.text.toString()
-        if (!ToolsText.checkStringChars(name, API.ACCOUNT_LOGIN_CHARS)) {
-            vLogin.error = t(API_TRANSLATE.profile_change_name_error)
-            vNext.isEnabled = false
-        } else if (name.length < API.ACCOUNT_NAME_L_MIN || name.length > API.ACCOUNT_NAME_L_MAX) {
-            vLogin.error = null
-            vNext.isEnabled = false
+        vNext.isEnabled = gender != -1L && ToolsText.isValidUsername(name)
+        vLogin.error = if (!ToolsText.isValidUsername(name)) {
+            t(API_TRANSLATE.profile_change_name_error)
         } else {
-            vLogin.error = null
-            vNext.isEnabled = gender != -1L
+            null
         }
     }
 

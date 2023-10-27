@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update sessions set expires = now() where user_id = $1 and (expires > now() or expires is null)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "dfc1df6364184f71a3370bb77e6f232938b12eaaa4aae66fa258c316458d9973"
+}

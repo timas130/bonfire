@@ -14,7 +14,7 @@ use std::ops::RangeInclusive;
 use std::time::Duration;
 
 lazy_static! {
-    static ref USERNAME_REGEX: regex::Regex = regex::Regex::new(r"^[a-zA-Z_0-9]{3,32}$").unwrap();
+    static ref USERNAME_REGEX: regex::Regex = regex::Regex::new(r"^[a-zA-Z_0-9]{3,25}$").unwrap();
     static ref NUMBERS_ONLY_REGEX: regex::Regex = regex::Regex::new(r"^[0-9]+$").unwrap();
 }
 
@@ -52,7 +52,7 @@ impl AuthServer {
         .map(|token| token.claims.sub)
     }
 
-    pub(crate) fn hash_password(password: String) -> anyhow::Result<String> {
+    pub(crate) fn hash_password(password: &str) -> anyhow::Result<String> {
         let salt = SaltString::generate(&mut OsRng);
         let params = scrypt::Params::new(18, 8, 1, 32).unwrap();
 
@@ -136,23 +136,9 @@ impl AuthServer {
             return Err(AuthError::UsernameTaken);
         }
 
-        //// Send verification email
-
-        let email_result = self
-            .send_verification_email(email.clone(), username.clone())
-            .await;
-
-        match email_result {
-            Ok(_) => {}
-            Err(err) => {
-                sleep_until(deadline).await;
-                return Err(err);
-            }
-        };
-
         //// Register
 
-        let hash = Self::hash_password(password)?;
+        let hash = Self::hash_password(&password)?;
 
         let mut tx = self.base.pool.begin().await?;
 
@@ -169,15 +155,31 @@ impl AuthServer {
         .fetch_one(&mut *tx)
         .await?;
 
-        if username.is_none() {
+        let username = if username.is_none() {
+            let new_username = format!("User#{user_id}");
             sqlx::query!(
                 "update users set username = $1 where id = $2",
-                format!("User#{user_id}"),
+                new_username,
                 user_id,
             )
             .execute(&mut *tx)
             .await?;
-        }
+            new_username
+        } else {
+            username.unwrap()
+        };
+
+        //// Send verification email
+
+        let email_result = self.send_verification_email(email.clone(), username).await;
+
+        match email_result {
+            Ok(_) => {}
+            Err(err) => {
+                sleep_until(deadline).await;
+                return Err(err);
+            }
+        };
 
         tx.commit().await?;
 

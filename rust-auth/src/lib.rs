@@ -1,6 +1,7 @@
 mod bind_oauth;
 mod cancel_email_change;
 mod change_email;
+mod change_name;
 mod change_password;
 mod check_recovery_token;
 mod check_tfa_status;
@@ -17,6 +18,7 @@ mod get_sessions;
 mod get_tfa_info;
 mod hard_ban;
 mod login_email;
+mod login_internal;
 mod login_refresh;
 mod recover_password;
 mod register_email;
@@ -32,7 +34,6 @@ mod unsafe_delete;
 mod util;
 mod vacuum;
 mod verify_email;
-mod login_internal;
 
 use c_core::prelude::tarpc::context::Context;
 use c_core::prelude::*;
@@ -71,7 +72,7 @@ pub struct AuthServer {
     email: EmailServiceClient,
 
     google_client: CoreClient,
-    google_jwks: HashMap<String, Jwk>,
+    google_jwks: Vec<Jwk>,
 }
 impl AuthServer {
     pub async fn load() -> anyhow::Result<Self> {
@@ -102,7 +103,7 @@ impl AuthServer {
 
         #[derive(Deserialize)]
         struct GoogleJwksResponse {
-            keys: HashMap<String, Jwk>,
+            keys: Vec<Jwk>,
         }
 
         let google_jwks = reqwest::get(GOOGLE_JWKS_URL)
@@ -334,7 +335,11 @@ impl AuthService for AuthServer {
         self._get_by_name(name).await
     }
 
-    async fn get_by_names(self, _: Context, names: Vec<String>) -> Result<HashMap<String, AuthUser>, AuthError> {
+    async fn get_by_names(
+        self,
+        _: Context,
+        names: Vec<String>,
+    ) -> Result<HashMap<String, AuthUser>, AuthError> {
         self._get_by_names(&names).await
     }
 
@@ -361,6 +366,15 @@ impl AuthService for AuthServer {
 
     async fn get_meta_users(self, _: Context) -> Result<MetaUsers, AuthError> {
         self._get_meta_users().await
+    }
+
+    async fn change_name(
+        self,
+        _: Context,
+        user_id: i64,
+        new_name: String,
+    ) -> Result<(), AuthError> {
+        self._change_name(user_id, new_name).await
     }
 
     async fn vacuum(self, _: Context) -> Result<(), AuthError> {

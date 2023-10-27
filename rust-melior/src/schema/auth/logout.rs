@@ -1,8 +1,8 @@
-use async_graphql::{Context, Object};
-use c_core::prelude::tarpc::context;
 use crate::context::ReqContext;
 use crate::error::RespError;
 use crate::utils::ok::OkResp;
+use async_graphql::{Context, Object};
+use c_core::prelude::tarpc::context;
 
 #[derive(Default)]
 pub struct LogoutMutation;
@@ -16,9 +16,12 @@ impl LogoutMutation {
         let Some(access_token) = req.access_token.clone() else {
             return Ok(OkResp);
         };
+        let Some(session_id) = req.session_id else {
+            return Ok(OkResp);
+        };
 
         req.auth
-            .terminate_session(context::current(), access_token, req.session_id.unwrap())
+            .terminate_session(context::current(), access_token, session_id)
             .await??;
 
         Ok(OkResp)

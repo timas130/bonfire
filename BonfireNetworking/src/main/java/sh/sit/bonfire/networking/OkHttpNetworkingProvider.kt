@@ -15,16 +15,8 @@ import java.io.DataOutputStream
 class OkHttpNetworkingProvider(
     context: Context,
     private val apiRoot: String,
-    userAgent: String,
 ) : NetworkingProvider {
-    private val cronetEngine: CronetEngine = CronetEngine.Builder(context)
-        .enableHttp2(true)
-        .enableQuic(true)
-        .setUserAgent(userAgent)
-        .build()
-    private val client = OkHttpClient.Builder()
-        .addInterceptor(CronetInterceptor.newBuilder(cronetEngine).build())
-        .build()
+    private val client = OkHttpController.getClient(context)
 
     @WorkerThread
     override fun sendRequest(data: ByteArray, additional: List<ByteArray?>): ByteArray {

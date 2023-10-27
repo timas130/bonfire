@@ -8,6 +8,7 @@ object TAccounts {
     val NAME = "accounts"
 
     val id = "id"
+    @Deprecated("migrate to melior")
     val google_id = "google_id"
     val date_create = "date_create"
     val name = "name"
@@ -45,6 +46,7 @@ object TAccounts {
     val LINKS = Sql.IFNULL("SELECT ${TCollisions.value_2} FROM ${TCollisions.NAME } WHERE ${TCollisions.owner_id}=$NAME.$id AND ${TCollisions.collision_type}=${API.COLLISION_ACCOUNT_LINKS} ${Sql.LIMIT} 1", "''")
     fun NOTE(accountId:Long) = Sql.IFNULL("SELECT ${TCollisions.value_2} FROM ${TCollisions.NAME } WHERE ${TCollisions.owner_id}=$accountId AND ${TCollisions.collision_id}=$NAME.$id AND ${TCollisions.collision_type}=${API.COLLISION_ACCOUNT_NOTE} ${Sql.LIMIT} 1", "''")
     val PINED_POST_ID = Sql.IFNULL("SELECT ${TCollisions.collision_id} FROM ${TCollisions.NAME } WHERE ${TCollisions.owner_id}=$NAME.$id AND ${TCollisions.collision_type}=${API.COLLISION_ACCOUNT_PINNED_POST} ${Sql.LIMIT} 1", 0)
+    val FIREBASE_ID = Sql.IFNULL("SELECT ${TAccountsFirebase.firebase_uid} from ${TAccountsFirebase.NAME} WHERE ${TAccountsFirebase.account_id} = $NAME.$id", "NULL")
 
     fun isInFollowsList(accountId: Long): String {
         return "(SELECT COUNT(*) FROM " + TCollisions.NAME + " WHERE " + TCollisions.collision_id + "=" + NAME + "." + id + " AND " + TCollisions.owner_id + "=" + accountId + " AND " + TCollisions.collision_type + "=" + API.COLLISION_ACCOUNT_FOLLOW + ")"

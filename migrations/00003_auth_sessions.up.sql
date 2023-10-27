@@ -12,9 +12,9 @@ create table sessions (
 );
 
 create table oauth_flows (
-    ua_token varchar(32) not null unique,
+    ua_token varchar(32) not null,
     csrf_token varchar(32) not null unique,
-    nonce varchar(32) not null,
+    nonce varchar(32) not null unique,
     created_at timestamptz not null default now(),
     expires timestamptz not null
 );

@@ -11,10 +11,10 @@ use o2o::o2o;
 use std::collections::HashMap;
 
 #[derive(Default)]
-pub struct LevelQuery;
+pub struct InternalLevelQuery;
 
 #[Object]
-impl LevelQuery {
+impl InternalLevelQuery {
     /// Force a recount of a user's level
     ///
     /// This method is for internal services only

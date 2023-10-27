@@ -21,8 +21,6 @@ fun err(vararg o: Any?) {
 }
 
 object Debug {
-
-    var log = ArrayList<String>()
     var printer = { s: String -> System.err.println(s) }
     var printerInfo = { s: String -> System.err.println(s) }
     var exceptionPrinter = { ex: Throwable -> ex.printStackTrace() }
@@ -32,13 +30,6 @@ object Debug {
     private var timeStepsCounter = 0
     private var printTimeEnabled = true
     private var minimumTimeToPrintMs = -1L
-
-    fun addToLog(s:String){
-        log.add(s)
-        while (log.size > 5000){
-            log.removeAt(0)
-        }
-    }
 
     fun saveTime() {
         time = System.nanoTime()
@@ -66,7 +57,6 @@ object Debug {
         val timeMs = ToolsMapper.timeNanoToMs(System.nanoTime() - time)
         if (printTimeEnabled && timeMs >= minimumTimeToPrintMs) {
             val s = "DXX $prefix $timeMs left"
-            addToLog(s)
             printer.invoke(s)
             return true
         }
@@ -83,7 +73,6 @@ object Debug {
         val timeMicro = (System.nanoTime() - time) / 1000
         if (printTimeEnabled && timeMicro >= minimumTimeToPrintMs * 1000) {
             val s = "DXX $prefix $timeMicro left"
-            addToLog(s)
             printer.invoke(s)
         }
     }
@@ -92,7 +81,6 @@ object Debug {
         val timeNano = System.nanoTime() - time
         if (printTimeEnabled && timeNano >= ToolsMapper.timeMsToNano(minimumTimeToPrintMs)){
             val s = "DXX $prefix $timeNano left"
-            addToLog(s)
             printer.invoke(s)
         }
     }
@@ -109,7 +97,6 @@ object Debug {
             val timeMs = ToolsMapper.timeNanoToMs(System.nanoTime() - time)
             if (printTimeEnabled && timeMs >= minimumTimeToPrintMs) {
                 val s  = "DXX $prefix $timeMs left [$timeStepsCounter steps]"
-                addToLog(s)
                 printer.invoke(s)
             }
             timeStepsCounter = 0
@@ -128,7 +115,6 @@ object Debug {
             val timeMicro = (System.nanoTime() - time) / 1000
             if (printTimeEnabled  && timeMicro >= minimumTimeToPrintMs * 1000){
                 val s = "DXX $prefix $timeMicro left [$timeStepsCounter steps]"
-                addToLog(s)
                 printer.invoke(s)
             }
             timeStepsCounter = 0
@@ -147,7 +133,6 @@ object Debug {
             val timeNano = System.nanoTime() - time
             if (printTimeEnabled && timeNano >= ToolsMapper.timeMsToNano(minimumTimeToPrintMs)) {
                 val s = "DXX $prefix $timeNano left [$timeStepsCounter steps]"
-                addToLog(s)
                 printer.invoke(s)
             }
             timeStepsCounter = 0
@@ -182,7 +167,6 @@ object Debug {
 
     fun info(vararg o: Any?) {
         val s = asLogString("XInfo", *o)
-        addToLog(s)
         printerInfo.invoke(s)
     }
 
@@ -191,7 +175,6 @@ object Debug {
     }
 
     fun logPrint(throwable: Throwable) {
-        addToLog(getStack(throwable))
         exceptionPrinter.invoke(throwable)
     }
 
@@ -201,7 +184,6 @@ object Debug {
 
     internal fun print(vararg o: Any?) {
         val s = asLogString(*o)
-        addToLog(s)
         printer.invoke(s)
     }
 

@@ -1,0 +1,21 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into auth_sources (\n                 user_id, provider, provider_account_id, refresh_token,\n                 access_token, expires_at, scope, id_token\n             ) values ($1, $2, $3, $4, $5, $6, $7, $8)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int4",
+        "Text",
+        "Text",
+        "Text",
+        "Timestamptz",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "612b31ca1e9511439e8256e8500433f68d65f6eced58f02ea58d68d7e1bcedbe"
+}

@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "delete from totp_attempts where user_id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "26e4a85020b8a2312b6599ac097236c1fdd949a1faacceda4cdce0cf8c9b0f76"
+}

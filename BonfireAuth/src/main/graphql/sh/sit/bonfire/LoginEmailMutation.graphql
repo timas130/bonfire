@@ -1,0 +1,13 @@
+mutation LoginEmailMutation($input: LoginEmailInput!) {
+    loginEmail(input: $input) {
+        __typename
+        ... on LoginResultSuccess {
+            accessToken
+            refreshToken
+        }
+        ... on LoginResultTfaRequired {
+            tfaType
+            tfaWaitToken
+        }
+    }
+}

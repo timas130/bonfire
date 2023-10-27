@@ -4,11 +4,12 @@ import com.dzen.campfire.R
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
-import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
+import com.sayzen.campfiresdk.compose.AccountSecurityScreen
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
@@ -77,7 +78,7 @@ class SSettings : Screen(R.layout.screen_settings_actions) {
                 ControllerSettings.fastPublicationFandomName = fandom.name
             }
         }
-        vSecurity.setOnClickListener {SSettingsSecurity.instance(Navigator.TO) }
+        vSecurity.setOnClickListener { Navigator.to(AccountSecurityScreen()) }
         vStyle.setOnClickListener { Navigator.to(SSettingsStyle()) }
         vVoiceAutoLock.setOnClickListener { ControllerSettings.voiceMessagesAutoLock = vVoiceAutoLock.isChecked() }
         vVoiceAutoSend.setOnClickListener { ControllerSettings.voiceMessagesAutoSend = vVoiceAutoSend.isChecked() }

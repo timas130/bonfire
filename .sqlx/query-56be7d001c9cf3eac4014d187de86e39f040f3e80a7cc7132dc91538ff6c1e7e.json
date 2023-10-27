@@ -1,0 +1,34 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select password, email, username from users where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "password",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "email",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "username",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "56be7d001c9cf3eac4014d187de86e39f040f3e80a7cc7132dc91538ff6c1e7e"
+}

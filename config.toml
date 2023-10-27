@@ -1,0 +1,42 @@
+database_url = "postgres://postgres:postgres@localhost/campfire_db"
+jwt_secret = "secretsecretsecret"
+sentry_dsn = ""
+internal_key = "internal_key_dont_use"
+
+[urls]
+verify_link = "http://localhost:5173/auth/verify?t="
+email_tfa_link = "http://localhost:5173/auth/tfa?t="
+recovery_link = "http://localhost:5173/auth/recovery?t="
+cancel_email_change_link = "http://localhost:5173/auth/cancel-email-change?t="
+image_proxy_link = "http://localhost:5173/image/"
+oauth_redirect_link = "http://localhost:5173/oauth/redirect/"
+
+[ports]
+auth = 31001
+email = 31002
+images = 31003
+level = 31004
+
+[email]
+host = "unused"
+port = 465
+username = "me@bonfire.moe"
+password = "unused"
+tls = true
+# emails are not sent from dummy@*.* addresses
+from = "Canana <dummy@bonfire.moe>"
+
+[images]
+type = "local"
+root = "./images"
+
+[google]
+client_id = ""
+client_secret = ""
+
+[firebase]
+project_id = ""
+scrypt_signer_key = ""
+scrypt_salt_separator = ""
+scrypt_rounds = 8
+scrypt_mem_cost = 14

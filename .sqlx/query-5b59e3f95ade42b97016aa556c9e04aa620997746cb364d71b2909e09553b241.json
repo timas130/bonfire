@@ -1,0 +1,77 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from sessions\n             where user_id = $1 and expires > now()\n             order by last_refreshed desc\n             limit 25 offset $2",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "account_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "provider",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 4,
+        "name": "ip",
+        "type_info": "Inet"
+      },
+      {
+        "ordinal": 5,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 6,
+        "name": "last_refreshed",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "expires",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "user_agent",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "refresh_token",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "5b59e3f95ade42b97016aa556c9e04aa620997746cb364d71b2909e09553b241"
+}

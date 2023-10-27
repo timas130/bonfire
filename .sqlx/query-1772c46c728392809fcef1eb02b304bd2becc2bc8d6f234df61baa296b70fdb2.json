@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update users set hard_banned = $1 where id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Bool",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "1772c46c728392809fcef1eb02b304bd2becc2bc8d6f234df61baa296b70fdb2"
+}

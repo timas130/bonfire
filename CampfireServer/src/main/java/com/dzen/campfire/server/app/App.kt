@@ -14,7 +14,6 @@ import com.sup.dev.java_pc.google.GoogleNotification
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.DatabasePool
 import sh.sit.bonfire.server.networking.startJavalin
-import java.io.File
 import java.nio.charset.Charset
 
 object App {
@@ -40,10 +39,6 @@ object App {
 
         val googleNotificationKey = secretsKeys.getString("google_notification_key")
         val googleAuth = secretsKeys.m(false, "google_auth", arrayOf(), Array<GoogleAuth.GoogleAuthCreds>::class)!!
-        val jksPassword = secretsKeys.getString("jks_password")
-
-        val keyFileJKS = File("secrets/Certificate.jks")
-        val keyFileBKS = File("secrets/Certificate.bks")
         val jarFile = "${patchPrefix}lib/CampfireServer.jar"
 
         try {
@@ -55,7 +50,7 @@ object App {
             GoogleNotification.init(googleNotificationKey, arrayOf("https://push.33rd.dev/push"))
             GoogleAuth.init(googleAuth)
 
-            val requestFactory = RequestFactory(jarFile, File("").absolutePath + "\\CampfireServer\\src\\main\\java")
+            val requestFactory = RequestFactory(jarFile, "CampfireServer\\src\\main\\java")
 
             val apiServer = ApiServer(
                 requestFactory,

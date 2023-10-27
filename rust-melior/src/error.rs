@@ -11,6 +11,8 @@ use thiserror::Error;
 pub enum RespError {
     #[error("OutOfSync: Internal error")]
     OutOfSync,
+    #[error("InvalidId: This ID is invalid")]
+    InvalidId,
     #[error("{0}")]
     Auth(#[from] AuthError),
     #[error("{0}")]

@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update users set tfa_mode = $1 where id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "f9eba1de1035292341cee236139d4bf3517cd518c784d735330936c6d5e6f5e2"
+}

@@ -70,19 +70,14 @@ impl AuthServer {
         }
 
         if let Some(current_password) = &user.password {
-            let password_matches = Scrypt
-                .verify_password(
-                    old_password.as_bytes(),
-                    &PasswordHash::new(current_password).map_err(anyhow::Error::from)?,
-                )
-                .is_ok();
+            let password_matches = self.verify_password(&old_password, current_password);
 
             if !password_matches {
                 return Err(AuthError::WrongPasswordOrEmail); // just the password in this case
             }
         }
 
-        let new_hash = Self::hash_password(new_password)?;
+        let new_hash = Self::hash_password(&new_password)?;
 
         self.do_change_password(access_token.user_id, new_hash)
             .await?;

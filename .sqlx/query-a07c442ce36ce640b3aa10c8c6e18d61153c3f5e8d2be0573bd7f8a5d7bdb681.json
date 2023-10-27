@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select tfa_mode, tfa_data from users where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "tfa_mode",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "tfa_data",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      true,
+      true
+    ]
+  },
+  "hash": "a07c442ce36ce640b3aa10c8c6e18d61153c3f5e8d2be0573bd7f8a5d7bdb681"
+}

@@ -305,9 +305,10 @@ impl LevelServer {
                 "select count(*)
                  from activities_collisions ac
                  inner join campfire_db.units u on ac.tag_1 = u.id
-                 where u.status = $1 and ac.account_id = $2",
+                 where u.status = $1 and ac.account_id = $2 and ac.type = $3",
                 i64::from(Status::Public),
                 user_id,
+                collisions::ACTIVITIES_COLLISION_TYPE_RELAY_RACE_POST,
             )
             .fetch_one(&self.base.pool)
             .await?

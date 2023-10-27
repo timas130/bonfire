@@ -1,0 +1,12 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "delete from recovery_flows where expires < now()",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": []
+  },
+  "hash": "a2f38da782a5bdc952d42f8abdc5bcbb2c7ed12f1e343441e00c7de05e3c0e66"
+}

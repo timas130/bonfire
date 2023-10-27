@@ -16,24 +16,16 @@ import java.util.*
 class API(
     projectKey: String,
     tokenProvider: TokenProvider,
-    host: String,
-    portHttps: Int,
-    portCertificate: Int,
-    saver: (String, String?) -> Unit,
-    loader: (String) -> String?,
     onError: (Throwable) -> Unit = {},
-) : ApiClient(projectKey, tokenProvider, host, portHttps, portCertificate, saver, loader, onError) {
+) : ApiClient(projectKey, tokenProvider, onError) {
 
     companion object {
         const val PORT_SERV_JL_V1 = 7070
         const val PORT_SERV_JL = 7071
         const val SERV_ROOT = "https://cf2.bonfire.moe/"
 
-        const val PORT_HTTPS = 4026
-        const val PORT_HTTP = 4028
-        const val PORT_CERTIFICATE = 4027
-        const val IP = "cf.bonfire.moe"
         const val DOMEN = "https://bonfire.moe/r/"
+        const val DOMEN_DL = "bf://link/"
         const val VERSION = "2.0"
         const val SUPPORTED_VERSION = "2.0"
 
@@ -132,7 +124,7 @@ class API(
         const val LINK_TAG_PROFILE_NAME = "profile"
         const val LINK_SHORT_PROFILE = "@"
         const val LINK_SHORT_PROFILE_SECOND = "#"
-        val LINK_PROFILE_NAME = "$DOMEN$LINK_TAG_PROFILE_NAME-"
+        const val LINK_PROFILE_NAME = "$DOMEN$LINK_TAG_PROFILE_NAME-"
 
         const val ERROR_GONE = "ERROR_GONE"
         const val ERROR_BAD_COMMENT = "ERROR_BAD_COMMENT"
@@ -163,11 +155,10 @@ class API(
         const val ACCOUNT_TITLE_IMG_GIF_H = 200
         const val ACCOUNT_TITLE_IMG_WEIGHT = 1024 * 32
         const val ACCOUNT_TITLE_IMG_GIF_WEIGHT = 1024 * 1024
-        const val ACCOUNT_NAME_L_MIN = 3
-        const val ACCOUNT_NAME_L_MAX = 25
-        const val ACCOUNT_PASSOWRD_L_MIN = 6
+        const val ACCOUNT_PASSOWRD_L_MIN = 8
         const val ACCOUNT_STATUS_MAX_L = 80
-        val ACCOUNT_LOGIN_CHARS = ToolsText.LATIS_S + ToolsText.NUMBERS_S
+        @Deprecated("use ToolsText.isValidUsername")
+        val ACCOUNT_LOGIN_CHARS = ToolsText.LATIS_S + ToolsText.NUMBERS_S + "_"
         const val ACCOUNT_AGE_MAX = 200
         const val ACCOUNT_DESCRIPTION_MAX_L = 1000
         const val ACCOUNT_LINK_TITLE_MAX_L = 30
@@ -735,8 +726,6 @@ class API(
         const val COLLISION_ACHIEVEMENT_RELAY_RACE_FIRST_NEXT_MEMBER = 10020L
         const val COLLISION_ACHIEVEMENT_RELAY_RACE_FIRST_CREATE = 10021L
         const val COLLISION_ACHIEVEMENT_RELAY_RACE_POSTS_COUNT = 10022L
-        @Deprecated("recounted in rust-bonfire")
-        const val COLLISION_ACHIEVEMENT_RELAY_RACE_MY_RACE_POSTS_COUNT = 10023L
         const val COLLISION_ACHIEVEMENT_VICEROY_ASSIGN = 10024L
         const val COLLISION_ACHIEVEMENT_VICEROY_LINK = 10025L
         const val COLLISION_ACHIEVEMENT_VICEROY_IMAGES = 10026L

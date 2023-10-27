@@ -42,10 +42,12 @@ private fun DailyTaskMultipliers(modifier: Modifier = Modifier, taskInfo: DailyT
                         .asSheetShow()
                 },
                 label = {
-                    Text(t(
-                        API_TRANSLATE.daily_task_newbie_bonus,
-                        "${(taskInfo.levelMultiplier * 100).toInt()}%"
-                    ))
+                    Text(
+                        t(
+                            API_TRANSLATE.daily_task_newbie_bonus,
+                            "${(taskInfo.levelMultiplier * 100).toInt()}%"
+                        )
+                    )
                 },
             )
         }
@@ -58,10 +60,12 @@ private fun DailyTaskMultipliers(modifier: Modifier = Modifier, taskInfo: DailyT
                     .asSheetShow()
             },
             label = {
-                Text(t(
-                    API_TRANSLATE.daily_task_combo_bonus,
-                    "${(taskInfo.comboMultiplier * 100 - 100).toInt()}%"
-                ))
+                Text(
+                    t(
+                        API_TRANSLATE.daily_task_combo_bonus,
+                        "${(taskInfo.comboMultiplier * 100 - 100).toInt()}%"
+                    )
+                )
             }
         )
 
@@ -81,18 +85,21 @@ fun DailyTask(modifier: Modifier = Modifier, taskInfo: DailyTaskInfo?, compact: 
                         it.fandomName ?: t(API_TRANSLATE.daily_task_deleted_fandom),
                     )
                 }
+
                 DailyTaskType.CommentNewbiePost, DailyTaskType.AnswerNewbieComment -> {
                     t(
                         API_TRANSLATE.dailyTaskNames[it.task.type] ?: API_TRANSLATE.daily_task_unknonwn,
                         ToolsText.numToStringRound(it.task.maxLevel / 100.0, 2),
                     )
                 }
+
                 DailyTaskType.CreatePostWithPageType -> {
                     t(
                         API_TRANSLATE.dailyTaskNames[it.task.type] ?: API_TRANSLATE.daily_task_unknonwn,
                         t(API_TRANSLATE.pageTypeNames[it.task.pageType] ?: API_TRANSLATE.post_page_unknown),
                     )
                 }
+
                 else -> {
                     t(API_TRANSLATE.dailyTaskNames[it.task.type] ?: API_TRANSLATE.daily_task_unknonwn)
                 }
@@ -107,7 +114,8 @@ fun DailyTask(modifier: Modifier = Modifier, taskInfo: DailyTaskInfo?, compact: 
 
         // task progress indicator
         LinearProgressIndicator(
-            progress = taskInfo?.let { it.progress.toFloat() / it.total.toFloat() } ?: 0f,
+            progress = taskInfo?.let { it.progress.toFloat() / it.task.amount.toFloat() }?.takeIf { it.isFinite() }
+                ?: 0f,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(16.dp)
@@ -137,15 +145,15 @@ fun DailyTask(modifier: Modifier = Modifier, taskInfo: DailyTaskInfo?, compact: 
             )
 
             if (taskInfo != null) {
-                val progress = taskInfo.progress.coerceAtMost(taskInfo.total)
+                val progress = taskInfo.progress.coerceAtMost(taskInfo.task.amount)
                 if (taskInfo.task.type.karmaTask) {
                     Text(
-                        t(API_TRANSLATE.daily_task_progress, progress / 100, taskInfo.total / 100),
+                        t(API_TRANSLATE.daily_task_progress, progress / 100, taskInfo.task.amount / 100),
                         style = textStyle,
                     )
                 } else {
                     Text(
-                        t(API_TRANSLATE.daily_task_progress, progress, taskInfo.total),
+                        t(API_TRANSLATE.daily_task_progress, progress, taskInfo.task.amount),
                         style = textStyle,
                     )
                 }

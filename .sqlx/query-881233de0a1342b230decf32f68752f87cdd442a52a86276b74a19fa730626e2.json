@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*)\n                 from campfire_db.units_karma_transactions\n                 where from_account_id = $1 and\n                       date_create >= $2 and date_create <= $3",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "881233de0a1342b230decf32f68752f87cdd442a52a86276b74a19fa730626e2"
+}

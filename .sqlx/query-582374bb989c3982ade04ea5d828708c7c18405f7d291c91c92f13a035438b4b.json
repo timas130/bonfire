@@ -1,0 +1,29 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update users set password = $1 where id = $2 returning email, username",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "email",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "username",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      true,
+      false
+    ]
+  },
+  "hash": "582374bb989c3982ade04ea5d828708c7c18405f7d291c91c92f13a035438b4b"
+}

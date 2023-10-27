@@ -1,0 +1,25 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*)\n                 from units u\n                 inner join activities_collisions ac on ac.tag_1 = u.id\n                 inner join activities a on a.id = ac.activity_id\n                 where u.unit_type = $1 and u.status = $2 and a.creator_id = $3 and ac.type = $4",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "728630adc12ad99afccb712e9d57f1ecca685c0f94e66a90467cceff87a12974"
+}

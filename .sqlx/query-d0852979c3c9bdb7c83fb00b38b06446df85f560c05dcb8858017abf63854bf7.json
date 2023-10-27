@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select id from users where username = any($1)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "TextArray"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "d0852979c3c9bdb7c83fb00b38b06446df85f560c05dcb8858017abf63854bf7"
+}

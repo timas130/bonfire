@@ -88,6 +88,11 @@ impl AuthServer {
             return Err(AuthError::InvalidTfaCode);
         }
 
+        // clear attempt counter
+        sqlx::query!("delete from totp_attempts where user_id = $1", user_id)
+            .execute(&mut *tx)
+            .await?;
+
         sqlx::query!(
             "update tfa_flows set completed = true where id = $1",
             tfa_flow.id

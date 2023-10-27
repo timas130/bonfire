@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select user_id from recovery_flows where expires > now() and id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "user_id",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "be4f150f5bd58044b6acfe9ef1ccf39a6b65985532a088116df810249b91d69d"
+}

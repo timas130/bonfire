@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select sum(kc.value_1)::bigint\n                 from collisions kc\n                 inner join collisions vc on kc.collision_id = vc.owner_id and kc.collision_sub_id = vc.collision_id\n                 where vc.collision_type = $1 and kc.collision_type = $2 and\n                       vc.value_1 = $3",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "sum",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "8eae9de19e681820333e319a8455c283cf6b50c0f75b2199fa92c93e79e9f3b2"
+}

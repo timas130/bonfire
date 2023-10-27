@@ -8,6 +8,7 @@ import com.dzen.campfire.server.rust.RustAchievements
 import com.dzen.campfire.server.tables.TAccounts
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.util.concurrent.ConcurrentSkipListSet
@@ -16,14 +17,18 @@ object ControllerAchievements {
     fun recount(accountId: Long): RustAchievements.LevelRecountReport {
         val previousReportS = ControllerCollisions.getCollisionValue2(accountId, API.COLLISION_ACCOUNT_ACHIEVEMENTS)
         val previousReport = if (previousReportS.isNotEmpty()) {
-            Json.decodeFromString<RustAchievements.LevelRecountReport>(previousReportS)
+            try {
+                Json.decodeFromString<RustAchievements.LevelRecountReport>(previousReportS)
+            } catch (e: SerializationException) {
+                null
+            }
         } else {
             null
         }
 
         val report = RustAchievements.getForUser(accountId)
         for ((_, achievement) in report.achievements) {
-            val previousLvl = ((previousReport?.achievements?.get(achievement.id)?.target ?: -1) + 1).toInt()
+            val previousLvl = ((previousReport?.achievements?.get(achievement.id)?.target ?: 9999999) + 1).toInt()
             val achievementTarget = ((achievement.target ?: -1) + 1).toInt()
 
             if (previousLvl < achievementTarget) {

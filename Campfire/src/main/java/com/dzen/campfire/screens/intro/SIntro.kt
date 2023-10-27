@@ -2,12 +2,14 @@ package com.dzen.campfire.screens.intro
 
 import com.dzen.campfire.R
 import com.dzen.campfire.app.App
-import com.sayzen.campfiresdk.controllers.ControllerApi
-import com.sayzen.campfiresdk.controllers.ControllerApiLogin
-import com.sayzen.campfiresdk.controllers.api
+import com.sayzen.campfiresdk.compose.auth.AuthStartScreen
+import com.sayzen.campfiresdk.compose.auth.AuthenticatedConsentScreen
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import sh.sit.bonfire.auth.AuthController
 
 class SIntro : Screen(R.layout.screen_intro) {
 
@@ -20,10 +22,21 @@ class SIntro : Screen(R.layout.screen_intro) {
     override fun onFirstShow() {
         super.onFirstShow()
 
-        if(ControllerApiLogin.isLoginNone()){
-            Navigator.set(SIntroAccount())
-        }else{
-            Navigator.set(SIntroConnection())
+        val authState = runBlocking { AuthController.authState.first() }
+        when (authState) {
+            is AuthController.AuthenticatedAuthState -> {
+                Navigator.replace(AuthenticatedConsentScreen {
+                    Navigator.replace(SIntroConnection())
+                })
+            }
+            is AuthController.TfaAuthState -> {
+                TODO()
+            }
+            else -> {
+                Navigator.replace(AuthStartScreen(onLogin = {
+                    Navigator.replace(SIntroConnection())
+                }))
+            }
         }
     }
 
@@ -31,7 +44,4 @@ class SIntro : Screen(R.layout.screen_intro) {
         App.activity().finish()
         return true
     }
-
-
-
 }

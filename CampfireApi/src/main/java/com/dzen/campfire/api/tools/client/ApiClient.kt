@@ -1,7 +1,6 @@
 package com.dzen.campfire.api.tools.client
 
 import com.dzen.campfire.api.tools.ApiException
-import com.sup.dev.java.classes.items.Item
 import com.sup.dev.java.libs.debug.Debug
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.json.Json
@@ -13,11 +12,6 @@ import java.util.concurrent.TimeUnit
 abstract class ApiClient(
     val projectKey: String,
     private val tokenProvider: TokenProvider,
-    val host: String,
-    private val portHttps: Int,
-    private val portCertificate: Int,
-    private val saver: (String, String?) -> Unit,
-    private val loader: (String) -> String?,
     private val onErrorCb: (Throwable) -> Unit = {},
 ) {
 
@@ -50,43 +44,6 @@ abstract class ApiClient(
         ThreadPoolExecutor(1, 4, 1, TimeUnit.MINUTES, LinkedBlockingQueue())
 
     lateinit var networkingProvider: NetworkingProvider
-
-    fun getAccessToken(): String? {
-        val s = loader.invoke("ApiClient_access_token")
-        if (!s.isNullOrEmpty()) {
-            try {
-                val time = (loader.invoke("ApiClient_access_token_time_save") ?: "0").toLong()
-                if (time + TOKEN_ACCESS_LIFETIME > System.currentTimeMillis()) {
-                    return s
-                }
-            } catch (_: NumberFormatException) {
-            } catch (e: Exception) {
-                onErrorCb(e)
-                err(e)
-            }
-        }
-
-        return null
-    }
-
-    fun setAccessToken(token: String?) {
-        saver.invoke("ApiClient_access_token_time_save", "${System.currentTimeMillis()}")
-        saver.invoke("ApiClient_access_token", token)
-    }
-
-    fun getRefreshToken() = loader.invoke("ApiClient_refresh_token")
-    fun setRefreshToken(token: String?) {
-        saver.invoke("ApiClient_refresh_token", token)
-    }
-
-    fun clearAccessToken() {
-        setAccessToken(null)
-    }
-
-    fun clearTokens() {
-        setAccessToken(null)
-        setRefreshToken(null)
-    }
 
     abstract fun getApiVersion(): String
 
@@ -125,55 +82,22 @@ abstract class ApiClient(
     //  Action
     //
 
-    private inner class Action<K : Request.Response> constructor(
+    private inner class Action<K : Request.Response>(
         private val request: Request<K>,
         private val stackTrace: Throwable,
         private val callbackInMain: Boolean
     ) {
-        private var accessToken: String? = request.accessToken
-        private var loginToken: String? = request.loginToken
-
         fun start(retry: Int = 3) {
-            val realAccessToken = accessToken ?: getAccessToken()
+            val accessToken = tokenProvider.getAccessToken()
 
-            if (
-                (request.tokenRequired || request.tokenDesirable) &&
-                realAccessToken == null &&
-                getRefreshToken() == null &&
-                loginToken == null
-            ) {
-                val result = Item(false)
-                tokenProvider.getToken { token ->
-                    loginToken = token
-                    result.a = true
-                }
-                while ((!result.a)) ToolsThreads.sleep(10)
-            }
-
-            if (
-                request.tokenRequired &&
-                realAccessToken == null &&
-                getRefreshToken() == null &&
-                loginToken == null
-            ) {
-                ToolsThreads.main { tokenProvider.onLoginFailed() }
+            if (request.tokenRequired && accessToken == null) {
                 onError(IllegalStateException("Can't get the access token"))
                 return
             }
 
             val json = Json()
             request.json(true, json)
-            when {
-                (accessToken != null || getAccessToken() != null) -> {
-                    json.put(J_API_ACCESS_TOKEN, realAccessToken)
-                }
-                getRefreshToken() != null -> {
-                    json.put(J_API_REFRESH_TOKEN, getRefreshToken())
-                }
-                loginToken != null -> {
-                    json.put(J_API_LOGIN_TOKEN, loginToken)
-                }
-            }
+            json.put(J_API_ACCESS_TOKEN, accessToken)
 
             val bytes = json.toBytes()
 
@@ -206,24 +130,11 @@ abstract class ApiClient(
             val status = responseJson.get<String>(J_STATUS)
 
             if (status == J_STATUS_OK) {
-                if (responseJson.containsKey(J_API_ACCESS_TOKEN)) setAccessToken(
-                    responseJson.getString(
-                        J_API_ACCESS_TOKEN
-                    )
-                )
-                if (responseJson.containsKey(J_API_REFRESH_TOKEN)) setRefreshToken(
-                    responseJson.getString(
-                        J_API_REFRESH_TOKEN
-                    )
-                )
-
                 val response = request.instanceResponse(responseJson.getJson(J_RESPONSE)!!)
 
                 callbackComplete(response)
             } else {
                 val ex = ApiException(responseJson.getJson(J_RESPONSE)!!)
-
-                if (parseApiError(ex)) return
 
                 callbackError(ex)
             }
@@ -238,29 +149,6 @@ abstract class ApiClient(
             else request.onCompleteList.invoke(request.instanceResponse(bytes))
         }
 
-        private fun parseApiError(e: ApiException): Boolean {
-            if (e.code == ERROR_UNAUTHORIZED) {
-                when {
-                    getAccessToken() != null -> {
-                        setAccessToken(null)
-                        start()
-                    }
-                    getRefreshToken() != null -> {
-                        setRefreshToken(null)
-                        start()
-                    }
-                    else -> {
-                        tokenProvider.clearToken()
-                        loginToken = null
-                        start()
-                    }
-                }
-                return true
-            }
-
-            return false
-        }
-
         private fun onError(e: Exception) {
             if (!request.noErrorLogs) {
                 this@ApiClient.onErrorCb(e)
@@ -268,11 +156,7 @@ abstract class ApiClient(
                 err(stackTrace)
             }
 
-            if (e is ApiException) {
-                parseApiError(e)
-            } else {
-                callbackError(e)
-            }
+            callbackError(e)
         }
 
         private fun callbackComplete(response: K) {

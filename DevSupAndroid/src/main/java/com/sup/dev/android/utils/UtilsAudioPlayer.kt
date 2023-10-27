@@ -63,12 +63,16 @@ class UtilsAudioPlayer {
     fun isPlaying() = subPlayer != null && !subPlayer!!.stop
 
     fun pause() {
-        subPlayer?.audioTrack?.pause()
+        if (subPlayer?.audioTrack?.state == AudioTrack.STATE_INITIALIZED) {
+            subPlayer?.audioTrack?.pause()
+        }
         ToolsAndroid.releaseAudioFocus()
     }
 
     fun resume() {
-        subPlayer?.audioTrack?.play()
+        if (subPlayer?.audioTrack?.state == AudioTrack.STATE_INITIALIZED) {
+            subPlayer?.audioTrack?.play()
+        }
         ToolsAndroid.requestAudioFocus()
     }
 
@@ -165,7 +169,7 @@ class UtilsAudioPlayer {
             stop = true
             utilsProximity?.release()
             try {
-                if (audioTrack != null) audioTrack!!.stop()
+                if (audioTrack?.state == AudioTrack.STATE_INITIALIZED) audioTrack!!.stop()
             } catch (e: Exception) {
                 err(e)
             }

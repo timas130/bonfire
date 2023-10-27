@@ -46,9 +46,11 @@ obj/
 
 # Rust
 */target/
+target/
 
 .git/
 .gitignore
 Dockerfile
 
 .env
+config.toml

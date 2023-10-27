@@ -1,0 +1,34 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select username, email_verification_sent, email_verified from users where email = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "username",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "email_verification_sent",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 2,
+        "name": "email_verified",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "653eede9c28d5413fd0ca660bfada645b5529ab2e82f5b388e977bfd02018c33"
+}

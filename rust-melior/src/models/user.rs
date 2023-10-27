@@ -1,5 +1,7 @@
+use crate::context::{ContextExt, ReqContext};
 use crate::data_loaders::AuthUserLoader;
 use crate::error::RespError;
+use crate::schema::auth::security_settings::GSecuritySettings;
 use crate::schema::level::daily_task::DailyTaskInfo;
 use crate::schema::level::daily_task_fandoms::DailyTaskFandom;
 use crate::utils::permissions::PermissionLevelGuard;
@@ -42,8 +44,8 @@ pub struct User {
     /// Unique nickname for the user
     pub username: String,
     /// The user's email
-    #[graphql(guard = "PermissionLevelGuard::new(PermissionLevel::Supermod)")]
-    pub email: Option<String>,
+    #[graphql(skip)]
+    pub _email: Option<String>,
     /// Base permission level for the user
     #[graphql(guard = "PermissionLevelGuard::new(PermissionLevel::Supermod)")]
     pub permission_level: GPermissionLevel,
@@ -56,7 +58,7 @@ impl User {
         Self {
             _id: auth.id,
             username: auth.username,
-            email: auth.email,
+            _email: auth.email,
             permission_level: auth.permission_level.into(),
             created_at: auth.created_at,
         }
@@ -93,6 +95,29 @@ impl User {
     /// when another API requires it.
     async fn id(&self) -> ID {
         self._id.into()
+    }
+
+    /// User's email
+    ///
+    /// The email is only visible to the user themselves and
+    /// to supermods.
+    async fn email(&self, ctx: &Context<'_>) -> Option<&str> {
+        let req = ctx.data_unchecked::<ReqContext>();
+
+        let Some(user) = &req.user else {
+            return None;
+        };
+
+        if user.id == self._id || ctx.has_permission_level(PermissionLevel::Supermod) {
+            self._email.as_deref()
+        } else {
+            None
+        }
+    }
+
+    /// Get some security and login options for this user
+    async fn security_settings(&self, ctx: &Context<'_>) -> Result<GSecuritySettings, RespError> {
+        self._security_settings(ctx).await
     }
 
     /// Get daily task information for this User

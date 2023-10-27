@@ -65,12 +65,11 @@ class ApiServer(
         val key = "[${request.requestProjectKey}] ${request.javaClass.simpleName}"
         onKeyFound.invoke(key)
         request.accessToken = json[ApiClient.J_API_ACCESS_TOKEN]
-        request.refreshToken = json[ApiClient.J_API_REFRESH_TOKEN]
         request.loginToken = json[ApiClient.J_API_LOGIN_TOKEN]
         request.botToken = json[ApiClient.J_API_BOT_TOKEN]
 
         val allowedAccounts = accountRateLimiter[ip] ?: listOf()
-        val apiAccount = accountProvider.getAccount(request.accessToken, request.refreshToken, request.loginToken)
+        val apiAccount = accountProvider.getAccount(request.accessToken, request.loginToken)
         request.apiAccount = apiAccount ?: ApiAccount()
 
         if (!botTokensList.contains(request.botToken)) {
@@ -150,15 +149,16 @@ class ApiServer(
         val responseJson = Json()
         val responseJsonContent = Json()
 
-        if ((request.tokenRequired && apiAccount == null) || (request.tokenDesirable && apiAccount == null && (request.accessToken != null || request.refreshToken != null))) {
+        if ((request.tokenRequired && apiAccount == null) || (request.tokenDesirable && apiAccount == null && request.accessToken != null)) {
             responseJson.put(ApiClient.J_STATUS, ApiClient.J_STATUS_ERROR)
             ApiException(ApiClient.ERROR_UNAUTHORIZED).json(true, responseJsonContent)
             responseJson.put(ApiClient.J_RESPONSE, responseJsonContent)
         } else {
             if (apiAccount != null) {
                 responseJson.put(ApiClient.J_API_ACCESS_TOKEN, apiAccount.accessToken)
-                if (request.loginToken != null || request.refreshToken != null)
+                if (request.loginToken != null) {
                     responseJson.put(ApiClient.J_API_REFRESH_TOKEN, apiAccount.refreshToken)
+                }
             }
 
             try {

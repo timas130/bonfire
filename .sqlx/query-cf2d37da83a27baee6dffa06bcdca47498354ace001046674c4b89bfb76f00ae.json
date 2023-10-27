@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select username, email from users where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "username",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "email",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      true
+    ]
+  },
+  "hash": "cf2d37da83a27baee6dffa06bcdca47498354ace001046674c4b89bfb76f00ae"
+}

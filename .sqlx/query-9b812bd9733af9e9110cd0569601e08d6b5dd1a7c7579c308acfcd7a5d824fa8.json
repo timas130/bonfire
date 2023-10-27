@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*) from campfire_db.units\n                 where creator_id = $1 and status = $2 and unit_type = $3 and\n                       date_create >= $4 and date_create <= $5 and tag_1 = $6 and\n                       fandom_id != $7",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "9b812bd9733af9e9110cd0569601e08d6b5dd1a7c7579c308acfcd7a5d824fa8"
+}

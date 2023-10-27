@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*) as count\n             from totp_attempts\n             where user_id = $1 and created_at > now() - '1 minute'::interval",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "1e95c5965cde4733d5ae67dd75e90fd361e5218f03eb7d0e3d06470e1224ec71"
+}

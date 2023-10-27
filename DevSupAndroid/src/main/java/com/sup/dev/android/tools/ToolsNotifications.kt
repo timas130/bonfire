@@ -1,6 +1,10 @@
 package com.sup.dev.android.tools
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationChannelGroup
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -41,7 +45,12 @@ object ToolsNotifications {
     private var notificationManager: NotificationManager = SupAndroid.appContext!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     init {
-        SupAndroid.appContext?.registerReceiver(broadcastReceiver, IntentFilter("NOTIF_CANCEL"))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            SupAndroid.appContext?.registerReceiver(broadcastReceiver, IntentFilter("NOTIF_CANCEL"),
+                Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            SupAndroid.appContext?.registerReceiver(broadcastReceiver, IntentFilter("NOTIF_CANCEL"))
+        }
     }
 
     fun instanceGroup(groupId: Int, name: Int) = instanceGroup(groupId, ToolsResources.s(name))
@@ -172,9 +181,9 @@ object ToolsNotifications {
             notification.intentCancel.putExtra("ToolsNotification.intentType", IntentType.CANCEL.index)
 
             builder.setContentIntent(PendingIntent.getActivity(SupAndroid.appContext!!, ++notificationIdCounter, notification.intent, PendingIntent.FLAG_CANCEL_CURRENT or (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                PendingIntent.FLAG_MUTABLE else 0)))
+                PendingIntent.FLAG_IMMUTABLE else 0)))
             builder.setDeleteIntent(PendingIntent.getBroadcast(SupAndroid.appContext!!, ++notificationIdCounter, notification.intentCancel, PendingIntent.FLAG_CANCEL_CURRENT or (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                PendingIntent.FLAG_MUTABLE else 0)))
+                PendingIntent.FLAG_IMMUTABLE else 0)))
 
             for (a in notification.actions) {
                 a.intent.putExtra("ToolsNotification.notificationId", notificationId)
@@ -183,7 +192,7 @@ object ToolsNotifications {
                 a.intent.putExtra("ToolsNotification.intentType", IntentType.ACTION.index)
 
                 val action = NotificationCompat.Action(a.icon, a.text, PendingIntent.getActivity(SupAndroid.appContext, ++notificationIdCounter, a.intent, PendingIntent.FLAG_CANCEL_CURRENT or (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    PendingIntent.FLAG_MUTABLE else 0)))
+                    PendingIntent.FLAG_IMMUTABLE else 0)))
                 builder.addAction(action)
             }
 

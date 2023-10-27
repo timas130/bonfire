@@ -39,9 +39,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sup.dev.android.R
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.magic_box.AndroidBug5497Workaround
-import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.android.views.splash.SplashProgressTransparent
 import com.sup.dev.android.views.splash.SplashProgressWithTitle
+import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.java.classes.items.Item
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
@@ -64,9 +64,9 @@ object ToolsView {
         }
     }
 
-    fun getSelectionPosition(vFiled: EditText): Point {
+    fun getSelectionPosition(vFiled: EditText): Point? {
         val pos = vFiled.selectionStart
-        val layout = vFiled.layout
+        val layout = vFiled.layout ?: return null
         val line = layout.getLineForOffset(pos)
         val baseline = layout.getLineBaseline(line)
         val ascent = layout.getLineAscent(line)

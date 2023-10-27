@@ -121,6 +121,8 @@ class AccountSettings() : JsonParsable {
         fullscreen = json.m(inp, "fullscreen", fullscreen)
         isProfileListStyle = json.m(inp, "isProfileListStyle", isProfileListStyle)
         postFontSize = json.m(inp, "postFontSize", postFontSize)
+        styleNewYearSnow = json.m(inp, "styleNewYearSnow", styleNewYearSnow)
+        styleNewYearProfileAnimation = json.m(inp, "styleNewYearProfileAnimation", styleNewYearProfileAnimation)
 
         watchPost = json.m(inp, "watchPost", watchPost)
         appLanguage = json.m(inp, "appLanguage", appLanguage)

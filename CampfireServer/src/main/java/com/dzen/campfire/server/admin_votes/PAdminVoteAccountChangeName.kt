@@ -3,27 +3,24 @@ package com.dzen.campfire.server.admin_votes
 import com.dzen.campfire.api.models.admins.MAdminVoteAccountChangeName
 import com.dzen.campfire.api.models.publications.events_admins.ApiEventAdminChangeName
 import com.dzen.campfire.api.models.publications.events_user.ApiEventUserAdminNameChanged
-import com.dzen.campfire.server.app.App
 import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerPublications
+import com.dzen.campfire.server.rust.RustAuth
 import com.dzen.campfire.server.tables.TAccounts
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
 
 class PAdminVoteAccountChangeName {
-
-    fun accept(m: MAdminVoteAccountChangeName){
+    fun accept(m: MAdminVoteAccountChangeName) {
         val oldName = ControllerAccounts.getAccount(m.targetAccount.id)!!.name
+
+        RustAuth.changeName(m.targetAccount.id, m.newName)
 
         Database.update("PAdminVoteAccountChangeName", SqlQueryUpdate(TAccounts.NAME)
             .updateValue(TAccounts.name, m.newName)
             .where(TAccounts.id, "=", m.targetAccount.id))
 
-        App.accountProvider.clearCash(m.targetAccount.id)
-
         ControllerPublications.event(ApiEventAdminChangeName(m.adminAccount.id, m.adminAccount.name, m.adminAccount.imageId, m.adminAccount.sex, m.targetAccount.id, m.newName, m.targetAccount.imageId, m.targetAccount.sex, m.comment, oldName), m.adminAccount.id)
         ControllerPublications.event(ApiEventUserAdminNameChanged(m.targetAccount.id, m.newName, m.targetAccount.imageId, m.targetAccount.sex, m.adminAccount.id, m.adminAccount.name, m.adminAccount.imageId, m.adminAccount.sex, m.comment, oldName), m.targetAccount.id)
     }
-
-
 }

@@ -1,4 +1,4 @@
-FROM gradle:8.0-jdk17 AS builder
+FROM gradle:8.2-jdk17 AS builder
 
 COPY . /app
 WORKDIR /app/
@@ -6,24 +6,23 @@ RUN gradle CampfireServer:build CampfireServerMedia:build --no-daemon
 
 FROM rust:1.72-buster AS rust-builder
 
-COPY ./rust-bonfire/Cargo.lock ./rust-bonfire/Cargo.toml /app/rust-bonfire/
-WORKDIR /app/rust-bonfire/
-
-RUN mkdir src && \
-    echo "fn main() {println!(\"if you see this, the build broke\")}" > src/main.rs && \
-    cargo build --release && \
-    rm -rf src target/release/deps/rust_bonfire*
-
-COPY ./rust-bonfire/src /app/rust-bonfire/src
-COPY ./rust-bonfire/.sqlx /app/rust-bonfire/.sqlx
+WORKDIR /app
+COPY ./rust-auth /app/rust-auth
+COPY ./rust-core /app/rust-core
+COPY ./rust-email /app/rust-email
+COPY ./rust-level /app/rust-level
+COPY ./rust-melior /app/rust-melior
+COPY ./.sqlx /app/.sqlx
+COPY ./migrations /app/migrations
+COPY ./Cargo.toml ./Cargo.lock /app/
 RUN cargo build --release
 
-FROM amazoncorretto:17-al2023 AS runner
+FROM azul/zulu-openjdk-debian:17-jre AS runner
 
 WORKDIR /app/
 RUN mkdir -p /app/CampfireServer/res /app/lib
 
-RUN yum install -y tar openssl bash findutils
+RUN apt-get update && apt-get install -y tar openssl bash findutils curl
 RUN curl -o /app/bcprov.jar https://downloads.bouncycastle.org/java/bcprov-jdk15on-170.jar
 
 COPY --from=builder /app/docker-entrypoint.sh /app/
@@ -36,7 +35,7 @@ RUN tar -xf CampfireServerMedia.tar && rm CampfireServerMedia.tar
 
 COPY --from=builder /app/CampfireServer/res /app/CampfireServer/res
 
-COPY --from=rust-builder /app/rust-bonfire/target/release/rust-bonfire /app/rust-bonfire
+COPY --from=rust-builder /app/target/release/b-melior /app/rust-bonfire
 
 EXPOSE 4022 4023 4024 4026 4027 4028 4051
 VOLUME /app/secrets

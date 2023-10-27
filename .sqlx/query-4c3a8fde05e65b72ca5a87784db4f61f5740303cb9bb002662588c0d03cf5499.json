@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select checked_in from daily_tasks\n                    where account_id = $1 and date = $2",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "checked_in",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Date"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "4c3a8fde05e65b72ca5a87784db4f61f5740303cb9bb002662588c0d03cf5499"
+}

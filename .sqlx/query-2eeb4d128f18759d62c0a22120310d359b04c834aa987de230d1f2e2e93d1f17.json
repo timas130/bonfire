@@ -1,0 +1,26 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select (select id from users where username = 'system') as system_id, (select id from users where username = 'deleted') as deleted_id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "system_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "deleted_id",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      null,
+      null
+    ]
+  },
+  "hash": "2eeb4d128f18759d62c0a22120310d359b04c834aa987de230d1f2e2e93d1f17"
+}

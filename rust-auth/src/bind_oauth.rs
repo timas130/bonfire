@@ -1,9 +1,7 @@
+use c_core::prelude::tracing::info;
 use crate::terminate_session::AccessTokenInfo;
 use crate::AuthServer;
 use c_core::services::auth::{AuthError, OAuthProvider};
-use itertools::Itertools;
-use openidconnect::{OAuth2TokenResponse, TokenResponse};
-use sqlx::types::chrono::Utc;
 
 impl AuthServer {
     pub(crate) async fn _bind_oauth(
@@ -15,9 +13,10 @@ impl AuthServer {
     ) -> Result<(), AuthError> {
         let AccessTokenInfo { user_id, .. } = self.get_access_token_info_secure(token).await?;
 
-        let (token_response, id_token) = self.get_token_response(provider, nonce, code).await?;
+        let (token_response, id_token, claims) =
+            self.get_token_response(provider, nonce, code).await?;
 
-        let provider_id = id_token.subject().as_str();
+        let provider_id = claims.subject().as_str();
 
         let mut tx = self.base.pool.begin().await?;
 
@@ -35,24 +34,32 @@ impl AuthServer {
             return Err(AuthError::AnotherAccountExists);
         }
 
-        sqlx::query!(
-            "insert into auth_sources (
-                 user_id, provider, provider_account_id, refresh_token,
-                 access_token, expires_at, scope, id_token
-             ) values ($1, $2, $3, $4, $5, $6, $7, $8)",
+        self.insert_into_auth_sources(
+            &mut tx,
             user_id,
-            i32::from(provider),
-            id_token.subject().as_str(),
-            token_response.refresh_token().map(|token| token.secret()),
-            token_response.access_token().secret(),
-            token_response.expires_in().map(|dur| Utc::now() + dur),
-            token_response
-                .scopes()
-                .map(|list| list.iter().map(|scope| scope.as_str()).join(" ")),
-            token_response.id_token().map(|token| token.to_string())
+            provider,
+            &token_response,
+            &id_token,
+            &claims,
         )
-        .execute(&mut *tx)
         .await?;
+
+        let email = match claims.email() {
+            Some(email) if claims.email_verified().unwrap_or(false) => Some(email),
+            _ => None,
+        };
+
+        if let Some(email) = email {
+            let updated = sqlx::query!(
+                "update users set email = $1 where id = $2 and (select id from users where email = $1) is null",
+                email.as_str(),
+                user_id,
+            ).execute(&mut *tx).await?.rows_affected();
+
+            if updated > 0 {
+                info!("updated user_id={user_id} email={} from authenticating via {provider:?}", email.as_str());
+            }
+        }
 
         tx.commit().await?;
 

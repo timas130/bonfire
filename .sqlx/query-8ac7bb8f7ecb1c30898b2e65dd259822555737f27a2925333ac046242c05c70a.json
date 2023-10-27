@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into oauth_flows (ua_token, csrf_token, nonce, expires)\n             values ($1, $2, $3, now() + '1 hour'::interval)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "8ac7bb8f7ecb1c30898b2e65dd259822555737f27a2925333ac046242c05c70a"
+}

@@ -24,6 +24,10 @@ impl AuthServer {
     ) -> Result<(), AuthError> {
         let access_token = self.get_access_token_info_secure(access_token).await?;
 
+        if !Self::is_email_valid(&new_email) {
+            return Err(AuthError::InvalidEmail);
+        }
+
         let mut tx = self.base.pool.begin().await?;
 
         let email_taken =

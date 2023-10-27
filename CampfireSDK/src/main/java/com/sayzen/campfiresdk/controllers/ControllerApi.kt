@@ -12,16 +12,15 @@ import com.dzen.campfire.api.models.lvl.LvlInfo
 import com.dzen.campfire.api.models.lvl.LvlInfoAdmin
 import com.dzen.campfire.api.models.lvl.LvlInfoUser
 import com.dzen.campfire.api.requests.accounts.RAccountsClearReports
-import com.dzen.campfire.api.requests.accounts.RAccountsLoginSimple
 import com.dzen.campfire.api.requests.accounts.RAccountsLogout
-import com.dzen.campfire.api.requests.accounts.RAccountsRegistration
 import com.dzen.campfire.api.requests.publications.RPublicationsAdminClearReports
 import com.dzen.campfire.api.requests.publications.RPublicationsOnShare
 import com.dzen.campfire.api.requests.publications.RPublicationsRemove
 import com.dzen.campfire.api.requests.publications.RPublicationsReport
 import com.dzen.campfire.api.tools.ApiException
+import com.dzen.campfire.api.tools.client.ApiClient
+import com.dzen.campfire.api.tools.client.DummyTokenProvider
 import com.dzen.campfire.api.tools.client.Request
-import com.dzen.campfire.api.tools.client.TokenProvider
 import com.dzen.campfire.api_media.APIMedia
 import com.dzen.campfire.api_media.requests.RResourcesGet
 import com.dzen.campfire.api_media.requests.RResourcesGetByTag
@@ -36,7 +35,6 @@ import com.sayzen.campfiresdk.models.events.publications.EventPublicationReports
 import com.sayzen.campfiresdk.screens.fandoms.moderation.view.SModerationView
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.adapters.XAccount
-import com.sayzen.devsupandroidgoogle.ControllerGoogleAuth
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.image_loader.ImageLink
 import com.sup.dev.android.libs.image_loader.ImageLoader
@@ -59,73 +57,39 @@ import com.sup.dev.java.libs.json.JsonArray
 import com.sup.dev.java.libs.text_format.TextFormatter
 import com.sup.dev.java.tools.ToolsMapper
 import com.sup.dev.java.tools.ToolsThreads
-import io.sentry.Sentry
+import kotlinx.coroutines.runBlocking
+import sh.sit.bonfire.auth.AuthController
 import sh.sit.bonfire.networking.OkHttpNetworkingProvider
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 val api: API = API(
     ControllerCampfireSDK.projectKey,
-    instanceTokenProvider(),
-    API.IP,
-    API.PORT_HTTPS,
-    API.PORT_CERTIFICATE,
-    { key, token -> ToolsStorage.put(key, token) },
-    { ToolsStorage.getString(it, null) },
-    { err -> err(err) }
-).apply {
+    AuthController,
+) { err -> err(err) }.apply {
     networkingProvider = OkHttpNetworkingProvider(
         SupAndroid.appContext!!,
         API.SERV_ROOT,
-        "CampfireSDK/${API.VERSION}"
     )
 }
 
 val apiMedia: APIMedia = APIMedia(
-        ControllerCampfireSDK.projectKey,
-        instanceTokenProviderMedia(),
-        APIMedia.IP,
-        APIMedia.PORT_HTTPS,
-        APIMedia.PORT_CERTIFICATE,
-        { _, _ -> }, { "" }
+    ControllerCampfireSDK.projectKey,
+    DummyTokenProvider
 ).apply {
     networkingProvider = OkHttpNetworkingProvider(
         SupAndroid.appContext!!,
         APIMedia.SERV_ROOT,
-        "CampfireSDK/M${API.VERSION}"
     )
 }
 
-fun instanceTokenProvider(): TokenProvider {
-    return object : TokenProvider {
-
-        override fun getToken(callbackSource: (String?) -> Unit) {
-            ControllerApiLogin.getLoginToken(callbackSource)
-        }
-
-        override fun clearToken() {
-            ControllerGoogleAuth.clearToken()
-        }
-
-        override fun onLoginFailed() {
-            ControllerGoogleAuth.onLoginFailed()
-        }
-    }
-}
-
-
-fun instanceTokenProviderMedia(): TokenProvider {
-    return object : TokenProvider {
-
-        override fun getToken(callbackSource: (String?) -> Unit) {
-            callbackSource.invoke("")
-        }
-
-        override fun clearToken() {
-            ControllerApi.setCurrentAccount(Account())
-        }
-
-        override fun onLoginFailed() {
-            ControllerApi.setCurrentAccount(Account())
-        }
+suspend fun <T : Request.Response> Request<T>.sendSuspend(api: ApiClient): T {
+    return suspendCoroutine { continuation ->
+        this
+            .onComplete { resp -> continuation.resume(resp) }
+            .onError { ex -> continuation.resumeWithException(ex) }
+            .send(api)
     }
 }
 
@@ -186,16 +150,6 @@ object ControllerApi {
 
     fun isUnsupportedVersion(): Boolean {
         return false
-        try {
-            val versionSupportedS = if (supported.contains('b')) supported.substring(0, supported.length - 1) else supported
-            val versionS = if (version.contains('b')) version.substring(0, version.length - 1) else version
-            val versionSupported = versionSupportedS.toDouble()
-            val version = versionS.toDouble()
-            return version < versionSupported
-        } catch (e: Exception) {
-            err(e)
-            return true
-        }
     }
 
     fun setVersion(version: String, supported: String) {
@@ -301,67 +255,6 @@ object ControllerApi {
         return (ToolsStorage.getJsonArray("protoadmins") ?: JsonArray()).getLongs()
     }
 
-    fun enableAutoRegistration() {
-        ControllerGoogleAuth.tokenPostExecutor = { token, callback ->
-            if (token == null) {
-                callback.invoke(token)
-            } else {
-                loginWithRegistration(token) {
-                    callback.invoke(token)
-                }
-            }
-        }
-    }
-
-
-    fun loginWithRegistration(onFinish: () -> Unit) {
-        loginWithRegistration(null, onFinish)
-    }
-
-    fun loginWithRegistration(loginToken: String?, onFinish: () -> Unit) {
-        if (account.getId() != 0L) {
-            onFinish.invoke()
-            return
-        }
-        val dialog = ToolsView.showProgressDialog()
-        login(loginToken) {
-            if (account.getId() == 0L) {
-                val r = RAccountsRegistration(getLanguage(getLanguageCode()).id, null)
-                        .onFinish {
-                            dialog.hide()
-                            login(loginToken) {
-                                onFinish.invoke()
-                            }
-                        }
-                r.loginToken = loginToken
-                r.send(api)
-            } else {
-                dialog.hide()
-                onFinish.invoke()
-            }
-        }
-    }
-
-    fun loginIfTokenExist() {
-        val token = api.getAccessToken()
-        if (token != null && token.isNotEmpty()) {
-            login(null) {
-
-            }
-        }
-    }
-
-    private fun login(loginToken: String?, onFinish: () -> Unit) {
-        val r = RAccountsLoginSimple(ControllerNotifications.token)
-                .onComplete {
-                    account.setAccount(it.account ?: Account())
-                    setServerTime(it.serverTime)
-                }
-                .onFinish { onFinish.invoke() }
-        r.loginToken = loginToken
-        r.send(api)
-    }
-
     fun currentTime() = System.currentTimeMillis() + serverTimeDelta
 
     fun setServerTime(serverTime: Long) {
@@ -380,22 +273,19 @@ object ControllerApi {
 
     fun logout(onComplete: () -> Unit) {
         RAccountsLogout()
-                .onFinish {
-                    ControllerNotifications.hideAll()
-                    ControllerGoogleAuth.logout {
-                        api.clearTokens()
-                        ControllerApiLogin.clear()
-                        ControllerChats.clearMessagesCount()
-                        ControllerSettings.clear()
-                        ControllerNotifications.setNewNotifications(emptyArray())
-                        setCurrentAccount(Account())
-                        this.fandomsKarmaCounts = null
-                        this.fandomsViceroy = null
-                        serverTimeDelta = 0
-                        onComplete.invoke()
-                    }
-                }
-                .send(api)
+            .onFinish {
+                ControllerNotifications.hideAll()
+                ControllerChats.clearMessagesCount()
+                ControllerSettings.clear()
+                ControllerNotifications.setNewNotifications(emptyArray())
+                runBlocking { AuthController.logout() }
+                setCurrentAccount(Account())
+                this.fandomsKarmaCounts = null
+                this.fandomsViceroy = null
+                serverTimeDelta = 0
+                onComplete.invoke()
+            }
+            .send(api)
     }
 
     fun showBlockedScreen(ex: ApiException, action: NavigationAction, text: String) {

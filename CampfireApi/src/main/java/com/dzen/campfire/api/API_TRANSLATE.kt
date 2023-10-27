@@ -696,7 +696,7 @@ object API_TRANSLATE {
     val feed_loading_81 = Translate("Запущен протокол самоуничтожения!")
     val feed_loading_82 = Translate("Встряхнуть перед использованием.")
     val feed_loading_83 = Translate("Использовать охлажденным.")
-    val feed_loading_84 = Translate("Bonfire — мы переосмыслили Bonfire")
+    val feed_loading_84 = Translate("Bonfire — мы переосмыслили Campfire")
     val feed_loading_85 = Translate("Покупайте нашу франшизу.")
     val feed_loading_86 = Translate("Молодой стартап")
     val feed_loading_87 = Translate("Кто-нибудь видел мою шляпу?")
@@ -1077,7 +1077,7 @@ object API_TRANSLATE {
     )
     val rules_users_6_title = Translate("Правила сообществ")
     val rules_users_7 = Translate(
-        "Запрещено публиковать контент в языке, который не соответствует языку фэндома. Разрешено помечать " +
+        "Запрещено публиковать контент на языке, который не соответствует языку фэндома. Разрешено помечать " +
         "пост как мультиязычный только если он преимущественно состоит из картинок."
     )
     val rules_users_7_title = Translate("Языки")
@@ -1768,7 +1768,7 @@ object API_TRANSLATE {
     val profile_change_name_confirm = Translate("Изменить имя этого пользователя?")
     val profile_change_title_image = Translate("Изменить фоновую картинку")
     val profile_remove_title_image = Translate("Удалить фоновую картинку")
-    val profile_change_name_error = Translate("Используйте символы: A-z 0-9")
+    val profile_change_name_error = Translate("Используйте символы: A-Z 0-9 _")
     val profile_empty_my = Translate("Вы еще ничего не публиковали")
     val profile_empty_other = Translate("Пользователь пока ничего не публиковал")
     val profile_follows_empty_male = Translate("Подписан на вас")

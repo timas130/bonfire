@@ -11,3 +11,4 @@ include ':Campfire',
         ':BonfireNetworking',
         ':BonfireServerNetworking',
         ':BonfireFormatting'
+include ':BonfireAuth'

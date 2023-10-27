@@ -1,15 +1,18 @@
 package com.dzen.campfire.server.rust
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 object RustAchievements {
     @Serializable
+    data class UserWithId(
+        val id: Long,
+    )
+
+    @Serializable
     data class LevelRecountReport(
-        @SerialName("user_id")
-        var userId: Long,
-        @SerialName("total_level")
+        var user: UserWithId,
         var totalLevel: Long,
         var achievements: HashMap<Long, AchievementRecountReport>,
     )
@@ -22,7 +25,28 @@ object RustAchievements {
         val level: Long,
     )
 
+    @Serializable
+    private data class InternalRecountResponse(
+        val internalRecountLevel: LevelRecountReport,
+    )
+
     fun getForUser(userId: Long): LevelRecountReport {
-        return Json.decodeFromString(String(ControllerRust.getBytes("/user/$userId/recount-level")))
+        val resp = ControllerRust.queryService<InternalRecountResponse>(
+            """
+                query InternalRecount(${'$'}userId: Int!) {
+                    internalRecountLevel(userId: ${'$'}userId) {
+                        totalLevel
+                        achievements
+                        user {
+                            id
+                        }
+                    }
+                }
+            """.trimIndent(),
+            buildJsonObject {
+                put("userId", userId)
+            }
+        )
+        return resp.internalRecountLevel
     }
 }

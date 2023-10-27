@@ -2,6 +2,8 @@ use async_graphql::Context;
 use async_trait::async_trait;
 use axum::headers::UserAgent;
 use axum::TypedHeader;
+use c_core::prelude::anyhow::anyhow;
+use c_core::prelude::tarpc::client::RpcError;
 use c_core::prelude::{anyhow, tarpc};
 use c_core::services::auth::user::{AuthUser, PermissionLevel};
 use c_core::services::auth::{Auth, AuthError, AuthServiceClient, UserContext};
@@ -34,6 +36,7 @@ pub struct ReqContext {
     pub user_context: UserContext,
     pub session_id: Option<i64>,
     pub user: Option<AuthUser>,
+    pub user_auth_error: Option<AuthError>,
     pub access_token: Option<String>,
 }
 impl ReqContext {
@@ -43,13 +46,22 @@ impl ReqContext {
         addr: SocketAddr,
         user_agent: Option<TypedHeader<UserAgent>>,
     ) -> Self {
+        let mut user_auth_error = None;
         let user: Option<(i64, AuthUser)> = match token.clone() {
-            Some(token) => global_context
-                .auth
-                .get_by_token(tarpc::context::current(), token)
-                .await
-                .ok()
-                .and_then(|result| result.ok()),
+            Some(token) => {
+                match global_context
+                    .auth
+                    .get_by_token(tarpc::context::current(), token)
+                    .await
+                {
+                    Ok(Ok(tuple)) => Some(tuple),
+                    Ok(Err(auth_error)) => {
+                        user_auth_error = Some(auth_error);
+                        None
+                    }
+                    Err(_) => None,
+                }
+            }
             None => None,
         };
 
@@ -65,8 +77,19 @@ impl ReqContext {
             },
             session_id: user.as_ref().map(|(session_id, _)| *session_id),
             user: user.map(|(_, auth)| auth),
+            user_auth_error,
             access_token: token,
         }
+    }
+
+    pub fn require_user(&self) -> Result<&AuthUser, AuthError> {
+        let Some(user) = &self.user else {
+            return Err(self
+                .user_auth_error
+                .clone()
+                .unwrap_or(AuthError::Unauthenticated));
+        };
+        Ok(user)
     }
 }
 

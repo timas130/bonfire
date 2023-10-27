@@ -144,7 +144,7 @@ fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound
                 }.toString())
             },
             PendingIntent.FLAG_UPDATE_CURRENT or (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                PendingIntent.FLAG_MUTABLE else 0),
+                PendingIntent.FLAG_IMMUTABLE else 0),
         ))
         builder.setStyle(NotificationCompat.MessagingStyle(me).also {
             it.isGroupConversation = tag.chatType != API.CHAT_TYPE_PRIVATE
@@ -201,7 +201,7 @@ fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound
                     it.putExtra(MessageReplyReceiver.CHAT_TAG, tag.asTag())
                 },
                 PendingIntent.FLAG_UPDATE_CURRENT or (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    PendingIntent.FLAG_MUTABLE else 0),
+                    PendingIntent.FLAG_IMMUTABLE else 0),
             )
         )
 

@@ -13,6 +13,7 @@ import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.tools.ToolsThreads
 import java.util.concurrent.TimeUnit
 
+@Deprecated("Migrate to BonfireAuth")
 object ControllerGoogleAuth {
 
     private var serverClientId = ""

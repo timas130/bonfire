@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*) from units_karma_transactions\n             where target_account_id = $1 and change_account_karma and karma_count > 0",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "b35b2f73d5f6e68d06c7c5964d63eef568e5c95100a68fe29a483ec03d9e7d1d"
+}

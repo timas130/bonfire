@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select collision_type from collisions\n             where owner_id = $1 and collision_type = any($2)\n             group by collision_type",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "collision_type",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8Array"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "cc45287fa71955452fd27dd764bbdc2a92a068b473ab88e10ce942cb8e17a189"
+}

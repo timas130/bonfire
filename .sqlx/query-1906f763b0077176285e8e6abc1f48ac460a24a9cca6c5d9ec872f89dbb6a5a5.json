@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "delete from tfa_flows where id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "1906f763b0077176285e8e6abc1f48ac460a24a9cca6c5d9ec872f89dbb6a5a5"
+}

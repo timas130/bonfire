@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*) > 0 from users where email = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "?column?",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "1f183864c08b97d715d60d60828b8eb90bf617b1e6dc86b5d29d1e0c8003b2ab"
+}

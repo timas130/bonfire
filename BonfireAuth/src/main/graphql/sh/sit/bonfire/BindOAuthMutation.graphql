@@ -1,0 +1,9 @@
+mutation BindOAuthMutation($input: OauthLoginInput!) {
+    bindOauth(input: $input) {
+        id
+        email
+        securitySettings {
+            googleLinked
+        }
+    }
+}

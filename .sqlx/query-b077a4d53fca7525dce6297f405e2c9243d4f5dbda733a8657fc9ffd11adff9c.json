@@ -1,0 +1,27 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*) from units\n                 where creator_id = $1 and fandom_id = $2 and status = $3 and\n                       unit_type = $4 and\n                       date_create >= $5 and date_create <= $6",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "b077a4d53fca7525dce6297f405e2c9243d4f5dbda733a8657fc9ffd11adff9c"
+}

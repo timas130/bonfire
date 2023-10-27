@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update users set permission_level = $1 where id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "5bf92dd43f2a67cf8b6c2600a998b18b8e030d1aef204ee6d9ff6221d0e86dab"
+}

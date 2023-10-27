@@ -1,14 +1,25 @@
 use crate::AuthServer;
+use c_core::prelude::anyhow;
 use c_core::prelude::anyhow::anyhow;
 use c_core::prelude::chrono::Utc;
 use c_core::services::auth::{AuthError, OAuthProvider, OAuthResult, UserContext};
 use itertools::Itertools;
 use jsonwebtoken::{decode, decode_header, Algorithm, DecodingKey, Validation};
 use nanoid::nanoid;
-use openidconnect::core::{CoreIdTokenClaims, CoreTokenResponse};
+use openidconnect::core::{CoreIdToken, CoreIdTokenClaims, CoreTokenResponse};
 use openidconnect::reqwest::async_http_client;
-use openidconnect::{AuthorizationCode, Nonce, OAuth2TokenResponse, TokenResponse};
+use openidconnect::{AuthorizationCode, Nonce, NonceVerifier, OAuth2TokenResponse, TokenResponse};
 use serde::Deserialize;
+use sqlx::{Postgres, Transaction};
+use std::str::FromStr;
+
+struct DummyNonceVerifier;
+
+impl NonceVerifier for DummyNonceVerifier {
+    fn verify(self, _: Option<&Nonce>) -> Result<(), String> {
+        Ok(())
+    }
+}
 
 #[derive(Deserialize)]
 struct FirebaseToken {
@@ -32,7 +43,17 @@ impl AuthServer {
             .map_err(|_| AuthError::InvalidToken)
             .and_then(|hdr| hdr.kid.ok_or(AuthError::InvalidToken))?;
 
-        let jwk = self.google_jwks.get(&kid).ok_or(AuthError::InvalidToken)?;
+        let jwk = self
+            .google_jwks
+            .iter()
+            .find(|jwk| {
+                jwk.common
+                    .key_id
+                    .as_ref()
+                    .map(|x| x == &kid)
+                    .unwrap_or(false)
+            })
+            .ok_or(AuthError::InvalidToken)?;
 
         let key = DecodingKey::from_jwk(jwk)
             .and_then(|key| decode::<FirebaseToken>(&id_token, &key, &validation))
@@ -60,17 +81,60 @@ impl AuthServer {
         })
     }
 
+    pub(crate) async fn insert_into_auth_sources(
+        &self,
+        tx: &mut Transaction<'_, Postgres>,
+        user_id: i64,
+        provider: OAuthProvider,
+        token_response: &Option<CoreTokenResponse>,
+        id_token: &CoreIdToken,
+        claims: &CoreIdTokenClaims,
+    ) -> Result<(), AuthError> {
+        let (refresh_token, access_token, expires_in, scopes) = match token_response {
+            Some(token_response) => (
+                token_response.refresh_token().map(|token| token.secret()),
+                Some(token_response.access_token().secret()),
+                token_response.expires_in().map(|dur| Utc::now() + dur),
+                token_response
+                    .scopes()
+                    .map(|list| list.iter().map(|scope| scope.as_str()).join(" ")),
+            ),
+            None => (None, None, None, None),
+        };
+
+        let id_token_ser = serde_json::to_value(id_token).map_err(anyhow::Error::from)?;
+        sqlx::query!(
+            "insert into auth_sources (
+                 user_id, provider, provider_account_id, refresh_token,
+                 access_token, expires_at, scope, id_token
+             ) values ($1, $2, $3, $4, $5, $6, $7, $8)",
+            user_id,
+            i32::from(provider),
+            claims.subject().as_str(),
+            refresh_token,
+            access_token,
+            expires_in,
+            scopes,
+            id_token_ser.as_str().unwrap(),
+        )
+        .execute(&mut **tx)
+        .await?;
+
+        Ok(())
+    }
+
     pub(crate) async fn register_oauth(
         &self,
         provider: OAuthProvider,
         context: Option<UserContext>,
-        token_response: CoreTokenResponse,
-        id_token: CoreIdTokenClaims,
+        token_response: Option<CoreTokenResponse>,
+        id_token: CoreIdToken,
+        claims: CoreIdTokenClaims,
     ) -> Result<OAuthResult, AuthError> {
         let mut tx = self.base.pool.begin().await?;
 
-        let email = id_token.email().map(|email| email.as_str());
-        let email_verified = id_token.email_verified().unwrap_or(true);
+        let email = claims.email().map(|email| email.as_str());
+        let email_verified = claims.email_verified().unwrap_or(true);
 
         let temp_name = nanoid!(32);
         let new_user_id = sqlx::query_scalar!(
@@ -106,23 +170,14 @@ impl AuthServer {
                 .await?;
         }
 
-        sqlx::query!(
-            "insert into auth_sources (
-                 user_id, provider, provider_account_id, refresh_token,
-                 access_token, expires_at, scope, id_token
-             ) values ($1, $2, $3, $4, $5, $6, $7, $8)",
+        self.insert_into_auth_sources(
+            &mut tx,
             new_user_id,
-            i32::from(provider),
-            id_token.subject().as_str(),
-            token_response.refresh_token().map(|token| token.secret()),
-            token_response.access_token().secret(),
-            token_response.expires_in().map(|dur| Utc::now() + dur),
-            token_response
-                .scopes()
-                .map(|list| list.iter().map(|scope| scope.as_str()).join(" ")),
-            token_response.id_token().map(|token| token.to_string())
+            provider,
+            &token_response,
+            &id_token,
+            &claims,
         )
-        .execute(&mut *tx)
         .await?;
 
         tx.commit().await?;
@@ -142,31 +197,40 @@ impl AuthServer {
         provider: OAuthProvider,
         nonce: String,
         code: String,
-    ) -> Result<(CoreTokenResponse, CoreIdTokenClaims), AuthError> {
+    ) -> Result<(Option<CoreTokenResponse>, CoreIdToken, CoreIdTokenClaims), AuthError> {
         let client = self.get_oauth_client(provider)?;
+        let id_token_verifier = client.id_token_verifier();
 
-        let token_response = client
-            .exchange_code(AuthorizationCode::new(code))
-            .request_async(async_http_client)
-            .await
-            .map_err(|_| AuthError::InvalidToken)?;
+        let id_token = CoreIdToken::from_str(&code);
+        let (token_response, id_token) = match id_token {
+            Ok(id_token) => (None, id_token),
+            Err(_) => {
+                let token_response = client
+                    .exchange_code(AuthorizationCode::new(code))
+                    .request_async(async_http_client)
+                    .await
+                    .map_err(|_| AuthError::InvalidToken)?;
+                let id_token = token_response
+                    .id_token()
+                    .ok_or(AuthError::InvalidToken)?
+                    .clone();
+                (Some(token_response), id_token)
+            }
+        };
 
         let nonce = sqlx::query_scalar!(
             "delete from oauth_flows where nonce = $1 returning nonce",
-            nonce
+            nonce,
         )
         .fetch_one(&self.base.pool)
         .await?;
 
-        let id_token_verifier = client.id_token_verifier();
-        let id_token = token_response
-            .id_token()
-            .ok_or(AuthError::InvalidToken)?
-            .claims(&id_token_verifier, &Nonce::new(nonce))
+        let claims = id_token
+            .claims(&id_token_verifier, DummyNonceVerifier)
             .map_err(|_| AuthError::InvalidToken)?
             .clone();
 
-        Ok((token_response, id_token))
+        Ok((token_response, id_token, claims))
     }
 
     pub(crate) async fn _get_oauth_result(
@@ -180,9 +244,10 @@ impl AuthServer {
             return self.get_firebase_result(code, context.as_ref()).await;
         }
 
-        let (token_response, id_token) = self.get_token_response(provider, nonce, code).await?;
+        let (token_response, id_token, claims) =
+            self.get_token_response(provider, nonce, code).await?;
 
-        let provider_id = id_token.subject().as_str();
+        let provider_id = claims.subject().as_str();
 
         let user_id = sqlx::query_scalar!(
             "select user_id from auth_sources
@@ -194,9 +259,9 @@ impl AuthServer {
         .await?;
 
         let Some(user_id) = user_id else {
-            let Some(email) = id_token.email() else {
+            let Some(email) = claims.email() else {
                 return self
-                    .register_oauth(provider, context, token_response, id_token)
+                    .register_oauth(provider, context, token_response, id_token, claims)
                     .await;
             };
 
@@ -213,7 +278,7 @@ impl AuthServer {
             }
 
             return self
-                .register_oauth(provider, context, token_response, id_token)
+                .register_oauth(provider, context, token_response, id_token, claims)
                 .await;
         };
 

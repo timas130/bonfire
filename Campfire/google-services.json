@@ -51,11 +51,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "778141366343-omjmv9oh458ngbtdvduntb3itr8078b9.apps.googleusercontent.com",
+          "client_id": "778141366343-3vq9eumhfad7elg3q9coehqc3pheo4al.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "sh.sit.bonfire.debug",
-            "certificate_hash": "ff74d662e91f696b0b96f2b8c508a1955b8daa87"
+            "certificate_hash": "ece3f715b94d776e66eec0ecdcf6412877afde26"
           }
         },
         {

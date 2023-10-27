@@ -1,0 +1,38 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select\n                 f.id,\n                 coalesce(\n                     ((vc.value_1 is not null and vc.value_1 = $3)::int * 2 + 1) *\n                     ((f.karma_cof::float / 100) * (f.karma_cof::float / 100)) *\n                     (\n                         (select count(*) from units u\n                          where u.unit_type = $5 and u.status = $7 and u.creator_id = $3 and\n                                u.date_create >= $9 and u.date_create <= $11 and u.fandom_id = f.id) +\n                         (select count(*) from units u\n                          where u.unit_type = $6 and u.status = $7 and u.creator_id = $3 and\n                                u.date_create >= $10 and u.date_create <= $11 and u.fandom_id = f.id) / 2\n                         + 1\n                     ),\n                     0\n                 ) as \"multiplier!\"\n             from fandoms f\n             inner join collisions sc on f.id = sc.collision_id\n             left join collisions vc on f.id = vc.owner_id\n             where\n                 f.id != any($1) and\n                 f.status = $7 and\n                 sc.collision_type = $2 and\n                 sc.owner_id = $3 and\n                 sc.value_1 != $4 and\n                 (vc.collision_type is null or vc.collision_type = $8)\n             order by \"multiplier!\" desc\n             limit 5",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "multiplier!",
+        "type_info": "Float8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8Array",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      null
+    ]
+  },
+  "hash": "6db2279c15b016409f0e88ee3ada26a9a7ad564a70dbef9412b986e1c856a2fc"
+}

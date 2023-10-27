@@ -1,0 +1,46 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select name,\n                    img_title_id,\n                    coalesce(recruiter_id, 0) as \"recruiter_id!\",\n                    karma_count,\n                    date_create\n             from accounts\n             where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "img_title_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "recruiter_id!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "karma_count",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 4,
+        "name": "date_create",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      null,
+      false,
+      false
+    ]
+  },
+  "hash": "515700821a03c53c48ac6840d4112f26f9c394b16c6e147679ce697b9eb4c0e8"
+}

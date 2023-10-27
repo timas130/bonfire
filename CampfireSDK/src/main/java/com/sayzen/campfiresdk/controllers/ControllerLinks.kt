@@ -49,6 +49,8 @@ object ControllerLinks {
             link.substring(1)
         } else if (link.startsWith(API.DOMEN)) {
             link.substring(API.DOMEN.length)
+        } else if (link.startsWith(API.DOMEN_DL)) {
+            link.substring(API.DOMEN_DL.length)
         } else {
             link.toString()
         }).replace('_', '-').removeSuffix("-")
@@ -158,7 +160,7 @@ object ControllerLinks {
                 API.LINK_RUBRIC.link -> SRubricPosts.instance(params[0].toLong(), Navigator.TO)
                 API.LINK_QUEST.link -> SQuest.instance(params[0].toLong(), Navigator.TO)
                 else -> {
-                    if (ToolsText.isOnly(t, API.ACCOUNT_LOGIN_CHARS)) {
+                    if (ToolsText.isValidUsername(t)) {
                         SProfile.instance(t, Navigator.TO)
                         return true
                     }
@@ -232,7 +234,7 @@ object ControllerLinks {
                 API.LINK_CONF.link -> params.size == 1 || params.size == 2
                 API.LINK_QUEST.link -> true
                 else -> {
-                    if (ToolsText.isOnly(t, API.ACCOUNT_LOGIN_CHARS)) {
+                    if (ToolsText.isValidUsername(t)) {
                         true
                     } else {
                         info("ControllerExecutorLinks link wasn't found [$link][$t]")

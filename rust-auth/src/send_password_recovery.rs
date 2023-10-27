@@ -33,7 +33,8 @@ impl AuthServer {
         .await?;
         let user = match user {
             Some(user) if user.email_verified.is_some() => user,
-            _ => return Ok(()),
+            Some(_) => return Err(AuthError::NotVerified),
+            _ => return Err(AuthError::UserNotFound),
         };
 
         // Check whether a recovery flow already exists
@@ -49,7 +50,7 @@ impl AuthServer {
         .unwrap_or(0);
 
         if existing_count > 0 {
-            return Ok(());
+            return Err(AuthError::TryAgainLater(RECOVERY_EXPIRY as u64));
         }
 
         // Create the flow and send the email

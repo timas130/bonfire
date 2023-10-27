@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into users (username, email, email_verification_sent, email_verified)\n             values ($1, $2, now(), $3)\n             returning id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "d5b5c9b4d57a586c932aa42be2b883063ffd77f487c2405b1b24a5515aaf3abb"
+}

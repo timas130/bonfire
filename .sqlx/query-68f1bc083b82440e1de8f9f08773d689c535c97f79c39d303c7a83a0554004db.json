@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*)\n                 from wiki_titles wt\n                 inner join collisions c on c.owner_id = wt.fandom_id\n                 where c.collision_type = $1 and wt.wiki_status = $2 and\n                       c.value_1 = $3 and wt.date_create >= c.collision_date_create",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "68f1bc083b82440e1de8f9f08773d689c535c97f79c39d303c7a83a0554004db"
+}

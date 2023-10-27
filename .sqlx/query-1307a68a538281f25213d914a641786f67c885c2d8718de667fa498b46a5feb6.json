@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select sum(((level_multiplier + combo_multiplier) * $1)::int)\n             from daily_tasks\n             where account_id = $2 and progress >= 1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "sum",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Float8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "1307a68a538281f25213d914a641786f67c885c2d8718de667fa498b46a5feb6"
+}

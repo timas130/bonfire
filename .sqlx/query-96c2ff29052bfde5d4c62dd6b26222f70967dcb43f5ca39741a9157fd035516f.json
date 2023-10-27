@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into totp_attempts (user_id) values ($1)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "96c2ff29052bfde5d4c62dd6b26222f70967dcb43f5ca39741a9157fd035516f"
+}

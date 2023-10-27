@@ -6,11 +6,18 @@ import com.sayzen.campfiresdk.views.SplashSearch
 import com.sayzen.campfiresdk.views.SplashSearchAccount
 import com.sayzen.campfiresdk.views.SplashSearchFandom
 import com.sup.dev.android.tools.ToolsView
+import java.util.*
 
 object ControllerMention {
 
-    private val wAccountSearch = SplashSearchAccount { field, account -> setMentionAccount(field, account.name) }.makeCompanion() as SplashSearchAccount
-    private val wFandomSearch = SplashSearchFandom { field, fandom -> setMentionFandom(field, fandom.id) }.makeCompanion() as SplashSearchFandom
+    private val wAccountSearch = SplashSearchAccount { field, account ->
+        setMentionAccount(
+            field,
+            account.name
+        )
+    }.makeCompanion() as SplashSearchAccount
+    private val wFandomSearch =
+        SplashSearchFandom { field, fandom -> setMentionFandom(field, fandom.id) }.makeCompanion() as SplashSearchFandom
 
     fun startFor(vField: EditText, addSpace: Boolean = true) {
         var firstTime = true
@@ -39,7 +46,13 @@ object ControllerMention {
     //  Account
     //
 
-    private fun searchForAccount(field: Field): SearchResult? = search(field, API.LINK_SHORT_PROFILE, API.ACCOUNT_LOGIN_CHARS, 20)?:search(field, API.LINK_SHORT_PROFILE_SECOND, API.ACCOUNT_LOGIN_CHARS, 20)
+    private fun searchForAccount(field: Field): SearchResult? =
+        search(field, API.LINK_SHORT_PROFILE, API.ACCOUNT_LOGIN_CHARS, 20) ?: search(
+            field,
+            API.LINK_SHORT_PROFILE_SECOND,
+            API.ACCOUNT_LOGIN_CHARS,
+            20
+        )
 
     private fun updateMentionAccount(field: Field) = updateMention(field, searchForAccount(field), wAccountSearch)
 
@@ -79,7 +92,9 @@ object ControllerMention {
         if (name != null) {
             if (widget.isHided()) {
                 val point = ToolsView.getSelectionPosition(vField)
-                widget.show(point, field)
+                if (point != null) {
+                    widget.show(point, field)
+                }
             }
             widget.setSearchName(name)
             return true
@@ -99,9 +114,9 @@ object ControllerMention {
 
 
         if (index > charsCount) {
-            if (!s.substring(index - charsCount, index).toLowerCase().contains(prefix)) return null
+            if (!s.substring(index - charsCount, index).lowercase(Locale.getDefault()).contains(prefix)) return null
         } else {
-            if (!s.substring(0, index).toLowerCase().contains(prefix)) return null
+            if (!s.substring(0, index).lowercase(Locale.getDefault()).contains(prefix)) return null
         }
 
         var x = charsCount
@@ -109,7 +124,7 @@ object ControllerMention {
         var text = ""
 
         while (index > 0 && x > -1) {
-            val c = ("${s[index - 1]}").toLowerCase()
+            val c = ("${s[index - 1]}").lowercase(Locale.getDefault())
             text = c + text
             if (text.contains(prefix)) {
                 found = true
@@ -127,13 +142,13 @@ object ControllerMention {
     }
 
     private class SearchResult(
-            val text: String,
-            val index: Int
+        val text: String,
+        val index: Int
     )
 
     class Field(
-            val vField: EditText,
-            val addSpace: Boolean
+        val vField: EditText,
+        val addSpace: Boolean
     )
 
 }

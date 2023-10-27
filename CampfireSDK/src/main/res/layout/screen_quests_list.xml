@@ -36,6 +36,14 @@
                 app:Settings_icon="@drawable/ic_mode_edit_white_24dp"
                 app:Settings_icon_background="@color/pink_700"/>
 
+            <com.sup.dev.android.views.settings.Settings
+                android:id="@+id/vLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"
+                app:Settings_icon="@drawable/account_plus"
+                app:Settings_icon_background="@color/yellow_800"/>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

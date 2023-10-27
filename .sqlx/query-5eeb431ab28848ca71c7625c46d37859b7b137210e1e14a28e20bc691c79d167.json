@@ -1,0 +1,25 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*)\n                 from units u\n                 inner join collisions c on c.owner_id = u.fandom_id and u.language_id = c.collision_id\n                 where c.collision_type = $1 and u.status = $2 and\n                       u.unit_type = $3 and c.value_1 = $4 and\n                       u.date_create >= c.collision_date_create",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "5eeb431ab28848ca71c7625c46d37859b7b137210e1e14a28e20bc691c79d167"
+}

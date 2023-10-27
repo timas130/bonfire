@@ -44,3 +44,4 @@ obj/
 target/
 
 .env
+config.toml

@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update sessions set expires = $1, ip = $2, user_agent = $3, last_refreshed = $4 where id = $5",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Timestamptz",
+        "Inet",
+        "Text",
+        "Timestamptz",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "472977505d0c82f3bb8210ba6eb8d3aac7a83e588bea172912238d8c97ff2fee"
+}

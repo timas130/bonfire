@@ -40,7 +40,7 @@ create trigger on_update_user
     before update on users
     for each row execute procedure update_modified();
 create trigger on_update_account
-    before update on accounts
+    before update on auth_sources
     for each row execute procedure update_modified();
 
 create function get_deleted_user_id() returns bigint as $$
@@ -48,3 +48,9 @@ begin
     return (select id from users where username = 'deleted');
 end;
 $$ language plpgsql;
+
+insert into users (id, username, email, email_verified, permission_level)
+values (100000, 'system', 'system@int.bonfire.moe', now(), 4);
+
+insert into users (id, username, email, email_verified)
+values (100001, 'deleted', 'deleted@int.bonfire.moe', now());

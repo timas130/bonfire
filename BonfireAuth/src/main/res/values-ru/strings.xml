@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="start_welcome_top">Участвуй.</string>
+    <string name="start_welcome_bottom">По-настоящему.</string>
+    <string name="start_agreements">Продолжая, вы соглашаетесь с Политикой конфиденциальности и Правилами приложения.</string>
+    <string name="start_google">Войти через Google</string>
+    <string name="start_email">Войти с помощью email</string>
+    <string name="start_privacy_policy">Политика конфиденциальности</string>
+    <string name="start_app_rules">Правила приложения</string>
+    <string name="error_auth_url_rejected">Не удалось начать вход. Проверьте соединение. (B1)</string>
+    <string name="error_request_rejected">Не удалось войти. Попробуйте позже. (R2)</string>
+    <string name="error_invalid_credential">Этот метод входа пока не поддерживается. (R3)</string>
+    <string name="error_finalize_failed">Мы не смогли проверить ваш аккаунт. Попробуйте позже. (B4)</string>
+    <string name="error_same_email_different_account">Этот email уже привязан к другому аккаунту Bonfire. Войдите в
+        этот аккаунт. (B5)
+    </string>
+    <string name="label_email">Email</string>
+    <string name="label_password">Пароль</string>
+    <string name="login_email_title">Добро пожаловать назад!</string>
+    <string name="forgot_password_button">Забыли пароль?</string>
+    <string name="register_button">Зарегистрироваться</string>
+    <string name="login_button">Войти</string>
+    <string name="back">Назад</string>
+    <string name="start_terms">Условия использования</string>
+    <string name="start_accept">Я принимаю</string>
+    <string name="start_decline">Я отказываюсь</string>
+    <string name="start_consent_requirement">Вы должны принять политики, чтобы продолжить.</string>
+    <string name="start_consent_title">Нажимая \"Я принимаю\" ниже, вы принимаете следующие условия:</string>
+    <string name="error_invalid_email">Это не похоже на email.</string>
+    <string name="error_invalid_password">Этот пароль не соответствует требованиям.</string>
+    <string name="error_invalid_username">Этот ник не соответствует требованиям.</string>
+    <string name="error_email_taken">Этот email используется другим аккаунтом.</string>
+    <string name="error_username_taken">Этот ник занят другим пользователем.</string>
+    <string name="error_wrong_password_or_email">Неправильный email или пароль. Проверьте и попробуйте ещё раз.</string>
+    <string name="error_hard_banned">Этот аккаунт жёстко забанен. Вход запрещён.</string>
+    <string name="error_not_verified">Подтвердите свой email перед тем, как это сделать.</string>
+    <string name="error_verification_email_fail">Не удалось отправить письмо с подтверждением.</string>
+    <string name="error_tfa_expired">Вы слишком долго проходили проверку. Начните сначала.</string>
+    <string name="error_too_many_attempts">Вы ввели код неправильно слишком много раз. Попробуйте позже.</string>
+    <string name="error_network_error">Сервер не отвечает. Проверьте своё соединение.</string>
+    <string name="error_cancelled">Действие отменено.</string>
+    <string name="error_unknown">Неизвестная ошибка. Попорбуйте ещё раз или напишите разработчику.</string>
+    <string name="register_title">Мы рады, что вы пришли!</string>
+    <string name="label_repeat_password">Повторите пароль</string>
+    <string name="error_password_dont_match">Пароли не совпадают</string>
+    <string name="verify_email_title">Подтвердите ваш email</string>
+    <string name="verify_email_text">Мы отправили письмо с подтверждением на ваш email-адрес. Пожалуйста, откройте его и
+        пройдите по ссылке, чтобы подтвердить свой аккаунт. Не забудьте проверить папку \"Спам\", если не можете найти
+        наше письмо.
+    </string>
+    <string name="verify_email_your_email">Ваш email: %s</string>
+    <string name="verify_email_incorrect">Если вы ошиблись при написании адреса, выйдите из аккаунта и создайте новый.
+    </string>
+    <string name="logout_button">Выйти</string>
+    <string name="verify_email_updating">Статус верификации обновляется автоматически.</string>
+    <string name="resend_verification_button">Переотправить письмо</string>
+    <string name="resend_verification_success">Письмо успешно переотправлено</string>
+    <string name="resend_verification_already">Этот аккаунт уже подтверждён</string>
+    <string name="resend_verification_later">Другое письмо уже отправлено. Пожалуйста, попробуйте через минуту</string>
+    <string name="forgot_password_title">Восстановление пароля</string>
+    <string name="forgot_password_send">Отправить</string>
+    <string name="error_try_again_later">Вы это уже недавно делали. Повторите позже.</string>
+    <string name="error_user_not_found">Пользователь не найден. Проверьте написание.</string>
+    <string name="forgot_password_sent">Письмо отправлено</string>
+    <string name="forgot_password_sent_description">Письмо было отправлено на вашу электронную почту. Пройдите по ссылке
+        в нём, чтобы продолжить. Не забудьте провеить папку Спам, если не можете найти наше сообщение.
+    </string>
+    <string name="security_title">Безопасность</string>
+    <string name="security_password">Пароль</string>
+    <string name="security_email">Email</string>
+    <string name="security_google">Аккаунт Google</string>
+    <string name="security_email_not_set">Не задан</string>
+    <string name="security_google_not_linked">Не привязан</string>
+    <string name="security_google_linked">Привязан</string>
+    <string name="security_password_button">Изменить пароль</string>
+    <string name="security_firebase">Великая миграция</string>
+    <string name="security_firebase_linked">Участвовал в миграции</string>
+    <string name="security_firebase_not_linked">Не участвовал</string>
+    <string name="security_firebase_toast_linked">Спасибо за вашу поддержку!</string>
+    <string name="security_firebase_toast_not_linked">Достоин ли ты знать о ней?</string>
+    <string name="security_email_change_title">Изменить email</string>
+    <string name="security_email_change_new">Новый адрес</string>
+    <string name="cancel">Отмена</string>
+    <string name="security_change_do">Изменить</string>
+    <string name="security_password_change_title">Изменить пароль</string>
+    <string name="security_password_change_old">Старый пароль</string>
+    <string name="security_password_change_new">Новый пароль</string>
+    <string name="security_password_change_done">Пароль изменён.</string>
+    <string name="security_email_change_done">Email изменён. Подтвердите ваш новый адрес.</string>
+    <string name="security_sessions">Активные сессии</string>
+    <string name="security_sessions_unknown">Неизвестная сессия</string>
+    <string name="security_sessions_ip">IP: %s</string>
+    <string name="security_sessions_active">Последняя активность: %s</string>
+    <string name="security_sessions_logout">Выйти</string>
+    <string name="error_session_too_new">Вашей сессии должно быть как минимум 7 дней, чтобы это сделать.</string>
+</resources>

@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update users set email = $1, email_verification_sent = null, email_verified = now() where id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "1969ecd65a37fc46faa494e3c9fa3a45eedf1356e00c6984d453c5159d258af9"
+}

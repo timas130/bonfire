@@ -1,0 +1,27 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into sessions (user_id, ip, expires, user_agent, refresh_token, provider) values ($1, $2, $5, $3, $4, $6) returning id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Inet",
+        "Text",
+        "Varchar",
+        "Timestamptz",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "819780aa8afaea8b9ec57b743d13c3211bd172da0a3688b396420f8272c57849"
+}

@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(distinct to_timestamp(date_create / 1000)::date)\n                 from accounts_enters\n                 where account_id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "1d2bf69d8d6766f77cef3300a3215160b91c2c3c93a2ccdc73c84f97ddb7fd26"
+}

@@ -20,12 +20,14 @@ import com.sayzen.campfiresdk.models.events.fandom.EventFandomBlackListChange
 import com.sayzen.campfiresdk.models.events.translate.EventTranslateChanged
 import com.sayzen.campfiresdk.screens.achievements.SAchievements
 import com.sayzen.campfiresdk.screens.fandoms.moderation.view.SModerationView
+import com.sayzen.campfiresdk.screens.other.rules.SRulesUser
 import com.sayzen.campfiresdk.screens.post.create.SPostCreate
 import com.sayzen.campfiresdk.screens.post.view.SPost
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.devsupandroidgoogle.ControllerGoogleAuth
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
+import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsIntent
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsToast
@@ -39,6 +41,7 @@ import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsColor
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
+import sh.sit.bonfire.auth.AuthController
 import sh.sit.bonfire.formatting.BonfireMarkdown
 
 object ControllerCampfireSDK {
@@ -77,6 +80,9 @@ object ControllerCampfireSDK {
         ControllerAlive.init()
         ControllerGoogleAuth.init("778141366343-bmunivg1shmt12gk3tf6svcj5cj8koun.apps.googleusercontent.com", onLoginFailed)
         BonfireMarkdown.init(SupAndroid.appContext!!)
+        AuthController.init(
+            openRules = { Navigator.to(SRulesUser()) }
+        )
 
         SAlert.GLOBAL_SHOW_WHOOPS = false
 
@@ -140,9 +146,7 @@ object ControllerCampfireSDK {
     fun changeLogin() {
         SplashField()
                 .setTitle(t(API_TRANSLATE.profile_change_name))
-                .addChecker(t(API_TRANSLATE.profile_change_name_error)) { s -> ToolsText.checkStringChars(s, API.ACCOUNT_LOGIN_CHARS) }
-                .setMin(API.ACCOUNT_NAME_L_MIN)
-                .setMax(API.ACCOUNT_NAME_L_MAX)
+                .addChecker(t(API_TRANSLATE.profile_change_name_error)) { s -> ToolsText.isValidUsername(s) }
                 .setOnCancel(t(API_TRANSLATE.app_cancel))
                 .setOnEnter(t(API_TRANSLATE.app_change)) { dialog, name ->
                     changeLoginNow(name, true) {}

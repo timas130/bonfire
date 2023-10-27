@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update users set email_verification_sent = $1 where email = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Timestamptz",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "85ebb682e67c04c499230ac2f35e6f7167ed2a2d33cf4dca0cc959f449d42d05"
+}

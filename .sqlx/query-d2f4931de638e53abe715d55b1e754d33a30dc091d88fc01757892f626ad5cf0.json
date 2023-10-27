@@ -1,0 +1,46 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select username, email, email_verification_sent, email_verified, anon_id from users where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "username",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "email",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "email_verification_sent",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 3,
+        "name": "email_verified",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 4,
+        "name": "anon_id",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "d2f4931de638e53abe715d55b1e754d33a30dc091d88fc01757892f626ad5cf0"
+}

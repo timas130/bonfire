@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into recovery_flows (user_id, id, expires, ip, user_agent) values ($1, $2, $3, $4, $5)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Varchar",
+        "Timestamptz",
+        "Inet",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "b49e1f356f93b4df9106da542fde8a8b477eabc65ab006d9a2c9a6e1ece346d0"
+}

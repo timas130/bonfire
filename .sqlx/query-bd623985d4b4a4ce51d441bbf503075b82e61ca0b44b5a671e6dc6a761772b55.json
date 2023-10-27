@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "delete from recovery_flows where id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "bd623985d4b4a4ce51d441bbf503075b82e61ca0b44b5a671e6dc6a761772b55"
+}

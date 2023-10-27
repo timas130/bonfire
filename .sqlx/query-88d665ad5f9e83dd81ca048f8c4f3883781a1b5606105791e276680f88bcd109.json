@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update tfa_flows set completed = true where id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "88d665ad5f9e83dd81ca048f8c4f3883781a1b5606105791e276680f88bcd109"
+}

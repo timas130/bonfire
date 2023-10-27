@@ -20,7 +20,7 @@ educe = { version = "0.4", features = ["Eq", "PartialEq", "Clone"] }
 opentelemetry = { version = "0.18", features = ["rt-tokio"] }
 tracing = { version = "0.1", features = ["attributes"] }
 strum_macros = "0.25"
-jsonwebtoken = "8.2"
+jsonwebtoken = "9.2"
 nanoid = "0.4"
 base64 = "0.21"
 stubborn-io = "0.3.2"

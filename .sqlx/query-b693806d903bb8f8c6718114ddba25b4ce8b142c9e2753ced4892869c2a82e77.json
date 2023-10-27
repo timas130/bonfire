@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*) from accounts\n                 where recruiter_id = $1 and to_timestamp(ban_date / 1000) < now()",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "b693806d903bb8f8c6718114ddba25b4ce8b142c9e2753ced4892869c2a82e77"
+}

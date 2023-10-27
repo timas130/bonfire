@@ -1,0 +1,76 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from sessions where refresh_token = $1 and expires > now() limit 1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "account_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "provider",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 4,
+        "name": "ip",
+        "type_info": "Inet"
+      },
+      {
+        "ordinal": 5,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 6,
+        "name": "last_refreshed",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "expires",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "user_agent",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "refresh_token",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "aaa221f8b09d764f671d8c1262f609cdecec86e5b0beaf9637489dcce489b065"
+}

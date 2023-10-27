@@ -10,26 +10,24 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.account.Account
-import com.dzen.campfire.api.models.account.MAccountEffect
 import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.accounts.*
 import com.dzen.campfire.api.requests.publications.RPublicationsGetAll
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sayzen.campfiresdk.controllers.*
+import com.sayzen.campfiresdk.models.PostList
 import com.sayzen.campfiresdk.models.cards.CardPost
 import com.sayzen.campfiresdk.models.cards.CardPublication
-import com.sayzen.campfiresdk.models.PostList
-import com.sup.dev.android.tools.ToolsGif
-import com.sayzen.campfiresdk.models.splashs.SplashAdminBlock
-import com.sayzen.campfiresdk.screens.account.search.SAccountSearch
-import com.sayzen.campfiresdk.models.events.account.*
+import com.sayzen.campfiresdk.models.events.account.EventAccountChanged
+import com.sayzen.campfiresdk.models.events.account.EventAccountStatusChanged
 import com.sayzen.campfiresdk.models.events.publications.EventPostPinedProfile
+import com.sayzen.campfiresdk.models.splashs.SplashAdminBlock
 import com.sayzen.campfiresdk.screens.administation.SAdministrationDeepBlocked
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
-import com.sup.dev.android.libs.image_loader.ImageLoaderId
+import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sup.dev.android.libs.image_loader.ImageLoader
+import com.sup.dev.android.libs.image_loader.ImageLoaderId
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -292,7 +290,6 @@ class SProfile private constructor(
                 .groupCondition(ControllerApi.can(API.LVL_PROTOADMIN))
                 .add(t(API_TRANSLATE.protoadin_profile_blocked)) { Navigator.to(SAdministrationDeepBlocked(xAccount.getId())) }.backgroundRes(R.color.orange_700).textColorRes(R.color.white)
                 .add(t(API_TRANSLATE.protoadin_profile_autch)) { protoadminAutorization() }.backgroundRes(R.color.orange_700).textColorRes(R.color.white)
-                .add(t(API_TRANSLATE.protoadin_profile_move_account)) { protoadminTranslateAccount() }.backgroundRes(R.color.orange_700).textColorRes(R.color.white)
                 .add("Расщепить на атомы") { }.backgroundRes(R.color.orange_700).textColorRes(R.color.white)
 
         w.asPopupShow(vMore)
@@ -422,9 +419,7 @@ class SProfile private constructor(
                 .setMax_2(API.MODERATION_COMMENT_MAX_L)
                 .setHint_1(t(API_TRANSLATE.app_name_s))
                 .setLinesCount_1(1)
-                .addChecker_1(t(API_TRANSLATE.profile_change_name_error)) { s -> ToolsText.checkStringChars(s, API.ACCOUNT_LOGIN_CHARS) }
-                .setMin_1(API.ACCOUNT_NAME_L_MIN)
-                .setMax_1(API.ACCOUNT_NAME_L_MAX)
+                .addChecker_1(t(API_TRANSLATE.profile_change_name_error)) { s -> ToolsText.isValidUsername(s) }
                 .setHint_2(t(API_TRANSLATE.comments_hint))
                 .setOnEnter(t(API_TRANSLATE.app_change)) { dialog, name, comment ->
                     ApiRequestsSupporter.executeEnabled(dialog, RAccountsAdminChangeName(xAccount.getId(), name, comment)) {
@@ -480,15 +475,6 @@ class SProfile private constructor(
             ToolsToast.show(t(API_TRANSLATE.app_done))
             ControllerCampfireSDK.logoutNow()
         }
-    }
-
-    private fun protoadminTranslateAccount() {
-        Navigator.to(SAccountSearch {
-            ApiRequestsSupporter.executeEnabledConfirm(t(API_TRANSLATE.protoadin_profile_move_account_title, it.name), t(API_TRANSLATE.protoadin_profile_move_account_action), RAccountsProtoadminReplaceGoogleId(xAccount.getId(), it.id)) {
-                ToolsToast.show(t(API_TRANSLATE.app_done))
-            }
-        })
-
     }
 
     private fun protoadminAchievementsRecount() {

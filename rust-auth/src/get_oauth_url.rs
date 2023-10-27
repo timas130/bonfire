@@ -2,7 +2,8 @@ use crate::AuthServer;
 use c_core::prelude::anyhow::anyhow;
 use c_core::services::auth::{AuthError, OAuthProvider, OAuthUrl};
 use openidconnect::core::{CoreClient, CoreResponseType};
-use openidconnect::{AuthenticationFlow, CsrfToken, Nonce, Scope};
+use openidconnect::{AuthenticationFlow, CsrfToken, Nonce, RedirectUrl, Scope};
+use std::borrow::Cow;
 
 impl AuthServer {
     pub(crate) fn get_oauth_client(
@@ -27,6 +28,14 @@ impl AuthServer {
                 CsrfToken::new_random,
                 Nonce::new_random,
             )
+            .set_redirect_uri(Cow::Owned(
+                RedirectUrl::new(format!(
+                    "{}{}",
+                    self.base.config.urls.oauth_redirect_link,
+                    i32::from(provider)
+                ))
+                .expect("invalid oauth redirect link configured"),
+            ))
             .add_scope(Scope::new("profile".to_string()))
             .add_scope(Scope::new("email".to_string()))
             .url();

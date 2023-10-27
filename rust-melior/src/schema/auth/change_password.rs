@@ -1,18 +1,21 @@
-use async_graphql::{Context, Object, SimpleObject};
-use c_core::prelude::tarpc::context;
-use c_core::services::auth::AuthError;
 use crate::context::ReqContext;
 use crate::error::RespError;
 use crate::utils::ok::OkResp;
+use async_graphql::{Context, Object, SimpleObject};
+use c_core::prelude::tarpc::context;
+use c_core::services::auth::AuthError;
 
 #[derive(Default)]
 pub struct ChangePasswordMutation;
 
 #[Object]
 impl ChangePasswordMutation {
-    async fn change_password(&self, ctx: &Context<'_>, old_password: String, new_password: String)
-        -> Result<OkResp, RespError>
-    {
+    async fn change_password(
+        &self,
+        ctx: &Context<'_>,
+        old_password: String,
+        new_password: String,
+    ) -> Result<OkResp, RespError> {
         let req = ctx.data_unchecked::<ReqContext>();
 
         let Some(access_token) = req.access_token.clone() else {

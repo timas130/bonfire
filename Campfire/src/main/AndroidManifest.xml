@@ -34,14 +34,20 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
-            <intent-filter android:autoVerify="true" tools:ignore="UnusedAttribute">
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="http" />
                 <data android:scheme="https" />
                 <data android:host="bonfire.moe" />
-                <data android:pathPattern="/r/*" />
+                <data android:pathPrefix="/r" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="bf" />
             </intent-filter>
 
             <intent-filter>
@@ -94,6 +100,7 @@
         <meta-data android:name="io.sentry.traces.sample-rate" android:value="1.0" />
         <meta-data android:name="io.sentry.traces.profiling.sample-rate" android:value="1.0" />
 
+        <meta-data android:name="io.sentry.auto-init" android:value="false" />
     </application>
 
 </manifest>

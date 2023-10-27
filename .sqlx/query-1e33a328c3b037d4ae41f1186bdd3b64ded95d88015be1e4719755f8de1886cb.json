@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into random_seeds (date, seed)\n             values ($1, $2)\n             on conflict (date) do update set seed = excluded.seed\n             returning seed",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "seed",
+        "type_info": "Bytea"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Date",
+        "Bytea"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "1e33a328c3b037d4ae41f1186bdd3b64ded95d88015be1e4719755f8de1886cb"
+}

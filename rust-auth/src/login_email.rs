@@ -5,7 +5,7 @@ use c_core::prelude::chrono::Utc;
 use c_core::prelude::sqlx::types::ipnetwork::IpNetwork;
 use c_core::prelude::tarpc::context;
 use c_core::prelude::tokio::time::{sleep_until, Instant};
-use c_core::prelude::tracing::{error, warn};
+use c_core::prelude::tracing::{error, info, warn};
 use c_core::prelude::{anyhow, chrono};
 use c_core::services::auth::jwt::TokenClaims;
 use c_core::services::auth::tfa::{TfaInfo, TfaType};
@@ -13,6 +13,7 @@ use c_core::services::auth::{
     AuthError, LoginEmailOptions, LoginEmailResponse, OAuthProvider, UserContext,
 };
 use c_core::services::email::types::EmailTemplate;
+use firebase_scrypt::FirebaseScrypt;
 use nanoid::nanoid;
 use scrypt::password_hash::{PasswordHash, PasswordVerifier};
 use scrypt::Scrypt;
@@ -117,6 +118,42 @@ impl AuthServer {
         Ok((access_token, refresh_token))
     }
 
+    fn get_firebase_scrypt(&self) -> FirebaseScrypt {
+        let config = &self.base.config.firebase;
+        FirebaseScrypt::new(
+            &config.scrypt_salt_separator,
+            &config.scrypt_signer_key,
+            config.scrypt_rounds,
+            config.scrypt_mem_cost,
+        )
+    }
+
+    pub(crate) fn verify_password(&self, password: &str, hash: &str) -> bool {
+        if hash.starts_with("FB:") {
+            let mut parts = hash.split(':').skip(1);
+            let Some(hash_part) = parts.next() else {
+                return false;
+            };
+            let Some(salt_part) = parts.next() else {
+                return false;
+            };
+
+            return self
+                .get_firebase_scrypt()
+                .verify_password_bool(password, salt_part, hash_part);
+        }
+
+        Scrypt
+            .verify_password(
+                password.as_bytes(),
+                &match PasswordHash::new(hash) {
+                    Ok(hash) => hash,
+                    Err(_err) => return false,
+                },
+            )
+            .is_ok()
+    }
+
     pub(crate) async fn _login_email(
         &self,
         opts: LoginEmailOptions,
@@ -162,7 +199,7 @@ impl AuthServer {
 
         //// Check password
 
-        let correct_password = match &user.password {
+        let password_hash = match &user.password {
             Some(password) => password,
             None => {
                 sleep_until(deadline).await;
@@ -170,23 +207,25 @@ impl AuthServer {
             }
         };
 
-        let password_correct = Scrypt
-            .verify_password(
-                password.as_bytes(),
-                &match PasswordHash::new(correct_password) {
-                    Ok(hash) => hash,
-                    Err(_err) => {
-                        error!("invalid password hash for {:?}!", user.email);
-                        sleep_until(deadline).await;
-                        return Err(anyhow::Error::msg("invalid password hash").into());
-                    }
-                },
-            )
-            .is_ok();
+        let password_correct = self.verify_password(&password, password_hash);
 
         if !password_correct {
             sleep_until(deadline).await;
             return Err(AuthError::WrongPasswordOrEmail);
+        }
+
+        //// Rehash password if legacy hashing used
+
+        if password_hash.starts_with("FB:") {
+            let rehashed_password = Self::hash_password(&password)?;
+            sqlx::query!(
+                "update users set password = $1 where id = $2",
+                rehashed_password,
+                user.id,
+            )
+            .execute(&self.base.pool)
+            .await?;
+            info!("password rehashed for user {}", user.id);
         }
 
         //// Other login checks
@@ -196,10 +235,10 @@ impl AuthServer {
             return Err(AuthError::HardBanned);
         }
 
-        if user.email_verified.is_none() {
-            sleep_until(deadline).await;
-            return Err(AuthError::NotVerified);
-        }
+        // if user.email_verified.is_none() {
+        //     sleep_until(deadline).await;
+        //     return Err(AuthError::NotVerified);
+        // }
 
         //// Decide on TFA mode
 

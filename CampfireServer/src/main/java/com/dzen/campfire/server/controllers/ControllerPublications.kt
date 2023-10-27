@@ -104,7 +104,7 @@ object ControllerPublications {
             if (textV[i] == API.LINK_SHORT_PROFILE[0]) {
                 var ss = ""
                 i++
-                while (i < textV.length && ToolsText.isOnly(textV[i] + "", API.ACCOUNT_LOGIN_CHARS)) {
+                while (i < textV.length && ToolsText.isValidUsernameChar(textV[i])) {
                     ss += textV[i]
                     i++
                 }

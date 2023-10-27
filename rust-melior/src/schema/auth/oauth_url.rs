@@ -1,9 +1,9 @@
-use async_graphql::{Context, Enum, Object, SimpleObject};
-use o2o::o2o;
-use c_core::prelude::tarpc::context;
-use c_core::services::auth;
 use crate::context::ReqContext;
 use crate::error::RespError;
+use async_graphql::{Context, Enum, Object, SimpleObject};
+use c_core::prelude::tarpc::context;
+use c_core::services::auth;
+use o2o::o2o;
 
 #[derive(Default)]
 pub struct OAuthUrlQuery;
@@ -44,10 +44,15 @@ pub struct OAuthUrl {
 #[Object]
 impl OAuthUrlQuery {
     /// Get the necessary information to log in with an OAuth provider
-    async fn oauth_url(&self, ctx: &Context<'_>, provider: OAuthProvider) -> Result<OAuthUrl, RespError> {
+    async fn oauth_url(
+        &self,
+        ctx: &Context<'_>,
+        provider: OAuthProvider,
+    ) -> Result<OAuthUrl, RespError> {
         let req = ctx.data_unchecked::<ReqContext>();
 
-        let resp = req.auth
+        let resp = req
+            .auth
             .get_oauth_url(context::current(), provider.into())
             .await??;
 

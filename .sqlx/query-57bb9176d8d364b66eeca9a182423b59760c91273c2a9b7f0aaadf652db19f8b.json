@@ -1,0 +1,41 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select s.created_at, u.hard_banned, u.email_verified, u.anon_id from sessions s inner join users u on s.user_id = u.id where s.id = $1 and s.user_id = $2",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 1,
+        "name": "hard_banned",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 2,
+        "name": "email_verified",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 3,
+        "name": "anon_id",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "57bb9176d8d364b66eeca9a182423b59760c91273c2a9b7f0aaadf652db19f8b"
+}

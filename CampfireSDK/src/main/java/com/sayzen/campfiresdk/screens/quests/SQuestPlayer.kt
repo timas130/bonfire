@@ -175,7 +175,7 @@ class SQuestPlayer(
         }
     }
 
-    private val part = parts[index]
+    private val part = parts.getOrNull(0) ?: parts.first()
 
     private val vImageWrapper: LayoutCorned = findViewById(R.id.vImageWrapper)
     private val vTitleImage: ImageView = findViewById(R.id.vTitleImage)

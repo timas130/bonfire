@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="google_client_id" translatable="false" formatted="false">778141366343-bmunivg1shmt12gk3tf6svcj5cj8koun.apps.googleusercontent.com</string>
+
+    <string name="start_welcome_top">Welcome to</string>
+    <string name="start_welcome_bottom">Bonfire!</string>
+    <string name="start_agreements">By continuing, you agree to the Privacy Policy and the Rules.</string>
+    <string name="start_google">Log in with Google</string>
+    <string name="start_email">Log in via email</string>
+    <string name="start_privacy_policy">Privacy Policy</string>
+    <string name="start_terms">Terms of Use</string>
+    <string name="start_app_rules">Rules</string>
+    <string name="error_auth_url_rejected">Failed to initiate login. Check your connection. (B1)</string>
+    <string name="error_request_rejected">Login failed. Try again later. (R2)</string>
+    <string name="error_invalid_credential">Logging in using this method is not supported. (R3)</string>
+    <string name="error_finalize_failed">We couldn\'t verify your account. Try again later. (B4)</string>
+    <string name="error_same_email_different_account">This email is bound to another Bonfire account. Use that account
+        instead. (B5)
+    </string>
+    <string name="label_email">Email</string>
+    <string name="label_password">Password</string>
+    <string name="login_email_title">Welcome back!</string>
+    <string name="forgot_password_button">Forgot password?</string>
+    <string name="register_button">Register</string>
+    <string name="login_button">Log in</string>
+    <string name="back">Back</string>
+    <string name="start_accept">I accept</string>
+    <string name="start_decline">I decline</string>
+    <string name="start_consent_requirement">You must accept the policies to continue.</string>
+    <string name="start_consent_title">By clicking \"I accept\" below, you accept these terms and conditions:</string>
+    <string name="error_invalid_email">This doesn\'t look like an email.</string>
+    <string name="error_invalid_password">This password doesn\'t meet the requirements.</string>
+    <string name="error_invalid_username">This username doesn\'t meet the requirements.</string>
+    <string name="error_email_taken">This email is taken by another user.</string>
+    <string name="error_username_taken">This username is taken by another user.</string>
+    <string name="error_wrong_password_or_email">Wrong email or password. Check and try again.</string>
+    <string name="error_hard_banned">This account is hard-banned. Logging in is prohibited.</string>
+    <string name="error_not_verified">Verify your email address before doing this.</string>
+    <string name="error_verification_email_fail">Failed to send verification email.</string>
+    <string name="error_tfa_expired">You took too long to pass the check. Start over.</string>
+    <string name="error_too_many_attempts">You submitted the code incorrectly too many times.</string>
+    <string name="error_network_error">The server is not responding. Check your connection</string>
+    <string name="error_cancelled">Action cancelled.</string>
+    <string name="error_unknown">Unknown error. Please try again or report to developer.</string>
+    <string name="register_title">We\'re glad to have you!</string>
+    <string name="label_repeat_password">Repeat password</string>
+    <string name="error_password_dont_match">Passwords don\'t match.</string>
+    <string name="verify_email_title">Verify your email</string>
+    <string name="verify_email_text">We have sent a verification email to your address. Please open it and follow the
+        link to verify your account. Don\'t forget to check the spam folder for our message.
+    </string>
+    <string name="verify_email_your_email">Your email is %s.</string>
+    <string name="verify_email_incorrect">If you have made a mistake in your address, just log out and create a new
+        account.
+    </string>
+    <string name="logout_button">Log out</string>
+    <string name="verify_email_updating">Verification status is updated automatically.</string>
+    <string name="resend_verification_button">Resend email</string>
+    <string name="resend_verification_success">Verification email successfully resent</string>
+    <string name="resend_verification_already">This account has already been verified</string>
+    <string name="resend_verification_later">An email has already been sent. Please try again in a minute</string>
+    <string name="forgot_password_title">Password recovery</string>
+    <string name="forgot_password_send">Send</string>
+    <string name="error_try_again_later">You have already done this. Try again later.</string>
+    <string name="error_user_not_found">User not found. Check your spelling.</string>
+    <string name="forgot_password_sent">Email sent</string>
+    <string name="forgot_password_sent_description">An email has been sent to the email address you specified. Follow
+        the link in the message to continue. Don\'t forget to check your Spam folder.
+    </string>
+    <string name="security_title">Security</string>
+    <string name="security_password">Password</string>
+    <string name="security_email">Email</string>
+    <string name="security_google">Google account</string>
+    <string name="security_email_not_set">Not set</string>
+    <string name="security_google_not_linked">Not linked</string>
+    <string name="security_google_linked">Linked</string>
+    <string name="security_password_button">Change password</string>
+    <string name="security_firebase">The great migration</string>
+    <string name="security_firebase_linked">Participated in the migration</string>
+    <string name="security_firebase_not_linked">Did not participate</string>
+    <string name="security_firebase_toast_linked">Thank you for your support!</string>
+    <string name="security_firebase_toast_not_linked">Are you worthy of knowing about it?</string>
+    <string name="security_email_change_title">Change email</string>
+    <string name="security_email_change_new">New email</string>
+    <string name="cancel">Cancel</string>
+    <string name="security_change_do">Change</string>
+    <string name="security_password_change_title">Change password</string>
+    <string name="security_password_change_old">Old password</string>
+    <string name="security_password_change_new">New password</string>
+    <string name="security_password_change_done">Password changed.</string>
+    <string name="security_email_change_done">Email changed. Verify your new address.</string>
+    <string name="security_sessions">Active sessions</string>
+    <string name="security_sessions_unknown">Unknown session</string>
+    <string name="security_sessions_ip">IP: %s</string>
+    <string name="security_sessions_active">Last active: %s</string>
+    <string name="security_sessions_logout">Log out</string>
+    <string name="error_session_too_new">Your session must be at least 7 days old to do this.</string>
+</resources>

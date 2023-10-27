@@ -1,0 +1,36 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select\n                 unit_type,\n                 count(*),\n                 max(karma_count) as max_karma\n             from units\n             where creator_id = $1 and status = $2 and unit_type = any($3)\n             group by unit_type",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "unit_type",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "count",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "max_karma",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8Array"
+      ]
+    },
+    "nullable": [
+      false,
+      null,
+      null
+    ]
+  },
+  "hash": "d9e0849048f665bd8d0f8cf093788a12df02e8d18c1c2f0376caf3cb77d83673"
+}

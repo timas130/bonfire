@@ -1,0 +1,12 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "delete from tfa_flows where expires < now()",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": []
+  },
+  "hash": "3ce915237ee154961f188768da07ec01f9c64500ce00e3f5b3b9634c76f56e86"
+}

@@ -32,6 +32,7 @@ pub struct UrlsConfig {
     pub recovery_link: String,
     pub cancel_email_change_link: String,
     pub image_proxy_link: String,
+    pub oauth_redirect_link: String,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -67,4 +68,9 @@ pub struct OAuthConfig {
 #[derive(Clone, Debug, Deserialize)]
 pub struct FirebaseConfig {
     pub project_id: String,
+
+    pub scrypt_signer_key: String,
+    pub scrypt_salt_separator: String,
+    pub scrypt_rounds: u32,
+    pub scrypt_mem_cost: u32,
 }

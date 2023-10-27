@@ -19,6 +19,10 @@ import com.sup.dev.android.libs.image_loader.ImageLoaderId
 import com.sup.dev.android.libs.screens.activity.SActivity
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsAndroid
+import io.sentry.android.core.SentryAndroid
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import sh.sit.bonfire.auth.AuthController
 
 class App : Application() {
 
@@ -35,6 +39,17 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        SentryAndroid.init(this) { options ->
+            options.setBeforeSend { ev, _ ->
+                val haveConsent = runBlocking { AuthController.haveConsent.first() }
+                if (haveConsent) {
+                    ev
+                } else {
+                    null
+                }
+            }
+        }
 
         FirebaseApp.initializeApp(applicationContext)
 
