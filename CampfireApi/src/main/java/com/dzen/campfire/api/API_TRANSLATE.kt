@@ -723,6 +723,7 @@ object API_TRANSLATE {
     val feed_loading_108 = Translate("У нас есть всё... кроме пользователей.")
     val feed_loading_109 = Translate("Слава Арстоцке!")
     val feed_loading_110 = Translate("Зима близко")
+    val feed_loading_111 = Translate("Я удалил Campfire")
     val feed_loading_1000 = Translate("Привет датамайнерам!")
     val feed_all = Translate("Все публикации")
     val feed_subscribed = Translate("Только подписки")
