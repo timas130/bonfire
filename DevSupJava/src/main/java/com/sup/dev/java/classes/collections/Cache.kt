@@ -15,7 +15,8 @@ class Cache<K : Any, V : Any>(val length: Int) {
 
     @Suppress("NewApi")
     fun put(key: K, value: V?) {
-        map[key] = value
+        if (value != null) map[key] = value
+        else map.remove(key)
         val newIdx = listIdx.getAndUpdate {
             if (it >= length) return@getAndUpdate 0
             else it + 1
