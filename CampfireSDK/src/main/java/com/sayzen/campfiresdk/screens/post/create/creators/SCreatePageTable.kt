@@ -129,7 +129,7 @@ class SCreatePageTable(
     }
 
     override fun onBackPressed(): Boolean {
-        onEnter()
+        SplashAdd.showConfirmCancelDialog(this)
         return true
     }
 
