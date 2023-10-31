@@ -39,10 +39,19 @@ class PageLvl(var accountId:Long, accountLvl: Long, karma30:Long) : Card(0) {
             if (ControllerApi.isCurrentAccount(accountId) && (ControllerApi.account.getLevel() < card.appLvl.lvl.lvl) && !adapterSub.contains(CardDividerTitle::class)) {
                 adapterSub.add(CardDividerTitle().setText(t(API_TRANSLATE.achi_you_are_here)).toCenter().setDividerBottom(false).setDividerTop(false))
             }
-            if(l.lvl == API.LVL_APP_ACCESS)  adapterSub.add(CardLvlTitle(t(API_TRANSLATE.app_user), ToolsResources.getColor(R.color.green_700)))
-            if(l.lvl == API.LVL_MODERATOR_BLOCK)  adapterSub.add(CardLvlTitle(t(API_TRANSLATE.app_moderator), ToolsResources.getColor(R.color.blue_700)))
-            if(l.lvl == API.LVL_ADMIN_MODER)  adapterSub.add(CardLvlTitle(t(API_TRANSLATE.app_admin), ToolsResources.getColor(R.color.red_700)))
-            if(l.lvl == API.LVL_PROTOADMIN)  adapterSub.add(CardLvlTitle(t(API_TRANSLATE.app_protoadmin), ToolsResources.getColor(R.color.orange_700)))
+
+            val additionalCard = when (l.lvl) {
+                API.LVL_TRUSTED -> CardLvlTitle(t(API_TRANSLATE.lvl_trusted), ToolsResources.getColor(R.color.green_700))
+                API.LVL_EXPERIENCED -> CardLvlTitle(t(API_TRANSLATE.lvl_experienced), ToolsResources.getColor(R.color.purple_700))
+                API.LVL_CURATOR -> CardLvlTitle(t(API_TRANSLATE.lvl_curator), ToolsResources.getColor(R.color.light_blue_500))
+                API.LVL_MODERATOR -> CardLvlTitle(t(API_TRANSLATE.lvl_moderator), ToolsResources.getColor(R.color.blue_a_400))
+                API.LVL_ADMINISTRATOR -> CardLvlTitle(t(API_TRANSLATE.lvl_administrator), ToolsResources.getColor(R.color.orange_700))
+                API.LVL_SUPER_ADMINISTRATOR -> CardLvlTitle(t(API_TRANSLATE.lvl_super_administrator), ToolsResources.getColor(R.color.red_700))
+                API.LVL_PROTOADMIN -> CardLvlTitle(t(API_TRANSLATE.lvl_protoadmin), ToolsResources.getColor(R.color.bonfire))
+                else -> null
+            }
+            additionalCard?.let { adapterSub.add(it) }
+
             adapterSub.add(card)
         }
 

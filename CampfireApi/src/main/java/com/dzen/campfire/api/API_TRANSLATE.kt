@@ -1062,7 +1062,7 @@ object API_TRANSLATE {
     val rules_users_4_title = Translate("Преследования")
     val rules_users_5 = Translate(
         "Запрещено публиковать шокирующий контент, если он не помечен как таковой или не отмечен как Закрытый. " +
-        "Всегда запрещено публиковать и ссылаться на пиратский, аморальный или незаконный контент, порнографию."
+        "Всегда запрещено публиковать и ссылаться на аморальный или незаконный контент, порнографию."
     )
     val rules_users_5_title = Translate("Другой запрещённый контент")
     val rules_users_6 = Translate(
@@ -1633,6 +1633,14 @@ object API_TRANSLATE {
     val sticker_event_create_sticker = Translate("%s новый стикер в набор")
     val sticker_event_create_stickers_pack = Translate("%s набор стикеров")
 
+    val lvl_trusted = Translate("Доверенный")
+    val lvl_experienced = Translate("Опытный")
+    val lvl_curator = Translate("Куратор")
+    val lvl_moderator = Translate("Модератор")
+    val lvl_administrator = Translate("Администратор")
+    val lvl_super_administrator = Translate("Суперадминистратор")
+    val lvl_expert = Translate("Эксперт")
+    val lvl_protoadmin = Translate("Протоадмин")
     val lvl_app_access = Translate("Возможность пользоваться приложением")
     val lvl_app_status = Translate("Возможность изменять статус профиля")
     val lvl_app_mention = Translate("Возможность упоминать других пользователей")
@@ -1642,7 +1650,7 @@ object API_TRANSLATE {
     val lvl_moderate_block = Translate("Модератор. Возможность блокировать публикации в фэндоме")
     val lvl_moderate_to_drafts = Translate("Возможность вернуть пост в черновики пользователя")
     val lvl_moderate_chats = Translate("Возможность создавать чаты фэндома")
-    val lvl_moderate_post_tags = Translate("Возможность изменять теги статей")
+    val lvl_moderate_post_tags = Translate("Возможность изменять теги постов")
     val lvl_moderate_image_title = Translate("Возможность изменить фоновую картинку в фэндоме")
     val lvl_moderate_description = Translate("Возможность изменить описание фэндома")
     val lvl_moderate_names = Translate("Возможность изменять другие названия фэндома")
@@ -1692,7 +1700,6 @@ object API_TRANSLATE {
     val lvl_translate_moderator = Translate("Возможность модерировать переводы других пользователей")
     val lvl_remove_fandoms = Translate("Возможность удалять фэндомы")
     val lvl_viceroy = Translate("Возможность назначать наместников фэндома")
-    val lvl_protoadmin = Translate("Протоадмин. Доступ к красной кнопке")
 
     val error_too_late = Translate("Слишком поздно")
     val error_too_long_text = Translate("Слишком длинный текст")
