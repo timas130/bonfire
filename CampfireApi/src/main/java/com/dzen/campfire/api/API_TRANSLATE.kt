@@ -2541,6 +2541,7 @@ object API_TRANSLATE {
     val events = Translate("События")
     val events_tutorial = Translate("События — специальные задания, ограниченные по времени, с большими наградами.")
     val events_empty = Translate("Пока событий нет! Подпишитесь на фэндом Bonfire, чтобы узнать о них первым.")
+    val events_error = Translate("Ошибка при загрузке событий")
 
     val loading_image_oct = Translate("А листья падают...")
     val loading_image_nov = Translate("Ноябрь")

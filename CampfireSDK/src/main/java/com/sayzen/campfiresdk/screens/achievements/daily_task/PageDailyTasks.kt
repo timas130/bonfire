@@ -3,13 +3,11 @@ package com.sayzen.campfiresdk.screens.achievements.daily_task
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SuggestionChip
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -18,8 +16,12 @@ import androidx.compose.ui.unit.dp
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.daily_tasks.DailyTaskInfo
 import com.dzen.campfire.api.models.daily_tasks.DailyTaskType
+import com.dzen.campfire.api.models.project.ProjectEvent
+import com.dzen.campfire.api.requests.project.RProjectGetEvents
 import com.sayzen.campfiresdk.compose.ComposeCard
+import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
+import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.java.tools.ToolsText
 
@@ -179,6 +181,19 @@ private fun TasksDescription(text: String) {
 class PageDailyTasks(private val taskInfo: DailyTaskInfo) : ComposeCard() {
     @Composable
     override fun Content() {
+        var events by remember { mutableStateOf<Array<ProjectEvent>?>(null) }
+
+        LaunchedEffect(Unit) {
+            RProjectGetEvents()
+                .onComplete {
+                    events = it.events
+                }
+                .onError {
+                    ToolsToast.show(t(API_TRANSLATE.app_error))
+                }
+                .send(api)
+        }
+
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             // daily task
             item {
@@ -199,13 +214,32 @@ class PageDailyTasks(private val taskInfo: DailyTaskInfo) : ComposeCard() {
             }
             item {
                 Text(
-                    t(API_TRANSLATE.events_empty),
+                    if (events?.isEmpty() == true) {
+                        t(API_TRANSLATE.events_empty)
+                    } else if (events == null) {
+                        t(API_TRANSLATE.app_loading_dots)
+                    } else {
+                        ""
+                    },
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                         .padding(bottom = 64.dp)
+                )
+            }
+            items(events ?: arrayOf()) {
+                ListItem(
+                    headlineContent = { Text(it.title) },
+                    supportingContent = {
+                        Column {
+                            Text(it.description, modifier = Modifier.padding(bottom = 4.dp))
+                            LinearProgressIndicator(
+                                (it.progressCurrent.toFloat() / it.progressMax).coerceAtMost(1f),
+                            )
+                        }
+                    }
                 )
             }
         }
