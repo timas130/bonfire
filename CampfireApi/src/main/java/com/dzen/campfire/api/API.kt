@@ -255,7 +255,7 @@ class API(
 
         val LVL_APP_ACCESS = LvlInfoUser(100L, 0L)
 
-        val LVL_TRUSTED = LvlInfoUser(250L, 0L)
+        val LVL_TRUSTED = LvlInfoUser(300L, 0L)
         val LVL_CAN_CHANGE_PROFILE_IMAGE = LvlInfoUser(300L, 0L)
         val LVL_CAN_CHANGE_STATUS = LvlInfoUser(300L, 0L)
         val LVL_CAN_MENTION = LvlInfoUser(300L, 0L)
@@ -264,9 +264,9 @@ class API(
         val LVL_CREATE_STICKERS = LvlInfoUser(300L, 0L)
         val LVL_CREATE_QUESTS = LvlInfoUser(300L, 0L)
 
-        val LVL_EXPERIENCED = LvlInfoUser(400L, 150)
+        val LVL_EXPERIENCED = LvlInfoUser(450L, 150)
         val LVL_CAN_CHANGE_PROFILE_IMAGE_GIF = LvlInfoUser(450L, 150)
-        val LVL_MODERATOR_POST_TAGS = LvlInfoModeration(420L, 330)
+        val LVL_MODERATOR_POST_TAGS = LvlInfoModeration(450L, 150)
         val LVL_MODERATOR_WIKI_EDIT = LvlInfoModeration(450L, 150)
         val LVL_ANONYMOUS = LvlInfoUser(450L, 150)
 

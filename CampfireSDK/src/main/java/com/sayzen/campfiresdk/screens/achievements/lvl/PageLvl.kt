@@ -47,6 +47,7 @@ class PageLvl(var accountId:Long, accountLvl: Long, karma30:Long) : Card(0) {
                 API.LVL_MODERATOR -> CardLvlTitle(t(API_TRANSLATE.lvl_moderator), ToolsResources.getColor(R.color.blue_a_400))
                 API.LVL_ADMINISTRATOR -> CardLvlTitle(t(API_TRANSLATE.lvl_administrator), ToolsResources.getColor(R.color.orange_700))
                 API.LVL_SUPER_ADMINISTRATOR -> CardLvlTitle(t(API_TRANSLATE.lvl_super_administrator), ToolsResources.getColor(R.color.red_700))
+                API.LVL_EXPERT -> CardLvlTitle(t(API_TRANSLATE.lvl_expert), ToolsResources.getColor(R.color.bonfire))
                 API.LVL_PROTOADMIN -> CardLvlTitle(t(API_TRANSLATE.lvl_protoadmin), ToolsResources.getColor(R.color.bonfire))
                 else -> null
             }

@@ -28,20 +28,20 @@ class CardLvl(
         vTextLvl.text = ToolsText.numToStringRoundAndTrim(appLvl.lvl.lvl / 100.0, 2)
         vText.text = appLvl.text
         vText.alpha = if (appLvl.lvl.lvl > accountLvl) 0.5f else 1f
-        vKarma.visibility = if(karma30 > 0 && appLvl.lvl is LvlInfoAdmin) View.VISIBLE else View.GONE
+        vKarma.visibility = if (karma30 > 0) View.VISIBLE else View.GONE
         vKarma.text = "${karma30/100}"
 
         if (appLvl.lvl.lvl > accountLvl){
             vTextLvl.setTextColor(ToolsResources.getColor(R.color.grey_200))
             vCorned.setBackgroundColor(ToolsResources.getColor(appLvl.colorRes))
-        }else{
+        } else {
             vTextLvl.setTextColor(ToolsResources.getColor(R.color.green_700))
             vCorned.setBackgroundColor(0x00000000)
         }
 
-        if(myKarma30 >= karma30){
+        if (myKarma30 >= karma30) {
             vKarma.setTextColor(ToolsResources.getColor(R.color.green_700))
-        }else{
+        } else {
             vKarma.setTextColor(ToolsResources.getColorAttr(R.attr.colorReversVariant))
         }
 
