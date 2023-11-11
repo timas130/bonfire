@@ -995,7 +995,7 @@ class API(
         const val QUEST_VARIABLES_MAX = 100
         const val QUEST_VARIABLE_MAX_NAME_L = 200
         const val QUEST_VARIABLE_MAX_VALUE_L = 200
-        const val QUEST_PARTS_MAX = 250
+        const val QUEST_PARTS_MAX = 750
         const val QUEST_DEV_LABEL_MAX_L = 100
         const val QUEST_MAX_DEPTH = 200
 
