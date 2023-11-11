@@ -16,10 +16,10 @@ class EProjectGetEvents : RProjectGetEvents() {
     }
 
     override fun execute(): Response {
+        val events = mutableListOf<ProjectEvent>()
+
         // Конкурс рассказов
         // https://www.notion.so/ki4en/d4ae508c8c974a048a478027244103a6?pvs=4
-
-        val events = mutableListOf<ProjectEvent>()
 
         if (System.currentTimeMillis() < 1699822799000) {
             events.add(ProjectEvent().apply {

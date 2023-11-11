@@ -24,7 +24,7 @@ open class RProjectGetEvents : Request<RProjectGetEvents.Response>() {
         }
 
         override fun json(inp: Boolean, json: Json) {
-            super.json(inp, json)
+            events = json.m(inp, "events", events)
         }
     }
 }
