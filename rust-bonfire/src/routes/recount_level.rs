@@ -282,6 +282,11 @@ async fn get_counts(
     .unwrap_or(0);
     bonus += legacy_quests_finished * 6 / 10;
 
+    // todo: bonfire knight story contest winners
+    if [43, 82, 257, 143, 69, 16, 48].contains(&user_id) {
+        bonus += 3;
+    }
+
     hm.insert(AchiIndex::Bonus, bonus);
 
     hm.insert(
