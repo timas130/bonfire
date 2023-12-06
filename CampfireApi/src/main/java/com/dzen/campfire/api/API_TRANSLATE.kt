@@ -2408,7 +2408,7 @@ object API_TRANSLATE {
     val quests_edit_text_effect_error_2 = Translate("Нельзя добавить два эффекта вибрации сразу")
     val quests_edit_text_effect_error_3 = Translate("Слишком много эффектов")
     val quests_edit_text_effect_remove_q = Translate("Удалить эффект?")
-    val quests_edit_text_pic = Translate("Картника")
+    val quests_edit_text_pic = Translate("Картинка")
     val quests_edit_text_error_1 = Translate("Тупик. Добавьте кнопку.")
     val quests_edit_text_error_2 = Translate("Пустой экран. Добавьте текст.")
     val quests_literal = Translate("Ввести значение")
