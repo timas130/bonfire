@@ -15,6 +15,8 @@ import com.sayzen.campfiresdk.models.events.account.EventAccountBioChangedLinks
 import com.sayzen.campfiresdk.models.events.account.EventAccountBioChangedSex
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.adapters.XAccount
+import com.sayzen.campfiresdk.support.setMarkdownEditor
+import com.sayzen.campfiresdk.support.setMentions
 import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
@@ -24,6 +26,7 @@ import com.sup.dev.android.views.splash.*
 import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsText
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class CardBio(
         private var xAccount: XAccount
@@ -59,7 +62,6 @@ class CardBio(
             else -> tCap(API_TRANSLATE.genderOther)
         })
         vAge.text = t(API_TRANSLATE.profile_age, if (age == 0L) t(API_TRANSLATE.profile_age_not_set) else age)
-        vDescription.text = if (description.isEmpty()) t(API_TRANSLATE.profile_bio_empty) else description
 
         if (ControllerApi.isCurrentAccount(xAccount.getId())) {
             vSex.setOnClickListener { onSexClicked() }
@@ -83,7 +85,11 @@ class CardBio(
 
         }
 
-        ControllerLinks.makeLinkable(vDescription)
+        val descriptionText = description.ifEmpty {
+            t(API_TRANSLATE.profile_bio_empty)
+        }
+        BonfireMarkdown.setMarkdown(vDescription, descriptionText)
+        ControllerLinks.linkifyShort(vDescription)
 
         vLinksContainer.visibility = if (links.count() > 0) View.VISIBLE else View.GONE
         vLinksContainer.removeAllViews()
@@ -146,13 +152,15 @@ class CardBio(
 
     private fun onDescriptionClicked() {
         SplashField()
-                .setAutoHideOnEnter(false)
-                .setHint(t(API_TRANSLATE.app_description))
-                .setText(description)
-                .setMax(API.ACCOUNT_DESCRIPTION_MAX_L)
-                .setOnCancel(t(API_TRANSLATE.app_cancel))
-                .setOnEnter(t(API_TRANSLATE.app_change)) { w, t -> setDescription(w, t) }
-                .asSheetShow()
+            .setAutoHideOnEnter(false)
+            .setHint(t(API_TRANSLATE.app_description))
+            .setMarkdownEditor(inline = false)
+            .setMentions()
+            .setText(description)
+            .setMax(API.ACCOUNT_DESCRIPTION_MAX_L)
+            .setOnCancel(t(API_TRANSLATE.app_cancel))
+            .setOnEnter(t(API_TRANSLATE.app_change)) { w, t -> setDescription(w, t) }
+            .asSheetShow()
     }
 
     private fun onChangeLinkClicked(index: Int, enterText: String, title: String = "", url: String = "") {
