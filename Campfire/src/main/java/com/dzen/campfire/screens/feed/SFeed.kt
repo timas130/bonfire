@@ -32,7 +32,6 @@ import com.sup.dev.java.tools.ToolsThreads
 
 
 class SFeed : Screen(R.layout.screen_feed), PostList {
-
     val vPager: ViewPager = findViewById(R.id.vPager)
     val vFilter: ViewIcon = findViewById(R.id.vFilter)
     private val vTitles: ViewPagerIndicatorTitles = findViewById(R.id.viIndicator)
@@ -43,7 +42,6 @@ class SFeed : Screen(R.layout.screen_feed), PostList {
     val cardDonate = CardDonate()
 
     init {
-
         setTitle(t(API_TRANSLATE.app_feed))
         vPager.adapter = pagerCardAdapter
 

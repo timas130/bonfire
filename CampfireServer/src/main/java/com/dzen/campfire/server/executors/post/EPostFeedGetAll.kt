@@ -9,7 +9,7 @@ import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlWhere
 
-class EPostFeedGetAll : RPostFeedGetAll(0, emptyArray(), emptyArray(), false, 0, false, false) {
+class EPostFeedGetAll : RPostFeedGetAll(0, emptyArray(), false, 0, false, false) {
 
     override fun check() {
     }
@@ -52,7 +52,6 @@ class EPostFeedGetAll : RPostFeedGetAll(0, emptyArray(), emptyArray(), false, 0,
         if (!noKarmaCategory) select.where(TPublications.tag_7, "=", karmaCategory)
         if(noSubscribes)
         if (importantOnly) select.where(TPublications.important, "=", API.PUBLICATION_IMPORTANT_IMPORTANT)
-        if (categoriesId.isNotEmpty()) select.where(SqlWhere.WhereIN(TPublications.publication_category, categoriesId))
         if (ignoreFandomsIds.isNotEmpty()) select.where(SqlWhere.WhereIN(TPublications.fandom_id, true, ignoreFandomsIds))
 
         var posts = ControllerPublications.parseSelect(Database.select("EPostFeedGetAll", select))

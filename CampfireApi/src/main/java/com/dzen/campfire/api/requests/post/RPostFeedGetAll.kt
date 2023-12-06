@@ -7,7 +7,6 @@ import com.sup.dev.java.libs.json.Json
 open class RPostFeedGetAll(
         var offsetDate: Long,
         var languagesId: Array<Long>,
-        var categoriesId: Array<Long>,
         var importantOnly: Boolean,
         var karmaCategory: Long,
         var noSubscribes: Boolean,
@@ -26,7 +25,6 @@ open class RPostFeedGetAll(
         offsetDate = json.m(inp, "offsetDate", offsetDate)
         importantOnly = json.m(inp, "importantOnly", importantOnly)
         languagesId = json.m(inp, "languagesId", languagesId)
-        categoriesId = json.m(inp, "categoriesId", categoriesId)
         karmaCategory = json.m(inp, "karmaCategory", karmaCategory)
         noSubscribes = json.m(inp, "noSubscribes", noSubscribes)
         noKarmaCategory = json.m(inp, "noKarmaCategory", noKarmaCategory)

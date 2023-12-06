@@ -123,7 +123,6 @@ abstract class APage(
         return RPostFeedGetAll(
                 if (cards.isEmpty()) 0 else cards.get(cards.size - 1).xPublication.publication.dateCreate,
                 ControllerSettings.feedLanguages,
-                ControllerSettings.feedCategories,
                 ControllerSettings.feedImportant,
                 getKarmaCategory(),
                 getNoSubscribes(),

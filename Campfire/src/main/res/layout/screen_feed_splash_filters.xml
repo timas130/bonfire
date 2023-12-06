@@ -31,12 +31,6 @@
                 android:layout_height="wrap_content"
                 app:Settings_lineVisible="false"/>
 
-            <com.sup.dev.android.views.settings.Settings
-                android:id="@+id/vCategories"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:Settings_lineVisible="false"/>
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

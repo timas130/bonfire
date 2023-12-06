@@ -6,9 +6,7 @@ import com.sup.dev.java.libs.json.Json
 
 open class RPostFeedGetAllSubscribe(
         var offsetDate: Long,
-        var categoryId:Long
 ) : Request<RPostFeedGetAllSubscribe.Response>() {
-
     companion object {
         val COUNT = 10
     }
@@ -19,7 +17,6 @@ open class RPostFeedGetAllSubscribe(
 
     override fun jsonSub(inp: Boolean, json: Json) {
         offsetDate = json.m(inp, "offsetDate", offsetDate)
-        categoryId = json.m(inp, "categoryId", categoryId)
     }
 
     override fun instanceResponse(json: Json): Response {

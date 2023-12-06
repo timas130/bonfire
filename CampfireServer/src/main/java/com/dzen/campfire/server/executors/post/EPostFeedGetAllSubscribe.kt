@@ -9,7 +9,7 @@ import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlWhere
 
-class EPostFeedGetAllSubscribe : RPostFeedGetAllSubscribe(0, 0) {
+class EPostFeedGetAllSubscribe : RPostFeedGetAllSubscribe(0) {
 
     override fun check() {
     }
@@ -21,8 +21,6 @@ class EPostFeedGetAllSubscribe : RPostFeedGetAllSubscribe(0, 0) {
                 .where(TPublications.date_create, "<", if (offsetDate == 0L) Long.MAX_VALUE else offsetDate)
                 .count(COUNT)
                 .sort(TPublications.date_create, false)
-
-        if (categoryId > 0) select.where(TPublications.publication_category, "=", categoryId)
 
         val subscribeTag: String = ControllerAccounts.get(apiAccount.id, TAccounts.subscribes).next()!!
         val split = subscribeTag.split(',')

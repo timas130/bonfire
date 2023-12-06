@@ -17,12 +17,17 @@ class PageSubscriptions(screen: SFeed) : APage(screen) {
     override fun getKarmaCategory() = -1L
 
     override fun instanceRequest(
-            cards:ArrayList<CardPublication>,
-            adapterX: RecyclerCardAdapterLoading<CardPublication, Publication>,
-            onLoad:(Array<Publication>)->Unit): Request<out Request.Response> {
-        return RPostFeedGetAllSubscribe(
-                if (cards.isEmpty()) 0 else cards.get(cards.size - 1).xPublication.publication.dateCreate, 0)
-                .onComplete { r -> onLoad.invoke(r.publications) }
+        cards: ArrayList<CardPublication>,
+        adapterX: RecyclerCardAdapterLoading<CardPublication, Publication>,
+        onLoad: (Array<Publication>) -> Unit
+    ): Request<out Request.Response> {
+        val offsetDate = if (cards.isEmpty()) {
+            0
+        } else {
+            cards.last().xPublication.publication.dateCreate
+        }
+        return RPostFeedGetAllSubscribe(offsetDate)
+            .onComplete { r -> onLoad.invoke(r.publications) }
     }
 
     override fun getNoKarmaCategory() = false
