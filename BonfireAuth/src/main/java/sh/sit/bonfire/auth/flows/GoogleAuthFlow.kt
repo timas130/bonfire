@@ -9,7 +9,6 @@ import com.sup.dev.android.tools.ToolsIntent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import sh.sit.bonfire.LoginOAuthMutation
-import sh.sit.bonfire.OAuthUrlQuery
 import sh.sit.bonfire.auth.AuthController
 import sh.sit.bonfire.auth.R
 import sh.sit.bonfire.auth.apollo
@@ -23,13 +22,13 @@ class GoogleAuthFlow(context: Context) : AuthFlow(context) {
     //private val credentialManager = CredentialManager.create(context)
 
     suspend fun getOAuthLoginInput(): OauthLoginInput {
-        val nonce = try {
-            val response = apollo.query(OAuthUrlQuery(provider = OauthProvider.GOOGLE)).execute()
-            response.data!!.oauthUrl.nonce
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            throw AuthException(FailureReason.AuthUrlRequest)
-        }
+        //val nonce = try {
+        //    val response = apollo.query(OAuthUrlQuery(provider = OauthProvider.GOOGLE)).execute()
+        //    response.data!!.oauthUrl.nonce
+        //} catch (e: Throwable) {
+        //    e.printStackTrace()
+        //    throw AuthException(FailureReason.AuthUrlRequest)
+        //}
 
         val opt = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
@@ -98,7 +97,7 @@ class GoogleAuthFlow(context: Context) : AuthFlow(context) {
 
         return OauthLoginInput(
             provider = OauthProvider.GOOGLE,
-            nonce = nonce,
+            nonce = "",
             code = idToken,
         )
     }

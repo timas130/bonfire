@@ -195,7 +195,7 @@ impl AuthServer {
     pub(crate) async fn get_token_response(
         &self,
         provider: OAuthProvider,
-        nonce: String,
+        _nonce: String,
         code: String,
     ) -> Result<(Option<CoreTokenResponse>, CoreIdToken, CoreIdTokenClaims), AuthError> {
         let client = self.get_oauth_client(provider)?;
@@ -218,12 +218,12 @@ impl AuthServer {
             }
         };
 
-        let nonce = sqlx::query_scalar!(
-            "delete from oauth_flows where nonce = $1 returning nonce",
-            nonce,
-        )
-        .fetch_one(&self.base.pool)
-        .await?;
+        //let nonce = sqlx::query_scalar!(
+        //    "delete from oauth_flows where nonce = $1 returning nonce",
+        //    nonce,
+        //)
+        //.fetch_one(&self.base.pool)
+        //.await?;
 
         let claims = id_token
             .claims(&id_token_verifier, DummyNonceVerifier)

@@ -26,6 +26,7 @@ use tracing_subscriber::filter::LevelFilter;
 use tracing_subscriber::fmt::format::FmtSpan;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
+use crate::error::LogErrorsMiddleware;
 
 type BSchema = Schema<schema::Query, schema::Mutation, EmptySubscription>;
 
@@ -104,7 +105,8 @@ async fn main() -> anyhow::Result<()> {
         .layer(SentryHttpLayer::with_transaction())
         .layer(CorsLayer::permissive())
         .layer(Extension(global_context))
-        .layer(Extension(schema));
+        .layer(Extension(schema))
+        .layer(Extension(LogErrorsMiddleware));
 
     Server::bind(&"0.0.0.0:8000".parse().unwrap())
         .serve(app.into_make_service_with_connect_info::<SocketAddr>())
