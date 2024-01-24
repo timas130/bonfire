@@ -39,20 +39,35 @@ class GoogleAuthFlow(context: Context) : AuthFlow(context) {
             .setGravityForPopups(Gravity.BOTTOM or Gravity.CENTER)
             .build()
 
-        withContext(Dispatchers.IO) {
-            client.blockingConnect()
+        try {
+            withContext(Dispatchers.IO) {
+                client.blockingConnect()
+            }
+            suspendCoroutine<Unit> {
+                Auth.GoogleSignInApi.signOut(client)
+                    .setResultCallback { status ->
+                        if (status.isSuccess) {
+                            it.resume(Unit)
+                        } else {
+                            it.resumeWithException(AuthException(FailureReason.RequestRejected, status.statusMessage))
+                        }
+                    }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw AuthException(FailureReason.RequestRejected, e.message)
         }
 
         val idToken = suspendCoroutine {
             ToolsIntent.startIntentForResult(Auth.GoogleSignInApi.getSignInIntent(client)) { _, intent ->
                 if (intent == null) {
-                    it.resumeWithException(AuthException(FailureReason.RequestRejected))
+                    it.resumeWithException(AuthException(FailureReason.InvalidCredential))
                     return@startIntentForResult
                 }
                 val result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent)
 
                 if (result == null || result.signInAccount?.idToken == null) {
-                    it.resumeWithException(AuthException(FailureReason.RequestRejected))
+                    it.resumeWithException(AuthException(FailureReason.InvalidCredential))
                 } else {
                     it.resume(result.signInAccount!!.idToken!!)
                 }
@@ -109,7 +124,7 @@ class GoogleAuthFlow(context: Context) : AuthFlow(context) {
             apollo.mutation(LoginOAuthMutation(input)).execute()
         } catch (e: Exception) {
             e.printStackTrace()
-            throw AuthException(FailureReason.FinalizeFailed)
+            throw AuthException(FailureReason.FinalizeFailed, e.message)
         }
 
         val data = response.data ?: throw AuthException(FailureReason.FinalizeFailed)
@@ -119,10 +134,12 @@ class GoogleAuthFlow(context: Context) : AuthFlow(context) {
 
         val tokens = data.loginOauth.tokens ?: throw AuthException(FailureReason.FinalizeFailed)
 
-        AuthController.saveAuthState(AuthController.AuthenticatedAuthState(
-            accessToken = tokens.accessToken,
-            refreshToken = tokens.refreshToken,
-            email = "",
-        ))
+        AuthController.saveAuthState(
+            AuthController.AuthenticatedAuthState(
+                accessToken = tokens.accessToken,
+                refreshToken = tokens.refreshToken,
+                email = "",
+            )
+        )
     }
 }
