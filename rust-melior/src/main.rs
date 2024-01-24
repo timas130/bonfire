@@ -21,6 +21,7 @@ use c_core::prelude::{anyhow, tokio};
 use c_core::ServiceBase;
 use sentry_tower::{NewSentryLayer, SentryHttpLayer};
 use std::net::SocketAddr;
+use axum_client_ip::XForwardedFor;
 use tower_http::cors::CorsLayer;
 use tracing_subscriber::filter::LevelFilter;
 use tracing_subscriber::fmt::format::FmtSpan;
@@ -43,6 +44,7 @@ async fn graphql_handler(
     Extension(schema): Extension<BSchema>,
     Extension(global_context): Extension<GlobalContext>,
     auth_header: Option<TypedHeader<Authorization<Bearer>>>,
+    forwarded_for: XForwardedFor,
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
     user_agent: Option<TypedHeader<UserAgent>>,
     req: GraphQLRequest,
@@ -50,7 +52,7 @@ async fn graphql_handler(
     let req_context = ReqContext::new(
         global_context,
         auth_header.map(|header| header.token().to_string()),
-        addr,
+        forwarded_for.0.first().cloned().unwrap_or(addr.ip()),
         user_agent,
     )
     .await;

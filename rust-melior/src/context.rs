@@ -9,7 +9,7 @@ use c_core::services::auth::user::{AuthUser, PermissionLevel};
 use c_core::services::auth::{Auth, AuthError, AuthServiceClient, UserContext};
 use c_core::services::level::{Level, LevelServiceClient};
 use c_core::ServiceBase;
-use std::net::SocketAddr;
+use std::net::{IpAddr, SocketAddr};
 use std::sync::Arc;
 
 #[derive(Clone)]
@@ -43,7 +43,7 @@ impl ReqContext {
     pub async fn new(
         global_context: GlobalContext,
         token: Option<String>,
-        addr: SocketAddr,
+        addr: IpAddr,
         user_agent: Option<TypedHeader<UserAgent>>,
     ) -> Self {
         let mut user_auth_error = None;
@@ -70,7 +70,7 @@ impl ReqContext {
             auth: global_context.auth,
             level: global_context.level,
             user_context: UserContext {
-                ip: addr.ip(),
+                ip: addr,
                 user_agent: user_agent
                     .map(|header| header.to_string())
                     .unwrap_or_else(|| String::from("[?]")),
