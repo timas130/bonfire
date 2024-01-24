@@ -605,6 +605,7 @@ object API_TRANSLATE {
     val profile_subtitle_text_60 = Translate("Бог кармы")
     val profile_subtitle_text_61 = Translate("Адепт бога кармы")
     val profile_subtitle_text_62 = Translate("Геолог")
+    val profile_subtitle_text_63 = Translate("Имеет доступ к базе данных")
 
     val feed_subtitle_subscriptions = Translate("Посты фэндомов на которые вы подписаны")
     val feed_subtitle_all = Translate("Все посты, кроме фэндомов на которые вы подписаны")
