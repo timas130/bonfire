@@ -4,8 +4,6 @@ use c_core::prelude::anyhow;
 use c_core::prelude::tarpc::context;
 use c_core::services::auth::{AuthError, UserContext};
 use c_core::services::email::types::EmailTemplate;
-use scrypt::password_hash::{PasswordHash, PasswordVerifier};
-use scrypt::Scrypt;
 
 impl AuthServer {
     // This method is used in tfa_approve() and recover_password()

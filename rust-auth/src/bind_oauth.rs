@@ -1,6 +1,6 @@
-use c_core::prelude::tracing::info;
 use crate::terminate_session::AccessTokenInfo;
 use crate::AuthServer;
+use c_core::prelude::tracing::info;
 use c_core::services::auth::{AuthError, OAuthProvider};
 
 impl AuthServer {
@@ -57,7 +57,10 @@ impl AuthServer {
             ).execute(&mut *tx).await?.rows_affected();
 
             if updated > 0 {
-                info!("updated user_id={user_id} email={} from authenticating via {provider:?}", email.as_str());
+                info!(
+                    "updated user_id={user_id} email={} from authenticating via {provider:?}",
+                    email.as_str()
+                );
             }
         }
 

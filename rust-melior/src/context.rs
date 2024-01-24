@@ -1,15 +1,13 @@
 use async_graphql::Context;
 use async_trait::async_trait;
-use axum::headers::UserAgent;
-use axum::TypedHeader;
-use c_core::prelude::anyhow::anyhow;
-use c_core::prelude::tarpc::client::RpcError;
+use axum_extra::headers::UserAgent;
+use axum_extra::TypedHeader;
 use c_core::prelude::{anyhow, tarpc};
 use c_core::services::auth::user::{AuthUser, PermissionLevel};
 use c_core::services::auth::{Auth, AuthError, AuthServiceClient, UserContext};
 use c_core::services::level::{Level, LevelServiceClient};
 use c_core::ServiceBase;
-use std::net::{IpAddr, SocketAddr};
+use std::net::IpAddr;
 use std::sync::Arc;
 
 #[derive(Clone)]

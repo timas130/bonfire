@@ -2,7 +2,6 @@ use crate::context::ReqContext;
 use crate::error::RespError;
 use crate::models::user::User;
 use crate::schema::auth::login_oauth::OAuthLoginInput;
-use crate::utils::ok::OkResp;
 use async_graphql::{Context, Object};
 use c_core::prelude::tarpc::context;
 use c_core::services::auth::AuthError;

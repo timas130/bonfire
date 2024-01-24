@@ -5,7 +5,7 @@ impl AuthServer {
     pub(crate) async fn _verify_email(
         &self,
         token: String,
-        user_context: Option<UserContext>,
+        _user_context: Option<UserContext>,
     ) -> Result<i64, AuthError> {
         let email = self.get_verify_token_email(token)?;
 

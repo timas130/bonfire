@@ -25,7 +25,7 @@ pub enum ImageError {
         #[from]
         #[serde(skip)]
         #[serde(default = "sqlx_unknown")]
-        #[educe(Eq(ignore), PartialEq(ignore), Clone(method = "sqlx_clone"))]
+        #[educe(Eq(ignore), Clone(method = "sqlx_clone"))]
         source: sqlx::Error,
     },
     #[error("Anyhow: Unknown error: {source}")]
@@ -34,7 +34,7 @@ pub enum ImageError {
         #[from]
         #[serde(skip)]
         #[serde(default = "anyhow_unknown")]
-        #[educe(Eq(ignore), PartialEq(ignore), Clone(method = "anyhow_clone"))]
+        #[educe(Eq(ignore), Clone(method = "anyhow_clone"))]
         source: anyhow::Error,
     },
 }

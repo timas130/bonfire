@@ -1,4 +1,3 @@
-use crate::context::ReqContext;
 use crate::error::RespError;
 use crate::models::user::User;
 use async_graphql::{Context, Object, ID};

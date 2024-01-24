@@ -1,7 +1,7 @@
 use crate::context::ReqContext;
 use crate::error::RespError;
 use crate::utils::ok::OkResp;
-use async_graphql::{Context, Object, SimpleObject};
+use async_graphql::{Context, Object};
 use c_core::prelude::tarpc::context;
 use c_core::services::auth::AuthError;
 

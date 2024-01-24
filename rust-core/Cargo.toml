@@ -15,8 +15,8 @@ futures = "0.3"
 serde = { version = "1.0", features = ["derive"] }
 chrono = { version = "0.4", default-features = false, features = ["serde", "clock", "std"] }
 thiserror = "1.0"
-num_enum = "0.6"
-educe = { version = "0.4", features = ["Eq", "PartialEq", "Clone"] }
+num_enum = "0.7"
+educe = { version = "0.5", features = ["Eq", "PartialEq", "Clone"] }
 opentelemetry = { version = "0.18", features = ["rt-tokio"] }
 tracing = { version = "0.1", features = ["attributes"] }
 strum_macros = "0.25"

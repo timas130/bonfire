@@ -10,13 +10,14 @@ c-email = { path = "../rust-email" }
 b-level = { path = "../rust-level" }
 tracing = { version = "0.1", features = ["attributes"] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-axum = { version = "0.6", features = ["headers", "http2", "macros"] }
-axum-client-ip = "0.4"
-async-graphql = { version = "6.0", default-features = false, features = ["chrono", "dataloader", "opentelemetry", "graphiql"] }
-async-graphql-axum = { version = "6.0" }
-tower-http = { version = "0.4", features = ["cors"] }
-sentry = { version = "0.31", features = ["tracing"] }
-sentry-tower = { version = "0.31", features = ["http"] }
+axum = { version = "0.7", features = ["http2", "macros"] }
+axum-extra = { version = "0.9", features = ["typed-header"] }
+axum-client-ip = "0.5"
+async-graphql = { version = "7.0", default-features = false, features = ["chrono", "dataloader", "opentelemetry", "graphiql"] }
+async-graphql-axum = { version = "7.0" }
+tower-http = { version = "0.5", features = ["cors"] }
+sentry = { version = "0.32", features = ["tracing"] }
+sentry-tower = { version = "0.32", features = ["http"] }
 tokio-stream = "0.1"
 sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "chrono"] }
 async-trait = "0.1"

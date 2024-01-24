@@ -27,8 +27,8 @@ impl AuthServer {
         Ok(self
             ._get_by_ids(&ids)
             .await?
-            .into_iter()
-            .map(|(_, user)| (user.username.clone(), user))
+            .into_values()
+            .map(|user| (user.username.clone(), user))
             .collect())
     }
 }

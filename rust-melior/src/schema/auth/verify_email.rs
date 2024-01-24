@@ -1,10 +1,8 @@
 use crate::context::ReqContext;
 use crate::error::RespError;
 use crate::models::user::User;
-use async_graphql::{Context, Object, SimpleObject};
-use c_core::prelude::anyhow::anyhow;
+use async_graphql::{Context, Object};
 use c_core::prelude::tarpc::context;
-use c_core::services::auth::LoginEmailResponse;
 
 #[derive(Default)]
 pub struct VerifyEmailMutation;

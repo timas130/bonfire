@@ -30,11 +30,13 @@ impl AuthServer {
 
         let mut tx = self.base.pool.begin().await?;
 
-        let email_taken =
-            sqlx::query_scalar!("select count(*) from users where lower(email) = lower($1)", &new_email)
-                .fetch_one(&mut *tx)
-                .await?
-                .unwrap_or(0);
+        let email_taken = sqlx::query_scalar!(
+            "select count(*) from users where lower(email) = lower($1)",
+            &new_email
+        )
+        .fetch_one(&mut *tx)
+        .await?
+        .unwrap_or(0);
 
         if email_taken > 0 {
             tx.rollback().await?;

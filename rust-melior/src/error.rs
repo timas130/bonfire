@@ -1,3 +1,6 @@
+use async_graphql::extensions::{Extension, ExtensionContext, NextExecute};
+use async_graphql::Response;
+use async_trait::async_trait;
 use c_core::prelude::anyhow;
 use c_core::prelude::anyhow::Error;
 use c_core::prelude::tarpc::client::RpcError;
@@ -5,9 +8,6 @@ use c_core::services::auth::AuthError;
 use c_core::services::email::EmailError;
 use c_core::services::level::LevelError;
 use std::sync::Arc;
-use async_graphql::extensions::{Extension, ExtensionContext, NextExecute};
-use async_graphql::Response;
-use async_trait::async_trait;
 use thiserror::Error;
 use tracing::warn;
 
@@ -46,7 +46,12 @@ pub struct LogErrorsMiddleware;
 
 #[async_trait]
 impl Extension for LogErrorsMiddleware {
-    async fn execute(&self, ctx: &ExtensionContext<'_>, operation_name: Option<&str>, next: NextExecute<'_>) -> Response {
+    async fn execute(
+        &self,
+        ctx: &ExtensionContext<'_>,
+        operation_name: Option<&str>,
+        next: NextExecute<'_>,
+    ) -> Response {
         let result = next.run(ctx, operation_name).await;
         for error in &result.errors {
             warn!("error while running op={operation_name:?}: {error:?}");

@@ -5,7 +5,7 @@ use c_core::prelude::chrono::Utc;
 use c_core::prelude::sqlx::types::ipnetwork::IpNetwork;
 use c_core::prelude::tarpc::context;
 use c_core::prelude::tokio::time::{sleep_until, Instant};
-use c_core::prelude::tracing::{error, info, warn};
+use c_core::prelude::tracing::{info, warn};
 use c_core::prelude::{anyhow, chrono};
 use c_core::services::auth::jwt::TokenClaims;
 use c_core::services::auth::tfa::{TfaInfo, TfaType};

@@ -1,5 +1,7 @@
 mod active_sessions;
 mod bind_oauth;
+mod cancel_email_change;
+mod change_email;
 mod change_password;
 mod check_recovery;
 pub(crate) mod login_email;
@@ -18,11 +20,11 @@ mod terminate_session;
 mod user_by_id;
 mod user_by_slug;
 mod verify_email;
-mod change_email;
-mod cancel_email_change;
 
 use crate::schema::auth::active_sessions::ActiveSessionsQuery;
 use crate::schema::auth::bind_oauth::BindOAuthMutation;
+use crate::schema::auth::cancel_email_change::CancelEmailChangeMutation;
+use crate::schema::auth::change_email::ChangeEmailMutation;
 use crate::schema::auth::change_password::ChangePasswordMutation;
 use crate::schema::auth::check_recovery::CheckRecoveryQuery;
 use crate::schema::auth::login_email::LoginEmailMutation;
@@ -36,13 +38,11 @@ use crate::schema::auth::recover_password::RecoverPasswordMutation;
 use crate::schema::auth::register_email::RegisterEmailMutation;
 use crate::schema::auth::resend_verification::ResendVerificationMutation;
 use crate::schema::auth::send_password_recovery::SendPasswordRecoveryMutation;
+use crate::schema::auth::terminate_session::TerminateSessionMutation;
 use crate::schema::auth::user_by_id::UserByIDQuery;
 use crate::schema::auth::user_by_slug::UserBySlugQuery;
 use crate::schema::auth::verify_email::VerifyEmailMutation;
 use async_graphql::MergedObject;
-use crate::schema::auth::cancel_email_change::CancelEmailChangeMutation;
-use crate::schema::auth::change_email::ChangeEmailMutation;
-use crate::schema::auth::terminate_session::TerminateSessionMutation;
 
 #[derive(MergedObject, Default)]
 pub struct AuthQuery(

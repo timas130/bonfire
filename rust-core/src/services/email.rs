@@ -19,7 +19,7 @@ pub enum EmailError {
         #[from]
         #[serde(skip)]
         #[serde(default = "anyhow_unknown")]
-        #[educe(Eq(ignore), PartialEq(ignore), Clone(method = "anyhow_clone"))]
+        #[educe(Eq(ignore), Clone(method = "anyhow_clone"))]
         source: anyhow::Error,
     },
 }

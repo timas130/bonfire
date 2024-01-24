@@ -8,26 +8,28 @@ pub(crate) mod utils;
 
 use crate::context::{GlobalContext, ReqContext};
 use crate::data_loaders::AuthUserLoader;
+use crate::error::LogErrorsMiddleware;
 use async_graphql::http::GraphiQLSource;
 use async_graphql::{EmptySubscription, Schema};
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
 use axum::extract::ConnectInfo;
-use axum::headers::authorization::Bearer;
-use axum::headers::{Authorization, UserAgent};
 use axum::response::IntoResponse;
 use axum::routing::get;
-use axum::{response, Extension, Router, Server, TypedHeader};
+use axum::{response, Extension, Router};
+use axum_client_ip::XForwardedFor;
 use c_core::prelude::{anyhow, tokio};
 use c_core::ServiceBase;
 use sentry_tower::{NewSentryLayer, SentryHttpLayer};
 use std::net::SocketAddr;
-use axum_client_ip::XForwardedFor;
+use axum_extra::headers::{Authorization, UserAgent};
+use axum_extra::headers::authorization::Bearer;
+use axum_extra::TypedHeader;
 use tower_http::cors::CorsLayer;
 use tracing_subscriber::filter::LevelFilter;
 use tracing_subscriber::fmt::format::FmtSpan;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
-use crate::error::LogErrorsMiddleware;
+use c_core::prelude::tokio::net::TcpListener;
 
 type BSchema = Schema<schema::Query, schema::Mutation, EmptySubscription>;
 
@@ -110,9 +112,8 @@ async fn main() -> anyhow::Result<()> {
         .layer(Extension(schema))
         .layer(Extension(LogErrorsMiddleware));
 
-    Server::bind(&"0.0.0.0:8000".parse().unwrap())
-        .serve(app.into_make_service_with_connect_info::<SocketAddr>())
-        .await?;
+    let listener = TcpListener::bind("0.0.0.0:8000").await?;
+    axum::serve(listener, app.into_make_service_with_connect_info::<SocketAddr>()).await?;
 
     Ok(())
 }

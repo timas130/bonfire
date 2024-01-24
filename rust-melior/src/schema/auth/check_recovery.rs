@@ -22,8 +22,8 @@ impl CheckRecoveryQuery {
             .check_recovery_token(context::current(), token)
             .await??;
 
-        Ok(User::by_id(ctx, user_id)
+        User::by_id(ctx, user_id)
             .await?
-            .ok_or(RespError::OutOfSync)?)
+            .ok_or(RespError::OutOfSync)
     }
 }

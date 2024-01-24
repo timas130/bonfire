@@ -6,14 +6,14 @@ license = "AGPL-3.0-or-later"
 
 [dependencies]
 c-core = { path = "../rust-core" }
-itertools = "0.11"
+itertools = "0.12"
 nanoid = "0.4"
 crossbeam-queue = "0.3"
 reqwest = "0.11"
 tracing = "0.1"
 
 [dependencies.lettre]
-version = "0.10"
+version = "0.11"
 default-features = false
 features = ["tokio1", "smtp-transport", "builder", "tokio1-rustls-tls"]
 

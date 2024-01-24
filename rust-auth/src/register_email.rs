@@ -102,8 +102,11 @@ impl AuthServer {
         //// Check if stuff was taken
 
         let (email_taken, username_taken) = tokio::join!(
-            sqlx::query_scalar!("select count(*) from users where lower(email) = lower($1) limit 1", email)
-                .fetch_one(&self.base.pool),
+            sqlx::query_scalar!(
+                "select count(*) from users where lower(email) = lower($1) limit 1",
+                email
+            )
+            .fetch_one(&self.base.pool),
             sqlx::query_scalar!(
                 "select count(*) from users where username = $1 limit 1",
                 username
@@ -155,7 +158,9 @@ impl AuthServer {
         .fetch_one(&mut *tx)
         .await?;
 
-        let username = if username.is_none() {
+        let username = if let Some(username) = username {
+            username
+        } else {
             let new_username = format!("User#{user_id}");
             sqlx::query!(
                 "update users set username = $1 where id = $2",
@@ -165,8 +170,6 @@ impl AuthServer {
             .execute(&mut *tx)
             .await?;
             new_username
-        } else {
-            username.unwrap()
         };
 
         //// Send verification email
