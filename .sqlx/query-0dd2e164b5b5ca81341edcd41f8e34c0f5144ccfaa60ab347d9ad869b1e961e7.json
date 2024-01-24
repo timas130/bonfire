@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select count(*) from users where email = $1 limit 1",
+  "query": "select count(*) from users where lower(email) = lower($1) limit 1",
   "describe": {
     "columns": [
       {
@@ -18,5 +18,5 @@
       null
     ]
   },
-  "hash": "9a1cb93db735364c3cbbe794ae9014910d83d80be791794d10d12d44617a5b6f"
+  "hash": "0dd2e164b5b5ca81341edcd41f8e34c0f5144ccfaa60ab347d9ad869b1e961e7"
 }

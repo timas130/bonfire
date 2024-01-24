@@ -1,12 +1,12 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select count(*) from users where email = $1",
+  "query": "select count(*) > 0 from users where lower(email) = lower($1)",
   "describe": {
     "columns": [
       {
         "ordinal": 0,
-        "name": "count",
-        "type_info": "Int8"
+        "name": "?column?",
+        "type_info": "Bool"
       }
     ],
     "parameters": {
@@ -18,5 +18,5 @@
       null
     ]
   },
-  "hash": "5a95698b5e376edc0e4f529001a2191fe19fc74f98ffa53d93ad66e2dae82ab0"
+  "hash": "a01083c231eab104d99c00c4aa53f172d7765eb7038853e13de99cb75cb03fc9"
 }

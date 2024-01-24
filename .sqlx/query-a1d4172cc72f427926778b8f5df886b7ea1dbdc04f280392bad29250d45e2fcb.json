@@ -1,17 +1,17 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select username, email_verification_sent, email_verified from users where email = $1",
+  "query": "select id, username, email_verified from users where lower(email) = lower($1) limit 1",
   "describe": {
     "columns": [
       {
         "ordinal": 0,
-        "name": "username",
-        "type_info": "Text"
+        "name": "id",
+        "type_info": "Int8"
       },
       {
         "ordinal": 1,
-        "name": "email_verification_sent",
-        "type_info": "Timestamptz"
+        "name": "username",
+        "type_info": "Text"
       },
       {
         "ordinal": 2,
@@ -26,9 +26,9 @@
     },
     "nullable": [
       false,
-      true,
+      false,
       true
     ]
   },
-  "hash": "653eede9c28d5413fd0ca660bfada645b5529ab2e82f5b388e977bfd02018c33"
+  "hash": "a1d4172cc72f427926778b8f5df886b7ea1dbdc04f280392bad29250d45e2fcb"
 }
