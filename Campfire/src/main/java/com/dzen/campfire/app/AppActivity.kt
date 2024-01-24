@@ -235,6 +235,7 @@ class AppActivity : SActivity() {
             vNavigationTitle?.setSubtitle(profileLabel)
         }
 
+        dailyTaskCard.load()
     }
 
     override fun applyTheme() {

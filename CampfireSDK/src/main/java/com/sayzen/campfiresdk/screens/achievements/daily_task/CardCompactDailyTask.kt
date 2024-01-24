@@ -103,10 +103,8 @@ class CardCompactDailyTask : ComposeCard() {
         }
     }
 
-    private fun load() {
+    fun load() {
         _isError.tryEmit(false)
-        // omg is it possible? no update()???
-
         RAchievementsInfo(ControllerApi.account.getId())
             .onComplete {
                 _task.tryEmit(it.dailyTask)
