@@ -25,7 +25,7 @@ impl AuthServer {
 
         let user = sqlx::query!(
             "select id, username, email_verified from users \
-             where email = $1 \
+             where lower(email) = lower($1) \
              limit 1",
             email,
         )

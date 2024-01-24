@@ -266,7 +266,7 @@ impl AuthServer {
             };
 
             let same_email_account_exists = sqlx::query_scalar!(
-                "select count(*) > 0 from users where email = $1",
+                "select count(*) > 0 from users where lower(email) = lower($1)",
                 email.as_str()
             )
             .fetch_one(&self.base.pool)

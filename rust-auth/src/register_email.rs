@@ -102,7 +102,7 @@ impl AuthServer {
         //// Check if stuff was taken
 
         let (email_taken, username_taken) = tokio::join!(
-            sqlx::query_scalar!("select count(*) from users where email = $1 limit 1", email)
+            sqlx::query_scalar!("select count(*) from users where lower(email) = lower($1) limit 1", email)
                 .fetch_one(&self.base.pool),
             sqlx::query_scalar!(
                 "select count(*) from users where username = $1 limit 1",

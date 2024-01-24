@@ -34,7 +34,7 @@ impl AuthServer {
     pub(crate) async fn _resend_verification(&self, email: String) -> Result<(), AuthError> {
         let user = sqlx::query!(
             "select username, email_verification_sent, email_verified from users \
-             where email = $1",
+             where lower(email) = lower($1)",
             email
         )
         .fetch_optional(&self.base.pool)

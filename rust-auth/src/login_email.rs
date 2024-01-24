@@ -180,7 +180,7 @@ impl AuthServer {
 
         let user = sqlx::query!(
             "select id, username, email, email_verified, hard_banned, password, tfa_mode, tfa_data \
-             from users where email = $1 limit 1",
+             from users where lower(email) = lower($1) limit 1",
             email
         )
         .fetch_optional(&self.base.pool)
