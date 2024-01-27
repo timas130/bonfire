@@ -14,7 +14,7 @@ use std::ops::RangeInclusive;
 use std::time::Duration;
 
 lazy_static! {
-    static ref USERNAME_REGEX: regex::Regex = regex::Regex::new(r"^[a-zA-Z_0-9]{3,25}$").unwrap();
+    static ref USERNAME_REGEX: regex::Regex = regex::Regex::new(r"^[a-zA-Z0-9]{3,25}$").unwrap();
     static ref NUMBERS_ONLY_REGEX: regex::Regex = regex::Regex::new(r"^[0-9]+$").unwrap();
 }
 

@@ -1769,7 +1769,7 @@ object API_TRANSLATE {
     val profile_change_name_confirm = Translate("Изменить имя этого пользователя?")
     val profile_change_title_image = Translate("Изменить фоновую картинку")
     val profile_remove_title_image = Translate("Удалить фоновую картинку")
-    val profile_change_name_error = Translate("Используйте символы: A-Z 0-9 _")
+    val profile_change_name_error = Translate("Используйте символы: A-Z 0-9")
     val profile_empty_my = Translate("Вы еще ничего не публиковали")
     val profile_empty_other = Translate("Пользователь пока ничего не публиковал")
     val profile_follows_empty_male = Translate("Подписан на вас")
