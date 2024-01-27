@@ -28,8 +28,8 @@ object ControllerAchievements {
 
         val report = RustAchievements.getForUser(accountId)
         for ((_, achievement) in report.achievements) {
-            val previousLvl = ((previousReport?.achievements?.get(achievement.id)?.target ?: 9999999) + 1).toInt()
-            val achievementTarget = ((achievement.target ?: -1) + 1).toInt()
+            val previousLvl = ((previousReport?.achievements?.get(achievement.id)?.target ?: -2) + 1).toInt()
+            val achievementTarget = ((achievement.target ?: -2) + 1).toInt()
 
             if (previousLvl < achievementTarget) {
                 // on new achievement level
