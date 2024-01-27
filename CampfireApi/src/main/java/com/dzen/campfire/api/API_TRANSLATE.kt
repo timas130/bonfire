@@ -1187,7 +1187,7 @@ object API_TRANSLATE {
     val settings_fandom_background = Translate("Отображать фон в чатах")
     val settings_language = Translate("Язык")
     val settings_anon_rate = Translate("Ставить оценки анонимно")
-    val settings_anon_rate_hint = Translate("Доступно с 5-го уровня")
+    val settings_anon_rate_hint = Translate("Доступно с уровня Опытный")
     val settings_user_activities_subscribe_title = Translate("Подписка")
     val settings_user_activities_subscribe = Translate("Автоматически подписываться на эстафеты")
     val settings_user_activities_allows = Translate("Кто может передать эстафету?")
