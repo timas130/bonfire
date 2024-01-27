@@ -9,7 +9,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.dzen.campfire.api.tools.client.TokenProvider
 import com.sup.dev.android.app.SupAndroid
-import com.sup.dev.java.tools.ToolsBytes
+import com.sup.dev.android.tools.ToolsTextAndroid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -160,7 +160,7 @@ object AuthController : TokenProvider {
 
     private fun getTokenExpiry(token: String): Long {
         val data = token.split('.')[1]
-        return json.decodeFromString<JsonElement>(ToolsBytes.fromBase64(data).decodeToString())
+        return json.decodeFromString<JsonElement>(ToolsTextAndroid.fromBase64(data).decodeToString())
             .jsonObject["exp"]
             ?.jsonPrimitive
             ?.long

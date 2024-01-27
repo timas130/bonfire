@@ -1,5 +1,5 @@
 package com.sup.dev.java.tools
-import java.util.Base64
+import java.util.*
 
 object ToolsBytes {
 
@@ -34,5 +34,4 @@ object ToolsBytes {
     fun toBase64(bytes:ByteArray):String{
         return Base64.getEncoder().encodeToString(bytes)
     }
-
 }

@@ -5,6 +5,7 @@ import android.graphics.Rect
 import android.graphics.Typeface
 import android.text.Html
 import android.text.InputFilter
+import android.util.Base64
 import android.widget.EditText
 import com.sup.dev.java.tools.ToolsText
 
@@ -72,5 +73,11 @@ object ToolsTextAndroid {
         return SUPPORT_PAINT.fontMetrics.descent
     }
 
+    fun fromBase64(text: String): ByteArray {
+        return Base64.decode(text, Base64.DEFAULT)
+    }
 
+    fun toBase64(bytes: ByteArray): String {
+        return Base64.encode(bytes, Base64.DEFAULT).decodeToString()
+    }
 }
