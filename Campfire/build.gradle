@@ -38,9 +38,6 @@ android {
     namespace 'com.dzen.campfire'
 }
 
-def localProperties = new Properties()
-localProperties.load(new FileInputStream(rootProject.file("local.properties")))
-
 sentry {
     tracingInstrumentation {
         logcat {
