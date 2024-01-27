@@ -242,7 +242,7 @@ class API(
         const val WIKI_PAGES_EVENT_TYPE_CHANGE_LANGUAGE = 5L
 
         const val MODERATION_COMMENT_MIN_L = 1
-        const val MODERATION_COMMENT_MAX_L = 1000
+        const val MODERATION_COMMENT_MAX_L = 4000
 
         val LVL_APP_ACCESS = LvlInfoUser(100L, 0L)
 
