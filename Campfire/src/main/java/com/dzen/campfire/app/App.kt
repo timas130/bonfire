@@ -43,7 +43,8 @@ class App : Application() {
         SentryAndroid.init(this) { options ->
             options.setBeforeSend { ev, _ ->
                 val haveConsent = runBlocking { AuthController.haveConsent.first() }
-                if (haveConsent) {
+                val mainApp = packageName == "sh.sit.bonfire"
+                if (haveConsent && mainApp) {
                     ev
                 } else {
                     null

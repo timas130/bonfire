@@ -52,5 +52,5 @@ java {
 }
 
 tasks.named('run').configure {
-    workingDir = projectDir.parentFile
+    workingDir = rootProject.projectDir
 }

@@ -1,3 +1,4 @@
+import io.sentry.android.gradle.instrumentation.logcat.LogcatLevel
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 apply plugin: 'com.android.application'
@@ -37,9 +38,19 @@ android {
     namespace 'com.dzen.campfire'
 }
 
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
+sentry {
+    tracingInstrumentation {
+        logcat {
+            minLevel = LogcatLevel.DEBUG
+        }
+    }
+}
+
 dependencies {
     implementation project(':CampfireSDK')
-    implementation 'io.sentry:sentry-android:6.28.0'
     implementation('com.google.firebase:firebase-auth-ktx:21.1.0') {
         exclude group: 'com.google.android.gms', module: 'play-services-safetynet'
     }
