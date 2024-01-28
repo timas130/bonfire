@@ -39,7 +39,7 @@ class ApiServer(
         rateLimitExecutor.scheduleAtFixedRate({
             info("> clearing accountRateLimiter")
             it.clear()
-        }, 0, 10, TimeUnit.MINUTES)
+        }, 0, 2, TimeUnit.HOURS)
     }
 
     class TooManyRequestsException : Exception("too many requests")
