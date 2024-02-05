@@ -4,14 +4,12 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.daily_tasks.DailyTask
 import com.dzen.campfire.api.models.daily_tasks.DailyTaskInfo
 import com.dzen.campfire.api.models.daily_tasks.DailyTaskType
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*
 
 object RustDailyTask {
     @Serializable
     data class DailyTaskFandom(
-        @SerialName("id")
         val fandomId: Long,
         val multiplier: Float,
     )
