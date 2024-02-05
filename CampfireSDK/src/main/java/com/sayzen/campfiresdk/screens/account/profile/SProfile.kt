@@ -473,7 +473,7 @@ class SProfile private constructor(
     private fun protoadminAutorization() {
         ApiRequestsSupporter.executeEnabledConfirm(t(API_TRANSLATE.protoadin_profile_autch_title), t(API_TRANSLATE.protoadin_profile_autch_action), RAccountsProtoadminAutorization(xAccount.getId())) {
             ToolsToast.show(t(API_TRANSLATE.app_done))
-            ControllerCampfireSDK.logoutNow()
+            ControllerCampfireSDK.logoutNow(announceLogout = false)
         }
     }
 

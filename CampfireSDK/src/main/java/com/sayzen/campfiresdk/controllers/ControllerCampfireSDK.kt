@@ -276,9 +276,9 @@ object ControllerCampfireSDK {
                 .asSheetShow()
     }
 
-    fun logoutNow() {
+    fun logoutNow(announceLogout: Boolean = true) {
         val d = ToolsView.showProgressDialog()
-        ControllerApi.logout {
+        ControllerApi.logout(announceLogout) {
             d.hide()
             onLoginFailed.invoke()
         }

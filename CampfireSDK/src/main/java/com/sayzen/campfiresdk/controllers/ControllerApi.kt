@@ -271,21 +271,31 @@ object ControllerApi {
         fandomsViceroy = Array(fandomsIds.size) { Item2(fandomsIds[it], languagesIds[it]) }
     }
 
-    fun logout(onComplete: () -> Unit) {
-        RAccountsLogout()
-            .onFinish {
-                ControllerNotifications.hideAll()
-                ControllerChats.clearMessagesCount()
-                ControllerSettings.clear()
-                ControllerNotifications.setNewNotifications(emptyArray())
-                runBlocking { AuthController.logout() }
-                setCurrentAccount(Account())
-                this.fandomsKarmaCounts = null
-                this.fandomsViceroy = null
-                serverTimeDelta = 0
-                onComplete.invoke()
-            }
-            .send(api)
+    fun logout(announceLogout: Boolean = true, onComplete: () -> Unit) {
+        if (announceLogout) {
+            RAccountsLogout()
+                .onFinish {
+                    completeLogout(true, onComplete)
+                }
+                .send(api)
+        } else {
+            completeLogout(false, onComplete)
+        }
+    }
+
+    private fun completeLogout(announceLogout: Boolean = true, onComplete: () -> Unit) {
+        ControllerNotifications.hideAll()
+        ControllerChats.clearMessagesCount()
+        ControllerSettings.clear()
+        ControllerNotifications.setNewNotifications(emptyArray())
+        if (announceLogout) {
+            runBlocking { AuthController.logout() }
+        }
+        setCurrentAccount(Account())
+        this.fandomsKarmaCounts = null
+        this.fandomsViceroy = null
+        serverTimeDelta = 0
+        onComplete.invoke()
     }
 
     fun showBlockedScreen(ex: ApiException, action: NavigationAction, text: String) {
