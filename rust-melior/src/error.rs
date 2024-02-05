@@ -1,4 +1,4 @@
-use async_graphql::extensions::{Extension, ExtensionContext, NextExecute};
+use async_graphql::extensions::{Extension, ExtensionContext, ExtensionFactory, NextExecute};
 use async_graphql::Response;
 use async_trait::async_trait;
 use c_core::prelude::anyhow;
@@ -58,5 +58,13 @@ impl Extension for LogErrorsMiddleware {
         }
 
         result
+    }
+}
+
+pub struct LogErrorsMiddlewareFactory;
+
+impl ExtensionFactory for LogErrorsMiddlewareFactory {
+    fn create(&self) -> Arc<dyn Extension> {
+        Arc::new(LogErrorsMiddleware)
     }
 }

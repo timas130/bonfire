@@ -8,7 +8,7 @@ pub(crate) mod utils;
 
 use crate::context::{GlobalContext, ReqContext};
 use crate::data_loaders::AuthUserLoader;
-use crate::error::LogErrorsMiddleware;
+use crate::error::{LogErrorsMiddleware, LogErrorsMiddlewareFactory};
 use async_graphql::http::GraphiQLSource;
 use async_graphql::{EmptySubscription, Schema};
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
@@ -101,6 +101,7 @@ async fn main() -> anyhow::Result<()> {
         EmptySubscription,
     )
     .data(AuthUserLoader::data_loader(global_context.clone()))
+    .extension(LogErrorsMiddlewareFactory)
     .finish();
 
     let app = Router::new()
@@ -109,8 +110,7 @@ async fn main() -> anyhow::Result<()> {
         .layer(SentryHttpLayer::with_transaction())
         .layer(CorsLayer::permissive())
         .layer(Extension(global_context))
-        .layer(Extension(schema))
-        .layer(Extension(LogErrorsMiddleware));
+        .layer(Extension(schema));
 
     let listener = TcpListener::bind("0.0.0.0:8000").await?;
     axum::serve(listener, app.into_make_service_with_connect_info::<SocketAddr>()).await?;
