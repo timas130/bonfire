@@ -39,7 +39,7 @@
     <string name="error_too_many_attempts">Вы ввели код неправильно слишком много раз. Попробуйте позже.</string>
     <string name="error_network_error">Сервер не отвечает. Проверьте своё соединение.</string>
     <string name="error_cancelled">Действие отменено.</string>
-    <string name="error_unknown">Неизвестная ошибка. Попорбуйте ещё раз или напишите разработчику.</string>
+    <string name="error_unknown">Неизвестная ошибка. Попробуйте ещё раз или напишите разработчику.</string>
     <string name="register_title">Мы рады, что вы пришли!</string>
     <string name="label_repeat_password">Повторите пароль</string>
     <string name="error_password_dont_match">Пароли не совпадают</string>
@@ -63,7 +63,7 @@
     <string name="error_user_not_found">Пользователь не найден. Проверьте написание.</string>
     <string name="forgot_password_sent">Письмо отправлено</string>
     <string name="forgot_password_sent_description">Письмо было отправлено на вашу электронную почту. Пройдите по ссылке
-        в нём, чтобы продолжить. Не забудьте провеить папку Спам, если не можете найти наше сообщение.
+        в нём, чтобы продолжить. Не забудьте проверить папку Спам, если не можете найти наше сообщение.
     </string>
     <string name="security_title">Безопасность</string>
     <string name="security_password">Пароль</string>

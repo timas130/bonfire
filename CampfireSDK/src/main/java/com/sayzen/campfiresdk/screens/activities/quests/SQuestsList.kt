@@ -18,7 +18,7 @@ class SQuestsList : Screen(R.layout.screen_quests_list) {
         disableShadows()
         setTitle(t(API_TRANSLATE.app_activities))
 
-        vRelayRace.setTitle("Класический новогодний квест")
+        vRelayRace.setTitle("Клаcсический новогодний квест")
         vRelayRace.setOnClickListener { Navigator.to(SQuestNewYear()) }
 
         vRubrics.setTitle("Однажды зимней ночью")
