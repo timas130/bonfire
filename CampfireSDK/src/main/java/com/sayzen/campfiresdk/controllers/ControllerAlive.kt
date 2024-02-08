@@ -76,7 +76,7 @@ object ControllerAlive {
         val time = ToolsStorage.getLong("ControllerAlive.push", 0)
         if (time < System.currentTimeMillis() - 1000L * 60 * 60) {
             info("ControllerAlive", "Check push ERROR")
-            ControllerNotifications.chanelOther.post(R.drawable.logo_campfire_alpha_black_and_white_no_margins, "Алерт!", "Пуши не работают. Последнйи пуш: ${ToolsDate.dateToString(time)}", Intent(), "ControllerAlive_2")
+            ControllerNotifications.chanelOther.post(R.drawable.logo_campfire_alpha_black_and_white_no_margins, "Алерт!", "Пуши не работают. Последний пуш: ${ToolsDate.dateToString(time)}", Intent(), "ControllerAlive_2")
         } else {
             info("ControllerAlive", "Check push done")
         }
