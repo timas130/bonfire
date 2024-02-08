@@ -21,16 +21,16 @@
 
         <LinearLayout
             android:id="@+id/vImagesContainer"
-            android:layout_width="wrap_content"
+            android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="8dp"
             android:orientation="vertical">
 
             <com.sup.dev.android.views.views.ViewAvatar
                 android:id="@+id/vImage1"
                 android:layout_width="32dp"
-                android:layout_height="32dp"
+				android:layout_height="32dp"
+				android:layout_gravity="center"
                 android:src="@color/blue_700"
                 app:ViewAvatar_chipBackground="@color/green_700"
                 app:ViewAvatar_chipSize="16dp" />
@@ -69,8 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="16dp">
+                android:layout_marginTop="8dp">
 
                 <com.sup.dev.android.views.views.ViewProgressLine
                     android:id="@+id/vLine"
