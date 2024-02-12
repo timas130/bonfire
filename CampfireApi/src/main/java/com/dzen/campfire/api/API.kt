@@ -786,7 +786,7 @@ class API(
         const val REPORT_COMMENT_L = 500
 
         const val COMMENT_MIN_L = 1
-        const val COMMENT_MAX_L = 1000
+        const val COMMENT_MAX_L = 2000
 
         const val CHAT_TYPE_FANDOM_ROOT = 1L
         const val CHAT_TYPE_PRIVATE = 2L
