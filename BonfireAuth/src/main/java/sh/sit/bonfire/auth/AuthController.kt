@@ -155,6 +155,8 @@ object AuthController : TokenProvider {
             ))
         } catch (e: Exception) {
             e.printStackTrace()
+        } finally {
+            isRefreshing.tryEmit(false)
         }
     }
 
