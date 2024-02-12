@@ -33,6 +33,7 @@ object CampfireConstants {
         API_TRANSLATE.rules_moderators_2,
         API_TRANSLATE.rules_moderators_3,
         API_TRANSLATE.rules_moderators_4,
+        API_TRANSLATE.rules_moderators_5,
     )
 
     val TEXT_ICONS = arrayOf(
@@ -591,6 +592,7 @@ object CampfireConstants {
         API_TRANSLATE.mod_comment_9_label to API_TRANSLATE.mod_comment_9_full,
         API_TRANSLATE.mod_comment_10_label to API_TRANSLATE.mod_comment_10_full,
         API_TRANSLATE.mod_comment_11_label to API_TRANSLATE.mod_comment_11_full,
+        API_TRANSLATE.mod_comment_12_label to API_TRANSLATE.mod_comment_12_full,
     )
 
     private val GAMES_1_ARRAY = API_TRANSLATE.getAllSame("games_genres_")
