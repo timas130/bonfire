@@ -14,8 +14,9 @@ import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.settings.SettingsField
 import com.sup.dev.android.views.settings.SettingsSelection
-import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.splash.Splash
+import com.sup.dev.android.views.support.watchers.TextWatcherChanged
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class SplashPageSpoiler(
         private val requestPutPage:(page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage)->Unit))->Unit,
@@ -23,14 +24,12 @@ class SplashPageSpoiler(
         private val card: CardPage?,
         private val oldPage: PageSpoiler?
 ) : Splash(R.layout.screen_post_create_spoiler) {
-
     private val vName: SettingsField = findViewById(R.id.vName)
     private val vCounter: SettingsSelection = findViewById(R.id.vCounter)
     private val vEnter: Button = findViewById(R.id.vEnter)
     private val vCancel: Button = findViewById(R.id.vCancel)
 
     init {
-
         vCancel.text = t(API_TRANSLATE.app_cancel)
         vEnter.text = t(API_TRANSLATE.app_create)
 
@@ -38,6 +37,7 @@ class SplashPageSpoiler(
         vName.setHint(t(API_TRANSLATE.post_create_spoiler_name))
         vName.vField.setSingleLine(true)
         vName.vField.imeOptions = EditorInfo.IME_FLAG_NO_ENTER_ACTION
+        vName.vField.addTextChangedListener(BonfireMarkdown.getInlineEditorTextChangedListener(vName.vField))
         vName.vField.addTextChangedListener(TextWatcherChanged { update() })
 
         var enterText = t(API_TRANSLATE.app_create)

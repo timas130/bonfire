@@ -1,10 +1,10 @@
 package com.sup.dev.android.views.splash
 
-import androidx.annotation.StringRes
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
+import androidx.annotation.StringRes
 import com.sup.dev.android.R
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
@@ -13,15 +13,13 @@ import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.java.classes.items.Item2
 import com.sup.dev.java.tools.ToolsThreads
-import java.util.*
 
 open class SplashFieldTwo : Splash(R.layout.splash_field_two) {
-
-    private val vIcon: ViewIcon = view.findViewById(R.id.vIcon)
-    private val vFieldWidget_1: SettingsField = view.findViewById(R.id.vField_1)
-    private val vFieldWidget_2: SettingsField = view.findViewById(R.id.vField_2)
-    private val vCancel: Button = view.findViewById(R.id.vCancel)
-    private val vEnter: Button = view.findViewById(R.id.vEnter)
+    val vIcon: ViewIcon = view.findViewById(R.id.vIcon)
+    val vFieldWidget_1: SettingsField = view.findViewById(R.id.vField_1)
+    val vFieldWidget_2: SettingsField = view.findViewById(R.id.vField_2)
+    protected val vCancel: Button = view.findViewById(R.id.vCancel)
+    protected val vEnter: Button = view.findViewById(R.id.vEnter)
 
     private val checkers_1 = ArrayList<Item2<String, (String) -> Boolean>>()
     private var max_1: Int = 0
@@ -31,11 +29,10 @@ open class SplashFieldTwo : Splash(R.layout.splash_field_two) {
     private var max_2: Int = 0
     private var min_2: Int = 0
 
-    private var autoHideOnEnter = true
+    protected var autoHideOnEnter = true
     private var autoHideOnCancel = true
 
     init {
-
         vEnter.visibility = View.GONE
         vCancel.visibility = View.GONE
         vIcon.visibility = View.GONE
@@ -46,7 +43,6 @@ open class SplashFieldTwo : Splash(R.layout.splash_field_two) {
         vFieldWidget_2.vField.addTextChangedListener(TextWatcherChanged { check() })
         vFieldWidget_2.vField.setCallback { vFieldWidget_2.setText(it) }
     }
-
 
     override fun onShow() {
         super.onShow()
@@ -61,11 +57,11 @@ open class SplashFieldTwo : Splash(R.layout.splash_field_two) {
         check(false)
     }
 
-    private fun check(setError:Boolean = true){
+    private fun check(setError: Boolean = true) {
         vEnter.isEnabled = check_1(setError) && check_2(setError)
     }
 
-    private fun check_1(setError:Boolean = true):Boolean {
+    private fun check_1(setError: Boolean = true): Boolean {
 
         val text = getText_1()
         var error: String? = null
@@ -77,7 +73,7 @@ open class SplashFieldTwo : Splash(R.layout.splash_field_two) {
             }
 
         if (error != null) {
-            if(setError)vFieldWidget_1.vFieldLayout.error = if (error.isEmpty()) null else error
+            if (setError) vFieldWidget_1.vFieldLayout.error = if (error.isEmpty()) null else error
             return false
         } else {
             vFieldWidget_1.vFieldLayout.error = null
@@ -85,7 +81,7 @@ open class SplashFieldTwo : Splash(R.layout.splash_field_two) {
         }
     }
 
-    private fun check_2(setError:Boolean = true):Boolean {
+    private fun check_2(setError: Boolean = true): Boolean {
 
         val text = getText_2()
         var error: String? = null
@@ -97,7 +93,7 @@ open class SplashFieldTwo : Splash(R.layout.splash_field_two) {
             }
 
         if (error != null) {
-            if(setError)vFieldWidget_2.vFieldLayout.error = if (error.isEmpty()) null else error
+            if (setError) vFieldWidget_2.vFieldLayout.error = if (error.isEmpty()) null else error
             return false
         } else {
             vFieldWidget_2.vFieldLayout.error = null
@@ -299,7 +295,10 @@ open class SplashFieldTwo : Splash(R.layout.splash_field_two) {
     }
 
 
-    fun setOnEnter(@StringRes s: Int, onEnter: (SplashFieldTwo, String, String) -> Unit = { _, _, _ -> }): SplashFieldTwo {
+    fun setOnEnter(
+        @StringRes s: Int,
+        onEnter: (SplashFieldTwo, String, String) -> Unit = { _, _, _ -> }
+    ): SplashFieldTwo {
         return setOnEnter(ToolsResources.s(s), onEnter)
     }
 
@@ -332,6 +331,4 @@ open class SplashFieldTwo : Splash(R.layout.splash_field_two) {
     fun getText_1() = vFieldWidget_1.getText()
 
     fun getText_2() = vFieldWidget_2.getText()
-
-
 }

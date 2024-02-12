@@ -15,17 +15,17 @@ import com.sayzen.campfiresdk.models.cards.post_pages.CardPageLink
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.settings.SettingsField
-import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.splash.Splash
+import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.java.tools.ToolsText
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class SplashPageLink(
-        private val requestPutPage:(page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage)->Unit))->Unit,
-        private val requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page)->Unit) -> Unit,
-        private val card: CardPage?,
-        private val oldPage: PageLink?
+    private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage) -> Unit)) -> Unit,
+    private val requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page) -> Unit) -> Unit,
+    private val card: CardPage?,
+    private val oldPage: PageLink?
 ) : Splash(R.layout.screen_post_create_link) {
-
     private val vName: SettingsField = findViewById(R.id.vName)
     private val vLink: SettingsField = findViewById(R.id.vLink)
     private val vEnter: Button = findViewById(R.id.vEnter)
@@ -44,6 +44,7 @@ class SplashPageLink(
 
         vName.vField.setSingleLine(true)
         vName.vField.imeOptions = EditorInfo.IME_FLAG_NO_ENTER_ACTION
+        vName.vField.addTextChangedListener(BonfireMarkdown.getInlineEditorTextChangedListener(vName.vField))
         vName.vField.addTextChangedListener(TextWatcherChanged { update() })
 
         var enterText = t(API_TRANSLATE.app_create)
@@ -78,9 +79,9 @@ class SplashPageLink(
         hide()
         val w = ToolsView.showProgressDialog()
         if (card == null)
-            requestPutPage.invoke(page, null, w, { page1 -> CardPageLink(null, page1 as PageLink) }){}
+            requestPutPage.invoke(page, null, w, { page1 -> CardPageLink(null, page1 as PageLink) }) {}
         else
-            requestChangePage.invoke(page, card, null, w){}
+            requestChangePage.invoke(page, card, null, w) {}
 
     }
 

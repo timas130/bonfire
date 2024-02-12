@@ -17,9 +17,8 @@ import com.sup.dev.java.classes.items.Item2
 import com.sup.dev.java.tools.ToolsThreads
 
 open class SplashField(
-        resId:Int = R.layout.splash_field
-): Splash(resId) {
-
+    resId: Int = R.layout.splash_field
+) : Splash(resId) {
     val vIcon: ViewIcon = view.findViewById(R.id.vIcon)
     val vFieldWidget: SettingsField = view.findViewById(R.id.vField)
     protected val vCancel: Button = view.findViewById(R.id.vCancel)
@@ -33,7 +32,6 @@ open class SplashField(
     private var autoDisableOnCancel = true
 
     init {
-
         vEnter.visibility = View.GONE
         vCancel.visibility = View.GONE
         vIcon.visibility = View.GONE
@@ -44,7 +42,6 @@ open class SplashField(
     }
 
     fun check() {
-
         val text = getText()
         var error: String? = null
 
@@ -115,7 +112,7 @@ open class SplashField(
     fun setIcon(icon: Bitmap, onClick: (SplashField) -> Unit) {
         vIcon.visibility = View.VISIBLE
         vIcon.setImageBitmap(icon)
-        vIcon.setOnClickListener {onClick.invoke(this) }
+        vIcon.setOnClickListener { onClick.invoke(this) }
     }
 
     fun setMediaCallback(callback: (SplashField, String) -> Unit): SplashField {
@@ -228,7 +225,6 @@ open class SplashField(
         vFieldWidget.vFieldLayout.isCounterEnabled = counter
     }
 
-
     fun setOnEnter(@StringRes s: Int, onEnter: (SplashField, String) -> Unit = { _, _ -> }): SplashField {
         return setOnEnter(ToolsResources.s(s), onEnter)
     }
@@ -260,6 +256,4 @@ open class SplashField(
     //
 
     fun getText() = vFieldWidget.getText()
-
-
 }

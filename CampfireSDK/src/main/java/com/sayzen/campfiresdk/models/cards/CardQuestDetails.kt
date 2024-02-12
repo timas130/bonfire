@@ -7,7 +7,6 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.quests.QuestDetails
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.publications.EventPostStatusChange
 import com.sayzen.campfiresdk.models.events.quests.EventQuestChanged
@@ -22,8 +21,9 @@ import com.sup.dev.android.views.views.ViewButton
 import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.java.libs.eventBus.EventBus
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
-class CardQuestDetails constructor(
+class CardQuestDetails(
     var questDetails: QuestDetails,
     private val onClick: (() -> Unit)? = null,
     private val onLongClick: ((View, Float, Float) -> Unit)? = null,
@@ -66,8 +66,10 @@ class CardQuestDetails constructor(
             vPublish.visibility = View.GONE
         }
 
-        vDescription.text = questDetails.description.ifEmpty { t(API_TRANSLATE.quests_no_description) }
-        ControllerLinks.makeLinkable(vDescription)
+        BonfireMarkdown.setMarkdown(
+            vDescription,
+            questDetails.description.ifEmpty { t(API_TRANSLATE.quests_no_description) }
+        )
 
         if (showMore) vMore.visibility = View.VISIBLE
         else vMore.visibility = View.GONE
@@ -95,17 +97,20 @@ class CardQuestDetails constructor(
         val vKarma: ViewKarmaHorizontal = view.findViewById(R.id.vKarma)
         xPublication.xKarma.setView(vKarma)
     }
+
     override fun updateComments() {
         val view = getView() ?: return
         val vComments: TextView = view.findViewById(R.id.vComments)
         xPublication.xComments.setView(vComments)
     }
+
     override fun updateReports() {
         val view = getView() ?: return
         val vReports: TextView = view.findViewById(R.id.vReports)
         vReports.setOnClickListener { Navigator.to(SReports(xPublication.publication.id)) }
         xPublication.xReports.setView(vReports)
     }
+
     override fun updateReactions() {}
     override fun notifyItem() {}
 }

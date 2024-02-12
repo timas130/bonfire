@@ -5,13 +5,15 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.dzen.campfire.api.API_TRANSLATE
-import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.publications.PagesContainer
 import com.dzen.campfire.api.models.publications.post.PagePolling
 import com.dzen.campfire.api.requests.post.RPostPagePollingGetVotes
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
-import com.sayzen.campfiresdk.controllers.*
+import com.sayzen.campfiresdk.controllers.ControllerApi
+import com.sayzen.campfiresdk.controllers.ControllerPolling
+import com.sayzen.campfiresdk.controllers.api
+import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.CardAccount
 import com.sayzen.campfiresdk.models.events.publications.EventPollingChanged
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -20,13 +22,13 @@ import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.screens.SLoadingRecycler
 import com.sup.dev.android.views.screens.SRecycler
 import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapter
-import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.android.views.views.ViewButton
 import com.sup.dev.android.views.views.ViewProgressLine
 import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
+import sh.sit.bonfire.formatting.BonfireMarkdown
 import kotlin.reflect.KClass
 
 class XPolling(
@@ -219,11 +221,8 @@ class XPolling(
     private fun updateTitle(view: View){
         val vTitle: ViewText = view.findViewById(R.id.vTitle)
 
-        ControllerLinks.makeLinkable(vTitle)
-
         vTitle.visibility = if (page.title.isEmpty()) View.GONE else View.VISIBLE
-        vTitle.text = page.title
-
+        BonfireMarkdown.setMarkdownInline(vTitle, page.title)
     }
 
     private fun updateLimits(view: View){

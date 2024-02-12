@@ -26,6 +26,7 @@ import com.sup.dev.android.views.splash.SplashMenu
 import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapter
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.libs.json.Json
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class SQuestEditor(
     private var questDetails: QuestDetails,
@@ -251,6 +252,11 @@ class SQuestEditor(
                     it.title = title
                     it.description = description
                 }
+            }
+            .apply {
+                vFieldWidget_2.vField.addTextChangedListener(
+                    BonfireMarkdown.getEditorTextChangedListener(vFieldWidget_2.vField)
+                )
             }
             .asSheetShow()
     }

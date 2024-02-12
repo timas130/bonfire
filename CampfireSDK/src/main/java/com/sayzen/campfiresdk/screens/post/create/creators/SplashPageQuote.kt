@@ -2,7 +2,6 @@ package com.sayzen.campfiresdk.screens.post.create.creators
 
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
-
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.post.Page
@@ -14,17 +13,17 @@ import com.sayzen.campfiresdk.models.cards.post_pages.CardPageQuote
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.settings.SettingsField
-import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.splash.Splash
+import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.java.tools.ToolsText
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class SplashPageQuote(
-        private val requestPutPage:(page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage)->Unit))->Unit,
-        private val requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page)->Unit) -> Unit,
-        private val card: CardPage?,
-        private val oldPage: PageQuote?
+    private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage) -> Unit)) -> Unit,
+    private val requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page) -> Unit) -> Unit,
+    private val card: CardPage?,
+    private val oldPage: PageQuote?
 ) : Splash(R.layout.screen_post_create_quote) {
-
     private val vAuthor: SettingsField = findViewById(R.id.vAuthor)
     private val vText: SettingsField = findViewById(R.id.vText)
     private val vEnter: Button = findViewById(R.id.vEnter)
@@ -38,11 +37,13 @@ class SplashPageQuote(
         vEnter.text = t(API_TRANSLATE.app_create)
 
         vAuthor.vField.imeOptions = EditorInfo.IME_FLAG_NO_ENTER_ACTION
+        vAuthor.vField.addTextChangedListener(BonfireMarkdown.getInlineEditorTextChangedListener(vAuthor.vField))
         vAuthor.vField.addTextChangedListener(TextWatcherChanged { update() })
 
         vText.vField.setSingleLine(false)
         vText.vField.imeOptions = EditorInfo.IME_FLAG_NO_ENTER_ACTION
-        vText.vField.addTextChangedListener(TextWatcherChanged {  update() })
+        vText.vField.addTextChangedListener(BonfireMarkdown.getEditorTextChangedListener(vText.vField))
+        vText.vField.addTextChangedListener(TextWatcherChanged { update() })
 
         vEnter.isEnabled = false
 
@@ -55,7 +56,7 @@ class SplashPageQuote(
             vAuthor.vField.setSelection(vAuthor.getText().length)
         }
 
-        vEnter.setText(enterText)
+        vEnter.text = enterText
         vEnter.setOnClickListener { onEnter() }
         vCancel.setOnClickListener { onCancel() }
     }
@@ -72,9 +73,9 @@ class SplashPageQuote(
         page.text = vText.getText().trim { it <= ' ' }
 
         if (card == null)
-            requestPutPage.invoke(page, null, this, { page1 -> CardPageQuote(null, page1 as PageQuote) }){}
+            requestPutPage.invoke(page, null, this, { page1 -> CardPageQuote(null, page1 as PageQuote) }) {}
         else
-            requestChangePage.invoke(page, card, null, this){}
+            requestChangePage.invoke(page, card, null, this) {}
 
     }
 

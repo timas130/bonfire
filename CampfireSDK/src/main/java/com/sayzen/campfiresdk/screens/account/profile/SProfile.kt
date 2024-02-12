@@ -45,9 +45,7 @@ import com.sup.dev.java.tools.ToolsThreads
 class SProfile private constructor(
         account: Account
 ) : Screen(R.layout.screen_profile), PostList {
-
     companion object {
-
         fun instance(account: Account, action: NavigationAction) {
             if (account.id == 0L) {
                 Navigator.to(instaneAnonimys())
@@ -488,5 +486,4 @@ class SProfile private constructor(
             ToolsToast.show(t(API_TRANSLATE.app_done))
         }
     }
-
 }
