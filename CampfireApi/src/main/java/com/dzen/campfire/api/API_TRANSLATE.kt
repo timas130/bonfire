@@ -2195,7 +2195,7 @@ object API_TRANSLATE {
     val about_creators_sit = Translate("@sit")
     val about_creators_sit_subtitle = Translate("Разработчик с 2022 года")
     val about_creators_niki = Translate("@NikiTank")
-    val about_creators_niki_subtitle = Translate("Иллюстрации")
+    val about_creators_niki_subtitle = Translate("Автор части иллюстраций")
     val about_creators_zeon = Translate("Дмитрий Холин")
     val about_creators_zeon_subtitle = Translate("Разработчик Campfire до 2023 года")
     val about_creators_saynok = Translate("Игорь Чернобылов")
