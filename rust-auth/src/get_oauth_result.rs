@@ -12,6 +12,7 @@ use openidconnect::{AuthorizationCode, Nonce, NonceVerifier, OAuth2TokenResponse
 use serde::Deserialize;
 use sqlx::{Postgres, Transaction};
 use std::str::FromStr;
+use c_core::prelude::tracing::warn;
 
 struct DummyNonceVerifier;
 
@@ -227,7 +228,10 @@ impl AuthServer {
 
         let claims = id_token
             .claims(&id_token_verifier, DummyNonceVerifier)
-            .map_err(|_| AuthError::InvalidToken)?
+            .map_err(|err| {
+                warn!("error while verifying oauth token: {err:?}");
+                AuthError::InvalidToken
+            })?
             .clone();
 
         Ok((token_response, id_token, claims))
