@@ -204,7 +204,7 @@ impl LevelServer {
         hm.insert(AchiIndex::PostKarma, posts.max_karma);
         hm.insert(AchiIndex::FirstPost, i64::from(posts.count > 0));
         hm.insert(AchiIndex::QuestKarma, quests.max_karma);
-        hm.insert(AchiIndex::ModeratorActionKarma, moderation.count);
+        hm.insert(AchiIndex::ModeratorActionKarma, moderation.max_karma);
         hm.insert(AchiIndex::StickersKarma, sticker_packs.max_karma);
 
         let account = sqlx::query!(
