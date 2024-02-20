@@ -384,6 +384,10 @@ object ControllerAccounts {
         return if (v.isEmpty) 0 else v.next()
     }
 
+    fun isOnline(accountId: Long): Boolean {
+        return System.currentTimeMillis() < ControllerAccounts.get(accountId, TAccounts.last_online_time).next<Long>() + 5 * 60000L
+    }
+
     fun getByName(name: String): Long {
         val v = Database.select("ControllerAccounts.getByName", SqlQuerySelect(TAccounts.NAME, TAccounts.id)
                 .whereValue(Sql.LOWER(TAccounts.name), "=", name.lowercase(Locale.getDefault())))

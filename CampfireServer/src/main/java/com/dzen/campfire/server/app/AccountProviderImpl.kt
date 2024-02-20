@@ -3,17 +3,11 @@ package com.dzen.campfire.server.app
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.tools.ApiAccount
 import com.dzen.campfire.api.tools.server.AccountProvider
-import com.dzen.campfire.server.controllers.ControllerAccounts
-import com.dzen.campfire.server.controllers.ControllerFirebase
-import com.dzen.campfire.server.controllers.ControllerOptimizer
 import com.dzen.campfire.server.controllers.ControllerResources
 import com.dzen.campfire.server.rust.RustAuth
 import com.dzen.campfire.server.tables.TAccounts
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.tools.ToolsFiles
-import com.sup.dev.java.tools.ToolsMath
-import com.sup.dev.java.tools.ToolsThreads
-import com.sup.dev.java_pc.google.GoogleAuth
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQuerySelect
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
@@ -37,45 +31,6 @@ class AccountProviderImpl : AccountProvider() {
         createAccount(user)
 
         return select(instanceSelect().where(TAccounts.id, "=", user.id))
-    }
-
-    override fun getByLoginToken(token: String?): ApiAccount? {
-        if (token == null) return null
-
-        if (token.startsWith(API.LOGIN_EMAIL_PREFIX + API.LOGIN_SPLITTER)) {
-            return null
-        } else if (token.startsWith(API.LOGIN_EMAIL2_PREFIX + API.LOGIN_SPLITTER)) {
-            val split = token.split(API.LOGIN_SPLITTER)
-            val fbToken = try { ControllerFirebase.readToken(split[1]) } catch (e: Exception) { return null }
-            if (!fbToken.isEmailVerified) return null
-
-            val accountId = ControllerFirebase.getAccountId(fbToken.uid)
-            return select(instanceSelect().where(TAccounts.id, "=", accountId))
-        } else if (token.startsWith(API.LOGIN_GOOGLE_PREFIX + API.LOGIN_SPLITTER)) {
-            val split = token.split(API.LOGIN_SPLITTER)
-            if (split.size != 3) return null
-
-            val googleId = GoogleAuth.getGoogleId(split[2], split[1].toIntOrNull() ?: return null)
-            return select(instanceSelect().whereValue(TAccounts.google_id, "=", googleId ?: return null))
-        } else {
-            val googleId = GoogleAuth.getGoogleId(token)
-
-            if (googleId == null) {
-                err("Google ID is null")
-                return null
-            }
-
-            return select(instanceSelect().whereValue(TAccounts.google_id, "=", googleId))
-        }
-    }
-
-    override fun onAccountLoaded(account: ApiAccount) {
-        account.lastOnlineTime = System.currentTimeMillis()
-        ControllerOptimizer.insertOnline(account.id, account.lastOnlineTime)
-
-        if (ControllerAccounts.isAccountShadowBanned(account.id)) {
-            ToolsThreads.sleep(ToolsMath.randomLong(2000, 4000))
-        }
     }
 
     private fun instanceSelect() = SqlQuerySelect(TAccounts.NAME,

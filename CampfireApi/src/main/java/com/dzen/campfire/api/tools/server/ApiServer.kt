@@ -69,7 +69,7 @@ class ApiServer(
         request.botToken = json[ApiClient.J_API_BOT_TOKEN]
 
         val allowedAccounts = accountRateLimiter[ip] ?: listOf()
-        val apiAccount = accountProvider.getAccount(request.accessToken, request.loginToken)
+        val apiAccount = accountProvider.getAccount(request.accessToken)
         request.apiAccount = apiAccount ?: ApiAccount()
 
         if (!botTokensList.contains(request.botToken)) {

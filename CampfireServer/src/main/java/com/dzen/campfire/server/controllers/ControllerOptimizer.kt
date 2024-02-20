@@ -194,54 +194,6 @@ object ControllerOptimizer {
     }
 
     //
-    //  Online
-    //
-
-    private val online_cash_size = 1000
-    private val online_max_time = 1000L * 10
-    private val online_cash = HashMap<Long, Long>()
-    private var online_lastCashUpdate = System.currentTimeMillis()
-
-    fun isOnline(accountId: Long): Boolean {
-        synchronized(online_cash) {
-            return online_cash.containsKey(accountId)
-        }
-    }
-
-    fun removeOnline(accountId: Long) {
-        synchronized(online_cash) {
-            if (online_cash.containsKey(accountId)) online_cash.remove(accountId)
-        }
-    }
-
-    fun insertOnline(accountId: Long, time:Long) {
-        synchronized(online_cash) {
-            online_cash[accountId] = 0
-
-            if (online_cash.isNotEmpty() && (online_cash.size > online_cash_size || online_lastCashUpdate < System.currentTimeMillis() - online_max_time)) {
-                online_lastCashUpdate = System.currentTimeMillis()
-                val list = HashMap<Long, Long>()
-                list.putAll(online_cash)
-                online_cash.clear()
-
-                ControllerSubThread.inSub("ControllerOptimizer.insertOnline") {
-
-                    val ids = ArrayList<Long>()
-                    for (i in list.keys) ids.add(i)
-
-                    if (ids.isEmpty()) return@inSub
-
-                    Database.update("ControllerOptimizer.insertOnline", SqlQueryUpdate(TAccounts.NAME)
-                            .update(TAccounts.last_online_time, time)
-                            .where(SqlWhere.WhereIN(TAccounts.id, ids)))
-
-                }
-
-            }
-        }
-    }
-
-    //
     //  Chat Online
     //
 

@@ -61,25 +61,25 @@ object ControllerNotifications {
 
             if (!notification.isShadow()) {
                 val addedList = ArrayList<Long>()
-                for (i in 0 until tokens.size) {
-                    if (addedList.contains(tokens[i].a1)) continue
-                    addedList.add(tokens[i].a1)
+                for (token in tokens) {
+                    if (addedList.contains(token.a1)) continue
+                    addedList.add(token.a1)
 
                     notification.id = Database.insert("ControllerNotifications.push insert", TAccountsNotification.NAME,
                         TAccountsNotification.date_create, notification.dateCreate,
                         TAccountsNotification.notification_type, notification.getType(),
-                        TAccountsNotification.account_id, tokens[i].a1,
+                        TAccountsNotification.account_id, token.a1,
                         TAccountsNotification.notification_json, notification.json(true, Json()))
                 }
             }
 
             val tokensS = ArrayList<String>()
-            for (i in tokens) {
-                if (!notification.isNeedForcePush() && !ControllerOptimizer.isOnline(i.a1)) {
+            for (token in tokens) {
+                if (!notification.isNeedForcePush() && !ControllerAccounts.isOnline(token.a1)) {
                     continue
                 }
-                if (i.a2 != null) {
-                    tokensS.add(i.a2!!)
+                if (token.a2 != null) {
+                    tokensS.add(token.a2!!)
                 }
             }
             val json = notification.json(true, Json())
