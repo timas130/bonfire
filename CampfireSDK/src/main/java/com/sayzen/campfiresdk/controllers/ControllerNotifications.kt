@@ -17,7 +17,6 @@ import com.dzen.campfire.api.models.notifications.fandom.*
 import com.dzen.campfire.api.models.notifications.post.*
 import com.dzen.campfire.api.models.notifications.project.NotificationDonate
 import com.dzen.campfire.api.models.notifications.project.NotificationProjectABParamsChanged
-import com.dzen.campfire.api.models.notifications.project.NotificationQuestFinish
 import com.dzen.campfire.api.models.notifications.project.NotificationQuestProgress
 import com.dzen.campfire.api.models.notifications.publications.*
 import com.dzen.campfire.api.models.notifications.rubrics.*
@@ -38,7 +37,6 @@ import com.sayzen.campfiresdk.controllers.notifications.fandom.*
 import com.sayzen.campfiresdk.controllers.notifications.post.*
 import com.sayzen.campfiresdk.controllers.notifications.project.NotificationDonateParser
 import com.sayzen.campfiresdk.controllers.notifications.project.NotificationProjectABParamsChangedParser
-import com.sayzen.campfiresdk.controllers.notifications.project.NotificationQuestFinishParser
 import com.sayzen.campfiresdk.controllers.notifications.project.NotificationQuestProgressParser
 import com.sayzen.campfiresdk.controllers.notifications.publications.*
 import com.sayzen.campfiresdk.controllers.notifications.rubrics.*
@@ -412,7 +410,6 @@ object ControllerNotifications {
             is NotificationAdminLinkRemove -> NotificationAdminLinkRemoveParser(n)
             is NotificationAdminStatusRemove -> NotificationAdminStatusRemoveParser(n)
             is NotificationModerationRejected -> NotificationModerationRejectedParser(n)
-            is NotificationQuestFinish -> NotificationQuestFinishParser(n)
             is NotificationDonate -> NotificationDonateParser(n)
             is NotificationRubricsMakeOwner -> NotificationRubricsMakeOwnerParser(n)
             is NotificationRubricsChangeName -> NotificationRubricsChangeNameParser(n)

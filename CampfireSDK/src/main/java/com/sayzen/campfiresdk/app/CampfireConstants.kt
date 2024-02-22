@@ -526,18 +526,6 @@ object CampfireConstants {
         AppLevel(API.LVL_ADMIN_REMOVE_MEDIA, API_TRANSLATE.lvl_fandom_remove_media),
     )
 
-    @Deprecated("Switch to new daily quest system")
-    val QUESTS = arrayOf(
-        Quest(API.QUEST_RATES, API_TRANSLATE.quests_text_rates),
-        Quest(API.QUEST_KARMA, API_TRANSLATE.quests_text_karma),
-        Quest(API.QUEST_POSTS, API_TRANSLATE.quests_text_posts),
-        Quest(API.QUEST_COMMENTS, API_TRANSLATE.quests_text_comments),
-        Quest(API.QUEST_CHAT, API_TRANSLATE.quests_text_chat),
-        Quest(API.QUEST_POST_KARMA, API_TRANSLATE.quests_text_posts_karma),
-        Quest(API.QUEST_COMMENTS_KARMA, API_TRANSLATE.quests_text_comments_karma),
-        Quest(API.QUEST_ACTIVITIES, API_TRANSLATE.quests_text_relay_race)
-    )
-
     val QUESTS_STORY = arrayOf(
         QuestStory(
             API.QUEST_STORY_START,
@@ -629,14 +617,6 @@ object CampfireConstants {
             true,
             API_RESOURCES.IMAGE_ICHI_10
         )
-    }
-
-    @Deprecated("Switch to new daily quest system")
-    fun getQuest(index: Long): Quest {
-        for (a in QUESTS)
-            if (a.quest.index == index)
-                return a
-        return Quest(API.QUEST_UNKNOWN, API_TRANSLATE.error_unknown)
     }
 
     fun getStoryQuest(index: Long): QuestStory? {

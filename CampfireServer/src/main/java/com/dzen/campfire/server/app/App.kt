@@ -9,7 +9,6 @@ import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsDate
 import com.sup.dev.java.tools.ToolsFiles
 import com.sup.dev.java.tools.ToolsThreads
-import com.sup.dev.java_pc.google.GoogleAuth
 import com.sup.dev.java_pc.google.GoogleNotification
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.DatabasePool
@@ -38,7 +37,6 @@ object App {
         val databaseAddress = secretsConfig.getString("database_address")
 
         val googleNotificationKey = secretsKeys.getString("google_notification_key")
-        val googleAuth = secretsKeys.m(false, "google_auth", arrayOf(), Array<GoogleAuth.GoogleAuthCreds>::class)!!
         val jarFile = "${patchPrefix}lib/CampfireServer.jar"
 
         try {
@@ -47,8 +45,7 @@ object App {
             System.err.println("Charset: " + Charset.defaultCharset())
             System.err.println("API Version: " + API.VERSION)
 
-            GoogleNotification.init(googleNotificationKey, arrayOf("https://push.33rd.dev/push"))
-            GoogleAuth.init(googleAuth)
+            GoogleNotification.init(googleNotificationKey, arrayOf())
 
             val requestFactory = RequestFactory(jarFile, "CampfireServer\\src\\main\\java")
 
@@ -88,8 +85,6 @@ object App {
             ControllerCensor.start()
             System.err.println("Starting daemons [ControllerServerTranslates]")
             ControllerServerTranslates.start()
-            System.err.println("Starting daemons [ControllerFirebase]")
-            ControllerFirebase.start()
 
             System.err.println("Update karma category")
             ControllerOptimizer.karmaCategoryUpdateIfNeed()

@@ -79,7 +79,6 @@ class CardPublicationEventUser(
                 vName.visibility = View.GONE
                 willResetimage = false
                 text = tCap(API_TRANSLATE.publication_event_quest_finish, ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_finished), t(API_TRANSLATE.she_finished))) + ":"
-                text += "\n" + t(CampfireConstants.getQuest(e.questIndex).text)
                 ImageLoader.load(CampfireConstants.getAchievement(API.ACHI_QUESTS).image).into(vAvatarTitle.vImageView)
                 vAvatarTitle.vImageView.setBackgroundColor(ToolsResources.getColor(CampfireConstants.getAchievement(API.ACHI_QUESTS).colorRes))
                 vAvatarTitle.setOnClickListener { ControllerCampfireSDK.onToAchievementClicked(publication.creator.id, publication.creator.name, API.ACHI_QUESTS.index, false, Navigator.TO) }

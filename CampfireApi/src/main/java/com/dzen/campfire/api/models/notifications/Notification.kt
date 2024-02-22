@@ -2,8 +2,8 @@ package com.dzen.campfire.api.models.notifications
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.notifications.account.*
-import com.dzen.campfire.api.models.notifications.activities.NotificationActivitiesRelayRaceLost
 import com.dzen.campfire.api.models.notifications.activities.NotificationActivitiesNewPost
+import com.dzen.campfire.api.models.notifications.activities.NotificationActivitiesRelayRaceLost
 import com.dzen.campfire.api.models.notifications.activities.NotificationActivitiesRelayRaceTurn
 import com.dzen.campfire.api.models.notifications.activities.NotificationActivitiesRelayRejected
 import com.dzen.campfire.api.models.notifications.chat.*
@@ -11,12 +11,14 @@ import com.dzen.campfire.api.models.notifications.comments.NotificationComment
 import com.dzen.campfire.api.models.notifications.comments.NotificationCommentAnswer
 import com.dzen.campfire.api.models.notifications.fandom.*
 import com.dzen.campfire.api.models.notifications.post.*
-import com.dzen.campfire.api.models.notifications.project.*
-import com.dzen.campfire.api.models.notifications.rubrics.*
+import com.dzen.campfire.api.models.notifications.project.NotificationAlive
+import com.dzen.campfire.api.models.notifications.project.NotificationDonate
+import com.dzen.campfire.api.models.notifications.project.NotificationProjectABParamsChanged
+import com.dzen.campfire.api.models.notifications.project.NotificationQuestProgress
 import com.dzen.campfire.api.models.notifications.publications.*
+import com.dzen.campfire.api.models.notifications.rubrics.*
 import com.dzen.campfire.api.models.notifications.translates.NotificationTranslatesAccepted
 import com.dzen.campfire.api.models.notifications.translates.NotificationTranslatesRejected
-import com.sup.dev.java.libs.debug.log
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonPolimorf
 
@@ -68,7 +70,6 @@ abstract class Notification : JsonPolimorf {
                 API.NOTIF_PUBLICATION_BLOCK_AFTER_REPORT -> notification = NotificationPublicationBlockAfterReport()
                 API.NOTIF_MENTION -> notification = NotificationMention()
                 API.NOTIF_MODERATION_MULTILINGUAL_NOT -> notification = NotificationModerationMultilingualNot()
-                API.NOTIF_QUEST_FINISH -> notification = NotificationQuestFinish()
                 API.NOTIF_MODERATION_POST_CLOSE -> notification = NotificationModerationPostClosed()
                 API.NOTIF_MODERATION_POST_CLOSE_NO -> notification = NotificationModerationPostClosedNo()
                 API.NOTIF_RUBRICS_CHANGE_NAME  -> notification = NotificationRubricsChangeName()

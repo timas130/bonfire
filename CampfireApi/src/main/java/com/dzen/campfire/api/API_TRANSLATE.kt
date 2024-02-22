@@ -1371,7 +1371,7 @@ object API_TRANSLATE {
     val publication_event_publication_warn_app = Translate("%s модератором %s в фэндоме %s")
     val publication_event_publication_warn_app_admin = Translate("%s пользователя %s в фэндоме %s")
     val publication_event_achievement = Translate("%s новый уровень достижения: %s")
-    val publication_event_quest_finish = Translate("%s ежедневное задание")
+    val publication_event_quest_finish = Translate("%s ежедневное задание (устар.)")
     val publication_event_fandom_suggested = Translate("%s фэндом %s")
     val publication_event_fandom_suggested_self = Translate("%s и %s фэндом %s")
     val publication_event_fandom_suggested_accept = Translate("%s фэндом %s")
