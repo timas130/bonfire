@@ -3,9 +3,9 @@ package com.dzen.campfire.server.executors.fandoms
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.requests.fandoms.RFandomsAdminChangeParams
 import com.dzen.campfire.api.requests.fandoms.RFandomsSuggest
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.server.tables.TFandoms
-import com.dzen.campfire.api.tools.ApiException
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.tools.ToolsImage
@@ -16,20 +16,12 @@ class EFandomsSuggest : RFandomsSuggest("", 0, false, null, null, emptyArray(), 
     override fun check() {
 
         if (categoryId != API.CATEGORY_GAMES &&
-                categoryId != API.CATEGORY_ANIME &&
-                categoryId != API.CATEGORY_MUSIC &&
-                categoryId != API.CATEGORY_PROGRAMS &&
-                categoryId != API.CATEGORY_MOVIES &&
-                categoryId != API.CATEGORY_SITE &&
-                categoryId != API.CATEGORY_COMPANY &&
-                categoryId != API.CATEGORY_BOOKS &&
-                categoryId != API.CATEGORY_ANIMALS &&
-                categoryId != API.CATEGORY_HOBBIES &&
-                categoryId != API.CATEGORY_PEOPLE &&
-                categoryId != API.CATEGORY_EVENT &&
-                categoryId != API.CATEGORY_PLANTS &&
-                categoryId != API.CATEGORY_PLACES &&
-                categoryId != API.CATEGORY_OTHER
+            categoryId != API.CATEGORY_ANIME &&
+            categoryId != API.CATEGORY_MOVIES &&
+            categoryId != API.CATEGORY_BOOKS &&
+            categoryId != API.CATEGORY_ART &&
+            categoryId != API.CATEGORY_RP &&
+            categoryId != API.CATEGORY_OTHER
         ) throw ApiException(RFandomsAdminChangeParams.E_BAD_TYPE)
         if (categoryId == API.CATEGORY_OTHER) ControllerFandom.checkCan(apiAccount, API.LVL_PROTOADMIN)
 

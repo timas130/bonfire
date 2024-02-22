@@ -484,18 +484,10 @@ class API(
 
         const val CATEGORY_GAMES = 1L
         const val CATEGORY_ANIME = 2L
-        const val CATEGORY_MUSIC = 3L
-        const val CATEGORY_PROGRAMS = 4L
         const val CATEGORY_MOVIES = 5L
-        const val CATEGORY_SITE = 6L
-        const val CATEGORY_COMPANY = 7L
         const val CATEGORY_BOOKS = 8L
-        const val CATEGORY_ANIMALS = 9L
-        const val CATEGORY_HOBBIES = 10L
-        const val CATEGORY_PEOPLE = 11L
-        const val CATEGORY_EVENT = 12L
-        const val CATEGORY_PLANTS = 13L
-        const val CATEGORY_PLACES = 14L
+        const val CATEGORY_ART = 15L
+        const val CATEGORY_RP = 16L
         const val CATEGORY_OTHER = 100L
         const val CATEGORY_UNKNOWN = 101L
 

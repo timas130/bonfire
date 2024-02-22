@@ -5,8 +5,11 @@ import com.dzen.campfire.api.models.fandoms.Fandom
 import com.dzen.campfire.api.models.publications.events_admins.ApiEventAdminFandomChangeParams
 import com.dzen.campfire.api.models.publications.events_fandoms.ApiEventFandomChangeParams
 import com.dzen.campfire.api.requests.fandoms.RFandomsAdminChangeParams
-import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.api.tools.ApiException
+import com.dzen.campfire.server.controllers.ControllerCollisions
+import com.dzen.campfire.server.controllers.ControllerFandom
+import com.dzen.campfire.server.controllers.ControllerModeration
+import com.dzen.campfire.server.controllers.ControllerPublications
 
 class EFandomsAdminChangeParams : RFandomsAdminChangeParams(0, 0, 0, emptyArray(), "") {
 
@@ -19,20 +22,12 @@ class EFandomsAdminChangeParams : RFandomsAdminChangeParams(0, 0, 0, emptyArray(
         if (fandom!!.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
 
         if (fandom!!.category != API.CATEGORY_GAMES &&
-                fandom!!.category != API.CATEGORY_ANIME &&
-                fandom!!.category != API.CATEGORY_MUSIC &&
-                fandom!!.category != API.CATEGORY_PROGRAMS &&
-                fandom!!.category != API.CATEGORY_MOVIES &&
-                fandom!!.category != API.CATEGORY_SITE &&
-                fandom!!.category != API.CATEGORY_COMPANY &&
-                fandom!!.category != API.CATEGORY_BOOKS &&
-                fandom!!.category != API.CATEGORY_ANIMALS &&
-                fandom!!.category != API.CATEGORY_HOBBIES &&
-                fandom!!.category != API.CATEGORY_PEOPLE &&
-                fandom!!.category != API.CATEGORY_EVENT &&
-                fandom!!.category != API.CATEGORY_PLANTS &&
-                fandom!!.category != API.CATEGORY_PLACES &&
-                fandom!!.category != API.CATEGORY_OTHER
+            fandom!!.category != API.CATEGORY_ANIME &&
+            fandom!!.category != API.CATEGORY_MOVIES &&
+            fandom!!.category != API.CATEGORY_BOOKS &&
+            fandom!!.category != API.CATEGORY_ART &&
+            fandom!!.category != API.CATEGORY_RP &&
+            fandom!!.category != API.CATEGORY_OTHER
         ) throw ApiException(E_BAD_TYPE)
         if (fandom!!.category == API.CATEGORY_OTHER) ControllerFandom.checkCan(apiAccount, API.LVL_PROTOADMIN)
 

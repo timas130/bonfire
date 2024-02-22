@@ -4,7 +4,6 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.AchievementInfo
-import com.dzen.campfire.api.models.project.StoryQuest
 import com.dzen.campfire.api.models.translate.Translate
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
@@ -565,18 +564,10 @@ object CampfireConstants {
     val CATEGORIES = arrayOf(
         FandomParam(API.CATEGORY_GAMES, API_TRANSLATE.category_games),
         FandomParam(API.CATEGORY_ANIME, API_TRANSLATE.category_anime),
-        FandomParam(API.CATEGORY_MUSIC, API_TRANSLATE.category_music),
-        FandomParam(API.CATEGORY_PROGRAMS, API_TRANSLATE.category_programs),
         FandomParam(API.CATEGORY_MOVIES, API_TRANSLATE.category_movies),
-        FandomParam(API.CATEGORY_SITE, API_TRANSLATE.category_sites),
-        FandomParam(API.CATEGORY_COMPANY, API_TRANSLATE.category_companies),
         FandomParam(API.CATEGORY_BOOKS, API_TRANSLATE.category_books),
-        FandomParam(API.CATEGORY_ANIMALS, API_TRANSLATE.category_animals),
-        FandomParam(API.CATEGORY_HOBBIES, API_TRANSLATE.category_hobbies),
-        FandomParam(API.CATEGORY_PEOPLE, API_TRANSLATE.category_people),
-        FandomParam(API.CATEGORY_EVENT, API_TRANSLATE.category_event),
-        FandomParam(API.CATEGORY_PLANTS, API_TRANSLATE.category_plants),
-        FandomParam(API.CATEGORY_PLACES, API_TRANSLATE.category_places),
+        FandomParam(API.CATEGORY_ART, API_TRANSLATE.category_art),
+        FandomParam(API.CATEGORY_RP, API_TRANSLATE.category_rp),
         FandomParam(API.CATEGORY_OTHER, API_TRANSLATE.category_other)
     )
 
@@ -596,47 +587,32 @@ object CampfireConstants {
     )
 
     private val GAMES_1_ARRAY = API_TRANSLATE.getAllSame("games_genres_")
-    val GAMES_1 = Array(GAMES_1_ARRAY.size) { FandomParam(it.toLong(), GAMES_1_ARRAY[it]) }
+    private val GAMES_1 = Array(GAMES_1_ARRAY.size) { FandomParam(it.toLong(), GAMES_1_ARRAY[it]) }
     private val GAMES_2_ARRAY = API_TRANSLATE.getAllSame("games_platform_")
-    val GAMES_2 = Array(GAMES_2_ARRAY.size) { FandomParam(it.toLong(), GAMES_2_ARRAY[it]) }
-    private val GAMES_3_ARRAY = API_TRANSLATE.getAllSame("games_control_")
-    val GAMES_3 = Array(GAMES_3_ARRAY.size) { FandomParam(it.toLong(), GAMES_3_ARRAY[it]) }
+    private val GAMES_2 = Array(GAMES_2_ARRAY.size) { FandomParam(it.toLong(), GAMES_2_ARRAY[it]) }
+    private val GAMES_3_ARRAY = API_TRANSLATE.getAllSame("games_age_")
+    private val GAMES_3 = Array(GAMES_3_ARRAY.size) { FandomParam(it.toLong(), GAMES_3_ARRAY[it]) }
+
     private val ANIME_1_ARRAY = API_TRANSLATE.getAllSame("anime_genres_")
-    val ANIME_1 = Array(ANIME_1_ARRAY.size) { FandomParam(it.toLong(), ANIME_1_ARRAY[it]) }
+    private val ANIME_1 = Array(ANIME_1_ARRAY.size) { FandomParam(it.toLong(), ANIME_1_ARRAY[it]) }
     private val ANIME_2_ARRAY = API_TRANSLATE.getAllSame("anime_type_")
-    val ANIME_2 = Array(ANIME_2_ARRAY.size) { FandomParam(it.toLong(), ANIME_2_ARRAY[it]) }
-    private val MUSIC_1_ARRAY = API_TRANSLATE.getAllSame("music_1_")
-    val MUSIC_1 = Array(MUSIC_1_ARRAY.size) { FandomParam(it.toLong(), MUSIC_1_ARRAY[it]) }
-    private val MUSIC_2_ARRAY = API_TRANSLATE.getAllSame("music_2_")
-    val MUSIC_2 = Array(MUSIC_2_ARRAY.size) { FandomParam(it.toLong(), MUSIC_2_ARRAY[it]) }
-    private val MUSIC_3_ARRAY = API_TRANSLATE.getAllSame("music_3_")
-    val MUSIC_3 = Array(MUSIC_3_ARRAY.size) { FandomParam(it.toLong(), MUSIC_3_ARRAY[it]) }
-    private val PROGRAMS_1_ARRAY = API_TRANSLATE.getAllSame("programs_1_")
-    val PROGRAMS_1 = Array(PROGRAMS_1_ARRAY.size) { FandomParam(it.toLong(), PROGRAMS_1_ARRAY[it]) }
-    private val PROGRAMS_2_ARRAY = API_TRANSLATE.getAllSame("programs_2_")
-    val PROGRAMS_2 = Array(PROGRAMS_2_ARRAY.size) { FandomParam(it.toLong(), PROGRAMS_2_ARRAY[it]) }
-    private val MOVIES_1_ARRAY = API_TRANSLATE.getAllSame("movies_1_")
-    val MOVIES_1 = Array(MOVIES_1_ARRAY.size) { FandomParam(it.toLong(), MOVIES_1_ARRAY[it]) }
-    private val MOVIES_2_ARRAY = API_TRANSLATE.getAllSame("movies_2_")
-    val MOVIES_2 = Array(MOVIES_2_ARRAY.size) { FandomParam(it.toLong(), MOVIES_2_ARRAY[it]) }
-    private val SITE_1_ARRAY = API_TRANSLATE.getAllSame("site_1_")
-    val SITE_1 = Array(SITE_1_ARRAY.size) { FandomParam(it.toLong(), SITE_1_ARRAY[it]) }
-    private val COMPANY_1_ARRAY = API_TRANSLATE.getAllSame("company_1_")
-    val COMPANY_1 = Array(COMPANY_1_ARRAY.size) { FandomParam(it.toLong(), COMPANY_1_ARRAY[it]) }
-    private val BOOKS_1_ARRAY = API_TRANSLATE.getAllSame("books_1_")
-    val BOOKS_1 = Array(BOOKS_1_ARRAY.size) { FandomParam(it.toLong(), BOOKS_1_ARRAY[it]) }
-    private val ANIMALS_1_ARRAY = API_TRANSLATE.getAllSame("animals_1_")
-    val ANIMALS_1 = Array(ANIMALS_1_ARRAY.size) { FandomParam(it.toLong(), ANIMALS_1_ARRAY[it]) }
-    private val HOBBIES_1_ARRAY = API_TRANSLATE.getAllSame("hobbies_1_")
-    val HOBBIES_1 = Array(HOBBIES_1_ARRAY.size) { FandomParam(it.toLong(), HOBBIES_1_ARRAY[it]) }
-    private val PEOPLE_1_ARRAY = API_TRANSLATE.getAllSame("people_1_")
-    val PEOPLE_1 = Array(PEOPLE_1_ARRAY.size) { FandomParam(it.toLong(), PEOPLE_1_ARRAY[it]) }
-    private val EVENT_1_ARRAY = API_TRANSLATE.getAllSame("event_1_")
-    val EVENT_1 = Array(EVENT_1_ARRAY.size) { FandomParam(it.toLong(), EVENT_1_ARRAY[it]) }
-    private val PLANTS_1_ARRAY = API_TRANSLATE.getAllSame("plants_1_")
-    val PLANTS_1 = Array(PLANTS_1_ARRAY.size) { FandomParam(it.toLong(), PLANTS_1_ARRAY[it]) }
-    private val PLACES_1_ARRAY = API_TRANSLATE.getAllSame("places_1_")
-    val PLACES_1 = Array(PLACES_1_ARRAY.size) { FandomParam(it.toLong(), PLACES_1_ARRAY[it]) }
+    private val ANIME_2 = Array(ANIME_2_ARRAY.size) { FandomParam(it.toLong(), ANIME_2_ARRAY[it]) }
+
+    private val MOVIES_1_ARRAY = API_TRANSLATE.getAllSame("movies_genres_")
+    private val MOVIES_1 = Array(MOVIES_1_ARRAY.size) { FandomParam(it.toLong(), MOVIES_1_ARRAY[it]) }
+    private val MOVIES_2_ARRAY = API_TRANSLATE.getAllSame("movies_length_")
+    private val MOVIES_2 = Array(MOVIES_2_ARRAY.size) { FandomParam(it.toLong(), MOVIES_2_ARRAY[it]) }
+
+    private val BOOKS_1_ARRAY = API_TRANSLATE.getAllSame("books_type_")
+    private val BOOKS_1 = Array(BOOKS_1_ARRAY.size) { FandomParam(it.toLong(), BOOKS_1_ARRAY[it]) }
+    private val BOOKS_2_ARRAY = API_TRANSLATE.getAllSame("books_genres_")
+    private val BOOKS_2 = Array(BOOKS_2_ARRAY.size) { FandomParam(it.toLong(), BOOKS_2_ARRAY[it]) }
+
+    private val ARTS_1_ARRAY = API_TRANSLATE.getAllSame("arts_")
+    private val ARTS_1 = Array(ARTS_1_ARRAY.size) { FandomParam(it.toLong(), ARTS_1_ARRAY[it]) }
+
+    private val RP_1_ARRAY = API_TRANSLATE.getAllSame("rp_genres_")
+    private val RP_1 = Array(RP_1_ARRAY.size) { FandomParam(it.toLong(), RP_1_ARRAY[it]) }
 
     fun getAchievement(info: AchievementInfo): Achievement {
         return getAchievement(info.index)
@@ -663,10 +639,6 @@ object CampfireConstants {
         return Quest(API.QUEST_UNKNOWN, API_TRANSLATE.error_unknown)
     }
 
-    fun getStoryQuest(quest: StoryQuest): QuestStory? {
-        return getStoryQuest(quest.index.toLong())
-    }
-
     fun getStoryQuest(index: Long): QuestStory? {
         for (a in QUESTS_STORY)
             if (a.quest.index.toLong() == index)
@@ -686,7 +658,7 @@ object CampfireConstants {
                 when (paramsPosition) {
                     1 -> t(API_TRANSLATE.app_genres)
                     2 -> t(API_TRANSLATE.app_platforms)
-                    3 -> t(API_TRANSLATE.app_controllers)
+                    3 -> t(API_TRANSLATE.app_age_restriction)
                     else -> null
                 }
 
@@ -697,21 +669,6 @@ object CampfireConstants {
                     else -> null
                 }
 
-            API.CATEGORY_MUSIC ->
-                when (paramsPosition) {
-                    1 -> t(API_TRANSLATE.app_genres)
-                    2 -> t(API_TRANSLATE.app_instrument)
-                    3 -> t(API_TRANSLATE.app_composition)
-                    else -> null
-                }
-
-            API.CATEGORY_PROGRAMS ->
-                when (paramsPosition) {
-                    1 -> t(API_TRANSLATE.app_purpose)
-                    2 -> t(API_TRANSLATE.app_platforms)
-                    else -> null
-                }
-
             API.CATEGORY_MOVIES ->
                 when (paramsPosition) {
                     1 -> t(API_TRANSLATE.app_genres)
@@ -719,62 +676,27 @@ object CampfireConstants {
                     else -> null
                 }
 
-            API.CATEGORY_SITE ->
-                when (paramsPosition) {
-                    1 -> t(API_TRANSLATE.app_type)
-                    else -> null
-                }
-
-            API.CATEGORY_COMPANY ->
-                when (paramsPosition) {
-                    1 -> t(API_TRANSLATE.app_type)
-                    else -> null
-                }
-
             API.CATEGORY_BOOKS ->
+                when (paramsPosition) {
+                    1 -> t(API_TRANSLATE.app_type)
+                    2 -> t(API_TRANSLATE.app_genres)
+                    else -> null
+                }
+
+            API.CATEGORY_ART ->
+                when (paramsPosition) {
+                    1 -> t(API_TRANSLATE.app_type)
+                    else -> null
+                }
+
+            API.CATEGORY_RP ->
                 when (paramsPosition) {
                     1 -> t(API_TRANSLATE.app_genres)
                     else -> null
                 }
 
-            API.CATEGORY_ANIMALS ->
-                when (paramsPosition) {
-                    1 -> t(API_TRANSLATE.app_type)
-                    else -> null
-                }
-
-            API.CATEGORY_HOBBIES ->
-                when (paramsPosition) {
-                    1 -> t(API_TRANSLATE.app_type)
-                    else -> null
-                }
-
-            API.CATEGORY_PEOPLE ->
-                when (paramsPosition) {
-                    1 -> t(API_TRANSLATE.app_type)
-                    else -> null
-                }
-
-            API.CATEGORY_EVENT ->
-                when (paramsPosition) {
-                    1 -> t(API_TRANSLATE.app_type)
-                    else -> null
-                }
-
-            API.CATEGORY_PLANTS ->
-                when (paramsPosition) {
-                    1 -> t(API_TRANSLATE.app_type)
-                    else -> null
-                }
-
-            API.CATEGORY_PLACES ->
-                when (paramsPosition) {
-                    1 -> t(API_TRANSLATE.app_type)
-                    else -> null
-                }
-
             API.CATEGORY_OTHER -> null
-            else -> t(API_TRANSLATE.error_unknown)
+            else -> null
         }
     }
 
@@ -795,21 +717,6 @@ object CampfireConstants {
                     else -> null
                 }
 
-            API.CATEGORY_MUSIC ->
-                when (paramsPosition) {
-                    1 -> MUSIC_1
-                    2 -> MUSIC_2
-                    3 -> MUSIC_3
-                    else -> null
-                }
-
-            API.CATEGORY_PROGRAMS ->
-                when (paramsPosition) {
-                    1 -> PROGRAMS_1
-                    2 -> PROGRAMS_2
-                    else -> null
-                }
-
             API.CATEGORY_MOVIES ->
                 when (paramsPosition) {
                     1 -> MOVIES_1
@@ -817,57 +724,22 @@ object CampfireConstants {
                     else -> null
                 }
 
-            API.CATEGORY_SITE ->
-                when (paramsPosition) {
-                    1 -> SITE_1
-                    else -> null
-                }
-
-            API.CATEGORY_COMPANY ->
-                when (paramsPosition) {
-                    1 -> COMPANY_1
-                    else -> null
-                }
-
             API.CATEGORY_BOOKS ->
                 when (paramsPosition) {
                     1 -> BOOKS_1
+                    2 -> BOOKS_2
                     else -> null
                 }
 
-            API.CATEGORY_ANIMALS ->
+            API.CATEGORY_ART ->
                 when (paramsPosition) {
-                    1 -> ANIMALS_1
+                    1 -> ARTS_1
                     else -> null
                 }
 
-            API.CATEGORY_HOBBIES ->
+            API.CATEGORY_RP ->
                 when (paramsPosition) {
-                    1 -> HOBBIES_1
-                    else -> null
-                }
-
-            API.CATEGORY_PEOPLE ->
-                when (paramsPosition) {
-                    1 -> PEOPLE_1
-                    else -> null
-                }
-
-            API.CATEGORY_EVENT ->
-                when (paramsPosition) {
-                    1 -> EVENT_1
-                    else -> null
-                }
-
-            API.CATEGORY_PLANTS ->
-                when (paramsPosition) {
-                    1 -> PLANTS_1
-                    else -> null
-                }
-
-            API.CATEGORY_PLACES ->
-                when (paramsPosition) {
-                    1 -> PLACES_1
+                    1 -> RP_1
                     else -> null
                 }
 
