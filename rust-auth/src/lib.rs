@@ -49,11 +49,12 @@ use c_core::services::email::Email;
 use c_core::services::email::EmailServiceClient;
 use c_core::{host_tcp, ServiceBase};
 use jsonwebtoken::jwk::Jwk;
-use openidconnect::core::{CoreClient, CoreProviderMetadata};
-use openidconnect::reqwest::async_http_client;
-use openidconnect::{ClientId, ClientSecret, IssuerUrl};
 use serde::Deserialize;
 use std::collections::HashMap;
+use std::sync::Arc;
+use http_cache_reqwest::{CACacheManager, Cache, CacheMode, HttpCache, HttpCacheOptions};
+use reqwest::Client;
+use reqwest_middleware::{ClientBuilder, ClientWithMiddleware};
 #[cfg(test)]
 use {
     c_core::prelude::tarpc::client,
@@ -62,6 +63,7 @@ use {
     c_core::services::email::EmailService,
     c_email::EmailServer,
 };
+use c_core::prelude::tokio::sync::Mutex;
 
 const GOOGLE_JWKS_URL: &str =
     "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com";
@@ -71,8 +73,8 @@ pub struct AuthServer {
     base: ServiceBase,
     email: EmailServiceClient,
 
-    google_client: CoreClient,
-    google_jwks: Vec<Jwk>,
+    reqwest_client: Arc<Mutex<ClientWithMiddleware>>,
+    google_jwks: Arc<Vec<Jwk>>,
 }
 impl AuthServer {
     pub async fn load() -> anyhow::Result<Self> {
@@ -92,15 +94,6 @@ impl AuthServer {
             EmailServiceClient::new(client::Config::default(), client).spawn()
         };
 
-        let issuer_url = IssuerUrl::new("https://accounts.google.com".to_string())?;
-        let google_metadata =
-            CoreProviderMetadata::discover_async(issuer_url, async_http_client).await?;
-        let google_client = CoreClient::from_provider_metadata(
-            google_metadata,
-            ClientId::new(base.config.google.client_id.clone()),
-            Some(ClientSecret::new(base.config.google.client_secret.clone())),
-        );
-
         #[derive(Deserialize)]
         struct GoogleJwksResponse {
             keys: Vec<Jwk>,
@@ -112,11 +105,19 @@ impl AuthServer {
             .await?
             .keys;
 
+        let reqwest_client = ClientBuilder::new(Client::new())
+            .with(Cache(HttpCache {
+                mode: CacheMode::Default,
+                manager: CACacheManager::default(),
+                options: HttpCacheOptions::default(),
+            }))
+            .build();
+
         Ok(Self {
             base,
             email,
-            google_client,
-            google_jwks,
+            reqwest_client: Arc::new(Mutex::new(reqwest_client)),
+            google_jwks: Arc::new(google_jwks),
         })
     }
 

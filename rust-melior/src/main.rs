@@ -8,7 +8,7 @@ pub(crate) mod utils;
 
 use crate::context::{GlobalContext, ReqContext};
 use crate::data_loaders::AuthUserLoader;
-use crate::error::{LogErrorsMiddleware, LogErrorsMiddlewareFactory};
+use crate::error::LogErrorsMiddlewareFactory;
 use async_graphql::http::GraphiQLSource;
 use async_graphql::{EmptySubscription, Schema};
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};

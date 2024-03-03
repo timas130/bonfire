@@ -199,7 +199,7 @@ impl AuthServer {
         _nonce: String,
         code: String,
     ) -> Result<(Option<CoreTokenResponse>, CoreIdToken, CoreIdTokenClaims), AuthError> {
-        let client = self.get_oauth_client(provider)?;
+        let client = self.get_oauth_client(provider).await?;
         let id_token_verifier = client.id_token_verifier();
 
         let id_token = CoreIdToken::from_str(&code);
