@@ -29,16 +29,16 @@ fun BetterModalBottomSheet(
     ) return
 
     ModalBottomSheet(
-        onDismissRequest,
-        modifier,
-        sheetState,
-        shape,
-        containerColor,
-        contentColor,
-        tonalElevation,
-        scrimColor,
-        dragHandle,
-        windowInsets
+        onDismissRequest = onDismissRequest,
+        modifier = modifier,
+        sheetState = sheetState,
+        shape = shape,
+        containerColor = containerColor,
+        contentColor = contentColor,
+        tonalElevation = tonalElevation,
+        scrimColor = scrimColor,
+        dragHandle = dragHandle,
+        windowInsets = windowInsets,
     ) {
         Column(
             Modifier.padding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom).asPaddingValues())
