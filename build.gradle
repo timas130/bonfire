@@ -12,7 +12,7 @@ buildscript {
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
         classpath 'io.sentry.android.gradle:io.sentry.android.gradle.gradle.plugin:4.2.0'
-        classpath 'org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:1.9.21'
+        classpath 'org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:1.9.10'
     }
 }
 
