@@ -1,0 +1,31 @@
+query DailyTask($userId: ID!) {
+    userById(id: $userId) {
+        dailyTask {
+            task {
+                __typename
+                amount
+                ... on PostInFandomTask {
+                    fandomId
+                }
+                ... on CommentInFandomTask {
+                    fandomId
+                }
+                ... on AnswerNewbieCommentTask {
+                    maxLevel
+                }
+                ... on CommentNewbiePostTask {
+                    maxLevel
+                }
+                ... on CreatePostWithPageTypeTask {
+                    pageType
+                }
+            }
+            progress
+            totalLevels
+            levelMultiplier
+            comboMultiplier
+            possibleReward
+            fandomName
+        }
+    }
+}

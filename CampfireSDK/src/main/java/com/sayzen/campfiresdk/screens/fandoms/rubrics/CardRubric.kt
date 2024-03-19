@@ -55,7 +55,7 @@ class CardRubric(val rubric: Rubric) : Card(R.layout.card_rubric) {
         val vTouch: View = view.findViewById(R.id.vTouch)
 
         vCreate.visibility = if (ControllerApi.isCurrentAccount(xAccount.getId()) && canCreatePost) View.VISIBLE else View.GONE
-        vCreate.setOnClickListener { SPostCreate.instance(xFandom.getId(), xFandom.getLanguageId(), xFandom.getName(), xFandom.getImageId(), SPostCreate.PostParams().setRubric(rubric), Navigator.TO) }
+        vCreate.setOnClickListener { SPostCreate.instance(xFandom.getId(), xFandom.getLanguageId(), xFandom.getName(), xFandom.getImage(), SPostCreate.PostParams().setRubric(rubric), Navigator.TO) }
 
         if (showFandom) xFandom.setView(vAvatar) else xAccount.setView(vAvatar)
         vAvatar.setTitle(rubric.name)

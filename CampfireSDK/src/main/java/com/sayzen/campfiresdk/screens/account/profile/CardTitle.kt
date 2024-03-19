@@ -13,6 +13,7 @@ import com.sayzen.campfiresdk.models.events.account.EventAccountChanged
 import com.sayzen.campfiresdk.screens.activities.support.SDonate
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.adapters.XAccount
+import com.sayzen.campfiresdk.support.clear
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsBitmap
@@ -102,8 +103,8 @@ abstract class CardTitle(
 
     private fun changeAvatarNow(dialog: SplashProgressTransparent, bytes: ByteArray) {
         ApiRequestsSupporter.executeProgressDialog(dialog, RAccountsChangeAvatar(bytes)) { _ ->
-            ImageLoader.clear(xAccount.getImageId())
-            EventBus.post(EventAccountChanged(xAccount.getId(), xAccount.getName(), xAccount.getImageId()))
+            ImageLoader.clear(xAccount.getImage())
+            EventBus.post(EventAccountChanged(xAccount.getId(), xAccount.getName(), xAccount.getImage()))
         }
     }
 

@@ -11,6 +11,7 @@ import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerWiki
 import com.sayzen.campfiresdk.models.events.wiki.EventWikiChanged
 import com.sayzen.campfiresdk.models.events.wiki.EventWikiRemove
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsView
@@ -42,7 +43,7 @@ class CardWikiItem(
         val vSectionIcon: ImageView = view.findViewById(R.id.vSectionIcon)
         val vFab: FloatingActionButton = view.findViewById(R.id.vSelectFab)
 
-        ImageLoader.loadGif(wikiItem.imageId, 0, vImage)
+        ImageLoader.load(wikiItem.image).into(vImage)
         vName.text = wikiItem.getName(API.getLanguage(prefLanguageId).code)
         vSectionIcon.visibility = if (wikiItem.itemType == API.WIKI_TYPE_SECION) View.VISIBLE else View.GONE
 
@@ -73,7 +74,7 @@ class CardWikiItem(
 
 
     override fun notifyItem() {
-        ImageLoader.load(wikiItem.imageId).intoCash()
+        ImageLoader.load(wikiItem.image).intoCash()
     }
 
 }

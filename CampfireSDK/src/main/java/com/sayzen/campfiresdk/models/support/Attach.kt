@@ -1,10 +1,10 @@
 package com.sayzen.campfiresdk.models.support
 
 import android.graphics.Bitmap
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.stickers.PublicationSticker
@@ -21,12 +21,11 @@ import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.cards.Card
 import com.sup.dev.android.views.screens.SCrop
 import com.sup.dev.android.views.screens.SImageView
-import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapter
-import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashChooseImage
+import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapter
+import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.java.libs.debug.err
-import com.sup.dev.java.libs.debug.log
 import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsNetwork
 import com.sup.dev.java.tools.ToolsThreads
@@ -202,7 +201,7 @@ class Attach(
             vImage.setOnClickListener { Navigator.to(SImageView(ImageLoader.load(bytes)).setOnHide(onSupportScreenHide)) }
             vCrop.setOnClickListener { crop(vImage) }
             vRemove.setOnClickListener {
-                if (adapter != null) adapter!!.remove(this)
+                adapter.remove(this)
                 updateAttach()
             }
         }

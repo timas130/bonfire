@@ -4,10 +4,12 @@ import android.view.View
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.screens.account.profile.SProfile
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsAndroid
@@ -91,11 +93,11 @@ class SAboutCreators : Screen(R.layout.screen_other_abount_creators) {
             ToolsToast.show(t(API_TRANSLATE.app_copied))
         }
 
-        ImageLoader.load(API_RESOURCES.DEVELOPER_SIT).into(vPhotoSit)
-        ImageLoader.load(API_RESOURCES.DEVELOPER_NIKI).into(vPhotoNiki)
-        ImageLoader.load(API_RESOURCES.DEVELOPER_ZEON).into(vPhotoZeon)
-        ImageLoader.load(API_RESOURCES.DEVELOPER_SAYNOK).into(vPhotoSaynok)
-        ImageLoader.load(API_RESOURCES.DEVELOPER_EGOR).into(vPhotoEgor)
+        ImageLoader.load(ApiResources.DEVELOPER_SIT).into(vPhotoSit)
+        ImageLoader.load(ApiResources.DEVELOPER_NIKI).into(vPhotoNiki)
+        ImageLoader.load(ApiResources.DEVELOPER_ZEON).into(vPhotoZeon)
+        ImageLoader.load(ApiResources.DEVELOPER_SAYNOK).into(vPhotoSaynok)
+        ImageLoader.load(ApiResources.DEVELOPER_EGOR).into(vPhotoEgor)
 
         ControllerLinks.makeLinkable(vPhotoSit.vTitle)
         ControllerLinks.makeLinkable(vPhotoNiki.vTitle)

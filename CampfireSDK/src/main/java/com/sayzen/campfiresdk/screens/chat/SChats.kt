@@ -2,6 +2,7 @@ package com.sayzen.campfiresdk.screens.chat
 
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessage
 import com.dzen.campfire.api.models.publications.chat.Chat
 import com.dzen.campfire.api.models.publications.chat.PublicationChatMessage
@@ -16,6 +17,8 @@ import com.sayzen.campfiresdk.models.events.chat.EventChatNewBottomMessage
 import com.sayzen.campfiresdk.models.events.chat.EventChatSubscriptionChanged
 import com.sayzen.campfiresdk.models.events.notifications.EventNotification
 import com.sayzen.campfiresdk.screens.chat.create.SChatCreate
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.views.screens.SLoadingRecycler
 import com.sup.dev.java.libs.eventBus.EventBus
@@ -33,7 +36,7 @@ class SChats constructor(
     init {
         disableShadows()
 
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_5)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_5))
         setTextEmpty(t(API_TRANSLATE.chats_empty))
         setTextProgress(t(API_TRANSLATE.chats_loading))
         setTitle(t(API_TRANSLATE.app_chats))

@@ -2,11 +2,11 @@ package com.sayzen.campfiresdk.screens.activities.administration.api_errors
 
 import android.view.View
 import android.widget.TextView
-import com.sayzen.campfiresdk.R
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.project.StatisticError
 import com.dzen.campfire.api.requests.project.RProjectStatisticErrorsRemove
+import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.project.EventStatisticErrorRemove
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
@@ -22,7 +22,7 @@ class CardError(
 
     private val eventBus = EventBus
             .subscribe(EventStatisticErrorRemove::class) {
-                if (error.key == it.key && adapter != null) adapter!!.remove(this)
+                if (error.key == it.key) adapter.remove(this)
             }
 
     override fun bindView(view: View) {

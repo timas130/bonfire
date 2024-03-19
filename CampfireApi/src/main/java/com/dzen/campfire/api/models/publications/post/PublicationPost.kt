@@ -2,21 +2,21 @@ package com.dzen.campfire.api.models.publications.post
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.activities.UserActivity
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.PagesContainer
-import com.dzen.campfire.api.models.publications.PublicationComment
 import com.dzen.campfire.api.models.publications.Publication
+import com.dzen.campfire.api.models.publications.PublicationComment
 import com.sup.dev.java.libs.json.Json
 
 class PublicationPost : Publication, PagesContainer {
-
     var pages: Array<Page> = emptyArray()
-    var bestComment : PublicationComment? = null
+    var bestComment: PublicationComment? = null
     var rubricId = 0L
     var rubricName = ""
     //  App Flags (No Json)
     var isPined = false
     //  User Activity
-    var userActivity:UserActivity? = null
+    var userActivity: UserActivity? = null
 
     override fun getPublicationTypeConst() = API.PUBLICATION_TYPE_POST
 
@@ -40,6 +40,15 @@ class PublicationPost : Publication, PagesContainer {
     override fun jsonDBLocal(inp: Boolean, json: Json): Json {
         pages = json.m(inp, "J_PAGES", pages, Array<Page>::class)
         return json
+    }
+
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        super.fillImageRefs(receiver)
+        bestComment?.fillImageRefs(receiver)
+        userActivity?.fillImageRefs(receiver)
+        for (page in pages) {
+            page.fillImageRefs(receiver)
+        }
     }
 
     override fun getPagesArray() = pages

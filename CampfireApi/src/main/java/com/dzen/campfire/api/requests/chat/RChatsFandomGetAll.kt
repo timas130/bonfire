@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.chat
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.chat.Chat
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -44,6 +45,11 @@ open class RChatsFandomGetAll(
             chats = json.m(inp, "chats", chats)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (chat in chats) {
+                chat.fillImageRefs(receiver)
+            }
+        }
     }
 
 

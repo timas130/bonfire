@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.PagesContainer
 import com.dzen.campfire.api.models.publications.post.PagePolling
 import com.dzen.campfire.api.requests.post.RPostPagePollingGetVotes
@@ -16,6 +17,8 @@ import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.CardAccount
 import com.sayzen.campfiresdk.models.events.publications.EventPollingChanged
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
@@ -65,7 +68,7 @@ class XPolling(
 
                     setTitle(t(API_TRANSLATE.post_page_polling_results_full))
                     setTextEmpty(t(API_TRANSLATE.app_empty))
-                    setBackgroundImage(419896L)
+                    setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_21))
 
                     adapter.setBottomLoader { onLoad, cards ->
                         if (pagesContainer == null) {

@@ -1,5 +1,7 @@
 package com.dzen.campfire.api.requests.accounts
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -34,8 +36,11 @@ open class RAccountsChangeTitleImage(
     }
 
     class Response : Request.Response {
-
+        var image = ImageRef()
+        @Deprecated("use ImageRefs")
         var imageId = 0L
+        var imageGif = ImageRef()
+        @Deprecated("use ImageRefs")
         var imageGifId = 0L
 
         constructor(json: Json) {
@@ -48,10 +53,16 @@ open class RAccountsChangeTitleImage(
         }
 
         override fun json(inp: Boolean, json: Json) {
+            image = json.m(inp, "image", image)
             imageId = json.m(inp, "imageId", imageId)
+            imageGif = json.m(inp, "imageGif", imageGif)
             imageGifId = json.m(inp, "imageGifId", imageGifId)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            receiver.add(image, imageId)
+            receiver.add(imageGif, imageGifId)
+        }
     }
 
 }

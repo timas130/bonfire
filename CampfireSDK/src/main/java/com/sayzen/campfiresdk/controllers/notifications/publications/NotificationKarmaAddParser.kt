@@ -2,8 +2,9 @@ package com.sayzen.campfiresdk.controllers.notifications.publications
 
 import android.content.Intent
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.notifications.publications.NotificationKarmaAdd
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.screens.notifications.SNotifications
@@ -60,8 +61,8 @@ public class NotificationKarmaAddParser(override val n: NotificationKarmaAdd) : 
 
     }
 
-    override fun getImageId(): Long {
-        return if (n.accountId == 0L) API_RESOURCES.CAMPFIRE_IMAGE_4 else super.getImageId()
+    override fun getImage(): ImageRef {
+        return if (n.accountId == 0L) ApiResources.CAMPFIRE_IMAGE_4 else super.getImage()
     }
 
     override fun canShow() = CAN_SHOW.invoke(n)

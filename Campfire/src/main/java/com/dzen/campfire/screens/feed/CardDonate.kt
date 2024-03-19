@@ -6,10 +6,12 @@ import android.widget.TextView
 import com.dzen.campfire.R
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.requests.project.RProjectSupportGetInfo
 import com.sayzen.campfiresdk.controllers.ControllerDonates
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.tools.ToolsStorage
 import com.sup.dev.android.views.cards.Card
@@ -47,7 +49,7 @@ class CardDonate() : Card(R.layout.screen_feed_card_donate){
         if(isVisible()) vContainer.visibility = View.GONE
         else vContainer.visibility = View.VISIBLE
 
-        ImageLoader.load(API_RESOURCES.IMAGE_BACKGROUND_25).noHolder().into(vImage)
+        ImageLoader.load(ApiResources.IMAGE_BACKGROUND_25).noHolder().into(vImage)
         ControllerDonates.setupLine(totalCount, vLine, vCounter)
 
         vContainer.setOnClickListener {

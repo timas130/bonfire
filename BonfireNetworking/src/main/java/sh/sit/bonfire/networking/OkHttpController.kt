@@ -29,7 +29,7 @@ object OkHttpController {
             .build()
     }
 
-    fun buildUserAgent(context: Context): String {
+    private fun buildUserAgent(context: Context): String {
         @Suppress("DEPRECATION")
         val packageVersion = if (Build.VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
             context.packageManager.getPackageInfo(

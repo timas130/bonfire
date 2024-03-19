@@ -1,10 +1,10 @@
 package com.dzen.campfire.api.models.admins
 
 import com.dzen.campfire.api.models.account.Account
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.sup.dev.java.libs.json.Json
 
 abstract class MAdminVoteAccount : MAdminVote {
-
     var targetAccount = Account()
 
     constructor()
@@ -24,4 +24,8 @@ abstract class MAdminVoteAccount : MAdminVote {
         return super.json(inp, json)
     }
 
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        super.fillImageRefs(receiver)
+        targetAccount.fillImageRefs(receiver)
+    }
 }

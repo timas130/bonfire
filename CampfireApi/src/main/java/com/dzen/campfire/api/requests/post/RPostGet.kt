@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.post
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.models.publications.tags.PublicationTag
 import com.dzen.campfire.api.tools.client.Request
@@ -46,6 +47,12 @@ open class RPostGet(var publicationId: Long) : Request<RPostGet.Response>() {
             tags = json.m(inp, "tags", tags, Array<PublicationTag>::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            publication.fillImageRefs(receiver)
+            for (tag in tags) {
+                tag.fillImageRefs(receiver)
+            }
+        }
     }
 
 

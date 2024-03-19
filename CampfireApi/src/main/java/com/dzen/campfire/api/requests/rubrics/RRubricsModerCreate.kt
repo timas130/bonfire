@@ -1,6 +1,7 @@
 package com.dzen.campfire.api.requests.rubrics
 
 import com.dzen.campfire.api.models.fandoms.Rubric
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -44,6 +45,9 @@ open class RRubricsModerCreate(
             rubric = json.m(inp, "rubric", rubric)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            rubric.fillImageRefs(receiver)
+        }
     }
 
 }

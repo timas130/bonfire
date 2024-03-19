@@ -13,10 +13,7 @@ pub struct InternalChangeNameMutation;
 #[Object]
 impl InternalChangeNameMutation {
     /// Change the name of a user
-    #[graphql(
-        visible = "is_system_caller",
-        guard = "PermissionLevelGuard::new(System)"
-    )]
+    #[graphql(guard = "PermissionLevelGuard::new(System)")]
     async fn internal_change_name(
         &self,
         ctx: &Context<'_>,

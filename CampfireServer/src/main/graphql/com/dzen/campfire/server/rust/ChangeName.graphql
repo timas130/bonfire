@@ -1,0 +1,5 @@
+mutation ChangeNameMutation($userId: ID!, $newName: String!) {
+    internalChangeName(userId: $userId, newName: $newName) {
+        ...ShortUser
+    }
+}

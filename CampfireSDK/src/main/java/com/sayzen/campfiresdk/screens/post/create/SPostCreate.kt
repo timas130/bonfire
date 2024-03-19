@@ -3,35 +3,36 @@ package com.sayzen.campfiresdk.screens.post.create
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.activities.UserActivity
 import com.dzen.campfire.api.models.fandoms.Rubric
-import com.dzen.campfire.api.models.publications.post.*
+import com.dzen.campfire.api.models.images.ImageRef
+import com.dzen.campfire.api.models.publications.post.Page
+import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.fandoms.RFandomsGet
 import com.dzen.campfire.api.requests.post.*
-import com.sayzen.campfiresdk.models.AttacheAgent
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.support.adapters.XFandom
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.ControllerStoryQuest
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.models.AttacheAgent
 import com.sayzen.campfiresdk.models.events.publications.EventPostChanged
 import com.sayzen.campfiresdk.models.events.publications.EventPostDraftCreated
 import com.sayzen.campfiresdk.models.events.publications.EventPostStatusChange
 import com.sayzen.campfiresdk.models.events.publications.EventPublicationRemove
 import com.sayzen.campfiresdk.screens.post.view.SPost
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.adapters.XFandom
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
-import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashAlert
+import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsThreads
 
@@ -39,7 +40,7 @@ class SPostCreate constructor(
         val fandomId: Long,
         val languageId: Long,
         val fandomName: String,
-        val fandomImageId: Long,
+        val fandomImage: ImageRef,
         changePost: PublicationPost?,
         private val postParams: PostParams,
         showMenu: Boolean
@@ -49,19 +50,19 @@ class SPostCreate constructor(
 
         fun instance(publicationId: Long, action: NavigationAction, onOpen: (SPostCreate) -> Unit = {}) {
             ApiRequestsSupporter.executeInterstitial(action, RPostGetDraft(publicationId)) { r ->
-                val screen = SPostCreate(r.publication.fandom.id, r.publication.fandom.languageId, r.publication.fandom.name, r.publication.fandom.imageId, r.publication, PostParams().setTags(Array(r.tags.size) { r.tags[it].id }), true)
+                val screen = SPostCreate(r.publication.fandom.id, r.publication.fandom.languageId, r.publication.fandom.name, r.publication.fandom.image, r.publication, PostParams().setTags(Array(r.tags.size) { r.tags[it].id }), true)
                 onOpen.invoke(screen)
                 screen
             }
         }
 
-        fun instance(fandomId: Long, languageId: Long, fandomName: String, fandomImageId: Long, postParams: PostParams, action: NavigationAction) {
-            Navigator.action(action, SPostCreate(fandomId, languageId, fandomName, fandomImageId, null, postParams, true))
+        fun instance(fandomId: Long, languageId: Long, fandomName: String, fandomImage: ImageRef, postParams: PostParams, action: NavigationAction) {
+            Navigator.action(action, SPostCreate(fandomId, languageId, fandomName, fandomImage, null, postParams, true))
         }
 
         fun instance(fandomId: Long, languageId: Long, postParams: PostParams, onOpen: (SPostCreate) -> Unit = {}, action: NavigationAction) {
             ApiRequestsSupporter.executeInterstitial(action, RFandomsGet(fandomId, languageId, ControllerApi.getLanguageId())) { r ->
-                val screen = SPostCreate(fandomId, languageId, r.fandom.name, r.fandom.imageId, null, postParams, true)
+                val screen = SPostCreate(fandomId, languageId, r.fandom.name, r.fandom.image, null, postParams, true)
                 onOpen.invoke(screen)
                 screen
             }
@@ -70,7 +71,7 @@ class SPostCreate constructor(
 
     }
 
-    constructor(fandomId: Long, languageId: Long, fandomName: String, fandomImageId: Long) : this(fandomId, languageId, fandomName, fandomImageId, null, PostParams(), true)
+    constructor(fandomId: Long, languageId: Long, fandomName: String, fandomImage: ImageRef) : this(fandomId, languageId, fandomName, fandomImage, null, PostParams(), true)
 
     private val vRecycler: RecyclerView = findViewById(R.id.vRecycler)
     private val vAdd: FloatingActionButton = findViewById(R.id.vAdd)
@@ -81,7 +82,7 @@ class SPostCreate constructor(
             .setId(fandomId)
             .setLanguageId(languageId)
             .setName(fandomName)
-            .setImageId(fandomImageId)
+            .setImage(fandomImage)
             .setOnChanged { updateTitle() }
 
     private var publicationId = 0L

@@ -1,10 +1,11 @@
 package com.sayzen.campfiresdk.controllers
 
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.account.MAccountEffect
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.notifications.account.NotificationEffectAdd
 import com.dzen.campfire.api.models.notifications.account.NotificationEffectRemove
 import com.dzen.campfire.api.requests.accounts.RAccountsAdminEffectAdd
@@ -202,11 +203,11 @@ object ControllerEffects {
     //
 
 
-    fun getAvatar(account: Account): Long? {
+    fun getAvatar(account: Account): ImageRef? {
 
         for (i in account.accountEffects) {
             if (i.effectIndex == API.EFFECT_INDEX_PIG && i.dateEnd > System.currentTimeMillis()) {
-                return API_RESOURCES.IMAGE_NEW_YEAR_PIG
+                return ApiResources.IMAGE_NEW_YEAR_PIG
             }
         }
 

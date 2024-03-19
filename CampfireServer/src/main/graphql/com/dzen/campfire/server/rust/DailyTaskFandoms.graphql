@@ -1,0 +1,12 @@
+fragment DailyTaskFandom on DailyTaskFandom {
+    fandomId
+    multiplier
+}
+
+query DailyTaskFandoms($id: ID!) {
+    userById(id: $id) {
+        dailyTaskFandoms {
+            ...DailyTaskFandom
+        }
+    }
+}

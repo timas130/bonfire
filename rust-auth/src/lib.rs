@@ -36,6 +36,7 @@ mod vacuum;
 mod verify_email;
 
 use c_core::prelude::tarpc::context::Context;
+use c_core::prelude::tokio::sync::Mutex;
 use c_core::prelude::*;
 use c_core::services::auth::tfa::{TfaInfo, TfaStatus};
 use c_core::services::auth::user::{AuthUser, PermissionLevel};
@@ -48,13 +49,13 @@ use c_core::services::auth::{
 use c_core::services::email::Email;
 use c_core::services::email::EmailServiceClient;
 use c_core::{host_tcp, ServiceBase};
+use http_cache_reqwest::{CACacheManager, Cache, CacheMode, HttpCache, HttpCacheOptions};
 use jsonwebtoken::jwk::Jwk;
+use reqwest::Client;
+use reqwest_middleware::{ClientBuilder, ClientWithMiddleware};
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::sync::Arc;
-use http_cache_reqwest::{CACacheManager, Cache, CacheMode, HttpCache, HttpCacheOptions};
-use reqwest::Client;
-use reqwest_middleware::{ClientBuilder, ClientWithMiddleware};
 #[cfg(test)]
 use {
     c_core::prelude::tarpc::client,
@@ -63,7 +64,6 @@ use {
     c_core::services::email::EmailService,
     c_email::EmailServer,
 };
-use c_core::prelude::tokio::sync::Mutex;
 
 const GOOGLE_JWKS_URL: &str =
     "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com";

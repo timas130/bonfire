@@ -1,0 +1,5 @@
+# haha Linus joke
+fragment ShortUser on User {
+    id
+    username
+}

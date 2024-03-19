@@ -1,6 +1,7 @@
 package com.sayzen.campfiresdk.controllers
 
-import com.dzen.campfire.api.API_RESOURCES
+import com.dzen.campfire.api.ApiResources
+import com.dzen.campfire.api.models.images.ImageRef
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.models.animations.DrawAnimationConfetti
 import com.sayzen.campfiresdk.models.animations.DrawAnimationGoose
@@ -36,28 +37,25 @@ object ControllerHoliday {
         return true
     }
 
-    fun getProfileBackgroundImage(): Long? {
+    fun getProfileBackgroundImage(): ImageRef? {
         if (isNewYear()) {
-            return API_RESOURCES.IMAGE_NEW_YEAR_LIGHT_GIF
+            return ApiResources.IMAGE_NEW_YEAR_LIGHT_GIF
         }
         return null
     }
 
-    fun getAvatar(accountId: Long, accountLvl: Long, karma30: Long): Long? {
-
-
+    fun getAvatar(accountId: Long, accountLvl: Long, karma30: Long): ImageRef? {
         if (isNewYear() && ControllerSettings.styleNewYearAvatars) {
-
-            if (ControllerApi.isProtoadmin(accountId, accountLvl)) return API_RESOURCES.IMAGE_NEW_YEAR_SANTA
+            if (ControllerApi.isProtoadmin(accountId, accountLvl)) return ApiResources.IMAGE_NEW_YEAR_SANTA
             if (ControllerApi.isAdmin(accountLvl, karma30)) {
-                val array = arrayOf(API_RESOURCES.IMAGE_NEW_YEAR_DEER_1, API_RESOURCES.IMAGE_NEW_YEAR_DEER_2, API_RESOURCES.IMAGE_NEW_YEAR_DEER_3, API_RESOURCES.IMAGE_NEW_YEAR_DEER_4, API_RESOURCES.IMAGE_NEW_YEAR_DEER_5)
+                val array = arrayOf(ApiResources.IMAGE_NEW_YEAR_DEER_1, ApiResources.IMAGE_NEW_YEAR_DEER_2, ApiResources.IMAGE_NEW_YEAR_DEER_3, ApiResources.IMAGE_NEW_YEAR_DEER_4, ApiResources.IMAGE_NEW_YEAR_DEER_5)
                 return array[(accountId % array.size).toInt()]
             }
             if (ControllerApi.isModerator(accountLvl, karma30)) {
-                val array = arrayOf(API_RESOURCES.IMAGE_NEW_YEAR_ELF_1, API_RESOURCES.IMAGE_NEW_YEAR_ELF_2, API_RESOURCES.IMAGE_NEW_YEAR_ELF_3, API_RESOURCES.IMAGE_NEW_YEAR_ELF_4)
+                val array = arrayOf(ApiResources.IMAGE_NEW_YEAR_ELF_1, ApiResources.IMAGE_NEW_YEAR_ELF_2, ApiResources.IMAGE_NEW_YEAR_ELF_3, ApiResources.IMAGE_NEW_YEAR_ELF_4)
                 return array[(accountId % array.size).toInt()]
             }
-            val array = arrayOf(API_RESOURCES.IMAGE_NEW_YEAR_KID_1, API_RESOURCES.IMAGE_NEW_YEAR_KID_2, API_RESOURCES.IMAGE_NEW_YEAR_KID_3, API_RESOURCES.IMAGE_NEW_YEAR_KID_4, API_RESOURCES.IMAGE_NEW_YEAR_KID_5, API_RESOURCES.IMAGE_NEW_YEAR_KID_6, API_RESOURCES.IMAGE_NEW_YEAR_KID_7, API_RESOURCES.IMAGE_NEW_YEAR_KID_8, API_RESOURCES.IMAGE_NEW_YEAR_KID_9, API_RESOURCES.IMAGE_NEW_YEAR_KID_10)
+            val array = arrayOf(ApiResources.IMAGE_NEW_YEAR_KID_1, ApiResources.IMAGE_NEW_YEAR_KID_2, ApiResources.IMAGE_NEW_YEAR_KID_3, ApiResources.IMAGE_NEW_YEAR_KID_4, ApiResources.IMAGE_NEW_YEAR_KID_5, ApiResources.IMAGE_NEW_YEAR_KID_6, ApiResources.IMAGE_NEW_YEAR_KID_7, ApiResources.IMAGE_NEW_YEAR_KID_8, ApiResources.IMAGE_NEW_YEAR_KID_9, ApiResources.IMAGE_NEW_YEAR_KID_10)
             return array[(accountId % array.size).toInt()]
         }
         return null

@@ -52,7 +52,7 @@ class EAccountsLogin : RAccountsLogin("", 0, 0, 0) {
 
         return Response(
                 API.VERSION, API.SUPPORTED_VERSION,
-                arrayOf("0.82b", "0.83b", "0.84b", "0.841b", "0.850b", "0.851b", "0.860b", "0.861b"),
+                arrayOf(),
                 API.PROTOADMINS, account, accountSettings, apiAccount.tag_s_1.isNotEmpty(),
                 languageId, translateMap, translateMapEng, serverTranslateHash,
                 serverTranslateHashEng

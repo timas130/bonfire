@@ -3,7 +3,9 @@ package com.sayzen.campfiresdk.screens.achievements
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import com.dzen.campfire.api.models.images.ImageRef
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 
 import com.sup.dev.android.views.cards.Card
@@ -14,7 +16,7 @@ class CardInfo(
         var countTitle: String,
         var count: Long,
         var dot: Boolean,
-        var image: Long = 0L
+        var image: ImageRef = ImageRef(),
 ) : Card(R.layout.screen_achievements_card_info) {
 
     override fun bindView(view: View) {
@@ -24,8 +26,8 @@ class CardInfo(
         val vText: TextView = view.findViewById(R.id.vText)
         val vImage: ImageView = view.findViewById(R.id.vImage)
 
-        vImage.visibility = if (image == 0L) View.GONE else View.VISIBLE
-        if (image != 0L) ImageLoader.load(image).noHolder().into(vImage)
+        vImage.visibility = if (image.isEmpty()) View.GONE else View.VISIBLE
+        if (image.isNotEmpty()) ImageLoader.load(image).noHolder().into(vImage)
 
         vCountTitle.setText(countTitle)
         vText.setText(text)

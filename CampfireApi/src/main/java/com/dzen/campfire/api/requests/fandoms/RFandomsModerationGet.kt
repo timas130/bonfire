@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.fandoms
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.moderations.PublicationModeration
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -34,6 +35,9 @@ open class RFandomsModerationGet(var publicationId: Long) : Request<RFandomsMode
             publication = json.mNull(inp, "unit", publication, PublicationModeration::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            publication?.fillImageRefs(receiver)
+        }
     }
 
 

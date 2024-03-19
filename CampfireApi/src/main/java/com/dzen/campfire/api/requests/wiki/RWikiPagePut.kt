@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.wiki
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.post.Page
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -52,6 +53,11 @@ open class RWikiPagePut(
             pages = json.m(inp, "pages", pages, Array<Page>::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (page in pages) {
+                page.fillImageRefs(receiver)
+            }
+        }
     }
 
 

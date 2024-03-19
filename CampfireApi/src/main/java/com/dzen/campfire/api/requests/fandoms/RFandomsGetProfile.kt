@@ -1,7 +1,8 @@
 package com.dzen.campfire.api.requests.fandoms
 
 import com.dzen.campfire.api.models.account.Account
-import com.dzen.campfire.api.models.fandoms.FandomLink
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -31,7 +32,11 @@ open class RFandomsGetProfile(
         var pinnedPost: PublicationPost? = null
         var subscriptionType = 0L
         var notifyImportant = false
+        var imageTitle = ImageRef()
+        @Deprecated("use ImageRefs")
         var imageTitleId = 0L
+        var imageTitleGif = ImageRef()
+        @Deprecated("use ImageRefs")
         var imageTitleGifId = 0L
 
 
@@ -44,16 +49,16 @@ open class RFandomsGetProfile(
                     pinnedPost: PublicationPost?,
                     subscriptionType: Long,
                     notifyImportant: Boolean,
-                    imageTitleId: Long,
-                    imageTitleGifId:Long
+                    imageTitle: Long,
+                    imageTitleGif: Long,
         ) {
             this.viceroyAccount = viceroyAccount
             this.viceroyDate = viceroyDate
             this.pinnedPost = pinnedPost
             this.subscriptionType = subscriptionType
             this.notifyImportant = notifyImportant
-            this.imageTitleId = imageTitleId
-            this.imageTitleGifId = imageTitleGifId
+            this.imageTitleId = imageTitle
+            this.imageTitleGifId = imageTitleGif
         }
 
         override fun json(inp: Boolean, json: Json) {
@@ -62,10 +67,18 @@ open class RFandomsGetProfile(
             pinnedPost = json.mNull(inp, "pinnedPost", pinnedPost, PublicationPost::class)
             subscriptionType = json.m(inp, "subscriptionType", subscriptionType)
             notifyImportant = json.m(inp, "notifyImportant", notifyImportant)
+            imageTitle = json.m(inp, "imageTitle", imageTitle)
             imageTitleId = json.m(inp, "imageTitleId", imageTitleId)
+            imageTitleGif = json.m(inp, "imageTitleGif", imageTitleGif)
             imageTitleGifId = json.m(inp, "imageTitleGifId", imageTitleGifId)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            viceroyAccount?.fillImageRefs(receiver)
+            pinnedPost?.fillImageRefs(receiver)
+            receiver.add(imageTitle, imageTitleId)
+            receiver.add(imageTitleGif, imageTitleGifId)
+        }
     }
 
 

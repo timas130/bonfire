@@ -1,20 +1,24 @@
 package com.dzen.campfire.api.models.account
 
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonParsable
 
-class Account : JsonParsable {
-
+class Account : JsonParsable, ImageHolder {
     var id = 0L
     var lvl = 0L
     var lastOnlineDate = 0L
     var name = ""
+    var image = ImageRef()
+    @Deprecated("use ImageRefs")
     var imageId = 0L
     var sex = 0L
     var karma30 = 0L
     var sponsor = 0L
     var sponsorTimes = 0L
-    var accountEffects:Array<MAccountEffect> = emptyArray()
+    var accountEffects: Array<MAccountEffect> = emptyArray()
 
     var dateCreate = 0L
 
@@ -40,6 +44,7 @@ class Account : JsonParsable {
         lvl = json.m(inp, "J_LVL", lvl)
         lastOnlineDate = json.m(inp, "J_LAST_ONLINE_DATE", lastOnlineDate)
         name = json.m(inp, "J_NAME", name)
+        image = json.m(inp, "avatar", image)
         imageId = json.m(inp, "J_IMAGE_ID", imageId)
         sex = json.m(inp, "sex", sex)
         karma30 = json.m(inp, "karma30", karma30)
@@ -49,4 +54,7 @@ class Account : JsonParsable {
         return json
     }
 
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        receiver.add(image, imageId)
+    }
 }

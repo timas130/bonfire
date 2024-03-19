@@ -1,12 +1,14 @@
 package com.dzen.campfire.api.models.translate
 
 import com.dzen.campfire.api.models.account.Account
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonParsable
 
-class TranslateHistory: JsonParsable{
+class TranslateHistory : JsonParsable, ImageHolder {
 
-    companion object{
+    companion object {
 
         val TYPE_TEXT = 1L
         val TYPE_HINT = 2L
@@ -26,7 +28,7 @@ class TranslateHistory: JsonParsable{
     var confirm_account_1 = 0L
     var confirm_account_2 = 0L
     var confirm_account_3 = 0L
-    var creator:Account=Account()
+    var creator: Account = Account()
 
     override fun json(inp: Boolean, json: Json): Json {
         id = json.m(inp, "id", id)
@@ -46,5 +48,7 @@ class TranslateHistory: JsonParsable{
         return json
     }
 
-
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        creator.fillImageRefs(receiver)
+    }
 }

@@ -1,6 +1,8 @@
 package com.dzen.campfire.api.requests.fandoms
 
 import com.dzen.campfire.api.models.fandoms.FandomLink
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -26,13 +28,15 @@ open class RFandomsGetInfo(
 
         var description = ""
         var categoryId = 0L
-        var names: Array<String> = emptyArray()
-        var gallery: Array<Long> = emptyArray()
-        var links: Array<FandomLink> = emptyArray()
-        var params1: Array<Long> = emptyArray()
-        var params2: Array<Long> = emptyArray()
-        var params3: Array<Long> = emptyArray()
-        var params4: Array<Long> = emptyArray()
+        var names = emptyArray<String>()
+        var galleryImages = emptyArray<ImageRef>()
+        @Deprecated("use ImageRefs")
+        var gallery = emptyArray<Long>()
+        var links = emptyArray<FandomLink>()
+        var params1 = emptyArray<Long>()
+        var params2 = emptyArray<Long>()
+        var params3 = emptyArray<Long>()
+        var params4 = emptyArray<Long>()
 
         constructor(json: Json) {
             json(false, json)
@@ -63,6 +67,7 @@ open class RFandomsGetInfo(
             description = json.m(inp, "description", description)
             categoryId = json.m(inp, "categoryId", categoryId)
             names = json.m(inp, "names", names)
+            galleryImages = json.m(inp, "galleryImages", galleryImages)
             gallery = json.m(inp, "gallery", gallery)
             links = json.m(inp, "links", links)
             params1 = json.m(inp, "params1", params1)
@@ -71,7 +76,14 @@ open class RFandomsGetInfo(
             params4 = json.m(inp, "params4", params4)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            if (galleryImages.isEmpty()) {
+                galleryImages = Array(gallery.size) { ImageRef() }
+            }
+
+            for (i in galleryImages.indices) {
+                receiver.add(galleryImages[i], gallery[i])
+            }
+        }
     }
-
-
 }

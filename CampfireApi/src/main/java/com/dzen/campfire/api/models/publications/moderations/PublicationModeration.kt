@@ -1,6 +1,7 @@
 package com.dzen.campfire.api.models.publications.moderations
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.Publication
 import com.sup.dev.java.libs.json.Json
 
@@ -27,4 +28,8 @@ class PublicationModeration : Publication {
         if (moderation != null) moderation!!.fillResourcesList(list)
     }
 
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        super.fillImageRefs(receiver)
+        moderation?.fillImageRefs(receiver)
+    }
 }

@@ -1,6 +1,7 @@
 package com.dzen.campfire.api.requests.chat
 
 import com.dzen.campfire.api.models.account.Account
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -44,6 +45,11 @@ open class RChatGetSubscribers(
             accounts = json.m(inp, "accounts", accounts, Array<Account>::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (account in accounts) {
+                account.fillImageRefs(receiver)
+            }
+        }
     }
 
 }

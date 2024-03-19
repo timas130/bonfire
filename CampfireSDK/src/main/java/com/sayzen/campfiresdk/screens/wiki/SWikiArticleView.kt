@@ -24,6 +24,7 @@ import com.sayzen.campfiresdk.models.events.wiki.EventWikiPagesChanged
 import com.sayzen.campfiresdk.models.events.wiki.EventWikiRemove
 import com.sayzen.campfiresdk.screens.wiki.history.EventWikiHistoryStatusChanged
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
@@ -82,8 +83,8 @@ class SWikiArticleView(
         disableShadows()
 
         vToolbarCollapsingShadow.background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(0x60000000, 0x00000000))
-        ImageLoader.loadGif(wikiTitle.imageId, 0, vAvatar)
-        ImageLoader.loadGif(wikiTitle.imageBigId, 0, vImageTitle)
+        ImageLoader.load(wikiTitle.image).into(vAvatar)
+        ImageLoader.load(wikiTitle.imageBig).into(vImageTitle)
 
         vAction.text = t(API_TRANSLATE.app_retry)
         vRecycler.layoutManager = LinearLayoutManager(context)

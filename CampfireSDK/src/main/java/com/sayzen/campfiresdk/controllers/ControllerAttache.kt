@@ -2,7 +2,6 @@ package com.sayzen.campfiresdk.controllers
 
 import android.net.Uri
 import com.dzen.campfire.api.API_TRANSLATE
-import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.models.AttacheAgent
 import com.sayzen.campfiresdk.screens.chat.SChat
 import com.sayzen.campfiresdk.screens.chat.SChats
@@ -12,7 +11,6 @@ import com.sayzen.campfiresdk.screens.post.drafts.SDrafts
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsBitmap
-import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.splash.SplashMenu
 import com.sup.dev.java.tools.ToolsText
@@ -39,7 +37,7 @@ object ControllerAttache {
             SplashMenu()
                     .add(t(API_TRANSLATE.app_create_post)) {
                         SFandomsSearch.instance(Navigator.TO) { fandom ->
-                            val screen = SPostCreate(fandom.id, fandom.languageId, fandom.name, fandom.imageId, null, SPostCreate.PostParams(), false)
+                            val screen = SPostCreate(fandom.id, fandom.languageId, fandom.name, fandom.image, null, SPostCreate.PostParams(), false)
                             Navigator.to(screen)
                             parseAttache(text, image, screen, false)
                         }

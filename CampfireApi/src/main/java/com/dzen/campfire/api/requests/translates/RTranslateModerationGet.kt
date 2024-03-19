@@ -1,14 +1,15 @@
 package com.dzen.campfire.api.requests.translates
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.translate.TranslateHistory
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
 open class RTranslateModerationGet(
-        var offset : Long
+    var offset: Long
 ) : Request<RTranslateModerationGet.Response>() {
 
-    companion object{
+    companion object {
         val COUNT = 20
     }
 
@@ -22,7 +23,7 @@ open class RTranslateModerationGet(
 
     class Response : Request.Response {
 
-        var histories:Array<TranslateHistory> = emptyArray()
+        var histories: Array<TranslateHistory> = emptyArray()
 
         constructor(json: Json) {
             json(false, json)
@@ -36,6 +37,11 @@ open class RTranslateModerationGet(
             histories = json.m(inp, "histories", histories)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (history in histories) {
+                history.fillImageRefs(receiver)
+            }
+        }
     }
 
 }

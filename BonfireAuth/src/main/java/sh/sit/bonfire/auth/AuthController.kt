@@ -113,6 +113,7 @@ object AuthController : TokenProvider {
         val error = me.errors!!.first()
         val errorCode = error.message.split(':').first()
 
+        Log.d("AuthController", "login error: $error")
         return when (errorCode) {
             "Unauthenticated" -> CanLoginResult.InvalidLogin
             "HardBanned" -> CanLoginResult.HardBanned
@@ -122,12 +123,15 @@ object AuthController : TokenProvider {
     }
 
     private val isRefreshing = MutableStateFlow(false)
-    suspend fun tryRefreshTokens(force: Boolean = false) {
-        if (!isRefreshing.compareAndSet(expect = false, update = true)) return
+    private suspend fun tryRefreshTokens(force: Boolean = false) {
+        while (true) {
+            isRefreshing.first { !it }
+            if (isRefreshing.compareAndSet(expect = false, update = true)) break
+        }
 
         val state = authState.first()
         if (state !is AuthenticatedAuthState) {
-            isRefreshing.tryEmit(false)
+            isRefreshing.emit(false)
             return
         }
 
@@ -140,7 +144,7 @@ object AuthController : TokenProvider {
         }
 
         if (!shouldRefresh) {
-            isRefreshing.tryEmit(false)
+            isRefreshing.emit(false)
             return
         }
 
@@ -156,7 +160,7 @@ object AuthController : TokenProvider {
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
-            isRefreshing.tryEmit(false)
+            isRefreshing.emit(false)
         }
     }
 

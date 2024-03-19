@@ -13,7 +13,8 @@ import com.sayzen.campfiresdk.models.events.fandom.EventFandomRemove
 import com.sayzen.campfiresdk.screens.fandoms.view.SplashSubscription
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.adapters.XFandom
-import com.sup.dev.android.libs.image_loader.ImageLoaderId
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.*
@@ -128,8 +129,8 @@ object ControllerFandoms {
                     .setMax(API.MODERATION_COMMENT_MAX_L)
                     .setOnEnter(t(API_TRANSLATE.app_change)) { ww, comment ->
                         ApiRequestsSupporter.executeEnabled(ww, RFandomsModerationChangeImageTitle(xFandom.getId(), xFandom.getLanguageId(), image, imageGif, comment)) { r ->
-                            ImageLoaderId(xFandom.getImageTitleId()).clear()
-                            EventBus.post(EventFandomChanged(xFandom.getId(), "", -1, r.imageId, r.imageGifId))
+                            ImageLoader.load(xFandom.getImageTitle()).clear()
+                            EventBus.post(EventFandomChanged(xFandom.getId(), "", -1, r.image, r.imageGif))
                             ToolsToast.show(t(API_TRANSLATE.app_done))
                         }
                     }
@@ -231,7 +232,7 @@ object ControllerFandoms {
                                         val image = ToolsBitmap.toBytes(ToolsBitmap.resize(b, API.FANDOM_IMG_SIDE, API.FANDOM_IMG_SIDE), API.FANDOM_IMG_WEIGHT)
                                         ToolsThreads.main {
                                             ApiRequestsSupporter.executeProgressDialog(dialog, RFandomsAdminChangeImage(xFandom.getId(), image, comment)) { _ ->
-                                                ImageLoaderId(xFandom.getImageId()).clear()
+                                                ImageLoader.load(xFandom.getImage()).clear()
                                                 EventBus.post(EventFandomChanged(xFandom.getId(), xFandom.getName()))
                                                 ToolsToast.show(t(API_TRANSLATE.app_done))
                                             }

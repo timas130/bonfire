@@ -1,18 +1,21 @@
 package com.sup.dev.android.views.screens
 
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.appcompat.widget.Toolbar
-import android.view.View
-import android.view.ViewGroup
-import android.widget.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sup.dev.android.R
 import com.sup.dev.android.app.SupAndroid
-import com.sup.dev.android.libs.screens.Screen
-import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.image_loader.ImageLink
+import com.sup.dev.android.libs.image_loader.ImageLoader
+import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.java.tools.ToolsThreads
@@ -123,10 +126,6 @@ abstract class SLoading(@LayoutRes layoutRes: Int) : Screen(R.layout.screen_load
 
     fun setBackgroundImage(@DrawableRes res: Int) {
         this.image = ImageLoader.load(res).noHolder()
-    }
-
-    fun setBackgroundImage(image: Any) {
-        setBackgroundImage(ImageLoader.loadByAny(image)?.noHolder())
     }
 
     fun setBackgroundImage(image: ImageLink?) {

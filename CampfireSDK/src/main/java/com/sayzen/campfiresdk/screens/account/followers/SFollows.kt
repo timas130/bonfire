@@ -2,6 +2,7 @@ package com.sayzen.campfiresdk.screens.account.followers
 
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.requests.accounts.RAccountsFollowsGetAll
 import com.dzen.campfire.api.models.account.Account
 import com.sayzen.campfiresdk.R
@@ -13,6 +14,8 @@ import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.account.EventAccountsFollowsChange
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.screens.SLoadingRecycler
@@ -37,7 +40,7 @@ class SFollows(
         disableShadows()
         disableNavigation()
         setTextEmpty(if (ControllerApi.isCurrentAccount(xAccount.getId())) t(API_TRANSLATE.profile_follows_empty) else t(API_TRANSLATE.profile_follows_empty_another))
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_24)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_24))
         update()
 
         adapter.setBottomLoader { onLoad, cards ->

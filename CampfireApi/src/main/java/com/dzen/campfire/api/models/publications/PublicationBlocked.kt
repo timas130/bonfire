@@ -1,12 +1,13 @@
 package com.dzen.campfire.api.models.publications
 
 import com.dzen.campfire.api.models.account.Account
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonParsable
 
-class PublicationBlocked : JsonParsable {
-
-    var publication:Publication = PublicationUnknown()
+class PublicationBlocked : JsonParsable, ImageHolder {
+    var publication: Publication = PublicationUnknown()
     var moderationId = 0L
     var moderator = Account()
     var comment = ""
@@ -25,4 +26,8 @@ class PublicationBlocked : JsonParsable {
         return json
     }
 
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        publication.fillImageRefs(receiver)
+        moderator.fillImageRefs(receiver)
+    }
 }

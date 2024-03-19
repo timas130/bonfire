@@ -11,12 +11,13 @@ import com.sayzen.campfiresdk.controllers.tCap
 import com.sayzen.campfiresdk.models.cards.CardPublication
 import com.sayzen.campfiresdk.models.events.stickers.EventStickersPackChanged
 import com.sayzen.campfiresdk.models.splashs.SplashComment
-import com.sayzen.campfiresdk.screens.comments.SComments
 import com.sayzen.campfiresdk.screens.account.stickers.SStickersView
+import com.sayzen.campfiresdk.screens.comments.SComments
 import com.sayzen.campfiresdk.screens.reports.SReports
+import com.sayzen.campfiresdk.support.load
 import com.sayzen.campfiresdk.views.ViewKarma
-import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.libs.image_loader.ImageLoader
+import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.java.libs.eventBus.EventBus
@@ -58,7 +59,7 @@ class CardStickersPack(
         vTitle.visibility = if(isShowFullInfo) View.VISIBLE else View.GONE
         vTitle.text = tCap(API_TRANSLATE.sticker_event_create_stickers_pack, ToolsResources.sex(publication.creator.sex, t(API_TRANSLATE.he_created), t(API_TRANSLATE.she_created)))
 
-        ImageLoader.load(publication.imageId).into(vAvatar.vAvatar.vImageView)
+        ImageLoader.load(publication.image).into(vAvatar.vAvatar.vImageView)
         vAvatar.setTitle(publication.name)
         vAvatar.setSubtitle(publication.creator.name)
 
@@ -107,7 +108,7 @@ class CardStickersPack(
 
     override fun notifyItem() {
         val publication = xPublication.publication as PublicationStickersPack
-        ImageLoader.load(publication.imageId).intoCash()
+        ImageLoader.load(publication.image).intoCash()
     }
 
 

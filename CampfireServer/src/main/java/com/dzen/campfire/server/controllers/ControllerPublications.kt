@@ -17,6 +17,7 @@ import com.dzen.campfire.api.models.publications.events_user.ApiEventUser
 import com.dzen.campfire.api.models.publications.events_user.PublicationEventUser
 import com.dzen.campfire.api.models.publications.moderations.Moderation
 import com.dzen.campfire.api.models.publications.moderations.PublicationModeration
+import com.dzen.campfire.api.models.publications.post.PageLink
 import com.dzen.campfire.api.models.publications.post.PageText
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.models.publications.tags.PublicationTag
@@ -177,12 +178,55 @@ object ControllerPublications {
         )
     }
 
-    fun loadSpecDataForPosts(accountId: Long, posts: Array<Publication>): Array<Publication> {
+    fun getUpdatePost(currentVersion: String): PublicationPost? {
+        if (currentVersion != "2.0") return null
+
+        return PublicationPost().apply {
+            id = -1L
+            fandom = ControllerFandom.getFandom(API.FANDOM_CAMPFIRE_ID)!!
+            creator = ControllerAccounts.getAccount(100000)!!
+            dateCreate = System.currentTimeMillis()
+            publicationType = API.PUBLICATION_TYPE_POST
+            myKarma = 1
+            status = API.STATUS_PUBLIC
+            closed = true
+            important = API.PUBLICATION_IMPORTANT_IMPORTANT
+
+            pages = arrayOf(
+                PageText().apply {
+                    text = """
+                        # Обнови своё приложение
+                        
+                        Версия приложения, которую вы используете, устарела, и пришло время обновиться.
+                        
+                        Пройдите по одной из ссылок ниже. Just do it.
+                    """.trimIndent()
+                    newFormatting = true
+                },
+                PageLink().apply {
+                    name = "Google Play"
+                    link = "https://play.google.com/store/apps/details?id=sh.sit.bonfire"
+                },
+                PageLink().apply {
+                    name = "APK (не используйте, если есть возможность)"
+                    link = "https://bonfire.moe/bonfire2.apk"
+                }
+            )
+        }
+    }
+
+    fun loadSpecDataForPosts(accountId: Long, posts: Array<Publication>, apiVersion: String = API.VERSION): Array<Publication> {
         loadBestCommentsForPosts(accountId, posts)
         loadRubricsForPosts(posts)
         loadUserActivity(accountId, posts)
         loadBlacklists(accountId, posts)
-        return loadShadowBans(accountId, posts)
+        val ret = loadShadowBans(accountId, posts)
+        val updatePost = getUpdatePost(apiVersion)
+        return if (updatePost != null) {
+            arrayOf(updatePost, *ret)
+        } else {
+            ret
+        }
     }
 
     fun loadBlacklists(accountId: Long, pubs: Array<Publication>) {

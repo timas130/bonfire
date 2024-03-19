@@ -13,6 +13,7 @@ import com.sayzen.campfiresdk.screens.account.profile.SProfile
 import com.sayzen.campfiresdk.screens.fandoms.moderation.view.SModerationView
 import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
 import com.sayzen.campfiresdk.support.adapters.XAccount
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
@@ -33,12 +34,12 @@ class CardPublicationEventUser(
 
         xAccount = XAccount().setId(e.ownerAccountId)
                 .setName(e.ownerAccountName)
-                .setImageId(e.ownerAccountImageId)
+                .setImage(e.ownerAccountImage)
                 .setOnChanged { update() }
 
         xAccountAdmin = XAccount().setId(e.adminAccountId)
                 .setName(e.adminAccountName)
-                .setImageId(e.adminAccountImageId)
+                .setImage(e.adminAccountImage)
                 .setOnChanged { update() }
     }
 

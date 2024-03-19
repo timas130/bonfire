@@ -113,12 +113,12 @@ class ECommentsCreate : RCommentsCreate(0, "", null, null, 0, false, 0, 0, false
                 comment.quoteId = quotePublication.id
                 comment.quoteText = quotePublication.creator.name + ": " + quotePublication.text
                 comment.quoteCreatorName = quotePublication.creator.name
-                if (quotePublication.imageIdArray.isNotEmpty()) comment.quoteImages = quotePublication.imageIdArray
-                else if (quotePublication.imageId > 0) comment.quoteImages = Array(1) { quotePublication.imageId }
+                if (quotePublication.imageIdArray.isNotEmpty()) comment.quoteImageIds = quotePublication.imageIdArray
+                else if (quotePublication.imageId > 0) comment.quoteImageIds = Array(1) { quotePublication.imageId }
                 else if (quotePublication.stickerId > 0) {
                     comment.quoteStickerId = quotePublication.stickerId
                     comment.quoteStickerImageId = quotePublication.stickerImageId
-                } else comment.quoteImages = emptyArray()
+                } else comment.quoteImageIds = emptyArray()
             }
         }
 

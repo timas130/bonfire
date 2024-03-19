@@ -1,7 +1,12 @@
+use crate::error::RespError;
 use async_graphql::Context;
 use async_trait::async_trait;
+use aws_config::SdkConfig;
+use aws_sdk_s3::config::{Credentials, SharedCredentialsProvider};
 use axum_extra::headers::UserAgent;
 use axum_extra::TypedHeader;
+use c_core::config::ImagesConfig;
+use c_core::prelude::anyhow::anyhow;
 use c_core::prelude::{anyhow, tarpc};
 use c_core::services::auth::user::{AuthUser, PermissionLevel};
 use c_core::services::auth::{Auth, AuthError, AuthServiceClient, UserContext};
@@ -88,6 +93,32 @@ impl ReqContext {
                 .unwrap_or(AuthError::Unauthenticated));
         };
         Ok(user)
+    }
+
+    pub fn get_s3(&self) -> Result<(aws_sdk_s3::Client, String), RespError> {
+        let ImagesConfig::S3 {
+            endpoint,
+            key_id,
+            key_secret,
+            bucket,
+        } = &self.base.config.images
+        else {
+            return Err(anyhow!("invalid images storage provider").into());
+        };
+
+        let config = SdkConfig::builder()
+            .endpoint_url(endpoint)
+            .credentials_provider(SharedCredentialsProvider::new(Credentials::new(
+                key_id,
+                key_secret,
+                None,
+                None,
+                "CoreConfig",
+            )))
+            .build();
+        let client = aws_sdk_s3::Client::new(&config);
+
+        Ok((client, bucket.clone()))
     }
 }
 

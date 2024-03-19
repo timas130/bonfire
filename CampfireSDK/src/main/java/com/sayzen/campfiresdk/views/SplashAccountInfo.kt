@@ -16,9 +16,9 @@ import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.settings.SettingsMini
+import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.android.views.views.ViewText
-import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.java.tools.ToolsDate
 
 class SplashAccountInfo(account: Account) : Splash(R.layout.splash_account_info) {
@@ -67,7 +67,7 @@ class SplashAccountInfo(account: Account) : Splash(R.layout.splash_account_info)
                 xAccount.getId(), "")
                 .onError {
                     if (released) return@onError
-                    if ("$it".contains("${API.ERROR_GONE}")) {
+                    if ("$it".contains(API.ERROR_GONE)) {
                         released = true
                         ToolsToast.show(t(API_TRANSLATE.error_account_is_anonymous))
                         hide()
@@ -77,8 +77,8 @@ class SplashAccountInfo(account: Account) : Splash(R.layout.splash_account_info)
             vLoading.visibility = View.GONE
             vInfoContainer.visibility = View.VISIBLE
 
-            xAccount.setTitleImageId(r.titleImageId)
-            xAccount.setTitleImageGifId(r.titleImageGifId)
+            xAccount.setTitleImage(r.titleImage)
+            xAccount.setTitleImageGif(r.titleImageGif)
             xAccount.setDateAccountCreated(r.dateCreate)
 
             status = r.status

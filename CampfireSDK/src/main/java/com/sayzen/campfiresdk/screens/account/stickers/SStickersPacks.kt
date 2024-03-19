@@ -4,6 +4,7 @@ import android.view.View
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.stickers.PublicationStickersPack
 import com.dzen.campfire.api.requests.stickers.RStickersPacksGetAllByAccount
 import com.sayzen.campfiresdk.R
@@ -13,6 +14,8 @@ import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.stickers.CardStickersPack
 import com.sayzen.campfiresdk.models.events.stickers.EventStickersPackCollectionChanged
 import com.sayzen.campfiresdk.models.events.stickers.EventStickersPackCreate
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.screens.SLoadingRecycler
@@ -34,7 +37,7 @@ class SStickersPacks(
 
         setTitle(t(API_TRANSLATE.app_stickers))
         setTextEmpty(t(API_TRANSLATE.stickers_packs_empty))
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_4)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_4))
         if (accountId == ControllerApi.account.getId()) {
             if (ControllerApi.can(API.LVL_CREATE_STICKERS)) {
                 addToolbarIcon(R.drawable.ic_add_white_24dp) {

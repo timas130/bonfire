@@ -17,19 +17,19 @@ use axum::response::IntoResponse;
 use axum::routing::get;
 use axum::{response, Extension, Router};
 use axum_client_ip::XForwardedFor;
+use axum_extra::headers::authorization::Bearer;
+use axum_extra::headers::{Authorization, UserAgent};
+use axum_extra::TypedHeader;
+use c_core::prelude::tokio::net::TcpListener;
 use c_core::prelude::{anyhow, tokio};
 use c_core::ServiceBase;
 use sentry_tower::{NewSentryLayer, SentryHttpLayer};
 use std::net::SocketAddr;
-use axum_extra::headers::{Authorization, UserAgent};
-use axum_extra::headers::authorization::Bearer;
-use axum_extra::TypedHeader;
 use tower_http::cors::CorsLayer;
 use tracing_subscriber::filter::LevelFilter;
 use tracing_subscriber::fmt::format::FmtSpan;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
-use c_core::prelude::tokio::net::TcpListener;
 
 type BSchema = Schema<schema::Query, schema::Mutation, EmptySubscription>;
 
@@ -113,7 +113,11 @@ async fn main() -> anyhow::Result<()> {
         .layer(Extension(schema));
 
     let listener = TcpListener::bind("0.0.0.0:8000").await?;
-    axum::serve(listener, app.into_make_service_with_connect_info::<SocketAddr>()).await?;
+    axum::serve(
+        listener,
+        app.into_make_service_with_connect_info::<SocketAddr>(),
+    )
+    .await?;
 
     Ok(())
 }

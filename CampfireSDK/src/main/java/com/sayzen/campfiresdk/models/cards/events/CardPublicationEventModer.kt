@@ -5,11 +5,10 @@ import android.widget.TextView
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.events_moderators.PublicationEventModer
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.CardPublication
-import com.sup.dev.android.tools.ToolsResources
+import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sup.dev.android.views.views.ViewAvatar
 import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.java.tools.ToolsDate
@@ -24,7 +23,7 @@ class CardPublicationEventModer(
         val e = publication.event!!
         xAccount = XAccount().setId(e.ownerAccountId)
                 .setName(e.ownerAccountName)
-                .setImageId(e.ownerAccountImageId)
+                .setImage(e.ownerAccountImage)
                 .setOnChanged { update() }
     }
 

@@ -53,14 +53,10 @@ class EAccountsChangeAvatar : RAccountsChangeAvatar(null) {
         val v = ControllerAccounts.get(apiAccount.id, TAccounts.img_id)
 
         val imgId = v.next<Long>()
-        if (imgId == 0L) {
-            val newId = ControllerResources.put(image!!, API.RESOURCES_PUBLICATION_DATABASE_LINKED)
-            Database.update("EAccountsChangeAvatar update", SqlQueryUpdate(TAccounts.NAME)
-                .update(TAccounts.img_id, newId)
-                .where(TAccounts.id, "=", apiAccount.id))
-        } else {
-            ControllerResources.replace(imgId, image!!, API.RESOURCES_PUBLICATION_DATABASE_LINKED)
-        }
+
+        Database.update("EAccountsChangeAvatar update", SqlQueryUpdate(TAccounts.NAME)
+            .update(TAccounts.img_id, ControllerResources.removeAndPut(imgId, image!!, API.RESOURCES_PUBLICATION_DATABASE_LINKED))
+            .where(TAccounts.id, "=", apiAccount.id))
 
         return Response()
     }

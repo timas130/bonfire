@@ -4,6 +4,7 @@ import android.view.View
 import com.dzen.campfire.R
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.account.AccountSettings
+import com.dzen.campfire.api.models.images.ImageRef
 import com.sayzen.campfiresdk.controllers.ControllerHoliday
 import com.sayzen.campfiresdk.controllers.ControllerScreenAnimations
 import com.sayzen.campfiresdk.controllers.ControllerSettings
@@ -107,7 +108,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
 
         vChatBackground.setOnClickListener {
             ControllerSettings.fandomBackground = vChatBackground.isChecked()
-            EventBus.post(EventFandomBackgroundImageChangedModeration(0, 0, 0))
+            EventBus.post(EventFandomBackgroundImageChangedModeration(0, 0, ImageRef()))
         }
 
         vRoundingChat.setMaxProgress(28)

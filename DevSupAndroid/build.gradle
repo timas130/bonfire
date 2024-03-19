@@ -29,8 +29,10 @@ dependencies {
     api 'io.github.waynejo:androidndkgif:0.3.4'
     api "androidx.media:media:1.7.0"
     api 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 
     api project(':DevSupJava')
+    api project(':BonfireNetworking')
 }
 
 tasks.withType(KotlinCompile).configureEach {

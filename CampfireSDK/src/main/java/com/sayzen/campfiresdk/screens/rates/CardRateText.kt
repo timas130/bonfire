@@ -2,12 +2,13 @@ package com.sayzen.campfiresdk.screens.rates
 
 import android.view.View
 import android.widget.TextView
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.Rate
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.support.adapters.XAccount
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.cards.CardAvatar
@@ -23,7 +24,7 @@ class CardRateText(
     private val xAccount = XAccount().setAccount(rate.account).setOnChanged { update() }
 
     init {
-        if(rate.account.id < 1) xAccount.setImageId(API_RESOURCES.CAMPFIRE_IMAGE_4)
+        if(rate.account.id < 1) xAccount.setImage(ApiResources.CAMPFIRE_IMAGE_4)
     }
 
     override fun bindView(view: View) {
@@ -54,6 +55,6 @@ class CardRateText(
     }
 
     override fun notifyItem() {
-        ImageLoader.load(xAccount.getImageId()).intoCash()
+        ImageLoader.load(xAccount.getImage()).intoCash()
     }
 }

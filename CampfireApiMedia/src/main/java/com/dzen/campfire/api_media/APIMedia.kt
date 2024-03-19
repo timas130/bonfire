@@ -3,6 +3,7 @@ package com.dzen.campfire.api_media
 import com.dzen.campfire.api.tools.client.ApiClient
 import com.dzen.campfire.api.tools.client.TokenProvider
 
+@Deprecated("use ImageRefs")
 class APIMedia(
     projectKey: String,
     tokenProvider: TokenProvider,

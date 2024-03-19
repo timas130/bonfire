@@ -31,7 +31,7 @@ class CardPublicationEventAdmin(
         val e = publication.event!!
         xAccount = XAccount().setId(e.ownerAccountId)
                 .setName(e.ownerAccountName)
-                .setImageId(e.ownerAccountImageId)
+                .setImage(e.ownerAccountImage)
                 .setOnChanged { update() }
     }
 

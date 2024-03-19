@@ -1,6 +1,9 @@
 package com.dzen.campfire.api.models.notifications
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.notifications.account.*
 import com.dzen.campfire.api.models.notifications.activities.NotificationActivitiesNewPost
 import com.dzen.campfire.api.models.notifications.activities.NotificationActivitiesRelayRaceLost
@@ -22,8 +25,7 @@ import com.dzen.campfire.api.models.notifications.translates.NotificationTransla
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonPolimorf
 
-abstract class Notification : JsonPolimorf {
-
+abstract class Notification : JsonPolimorf, ImageHolder {
     companion object {
 
         private val J_N_TYPE = "J_N_TYPE"
@@ -107,6 +109,8 @@ abstract class Notification : JsonPolimorf {
     var id = 0L
     var status = 0L
     var dateCreate = 0L
+    var image = ImageRef()
+    @Deprecated("use ImageRefs")
     var imageId = 0L
     var randomCode = 0L
 
@@ -118,20 +122,13 @@ abstract class Notification : JsonPolimorf {
         this.imageId = imageId
     }
 
-    fun getResourcesList(): ArrayList<Long> {
-        val list = ArrayList<Long>()
-        if (imageId != 0L) list.add(imageId)
-        fillResourcesList(list)
-        return list
-    }
-
     abstract fun fillResourcesList(list: ArrayList<Long>)
 
     override fun json(inp: Boolean, json: Json): Json {
-
         id = json.m(inp, "J_N_ID", id)
         status = json.m(inp, "status", status)
         dateCreate = json.m(inp, "J_N_DATE_CREATE", dateCreate)
+        image = json.m(inp, "image", image)
         imageId = json.m(inp, "J_N_IMAGE_ID", imageId)
         randomCode = json.m(inp, "randomCode", randomCode)
 
@@ -140,10 +137,13 @@ abstract class Notification : JsonPolimorf {
         return json
     }
 
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        receiver.add(image, imageId)
+    }
+
     abstract fun getType(): Long
 
     abstract fun isShadow(): Boolean
 
     abstract fun isNeedForcePush(): Boolean
-
 }

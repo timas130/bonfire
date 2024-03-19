@@ -7,8 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.models.publications.post.PublicationPost
@@ -26,8 +26,9 @@ import com.sayzen.campfiresdk.models.splashs.SplashAdminBlock
 import com.sayzen.campfiresdk.screens.administation.SAdministrationDeepBlocked
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.adapters.XAccount
+import com.sayzen.campfiresdk.support.clear
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
-import com.sup.dev.android.libs.image_loader.ImageLoaderId
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -80,7 +81,7 @@ class SProfile private constructor(
                     null,
                     t(API_TRANSLATE.profile_anonymous_text),
                     t(API_TRANSLATE.app_back), null)
-            screen.setImage(ImageLoaderId(API_RESOURCES.IMAGE_BACKGROUND_23).noHolder().noFade())
+            screen.setImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_23).noHolder().noFade())
             screen.onAction = { Navigator.remove(screen) }
             screen.isNavigationAllowed = false
             screen.isNavigationAnimation = false
@@ -124,19 +125,19 @@ class SProfile private constructor(
 
         vImage.setOnClickListener {
             if (ControllerApi.isCurrentAccount(xAccount.getId()) && ControllerApi.can(API.LVL_CAN_CHANGE_PROFILE_IMAGE)) onChangeTitleImageClicked()
-            else if (xAccount.getTitleImageGifId() > 0) Navigator.to(SImageView(ImageLoader.load(xAccount.getTitleImageGifId())))
-            else Navigator.to(SImageView(ImageLoader.load(xAccount.getTitleImageId())))
+            else if (xAccount.getTitleImageGif().isNotEmpty()) Navigator.to(SImageView(ImageLoader.load(xAccount.getTitleImageGif())))
+            else Navigator.to(SImageView(ImageLoader.load(xAccount.getTitleImage())))
         }
         vImage.setOnLongClickListener {
-            if (xAccount.getTitleImageGifId() > 0) Navigator.to(SImageView(ImageLoader.load(xAccount.getTitleImageGifId())))
-            else Navigator.to(SImageView(ImageLoader.load(xAccount.getTitleImageId())))
+            if (xAccount.getTitleImageGif().isNotEmpty()) Navigator.to(SImageView(ImageLoader.load(xAccount.getTitleImageGif())))
+            else Navigator.to(SImageView(ImageLoader.load(xAccount.getTitleImage())))
             true
         }
 
         if (ControllerSettings.styleNewYearProfileAnimation) {
             val holidayImage = ControllerHoliday.getProfileBackgroundImage()
             if (holidayImage != null) {
-                ImageLoaderId(holidayImage).into(vImageHoliday)
+                ImageLoader.load(holidayImage).into(vImageHoliday)
             }
         }
 
@@ -147,23 +148,23 @@ class SProfile private constructor(
 
         adapter = RecyclerCardAdapterLoading<CardPublication, Publication>(CardPublication::class) { publication -> CardPublication.instance(publication, vRecycler, true, isShowFullInfo = true) }
                 .setBottomLoader { onLoad, cards ->
-                    val r = RPublicationsGetAll()
+                    val req = RPublicationsGetAll()
                             .setAccountId(xAccount.getId())
                             .setOffset(cards.size)
                     if (cardFilters.fandomId > 0) {
-                        r.setPublicationTypes(API.PUBLICATION_TYPE_POST)
-                        r.setFandomId(cardFilters.fandomId)
-                        r.setLanguageId(cardFilters.fandomLanguageId)
+                        req.setPublicationTypes(API.PUBLICATION_TYPE_POST)
+                        req.setFandomId(cardFilters.fandomId)
+                        req.setLanguageId(cardFilters.fandomLanguageId)
                     } else {
-                        r.setPublicationTypes(ControllerSettings.getProfileFilters())
+                        req.setPublicationTypes(ControllerSettings.getProfileFilters())
                     }
-                    r.tokenRequired = true
-                    r.onComplete { r ->
-                        onLoad.invoke(r.publications)
+                    req.tokenRequired = true
+                    req.onComplete { resp ->
+                        onLoad.invoke(resp.publications)
                         afterPackLoaded()
                     }
-                    r.onNetworkError { onLoad.invoke(null) }
-                    r.send(api)
+                    req.onNetworkError { onLoad.invoke(null) }
+                    req.send(api)
                 }
                 .setRetryMessage(t(API_TRANSLATE.error_network), t(API_TRANSLATE.app_retry))
                 .setNotifyCount(5)
@@ -184,8 +185,8 @@ class SProfile private constructor(
         adapter.add(cardFilters)
         adapter.loadBottom()
 
-        ImageLoaderId(xAccount.getImageId()).noLoadFromCash().intoBitmap {
-            EventBus.post(EventAccountChanged(xAccount.getId(), xAccount.getName(), xAccount.getImageId()))
+        ImageLoader.load(xAccount.getImage()).noLoadFromCash().intoBitmap {
+            EventBus.post(EventAccountChanged(xAccount.getId(), xAccount.getName(), xAccount.getImage()))
         }
 
         update()
@@ -203,8 +204,8 @@ class SProfile private constructor(
     private fun load() {
         ApiRequestsSupporter.executeWithRetry(RAccountsGetProfile(xAccount.getId(), "")) { r ->
             setPinnedPost(r.pinnedPost)
-            xAccount.setTitleImageId(r.titleImageId)
-            xAccount.setTitleImageGifId(r.titleImageGifId)
+            xAccount.setTitleImage(r.titleImage)
+            xAccount.setTitleImageGif(r.titleImageGif)
             xAccount.setDateAccountCreated(r.dateCreate)
             updateTitleImage()
 
@@ -306,8 +307,8 @@ class SProfile private constructor(
                 .setOnCancel(t(API_TRANSLATE.app_cancel))
                 .setMin(0)
                 .setMax(API.REPORT_COMMENT_L)
-                .setOnEnter(t(API_TRANSLATE.app_report)) { w, comment ->
-                    ApiRequestsSupporter.executeProgressDialog(RAccountsReport(xAccount.getId(), comment)) { r ->
+                .setOnEnter(t(API_TRANSLATE.app_report)) { _, comment ->
+                    ApiRequestsSupporter.executeProgressDialog(RAccountsReport(xAccount.getId(), comment)) { _ ->
                         ToolsToast.show(t(API_TRANSLATE.profile_report_reported))
                     }
                             .onApiError(RAccountsReport.E_EXIST) { ToolsToast.show(t(API_TRANSLATE.profile_report_already_exist)) }
@@ -370,9 +371,9 @@ class SProfile private constructor(
 
     private fun changeTitleImageNow(d: SplashProgressTransparent, bytes: ByteArray, bytesGif: ByteArray?) {
         ApiRequestsSupporter.executeProgressDialog(d, RAccountsChangeTitleImage(bytes, bytesGif)) { r ->
-            ImageLoader.clear(xAccount.getTitleImageId())
-            ImageLoader.clear(xAccount.getTitleImageGifId())
-            EventBus.post(EventAccountChanged(xAccount.getId(), xAccount.getName(), xAccount.getImageId(), r.imageId, r.imageGifId))
+            ImageLoader.clear(xAccount.getTitleImage())
+            ImageLoader.clear(xAccount.getTitleImageGif())
+            EventBus.post(EventAccountChanged(xAccount.getId(), xAccount.getName(), xAccount.getImage(), r.image, r.imageGif))
         }
     }
 
@@ -385,8 +386,8 @@ class SProfile private constructor(
                 .setOnEnter(t(API_TRANSLATE.app_remove)) { w, comment ->
                     ApiRequestsSupporter.executeEnabled(w, RAccountsRemoveAvatar(xAccount.getId(), comment)) {
                         ToolsToast.show(t(API_TRANSLATE.app_done))
-                        ImageLoader.clear(xAccount.getImageId())
-                        EventBus.post(EventAccountChanged(xAccount.getId(), xAccount.getName(), xAccount.getImageId()))
+                        ImageLoader.clear(xAccount.getImage())
+                        EventBus.post(EventAccountChanged(xAccount.getId(), xAccount.getName(), xAccount.getImage()))
                     }
                 }
                 .asSheetShow()
@@ -401,7 +402,7 @@ class SProfile private constructor(
                 .setOnEnter(t(API_TRANSLATE.app_remove)) { w, comment ->
                     ApiRequestsSupporter.executeEnabled(w, RAccountsRemoveName(xAccount.getId(), comment)) {
                         ToolsToast.show(t(API_TRANSLATE.app_done))
-                        EventBus.post(EventAccountChanged(xAccount.getId(), "User#" + xAccount.getId(), xAccount.getImageId(), 0, 0))
+                        EventBus.post(EventAccountChanged(xAccount.getId(), "User#" + xAccount.getId(), xAccount.getImage()))
                     }
                 }
                 .asSheetShow()
@@ -444,7 +445,7 @@ class SProfile private constructor(
                 .setOnEnter(t(API_TRANSLATE.app_remove)) { w, comment ->
                     ApiRequestsSupporter.executeEnabled(w, RAccountsRemoveTitleImage(xAccount.getId(), comment)) {
                         ToolsToast.show(t(API_TRANSLATE.app_done))
-                        EventBus.post(EventAccountChanged(xAccount.getId(), xAccount.getName(), xAccount.getImageId(), 0, 0))
+                        EventBus.post(EventAccountChanged(xAccount.getId(), xAccount.getName(), xAccount.getImage()))
                     }
                 }
                 .asSheetShow()

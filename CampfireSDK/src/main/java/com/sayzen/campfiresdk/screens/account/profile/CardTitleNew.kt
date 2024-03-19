@@ -4,14 +4,15 @@ import android.view.View
 import android.widget.TextView
 import com.dzen.campfire.api.API_TRANSLATE
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.controllers.tCap
 import com.sayzen.campfiresdk.controllers.tPlural
+import com.sayzen.campfiresdk.support.adapters.XAccount
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.*
+import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.screens.SImageView
 import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.java.tools.ToolsDate
@@ -27,10 +28,10 @@ class CardTitleNew(
         xAccount.setView(vAvatar)
 
         vAvatar.vAvatar.setOnClickListener {
-            Navigator.to(SImageView(ImageLoader.load(xAccount.getImageId())))
+            Navigator.to(SImageView(ImageLoader.load(xAccount.getImage())))
         }
         vAvatar.vAvatar.setOnLongClickListener {
-            Navigator.to(SImageView(ImageLoader.load(xAccount.getImageId())))
+            Navigator.to(SImageView(ImageLoader.load(xAccount.getImage())))
             true
         }
         vAvatar.setOnClickListener {}

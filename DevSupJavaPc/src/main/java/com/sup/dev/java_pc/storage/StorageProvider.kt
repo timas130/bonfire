@@ -6,4 +6,6 @@ interface StorageProvider {
     fun get(id: Long): ByteArray?
 
     fun delete(id: Long)
+
+    fun getPublicUrl(id: Long): String
 }

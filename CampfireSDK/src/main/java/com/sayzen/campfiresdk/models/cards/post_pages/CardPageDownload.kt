@@ -7,11 +7,14 @@ import android.widget.TextView
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.PagesContainer
 import com.dzen.campfire.api.models.publications.post.PageDownload
-import com.dzen.campfire.api_media.requests.RResourcesGet
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.controllers.apiMedia
 import com.sayzen.campfiresdk.controllers.t
-import com.sup.dev.android.tools.*
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
+import com.sup.dev.android.tools.ToolsFilesAndroid
+import com.sup.dev.android.tools.ToolsPermission
+import com.sup.dev.android.tools.ToolsToast
+import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
@@ -57,24 +60,26 @@ class CardPageDownload(
                 .setTitleImage(R.drawable.ic_security_white_48dp)
                 .setTitleImageBackgroundRes(R.color.blue_700)
                 .setOnEnter(t(API_TRANSLATE.app_download)) {
-
                     val dProgress = ToolsView.showProgressDialog(t(API_TRANSLATE.app_downloading))
-                    RResourcesGet(page.resourceId)
-                            .onComplete { r ->
-                                ToolsPermission.requestWritePermission {
-                                    val dProgress2 = ToolsView.showProgressDialog(t(API_TRANSLATE.app_downloading))
-                                    ToolsThreads.thread {
-                                        ToolsFilesAndroid.unpackZip(page.patch, r.bytes)
-                                        ToolsThreads.main {
-                                            dProgress2.hide()
-                                            dProgress.hide()    //  Почему-то не скрывается в onFinish
-                                            ToolsToast.show(t(API_TRANSLATE.app_done))
-                                        }
-                                    }
+                    ImageLoader.load(page.resource).intoBytes { bytes ->
+                        dProgress.hide()
+                        if (bytes == null) {
+                            ToolsToast.show(t(API_TRANSLATE.error_network))
+                            return@intoBytes
+                        }
+
+                        ToolsPermission.requestWritePermission {
+                            val dProgress2 = ToolsView.showProgressDialog(t(API_TRANSLATE.app_downloading))
+                            ToolsThreads.thread {
+                                ToolsFilesAndroid.unpackZip(page.patch, bytes)
+                                ToolsThreads.main {
+                                    dProgress2.hide()
+                                    dProgress.hide()
+                                    ToolsToast.show(t(API_TRANSLATE.app_done))
                                 }
                             }
-                            .onFinish { dProgress.hide() }
-                            .send(apiMedia)
+                        }
+                    }
                 }
                 .asSheetShow()
 

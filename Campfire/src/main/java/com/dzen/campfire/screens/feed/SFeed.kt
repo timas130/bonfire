@@ -18,6 +18,7 @@ import com.sayzen.campfiresdk.screens.fandoms.CardStoryQuest
 import com.sayzen.campfiresdk.screens.fandoms.CardUpdate
 import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
 import com.sayzen.campfiresdk.screens.post.create.SPostCreate
+import com.sayzen.campfiresdk.support.load
 import com.sayzen.devsupandroidgoogle.ControllerFirebaseAnalytics
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
@@ -91,7 +92,7 @@ class SFeed : Screen(R.layout.screen_feed), PostList {
         findViewById<View>(R.id.vFab).setOnClickListener {
             ControllerFirebaseAnalytics.post("Screen_Feed", "CreateDraft")
             SFandomsSearch.instance(Navigator.TO, false) { fandom ->
-                SPostCreate.instance(fandom.id, fandom.languageId, fandom.name, fandom.imageId, SPostCreate.PostParams(), Navigator.REPLACE)
+                SPostCreate.instance(fandom.id, fandom.languageId, fandom.name, fandom.image, SPostCreate.PostParams(), Navigator.REPLACE)
             }
         }
         findViewById<View>(R.id.vFab).setOnLongClickListener {

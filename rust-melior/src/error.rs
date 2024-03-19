@@ -17,16 +17,39 @@ pub enum RespError {
     OutOfSync,
     #[error("InvalidId: This ID is invalid")]
     InvalidId,
+
+    // image upload
+    #[error("MultipartError: Failed to upload file")]
+    MultipartError,
+    #[error("InvalidByteSize: This image is too big (or small) to process")]
+    InvalidByteSize,
+    #[error("InvalidFormat: Failed to detect image format")]
+    InvalidFormat,
+    #[error("IncorrectFormat: The image uses a format unsupported by this use case")]
+    IncorrectFormat,
+    #[error("ImageCorrupt: The image is corrupted and cannot be used")]
+    ImageCorrupt,
+    #[error("InvalidImageSize: This image is too big")]
+    InvalidImageSize,
+    #[error("InvalidAspectRatio: You need a different aspect ratio for this use case")]
+    InvalidAspectRatio,
+    #[error("TempImageNotFound: This image doesn't exist")]
+    TempImageNotFound,
+    #[error("IncorrectUploadType: Provided upload type doesn't match expected")]
+    IncorrectUploadType,
+
     #[error("{0}")]
     Auth(#[from] AuthError),
     #[error("{0}")]
     Email(#[from] EmailError),
     #[error("{0}")]
     Level(#[from] LevelError),
-    #[error("Rpc: An unknown error has occurred")]
+    #[error("Rpc: An unknown error has occurred: {0}")]
     Rpc(#[from] Arc<RpcError>),
-    #[error("Anyhow: An unknown error has occurred")]
+    #[error("Anyhow: An unknown error has occurred: {0}")]
     Anyhow(#[from] Arc<anyhow::Error>),
+    #[error("Sqlx: Error communicating with the database")]
+    Sqlx(#[from] Arc<sqlx::Error>),
 }
 
 impl From<RpcError> for RespError {
@@ -38,6 +61,12 @@ impl From<RpcError> for RespError {
 impl From<anyhow::Error> for RespError {
     fn from(value: Error) -> Self {
         Self::Anyhow(Arc::new(value))
+    }
+}
+
+impl From<sqlx::Error> for RespError {
+    fn from(value: sqlx::Error) -> Self {
+        Self::Sqlx(Arc::new(value))
     }
 }
 

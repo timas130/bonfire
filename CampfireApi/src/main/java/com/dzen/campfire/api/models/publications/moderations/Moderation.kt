@@ -1,6 +1,8 @@
 package com.dzen.campfire.api.models.publications.moderations
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.moderations.activities.ModerationActivitiesChange
 import com.dzen.campfire.api.models.publications.moderations.activities.ModerationActivitiesCreate
 import com.dzen.campfire.api.models.publications.moderations.activities.ModerationActivitiesRemove
@@ -17,7 +19,7 @@ import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonPolimorf
 
 
-abstract class Moderation : JsonPolimorf {
+abstract class Moderation : JsonPolimorf, ImageHolder {
 
     var comment: String = ""
 
@@ -27,9 +29,11 @@ abstract class Moderation : JsonPolimorf {
         return json
     }
 
-    constructor() {
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
 
     }
+
+    constructor()
 
     constructor(comment: String) {
         this.comment = comment

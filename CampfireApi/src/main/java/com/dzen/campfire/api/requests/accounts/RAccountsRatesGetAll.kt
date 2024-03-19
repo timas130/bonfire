@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.accounts
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.Rate
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -42,6 +43,11 @@ open class RAccountsRatesGetAll(
             rates = json.m(inp, "rates", rates, Array<Rate>::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (rate in rates) {
+                rate.fillImageRefs(receiver)
+            }
+        }
     }
 
 

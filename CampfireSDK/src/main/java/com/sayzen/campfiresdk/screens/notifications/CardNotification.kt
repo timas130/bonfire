@@ -25,6 +25,7 @@ import com.sayzen.campfiresdk.models.events.notifications.EventNotificationsCoun
 import com.sayzen.campfiresdk.screens.account.profile.SProfile
 import com.sayzen.campfiresdk.screens.achievements.SAchievements
 import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsView
@@ -97,7 +98,7 @@ class CardNotification(
 
         val parser = ControllerNotifications.parser(notification)
         val title = parser.getTitle()
-        val imageId = parser.getImageId()
+        val image = parser.getImage()
         if (title.isNotEmpty()) {
             vAvatar.setTitle(title)
             vAvatar.vSubtitle.text = ControllerNotifications.parser(notification).asString(true)
@@ -111,8 +112,8 @@ class CardNotification(
         ControllerLinks.makeLinkable(vAvatar.vTitle)
         ControllerLinks.makeLinkable(vAvatar.vSubtitle)
 
-        if (imageId > 0)
-            ImageLoader.load(imageId).into(vAvatar.vAvatar.vImageView)
+        if (image.isNotEmpty())
+            ImageLoader.load(image).into(vAvatar.vAvatar.vImageView)
         else
             vAvatar.vAvatar.setImage(R.drawable.logo_campfire_128x128)
 
@@ -125,6 +126,6 @@ class CardNotification(
     }
 
     override fun notifyItem() {
-        if (notification.imageId > 0) ImageLoader.load(notification.imageId).intoCash()
+        if (notification.image.isNotEmpty()) ImageLoader.load(notification.image).intoCash()
     }
 }

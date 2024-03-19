@@ -8,8 +8,6 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.activities.UserActivity
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.support.adapters.XAccount
-import com.sayzen.campfiresdk.support.adapters.XFandom
 import com.sayzen.campfiresdk.controllers.ControllerActivities
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.t
@@ -20,6 +18,8 @@ import com.sayzen.campfiresdk.models.events.activities.EventActivitiesRemove
 import com.sayzen.campfiresdk.screens.activities.user_activities.relay_race.SRelayRaceInfo
 import com.sayzen.campfiresdk.screens.post.create.SPostCreate
 import com.sayzen.campfiresdk.screens.post.create.SplashTagsRelayRaceNextUser
+import com.sayzen.campfiresdk.support.adapters.XAccount
+import com.sayzen.campfiresdk.support.adapters.XFandom
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.cards.Card
@@ -140,7 +140,7 @@ class CardUserActivity(
 
     private fun toPostCreate() {
         SplashTagsRelayRaceNextUser(userActivity.id) {
-            SPostCreate.instance(userActivity.fandom.id, userActivity.fandom.languageId, userActivity.fandom.name, userActivity.fandom.imageId, SPostCreate.PostParams().setActivity(userActivity).setNextRelayRaceUserId(it), Navigator.TO)
+            SPostCreate.instance(userActivity.fandom.id, userActivity.fandom.languageId, userActivity.fandom.name, userActivity.fandom.image, SPostCreate.PostParams().setActivity(userActivity).setNextRelayRaceUserId(it), Navigator.TO)
         }
                 .asSheetShow()
     }

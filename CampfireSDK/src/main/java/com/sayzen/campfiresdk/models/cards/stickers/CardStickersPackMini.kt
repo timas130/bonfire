@@ -13,8 +13,9 @@ import com.sayzen.campfiresdk.models.cards.CardPublication
 import com.sayzen.campfiresdk.models.events.stickers.EventStickersPackChanged
 import com.sayzen.campfiresdk.screens.account.stickers.SStickersView
 import com.sayzen.campfiresdk.screens.reports.SReports
-import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
+import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.java.libs.eventBus.EventBus
@@ -68,7 +69,7 @@ class CardStickersPackMini(
             vRootContainer.setBackgroundColor(0x00000000)
         }
 
-        ImageLoader.load(publication.imageId).into(vImage)
+        ImageLoader.load(publication.image).into(vImage)
     }
 
     override fun updateAccount() {
@@ -100,7 +101,7 @@ class CardStickersPackMini(
 
     override fun notifyItem() {
         val publication = xPublication.publication as PublicationStickersPack
-        ImageLoader.load(publication.imageId).intoCash()
+        ImageLoader.load(publication.image).intoCash()
     }
 
 }

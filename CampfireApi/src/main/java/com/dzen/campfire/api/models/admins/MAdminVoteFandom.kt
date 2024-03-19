@@ -2,6 +2,7 @@ package com.dzen.campfire.api.models.admins
 
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.fandoms.Fandom
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.sup.dev.java.libs.json.Json
 
 abstract class MAdminVoteFandom : MAdminVote {
@@ -25,4 +26,8 @@ abstract class MAdminVoteFandom : MAdminVote {
         return super.json(inp, json)
     }
 
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        super.fillImageRefs(receiver)
+        targetFandom.fillImageRefs(receiver)
+    }
 }

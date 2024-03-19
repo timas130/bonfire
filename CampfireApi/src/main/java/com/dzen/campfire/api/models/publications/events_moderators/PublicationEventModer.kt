@@ -1,11 +1,11 @@
 package com.dzen.campfire.api.models.publications.events_moderators
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.Publication
 import com.sup.dev.java.libs.json.Json
 
 class PublicationEventModer : Publication {
-
     var event: ApiEventModer? = null
 
     override fun getPublicationTypeConst() = API.PUBLICATION_TYPE_EVENT_MODER
@@ -29,6 +29,8 @@ class PublicationEventModer : Publication {
         if(event != null) event!!.fillResourcesList(list)
     }
 
-
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        super.fillImageRefs(receiver)
+        event?.fillImageRefs(receiver)
+    }
 }
-

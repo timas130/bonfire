@@ -4,8 +4,9 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
+import com.dzen.campfire.api.models.images.ImageRef
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
 import com.sup.dev.android.libs.screens.Screen
@@ -21,17 +22,29 @@ class SGallery : Screen(R.layout.screen_other_gallery) {
 
     private val adapter = RecyclerCardAdapter()
 
-    private val array_bg = cardsOf(API_RESOURCES.ARRAY_BACKGROUND)
-    private val array_newYear = cardsOf(API_RESOURCES.ARRAY_NEW_YEAR)
-    private val array_achi = cardsOf(API_RESOURCES.ARRAY_ACHI)
-    private val array_level = cardsOf(API_RESOURCES.ARRAY_BACKGROUND_LEVEL)
-    private val array_emoji = cardsOf(API_RESOURCES.ARRAY_EMOJI)
-    private val array_other = cardsOf(ToolsCollections.merge(API_RESOURCES.ARRAY_CAMPFIRE_IMAGE, API_RESOURCES.ARRAY_AVATAR))
-    private val array_flags = cardsOf(API_RESOURCES.ARRAY_FLAG)
-    private val array_icons = cardsOf(API_RESOURCES.ARRAY_ICON)
-    private val array_developers = cardsOf(API_RESOURCES.ARRAY_DEVELOPER)
-    private val array_newyearQuest = cardsOf(API_RESOURCES.ARRAY_QUEST_NEW_YEAR)
-    private val array_all = arrayOf(*array_bg, *array_level, *array_achi, *array_newYear, *array_emoji, *array_other, *array_flags, *array_icons, *array_developers, *array_newyearQuest)
+    private val array_bg = cardsOf(ApiResources.ARRAY_BACKGROUND)
+    private val array_newYear = cardsOf(ApiResources.ARRAY_NEW_YEAR)
+    private val array_achi = cardsOf(ApiResources.ARRAY_ACHI)
+    private val array_level = cardsOf(ApiResources.ARRAY_BACKGROUND_LEVEL)
+    private val array_emoji = cardsOf(ApiResources.ARRAY_EMOJI)
+    private val array_other =
+        cardsOf(ToolsCollections.merge(ApiResources.ARRAY_CAMPFIRE_IMAGE, ApiResources.ARRAY_AVATAR))
+    private val array_flags = cardsOf(ApiResources.ARRAY_FLAG)
+    private val array_icons = cardsOf(ApiResources.ARRAY_ICON)
+    private val array_developers = cardsOf(ApiResources.ARRAY_DEVELOPER)
+    private val array_newyearQuest = cardsOf(ApiResources.ARRAY_QUEST_NEW_YEAR)
+    private val array_all = arrayOf(
+        *array_bg,
+        *array_level,
+        *array_achi,
+        *array_newYear,
+        *array_emoji,
+        *array_other,
+        *array_flags,
+        *array_icons,
+        *array_developers,
+        *array_newyearQuest
+    )
 
     init {
         disableNavigation()
@@ -45,7 +58,7 @@ class SGallery : Screen(R.layout.screen_other_gallery) {
         vRecycler.layoutManager = LinearLayoutManager(context)
         vRecycler.adapter = adapter
 
-        fill(t(API_TRANSLATE.gallery_achi_title),t(API_TRANSLATE.gallery_achi_text), array_achi, 5)
+        fill(t(API_TRANSLATE.gallery_achi_title), t(API_TRANSLATE.gallery_achi_text), array_achi, 5)
         fill(t(API_TRANSLATE.gallery_level_title), t(API_TRANSLATE.gallery_level_text), array_level, 3)
         fill(t(API_TRANSLATE.gallery_bg_title), t(API_TRANSLATE.gallery_bg_title), array_bg, 3)
         fill(t(API_TRANSLATE.gallery_emoji_title), t(API_TRANSLATE.gallery_emoji_text), array_emoji, 7)
@@ -58,41 +71,42 @@ class SGallery : Screen(R.layout.screen_other_gallery) {
     }
 
     private fun fill(title: String, text: String, array: Array<CardImage>, count: Int) {
-        adapter.add(CardTitle(title,text))
+        adapter.add(CardTitle(title, text))
         for (i in array.indices step count) adapter.add(CardContainer(this, i, array, count))
     }
 
     fun getAllImages() = array_all
 
-    private fun cardsOf(array: Array<Long>) = Array(array.size) { CardImage(this, array[it], getLabel(array[it])) }
+    private fun cardsOf(array: Array<ImageRef>) = Array(array.size) {
+        CardImage(this, array[it], getLabel(array[it]))
+    }
 
-    private fun getLabel(imageId: Long): String? {
-
-        if (imageId == API_RESOURCES.IMAGE_BACKGROUND_26
-                || imageId == API_RESOURCES.IMAGE_BACKGROUND_23
-                || imageId == API_RESOURCES.CAMPFIRE_IMAGE_4
-                || imageId == API_RESOURCES.IMAGE_BACKGROUND_27
-                || imageId == API_RESOURCES.IMAGE_BACKGROUND_28
-                || imageId == API_RESOURCES.IMAGE_BACKGROUND_29
-                || imageId == API_RESOURCES.IMAGE_BACKGROUND_30
-                || imageId == API_RESOURCES.AVATAR_1
-                || imageId == API_RESOURCES.AVATAR_2
-                || imageId == API_RESOURCES.AVATAR_3
-                || imageId == API_RESOURCES.AVATAR_4
-                || imageId == API_RESOURCES.AVATAR_5
-                || imageId == API_RESOURCES.AVATAR_6
-                || imageId == API_RESOURCES.IMAGE_BACKGROUND_LEVEL_16
-                || imageId == API_RESOURCES.IMAGE_BACKGROUND_LEVEL_17
-                || imageId == API_RESOURCES.IMAGE_BACKGROUND_LEVEL_18
-                || imageId == API_RESOURCES.IMAGE_BACKGROUND_LEVEL_19
-                || imageId == API_RESOURCES.IMAGE_BACKGROUND_LEVEL_20
+    private fun getLabel(image: ImageRef): String? {
+        if (image == ApiResources.IMAGE_BACKGROUND_26
+            || image == ApiResources.IMAGE_BACKGROUND_23
+            || image == ApiResources.CAMPFIRE_IMAGE_4
+            || image == ApiResources.IMAGE_BACKGROUND_27
+            || image == ApiResources.IMAGE_BACKGROUND_28
+            || image == ApiResources.IMAGE_BACKGROUND_29
+            || image == ApiResources.IMAGE_BACKGROUND_30
+            || image == ApiResources.AVATAR_1
+            || image == ApiResources.AVATAR_2
+            || image == ApiResources.AVATAR_3
+            || image == ApiResources.AVATAR_4
+            || image == ApiResources.AVATAR_5
+            || image == ApiResources.AVATAR_6
+            || image == ApiResources.IMAGE_BACKGROUND_LEVEL_16
+            || image == ApiResources.IMAGE_BACKGROUND_LEVEL_17
+            || image == ApiResources.IMAGE_BACKGROUND_LEVEL_18
+            || image == ApiResources.IMAGE_BACKGROUND_LEVEL_19
+            || image == ApiResources.IMAGE_BACKGROUND_LEVEL_20
         ) return "NikiTank"
 
-        if (imageId == API_RESOURCES.DEVELOPER_ZEON) return "Zeon"
-        if (imageId == API_RESOURCES.DEVELOPER_EGOR) return "GeorgePro"
-        if (imageId == API_RESOURCES.DEVELOPER_SAYNOK) return "Saynok"
-        if (imageId == API_RESOURCES.DEVELOPER_TURBO) return "TurboA99"
-        if (imageId == API_RESOURCES.DEVELOPER_ZYMIXX) return "ZYMixx"
+        if (image == ApiResources.DEVELOPER_ZEON) return "Zeon"
+        if (image == ApiResources.DEVELOPER_EGOR) return "GeorgePro"
+        if (image == ApiResources.DEVELOPER_SAYNOK) return "Saynok"
+        if (image == ApiResources.DEVELOPER_TURBO) return "TurboA99"
+        if (image == ApiResources.DEVELOPER_ZYMIXX) return "ZYMixx"
 
         return null;
 

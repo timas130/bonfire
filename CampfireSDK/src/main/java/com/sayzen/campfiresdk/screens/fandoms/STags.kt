@@ -1,6 +1,5 @@
 package com.sayzen.campfiresdk.screens.fandoms
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -8,27 +7,30 @@ import android.widget.TextView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.tags.PublicationTag
 import com.dzen.campfire.api.requests.tags.RTagsGetAll
-import com.sayzen.campfiresdk.screens.fandoms.tags.SplashTagCreate
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.models.events.fandom.EventFandomTagMove
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerPublications
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.models.events.fandom.EventFandomTagMove
 import com.sayzen.campfiresdk.models.objects.TagParent
 import com.sayzen.campfiresdk.models.splashs.SplashCategoryCreate
+import com.sayzen.campfiresdk.screens.fandoms.tags.SplashTagCreate
 import com.sayzen.campfiresdk.screens.post.search.SPostsSearch
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
+import com.sup.dev.android.views.splash.SplashMenu
 import com.sup.dev.android.views.views.ViewChip
 import com.sup.dev.android.views.views.layouts.LayoutFlow
-import com.sup.dev.android.views.splash.SplashMenu
 import com.sup.dev.java.libs.eventBus.EventBus
 
 class STags private constructor(
@@ -75,7 +77,7 @@ class STags private constructor(
         if (tags.isNotEmpty()) vMessageContainer.visibility = View.GONE
         else {
             vMessageContainer.visibility = View.VISIBLE
-            ImageLoader.load(API_RESOURCES.IMAGE_BACKGROUND_11).noHolder().into(vImage)
+            ImageLoader.load(ApiResources.IMAGE_BACKGROUND_11).noHolder().into(vImage)
         }
 
         for (tag in tags) {
@@ -97,9 +99,9 @@ class STags private constructor(
                 v.tag = t.id
                 vFlow.addView(v)
                 ControllerPublications.createTagMenu(v, t, true, tags)
-                if (t.imageId != 0L) {
+                if (t.image.isNotEmpty()) {
                     v.setIcon(R.color.focus)
-                    ImageLoader.load(t.imageId).size(ToolsView.dpToPx(24).toInt(),ToolsView.dpToPx(24).toInt()).intoBitmap { v.setIcon(it) }
+                    ImageLoader.load(t.image).size(ToolsView.dpToPx(24).toInt(),ToolsView.dpToPx(24).toInt()).intoBitmap { v.setIcon(it) }
                 }else{
                     v.setIcon(null)
                 }

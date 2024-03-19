@@ -19,10 +19,7 @@ impl InternalLevelQuery {
     ///
     /// This method is for internal services only
     /// and you morons can't use it.
-    #[graphql(
-        visible = "is_system_caller",
-        guard = "PermissionLevelGuard::new(System)"
-    )]
+    #[graphql(guard = "PermissionLevelGuard::new(System)")]
     async fn internal_recount_level(
         &self,
         ctx: &Context<'_>,

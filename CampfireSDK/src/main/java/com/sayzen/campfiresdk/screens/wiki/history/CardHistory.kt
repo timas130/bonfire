@@ -12,7 +12,6 @@ import com.sayzen.campfiresdk.controllers.tPlural
 import com.sayzen.campfiresdk.screens.wiki.SWikiArticleView
 import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.cards.Card
 import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.java.libs.eventBus.EventBus
@@ -36,7 +35,7 @@ class CardHistory(
     val xAccount = XAccount()
             .setId(pages.creatorId)
             .setName(pages.creatorName)
-            .setImageId(pages.creatorImageId)
+            .setImage(pages.creatorImage)
             .setDate(pages.changeDate)
 
     override fun bindView(view: View) {

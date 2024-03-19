@@ -5,9 +5,11 @@ import android.widget.Button
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.notifications.ControllerApp
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.views.settings.SettingsField
 import com.sup.dev.android.views.views.ViewIcon
@@ -69,14 +71,14 @@ internal class SplashLink(
         vIcon_7.setOnClickListener { setSelectedIcon(7L, true) }
         vIcon_8.setOnClickListener { setSelectedIcon(8L, true) }
 
-        ImageLoader.load(if (ControllerApp.isDarkThem()) API_RESOURCES.ICON_YOUTUBE_WHITE else API_RESOURCES.ICON_YOUTUBE_BLACK).into(vIcon_1)
-        ImageLoader.load(if (ControllerApp.isDarkThem()) API_RESOURCES.ICON_DISCORD_WHITE else API_RESOURCES.ICON_DISCORD_BLACK).into(vIcon_2)
-        ImageLoader.load(if (ControllerApp.isDarkThem()) API_RESOURCES.ICON_WIKI_WHITE else API_RESOURCES.ICON_WIKI_BLACK).into(vIcon_3)
-        ImageLoader.load(if (ControllerApp.isDarkThem()) API_RESOURCES.ICON_TWITTER_WHITE else API_RESOURCES.ICON_TWITTER_BLACK).into(vIcon_4)
-        ImageLoader.load(if (ControllerApp.isDarkThem()) API_RESOURCES.ICON_STEAM_WHITE else API_RESOURCES.ICON_STEAM_BLACK).into(vIcon_5)
-        ImageLoader.load(if (ControllerApp.isDarkThem()) API_RESOURCES.ICON_GOOGLE_PLAY_WHITE else API_RESOURCES.ICON_GOOGLE_PLAY_BLACK).into(vIcon_6)
-        ImageLoader.load(if (ControllerApp.isDarkThem()) API_RESOURCES.ICON_APPSTORE_WHITE else API_RESOURCES.ICON_APPSTORE_BLACK).into(vIcon_7)
-        ImageLoader.load(API_RESOURCES.ICON_CAMPFIRE).into(vIcon_8)
+        ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_YOUTUBE_WHITE else ApiResources.ICON_YOUTUBE_BLACK).into(vIcon_1)
+        ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_DISCORD_WHITE else ApiResources.ICON_DISCORD_BLACK).into(vIcon_2)
+        ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_WIKI_WHITE else ApiResources.ICON_WIKI_BLACK).into(vIcon_3)
+        ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_TWITTER_WHITE else ApiResources.ICON_TWITTER_BLACK).into(vIcon_4)
+        ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_STEAM_WHITE else ApiResources.ICON_STEAM_BLACK).into(vIcon_5)
+        ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_GOOGLE_PLAY_WHITE else ApiResources.ICON_GOOGLE_PLAY_BLACK).into(vIcon_6)
+        ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_APPSTORE_WHITE else ApiResources.ICON_APPSTORE_BLACK).into(vIcon_7)
+        ImageLoader.load(ApiResources.ICON_CAMPFIRE).into(vIcon_8)
 
         if (icon > 0L) setSelectedIcon(icon, true)
 

@@ -37,10 +37,6 @@ object App {
         val databaseName = secretsConfig.getString("database_media_name")
         val databaseAddress = secretsConfig.getString("database_media_address")
 
-        val jksPassword = secretsKeys.getString("jks_password")
-
-        val keyFileJKS = File("secrets/Certificate.jks")
-        val keyFileBKS = File("secrets/Certificate.bks")
         val jarFile = "${patchPrefix}CampfireServerMedia.jar"
 
         try {
@@ -54,14 +50,17 @@ object App {
                 secretsS3.getString("access_key"),
                 secretsS3.getString("secret_key"),
                 secretsS3.getString("bucket"),
+                secretsS3.getString("region"),
+                secretsS3.getString("public_endpoint")
             )
 
             val requestFactory = RequestFactory(jarFile, File("").absolutePath + "\\CampfireServerMedia\\src\\main\\java")
 
             val apiServer = ApiServer(
-                    requestFactory,
-                    AccountProviderImpl(),
-                    secretsBotsTokens,
+                requestFactory,
+                AccountProviderImpl(),
+                secretsBotsTokens,
+                null,
             )
 
             while (true) {

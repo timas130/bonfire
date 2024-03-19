@@ -4,6 +4,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.tools.ApiAccount
 import com.dzen.campfire.api.tools.server.AccountProvider
 import com.dzen.campfire.server.controllers.ControllerResources
+import com.dzen.campfire.server.fragment.ShortUser
 import com.dzen.campfire.server.rust.RustAuth
 import com.dzen.campfire.server.tables.TAccounts
 import com.sup.dev.java.libs.debug.err
@@ -71,7 +72,7 @@ class AccountProviderImpl : AccountProvider() {
         return account
     }
 
-    private fun createAccount(user: RustAuth.AuthUser) {
+    private fun createAccount(user: ShortUser) {
         var image = ToolsFiles.readFileSalient("${App.patchPrefix}res/def_image.png")
         if (image == null) image = ToolsFiles.readFileSalient("CampfireServer/res/def_image.png")
         val imgId = try {

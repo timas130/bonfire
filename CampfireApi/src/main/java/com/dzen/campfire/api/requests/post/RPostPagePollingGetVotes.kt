@@ -1,6 +1,8 @@
 package com.dzen.campfire.api.requests.post
 
 import com.dzen.campfire.api.models.account.Account
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonParsable
@@ -28,7 +30,7 @@ open class RPostPagePollingGetVotes(
         return Response(json)
     }
 
-    class PollingResultsItem : JsonParsable {
+    class PollingResultsItem : JsonParsable, ImageHolder {
         var itemId = 0L
         var account = Account()
         var timestamp = 0L
@@ -38,6 +40,10 @@ open class RPostPagePollingGetVotes(
             account = json.m(inp, "account", account)
             timestamp = json.m(inp, "timestamp", timestamp)
             return json
+        }
+
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            account.fillImageRefs(receiver)
         }
     }
 
@@ -54,6 +60,12 @@ open class RPostPagePollingGetVotes(
 
         override fun json(inp: Boolean, json: Json) {
             results = json.m(inp, "results", results, Array<PollingResultsItem>::class)
+        }
+
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (result in results) {
+                result.fillImageRefs(receiver)
+            }
         }
     }
 }

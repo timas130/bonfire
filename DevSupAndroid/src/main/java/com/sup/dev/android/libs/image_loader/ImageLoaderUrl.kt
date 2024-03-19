@@ -1,47 +1,42 @@
 package com.sup.dev.android.libs.image_loader
 
+import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.java.libs.debug.err
-import com.sup.dev.java.tools.ToolsNetwork
-import com.sup.dev.java.tools.ToolsThreads
+import okhttp3.Request
+import sh.sit.bonfire.networking.OkHttpController
 
-class ImageLoaderUrl(
-        private val url: String
+open class ImageLoaderUrl(
+    protected val url: String
 ) : ImageLink() {
-
-    private var tryCount = 5
-
-
-    override fun equalsTo(imageLoader: ImageLink): Boolean {
-        return url == (imageLoader as ImageLoaderUrl).url
-    }
-
-    override fun getKeyOfImage() = "url_${url}"
-
     override fun load(): ByteArray? {
-        return load(tryCount)
-    }
-
-    private fun load(tryCount:Int): ByteArray?{
-        if(tryCount < 0) {
+        if (url.isEmpty()) return null
+        val client = OkHttpController.getClient(SupAndroid.appContext!!)
+        val request = Request.Builder()
+            .url(url)
+            .build()
+        try {
+            return client
+                .newCall(request)
+                .execute()
+                .use {
+                    it.body!!.bytes()
+                }
+        } catch (e: Exception) {
+            err("ImageLoaderUrl failed:")
+            err(e)
             return null
         }
-        try {
-            return ToolsNetwork.getBytesFromURL(url)!!
-        } catch (e: Exception) {
-            err(e)
-            if(tryCount > 1) {
-                ToolsThreads.sleep(1000)
-                return load(tryCount - 1)
-            }else{
-                return null
-            }
-        }
     }
 
-    override fun copyLocal() = ImageLoaderUrl(url)
+    override fun copyLocal(): ImageLink {
+        return ImageLoaderUrl(url)
+    }
 
-    fun setTryCount(tryCount:Int):ImageLoaderUrl{
-        this.tryCount = tryCount
-        return this
+    override fun equalsTo(imageLoader: ImageLink): Boolean {
+        return (imageLoader as? ImageLoaderUrl)?.url == url
+    }
+
+    override fun getKeyOfImage(): String {
+        return "url_${url}"
     }
 }

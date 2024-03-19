@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.translates
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.translate.TranslateHistory
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -46,6 +47,11 @@ open class RTranslateHistoryGet(
             history = json.m(inp, "history", history)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (translateHistory in history) {
+                translateHistory.fillImageRefs(receiver)
+            }
+        }
     }
 
 }

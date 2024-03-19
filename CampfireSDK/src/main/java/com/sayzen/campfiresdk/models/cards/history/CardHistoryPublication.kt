@@ -8,9 +8,9 @@ import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.screens.account.profile.SProfile
-import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
-import com.sup.dev.android.tools.ToolsResources
+import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.views.cards.Card
 import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.java.tools.ToolsDate
@@ -27,7 +27,7 @@ class CardHistoryPublication(
 
         val vAvatar: ViewAvatarTitle = view.findViewById(R.id.vAvatar)
 
-        ImageLoader.load(history.userImageId).into(vAvatar.vAvatar.vImageView)
+        ImageLoader.load(history.userImage).into(vAvatar.vAvatar.vImageView)
         vAvatar.vAvatar.setOnClickListener { SProfile.instance(history.userId, Navigator.TO) }
         vAvatar.setTitle(history.userName + " " + ToolsDate.dateToString(historyPublication.date))
         vAvatar.setSubtitle("")

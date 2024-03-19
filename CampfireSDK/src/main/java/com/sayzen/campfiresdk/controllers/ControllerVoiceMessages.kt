@@ -1,10 +1,11 @@
 package com.sayzen.campfiresdk.controllers
 
 import com.dzen.campfire.api.API_TRANSLATE
-import com.dzen.campfire.api_media.requests.RResourcesGet
-import com.sayzen.campfiresdk.R
+import com.dzen.campfire.api.models.images.ImageRef
 import com.sayzen.campfiresdk.models.events.chat.EventVoiceMessageStateChanged
 import com.sayzen.campfiresdk.models.events.chat.EventVoiceMessageStep
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.utils.UtilsAudioPlayer
@@ -16,7 +17,7 @@ object ControllerVoiceMessages {
         NONE, LOADING, PLAY, PAUSE
     }
 
-    private var currentVoice = Voice(0)
+    private var currentVoice = Voice(ImageRef())
 
     init {
         Navigator.addOnScreenChanged {
@@ -29,29 +30,29 @@ object ControllerVoiceMessages {
     //  API
     //
 
-    fun play(id: Long) {
-        if (currentVoice.id == id) {
-            if (isPause(currentVoice.id)) currentVoice.resume()
+    fun play(ref: ImageRef) {
+        if (currentVoice.ref == ref) {
+            if (isPause(currentVoice.ref)) currentVoice.resume()
             return
         }
 
         currentVoice.stop()
-        currentVoice = Voice(id)
+        currentVoice = Voice(ref)
         currentVoice.play()
     }
 
-    fun stop(id:Long) {
-        if (currentVoice.id != id) return
+    fun stop(ref: ImageRef) {
+        if (currentVoice.ref != ref) return
         currentVoice.stop()
     }
 
-    fun pause(id:Long) {
-        if (currentVoice.id != id) return
+    fun pause(ref: ImageRef) {
+        if (currentVoice.ref != ref) return
         currentVoice.pause()
     }
 
-    fun resume(id:Long) {
-        if (currentVoice.id != id) return
+    fun resume(ref: ImageRef) {
+        if (currentVoice.ref != ref) return
         currentVoice.resume()
     }
 
@@ -60,23 +61,23 @@ object ControllerVoiceMessages {
     //  Getters
     //
 
-    fun isPlay(id: Long): Boolean {
-        if (currentVoice.id != id) return false
+    fun isPlay(ref: ImageRef): Boolean {
+        if (currentVoice.ref != ref) return false
         return currentVoice.getState() == State.PLAY
     }
 
-    fun isPause(id: Long): Boolean {
-        if (currentVoice.id != id) return false
+    fun isPause(ref: ImageRef): Boolean {
+        if (currentVoice.ref != ref) return false
         return currentVoice.getState() == State.PAUSE
     }
 
-    fun isLoading(id: Long): Boolean {
-        if (currentVoice.id != id) return false
+    fun isLoading(ref: ImageRef): Boolean {
+        if (currentVoice.ref != ref) return false
         return currentVoice.getState() == State.LOADING
     }
 
-    fun getPlayTimeMs(id: Long): Long {
-        if (currentVoice.id != id) return 0L
+    fun getPlayTimeMs(ref: ImageRef): Long {
+        if (currentVoice.ref != ref) return 0L
         return currentVoice.playTimeMs
     }
 
@@ -85,7 +86,7 @@ object ControllerVoiceMessages {
     //
 
     private class Voice(
-            val id: Long
+        val ref: ImageRef,
     ) {
 
         private var state = State.NONE
@@ -97,17 +98,16 @@ object ControllerVoiceMessages {
         }
 
         fun play() {
-            if (id == 0L) return
+            if (ref.isEmpty()) return
             setState(State.LOADING)
-            RResourcesGet(id)
-                    .onComplete {
-                        startPlay(it.bytes)
-                    }
-                    .onError {
-                        stop()
-                        ToolsToast.show(t(API_TRANSLATE.error_unknown))
-                    }
-                    .send(apiMedia)
+            ImageLoader.load(ref).intoBytes {
+                if (it != null) {
+                    startPlay(it)
+                } else {
+                    stop()
+                    ToolsToast.show(t(API_TRANSLATE.error_unknown))
+                }
+            }
         }
 
         private fun setState(state: State) {
@@ -124,13 +124,13 @@ object ControllerVoiceMessages {
             utilsAudioPlayer.onStep = {
                 if (currentVoice == this) {
                     playTimeMs = it
-                    EventBus.post(EventVoiceMessageStep(id))
+                    EventBus.post(EventVoiceMessageStep(ref))
                 }
             }
             utilsAudioPlayer.play(bytes) {
                 if (currentVoice == this) {
                     setState(State.NONE)
-                    currentVoice = Voice(0)
+                    currentVoice = Voice(ImageRef())
                 }
             }
         }
@@ -153,9 +153,6 @@ object ControllerVoiceMessages {
             utilsAudioPlayer.resume()
         }
 
-        fun idDead() = currentVoice != this || id == 0L || state == State.NONE
-
-
+        fun idDead() = currentVoice != this || ref.isEmpty() || state == State.NONE
     }
-
 }

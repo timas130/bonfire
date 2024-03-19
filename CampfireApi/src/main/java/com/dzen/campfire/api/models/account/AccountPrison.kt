@@ -1,10 +1,11 @@
 package com.dzen.campfire.api.models.account
 
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonParsable
 
-class AccountPrison : JsonParsable {
-
+class AccountPrison : JsonParsable, ImageHolder {
     var account = Account()
     var banDate = 0L
     var comment = ""
@@ -16,4 +17,7 @@ class AccountPrison : JsonParsable {
         return json
     }
 
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        account.fillImageRefs(receiver)
+    }
 }

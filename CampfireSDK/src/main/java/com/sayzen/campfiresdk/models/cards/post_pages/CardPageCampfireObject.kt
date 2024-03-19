@@ -17,6 +17,7 @@ import com.sayzen.campfiresdk.screens.chat.SChat
 import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
 import com.sayzen.campfiresdk.screens.post.view.SPost
 import com.sayzen.campfiresdk.screens.quests.SQuest
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.views.views.ViewAvatarTitle
@@ -38,11 +39,11 @@ class CardPageCampfireObject(
         vPageAvatar.setTitle(t(API_TRANSLATE.app_loading))
         vPageAvatar.setSubtitle("")
         val link = LinkParsed(page.link)
-        ControllerCampfireObjects.load(link) { title, subtitle, imageId ->
+        ControllerCampfireObjects.load(link) { title, subtitle, image ->
             if (vPageAvatar.tag == this) {
                 vPageAvatar.setTitle(title)
                 vPageAvatar.setSubtitle(subtitle)
-                if (imageId > 0) ImageLoader.load(imageId).into(vPageAvatar.vAvatar.vImageView)
+                if (image.isNotEmpty()) ImageLoader.load(image).into(vPageAvatar.vAvatar.vImageView)
                 else vPageAvatar.vAvatar.vImageView.setImageResource(R.color.focus)
                 ControllerLinks.makeLinkable(vPageAvatar.vTitle)
             }

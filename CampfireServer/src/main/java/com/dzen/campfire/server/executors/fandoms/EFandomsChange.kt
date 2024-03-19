@@ -2,12 +2,12 @@ package com.dzen.campfire.server.executors.fandoms
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.requests.fandoms.RFandomsChange
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerCensor
+import com.dzen.campfire.server.controllers.ControllerCollisions
 import com.dzen.campfire.server.controllers.ControllerFandom
 import com.dzen.campfire.server.controllers.ControllerResources
 import com.dzen.campfire.server.tables.TFandoms
-import com.dzen.campfire.api.tools.ApiException
-import com.dzen.campfire.server.controllers.ControllerCollisions
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
 import com.sup.dev.java_pc.tools.ToolsImage
@@ -29,8 +29,16 @@ class EFandomsChange : RFandomsChange(0, null, null, null, null, null, null, nul
 
         val fandom = ControllerFandom.getFandom(fandomId)!!
 
-        if (image != null) ControllerResources.replace(fandom.imageTitleId, image!!, API.RESOURCES_PUBLICATION_DATABASE_LINKED)
-        if (imageMini != null) ControllerResources.replace(fandom.imageId, imageMini!!, API.RESOURCES_PUBLICATION_DATABASE_LINKED)
+        if (image != null) {
+            Database.update("EFandomsChange update_image", SqlQueryUpdate(TFandoms.NAME)
+                .where(TFandoms.id, "=", fandomId)
+                .updateValue(TFandoms.image_title_id, ControllerResources.removeAndPut(fandom.imageTitleId, image!!, API.RESOURCES_PUBLICATION_DATABASE_LINKED)))
+        }
+        if (imageMini != null) {
+            Database.update("EFandomsChange update_imageMini", SqlQueryUpdate(TFandoms.NAME)
+                .where(TFandoms.id, "=", fandomId)
+                .updateValue(TFandoms.image_id, ControllerResources.removeAndPut(fandom.imageId, imageMini!!, API.RESOURCES_PUBLICATION_DATABASE_LINKED)))
+        }
 
         if (name != null) {
             Database.update("EFandomsChange update_1", SqlQueryUpdate(TFandoms.NAME)

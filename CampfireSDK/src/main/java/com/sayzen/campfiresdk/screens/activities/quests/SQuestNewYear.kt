@@ -2,7 +2,7 @@ package com.sayzen.campfiresdk.screens.activities.quests
 
 import android.annotation.SuppressLint
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.requests.project.RProjectGetEffect
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerScreenAnimations
@@ -34,7 +34,7 @@ class SQuestNewYear : SQuest() {
             QuestItem("0")
                 .setOnStart {
                     globalLabel = "Вступление"; globalImage =
-                    API_RESOURCES.QUEST_NEW_YEAR_5
+                    ApiResources.QUEST_NEW_YEAR_5
                 }
                 .text("Квесты - новая система в приложении.\nМы считаем что они могут стать очень важной частью приложения.")
                 .addButton("Квесты?", "0_1"),
@@ -68,7 +68,7 @@ class SQuestNewYear : SQuest() {
             QuestItem("1")
                 .setOnStart {
                     globalLabel = "Глухой лес, утро";globalImage =
-                    API_RESOURCES.QUEST_NEW_YEAR_1
+                    ApiResources.QUEST_NEW_YEAR_1
                 }
                 .text("Рассвет. Идет мелкий снег. \nРядом слышно потрескивание тлеющих углей \nВы спите у почти потухшего костра...")
                 .addButtonParams("Поспать ещё", null) {
@@ -94,7 +94,7 @@ class SQuestNewYear : SQuest() {
 
         addQuest(
             QuestItem("2")
-                .setOnStart { globalImage = API_RESOURCES.QUEST_NEW_YEAR_2 }
+                .setOnStart { globalImage = ApiResources.QUEST_NEW_YEAR_2 }
                 .text("Вы медленно просыпаетесь. Ваше тело очень болит, из-за ночи проведенной в тяжелых доспехах.")
                 .addButton("Размяться", "2_1")
                 .addButton("Осмотреться возле костра", "2_2") { stick = true; },
@@ -192,7 +192,7 @@ class SQuestNewYear : SQuest() {
                 .addButton("В путь!", "5"),
             QuestItem("5")
                 .setOnStart {
-                    globalImage = API_RESOURCES.QUEST_NEW_YEAR_3; globalLabel =
+                    globalImage = ApiResources.QUEST_NEW_YEAR_3; globalLabel =
                     "Каменные ворота, день"
                 }
                 .text("Вы отправились в сторону дома старосты.\nПосле нескольких часов пути, дорогу вам преградили огромные ворота из камня и тяжелых бревен.")
@@ -252,7 +252,7 @@ class SQuestNewYear : SQuest() {
         addQuest(
             QuestItem("6")
                 .setOnStart {
-                    globalImage = API_RESOURCES.QUEST_NEW_YEAR_4; globalLabel =
+                    globalImage = ApiResources.QUEST_NEW_YEAR_4; globalLabel =
                     "Алтарь, вечер"
                 }
                 .text("Пройдя через ворота вы обнаружили небольшой алтарь с идолом протобожества.")
@@ -336,7 +336,7 @@ class SQuestNewYear : SQuest() {
                 .addButton("Направиться к дому", "7_4") ,
             QuestItem("7_4")
                 .setOnStart {
-                    globalImage = API_RESOURCES.QUEST_NEW_YEAR_5;globalLabel =
+                    globalImage = ApiResources.QUEST_NEW_YEAR_5;globalLabel =
                     "Дом старосты, вечер"
                 }
                 .text("Наконец-то вы на месте. Дом старосты выглядит очень мрачно. Калитка распахнута, двор пуст, тишина... странная и недобрая")
@@ -380,7 +380,7 @@ class SQuestNewYear : SQuest() {
         addQuest(
             QuestItem("8")
                 .setOnStart {
-                    startThunder(); globalImage = API_RESOURCES.QUEST_NEW_YEAR_6
+                    startThunder(); globalImage = ApiResources.QUEST_NEW_YEAR_6
                 }
                 .text("Огромный волк. В его глазах видно безумие, весь дом содрогается при каждом его шаге. Вы понимаете, что еще мгновение и он порвет вас на части.")
                 .addButton("В бой", "8_1") ,
@@ -437,7 +437,7 @@ class SQuestNewYear : SQuest() {
         addQuest(
             QuestItem("9")
                 .setOnStart {
-                    stopThunder(); globalImage = API_RESOURCES.QUEST_NEW_YEAR_5
+                    stopThunder(); globalImage = ApiResources.QUEST_NEW_YEAR_5
                 }
                 .text("Теперь, когда бой закончен, а опасность миновала самое время получше осмотреться вокруг.")
                 .addButton("Осмотреть двор", "9_3")
@@ -482,7 +482,7 @@ class SQuestNewYear : SQuest() {
                 .addButton("Идти дальше", "9_5"),
             QuestItem("9_5")
                 .setOnStart {
-                    globalImage = API_RESOURCES.QUEST_NEW_YEAR_7;globalLabel =
+                    globalImage = ApiResources.QUEST_NEW_YEAR_7;globalLabel =
                     "Лес, рассвет"
                 }
                 .text("Вы надеетесь что Диана, осталась в своей хижине и не пришла в этот день. Вам страшно, что они забрали её с собой. Нельзя терять времени! Ваши глаза залились яростью...")
@@ -532,7 +532,7 @@ class SQuestNewYear : SQuest() {
         addQuest(
             QuestItem("10")
                 .setOnStart {
-                    globalImage = API_RESOURCES.QUEST_NEW_YEAR_8; globalLabel =
+                    globalImage = ApiResources.QUEST_NEW_YEAR_8; globalLabel =
                     "Лес, утро"
                 }
                 .text("Очнувшись, вы обнаружили, что лежите в снегу под деревом. Холодно, пропала часть вашего доспеха. Оружия также нет поблизости. Вы слышите незнакомые голоса, какие-то странные звуки, скрип. Неприятный и острый запах. Сильно болит голова.")
@@ -562,7 +562,7 @@ class SQuestNewYear : SQuest() {
                 .text("Перед вами огромное сооружение, с плоской тыльной частью и заострённой, поднятой вверх передней, по своей форме это напоминает вам корабль, но более огромный и несуразный. «ИуИИЪъи!!» пронзительный визг окутывает всю поляну.")
                 .addButton("Обернуться на визг", "10_7"),
             QuestItem("10_7")
-                .setOnStart { globalImage = API_RESOURCES.QUEST_NEW_YEAR_9 }
+                .setOnStart { globalImage = ApiResources.QUEST_NEW_YEAR_9 }
                 .text("Вы видите свинью, её волокут к борту корабля. Свинью поднимают на руках и затаскивают в узкую щель в борту. Человечки на поляне перестают орать, организовались и стали подниматься на борт. Они погружают вещи и разную живность на корабль. Нужно придумать, что делать дальше.")
                 .addButton("Рассмотреть людей", "10_8")
                 .addButton("Рассмотреть их оружие", "10_9")
@@ -647,7 +647,7 @@ class SQuestNewYear : SQuest() {
         addQuest(
             QuestItem("11")
                 .setOnStart {
-                    globalImage = API_RESOURCES.QUEST_NEW_YEAR_10; globalLabel =
+                    globalImage = ApiResources.QUEST_NEW_YEAR_10; globalLabel =
                     "Дом старосты, утро"
                 }
                 .text(

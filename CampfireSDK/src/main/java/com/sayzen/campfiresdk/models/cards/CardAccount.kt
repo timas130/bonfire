@@ -2,9 +2,10 @@ package com.sayzen.campfiresdk.models.cards
 
 import com.dzen.campfire.api.models.account.Account
 import com.sayzen.campfiresdk.support.adapters.XAccount
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
-import com.sup.dev.android.views.support.adapters.NotifyItem
 import com.sup.dev.android.views.cards.CardAvatar
+import com.sup.dev.android.views.support.adapters.NotifyItem
 import com.sup.dev.android.views.views.ViewAvatarTitle
 
 open class CardAccount(
@@ -25,7 +26,7 @@ open class CardAccount(
     }
 
     override fun notifyItem() {
-        ImageLoader.load(xAccount.getImageId()).intoCash()
+        ImageLoader.load(xAccount.getImage()).intoCash()
     }
 
     override fun setOnClick(onClick: () -> Unit): CardAccount {

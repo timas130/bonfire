@@ -11,6 +11,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.chat.ChatParamsFandomSub
 import com.dzen.campfire.api.models.chat.ChatTag
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.requests.chat.RChatGet
 import com.dzen.campfire.api.requests.fandoms.RFandomsModerationChatChange
 import com.dzen.campfire.api.requests.fandoms.RFandomsModerationChatCreate
@@ -21,6 +22,8 @@ import com.sayzen.campfiresdk.models.events.fandom.EventFandomChatChanged
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomChatCreated
 import com.sayzen.campfiresdk.screens.chat.SChat
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.clear
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
@@ -28,10 +31,10 @@ import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.*
 import com.sup.dev.android.views.screens.SCrop
 import com.sup.dev.android.views.settings.SettingsField
-import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.android.views.splash.SplashChooseImage
 import com.sup.dev.android.views.splash.SplashField
+import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsText
@@ -42,7 +45,7 @@ class SFandomChatsCreate(
         val languageId: Long,
         val chatId: Long,
         val text: String,
-        val imageId: Long,
+        val imageRef: ImageRef,
         val name: String
 ) : Screen(R.layout.screen_fandom_chat_create) {
 
@@ -59,7 +62,7 @@ class SFandomChatsCreate(
         fun instance(chatId: Long, action: NavigationAction) {
             ApiRequestsSupporter.executeInterstitial(action, RChatGet(ChatTag(API.CHAT_TYPE_FANDOM_SUB, chatId, 0), 0)) { r ->
                 val params = ChatParamsFandomSub(r.chat.params)
-                SFandomChatsCreate(0, 0, chatId, params.text, r.chat.customImageId, r.chat.customName)
+                SFandomChatsCreate(0, 0, chatId, params.text, r.chat.customImage, r.chat.customName)
             }
         }
 
@@ -82,8 +85,8 @@ class SFandomChatsCreate(
         vImage.setOnClickListener { chooseImage() }
         vName.vField.addTextChangedListener(TextWatcherChanged { update() })
 
-        if (imageId > 0) {
-            ImageLoader.load(imageId).into(vImage)
+        if (imageRef.isNotEmpty()) {
+            ImageLoader.load(imageRef).into(vImage)
             vImageIcon.visibility = View.GONE
             vFinish.text = t(API_TRANSLATE.app_change)
         }
@@ -123,7 +126,7 @@ class SFandomChatsCreate(
                     } else {
                         ApiRequestsSupporter.executeProgressDialog(RFandomsModerationChatChange(chatId, name, vField.text.toString(), comment, image)) { _ ->
                             ToolsToast.show(t(API_TRANSLATE.app_done))
-                            ImageLoader.clear(imageId)
+                            ImageLoader.clear(imageRef)
                             Navigator.remove(this)
                             EventBus.post(EventFandomChatChanged(chatId, name, vField.text.toString()))
                         }

@@ -4,6 +4,7 @@ import android.view.View
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.fandoms.Rubric
 import com.dzen.campfire.api.requests.rubrics.RRubricsGetAll
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -12,6 +13,8 @@ import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.rubrics.EventRubricCreate
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.views.cards.CardSpace
 import com.sup.dev.android.views.screens.SLoadingRecycler
@@ -39,7 +42,7 @@ class SRubricsList constructor(
         else if (ControllerApi.isCurrentAccount(ownerId)) setTextEmpty(t(API_TRANSLATE.rubric_empty_my))
         else setTextEmpty(t(API_TRANSLATE.rubric_empty_other))
         setTextProgress(t(API_TRANSLATE.rubric_loading))
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_28)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_28))
 
         val vFab: FloatingActionButton = findViewById(R.id.vFab)
         if (ControllerApi.can(fandomId, languageId, API.LVL_MODERATOR_RUBRIC)) (vFab as View).visibility = View.VISIBLE

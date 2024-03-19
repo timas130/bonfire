@@ -1,6 +1,7 @@
 package com.dzen.campfire.api.requests.accounts
 
 import com.dzen.campfire.api.models.account.Account
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -38,6 +39,9 @@ open class RAccountsGet(
             account = json.m(inp, "account", account)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            account.fillImageRefs(receiver)
+        }
     }
 
 

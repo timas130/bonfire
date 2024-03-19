@@ -33,6 +33,8 @@ import com.sayzen.campfiresdk.screens.chat.SChat
 import com.sayzen.campfiresdk.screens.post.history.SPublicationHistory
 import com.sayzen.campfiresdk.screens.reports.SReports
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
+import com.sayzen.campfiresdk.support.loadGif
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -53,12 +55,12 @@ import com.sup.dev.java.tools.ToolsText
 import sh.sit.bonfire.formatting.BonfireMarkdown
 
 open class CardChatMessage constructor(
-        publication: PublicationChatMessage,
-        var onClick: ((PublicationChatMessage) -> Boolean)? = null,
-        var onChange: ((PublicationChatMessage) -> Unit)? = null,
-        var onQuote: ((PublicationChatMessage) -> Unit)? = null,
-        var onGoTo: ((Long) -> Unit)? = null,
-        var onBlocked: ((PublicationChatMessage) -> Unit)? = null
+    publication: PublicationChatMessage,
+    var onClick: ((PublicationChatMessage) -> Boolean)? = null,
+    var onChange: ((PublicationChatMessage) -> Unit)? = null,
+    var onQuote: ((PublicationChatMessage) -> Unit)? = null,
+    var onGoTo: ((Long) -> Unit)? = null,
+    var onBlocked: ((PublicationChatMessage) -> Unit)? = null
 ) : CardPublication(R.layout.card_chat_message, publication) {
 
     companion object {
@@ -77,12 +79,13 @@ open class CardChatMessage constructor(
             return viewCash.removeOne(key)
         }
 
-        fun instance(publication: PublicationChatMessage,
-                     onClick: ((PublicationChatMessage) -> Boolean)? = null,
-                     onChange: ((PublicationChatMessage) -> Unit)? = null,
-                     onQuote: ((PublicationChatMessage) -> Unit)? = null,
-                     onGoTo: ((Long) -> Unit)? = null,
-                     onBlocked: ((PublicationChatMessage) -> Unit)? = null
+        fun instance(
+            publication: PublicationChatMessage,
+            onClick: ((PublicationChatMessage) -> Boolean)? = null,
+            onChange: ((PublicationChatMessage) -> Unit)? = null,
+            onQuote: ((PublicationChatMessage) -> Unit)? = null,
+            onGoTo: ((Long) -> Unit)? = null,
+            onBlocked: ((PublicationChatMessage) -> Unit)? = null
         ): CardChatMessage {
             return CardChatMessage(publication, onClick, onChange, onQuote, onGoTo, onBlocked)
         }
@@ -90,26 +93,26 @@ open class CardChatMessage constructor(
     }
 
     private val eventBus = EventBus
-            .subscribe(EventNotification::class) { onNotification(it) }
-            .subscribe(EventChatMessageChanged::class) { onEventChanged(it) }
-            .subscribe(EventChatReadDateChanged::class) { onEventChatReadDateChanged(it) }
-            .subscribe(EventStyleChanged::class) { update() }
-            .subscribe(EventPublicationBlocked::class) { onEventPublicationBlocked(it) }
-            .subscribe(EventPublicationDeepBlockRestore::class) { onEventPublicationDeepBlockRestore(it) }
-            .subscribe(EventVoiceMessageStateChanged::class) { update() }
-            .subscribe(EventVoiceMessageStep::class) { if (it.id == publication.voiceResourceId) updatePlayTime() }
-            .subscribe(EventAccountRemoveFromBlackList::class) {
-                if (publication.creator.id == it.accountId) {
-                    publication.blacklisted = false
-                    update()
-                }
+        .subscribe(EventNotification::class) { onNotification(it) }
+        .subscribe(EventChatMessageChanged::class) { onEventChanged(it) }
+        .subscribe(EventChatReadDateChanged::class) { onEventChatReadDateChanged(it) }
+        .subscribe(EventStyleChanged::class) { update() }
+        .subscribe(EventPublicationBlocked::class) { onEventPublicationBlocked(it) }
+        .subscribe(EventPublicationDeepBlockRestore::class) { onEventPublicationDeepBlockRestore(it) }
+        .subscribe(EventVoiceMessageStateChanged::class) { update() }
+        .subscribe(EventVoiceMessageStep::class) { if (it.ref == publication.voiceResource) updatePlayTime() }
+        .subscribe(EventAccountRemoveFromBlackList::class) {
+            if (publication.creator.id == it.accountId) {
+                publication.blacklisted = false
+                update()
             }
-            .subscribe(EventAccountAddToBlackList::class) {
-                if (publication.creator.id == it.accountId) {
-                    publication.blacklisted = true
-                    update()
-                }
+        }
+        .subscribe(EventAccountAddToBlackList::class) {
+            if (publication.creator.id == it.accountId) {
+                publication.blacklisted = true
+                update()
             }
+        }
 
     var changeEnabled = true
     var useMessageContainerBackground = true
@@ -122,7 +125,7 @@ open class CardChatMessage constructor(
         useBackgroundToFlash = true
     }
 
-    fun onSameChanged(){
+    fun onSameChanged() {
         updateAccount()
         updateSameCards()
         updateLabel()
@@ -187,7 +190,8 @@ open class CardChatMessage constructor(
             return
         }
         if (vAlertContainer == null) {
-            vAlertContainer = getViewFromCash("alert") ?: ToolsView.inflate(vSwipe, R.layout.card_chat_message_view_alert)
+            vAlertContainer =
+                getViewFromCash("alert") ?: ToolsView.inflate(vSwipe, R.layout.card_chat_message_view_alert)
             vSwipe.addView(vAlertContainer, 0)
         }
 
@@ -206,13 +210,21 @@ open class CardChatMessage constructor(
         val vSystemMessage: ViewText = vAlertContainer.findViewById(R.id.vSystemMessage)
 
         vSystemMessage.setTextColor(ToolsResources.getColorAttr(R.attr.colorOnPrimaryVariant))
-        if (publication.systemType == PublicationChatMessage.SYSTEM_TYPE_BLOCK) vSystemMessage.setTextColor(ToolsResources.getColor(R.color.red_600))
+        if (publication.systemType == PublicationChatMessage.SYSTEM_TYPE_BLOCK) vSystemMessage.setTextColor(
+            ToolsResources.getColor(R.color.red_600)
+        )
         vSystemMessage.text = ControllerChats.getSystemText(publication)
         ControllerLinks.makeLinkable(vSystemMessage)
 
         val vTouchModeration: ViewGroup = view.findViewById(R.id.vTouchModeration) ?: return
 
-        vTouchModeration.setOnClickListener { ControllerCampfireSDK.onToModerationClicked(publication.blockModerationEventId, 0, Navigator.TO) }
+        vTouchModeration.setOnClickListener {
+            ControllerCampfireSDK.onToModerationClicked(
+                publication.blockModerationEventId,
+                0,
+                Navigator.TO
+            )
+        }
         vTouchModeration.isClickable = publication.blockModerationEventId != 0L
 
     }
@@ -223,23 +235,32 @@ open class CardChatMessage constructor(
         val vLabel: ViewText = view.findViewById(R.id.vLabel) ?: return
 
         if (ControllerApi.isCurrentAccount(publication.creator.id)) {
-            if (vLabel.layoutParams is FrameLayout.LayoutParams) (vLabel.layoutParams as FrameLayout.LayoutParams).gravity = Gravity.RIGHT or Gravity.BOTTOM
-            if (vLabel.layoutParams is LinearLayout.LayoutParams) (vLabel.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.RIGHT
-            vLabel.text = ToolsDate.dateToString(publication.dateCreate) + (if (publication.changed) " " + t(API_TRANSLATE.app_edited) else "")
+            if (vLabel.layoutParams is FrameLayout.LayoutParams) (vLabel.layoutParams as FrameLayout.LayoutParams).gravity =
+                Gravity.RIGHT or Gravity.BOTTOM
+            if (vLabel.layoutParams is LinearLayout.LayoutParams) (vLabel.layoutParams as LinearLayout.LayoutParams).gravity =
+                Gravity.RIGHT
+            vLabel.text =
+                ToolsDate.dateToString(publication.dateCreate) + (if (publication.changed) " " + t(API_TRANSLATE.app_edited) else "")
         } else {
-            if (vLabel.layoutParams is FrameLayout.LayoutParams) (vLabel.layoutParams as FrameLayout.LayoutParams).gravity = Gravity.LEFT or Gravity.BOTTOM
-            if (vLabel.layoutParams is LinearLayout.LayoutParams) (vLabel.layoutParams as LinearLayout.LayoutParams).gravity = Gravity.LEFT
+            if (vLabel.layoutParams is FrameLayout.LayoutParams) (vLabel.layoutParams as FrameLayout.LayoutParams).gravity =
+                Gravity.LEFT or Gravity.BOTTOM
+            if (vLabel.layoutParams is LinearLayout.LayoutParams) (vLabel.layoutParams as LinearLayout.LayoutParams).gravity =
+                Gravity.LEFT
             if (publication.chatTag().chatType == API.CHAT_TYPE_PRIVATE)
-                vLabel.text = ToolsDate.dateToString(publication.dateCreate) + (if (publication.changed) " " + t(API_TRANSLATE.app_edited) else "")
+                vLabel.text =
+                    ToolsDate.dateToString(publication.dateCreate) + (if (publication.changed) " " + t(API_TRANSLATE.app_edited) else "")
             else {
                 val color = xPublication.xAccount.getLevelColorHex()
-                vLabel.text =  "{$color ${xPublication.xAccount.getName()}}  " + ToolsDate.dateToString(publication.dateCreate) + (if (publication.changed) " " + t(API_TRANSLATE.app_edited) else "")
+                vLabel.text =
+                    "{$color ${xPublication.xAccount.getName()}}  " + ToolsDate.dateToString(publication.dateCreate) + (if (publication.changed) " " + t(
+                        API_TRANSLATE.app_edited
+                    ) else "")
                 ControllerLinks.makeLinkable(vLabel)
             }
 
         }
 
-        vLabel.gravity = if(ControllerApi.isCurrentAccount(publication.creator.id)) Gravity.RIGHT else Gravity.LEFT
+        vLabel.gravity = if (ControllerApi.isCurrentAccount(publication.creator.id)) Gravity.RIGHT else Gravity.LEFT
 
         vLabel.visibility = if (willHideLabel()) View.GONE else View.VISIBLE
     }
@@ -259,7 +280,8 @@ open class CardChatMessage constructor(
             return
         }
         if (vVoiceContainer == null) {
-            vVoiceContainer = getViewFromCash("voice") ?: ToolsView.inflate(vContentContainer, R.layout.card_chat_message_view_voice)
+            vVoiceContainer =
+                getViewFromCash("voice") ?: ToolsView.inflate(vContentContainer, R.layout.card_chat_message_view_voice)
             vContentContainer.addView(vVoiceContainer, vContentContainer.indexOfChild(vText) + 1)
         }
 
@@ -269,10 +291,10 @@ open class CardChatMessage constructor(
         vSoundLine.setSoundMask(publication.voiceMask)
 
 
-        if (ControllerVoiceMessages.isLoading(publication.voiceResourceId)) {
+        if (ControllerVoiceMessages.isLoading(publication.voiceResource)) {
             vPlay.isEnabled = false
             vPlay.setImageResource(R.drawable.ic_play_arrow_white_24dp)
-        } else if (ControllerVoiceMessages.isPlay(publication.voiceResourceId)) {
+        } else if (ControllerVoiceMessages.isPlay(publication.voiceResource)) {
             vPlay.isEnabled = true
             vPlay.setImageResource(R.drawable.ic_pause_white_24dp)
         } else {
@@ -281,10 +303,10 @@ open class CardChatMessage constructor(
         }
 
         vPlay.setOnClickListener {
-            if (ControllerVoiceMessages.isPlay(publication.voiceResourceId))
-                ControllerVoiceMessages.pause(publication.voiceResourceId)
+            if (ControllerVoiceMessages.isPlay(publication.voiceResource))
+                ControllerVoiceMessages.pause(publication.voiceResource)
             else
-                ControllerVoiceMessages.play(publication.voiceResourceId)
+                ControllerVoiceMessages.play(publication.voiceResource)
         }
 
         updatePlayTime()
@@ -307,7 +329,10 @@ open class CardChatMessage constructor(
             return
         }
         if (vStickerContainer == null) {
-            vStickerContainer = getViewFromCash("sticker") ?: ToolsView.inflate(vContentContainer, R.layout.card_chat_message_view_sticker)
+            vStickerContainer = getViewFromCash("sticker") ?: ToolsView.inflate(
+                vContentContainer,
+                R.layout.card_chat_message_view_sticker
+            )
             vContentContainer.addView(vStickerContainer, vContentContainer.indexOfChild(vText) + 1)
         }
 
@@ -315,12 +340,12 @@ open class CardChatMessage constructor(
         val vImage: ImageView = vStickerContainer.findViewById(R.id.vImage)
         val vGifProgressBar: View = vStickerContainer.findViewById(R.id.vGifProgressBar)
 
-        ToolsView.setOnLongClickCoordinates(vImage) { v, x, y -> showMenu(v,x,y) }
+        ToolsView.setOnLongClickCoordinates(vImage) { v, x, y -> showMenu(v, x, y) }
 
         vImage.setOnClickListener { SStickersView.instanceBySticker(publication.stickerId, Navigator.TO) }
-        vImage.setOnLongClickListener{ Navigator.to(SImageView(ImageLoader.load(if (publication.stickerGifId == 0L) publication.stickerImageId else publication.stickerGifId))); true }
+        vImage.setOnLongClickListener { Navigator.to(SImageView(ImageLoader.load(if (publication.stickerGif.isEmpty()) publication.stickerImage else publication.stickerGif))); true }
 
-        ImageLoader.loadGif(publication.stickerImageId, publication.stickerGifId, vImage, vGifProgressBar) {
+        ImageLoader.loadGif(publication.stickerImage, publication.stickerGif, vImage, vGifProgressBar) {
             it.crop(ToolsView.dpToPx(156).toInt())
             it.size((publication.imageW * 1.7f).toInt(), (publication.imageH * 1.7f).toInt())
         }
@@ -343,22 +368,24 @@ open class CardChatMessage constructor(
             return
         }
         if (vImagesContainer == null) {
-            vImagesContainer = getViewFromCash("images") ?: ToolsView.inflate(vContentContainer, R.layout.card_chat_message_view_images)
+            vImagesContainer = getViewFromCash("images") ?: ToolsView.inflate(
+                vContentContainer,
+                R.layout.card_chat_message_view_images
+            )
             vContentContainer.addView(vImagesContainer, vContentContainer.indexOfChild(vText) + 1)
         }
 
         val vImages: ViewImagesContainer = vImagesContainer.findViewById(R.id.vImages)
 
-        ToolsView.setOnLongClickCoordinates(vImages) { v, x, y -> showMenu(v,x,y) }
-        vImages.setOnClickListener { Navigator.to(SImageView(ImageLoader.load(publication.resourceId, publication.imagePwd))) }
+        ToolsView.setOnLongClickCoordinates(vImages) { v, x, y -> showMenu(v, x, y) }
+        vImages.setOnClickListener { Navigator.to(SImageView(ImageLoader.load(publication.resource))) }
         vImages.clear()
 
-        for (i in publication.imageIdArray.indices) {
+        for (image in publication.images) {
             vImages.add(
-                    ImageLoader.load(publication.imageIdArray[i], publication.imagePwdArray.getOrNull(i) ?: "")
-                            .size(publication.imageWArray[i], publication.imageHArray[i]),
-                    null,
-                    { showMenu(it.view, it.x, it.y) })
+                ImageLoader.load(image),
+                null
+            ) { showMenu(it.view, it.x, it.y) }
         }
     }
 
@@ -377,7 +404,8 @@ open class CardChatMessage constructor(
             return
         }
         if (vImageContainer == null) {
-            vImageContainer = getViewFromCash("image") ?: ToolsView.inflate(vContentContainer, R.layout.card_chat_message_view_image)
+            vImageContainer =
+                getViewFromCash("image") ?: ToolsView.inflate(vContentContainer, R.layout.card_chat_message_view_image)
             vContentContainer.addView(vImageContainer, vContentContainer.indexOfChild(vText) + 1)
         }
 
@@ -387,20 +415,20 @@ open class CardChatMessage constructor(
 
         vLabelRemoved.setText(t(API_TRANSLATE.message_removed_by_server))
 
-        ToolsView.setOnLongClickCoordinates(vImage) { v, x, y -> showMenu(v,x,y) }
+        ToolsView.setOnLongClickCoordinates(vImage) { v, x, y -> showMenu(v, x, y) }
 
         vImage.setOnClickListener(null)
 
         vLabelRemoved.tag = publication
         vLabelRemoved.visibility = View.GONE
 
-        ImageLoader.loadGif(publication.resourceId, publication.gifId, publication.imagePwd, vImage, vGifProgressBar) {
+        ImageLoader.loadGif(publication.resource, publication.gif, vImage, vGifProgressBar) {
             it.maxSize(ToolsView.dpToPx(612).toInt())
             it.minSize(ToolsView.dpToPx(128).toInt())
-            it.size((publication.imageW * 1.7f).toInt(), (publication.imageH * 1.7f).toInt())
+            it.size((publication.resource.width * 1.7f).toInt(), (publication.resource.height * 1.7f).toInt())
         }
 
-        vImage.setOnClickListener { Navigator.to(SImageView(ImageLoader.load(if (publication.gifId == 0L) publication.resourceId else publication.gifId, publication.imagePwd))) }
+        vImage.setOnClickListener { Navigator.to(SImageView(ImageLoader.load(if (publication.gif.isEmpty()) publication.resource else publication.gif))) }
     }
 
     fun updateText() {
@@ -441,7 +469,8 @@ open class CardChatMessage constructor(
         val vMessageContainer: LayoutCorned? = view.findViewById(R.id.vMessageContainer)
 
         if (vRootContainer != null) {
-            (vRootContainer.layoutParams as LinearLayout.LayoutParams).gravity = if (ControllerApi.isCurrentAccount(publication.creator.id)) Gravity.RIGHT or Gravity.TOP else Gravity.LEFT or Gravity.TOP
+            (vRootContainer.layoutParams as LinearLayout.LayoutParams).gravity =
+                if (ControllerApi.isCurrentAccount(publication.creator.id)) Gravity.RIGHT or Gravity.TOP else Gravity.LEFT or Gravity.TOP
         }
 
         if (vMessageContainer != null) {
@@ -450,13 +479,23 @@ open class CardChatMessage constructor(
 
         if (ControllerApi.isCurrentAccount(publication.creator.id)) {
             if (vMessageContainer != null) {
-                (vMessageContainer.layoutParams as ViewGroup.MarginLayoutParams).rightMargin =0
-                (vMessageContainer.layoutParams as ViewGroup.MarginLayoutParams).leftMargin =0
+                (vMessageContainer.layoutParams as ViewGroup.MarginLayoutParams).rightMargin = 0
+                (vMessageContainer.layoutParams as ViewGroup.MarginLayoutParams).leftMargin = 0
                 if (useMessageContainerBackground) {
                     if (ToolsColor.red(ToolsResources.getColorAttr(R.attr.colorSurface)) < 0x60)
-                        vMessageContainer.setBackgroundColor(ToolsColor.add(ToolsResources.getColorAttr(R.attr.colorSurface), 0xFF202020.toInt()))
+                        vMessageContainer.setBackgroundColor(
+                            ToolsColor.add(
+                                ToolsResources.getColorAttr(R.attr.colorSurface),
+                                0xFF202020.toInt()
+                            )
+                        )
                     else
-                        vMessageContainer.setBackgroundColor(ToolsColor.remove(ToolsResources.getColorAttr(R.attr.colorSurface), 0xFF202020.toInt()))
+                        vMessageContainer.setBackgroundColor(
+                            ToolsColor.remove(
+                                ToolsResources.getColorAttr(R.attr.colorSurface),
+                                0xFF202020.toInt()
+                            )
+                        )
                 } else {
                     vMessageContainer.setBackgroundColor(0x00000000)
                 }
@@ -467,8 +506,10 @@ open class CardChatMessage constructor(
             }
         } else {
             if (vMessageContainer != null) {
-                (vMessageContainer.layoutParams as ViewGroup.MarginLayoutParams).rightMargin = ToolsView.dpToPx(48).toInt()
-                (vMessageContainer.layoutParams as ViewGroup.MarginLayoutParams).leftMargin = ToolsView.dpToPx(12).toInt()
+                (vMessageContainer.layoutParams as ViewGroup.MarginLayoutParams).rightMargin =
+                    ToolsView.dpToPx(48).toInt()
+                (vMessageContainer.layoutParams as ViewGroup.MarginLayoutParams).leftMargin =
+                    ToolsView.dpToPx(12).toInt()
                 if (useMessageContainerBackground) vMessageContainer.setBackgroundColor(ToolsResources.getColorAttr(R.attr.colorSurface))
                 else vMessageContainer.setBackgroundColor(0x00000000)
             }
@@ -486,7 +527,7 @@ open class CardChatMessage constructor(
         var vQuoteContainer: View? = view.findViewById(R.id.vQuoteContainer)
         val vContentContainer: ViewGroup = vText.parent as ViewGroup
 
-        if (publication.quoteText.isEmpty() && publication.quoteImages.isEmpty()) {
+        if (publication.quoteText.isEmpty() && publication.quoteImagesIds.isEmpty()) {
             if (vQuoteContainer != null) {
                 vContentContainer.removeView(vQuoteContainer)
                 val vQuoteImage: ViewImagesContainer = vQuoteContainer.findViewById(R.id.vQuoteImage)
@@ -496,7 +537,8 @@ open class CardChatMessage constructor(
             return
         }
         if (vQuoteContainer == null) {
-            vQuoteContainer = getViewFromCash("quote") ?: ToolsView.inflate(vContentContainer, R.layout.card_chat_message_view_quote)
+            vQuoteContainer =
+                getViewFromCash("quote") ?: ToolsView.inflate(vContentContainer, R.layout.card_chat_message_view_quote)
             vContentContainer.addView(vQuoteContainer, vContentContainer.indexOfChild(vText))
         }
 
@@ -514,12 +556,14 @@ open class CardChatMessage constructor(
         vQuoteImage.clear()
         vQuoteImage.visibility = View.VISIBLE
         if (publication.quoteStickerId > 0) {
-            vQuoteImage.add(ImageLoader.load(publication.quoteStickerImageId)
-                    .crop(ToolsView.dpToPx(100).toInt()).cropSquare(),
-                    onClick = { SStickersView.instanceBySticker(publication.quoteStickerId, Navigator.TO) })
+            vQuoteImage.add(ImageLoader.load(publication.quoteStickerImage)
+                .crop(ToolsView.dpToPx(100).toInt()).cropSquare(),
+                onClick = { SStickersView.instanceBySticker(publication.quoteStickerId, Navigator.TO) })
         } else if (publication.quoteImages.isNotEmpty()) {
-            for (i in publication.quoteImages.indices) vQuoteImage.add(ImageLoader.load(publication.quoteImages[i], publication.quoteImagesPwd.getOrNull(i) ?: "")
-                    .crop(ToolsView.dpToPx(100).toInt()).cropSquare())
+            for (image in publication.quoteImages) vQuoteImage.add(
+                ImageLoader.load(image)
+                    .crop(ToolsView.dpToPx(100).toInt()).cropSquare()
+            )
         } else {
             vQuoteImage.visibility = View.GONE
         }
@@ -557,7 +601,7 @@ open class CardChatMessage constructor(
         val vMessageContainer: LayoutCorned = view.findViewById(R.id.vMessageContainer)
 
         val willHideLabel = willHideLabel()
-        val bottomIsWillHideLabel = getBottomCard()?.willHideLabel()?:false
+        val bottomIsWillHideLabel = getBottomCard()?.willHideLabel() ?: false
 
         if (ControllerApi.isCurrentAccount(xPublication.publication.creator.id)) {
             vMessageContainer.setCornedTL(true)
@@ -571,7 +615,13 @@ open class CardChatMessage constructor(
             vMessageContainer.setCornedBR(true)
         }
 
-        vPaddingContainer.setPadding(0, 0, 0, if (bottomIsWillHideLabel && getBottomCard()?.willHideLabel() == true) ToolsView.dpToPx(1).toInt() else ToolsView.dpToPx(16).toInt())
+        vPaddingContainer.setPadding(
+            0,
+            0,
+            0,
+            if (bottomIsWillHideLabel && getBottomCard()?.willHideLabel() == true) ToolsView.dpToPx(1)
+                .toInt() else ToolsView.dpToPx(16).toInt()
+        )
 
     }
 
@@ -608,7 +658,10 @@ open class CardChatMessage constructor(
         }
 
         if (vReactions == null) {
-            vReactions = (getViewFromCash("reactions") ?: ToolsView.inflate(vContentContainer, R.layout.card_chat_message_view_reactions)) as ViewGroup
+            vReactions = (getViewFromCash("reactions") ?: ToolsView.inflate(
+                vContentContainer,
+                R.layout.card_chat_message_view_reactions
+            )) as ViewGroup
             vContentContainer.addView(vReactions, vContentContainer.indexOfChild(vText) + 1)
         }
 
@@ -633,14 +686,21 @@ open class CardChatMessage constructor(
                 v.setChipBackgroundColorResource(R.color.blue_700)
                 v.setOnClickListener { removeReaction(i.reactionIndex) }
             }
-            v.setOnLongClickListener { ControllerReactions.showAccounts(xPublication.publication.id, i.reactionIndex, v);true }
+            v.setOnLongClickListener {
+                ControllerReactions.showAccounts(
+                    xPublication.publication.id,
+                    i.reactionIndex,
+                    v
+                );true
+            }
 
             val index = if (i.reactionIndex > -1 && i.reactionIndex < API.REACTIONS.size) i.reactionIndex.toInt() else 0
             v.setIcon(R.color.focus)
             ImageLoader.load(API.REACTIONS[index]).intoBitmap { v.setIcon(it) }
         }
 
-        (vReactions.layoutParams as ViewGroup.MarginLayoutParams).topMargin = if( xPublication.publication.text.isEmpty()) ToolsView.dpToPx(8).toInt() else 0
+        (vReactions.layoutParams as ViewGroup.MarginLayoutParams).topMargin =
+            if (xPublication.publication.text.isEmpty()) ToolsView.dpToPx(8).toInt() else 0
 
         vReactions.removeAllViews()
         for (i in 0 until map.size()) {
@@ -665,19 +725,22 @@ open class CardChatMessage constructor(
                 putViewToCash("avatar", vAvatar)
             }
             if (!ControllerApi.isCurrentAccount(publication.creator.id) && publication.chatTag().chatType != API.CHAT_TYPE_PRIVATE && isTopSameUserAndFandom())
-                (vAvatarContainer.layoutParams as ViewGroup.MarginLayoutParams).leftMargin = ToolsView.dpToPx(48).toInt()
+                (vAvatarContainer.layoutParams as ViewGroup.MarginLayoutParams).leftMargin =
+                    ToolsView.dpToPx(48).toInt()
             return
         }
         if (vAvatar == null) {
-            vAvatar = (getViewFromCash("avatar") ?: ToolsView.inflate(vAvatarContainer, R.layout.card_chat_message_view_avatar)) as ViewAvatar
+            vAvatar = (getViewFromCash("avatar") ?: ToolsView.inflate(
+                vAvatarContainer,
+                R.layout.card_chat_message_view_avatar
+            )) as ViewAvatar
             vAvatarContainer.addView(vAvatar, 0)
         }
 
         if (!showFandom) {
             xPublication.xAccount.setView(vAvatar)
             vAvatar.vChip.visibility = View.GONE
-        }
-        else {
+        } else {
             xPublication.xFandom.setView(vAvatar)
             vAvatar.vChip.visibility = View.VISIBLE
         }
@@ -698,7 +761,7 @@ open class CardChatMessage constructor(
 
     override fun updateReports() {
         if (getView() == null) return
-        val vReports: TextView = getView()!!.findViewById(R.id.vReports)?:return
+        val vReports: TextView = getView()!!.findViewById(R.id.vReports) ?: return
         vReports.setOnClickListener { Navigator.to(SReports(xPublication.publication.id)) }
         xPublication.xReports.setView(vReports)
     }
@@ -715,8 +778,14 @@ open class CardChatMessage constructor(
         val vTimeLabel: TextView = vVoiceContainer.findViewById(R.id.vTimeLabel)
         val vSoundLine: ViewSoundLine = vVoiceContainer.findViewById(R.id.vSoundLine)
 
-        val time = ControllerVoiceMessages.getPlayTimeMs(publication.voiceResourceId)
-        if (time < publication.voiceMs && ControllerVoiceMessages.isPlay(publication.voiceResourceId) || ControllerVoiceMessages.isPause(publication.voiceResourceId)) {
+        val time = ControllerVoiceMessages.getPlayTimeMs(publication.voiceResource)
+        if (
+            (
+                (time < publication.voiceMs) &&
+                ControllerVoiceMessages.isPlay(publication.voiceResource)
+            ) ||
+            ControllerVoiceMessages.isPause(publication.voiceResource)
+        ) {
             vTimeLabel.text = ToolsText.toTime(publication.voiceMs - time)
             vSoundLine.setProgress(time.toFloat(), publication.voiceMs.toFloat())
         } else {
@@ -781,36 +850,66 @@ open class CardChatMessage constructor(
 
 
         val w = SplashMenu()
-                .addTitleView(vMenuReactions)
-                .groupCondition(ControllerApi.isCurrentAccount(publication.creator.id))
-                .add(t(API_TRANSLATE.app_remove)) {
-                    val topCard = getTopCard()
-                    val bottomCard = getBottomCard()
-                    ControllerApi.removePublication(publication.id, t(API_TRANSLATE.chat_remove_confirm), t(API_TRANSLATE.chat_error_gone)) {
-                        onRemoved(topCard, bottomCard)
-                    }
+            .addTitleView(vMenuReactions)
+            .groupCondition(ControllerApi.isCurrentAccount(publication.creator.id))
+            .add(t(API_TRANSLATE.app_remove)) {
+                val topCard = getTopCard()
+                val bottomCard = getBottomCard()
+                ControllerApi.removePublication(
+                    publication.id,
+                    t(API_TRANSLATE.chat_remove_confirm),
+                    t(API_TRANSLATE.chat_error_gone)
+                ) {
+                    onRemoved(topCard, bottomCard)
                 }
-                .clearGroupCondition()
-                .add(t(API_TRANSLATE.app_copy)) {
-                    ToolsAndroid.setToClipboard(publication.text)
-                    ToolsToast.show(t(API_TRANSLATE.app_copied))
-                }.condition(copyEnabled)
-                .add(t(API_TRANSLATE.app_history)) {  Navigator.to(SPublicationHistory(publication.id)) }.condition(ControllerPost.ENABLED_HISTORY)
-                .groupCondition(!ControllerApi.isCurrentAccount(publication.creator.id))
-                .add(t(API_TRANSLATE.app_report)) {  ControllerApi.reportPublication(publication.id, t(API_TRANSLATE.chat_report_confirm), t(API_TRANSLATE.chat_error_gone)) }.condition(publication.chatType == API.CHAT_TYPE_FANDOM_ROOT)
-                .spoiler(t(API_TRANSLATE.app_moderator))
-                .add(t(API_TRANSLATE.app_clear_reports)) {  ControllerApi.clearReportsPublication(publication.id, publication.publicationType) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(publication.chatType == API.CHAT_TYPE_FANDOM_ROOT && ControllerApi.can(publication.fandom.id, publication.fandom.languageId, API.LVL_MODERATOR_BLOCK) && publication.reportsCount > 0)
-                .add(t(API_TRANSLATE.app_block)) {
-                    val topCard = getTopCard()
-                    val bottomCard = getBottomCard()
-                    ControllerPublications.block(publication) {
-                        onRemoved(topCard, bottomCard)
-                    }
-                }.backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(publication.chatType == API.CHAT_TYPE_FANDOM_ROOT && ControllerApi.can(publication.fandom.id, publication.fandom.languageId, API.LVL_MODERATOR_BLOCK))
-                .clearGroupCondition()
-                .spoiler(t(API_TRANSLATE.app_protoadmin))
-                .add("Востановить") {  ControllerPublications.restoreDeepBlock(publication.id) }.backgroundRes(R.color.orange_700).textColorRes(R.color.white).condition(ControllerApi.can(API.LVL_PROTOADMIN) && publication.status == API.STATUS_DEEP_BLOCKED)
-                .asPopupShow(targetView, x, y)
+            }
+            .clearGroupCondition()
+            .add(t(API_TRANSLATE.app_copy)) {
+                ToolsAndroid.setToClipboard(publication.text)
+                ToolsToast.show(t(API_TRANSLATE.app_copied))
+            }.condition(copyEnabled)
+            .add(t(API_TRANSLATE.app_history)) { Navigator.to(SPublicationHistory(publication.id)) }
+            .condition(ControllerPost.ENABLED_HISTORY)
+            .groupCondition(!ControllerApi.isCurrentAccount(publication.creator.id))
+            .add(t(API_TRANSLATE.app_report)) {
+                ControllerApi.reportPublication(
+                    publication.id,
+                    t(API_TRANSLATE.chat_report_confirm),
+                    t(API_TRANSLATE.chat_error_gone)
+                )
+            }.condition(publication.chatType == API.CHAT_TYPE_FANDOM_ROOT)
+            .spoiler(t(API_TRANSLATE.app_moderator))
+            .add(t(API_TRANSLATE.app_clear_reports)) {
+                ControllerApi.clearReportsPublication(
+                    publication.id,
+                    publication.publicationType
+                )
+            }.backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(
+                publication.chatType == API.CHAT_TYPE_FANDOM_ROOT && ControllerApi.can(
+                    publication.fandom.id,
+                    publication.fandom.languageId,
+                    API.LVL_MODERATOR_BLOCK
+                ) && publication.reportsCount > 0
+            )
+            .add(t(API_TRANSLATE.app_block)) {
+                val topCard = getTopCard()
+                val bottomCard = getBottomCard()
+                ControllerPublications.block(publication) {
+                    onRemoved(topCard, bottomCard)
+                }
+            }.backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(
+                publication.chatType == API.CHAT_TYPE_FANDOM_ROOT && ControllerApi.can(
+                    publication.fandom.id,
+                    publication.fandom.languageId,
+                    API.LVL_MODERATOR_BLOCK
+                )
+            )
+            .clearGroupCondition()
+            .spoiler(t(API_TRANSLATE.app_protoadmin))
+            .add("Востановить") { ControllerPublications.restoreDeepBlock(publication.id) }
+            .backgroundRes(R.color.orange_700).textColorRes(R.color.white)
+            .condition(ControllerApi.can(API.LVL_PROTOADMIN) && publication.status == API.STATUS_DEEP_BLOCKED)
+            .asPopupShow(targetView, x, y)
 
         val p = ToolsView.dpToPx(4).toInt()
         for (i in API.REACTIONS.indices) {
@@ -822,14 +921,14 @@ open class CardChatMessage constructor(
         }
     }
 
-    private fun onRemoved(topCard:CardChatMessage?, bottomCard:CardChatMessage?){
+    private fun onRemoved(topCard: CardChatMessage?, bottomCard: CardChatMessage?) {
         val publication = xPublication.publication as PublicationChatMessage
         topCard?.update()
         bottomCard?.update()
         val p = topCard?.xPublication?.publication as PublicationChatMessage?
-        if(p != null){
+        if (p != null) {
             EventBus.post(EventChatNewBottomMessage(p))
-        }else{
+        } else {
             val n = PublicationChatMessage()
             n.chatType = publication.chatType
             n.fandom = publication.fandom
@@ -838,20 +937,30 @@ open class CardChatMessage constructor(
     }
 
     private fun sendReaction(reactionIndex: Long) {
-        ApiRequestsSupporter.executeProgressDialog(RPublicationsReactionAdd(xPublication.publication.id, reactionIndex)) { _ ->
+        ApiRequestsSupporter.executeProgressDialog(
+            RPublicationsReactionAdd(
+                xPublication.publication.id,
+                reactionIndex
+            )
+        ) { _ ->
             ToolsToast.show(t(API_TRANSLATE.app_done))
             EventBus.post(EventPublicationReactionAdd(xPublication.publication.id, reactionIndex))
         }
-                .onApiError(API.ERROR_ALREADY) { ToolsToast.show(t(API_TRANSLATE.app_done)) }
-                .onApiError(API.ERROR_GONE) { ToolsToast.show(t(API_TRANSLATE.comment_error_gone)) }
+            .onApiError(API.ERROR_ALREADY) { ToolsToast.show(t(API_TRANSLATE.app_done)) }
+            .onApiError(API.ERROR_GONE) { ToolsToast.show(t(API_TRANSLATE.comment_error_gone)) }
     }
 
     private fun removeReaction(reactionIndex: Long) {
-        ApiRequestsSupporter.executeProgressDialog(RPublicationsReactionRemove(xPublication.publication.id, reactionIndex)) { _ ->
+        ApiRequestsSupporter.executeProgressDialog(
+            RPublicationsReactionRemove(
+                xPublication.publication.id,
+                reactionIndex
+            )
+        ) { _ ->
             ToolsToast.show(t(API_TRANSLATE.app_done))
             EventBus.post(EventPublicationReactionRemove(xPublication.publication.id, reactionIndex))
         }
-                .onApiError(API.ERROR_GONE) { ToolsToast.show(t(API_TRANSLATE.comment_error_gone)) }
+            .onApiError(API.ERROR_GONE) { ToolsToast.show(t(API_TRANSLATE.comment_error_gone)) }
     }
 
 
@@ -863,7 +972,12 @@ open class CardChatMessage constructor(
         }
 
         if (onClick == null) {
-            SChat.instance(ChatTag(publication.chatType, publication.fandom.id, publication.fandom.languageId), publication.id, false, Navigator.TO)
+            SChat.instance(
+                ChatTag(publication.chatType, publication.fandom.id, publication.fandom.languageId),
+                publication.id,
+                false,
+                Navigator.TO
+            )
             return true
         } else {
             return onClick!!.invoke(publication)
@@ -872,7 +986,7 @@ open class CardChatMessage constructor(
 
     override fun notifyItem() {
         val publication = xPublication.publication as PublicationChatMessage
-        ImageLoader.load(publication.creator.imageId).intoCash()
+        ImageLoader.load(publication.creator.image).intoCash()
     }
 
     //
@@ -912,7 +1026,7 @@ open class CardChatMessage constructor(
         }
     }
 
-    private fun willHideLabel():Boolean{
+    private fun willHideLabel(): Boolean {
         val topPublication = getTopPublication()
         return topPublication != null &&
                 topPublication.creator.id == xPublication.publication.creator.id &&

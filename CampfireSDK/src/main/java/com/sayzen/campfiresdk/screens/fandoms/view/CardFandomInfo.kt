@@ -5,9 +5,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.fandoms.FandomLink
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.requests.fandoms.*
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
@@ -21,6 +22,7 @@ import com.sayzen.campfiresdk.models.objects.FandomParam
 import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.adapters.XFandom
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsAndroid
@@ -50,7 +52,7 @@ class CardFandomInfo(
 
     private var loaded = false
     private var loading = false
-    private var gallery = emptyArray<Long>()
+    private var gallery = emptyArray<ImageRef>()
     private var links = emptyArray<FandomLink>()
     private var description: String = ""
     private var names = emptyArray<String>()
@@ -131,7 +133,7 @@ class CardFandomInfo(
                 .onComplete { r ->
                     loading = false
                     loaded = true
-                    gallery = r.gallery
+                    gallery = r.galleryImages
                     links = r.links
                     description = r.description
                     names = r.names
@@ -537,7 +539,7 @@ class CardFandomInfo(
         vText.visibility = if (gallery.isEmpty()) View.VISIBLE else View.INVISIBLE
     }
 
-    private fun onGalleryImageClicked(i: Long) {
+    private fun onGalleryImageClicked(i: ImageRef) {
         if (!ControllerApi.can(xFandom.getId(), xFandom.getLanguageId(), API.LVL_MODERATOR_GALLERY)) {
             ToolsToast.show(t(API_TRANSLATE.error_low_lvl))
             return
@@ -551,10 +553,19 @@ class CardFandomInfo(
             .setOnEnter(t(API_TRANSLATE.app_remove)) { w, comment ->
                 ApiRequestsSupporter.executeEnabled(
                     w,
-                    RFandomsModerationGalleryRemove(xFandom.getId(), xFandom.getLanguageId(), i, comment)
+                    RFandomsModerationGalleryRemove(
+                        xFandom.getId(),
+                        xFandom.getLanguageId(),
+                        i.imageId,
+                        comment
+                    )
                 ) {
-                    val list = ArrayList<Long>()
-                    for (id in gallery) if (id != i) list.add(id)
+                    val list = ArrayList<ImageRef>()
+                    for (item in gallery) {
+                        if (item != i) {
+                            list.add(item)
+                        }
+                    }
                     EventBus.post(
                         EventFandomInfGalleryChanged(
                             xFandom.getId(),
@@ -599,7 +610,7 @@ class CardFandomInfo(
                                         )
                                     ) { r ->
                                         val array = Array(gallery.size + 1) {
-                                            if (gallery.size == it) r.imageId
+                                            if (gallery.size == it) r.image
                                             else gallery[it]
                                         }
                                         EventBus.post(
@@ -673,28 +684,28 @@ class CardFandomInfo(
             vLink.setOnClickListener { ControllerLinks.openLink(link.url) }
 
             when (link.imageIndex) {
-                1L -> ImageLoader.load(if (ControllerApp.isDarkThem()) API_RESOURCES.ICON_YOUTUBE_WHITE else API_RESOURCES.ICON_YOUTUBE_BLACK)
+                1L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_YOUTUBE_WHITE else ApiResources.ICON_YOUTUBE_BLACK)
                     .into(vLinkImage)
 
-                2L -> ImageLoader.load(if (ControllerApp.isDarkThem()) API_RESOURCES.ICON_DISCORD_WHITE else API_RESOURCES.ICON_DISCORD_BLACK)
+                2L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_DISCORD_WHITE else ApiResources.ICON_DISCORD_BLACK)
                     .into(vLinkImage)
 
-                3L -> ImageLoader.load(if (ControllerApp.isDarkThem()) API_RESOURCES.ICON_WIKI_WHITE else API_RESOURCES.ICON_WIKI_BLACK)
+                3L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_WIKI_WHITE else ApiResources.ICON_WIKI_BLACK)
                     .into(vLinkImage)
 
-                4L -> ImageLoader.load(if (ControllerApp.isDarkThem()) API_RESOURCES.ICON_TWITTER_WHITE else API_RESOURCES.ICON_TWITTER_BLACK)
+                4L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_TWITTER_WHITE else ApiResources.ICON_TWITTER_BLACK)
                     .into(vLinkImage)
 
-                5L -> ImageLoader.load(if (ControllerApp.isDarkThem()) API_RESOURCES.ICON_STEAM_WHITE else API_RESOURCES.ICON_STEAM_BLACK)
+                5L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_STEAM_WHITE else ApiResources.ICON_STEAM_BLACK)
                     .into(vLinkImage)
 
-                6L -> ImageLoader.load(if (ControllerApp.isDarkThem()) API_RESOURCES.ICON_GOOGLE_PLAY_WHITE else API_RESOURCES.ICON_GOOGLE_PLAY_BLACK)
+                6L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_GOOGLE_PLAY_WHITE else ApiResources.ICON_GOOGLE_PLAY_BLACK)
                     .into(vLinkImage)
 
-                7L -> ImageLoader.load(if (ControllerApp.isDarkThem()) API_RESOURCES.ICON_APPSTORE_WHITE else API_RESOURCES.ICON_APPSTORE_BLACK)
+                7L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_APPSTORE_WHITE else ApiResources.ICON_APPSTORE_BLACK)
                     .into(vLinkImage)
 
-                8L -> ImageLoader.load(if (ControllerApp.isDarkThem()) API_RESOURCES.ICON_CAMPFIRE else API_RESOURCES.ICON_CAMPFIRE)
+                8L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_CAMPFIRE else ApiResources.ICON_CAMPFIRE)
                     .into(vLinkImage)
 
                 else -> vLinkImage.setImageResource(R.drawable.ic_insert_link_white_24dp)

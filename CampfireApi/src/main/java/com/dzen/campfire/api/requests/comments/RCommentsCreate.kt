@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.comments
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.PublicationComment
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -69,6 +70,9 @@ open class RCommentsCreate(
             comment = json.m(inp, "comment", comment, PublicationComment::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            comment.fillImageRefs(receiver)
+        }
     }
 
 }

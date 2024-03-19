@@ -1,5 +1,7 @@
 package com.dzen.campfire.api.requests.accounts
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -23,6 +25,8 @@ open class RAccountsAdminPut(var login: String, var googleTokenId: String, var i
     class Response : Request.Response {
 
         var accountId: Long = 0
+        var image = ImageRef()
+        @Deprecated("use ImageRefs")
         var imageId: Long = 0
 
         constructor(json: Json) {
@@ -36,9 +40,13 @@ open class RAccountsAdminPut(var login: String, var googleTokenId: String, var i
 
         override fun json(inp: Boolean, json: Json) {
             accountId = json.m(inp, "accountId", accountId)
+            image = json.m(inp, "image", image)
             imageId = json.m(inp, "imageId", imageId)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            receiver.add(image, imageId)
+        }
     }
 
 

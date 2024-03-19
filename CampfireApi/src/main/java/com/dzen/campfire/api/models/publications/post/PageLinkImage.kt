@@ -1,12 +1,15 @@
 package com.dzen.campfire.api.models.publications.post
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.client.Request
 import com.dzen.campfire.api.tools.server.IControllerResources
 import com.sup.dev.java.libs.json.Json
 
 class PageLinkImage : Page() {
-
+    var image = ImageRef()
+    @Deprecated("use ImageRefs")
     var imageId = 0L
     var link = ""
     var insertBytes: ByteArray? = null
@@ -15,6 +18,7 @@ class PageLinkImage : Page() {
 
     override fun json(inp: Boolean, json: Json): Json {
         link = json.m(inp, "link", link)
+        image = json.m(inp, "image", image)
         imageId = json.m(inp, "imageId", imageId)
 
         return super.json(inp, json)
@@ -31,6 +35,11 @@ class PageLinkImage : Page() {
         list.add(imageId)
     }
 
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        super.fillImageRefs(receiver)
+        receiver.add(image, imageId)
+    }
+
     override fun addInsertData(request: Request<*>) {
         request.addDataOutput(insertBytes)
     }
@@ -43,6 +52,5 @@ class PageLinkImage : Page() {
         insertBytes = request.dataOutput[offset]
         return 1
     }
-
 }
 

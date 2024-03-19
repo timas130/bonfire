@@ -18,6 +18,8 @@ import com.sayzen.campfiresdk.controllers.ControllerScreenAnimations
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.animations.*
+import com.sayzen.campfiresdk.support.load
+import com.sayzen.campfiresdk.support.loadGif
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -201,13 +203,9 @@ class SQuestPlayer(
             throw AssertionError()
         }
 
-        if (part.imageId > 0) {
+        if (part.image.isNotEmpty()) {
             vImageWrapper.visibility = VISIBLE
-            if (part.gifId > 0) {
-                ImageLoader.loadGif(part.imageId, part.gifId, vTitleImage)
-            } else {
-                ImageLoader.load(part.imageId).into(vTitleImage)
-            }
+            ImageLoader.loadGif(part.image, part.gif, vTitleImage)
         } else {
             vImageWrapper.visibility = GONE
         }

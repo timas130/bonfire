@@ -2,16 +2,16 @@ package com.sayzen.campfiresdk.screens.post.search
 
 import android.view.View
 import com.dzen.campfire.api.API_TRANSLATE
-import com.dzen.campfire.api.requests.post.RPostGetAllByTag
-import com.sayzen.campfiresdk.models.cards.CardPublication
 import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.models.publications.tags.PublicationTag
+import com.dzen.campfire.api.requests.post.RPostGetAllByTag
 import com.dzen.campfire.api.requests.tags.RTagsGet
-import com.sayzen.campfiresdk.screens.post.create.SPostCreate
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.models.cards.CardPublication
 import com.sayzen.campfiresdk.screens.fandoms.STags
+import com.sayzen.campfiresdk.screens.post.create.SPostCreate
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -46,7 +46,7 @@ class SPostsSearch(val tag: PublicationTag) : SLoadingRecycler<CardPublication, 
         (vFab as View).visibility = View.VISIBLE
         vFab.setImageResource(R.drawable.ic_add_white_24dp)
         vFab.setOnClickListener {
-            SPostCreate.instance(tag.fandom.id, tag.fandom.languageId, tag.fandom.name, tag.fandom.imageId, SPostCreate.PostParams().setTags(arrayOf(tag.id)), Navigator.TO)
+            SPostCreate.instance(tag.fandom.id, tag.fandom.languageId, tag.fandom.name, tag.fandom.image, SPostCreate.PostParams().setTags(arrayOf(tag.id)), Navigator.TO)
         }
 
         adapter.setBottomLoader { onLoad, cards ->

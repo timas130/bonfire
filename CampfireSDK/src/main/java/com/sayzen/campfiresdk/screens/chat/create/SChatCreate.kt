@@ -6,6 +6,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.chat.ChatMember
 import com.dzen.campfire.api.models.chat.ChatParamsConf
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.requests.chat.RChatChange
 import com.dzen.campfire.api.requests.chat.RChatCreate
 import com.dzen.campfire.api.requests.chat.RChatGetForChange
@@ -17,7 +18,8 @@ import com.sayzen.campfiresdk.models.events.chat.EventChatChanged
 import com.sayzen.campfiresdk.screens.account.search.SAccountSearch
 import com.sayzen.campfiresdk.screens.chat.SChat
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
-import com.sup.dev.android.libs.image_loader.ImageLoaderId
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -26,14 +28,14 @@ import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.cards.CardMenu
 import com.sup.dev.android.views.cards.CardSpace
-import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapter
 import com.sup.dev.android.views.splash.SplashAlert
+import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapter
 import com.sup.dev.java.libs.eventBus.EventBus
 
 class SChatCreate(
         var chatId: Long,
         val changeName: String,
-        val changeImageId: Long,
+        val changeImage: ImageRef,
         val accounts: Array<ChatMember>,
         val myLvl: Long,
         val params: ChatParamsConf
@@ -44,7 +46,7 @@ class SChatCreate(
         fun instance(chatId: Long, action: NavigationAction) {
 
             ApiRequestsSupporter.executeProgressDialog(RChatGetForChange(chatId)) { r ->
-                Navigator.action(action, SChatCreate(chatId, r.chatName, r.chatImageId, r.accounts, r.myLvl, r.params))
+                Navigator.action(action, SChatCreate(chatId, r.chatName, r.chatImage, r.accounts, r.myLvl, r.params))
             }
                     .onApiError(API.ERROR_ACCESS) { ToolsToast.show(t(API_TRANSLATE.error_chat_access)) }
 
@@ -57,9 +59,9 @@ class SChatCreate(
     private val vFab: FloatingActionButton = findViewById(R.id.vFab)
     private val adapter = RecyclerCardAdapter()
 
-    private val cardTitle = CardCreateTitle(chatId, myLvl, changeName, changeImageId, params) { updateFinish() }
+    private val cardTitle = CardCreateTitle(chatId, myLvl, changeName, changeImage, params) { updateFinish() }
 
-    constructor() : this(0, "", 0, emptyArray(), API.CHAT_MEMBER_LVL_ADMIN, ChatParamsConf())
+    constructor() : this(0, "", ImageRef(), emptyArray(), API.CHAT_MEMBER_LVL_ADMIN, ChatParamsConf())
 
     init {
         disableShadows()
@@ -162,11 +164,20 @@ class SChatCreate(
         }
 
 
-        ApiRequestsSupporter.executeProgressDialog(RChatChange(chatId, cardTitle.text, cardTitle.image, accountsList.toTypedArray(), removeAccountList.toTypedArray(), changeAccountList.toTypedArray(), changeAccountListLevels.toTypedArray(), params)) { r ->
-            if (cardTitle.image != null) ImageLoaderId(changeImageId).clear()
+        ApiRequestsSupporter.executeProgressDialog(RChatChange(
+            chatId = chatId,
+            name = cardTitle.text,
+            image = cardTitle.image,
+            newAccounts = accountsList.toTypedArray(),
+            removeAccounts = removeAccountList.toTypedArray(),
+            changeAccounts = changeAccountList.toTypedArray(),
+            changeAccountsLevels = changeAccountListLevels.toTypedArray(),
+            chatParams = params
+        )) { r ->
+            if (cardTitle.image != null) ImageLoader.load(changeImage).clear()
             var count = 0
             for (c in adapter.get(CardChatMember::class)) if (c.chatMember.memberStatus == API.CHAT_MEMBER_STATUS_ACTIVE || c.chatMember.memberStatus == 0L) count++
-            EventBus.post(EventChatChanged(chatId, cardTitle.text, changeImageId, count))
+            EventBus.post(EventChatChanged(chatId, cardTitle.text, changeImage, count))
             Navigator.remove(this)
             SChat.instance(r.tag, 0, false, Navigator.TO)
         }.onApiError { exception ->

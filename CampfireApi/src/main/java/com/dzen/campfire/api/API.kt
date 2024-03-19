@@ -21,11 +21,14 @@ class API(
     companion object {
         const val PORT_SERV_JL_V1 = 7070
         const val PORT_SERV_JL = 7071
-        const val SERV_ROOT = "https://cf2.bonfire.moe/"
+
+        const val S3_ROOT = "https://s3.eu-central-2.wasabisys.com/bonfire"
+        const val MELIOR_ROOT = "https://api.bonfire.moe"
+        const val SERV_ROOT = "https://cf2.bonfire.moe"
 
         const val DOMEN = "https://bonfire.moe/r/"
         const val DOMEN_DL = "bf://link/"
-        const val VERSION = "2.0"
+        const val VERSION = "3.0"
         const val SUPPORTED_VERSION = "2.0"
 
         const val PROJECT_KEY_CAMPFIRE = "Campfire"
@@ -139,23 +142,17 @@ class API(
         val ENGLISH =
             ToolsText.LATIS_S + ToolsText.LATIS_S.uppercase(Locale.ENGLISH) + ToolsText.NUMBERS_S + ToolsText.TEXT_CHARS_s + ToolsText.SPEC
 
-        const val LOGIN_SPLITTER = " - "
-        const val LOGIN_EMAIL_PREFIX = "Email"
-        const val LOGIN_EMAIL2_PREFIX = "Email2"
-        const val LOGIN_GOOGLE_PREFIX = "GoogleAlt"
-
-        const val ACCOUNT_IMG_SIDE = 256
-        const val ACCOUNT_IMG_SIDE_GIF = 64
-        const val ACCOUNT_IMG_WEIGHT = 1024 * 16
-        const val ACCOUNT_IMG_WEIGHT_GIF = 1024 * 128
-        const val ACCOUNT_TITLE_IMG_W = 800
-        const val ACCOUNT_TITLE_IMG_H = 400
+        const val ACCOUNT_IMG_SIDE = 384
+        const val ACCOUNT_IMG_SIDE_GIF = 92
+        const val ACCOUNT_IMG_WEIGHT = 1024 * 32
+        const val ACCOUNT_IMG_WEIGHT_GIF = 1024 * 256
+        const val ACCOUNT_TITLE_IMG_W = 1200
+        const val ACCOUNT_TITLE_IMG_H = 600
         const val ACCOUNT_TITLE_IMG_GIF_W = 400
         const val ACCOUNT_TITLE_IMG_GIF_H = 200
-        const val ACCOUNT_TITLE_IMG_WEIGHT = 1024 * 32
-        const val ACCOUNT_TITLE_IMG_GIF_WEIGHT = 1024 * 1024
-        const val ACCOUNT_PASSOWRD_L_MIN = 8
-        const val ACCOUNT_STATUS_MAX_L = 80
+        const val ACCOUNT_TITLE_IMG_WEIGHT = 1024 * 256
+        const val ACCOUNT_TITLE_IMG_GIF_WEIGHT = 1024 * 1024 * 2
+        const val ACCOUNT_STATUS_MAX_L = 100
         @Deprecated("use ToolsText.isValidUsername")
         val ACCOUNT_LOGIN_CHARS = ToolsText.LATIS_S + ToolsText.NUMBERS_S + "_"
         const val ACCOUNT_AGE_MAX = 200
@@ -165,21 +162,21 @@ class API(
         const val ACCOUNT_LINK_MAX = 7
         const val ACCOUNT_NOTE_MAX = 200
 
-        const val FANDOM_TITLE_IMG_W = 800
-        const val FANDOM_TITLE_IMG_H = 400
-        const val FANDOM_TITLE_IMG_WEIGHT = 1024 * 32
+        const val FANDOM_TITLE_IMG_W = 1200
+        const val FANDOM_TITLE_IMG_H = 600
+        const val FANDOM_TITLE_IMG_WEIGHT = 1024 * 64
         const val FANDOM_TITLE_IMG_GIF_W = 400
         const val FANDOM_TITLE_IMG_GIF_H = 200
-        const val FANDOM_TITLE_IMG_GIF_WEIGHT = 1024 * 1024
-        const val FANDOM_IMG_SIDE = 256
+        const val FANDOM_TITLE_IMG_GIF_WEIGHT = 1024 * 1024 * 2
+        const val FANDOM_IMG_SIDE = 384
         val FANDOM_NAME_CHARS = ENGLISH
-        const val FANDOM_IMG_WEIGHT = 1024 * 16
-        const val CHAT_IMG_BACKGROUND_W = 360
-        const val CHAT_IMG_BACKGROUND_H = 640
-        const val CHAT_IMG_BACKGROUND_WEIGHT = 1024 * 32
+        const val FANDOM_IMG_WEIGHT = 1024 * 32
+        const val CHAT_IMG_BACKGROUND_W = 720
+        const val CHAT_IMG_BACKGROUND_H = 1280
+        const val CHAT_IMG_BACKGROUND_WEIGHT = 1024 * 128
         const val FANDOM_NAME_MAX = 100
-        const val FANDOM_GALLERY_MAX_SIDE = 1024
-        const val FANDOM_GALLERY_MAX_WEIGHT = 1024 * 32
+        const val FANDOM_GALLERY_MAX_SIDE = 1280
+        const val FANDOM_GALLERY_MAX_WEIGHT = 1024 * 256
         const val FANDOM_DESCRIPTION_MAX_L = 500
         const val FANDOM_GALLERY_MAX = 10
         const val FANDOM_LINKS_URL_MAX_L = 500
@@ -214,23 +211,23 @@ class API(
         const val EFFECT_INDEX_TRANSLATOR = 7L
         const val EFFECT_INDEX_MENTION_LOCK = 8L
 
-        const val CHAT_IMG_SIDE = 256
-        const val CHAT_IMG_SIDE_GIF = 64
-        const val CHAT_IMG_WEIGHT = 1024 * 16
-        const val CHAT_IMG_WEIGHT_GIF = 1024 * 16
+        const val CHAT_IMG_SIDE = 384
+        const val CHAT_IMG_SIDE_GIF = 92
+        const val CHAT_IMG_WEIGHT = 1024 * 32
+        const val CHAT_IMG_WEIGHT_GIF = 1024 * 256
         const val CHAT_NAME_MIN = 1
         const val CHAT_NAME_MAX = 100
 
         const val WIKI_NAME_MAX = 200
-        const val WIKI_IMG_SIDE = 256
-        const val WIKI_IMG_SIDE_GIF = 64
-        const val WIKI_IMG_WEIGHT = 1024 * 16
-        const val WIKI_IMG_WEIGHT_GIF = 1024 * 128
-        const val WIKI_TITLE_IMG_W = 800
-        const val WIKI_TITLE_IMG_H = 400
+        const val WIKI_IMG_SIDE = 384
+        const val WIKI_IMG_SIDE_GIF = 92
+        const val WIKI_IMG_WEIGHT = 1024 * 32
+        const val WIKI_IMG_WEIGHT_GIF = 1024 * 256
+        const val WIKI_TITLE_IMG_W = 1200
+        const val WIKI_TITLE_IMG_H = 600
         const val WIKI_TITLE_IMG_GIF_W = 400
         const val WIKI_TITLE_IMG_GIF_H = 200
-        const val WIKI_TITLE_IMG_WEIGHT = 1024 * 32
+        const val WIKI_TITLE_IMG_WEIGHT = 1024 * 64
         const val WIKI_TITLE_IMG_GIF_WEIGHT = 1024 * 1024
         const val WIKI_TYPE_SECION = 1L
         const val WIKI_TYPE_ARTICLE = 2L
@@ -766,8 +763,8 @@ class API(
         const val CHAT_TYPE_FANDOM_SUB = 4L
         const val CHAT_MESSAGE_TEXT_MAX_L = 2000
         const val CHAT_MESSAGE_TEXT_MIN_L = 1
-        const val CHAT_MESSAGE_IMAGE_WEIGHT = 1024 * 64
-        const val CHAT_MESSAGE_IMAGE_SIDE = 1000
+        const val CHAT_MESSAGE_IMAGE_WEIGHT = 1024 * 256
+        const val CHAT_MESSAGE_IMAGE_SIDE = 1080
         const val CHAT_MESSAGE_IMAGE_SIDE_GIF = 400
         const val CHAT_MESSAGE_GIF_MAX_WEIGHT = 1024 * 1024
         const val CHAT_MESSAGE_MAX_IMAGES_COUNT = 5
@@ -784,17 +781,17 @@ class API(
         const val TAG_NAME_MIN_L = 1
         const val TAG_NAME_MAX_L = 20
         const val TAG_IMAGE_SIDE = 64
-        const val TAG_IMAGE_WEIGHT = 1024 * 2
+        const val TAG_IMAGE_WEIGHT = 1024 * 8
 
-        const val STICKERS_PACK_IMAGE_SIDE = 256
-        const val STICKERS_PACK_IMAGE_WEIGHT = 1024 * 16
+        const val STICKERS_PACK_IMAGE_SIDE = 384
+        const val STICKERS_PACK_IMAGE_WEIGHT = 1024 * 32
         const val STICKERS_PACK_NAME_L_MIN = 2
         const val STICKERS_PACK_NAME_L_MAX = 100
         const val STICKERS_IMAGE_SIDE = 300
         const val STICKERS_IMAGE_SIDE_GIF = 300
-        const val STICKERS_IMAGE_WEIGHT = 1024 * 8
-        const val STICKERS_IMAGE_WEIGHT_GIF = 1024 * 64
-        const val STICKERS_MAX_COUNT_IN_PACK = 50
+        const val STICKERS_IMAGE_WEIGHT = 1024 * 32
+        const val STICKERS_IMAGE_WEIGHT_GIF = 1024 * 256
+        const val STICKERS_MAX_COUNT_IN_PACK = 100
         const val STICKERS_PACK_MAX_COUNT_ON_ACCOUNT = 50
         const val STICKERS_MAX_COUNT_ON_ACCOUNT = 100
 
@@ -837,10 +834,10 @@ class API(
         const val PAGE_TEXT_TITLE_MAX_L = 100
         const val PAGE_IMAGE_SIDE = 1500
         const val PAGE_IMAGE_SIDE_GIF = 400
-        const val PAGE_IMAGE_WEIGHT = 1024 * 128
+        const val PAGE_IMAGE_WEIGHT = 1024 * 768
         const val PAGE_IMAGE_GIF_WEIGHT = 1024 * 1024 * 6
         const val PAGE_VIDEO_IMAGE_SIDE = 1000
-        const val PAGE_VIDEO_IMAGE_WEIGHT = 1024 * 64
+        const val PAGE_VIDEO_IMAGE_WEIGHT = 1024 * 128
         const val PAGE_QUOTE_AUTHOR_MAX_L = 50
         const val PAGE_QUOTE_TEXT_MAX_L = 1000
         const val PAGE_LINK_NAME_MAX_L = 100
@@ -852,11 +849,13 @@ class API(
         const val PAGE_POLLING_TITLE_MAX = 100
         const val PAGE_POLLING_BLACKLIST_MAX = 10
         const val PAGE_IMAGES_MINI_SIDE = 500
-        const val PAGE_IMAGES_MINI_WEIGHT = 1024 * 16
+        const val PAGE_IMAGES_MINI_WEIGHT = 1024 * 128
+        const val PAGE_IMAGES_MINI_SIDE_GIF = 128
+        const val PAGE_IMAGES_MINI_WEIGHT_GIF = 1024 * 384
         const val PAGE_IMAGES_SIDE = 1980
-        const val PAGE_IMAGES_WEIGHT = 1024 * 128
-        const val PAGE_IMAGES_SIDE_GIF = 164
-        const val PAGE_IMAGES_WEIGHT_GIF = 1024 * 512
+        const val PAGE_IMAGES_WEIGHT = 1024 * 1024
+        const val PAGE_IMAGES_SIDE_GIF = 400
+        const val PAGE_IMAGES_WEIGHT_GIF = 1024 * 1024 * 6
         const val PAGE_IMAGES_MAX_COUNT = 10
         const val PAGE_IMAGES_TITLE_MAX = 100
         const val PAGE_TABLE_MAX_COLUMNS = 5
@@ -870,9 +869,9 @@ class API(
         const val PAGE_DOWNLOAD_TITLE_MAX = 100
         const val PAGE_DOWNLOAD_SIZE_MAX = 1024 * 1024 * 50
         const val PAGE_CAMPFIRE_OBJECT_LINK_MAX = 2000
-        const val PAGE_LINK_IMAGE_W = 800
-        const val PAGE_LINK_IMAGE_H = 400
-        const val PAGE_LINK_IMAGE_WEIGHT = 1024 * 128
+        const val PAGE_LINK_IMAGE_W = 1200
+        const val PAGE_LINK_IMAGE_H = 600
+        const val PAGE_LINK_IMAGE_WEIGHT = 1024 * 256
 
         const val PAGES_SOURCE_TYPE_POST = 1L
         const val PAGES_SOURCE_TYPE_WIKI = 2L
@@ -1046,13 +1045,13 @@ class API(
         //
 
         val REACTIONS = arrayOf(
-                API_RESOURCES.EMOJI_1,
-                API_RESOURCES.EMOJI_2,
-                API_RESOURCES.EMOJI_3,
-                API_RESOURCES.EMOJI_4,
-                API_RESOURCES.EMOJI_5,
-                API_RESOURCES.EMOJI_6,
-                API_RESOURCES.EMOJI_7
+                ApiResources.EMOJI_1,
+                ApiResources.EMOJI_2,
+                ApiResources.EMOJI_3,
+                ApiResources.EMOJI_4,
+                ApiResources.EMOJI_5,
+                ApiResources.EMOJI_6,
+                ApiResources.EMOJI_7
         )
 
         //

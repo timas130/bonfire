@@ -8,12 +8,14 @@ import android.widget.TextView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.requests.project.RProjectDonatesCreateDraft
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.tools.ToolsBitmap
@@ -79,14 +81,14 @@ class SDonateMake : Screen(R.layout.screen_donate_make){
 
         ControllerLinks.makeLinkable(vMobileAlert)
 
-        ImageLoader.load(API_RESOURCES.ICON_YANDEX_DENGI).into(vIcon_yandex)
-        ImageLoader.load(API_RESOURCES.ICON_BANK_CARD).into(vIcon_card)
-        ImageLoader.load(API_RESOURCES.ICON_PHONE).into(vIcon_phone)
+        ImageLoader.load(ApiResources.ICON_YANDEX_DENGI).into(vIcon_yandex)
+        ImageLoader.load(ApiResources.ICON_BANK_CARD).into(vIcon_card)
+        ImageLoader.load(ApiResources.ICON_PHONE).into(vIcon_phone)
 
         setSelected(vIcon_card)
 
-        ImageLoader.load(API_RESOURCES.IMAGE_BACKGROUND_25).noHolder().into(vImage_2)
-        ImageLoader.load(API_RESOURCES.IMAGE_BACKGROUND_25).noHolder().intoBitmap { vImage_1.setImageBitmap(ToolsBitmap.mirror(it!!)) }
+        ImageLoader.load(ApiResources.IMAGE_BACKGROUND_25).noHolder().into(vImage_2)
+        ImageLoader.load(ApiResources.IMAGE_BACKGROUND_25).noHolder().intoBitmap { vImage_1.setImageBitmap(ToolsBitmap.mirror(it!!)) }
     }
 
 

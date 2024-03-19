@@ -3,6 +3,8 @@ package com.dzen.campfire.api.models.publications
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.fandoms.Fandom
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.chat.PublicationChatMessage
 import com.dzen.campfire.api.models.publications.events_admins.PublicationEventAdmin
 import com.dzen.campfire.api.models.publications.events_fandoms.PublicationEventFandom
@@ -20,7 +22,7 @@ import com.sup.dev.java.libs.json.JsonParsable
 import com.sup.dev.java.libs.json.JsonPolimorf
 import com.sup.dev.java.tools.ToolsThreads
 
-abstract class Publication : JsonPolimorf {
+abstract class Publication : JsonPolimorf, ImageHolder {
 
     var jsonDB: Json? = null
 
@@ -98,27 +100,19 @@ abstract class Publication : JsonPolimorf {
         tag_7 = json.m(inp, "tag_7", tag_7)
         tag_s_1 = json.m(inp, "tag_s_1", tag_s_1)
         blacklisted = json.m(inp, "blacklisted", blacklisted)
+        
+        if (inp) jsonDB = jsonDB(true, Json())
         jsonDB = json.mNull(inp, "jsonDB", jsonDB, Json::class)
-
-        //  Обратная совместимость
-        json.m(inp, "creatorId", creator.id)
-        json.m(inp, "creatorImageId", creator.imageId)
-        json.m(inp, "creatorSex", creator.sex)
-        json.m(inp, "creatorName", creator.name)
-        json.m(inp, "creatorLvl", creator.lvl)
-        json.m(inp, "creatorKarma30", creator.karma30)
-        json.m(inp, "creatorLastOnlineTime", creator.lastOnlineDate)
-        json.m(inp, "fandomId", fandom.id)
-        json.m(inp, "fandomName", fandom.name)
-        json.m(inp, "fandomImageId", fandom.imageId)
-        json.m(inp, "fandomKarmaCof", fandom.karmaCof)
-        json.m(inp, "fandomClosed", fandom.closed)
-        json.m(inp, "languageId", fandom.languageId)
 
         jsonPublication(inp, json)
         if (!inp) restoreFromJsonDB()
 
         return json
+    }
+
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        fandom.fillImageRefs(receiver)
+        creator.fillImageRefs(receiver)
     }
 
     fun restoreFromJsonDB() {

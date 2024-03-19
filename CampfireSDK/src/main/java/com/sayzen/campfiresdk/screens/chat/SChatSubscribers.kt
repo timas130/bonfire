@@ -2,12 +2,15 @@ package com.sayzen.campfiresdk.screens.chat
 
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.requests.chat.RChatGetSubscribers
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.models.cards.CardAccount
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.screens.SLoadingRecycler
 import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapterLoading
@@ -25,7 +28,7 @@ class SChatSubscribers(
 
         setTitle(t(API_TRANSLATE.app_chat) + " " + chatName)
         setTextEmpty(t(API_TRANSLATE.app_empty))
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_4)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_4))
 
         adapter.setBottomLoader { onLoad, cards ->
             subscription = RChatGetSubscribers(fandomId, languageId, cards.size.toLong())

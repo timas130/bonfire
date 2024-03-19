@@ -1,9 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-apply plugin: 'java-library'
-apply plugin: 'kotlin'
-apply plugin: 'application'
-apply plugin: 'kotlinx-serialization'
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
+    id 'org.jetbrains.kotlin.plugin.serialization'
+    id 'application'
+    id 'com.apollographql.apollo3' version '3.8.2'
+}
 
 dependencies {
     implementation project(':CampfireApiMedia')
@@ -14,7 +17,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-admin:9.0.0'
     implementation 'org.slf4j:slf4j-simple:2.0.7'
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0"
-    implementation "com.squareup.okhttp3:okhttp:4.11.0"
+
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation "com.apollographql.apollo3:apollo-runtime:3.8.2"
 }
 
 jar {
@@ -26,15 +31,6 @@ jar {
 
 application {
     mainClass = 'com.dzen.campfire.server.app.App'
-}
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10'
-    }
 }
 
 repositories {
@@ -53,4 +49,18 @@ java {
 
 tasks.named('run').configure {
     workingDir = rootProject.projectDir
+}
+
+apollo {
+    service("melior") {
+        packageName.set("com.dzen.campfire.server")
+
+        // use CampfireServer:downloadMeliorApolloSchema to update schema
+        introspection {
+            endpointUrl.set("http://localhost:8000")
+            schemaFile.set(file("src/main/graphql/com/dzen/campfire/server/schema.graphqls"))
+        }
+
+        mapScalar("JSONObject", "kotlin.String", "com.dzen.campfire.server.rust.JsonAdapter")
+    }
 }

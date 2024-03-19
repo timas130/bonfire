@@ -3,6 +3,7 @@ package com.dzen.campfire.server.executors.achievements
 import com.dzen.campfire.api.requests.achievements.RAchievementsInfo
 import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerAchievements
+import com.dzen.campfire.server.rust.RustAchievements.achievements
 import com.dzen.campfire.server.rust.RustDailyTask
 import com.dzen.campfire.server.tables.TAccounts
 
@@ -16,14 +17,14 @@ class EAchievementsInfo : RAchievementsInfo(0) {
         val karma30:Long = v.next()
 
         val report = ControllerAchievements.recount(accountId)
-        for ((_, achievement) in report.achievements) {
+        for ((_, achievement) in report.achievements()) {
             indexes.add(achievement.id)
             lvls.add((achievement.target ?: -1) + 1)
         }
 
         return Response(
             karma30 = karma30,
-            karmaForce = report.totalLevel,
+            karmaForce = report.totalLevel.toLong(),
             indexes = indexes.toTypedArray(),
             lvls = lvls.toTypedArray(),
             dailyTask = RustDailyTask.getInfo(accountId)

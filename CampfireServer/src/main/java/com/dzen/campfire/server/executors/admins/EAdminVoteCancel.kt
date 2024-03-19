@@ -9,7 +9,6 @@ import com.dzen.campfire.api.models.publications.events_user.ApiEventUserAdminVo
 import com.dzen.campfire.api.models.publications.events_user.ApiEventUserAdminVoteCanceledForAdmin
 import com.dzen.campfire.api.requests.admins.RAdminVoteCancel
 import com.dzen.campfire.server.controllers.*
-import com.sup.dev.java.libs.debug.log
 
 class EAdminVoteCancel : RAdminVoteCancel(0, "") {
 

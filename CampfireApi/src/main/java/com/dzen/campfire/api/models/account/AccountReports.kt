@@ -1,10 +1,11 @@
 package com.dzen.campfire.api.models.account
 
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonParsable
 
-class AccountReports : JsonParsable {
-
+class AccountReports : JsonParsable, ImageHolder {
     var account = Account()
     var reportsCount = 0L
 
@@ -14,4 +15,7 @@ class AccountReports : JsonParsable {
         return json
     }
 
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        account.fillImageRefs(receiver)
+    }
 }

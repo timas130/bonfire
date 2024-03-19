@@ -6,6 +6,7 @@ import com.dzen.campfire.api.models.publications.PagesContainer
 import com.dzen.campfire.api.models.publications.post.PageVideo
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerYoutube
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.views.views.ViewIcon
 
@@ -28,12 +29,12 @@ class CardPageVideo(
         vImage.isClickable = clickable
         vImage.isFocusableInTouchMode = false
 
-        ImageLoader.load(page.imageId).size(page.w, page.h).into(vImage)
+        ImageLoader.load(page.image).into(vImage)
     }
 
     override fun notifyItem() {
         val page = this.page as PageVideo
-        ImageLoader.load(page.imageId).size(page.w, page.h).intoCash()
+        ImageLoader.load(page.image).intoCash()
     }
 
 }

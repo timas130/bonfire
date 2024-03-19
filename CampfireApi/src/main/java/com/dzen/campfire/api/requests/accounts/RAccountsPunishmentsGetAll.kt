@@ -1,6 +1,7 @@
 package com.dzen.campfire.api.requests.accounts
 
 import com.dzen.campfire.api.models.account.AccountPunishment
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -42,6 +43,11 @@ open class RAccountsPunishmentsGetAll(
             punishments = json.m(inp, "punishments", punishments, Array<AccountPunishment>::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (punishment in punishments) {
+                punishment.fillImageRefs(receiver)
+            }
+        }
     }
 
 

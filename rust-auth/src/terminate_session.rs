@@ -22,7 +22,7 @@ impl AuthServer {
             &self.base.jwt_decoding_key,
             &TokenClaims::get_access_validation(Validation::new(Algorithm::HS256)),
         )
-        .map_err(anyhow::Error::from)?;
+        .map_err(|_| AuthError::InvalidToken)?;
 
         let user_id = access_token
             .claims

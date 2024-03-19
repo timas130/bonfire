@@ -41,51 +41,9 @@ object ImageLoader {
     //  Tools
     //
 
-    fun loadByAny(any: Any): ImageLink? {
-        if (any is File) return load(any)
-        if (any is Int) return load(any)
-        if (any is Long) return load(any)
-        if (any is String) return load(any)
-        if (any is ByteArray) return load(any)
-        return null
-    }
-
     fun load(file: File) = ImageLoaderFile(file)
     fun load(@DrawableRes res: Int) = ImageLoaderResource(res)
-    @JvmOverloads
-    fun load(id: Long, pwd: String? = null) = ImageLoaderId(id, pwd)
-    fun load(tag: String) = ImageLoaderTag(tag)
     fun load(bytes: ByteArray) = ImageLoaderBytes(bytes)
-
-    fun loadGif(imageId: Long, gifId: Long, vImage: ImageView,
-                vGifProgressBar: View? = null, onInit: (ImageLink) -> Unit = {}) =
-        loadGif(imageId, gifId, null, vImage, vGifProgressBar, onInit)
-
-    fun loadGif(imageId: Long, gifId: Long, pwd: String?, vImage: ImageView,
-                vGifProgressBar: View? = null, onInit: (ImageLink) -> Unit = {}) {
-        if (gifId == 0L) {
-            ToolsThreads.main { vGifProgressBar?.visibility = View.INVISIBLE }
-            val load = load(imageId, pwd)
-            onInit.invoke(load)
-            load.into(vImage)
-        } else if (imageId > 0) {
-            val load = load(imageId, pwd)
-            onInit.invoke(load)
-            load.into(vImage) {
-                val loadGif = load(gifId, pwd)
-                onInit.invoke(loadGif)
-                loadGif.holder(vImage.drawable).into(vImage, vGifProgressBar)
-            }
-        } else {
-            val load = load(gifId, pwd)
-            onInit.invoke(load)
-            load.holder(vImage.drawable).into(vImage, vGifProgressBar)
-        }
-    }
-
-    fun clear(imageId: Long) {
-        load(imageId).clear()
-    }
 
     //
     //  Public

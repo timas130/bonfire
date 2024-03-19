@@ -1,11 +1,12 @@
 package com.dzen.campfire.api.models.fandoms
 
 import com.dzen.campfire.api.models.account.Account
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonParsable
 
-class Rubric : JsonParsable {
-
+class Rubric : JsonParsable, ImageHolder {
     var id = 0L
     var name = ""
     var karmaCof = 0L
@@ -32,5 +33,8 @@ class Rubric : JsonParsable {
         return json
     }
 
-
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        owner.fillImageRefs(receiver)
+        fandom.fillImageRefs(receiver)
+    }
 }

@@ -2,6 +2,7 @@ package com.sayzen.campfiresdk.screens.punishments
 
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.account.AccountPunishment
 import com.dzen.campfire.api.requests.accounts.RAccountsPunishmentsGetAll
 import com.sayzen.campfiresdk.R
@@ -9,6 +10,8 @@ import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.screens.SLoadingRecycler
 
@@ -26,7 +29,7 @@ class SPunishments(
         disableShadows()
         disableNavigation()
 
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_8)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_8))
         setTextEmpty(if (ControllerApi.isCurrentAccount(accountId)) t(API_TRANSLATE.profile_punishments_empty) else t(API_TRANSLATE.profile_punishments_empty_another))
         update()
 

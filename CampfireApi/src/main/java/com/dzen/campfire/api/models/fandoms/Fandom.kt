@@ -1,12 +1,16 @@
 package com.dzen.campfire.api.models.fandoms
 
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonParsable
 
-class Fandom : JsonParsable {
-
+class Fandom : JsonParsable, ImageHolder {
     var id = 0L
     var name = ""
+    var image = ImageRef()
+    @Deprecated("use ImageRefs")
     var imageId = 0L
     var languageId = 0L
     var closed = false
@@ -17,7 +21,11 @@ class Fandom : JsonParsable {
     var subscribesCount = 0L
     var status = 0L
     var category = 0L
+    var imageTitle = ImageRef()
+    @Deprecated("use ImageRefs")
     var imageTitleId = 0L
+    var imageTitleGif = ImageRef()
+    @Deprecated("use ImageRefs")
     var imageTitleGifId = 0L
 
     constructor() {
@@ -36,8 +44,11 @@ class Fandom : JsonParsable {
     override fun json(inp: Boolean, json: Json): Json {
         id = json.m(inp, "id", id)
         name = json.m(inp, "name", name)
+        image = json.m(inp, "image", image)
         imageId = json.m(inp, "imageId", imageId)
+        imageTitle = json.m(inp, "imageTitle", imageTitle)
         imageTitleId = json.m(inp, "imageTitleId", imageTitleId)
+        imageTitleGif = json.m(inp, "imageTitleGif", imageTitleGif)
         imageTitleGifId = json.m(inp, "imageTitleGifId", imageTitleGifId)
         dateCreate = json.m(inp, "dateCreate", dateCreate)
         creatorId = json.m(inp, "creatorId", creatorId)
@@ -58,5 +69,9 @@ class Fandom : JsonParsable {
         return copy
     }
 
-
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        receiver.add(image, imageId)
+        receiver.add(imageTitle, imageTitleId)
+        receiver.add(imageTitleGif, imageTitleGifId)
+    }
 }

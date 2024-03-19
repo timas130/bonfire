@@ -2,8 +2,8 @@ package com.sayzen.campfiresdk.screens.activities.user_activities
 
 import android.view.View
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.activities.UserActivity
 import com.dzen.campfire.api.requests.activities.RActivitiesGetAllForAccount
 import com.dzen.campfire.api.requests.activities.RActivitiesGetAllNotForAccount
@@ -13,6 +13,8 @@ import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.activities.EventActivitiesCreate
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.views.cards.CardDividerTitle
 import com.sup.dev.android.views.cards.CardSpace
@@ -35,7 +37,7 @@ class SRelayRacesList constructor(
         setTitle(t(API_TRANSLATE.app_relay_races))
         setTextProgress(t(API_TRANSLATE.activities_loading))
         setTextEmpty(if (fandomId > 0) t(API_TRANSLATE.activities_empty_user) else t(API_TRANSLATE.activities_empty))
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_26)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_26))
 
         val vFab: FloatingActionButton = findViewById(R.id.vFab)
         (vFab as View).visibility = if (ControllerApi.can(fandomId, languageId, API.LVL_MODERATOR_RELAY_RACE)) View.VISIBLE else View.GONE

@@ -2,6 +2,8 @@ package com.dzen.campfire.api.requests.chat
 
 import com.dzen.campfire.api.models.chat.ChatMember
 import com.dzen.campfire.api.models.chat.ChatParamsConf
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -22,8 +24,9 @@ open class RChatGetForChange(
     }
 
     class Response : Request.Response {
-
         var chatName = ""
+        var chatImage = ImageRef()
+        @Deprecated("use ImageRefs")
         var chatImageId = 0L
         var myLvl = 0L
         var accounts: Array<ChatMember> = emptyArray()
@@ -43,13 +46,15 @@ open class RChatGetForChange(
 
         override fun json(inp: Boolean, json: Json) {
             chatName = json.m(inp, "chatName", chatName)
+            chatImage = json.m(inp, "chatImage", chatImage)
             chatImageId = json.m(inp, "chatImageId", chatImageId)
             myLvl = json.m(inp, "myLvl", myLvl)
             accounts = json.m(inp, "accounts", accounts)
             params = json.m(inp, "params", params)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            receiver.add(chatImage, chatImageId)
+        }
     }
-
-
 }

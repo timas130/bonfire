@@ -9,6 +9,7 @@ import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.controllers.tCap
 import com.sayzen.campfiresdk.controllers.tPlural
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.*
@@ -31,10 +32,10 @@ class CardTitleOld(
         xAccount.setView(vName)
 
         vAvatar.setOnClickListener {
-            Navigator.to(SImageView(ImageLoader.load(xAccount.getImageId())))
+            Navigator.to(SImageView(ImageLoader.load(xAccount.getImage())))
         }
         vAvatar.setOnLongClickListener {
-            Navigator.to(SImageView(ImageLoader.load(xAccount.getImageId())))
+            Navigator.to(SImageView(ImageLoader.load(xAccount.getImage())))
             true
         }
 

@@ -11,6 +11,8 @@ import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPageTable
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.*
@@ -116,7 +118,7 @@ class SCreatePageTable(
             vTable.createRows(oldPage!!.rowsCount, true)
             for (c in oldPage!!.cells) {
                 if (c.type == PageTable.CELL_TYPE_TEXT) vTable.getCell(c.rowIndex, c.columnIndex)?.setContentText(c.text)
-                if (c.type == PageTable.CELL_TYPE_IMAGE) vTable.getCell(c.rowIndex, c.columnIndex)?.setContentImageId(c.imageId)
+                if (c.type == PageTable.CELL_TYPE_IMAGE) vTable.getCell(c.rowIndex, c.columnIndex)?.setContentImage(ImageLoader.load(c.image))
             }
             vCreate.setText(t(API_TRANSLATE.app_save))
         } else {
@@ -322,7 +324,7 @@ class SCreatePageTable(
         cell.insertImage = img
         ToolsThreads.main {
             sendChanges(cell, vCell, dialog) {
-                vCell.setContentImageId(oldPage!!.getCell(vCell.getRowIndex(), vCell.getColumnIndex())!!.imageId)
+                vCell.setContentImage(ImageLoader.load(oldPage!!.getCell(vCell.getRowIndex(), vCell.getColumnIndex())!!.image))
             }
         }
     }

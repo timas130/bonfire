@@ -1,6 +1,7 @@
 package com.dzen.campfire.api.requests.publications
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.models.publications.tags.PublicationTag
 import com.dzen.campfire.api.tools.client.Request
@@ -194,6 +195,11 @@ open class RPublicationsGetAll : Request<RPublicationsGetAll.Response>() {
             publications = json.m(inp, "units", publications, Array<Publication>::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (publication in publications) {
+                publication.fillImageRefs(receiver)
+            }
+        }
     }
 
 }

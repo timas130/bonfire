@@ -1,12 +1,12 @@
 package com.dzen.campfire.api.models.publications
 
 import com.dzen.campfire.api.models.account.Account
-import com.dzen.campfire.api.models.fandoms.Fandom
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonParsable
 
-class PublicationReport : JsonParsable {
-
+class PublicationReport : JsonParsable, ImageHolder {
     var id = 0L
     var account = Account()
     var comment = ""
@@ -18,4 +18,7 @@ class PublicationReport : JsonParsable {
         return json
     }
 
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        account.fillImageRefs(receiver)
+    }
 }

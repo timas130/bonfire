@@ -1,18 +1,25 @@
 package com.dzen.campfire.api.models.publications.events_user
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonPolimorf
 
-abstract class ApiEventUser : JsonPolimorf {
+abstract class ApiEventUser : JsonPolimorf, ImageHolder {
 
     var comment = ""
     var ownerAccountId = 0L
+    var ownerAccountImage = ImageRef()
+    @Deprecated("use ImageRefs")
     var ownerAccountImageId = 0L
     var ownerAccountName = ""
     var ownerAccountSex = 0L
     var adminAccountId = 0L
     var adminAccountName = ""
+    var adminAccountImage = ImageRef()
+    @Deprecated("use ImageRefs")
     var adminAccountImageId = 0L
     var adminAccountSex = 0L
 
@@ -20,11 +27,11 @@ abstract class ApiEventUser : JsonPolimorf {
 
     constructor(ownerAccountId: Long,
                 ownerAccountName: String,
-                ownerAccountImageId: Long,
+                ownerAccountImage: Long,
                 ownerAccountSex: Long,
                 comment:String) : super() {
         this.ownerAccountId = ownerAccountId
-        this.ownerAccountImageId = ownerAccountImageId
+        this.ownerAccountImageId = ownerAccountImage
         this.ownerAccountName = ownerAccountName
         this.ownerAccountSex = ownerAccountSex
         this.comment = comment
@@ -32,20 +39,20 @@ abstract class ApiEventUser : JsonPolimorf {
 
     constructor(ownerAccountId: Long,
                 ownerAccountName: String,
-                ownerAccountImageId: Long,
+                ownerAccountImage: Long,
                 ownerAccountSex: Long,
                 adminAccountId: Long,
                 adminAccountName: String,
-                adminAccountImageId: Long,
+                adminAccountImage: Long,
                 adminAccountSex: Long,
                 comment:String) : super() {
         this.ownerAccountId = ownerAccountId
-        this.ownerAccountImageId = ownerAccountImageId
+        this.ownerAccountImageId = ownerAccountImage
         this.ownerAccountName = ownerAccountName
         this.ownerAccountSex = ownerAccountSex
         this.adminAccountId = adminAccountId
         this.adminAccountName = adminAccountName
-        this.adminAccountImageId = adminAccountImageId
+        this.adminAccountImageId = adminAccountImage
         this.adminAccountSex = adminAccountSex
         this.comment = comment
     }
@@ -54,14 +61,21 @@ abstract class ApiEventUser : JsonPolimorf {
         if (inp) json.put("type", getType())
         ownerAccountId = json.m(inp, "ownerAccountId", ownerAccountId)
         ownerAccountName = json.m(inp, "ownerAccountName", ownerAccountName)
+        ownerAccountImage = json.m(inp, "ownerAccountImage", ownerAccountImage)
         ownerAccountImageId = json.m(inp, "ownerAccountImageId", ownerAccountImageId)
         ownerAccountSex = json.m(inp, "ownerAccountSex", ownerAccountSex)
         adminAccountId = json.m(inp, "adminAccountId", adminAccountId)
         adminAccountName = json.m(inp, "adminAccountName", adminAccountName)
+        adminAccountImage = json.m(inp, "adminAccountImage", adminAccountImage)
         adminAccountImageId = json.m(inp, "adminAccountImageId", adminAccountImageId)
         adminAccountSex = json.m(inp, "adminAccountSex", adminAccountSex)
         comment = json.m(inp, "comment", comment)
         return json
+    }
+
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        receiver.add(ownerAccountImage, ownerAccountImageId)
+        receiver.add(adminAccountImage, adminAccountImageId)
     }
 
     abstract fun getType(): Long

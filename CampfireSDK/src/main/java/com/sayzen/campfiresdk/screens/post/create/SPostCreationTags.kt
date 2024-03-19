@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.tags.PublicationTag
 import com.dzen.campfire.api.requests.post.RPostGet
 import com.dzen.campfire.api.requests.post.RPostPublication
@@ -14,8 +14,8 @@ import com.dzen.campfire.api.requests.tags.RTagsGetAll
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerActivities
-import com.sayzen.campfiresdk.controllers.ControllerStoryQuest
 import com.sayzen.campfiresdk.controllers.ControllerPublications
+import com.sayzen.campfiresdk.controllers.ControllerStoryQuest
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.publications.EventPostStatusChange
 import com.sayzen.campfiresdk.models.events.publications.EventPostTagsChanged
@@ -23,19 +23,19 @@ import com.sayzen.campfiresdk.screens.other.rules.SGoogleRules
 import com.sayzen.campfiresdk.screens.post.pending.SPending
 import com.sayzen.campfiresdk.screens.post.view.SPost
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.activity.SActivityTypeBottomNavigation
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.*
+import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.settings.Settings
+import com.sup.dev.android.views.splash.SplashField
 import com.sup.dev.android.views.views.ViewChip
 import com.sup.dev.android.views.views.layouts.LayoutFlow
-import com.sup.dev.android.views.splash.SplashField
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsThreads
-import java.util.*
 
 class SPostCreationTags private constructor(
         private val publicationId: Long,
@@ -99,7 +99,7 @@ class SPostCreationTags private constructor(
         if (fandomTags.isNotEmpty()) vMessageContainer.visibility = View.GONE
         else {
             vMessageContainer.visibility = View.VISIBLE
-            ImageLoader.load(API_RESOURCES.IMAGE_BACKGROUND_11).noHolder().into(vImage)
+            ImageLoader.load(ApiResources.IMAGE_BACKGROUND_11).noHolder().into(vImage)
         }
         if (isEditTagsMode) {
             vMenuContainer.visibility = View.GONE
@@ -192,9 +192,9 @@ class SPostCreationTags private constructor(
                 for (tt in postParams.tags) if (t.id == tt) v.isChecked = true
                 vFlow.addView(v)
                 chips.add(v)
-                if (t.imageId != 0L) {
+                if (t.image.isNotEmpty()) {
                     v.setIcon(R.color.focus)
-                    ImageLoader.load(t.imageId).size(ToolsView.dpToPx(24).toInt(), ToolsView.dpToPx(24).toInt()).intoBitmap { v.setIcon(it) }
+                    ImageLoader.load(t.image).size(ToolsView.dpToPx(24).toInt(), ToolsView.dpToPx(24).toInt()).intoBitmap { v.setIcon(it) }
                 } else {
                     v.setIcon(null)
                 }

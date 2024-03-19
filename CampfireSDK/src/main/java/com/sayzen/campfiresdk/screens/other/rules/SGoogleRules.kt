@@ -9,11 +9,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -115,7 +117,7 @@ class SGoogleRules(
         vButton.text = t(API_TRANSLATE.app_accept)
         vCheck.setOnCheckedChangeListener { _, b -> vButton.isEnabled = b }
         ToolsView.makeLinksClickable(vText)
-        ImageLoader.load(API_RESOURCES.IMAGE_BACKGROUND_14).noHolder().into(vImage)
+        ImageLoader.load(ApiResources.IMAGE_BACKGROUND_14).noHolder().into(vImage)
     }
 
 
