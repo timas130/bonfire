@@ -55,7 +55,7 @@ class EPostFeedGetAll : RPostFeedGetAll(0, emptyArray(), false, 0, false, false)
         if (ignoreFandomsIds.isNotEmpty()) select.where(SqlWhere.WhereIN(TPublications.fandom_id, true, ignoreFandomsIds))
 
         var posts = ControllerPublications.parseSelect(Database.select("EPostFeedGetAll", select))
-        posts = ControllerPublications.loadSpecDataForPosts(apiAccount.id, posts)
+        posts = ControllerPublications.loadSpecDataForPosts(apiAccount.id, posts, requestApiVersion)
 
         return Response(posts)
     }

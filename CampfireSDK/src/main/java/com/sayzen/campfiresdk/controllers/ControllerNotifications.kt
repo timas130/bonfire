@@ -67,10 +67,18 @@ object ControllerNotifications {
     private val groupId_app = ToolsNotifications.instanceGroup(1, t(API_TRANSLATE.settings_notifications_filter_app))
     private val groupId_chat = ToolsNotifications.instanceGroup(3, t(API_TRANSLATE.settings_notifications_filter_chat))
 
-    val chanelChatMessages = ToolsNotifications.instanceChanel(11).setName(t(API_TRANSLATE.settings_notifications_filter_chat_messages)).setGroupId(groupId_chat).setGroupingType(ToolsNotifications.GroupingType.SINGLE).init()
-    val chanelOther = ToolsNotifications.instanceChanel(12).setName(t(API_TRANSLATE.settings_notifications_filter_app_other)).setGroupId(groupId_app).init()
-    val chanelChatMessages_salient = ToolsNotifications.instanceChanel(13).setName(t(API_TRANSLATE.settings_notifications_filter_chat_messages_salient)).setGroupId(groupId_chat).setGroupingType(ToolsNotifications.GroupingType.SINGLE).setSound(false).setVibration(false).init()
-    val chanelOther_salient = ToolsNotifications.instanceChanel(14).setName(t(API_TRANSLATE.settings_notifications_filter_app_other_salient)).setGroupId(groupId_app).setSound(false).setVibration(false).init()
+    val chanelChatMessages =
+        ToolsNotifications.instanceChanel(11).setName(t(API_TRANSLATE.settings_notifications_filter_chat_messages))
+            .setGroupId(groupId_chat).setGroupingType(ToolsNotifications.GroupingType.SINGLE).init()
+    val chanelOther =
+        ToolsNotifications.instanceChanel(12).setName(t(API_TRANSLATE.settings_notifications_filter_app_other))
+            .setGroupId(groupId_app).init()
+    val chanelChatMessages_salient = ToolsNotifications.instanceChanel(13)
+        .setName(t(API_TRANSLATE.settings_notifications_filter_chat_messages_salient)).setGroupId(groupId_chat)
+        .setGroupingType(ToolsNotifications.GroupingType.SINGLE).setSound(false).setVibration(false).init()
+    val chanelOther_salient =
+        ToolsNotifications.instanceChanel(14).setName(t(API_TRANSLATE.settings_notifications_filter_app_other_salient))
+            .setGroupId(groupId_app).setSound(false).setVibration(false).init()
 
     val TYPE_NOTIFICATIONS = 1
     val TYPE_CHAT = 2
@@ -80,8 +88,8 @@ object ControllerNotifications {
     var logoWhite = 0
 
     internal fun init(
-            logoColored: Int,
-            logoWhite: Int
+        logoColored: Int,
+        logoWhite: Int
     ) {
         this.logoColored = logoColored
         this.logoWhite = logoWhite
@@ -96,7 +104,7 @@ object ControllerNotifications {
 
         ToolsNotifications.notificationsListener = { intent, type, _ ->
             if (intent.hasExtra(EXTRA_NOTIFICATION)) {
-                val n = Notification.instance(Json(intent.getStringExtra(EXTRA_NOTIFICATION)?:""))
+                val n = Notification.instance(Json(intent.getStringExtra(EXTRA_NOTIFICATION) ?: ""))
                 intent.removeExtra(EXTRA_NOTIFICATION)
                 removeNotificationFromNew(n.id)
                 if (type == ToolsNotifications.IntentType.CLICK) parser(n).doAction()
@@ -138,9 +146,9 @@ object ControllerNotifications {
 
         ToolsThreads.main {
             EventBus.post(
-                    EventNotification(
-                            notification
-                    )
+                EventNotification(
+                    notification
+                )
             )
         }
 
@@ -157,7 +165,8 @@ object ControllerNotifications {
             if (text.isNotEmpty()) {
 
                 val canSound = canSoundBySettings(notification)
-                val icon = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) logoWhite else logoColored
+                val icon =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) logoWhite else logoColored
                 val intent = Intent(SupAndroid.appContext, SupAndroid.activityClass)
                 val title = SupAndroid.TEXT_APP_NAME ?: ""
                 val tag = tag(notification.id)
@@ -180,8 +189,10 @@ object ControllerNotifications {
         if (ControllerSettings.notificationsSalientAll) return false
         if (ControllerSettings.notificationsSalientOnTimeEnabled) {
             val current = ToolsDate.getCurrentMinutesOfDay()
-            val start = ControllerSettings.notificationsSalientOnTimeStartH * 60 + ControllerSettings.notificationsSalientOnTimeStartM
-            val end = ControllerSettings.notificationsSalientOnTimeEndH * 60 + ControllerSettings.notificationsSalientOnTimeEndM
+            val start =
+                ControllerSettings.notificationsSalientOnTimeStartH * 60 + ControllerSettings.notificationsSalientOnTimeStartM
+            val end =
+                ControllerSettings.notificationsSalientOnTimeEndH * 60 + ControllerSettings.notificationsSalientOnTimeEndM
             if (start < end) {
                 if (current in start..end) return false
             } else {
@@ -217,8 +228,10 @@ object ControllerNotifications {
                 // safe to just ignore it
                 try {
                     NotificationChatMessageParser.clearNotification(ChatTag(tag))
-                } catch (e: Exception) {}
+                } catch (e: Exception) {
+                }
             }
+
             else -> {
                 chanelOther.cancelAllOrByTagIfNotEmpty(tag)
                 chanelOther_salient.cancelAllOrByTagIfNotEmpty(tag)
@@ -337,10 +350,10 @@ object ControllerNotifications {
     }
 
     private class NewNotificationKiller(
-            val nClass: Any,
-            val arg1: Long,
-            val arg2: Long,
-            val dateCreate: Long = System.currentTimeMillis()
+        val nClass: Any,
+        val arg1: Long,
+        val arg2: Long,
+        val dateCreate: Long = System.currentTimeMillis()
     )
 
     //
@@ -355,9 +368,9 @@ object ControllerNotifications {
         }
 
         RAccountsNotificationsRemoveToken(token)
-                .onComplete { onClear?.invoke() }
-                .onError { onError?.invoke() }
-                .send(api)
+            .onComplete { onClear?.invoke() }
+            .onError { onError?.invoke() }
+            .send(api)
     }
 
     private fun onToken(token: String?) {
@@ -444,7 +457,7 @@ object ControllerNotifications {
 
         abstract fun doAction()
 
-        open fun getImageId() = n.imageId
+        open fun getImage() = n.image
 
         open fun getTitle() = ""
 

@@ -1,12 +1,13 @@
 package com.dzen.campfire.api.requests.wiki
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.wiki.WikiPages
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
 open class RWikiGetPages(
-        var itemId: Long,
-        var languageId:Long
+    var itemId: Long,
+    var languageId: Long
 ) : Request<RWikiGetPages.Response>() {
 
     override fun jsonSub(inp: Boolean, json: Json) {
@@ -20,7 +21,7 @@ open class RWikiGetPages(
 
     class Response : Request.Response {
 
-        var wikiPages:WikiPages? = null
+        var wikiPages: WikiPages? = null
 
         constructor(json: Json) {
             json(false, json)
@@ -34,6 +35,9 @@ open class RWikiGetPages(
             wikiPages = json.mNull(inp, "wikiPages", wikiPages, WikiPages::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            wikiPages?.fillImageRefs(receiver)
+        }
     }
 
 

@@ -1,22 +1,19 @@
 package com.sayzen.campfiresdk.screens.fandoms.view
 
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
-import com.dzen.campfire.api.requests.fandoms.RFandomsGetSubscribtion
 import com.dzen.campfire.api.requests.fandoms.RFandomsSubscribeChange
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.support.adapters.XFandom
 import com.sayzen.campfiresdk.controllers.ControllerApi
-import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.ControllerStoryQuest
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomCategoryChanged
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomSubscribe
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
-import com.sup.dev.android.libs.image_loader.ImageLoaderId
+import com.sayzen.campfiresdk.support.adapters.XFandom
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsToast
@@ -81,7 +78,7 @@ class CardTitle(
         val view = getView() ?: return
         val vAvatar: ViewAvatarTitle = view.findViewById(R.id.vAvatar)
         xFandom.setView(vAvatar)
-        vAvatar.vAvatar.setOnClickListener { Navigator.to(SImageView(ImageLoaderId(xFandom.getImageId()))) }
+        vAvatar.vAvatar.setOnClickListener { Navigator.to(SImageView(ImageLoader.load(xFandom.getImage()))) }
     }
 
     fun setParams(subscriptionType: Long) {

@@ -4,12 +4,12 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.moderations.tags.ModerationTagChange
 import com.dzen.campfire.api.models.publications.tags.PublicationTag
 import com.dzen.campfire.api.requests.tags.RTagsChange
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerFandom
 import com.dzen.campfire.server.controllers.ControllerModeration
-import com.dzen.campfire.server.controllers.ControllerResources
 import com.dzen.campfire.server.controllers.ControllerPublications
+import com.dzen.campfire.server.controllers.ControllerResources
 import com.dzen.campfire.server.tables.TPublications
-import com.dzen.campfire.api.tools.ApiException
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
@@ -51,8 +51,7 @@ class ETagsChange : RTagsChange(0, null, "", null, false) {
 
         publication!!.name = name!!
         if (image != null) {
-            if (publication!!.imageId != 0L) ControllerResources.replace(publication!!.imageId, image!!,  API.RESOURCES_PUBLICATION_TAG)
-            else publication!!.imageId = ControllerResources.put(image!!, API.RESOURCES_PUBLICATION_TAG)
+            publication!!.imageId = ControllerResources.removeAndPut(publication!!.imageId, image!!, API.RESOURCES_PUBLICATION_TAG)
         }
         if (removeImage) {
             ControllerResources.remove(publication!!.imageId)

@@ -3,27 +3,25 @@ package com.sayzen.campfiresdk.screens.fandoms.tags
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.models.publications.tags.PublicationTag
 import com.dzen.campfire.api.requests.tags.RTagsChange
 import com.dzen.campfire.api.requests.tags.RTagsCreate
-import com.sayzen.campfiresdk.support.ApiRequestsSupporter
-import com.dzen.campfire.api.models.publications.tags.PublicationTag
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.screens.fandoms.STags
+import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsBitmap
-import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.tools.ToolsToast
-import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.screens.SCrop
 import com.sup.dev.android.views.settings.SettingsField
-import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashChooseImage
+import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
 
@@ -61,9 +59,9 @@ class SplashTagCreate private constructor(
 
         if (tag != null) {
             vName.setText(tag.name)
-            vEnter.setText(t(API_TRANSLATE.app_change))
-            if (tag.imageId != 0L) {
-                ImageLoader.load(tag.imageId).into(vImage)
+            vEnter.text = t(API_TRANSLATE.app_change)
+            if (tag.image.isNotEmpty()) {
+                ImageLoader.load(tag.image).into(vImage)
                 vImageIcon.visibility = View.GONE
             }
         }
@@ -97,7 +95,7 @@ class SplashTagCreate private constructor(
     }
 
     private fun chooseImage() {
-        if (image != null || tag != null && tag.imageId != 0L && !removeImage) {
+        if (image != null || tag != null && tag.image.isNotEmpty() && !removeImage) {
             image = null
             removeImage = true
             vImageIcon.visibility = View.VISIBLE

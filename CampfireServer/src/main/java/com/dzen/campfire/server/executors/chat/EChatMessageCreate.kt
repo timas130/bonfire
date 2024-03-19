@@ -157,15 +157,15 @@ class EChatMessageCreate(
                 message.quoteCreatorName = quoteMessage.creator.name
                 if (message.quoteText.length > API.CHAT_MESSAGE_QUOTE_MAX_SIZE) message.quoteText = message.quoteText.substring(0, API.CHAT_MESSAGE_QUOTE_MAX_SIZE) + "..."
                 if (quoteMessage.imageIdArray.isNotEmpty()) {
-                    message.quoteImages = quoteMessage.imageIdArray
+                    message.quoteImagesIds = quoteMessage.imageIdArray
                     message.quoteImagesPwd = quoteMessage.imagePwdArray
                 } else if (quoteMessage.resourceId > 0) {
-                    message.quoteImages = Array(1) { quoteMessage.resourceId }
+                    message.quoteImagesIds = Array(1) { quoteMessage.resourceId }
                     message.quoteImagesPwd = arrayOf(quoteMessage.imagePwd)
                 } else if (quoteMessage.stickerId > 0) {
                     message.quoteStickerId = quoteMessage.stickerId
                     message.quoteStickerImageId = quoteMessage.stickerImageId
-                } else message.quoteImages = emptyArray()
+                } else message.quoteImagesIds = emptyArray()
             }
         }
 

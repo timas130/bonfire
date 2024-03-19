@@ -4,7 +4,7 @@ import android.app.Application
 import com.dzen.campfire.BuildConfig
 import com.dzen.campfire.R
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.screens.intro.SIntro
 import com.google.firebase.FirebaseApp
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
@@ -14,8 +14,9 @@ import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
 import com.sayzen.campfiresdk.screens.other.rules.SGoogleRules
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.app.SupAndroid
-import com.sup.dev.android.libs.image_loader.ImageLoaderId
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.activity.SActivity
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsAndroid
@@ -55,8 +56,8 @@ class App : Application() {
         FirebaseApp.initializeApp(applicationContext)
 
         SupAndroid.init(applicationContext, BuildConfig.APPLICATION_ID, AppActivity::class.java)
-        SupAndroid.imgErrorGone = ImageLoaderId(API_RESOURCES.IMAGE_BACKGROUND_17).noHolder()
-        SupAndroid.imgErrorNetwork = ImageLoaderId(API_RESOURCES.IMAGE_BACKGROUND_20).noHolder()
+        SupAndroid.imgErrorGone = ImageLoader.load(ApiResources.IMAGE_BACKGROUND_17).noHolder()
+        SupAndroid.imgErrorNetwork = ImageLoader.load(ApiResources.IMAGE_BACKGROUND_20).noHolder()
         ApiRequestsSupporter.USE_ID_RESOURCES = true
 
         initSdk()
@@ -67,15 +68,15 @@ class App : Application() {
             ControllerLinks.openLink(it)
         }
 
-        ImageLoaderId(API_RESOURCES.IMAGE_BACKGROUND_17).immortalCash().intoCash()
-        ImageLoaderId(API_RESOURCES.IMAGE_BACKGROUND_20).immortalCash().intoCash()
-        ImageLoaderId(API_RESOURCES.EMOJI_1).immortalCash().intoCash()
-        ImageLoaderId(API_RESOURCES.EMOJI_2).immortalCash().intoCash()
-        ImageLoaderId(API_RESOURCES.EMOJI_3).immortalCash().intoCash()
-        ImageLoaderId(API_RESOURCES.EMOJI_4).immortalCash().intoCash()
-        ImageLoaderId(API_RESOURCES.EMOJI_5).immortalCash().intoCash()
-        ImageLoaderId(API_RESOURCES.EMOJI_6).immortalCash().intoCash()
-        ImageLoaderId(API_RESOURCES.EMOJI_7).immortalCash().intoCash()
+        ImageLoader.load(ApiResources.IMAGE_BACKGROUND_17).immortalCash().intoCash()
+        ImageLoader.load(ApiResources.IMAGE_BACKGROUND_20).immortalCash().intoCash()
+        ImageLoader.load(ApiResources.EMOJI_1).immortalCash().intoCash()
+        ImageLoader.load(ApiResources.EMOJI_2).immortalCash().intoCash()
+        ImageLoader.load(ApiResources.EMOJI_3).immortalCash().intoCash()
+        ImageLoader.load(ApiResources.EMOJI_4).immortalCash().intoCash()
+        ImageLoader.load(ApiResources.EMOJI_5).immortalCash().intoCash()
+        ImageLoader.load(ApiResources.EMOJI_6).immortalCash().intoCash()
+        ImageLoader.load(ApiResources.EMOJI_7).immortalCash().intoCash()
     }
 
     private fun initSdk() {

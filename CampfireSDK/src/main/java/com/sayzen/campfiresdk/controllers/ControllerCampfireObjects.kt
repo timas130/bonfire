@@ -4,6 +4,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.LinkParsed
 import com.dzen.campfire.api.models.chat.ChatTag
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.requests.accounts.RAccountsGet
 import com.dzen.campfire.api.requests.chat.RChatGet
 import com.dzen.campfire.api.requests.comments.RCommentGet
@@ -15,10 +16,10 @@ import com.sup.dev.java.classes.items.Item3
 
 object ControllerCampfireObjects {
 
-    private val cash: HashMap<String, Item3<String, String, Long>> = HashMap()
-    private val inProgress: HashMap<String, ArrayList<(String, String, Long) -> Unit>> = HashMap()
+    private val cash: HashMap<String, Item3<String, String, ImageRef>> = HashMap()
+    private val inProgress: HashMap<String, ArrayList<(String, String, ImageRef) -> Unit>> = HashMap()
 
-    fun load(link: LinkParsed, onComplete: (String, String, Long) -> Unit) {
+    fun load(link: LinkParsed, onComplete: (String, String, ImageRef) -> Unit) {
 
         if (cash.containsKey(link.linkRaw)) {
             val get = cash.get(link.linkRaw)!!
@@ -27,12 +28,12 @@ object ControllerCampfireObjects {
         }
 
         if (inProgress.containsKey(link.linkRaw)) {
-            val get = inProgress.get(link.linkRaw)
+            val get = inProgress[link.linkRaw]
             get!!.add(onComplete)
             return
         }
 
-        val list = ArrayList<(String, String, Long) -> Unit>()
+        val list = ArrayList<(String, String, ImageRef) -> Unit>()
         inProgress[link.linkRaw] = list
         list.add(onComplete)
 
@@ -58,18 +59,25 @@ object ControllerCampfireObjects {
         }
 
         RAccountsGet(id, name)
-                .onComplete { onComplete(link, it.account.name, t(API_TRANSLATE.app_user), it.account.imageId) }
-                .onError { onError(link) }
-                .send(api)
+            .onComplete { onComplete(link, it.account.name, t(API_TRANSLATE.app_user), it.account.image) }
+            .onError { onError(link) }
+            .send(api)
     }
 
     private fun loadPost(link: LinkParsed) {
         val id = link.getLongParamOrZero(0)
 
         RPostGet(id)
-                .onComplete { onComplete(link, it.publication.fandom.name, t(API_TRANSLATE.app_post), it.publication.fandom.imageId) }
-                .onError { onError(link) }
-                .send(api)
+            .onComplete {
+                onComplete(
+                    link,
+                    it.publication.fandom.name,
+                    t(API_TRANSLATE.app_post),
+                    it.publication.fandom.image
+                )
+            }
+            .onError { onError(link) }
+            .send(api)
     }
 
     private fun loadChat(link: LinkParsed) {
@@ -77,9 +85,9 @@ object ControllerCampfireObjects {
         val targetSubId = link.getLongParamOrZero(1)
 
         RChatGet(ChatTag(API.CHAT_TYPE_FANDOM_ROOT, targetId, targetSubId), 0)
-                .onComplete { onComplete(link, it.chat.customName, t(API_TRANSLATE.app_chat), it.chat.customImageId) }
-                .onError { onError(link) }
-                .send(api)
+            .onComplete { onComplete(link, it.chat.customName, t(API_TRANSLATE.app_chat), it.chat.customImage) }
+            .onError { onError(link) }
+            .send(api)
     }
 
     private fun loadFandom(link: LinkParsed) {
@@ -87,25 +95,39 @@ object ControllerCampfireObjects {
         val languageId = link.getLongParamOrZero(1)
 
         RFandomsGet(fandomId, languageId, ControllerApi.getLanguageId())
-                .onComplete { onComplete(link, it.fandom.name, t(API_TRANSLATE.app_fandom), it.fandom.imageId) }
-                .onError { onError(link) }
-                .send(api)
+            .onComplete { onComplete(link, it.fandom.name, t(API_TRANSLATE.app_fandom), it.fandom.image) }
+            .onError { onError(link) }
+            .send(api)
     }
 
     private fun loadStickersPack(link: LinkParsed) {
         val id = link.getLongParamOrZero(0)
 
         RStickersPacksGetInfo(id, 0)
-                .onComplete { onComplete(link, it.stickersPack.name, t(API_TRANSLATE.app_stickers), it.stickersPack.imageId) }
-                .onError { onError(link) }
-                .send(api)
+            .onComplete {
+                onComplete(
+                    link,
+                    it.stickersPack.name,
+                    t(API_TRANSLATE.app_stickers),
+                    it.stickersPack.image
+                )
+            }
+            .onError { onError(link) }
+            .send(api)
     }
 
     private fun loadQuest(link: LinkParsed) {
         val publicationId = link.getLongParamOrZero(0)
 
         RQuestsGet(publicationId)
-            .onComplete { onComplete(link, it.questDetails.title, t(API_TRANSLATE.quest), it.questDetails.creator.imageId) }
+            .onComplete {
+                onComplete(
+                    link,
+                    it.questDetails.title,
+                    t(API_TRANSLATE.quest),
+                    it.questDetails.creator.image
+                )
+            }
             .onError { onError(link) }
             .send(api)
     }
@@ -115,12 +137,22 @@ object ControllerCampfireObjects {
         val commentId = link.getLongParamOrZero(1)
 
         RCommentGet(publicationId, commentId)
-                .onComplete { onComplete(link, ControllerPublications.getMaskForComment(it.comment.creator.name + ": " + it.comment.text, it.comment.type), t(API_TRANSLATE.app_comment), it.comment.fandom.imageId) }
-                .onError { onError(link) }
-                .send(api)
+            .onComplete {
+                onComplete(
+                    link,
+                    ControllerPublications.getMaskForComment(
+                        it.comment.creator.name + ": " + it.comment.text,
+                        it.comment.type
+                    ),
+                    t(API_TRANSLATE.app_comment),
+                    it.comment.fandom.image
+                )
+            }
+            .onError { onError(link) }
+            .send(api)
     }
 
-    private fun onComplete(link: LinkParsed, title: String, subtitle: String, image: Long) {
+    private fun onComplete(link: LinkParsed, title: String, subtitle: String, image: ImageRef) {
         cash.put(link.linkRaw, Item3(title, subtitle, image))
         val callbacks = inProgress.get(link.linkRaw)
         if (callbacks != null) {
@@ -132,7 +164,11 @@ object ControllerCampfireObjects {
     private fun onError(link: LinkParsed) {
         val callbacks = inProgress.get(link.linkRaw)
         if (callbacks != null) {
-            for (i in callbacks) i.invoke(t(API_TRANSLATE.post_page_campfire_object_error), t(API_TRANSLATE.app_error), 0)
+            for (i in callbacks) i.invoke(
+                t(API_TRANSLATE.post_page_campfire_object_error),
+                t(API_TRANSLATE.app_error),
+                ImageRef()
+            )
             inProgress.remove(link.linkRaw)
         }
     }

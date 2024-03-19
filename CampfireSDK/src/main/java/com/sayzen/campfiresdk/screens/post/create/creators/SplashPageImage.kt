@@ -6,24 +6,27 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.post.Page
 import com.dzen.campfire.api.models.publications.post.PageImage
 import com.dzen.campfire.api.models.publications.post.PageImages
-import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.t
-import com.sayzen.campfiresdk.models.cards.post_pages.CardPageImage
-import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.views.screens.SCrop
-import com.sup.dev.android.views.splash.Splash
-import com.sup.dev.android.views.splash.SplashChooseImage
-import com.sup.dev.java.tools.ToolsBytes
-import com.sup.dev.java.tools.ToolsThreads
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
+import com.sayzen.campfiresdk.models.cards.post_pages.CardPageImage
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPageImages
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
-import com.sup.dev.android.tools.*
+import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sup.dev.android.tools.ToolsBitmap
+import com.sup.dev.android.tools.ToolsGif
+import com.sup.dev.android.tools.ToolsToast
+import com.sup.dev.android.tools.ToolsView
+import com.sup.dev.android.views.screens.SCrop
+import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashAlert
+import com.sup.dev.android.views.splash.SplashChooseImage
 import com.sup.dev.java.classes.items.Item
+import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsCollections
+import com.sup.dev.java.tools.ToolsThreads
 
 class SplashPageImage(
         private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage) -> Unit)) -> Unit,
@@ -85,12 +88,12 @@ class SplashPageImage(
                    requestPutPage: (page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage) -> Unit)) -> Unit,
                    requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page) -> Unit) -> Unit,
                    card: CardPage) {
-            if ((page as PageImage).gifId != 0L) {
-                ImageLoader.load(page.gifId).intoBytes { bytes ->
+            if ((page as PageImage).gif.isNotEmpty()) {
+                ImageLoader.load(page.gif).intoBytes { bytes ->
                     parseChangeBytes(bytes, requestPutPage, requestChangePage, card)
                 }
             } else {
-                ImageLoader.load(page.imageId).intoBytes { bytes ->
+                ImageLoader.load(page.image).intoBytes { bytes ->
                     parseChangeBytes(bytes, requestPutPage, requestChangePage, card)
                 }
             }

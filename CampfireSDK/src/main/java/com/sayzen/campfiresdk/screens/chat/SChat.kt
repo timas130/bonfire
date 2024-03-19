@@ -8,8 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.chat.ChatTag
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatAnswer
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessage
@@ -32,6 +32,7 @@ import com.sayzen.campfiresdk.screens.chat.create.SChatCreate
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sayzen.campfiresdk.support.adapters.XFandom
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.activity.SActivityTypeBottomNavigation
@@ -45,10 +46,10 @@ import com.sup.dev.android.views.cards.Card
 import com.sup.dev.android.views.cards.CardLoading
 import com.sup.dev.android.views.cards.CardSpace
 import com.sup.dev.android.views.screens.SLoadingRecycler
+import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.android.views.views.ViewChip
 import com.sup.dev.android.views.views.ViewIcon
-import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsCollections
 import com.sup.dev.java.tools.ToolsColor
@@ -160,10 +161,10 @@ class SChat constructor(
         if (chat.tag.chatType == API.CHAT_TYPE_CONFERENCE) vAvatarTitle.setOnClickListener { SChatCreate.instance(chat.tag.targetId, Navigator.TO) }
 
         vMenu = addToolbarIcon(R.drawable.ic_more_vert_white_24dp) {
-            ControllerChats.instanceChatPopup(chat.tag, chat.params, chat.customImageId, chat.memberStatus) { Navigator.remove(this) }.asPopupShow(it)
+            ControllerChats.instanceChatPopup(chat.tag, chat.params, chat.customImage, chat.memberStatus) { Navigator.remove(this) }.asPopupShow(it)
         }
 
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_5)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_5))
         setTextEmpty(if (chat.tag.chatType == API.CHAT_TYPE_FANDOM_ROOT) t(API_TRANSLATE.chat_empty_fandom) else t(API_TRANSLATE.chat_empty_private))
         setTextProgress(t(API_TRANSLATE.chat_loading))
 
@@ -184,7 +185,7 @@ class SChat constructor(
 
         if (chat.tag.chatType == API.CHAT_TYPE_FANDOM_SUB) {
             if (!ControllerSettings.viewedChats.contains(chat.tag.targetId)) {
-                ToolsThreads.main(100) { ControllerChats.showFandomChatInfo(chat.tag, chat.params, chat.customImageId) }
+                ToolsThreads.main(100) { ControllerChats.showFandomChatInfo(chat.tag, chat.params, chat.customImage) }
             }
         }
         adapter.setBottomLoader { onLoad, cards ->
@@ -364,7 +365,7 @@ class SChat constructor(
                 vAvatarTitle.vSubtitle.setTextColor(ToolsResources.getColor(R.color.green_700))
             }
         } else {
-            ImageLoader.load(chat.customImageId).into(vAvatarTitle.vAvatar.vImageView)
+            ImageLoader.load(chat.customImage).into(vAvatarTitle.vAvatar.vImageView)
             vAvatarTitle.vSubtitle.setTextColor(ToolsResources.getColor(R.color.grey_500))
             vAvatarTitle.setSubtitle(t(API_TRANSLATE.app_subscribers) + ": ${chat.membersCount}")
             vAvatarTitle.setTitle(chat.customName)
@@ -376,9 +377,9 @@ class SChat constructor(
     }
 
     private fun updateBackground() {
-        if (chat.backgroundImageId > 0 && ControllerSettings.fandomBackground) {
+        if (chat.backgroundImage.isNotEmpty() && ControllerSettings.fandomBackground) {
             vChatBackground.visibility = View.VISIBLE
-            ImageLoader.load(chat.backgroundImageId).holder(0x00000000).into(vChatBackground)
+            ImageLoader.load(chat.backgroundImage).holder(0x00000000).into(vChatBackground)
             vChatBackground.setColorFilter(ToolsColor.setAlpha(210, ToolsResources.getColorAttr(android.R.attr.windowBackground)))
         } else {
             vChatBackground.setImageBitmap(null)
@@ -591,7 +592,7 @@ class SChat constructor(
     private fun onEventFandomBackgroundImageChangedModeration(e: EventFandomBackgroundImageChangedModeration) {
         if (chat.tag.chatType == API.CHAT_TYPE_FANDOM_ROOT) {
             if (chat.tag.targetId == e.fandomId && chat.tag.targetSubId == e.languageId) {
-                chat.backgroundImageId = e.imageId
+                chat.backgroundImage = e.image
                 updateBackground()
             }
             if (chat.tag.targetId == 0L && chat.tag.targetSubId == 0L) {
@@ -603,7 +604,7 @@ class SChat constructor(
     private fun onEventFandomBackgroundImageChanged(e: EventFandomBackgroundImageChanged) {
         if (chat.tag.chatType == API.CHAT_TYPE_FANDOM_SUB || chat.tag.chatType == API.CHAT_TYPE_CONFERENCE) {
             if (chat.tag == e.chatTag) {
-                chat.backgroundImageId = e.imageId
+                chat.backgroundImage = e.image
                 updateBackground()
             }
             if (chat.tag.targetId == 0L && chat.tag.targetSubId == 0L) {
@@ -615,7 +616,7 @@ class SChat constructor(
     private fun onEventChatChanged(e: EventChatChanged) {
         if (chat.tag.chatType == API.CHAT_TYPE_CONFERENCE && e.chatId == chat.tag.targetId) {
             chat.customName = e.name
-            chat.customImageId = e.imageId
+            chat.customImage = e.image
             chat.membersCount = e.accountCount.toLong()
             update()
         }

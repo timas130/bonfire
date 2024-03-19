@@ -8,10 +8,12 @@ import android.widget.TextView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.ControllerTranslate
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.cards.Card
@@ -77,7 +79,7 @@ class CardTranslateMenu(
         if (isEmpty) {
             val vEmptyImage: ImageView = view.findViewById(R.id.vEmptyImage)
             val vEmptyMessage: TextView = view.findViewById(R.id.vEmptyMessage)
-            ImageLoader.load(API_RESOURCES.IMAGE_BACKGROUND_30).into(vEmptyImage)
+            ImageLoader.load(ApiResources.IMAGE_BACKGROUND_30).into(vEmptyImage)
             vEmptyMessage.text = t(API_TRANSLATE.translates_empty)
         }
     }

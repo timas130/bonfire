@@ -10,25 +10,30 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.publications.post.Page
 import com.dzen.campfire.api.models.publications.post.PageImages
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.*
+import com.sup.dev.android.tools.ToolsBitmap
+import com.sup.dev.android.tools.ToolsGif
+import com.sup.dev.android.tools.ToolsToast
+import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.cards.Card
 import com.sup.dev.android.views.screens.SCrop
 import com.sup.dev.android.views.screens.SImageView
 import com.sup.dev.android.views.settings.SettingsField
-import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapter
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.android.views.splash.SplashChooseImage
+import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapter
 import com.sup.dev.android.views.views.ViewButton
 import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsThreads
@@ -64,9 +69,9 @@ class SplashPageImages(
         vAttachRecycler.adapter = adapter
         adapter.setCardW(ViewGroup.LayoutParams.WRAP_CONTENT)
 
-        vPageTitle.setText(oldPage!!.title)
-        if (oldPage.imagesIds.isNotEmpty()) vTextEmpty.visibility = View.GONE
-        for (element in oldPage.imagesIds) addBytes(null, element)
+        vPageTitle.setText(oldPage.title)
+        if (oldPage.images.isNotEmpty()) vTextEmpty.visibility = View.GONE
+        for (element in oldPage.images) addBytes(null, element)
 
         update()
     }
@@ -88,8 +93,8 @@ class SplashPageImages(
         pageNew.insertImages = emptyArray()
         pageNew.insertImagesMini = emptyArray()
         pageNew.title = oldPage.title
-        pageNew.imagesIds = oldPage.imagesIds
-        pageNew.imagesMiniIds = oldPage.imagesMiniIds
+        pageNew.images = oldPage.images
+        pageNew.imagesMini = oldPage.imagesMini
         pageNew.removePageIndex = index
 
         SplashAlert()
@@ -99,7 +104,7 @@ class SplashPageImages(
                 .setOnEnter(t(API_TRANSLATE.app_remove)) { ww ->
                     requestChangePage.invoke(pageNew, card, null, ww) { page ->
                         oldPage = page as PageImages
-                        vTextEmpty.visibility = if (oldPage.imagesIds.isNotEmpty()) View.GONE else View.VISIBLE
+                        vTextEmpty.visibility = if (oldPage.images.isNotEmpty()) View.GONE else View.VISIBLE
                         adapter.remove(index)
                         update()
                     }
@@ -149,14 +154,14 @@ class SplashPageImages(
         pageNew.insertImagesMini = Array(1) { imgMini }
         pageNew.replacePageIndex = replaceIndex
         pageNew.title = oldPage.title
-        pageNew.imagesIds = oldPage.imagesIds
-        pageNew.imagesMiniIds = oldPage.imagesMiniIds
+        pageNew.images = oldPage.images
+        pageNew.imagesMini = oldPage.imagesMini
 
         requestChangePage.invoke(pageNew, card, null, dialog) { page ->
             oldPage = page as PageImages
             ToolsThreads.main {
                 vTextEmpty.visibility = View.GONE
-                addBytes(rawBytes, oldPage.imagesMiniIds[oldPage.imagesMiniIds.size - 1], replaceIndex)
+                addBytes(rawBytes, oldPage.imagesMini[oldPage.imagesMini.size - 1], replaceIndex)
                 update()
             }
         }
@@ -175,8 +180,8 @@ class SplashPageImages(
         ToolsThreads.main(100) { asSheetShow() }
     }
 
-    private fun addBytes(bytes: ByteArray?, id: Long, replaceIndex: Int = -1) {
-        val card = ItemCard(bytes, id)
+    private fun addBytes(bytes: ByteArray?, image: ImageRef, replaceIndex: Int = -1) {
+        val card = ItemCard(bytes, image)
         if (replaceIndex == -1) {
             adapter.add(card)
             vAttachRecycler.scrollToPosition(adapter.size() - 1)
@@ -189,7 +194,7 @@ class SplashPageImages(
 
     private inner class ItemCard(
             var bytes: ByteArray?,
-            var id: Long
+            var image: ImageRef
     ) : Card(R.layout.view_attach_image) {
 
         override fun bindView(view: View) {
@@ -200,10 +205,10 @@ class SplashPageImages(
             val vRemove: View = view.findViewById(R.id.vRemove)
             setImage(vImage)
 
-            vImage.setOnClickListener { Navigator.to(SImageView(ImageLoader.load(id)).setOnHide { onSupportScreenHide() }) }
+            vImage.setOnClickListener { Navigator.to(SImageView(ImageLoader.load(image)).setOnHide { onSupportScreenHide() }) }
             vCrop.setOnClickListener { crop() }
             vRemove.setOnClickListener {
-                removeImage(adapter!!.indexOf(this))
+                removeImage(adapter.indexOf(this))
             }
         }
 
@@ -212,7 +217,7 @@ class SplashPageImages(
             if (bytes != null) {
                 vImage.setImageBitmap(ToolsBitmap.decode(bytes, dp, dp, null, dp, dp))
             } else {
-                ImageLoader.load(id).intoBytes { bytes -> vImage.setImageBitmap(ToolsBitmap.decode(bytes, dp, dp, null, dp, dp)) }
+                ImageLoader.load(image).intoBytes { bytes -> vImage.setImageBitmap(ToolsBitmap.decode(bytes, dp, dp, null, dp, dp)) }
             }
         }
 
@@ -222,7 +227,7 @@ class SplashPageImages(
             if (bytes != null) {
                 crop(bytes!!, dialog)
             } else {
-                ImageLoader.load(id).intoBytes { bytes ->
+                ImageLoader.load(image).intoBytes { bytes ->
                     crop(bytes!!, dialog)
                 }
             }
@@ -243,9 +248,9 @@ class SplashPageImages(
                             ToolsThreads.thread {
                                 if (ToolsBytes.isGif(bytes)) {
                                     val resizedBytes = ToolsGif.resize(bytes, API.PAGE_IMAGES_SIDE_GIF, API.PAGE_IMAGES_SIDE_GIF, x, y, w, h, true)
-                                    sendImage(bitmap, resizedBytes, dialogV, adapter!!.indexOf(this))
+                                    sendImage(bitmap, resizedBytes, dialogV, adapter.indexOf(this))
                                 } else {
-                                    sendImage(bitmap, ControllerApi.toBytesNow(bitmap, API.PAGE_IMAGES_WEIGHT), dialogV, adapter!!.indexOf(this))
+                                    sendImage(bitmap, ControllerApi.toBytesNow(bitmap, API.PAGE_IMAGES_WEIGHT), dialogV, adapter.indexOf(this))
                                 }
                             }
                         }

@@ -13,7 +13,7 @@ import sh.sit.bonfire.networking.OkHttpController
 
 object ApolloController {
     val apolloClient: ApolloClient = ApolloClient.Builder()
-        .serverUrl("https://api.bonfire.moe/")
+        .serverUrl("https://api.bonfire.moe")
         .httpEngine(DefaultHttpEngine(
             OkHttpController.getClient(SupAndroid.appContext!!) {
                 addInterceptor(AuthInterceptor())

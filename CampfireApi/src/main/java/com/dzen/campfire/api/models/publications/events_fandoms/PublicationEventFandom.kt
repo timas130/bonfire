@@ -1,6 +1,7 @@
 package com.dzen.campfire.api.models.publications.events_fandoms
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.Publication
 import com.sup.dev.java.libs.json.Json
 
@@ -16,7 +17,9 @@ class PublicationEventFandom : Publication {
         this.event = event
     }
 
-    constructor(jsonDB: Json) : super(jsonDB) {    restoreFromJsonDB()}
+    constructor(jsonDB: Json) : super(jsonDB) {
+        restoreFromJsonDB()
+    }
 
     override fun jsonPublication(inp: Boolean, json: Json) {}
 
@@ -26,8 +29,11 @@ class PublicationEventFandom : Publication {
     }
 
     override fun fillResourcesList(list: ArrayList<Long>) {
-        if(event != null) event!!.fillResourcesList(list)
+        if (event != null) event!!.fillResourcesList(list)
     }
 
-
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        super.fillImageRefs(receiver)
+        event?.fillImageRefs(receiver)
+    }
 }

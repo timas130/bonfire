@@ -2,6 +2,7 @@ package com.sayzen.campfiresdk.screens.account.rates
 
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.Rate
 import com.dzen.campfire.api.requests.accounts.RAccountsRatesGetAll
 import com.sayzen.campfiresdk.R
@@ -10,6 +11,8 @@ import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.screens.rates.CardRate
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.screens.SLoadingRecycler
 
@@ -23,7 +26,7 @@ class SRates(
     init {
         disableShadows()
         disableNavigation()
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_21)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_21))
         setTextEmpty(if (ControllerApi.isCurrentAccount(accountId)) t(API_TRANSLATE.profile_rates_empty) else t(API_TRANSLATE.profile_rates_empty_another))
         update()
 

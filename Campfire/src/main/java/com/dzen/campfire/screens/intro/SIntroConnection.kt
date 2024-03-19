@@ -9,7 +9,7 @@ import androidx.annotation.WorkerThread
 import androidx.core.view.WindowCompat
 import com.dzen.campfire.R
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.requests.accounts.RAccountsAddNotificationsToken
 import com.dzen.campfire.api.requests.accounts.RAccountsGetInfo
@@ -21,6 +21,7 @@ import com.sayzen.campfiresdk.compose.auth.AuthStartScreen
 import com.sayzen.campfiresdk.compose.auth.VerifyEmailScreen
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.objects.MChatMessagesPool
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -147,7 +148,7 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
             sendLoginRequestNow(false)
 
             // if the fcm token is not ready yet, try to refresh
-            // it for every second for a minute
+            // it every second for a minute
             if (ControllerNotifications.token.isEmpty()) {
                 ToolsThreads.timerMain(1000, 1000 * 60L, {
                     if (ControllerNotifications.token.isNotEmpty()) {
@@ -225,7 +226,7 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
         if (state == State.ERROR) {
             vProgress.visibility = View.GONE
             vEmptyImage.visibility = View.VISIBLE
-            ImageLoader.load(API_RESOURCES.IMAGE_BACKGROUND_20).noHolder().into(vEmptyImage)
+            ImageLoader.load(ApiResources.IMAGE_BACKGROUND_20).noHolder().into(vEmptyImage)
         }
 
         if (state == State.PROGRESS && !loadedBackground) {
@@ -282,7 +283,7 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
         val subtitle = ControllerTranslate.getMyMap()?.get(activeBackground.subtitleTranslation)?.text
             ?: activeBackground.subtitleTranslation
 
-        val imageLink = ImageLoader.load(activeBackground.imageId)
+        val imageLink = ImageLoader.load(activeBackground.image)
         ImageLoader.load(
             link = imageLink,
             vImage = vBackground,

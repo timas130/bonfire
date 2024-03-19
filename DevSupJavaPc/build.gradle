@@ -9,10 +9,10 @@ dependencies {
     implementation 'com.mysql:mysql-connector-j:8.0.31'
     implementation 'org.postgresql:postgresql:42.3.8'
 
-    implementation('software.amazon.awssdk:s3:2.20.130') {
+    implementation('software.amazon.awssdk:s3:2.25.11') {
         exclude group: 'software.amazon.awssdk', module: 'apache-client'
     }
-    implementation('software.amazon.awssdk:url-connection-client:2.20.130')
+    implementation('software.amazon.awssdk:url-connection-client:2.25.11')
 }
 
 jar {

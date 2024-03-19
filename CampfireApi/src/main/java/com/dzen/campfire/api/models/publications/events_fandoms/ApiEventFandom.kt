@@ -1,15 +1,22 @@
 package com.dzen.campfire.api.models.publications.events_fandoms
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonPolimorf
 
-abstract class ApiEventFandom : JsonPolimorf {
+abstract class ApiEventFandom : JsonPolimorf, ImageHolder {
 
     var fandomId = 0L
     var fandomName = ""
+    var fandomImage = ImageRef()
+    @Deprecated("use ImageRefs")
     var fandomImageId = 0L
     var ownerAccountId = 0L
+    var ownerAccountImage = ImageRef()
+    @Deprecated("use ImageRefs")
     var ownerAccountImageId = 0L
     var ownerAccountName = ""
     var ownerAccountSex = 0L
@@ -19,17 +26,17 @@ abstract class ApiEventFandom : JsonPolimorf {
 
     constructor(ownerAccountId: Long,
                 ownerAccountName: String,
-                ownerAccountImageId: Long,
+                ownerAccountImage: Long,
                 ownerAccountSex: Long,
                 fandomId: Long,
                 fandomName: String,
-                fandomImageId: Long,
+                fandomImage: Long,
                 comment: String) : super() {
         this.fandomId = fandomId
         this.fandomName = fandomName
-        this.fandomImageId = fandomImageId
+        this.fandomImage = ImageRef(fandomImage)
         this.ownerAccountId = ownerAccountId
-        this.ownerAccountImageId = ownerAccountImageId
+        this.ownerAccountImage = ImageRef(ownerAccountImage)
         this.ownerAccountName = ownerAccountName
         this.ownerAccountSex = ownerAccountSex
         this.comment = comment
@@ -38,14 +45,21 @@ abstract class ApiEventFandom : JsonPolimorf {
     override fun json(inp: Boolean, json: Json): Json {
         if (inp) json.put("type", getType())
         fandomId = json.m(inp, "fandomId", fandomId)
+        fandomImage = json.m(inp, "fandomImage", fandomImage)
         fandomImageId = json.m(inp, "fandomImageId", fandomImageId)
         fandomName = json.m(inp, "fandomName", fandomName)
         ownerAccountId = json.m(inp, "ownerAccountId", ownerAccountId)
         ownerAccountName = json.m(inp, "ownerAccountName", ownerAccountName)
+        ownerAccountImage = json.m(inp, "ownerAccountImage", ownerAccountImage)
         ownerAccountImageId = json.m(inp, "ownerAccountImageId", ownerAccountImageId)
         ownerAccountSex = json.m(inp, "ownerAccountSex", ownerAccountSex)
         comment = json.m(inp, "comment", comment)
         return json
+    }
+
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        receiver.add(fandomImage, fandomImageId)
+        receiver.add(ownerAccountImage, ownerAccountImageId)
     }
 
     abstract fun getType(): Long

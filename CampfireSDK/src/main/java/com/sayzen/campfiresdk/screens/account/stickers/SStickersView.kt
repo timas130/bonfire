@@ -4,8 +4,8 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.stickers.PublicationSticker
 import com.dzen.campfire.api.models.publications.stickers.PublicationStickersPack
 import com.dzen.campfire.api.requests.stickers.RStickersAdd
@@ -25,6 +25,7 @@ import com.sayzen.campfiresdk.screens.comments.SComments
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.adapters.XComments
 import com.sayzen.campfiresdk.support.adapters.XKarma
+import com.sayzen.campfiresdk.support.load
 import com.sayzen.campfiresdk.views.ViewKarma
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
@@ -32,9 +33,9 @@ import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.*
 import com.sup.dev.android.views.screens.SCrop
 import com.sup.dev.android.views.screens.SLoadingRecycler
-import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.android.views.splash.SplashChooseImage
 import com.sup.dev.android.views.splash.SplashProgressTransparent
+import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsThreads
@@ -79,7 +80,7 @@ class SStickersView(
         disableNavigation()
         disableShadows()
         setTextEmpty(t(API_TRANSLATE.stickers_pack_view_empty))
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_4)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_4))
 
         val spanCount = if (ToolsAndroid.isScreenPortrait()) 3 else 6
         vRecycler.layoutManager = GridLayoutManager(context, spanCount)
@@ -141,7 +142,7 @@ class SStickersView(
     private fun updateTitle() {
         vAvatarTitle.setTitle(stickersPack.name)
         vAvatarTitle.setSubtitle(stickersPack.creator.name)
-        ImageLoader.load(stickersPack.imageId).into(vAvatarTitle.vAvatar.vImageView)
+        ImageLoader.load(stickersPack.image).into(vAvatarTitle.vAvatar.vImageView)
 
     }
 
@@ -229,7 +230,7 @@ class SStickersView(
     private fun onEventStickersPackChanged(e: EventStickersPackChanged) {
         if (e.stickersPack.id == stickerId) {
             stickersPack.name = e.stickersPack.name
-            stickersPack.imageId = e.stickersPack.imageId
+            stickersPack.image = e.stickersPack.image
             updateTitle()
         }
     }

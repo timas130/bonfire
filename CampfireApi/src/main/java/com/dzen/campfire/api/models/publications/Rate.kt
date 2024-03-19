@@ -2,11 +2,12 @@ package com.dzen.campfire.api.models.publications
 
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.fandoms.Fandom
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonParsable
 
-class Rate : JsonParsable {
-
+class Rate : JsonParsable, ImageHolder {
     var account = Account()
     var fandom = Fandom()
     var publicationType = 0L
@@ -32,4 +33,8 @@ class Rate : JsonParsable {
         return json
     }
 
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        account.fillImageRefs(receiver)
+        fandom.fillImageRefs(receiver)
+    }
 }

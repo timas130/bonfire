@@ -1,40 +1,50 @@
 package com.dzen.campfire.api.models.publications.history
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonParsable
 
-abstract class History : JsonParsable {
-
+abstract class History : JsonParsable, ImageHolder {
     var userId = 0L
+    var userImage = ImageRef()
+    @Deprecated("use ImageRefs")
     var userImageId = 0L
     var userName = ""
     var comment = ""
 
-    constructor(){
+    constructor() {
 
     }
 
-    constructor(userId:Long,
-                userImageId:Long,
-                userName:String,
-                comment:String
-    ){
+    constructor(
+        userId: Long,
+        userImageId: Long,
+        userName: String,
+        comment: String
+    ) {
         this.userId = userId
-        this.userImageId = userImageId
+        this.userImage = ImageRef(userImageId)
         this.userName = userName
         this.comment = comment
     }
 
-    abstract fun getType():Long
+    abstract fun getType(): Long
 
     override fun json(inp: Boolean, json: Json): Json {
         userId = json.m(inp, "userId", userId)
+        userImage = json.m(inp, "userImage", userImage)
         userImageId = json.m(inp, "userImageId", userImageId)
         userName = json.m(inp, "userName", userName)
         comment = json.m(inp, "comment", comment)
         json.m(inp, "type", getType())
         return json
+    }
+
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        receiver.add(userImage, userImageId)
     }
 
     companion object {
@@ -45,10 +55,10 @@ abstract class History : JsonParsable {
                 API.HISTORY_PUBLICATION_TYPE_CREATED -> HistoryCreate()
                 API.HISTORY_PUBLICATION_TYPE_ADMIN_BACK_DRAFT -> HistoryAdminBackDraft()
                 API.HISTORY_PUBLICATION_TYPE_ADMIN_BLOCK -> HistoryAdminBlock()
-                API.HISTORY_PUBLICATION_TYPE_ADMIN_CHANGE_FANDOM  -> HistoryAdminChangeFandom()
-                API.HISTORY_PUBLICATION_TYPE_ADMIN_CLEAR_REPORTS  -> HistoryAdminClearReports()
+                API.HISTORY_PUBLICATION_TYPE_ADMIN_CHANGE_FANDOM -> HistoryAdminChangeFandom()
+                API.HISTORY_PUBLICATION_TYPE_ADMIN_CLEAR_REPORTS -> HistoryAdminClearReports()
                 API.HISTORY_PUBLICATION_TYPE_ADMIN_DEEP_BLOCK -> HistoryAdminDeepBlock()
-                API.HISTORY_PUBLICATION_TYPE_ADMIN_NOT_BLOCK  -> HistoryAdminNotBlock()
+                API.HISTORY_PUBLICATION_TYPE_ADMIN_NOT_BLOCK -> HistoryAdminNotBlock()
                 API.HISTORY_PUBLICATION_TYPE_ADMIN_NOT_MULTILINGUAL -> HistoryAdminNotMultilingual()
                 API.HISTORY_PUBLICATION_TYPE_BACK_DRAFT -> HistoryBackDraft()
                 API.HISTORY_PUBLICATION_TYPE_CHANGE_FANDOM -> HistoryChangeFandom()

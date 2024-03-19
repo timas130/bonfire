@@ -5,16 +5,16 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.dzen.campfire.api.models.fandoms.Fandom
-import com.dzen.campfire.api.models.publications.Publication
 import com.sayzen.campfiresdk.controllers.ControllerApi
-import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomChanged
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomClose
 import com.sayzen.campfiresdk.models.events.publications.EventPublicationFandomChanged
 import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
-import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sayzen.campfiresdk.support.load
+import com.sayzen.campfiresdk.support.loadGif
 import com.sup.dev.android.libs.image_loader.ImageLoader
+import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.views.views.ViewAvatar
 import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.java.libs.eventBus.EventBus
@@ -35,7 +35,7 @@ class XFandom() {
             .subscribe(EventFandomClose::class) { onEventFandomClose(it) }
 
     init {
-        ImageLoader.load(fandom.imageId).intoCash()
+        ImageLoader.load(fandom.image).intoCash()
     }
 
     //
@@ -101,7 +101,7 @@ class XFandom() {
     }
 
     fun setView(viewAvatar: ViewAvatar) {
-        ImageLoader.load(fandom.imageId).into(viewAvatar.vImageView)
+        ImageLoader.load(fandom.image).into(viewAvatar.vImageView)
         viewAvatar.setChipIcon(0)
         viewAvatar.setChipText("")
 
@@ -130,12 +130,12 @@ class XFandom() {
     }
 
     fun setViewBig(vImage: ImageView) {
-        if (fandom.imageTitleId != 0L) ImageLoader.loadGif(fandom.imageTitleId, fandom.imageTitleGifId, vImage)
+        if (fandom.imageTitle.isNotEmpty()) ImageLoader.loadGif(fandom.imageTitle, fandom.imageTitleGif, vImage)
         else vImage.setImageBitmap(null)
     }
 
     fun setView(vImage: ImageView) {
-        ImageLoader.load(fandom.imageId).into(vImage)
+        ImageLoader.load(fandom.image).into(vImage)
     }
 
     fun setView(vText: TextView) {
@@ -143,7 +143,7 @@ class XFandom() {
     }
 
     fun cashAvatar(){
-        ImageLoader.load(fandom.imageId).intoCash()
+        ImageLoader.load(fandom.image).intoCash()
     }
 
     //
@@ -154,13 +154,22 @@ class XFandom() {
 
     fun getLanguageId() = fandom.languageId
 
+    @Deprecated("use ImageRefs")
     fun getImageId() = fandom.imageId
+
+    fun getImage() = fandom.image
 
     fun getName() = fandom.name
 
+    @Deprecated("use ImageRefs")
     fun getImageTitleGifId() = fandom.imageTitleGifId
 
+    fun getImageTitleGif() = fandom.imageTitleGif
+
+    @Deprecated("use ImageRefs")
     fun getImageTitleId() = fandom.imageTitleId
+
+    fun getImageTitle() = fandom.imageTitle
 
     fun isClosed() = fandom.closed
 
@@ -174,8 +183,8 @@ class XFandom() {
         if (e.fandomId == fandom.id) {
             if (e.name.isNotEmpty()) fandom.name = e.name
             if (e.imageId != -1L) fandom.imageId = e.imageId
-            if (e.imageTitleId != -1L) fandom.imageTitleId = e.imageTitleId
-            if (e.imageTitleGifId != -1L) fandom.imageTitleGifId = e.imageTitleGifId
+            if (e.imageTitle.isNotEmpty()) fandom.imageTitle = e.imageTitle
+            if (e.imageTitleGif.isNotEmpty()) fandom.imageTitleGif = e.imageTitleGif
             onChanged.invoke()
         }
     }

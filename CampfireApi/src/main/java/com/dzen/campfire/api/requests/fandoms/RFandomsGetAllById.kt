@@ -1,6 +1,7 @@
 package com.dzen.campfire.api.requests.fandoms
 
 import com.dzen.campfire.api.models.fandoms.Fandom
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -36,6 +37,11 @@ open class RFandomsGetAllById(
             fandoms = json.m(inp, "fandoms", fandoms, Array<Fandom>::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (fandom in fandoms) {
+                fandom.fillImageRefs(receiver)
+            }
+        }
     }
 
 }

@@ -3,6 +3,7 @@ package com.sayzen.campfiresdk.screens.fandoms.chats
 import android.view.View
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.publications.chat.Chat
 import com.dzen.campfire.api.requests.chat.RChatsFandomGetAll
 import com.sayzen.campfiresdk.R
@@ -33,7 +34,7 @@ class SFandomChatsList constructor(
         vFab.setImageResource(R.drawable.ic_add_white_24dp)
         vFab.setOnClickListener {
             if (ControllerApi.can(fandomId, languageId, API.LVL_MODERATOR_CHATS)) {
-                Navigator.to(SFandomChatsCreate(fandomId, languageId, 0, "", 0, ""))
+                Navigator.to(SFandomChatsCreate(fandomId, languageId, 0, "", ImageRef(), ""))
             } else {
                 ToolsToast.show(t(API_TRANSLATE.error_low_lvl_or_karma))
             }

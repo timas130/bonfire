@@ -16,7 +16,6 @@ fn is_internal(ctx: &Context<'_>) -> bool {
 #[Object]
 impl LoginInternalMutation {
     /// Login as an internal service
-    #[graphql(visible = "is_internal")]
     async fn login_internal(
         &self,
         ctx: &Context<'_>,

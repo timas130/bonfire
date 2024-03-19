@@ -1,11 +1,12 @@
 package com.dzen.campfire.api.models.project
 
 import com.dzen.campfire.api.models.account.Account
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonParsable
 
-class Donate : JsonParsable{
-
+class Donate : JsonParsable, ImageHolder {
     var account = Account()
     var sum = 0L
     var dateCreate = 0L
@@ -24,4 +25,7 @@ class Donate : JsonParsable{
         return json
     }
 
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        account.fillImageRefs(receiver)
+    }
 }

@@ -1,18 +1,19 @@
 package com.sayzen.campfiresdk.screens.account.black_list
 
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.fandoms.Fandom
 import com.dzen.campfire.api.requests.accounts.RAccountsGetIgnoredFandoms
 import com.dzen.campfire.api.requests.fandoms.RFandomsGetAllById
-import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
-import com.sayzen.campfiresdk.models.cards.CardFandom
-import com.sayzen.campfiresdk.models.events.fandom.EventFandomBlackListChange
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.models.cards.CardFandom
+import com.sayzen.campfiresdk.models.events.fandom.EventFandomBlackListChange
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.views.screens.SLoadingRecycler
 import com.sup.dev.java.libs.eventBus.EventBus
@@ -44,7 +45,7 @@ class SBlackListFandoms(
         disableNavigation()
         setTitle(t(API_TRANSLATE.settings_black_list_fandoms))
         setTextEmpty(t(API_TRANSLATE.settings_black_list_empty))
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_22)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_22))
 
         adapter.setBottomLoader { onLoad, _ ->
             if (loaded) {

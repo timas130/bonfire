@@ -53,6 +53,7 @@ object App {
                 requestFactory,
                 accountProvider,
                 secretsBotsTokens,
+                ControllerResources,
             )
 
             while (true) {

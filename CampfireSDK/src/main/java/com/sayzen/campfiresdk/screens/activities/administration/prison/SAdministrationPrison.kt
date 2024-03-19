@@ -1,14 +1,15 @@
 package com.sayzen.campfiresdk.screens.activities.administration.prison
 
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.account.AccountPrison
 import com.dzen.campfire.api.requests.accounts.RAccountsPrisonGetAll
-import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.CardAccount
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomAccountBaned
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.screens.SLoadingRecycler
 import com.sup.dev.java.libs.eventBus.EventBus
@@ -31,7 +32,7 @@ class SAdministrationPrison() : SLoadingRecycler<CardAccount, AccountPrison>() {
         disableShadows()
         disableNavigation()
 
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_8)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_8))
         setTitle(t(API_TRANSLATE.moderation_screen_prison))
         setTextEmpty(t(API_TRANSLATE.moderation_screen_prison_empty))
 

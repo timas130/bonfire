@@ -2,16 +2,15 @@ package com.dzen.campfire.api.models.admins
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.account.Account
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonPolimorf
 
-abstract class MAdminVote : JsonPolimorf {
-
+abstract class MAdminVote : JsonPolimorf, ImageHolder {
     companion object {
-
         @JvmStatic
         fun instance(json: Json): MAdminVote {
-
             val event = when (json.getLong("type")) {
                 API.ADMIN_VOTE_ACCOUNT_RECOUNT_ACHI -> MAdminVoteAccountRecountAchi()
                 API.ADMIN_VOTE_ACCOUNT_CHANGE_NAME -> MAdminVoteAccountChangeName()
@@ -55,6 +54,9 @@ abstract class MAdminVote : JsonPolimorf {
         return json
     }
 
-    abstract fun getType(): Long
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        adminAccount.fillImageRefs(receiver)
+    }
 
+    abstract fun getType(): Long
 }

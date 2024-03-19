@@ -1,0 +1,6 @@
+mutation CheckImage($userId: ID!, $key: String!, $uploadTypes: [UploadType!]!) {
+    checkImage(userId: $userId, key: $key, uploadTypes: $uploadTypes) {
+        size
+        gif
+    }
+}

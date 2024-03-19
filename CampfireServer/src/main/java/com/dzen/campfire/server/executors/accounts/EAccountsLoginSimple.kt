@@ -8,7 +8,6 @@ import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerSubThread
 import com.dzen.campfire.server.tables.TAccounts
 import com.dzen.campfire.server.tables.TCollisions
-import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryRemove

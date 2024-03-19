@@ -1,22 +1,21 @@
 package com.sayzen.campfiresdk.screens.activities.administration.fandoms
 
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
-import com.sayzen.campfiresdk.R
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.fandoms.Fandom
 import com.dzen.campfire.api.requests.fandoms.RFandomsSuggestedGetAll
 import com.sayzen.campfiresdk.controllers.ControllerActivities
+import com.sayzen.campfiresdk.controllers.api
+import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.CardFandom
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomAccepted
 import com.sayzen.campfiresdk.screens.fandoms.suggest.SFandomSuggest
-import com.sayzen.campfiresdk.controllers.api
-import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapterLoading
 import com.sup.dev.android.views.screens.SLoadingRecycler
 import com.sup.dev.java.libs.eventBus.EventBus
-import kotlin.reflect.KClass
 
 class SAdministrationFandoms private constructor(
 
@@ -36,7 +35,7 @@ class SAdministrationFandoms private constructor(
         disableNavigation()
         disableShadows()
 
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_2)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_2))
         setTitle(t(API_TRANSLATE.administration_fandoms))
         setTextEmpty(t(API_TRANSLATE.administration_fandoms_empty))
 

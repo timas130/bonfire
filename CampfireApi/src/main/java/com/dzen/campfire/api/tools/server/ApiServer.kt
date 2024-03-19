@@ -16,9 +16,10 @@ import java.util.concurrent.TimeUnit
 
 
 class ApiServer(
-        private val requestFactory: RequestFactory,
-        private val accountProvider: AccountProvider,
-        private val botTokensList: Array<String>,
+    private val requestFactory: RequestFactory,
+    private val accountProvider: AccountProvider,
+    private val botTokensList: Array<String>,
+    private val resources: IControllerResources?,
 ) {
     var onError: (String, Throwable) -> Unit = { _,ex -> err(ex) }
     var statisticCollector: (String, Long, String) -> Unit = { _, _, _ -> }
@@ -163,7 +164,9 @@ class ApiServer(
 
             try {
                 request.check()
-                request.execute().json(true, responseJsonContent)
+                val response = request.execute()
+                resources?.let { response.signImages(it) }
+                response.json(true, responseJsonContent)
 
                 responseJson.put(ApiClient.J_STATUS, ApiClient.J_STATUS_OK)
             } catch (ex: ApiException) {

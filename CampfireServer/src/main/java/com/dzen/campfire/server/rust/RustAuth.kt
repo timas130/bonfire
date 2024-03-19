@@ -1,61 +1,30 @@
 package com.dzen.campfire.server.rust
 
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
+import com.dzen.campfire.api.tools.ApiException
+import com.dzen.campfire.server.ChangeNameMutation
+import com.dzen.campfire.server.ShortMeQuery
+import com.dzen.campfire.server.fragment.ShortUser
+import com.dzen.campfire.server.rust.ControllerRust.executeExt
 
 object RustAuth {
-    @Serializable
-    private data class ShortMeResponse(
-        val me: AuthUser,
-    )
-
-    @Serializable
-    data class AuthUser(
-        val id: String,
-        val username: String,
-    )
-
-    fun getByToken(accessToken: String): AuthUser? {
-        try {
-            val resp = ControllerRust.query<ShortMeResponse>(
-                """
-                    query ShortMe {
-                        me {
-                            id
-                            username
-                        }
-                    }
-                """.trimIndent(),
-                buildJsonObject {},
-                accessToken,
-            )
-            return resp.me
-        } catch (e: Exception) {
-            return null
+    fun getByToken(accessToken: String): ShortUser? {
+        return try {
+            ControllerRust.apollo
+                .query(ShortMeQuery())
+                .addHttpHeader("Authorization", "Bearer $accessToken")
+                .executeExt()
+                .me
+                .shortUser
+        } catch (e: ApiException) {
+            null
         }
     }
 
-    @Serializable
-    private data class ChangeNameResponse(
-        val internalChangeName: AuthUser,
-    )
-
-    fun changeName(userId: Long, newName: String): AuthUser {
-        val resp = ControllerRust.queryService<ChangeNameResponse>(
-            """
-                mutation ChangeNameMutation(${"$"}userId: ID!, ${"$"}newName: String!) {
-                    internalChangeName(userId: ${"$"}userId, newName: ${"$"}newName) {
-                        id
-                        username
-                    }
-                }
-            """.trimIndent(),
-            buildJsonObject {
-                put("userId", userId.toString())
-                put("newName", newName)
-            },
-        )
-        return resp.internalChangeName
+    fun changeName(userId: Long, newName: String): ShortUser {
+        return ControllerRust.apollo
+            .mutation(ChangeNameMutation(userId.toString(), newName))
+            .executeExt()
+            .internalChangeName
+            .shortUser
     }
 }

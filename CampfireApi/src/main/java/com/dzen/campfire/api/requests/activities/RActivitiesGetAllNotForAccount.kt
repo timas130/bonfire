@@ -1,6 +1,7 @@
 package com.dzen.campfire.api.requests.activities
 
 import com.dzen.campfire.api.models.activities.UserActivity
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -38,6 +39,11 @@ open class RActivitiesGetAllNotForAccount(
             userActivities = json.m(inp, "userActivities", userActivities)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (userActivity in userActivities) {
+                userActivity.fillImageRefs(receiver)
+            }
+        }
     }
 
 

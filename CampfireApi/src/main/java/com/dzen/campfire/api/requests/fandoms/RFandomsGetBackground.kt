@@ -1,6 +1,7 @@
 package com.dzen.campfire.api.requests.fandoms
 
-import com.dzen.campfire.api.models.fandoms.Fandom
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -28,7 +29,11 @@ open class RFandomsGetBackground(
 
     class Response : Request.Response {
 
+        var imageTitle = ImageRef()
+        @Deprecated("use ImageRefs")
         var imageTitleId = 0L
+        var imageTitleGif = ImageRef()
+        @Deprecated("use ImageRefs")
         var imageTitleGifId = 0L
 
         constructor(json: Json) {
@@ -36,15 +41,21 @@ open class RFandomsGetBackground(
         }
 
         constructor(imageTitleId: Long, imageTitleGifId:Long) {
-            this.imageTitleId = imageTitleId
-            this.imageTitleGifId = imageTitleGifId
+            this.imageTitle = ImageRef(imageTitleId)
+            this.imageTitleGif = ImageRef(imageTitleGifId)
         }
 
         override fun json(inp: Boolean, json: Json) {
+            imageTitle = json.m(inp, "imageTitle", imageTitle)
             imageTitleId = json.m(inp, "imageTitleId", imageTitleId)
+            imageTitleGif = json.m(inp, "imageTitleGif", imageTitleGif)
             imageTitleGifId = json.m(inp, "imageTitleGifId", imageTitleGifId)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            receiver.add(imageTitle, imageTitleId)
+            receiver.add(imageTitleGif, imageTitleGifId)
+        }
     }
 
 }

@@ -4,9 +4,9 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.chat.ChatParamsFandomSub
 import com.dzen.campfire.api.models.publications.moderations.chat.ModerationChatChange
 import com.dzen.campfire.api.requests.fandoms.RFandomsModerationChatChange
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.server.tables.TChats
-import com.dzen.campfire.api.tools.ApiException
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java_pc.sql.Database
@@ -67,7 +67,7 @@ class EFandomsModerationChatChange : RFandomsModerationChatChange(0, "", "", "",
         }
 
         if(image != null){
-            ControllerResources.replace(imageId, image!!, API.RESOURCES_PUBLICATION_DATABASE_LINKED)
+            update.update(TChats.image_id, ControllerResources.removeAndPut(imageId, image!!, API.RESOURCES_PUBLICATION_DATABASE_LINKED))
         }
 
         Database.update("EFandomsModerationChatChange update", update)

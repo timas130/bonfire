@@ -3,6 +3,7 @@ package com.sayzen.campfiresdk.controllers
 import android.view.View
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.publications.PagesContainer
 import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.models.publications.post.*
@@ -19,6 +20,7 @@ import com.sayzen.campfiresdk.screens.fandoms.rubrics.SRubricsList
 import com.sayzen.campfiresdk.screens.post.create.SPostCreationTags
 import com.sayzen.campfiresdk.screens.post.history.SPublicationHistory
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsAndroid
@@ -518,27 +520,27 @@ object ControllerPost {
         }
     }
 
-    fun toImagesScreen(pagesContainer: PagesContainer, imageId: Long) {
-        val list = ArrayList<Long>()
+    fun toImagesScreen(pagesContainer: PagesContainer, image: ImageRef) {
+        val list = mutableListOf<ImageRef>()
         var index = 0
 
         for (p in pagesContainer.getPagesArray()) {
             when (p) {
                 is PageImage -> {
-                    if (p.imageId == imageId) index = list.size
-                    list.add(p.getMainImageId())
+                    if (p.image == image) index = list.size
+                    list.add(p.getMainImage())
                 }
                 is PageImages -> {
-                    for (subImageId in p.imagesIds) {
-                        if (subImageId == imageId) index = list.size
-                        list.add(subImageId)
+                    for (subImage in p.images) {
+                        if (subImage == image) index = list.size
+                        list.add(subImage)
                     }
                 }
                 is PageTable -> {
                     for (cell in p.cells) {
-                        if (cell.imageId < 1) continue
-                        if (cell.imageId == imageId) index = list.size
-                        list.add(cell.imageId)
+                        if (cell.image.isEmpty()) continue
+                        if (cell.image == image) index = list.size
+                        list.add(cell.image)
                     }
                 }
             }

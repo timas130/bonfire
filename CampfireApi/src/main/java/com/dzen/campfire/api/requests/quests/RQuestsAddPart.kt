@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.quests
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.quests.QuestPart
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -44,6 +45,12 @@ open class RQuestsAddPart(
 
         override fun json(inp: Boolean, json: Json) {
             parts = json.m(inp, "parts", parts, Array<QuestPart>::class)
+        }
+
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (part in parts) {
+                part.fillImageRefs(receiver)
+            }
         }
     }
 }

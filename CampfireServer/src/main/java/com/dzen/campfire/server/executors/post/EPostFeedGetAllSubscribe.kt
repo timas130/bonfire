@@ -37,7 +37,7 @@ class EPostFeedGetAllSubscribe : RPostFeedGetAllSubscribe(0) {
         ))
 
         var posts = ControllerPublications.parseSelect(Database.select("EPostFeedGetAll", select))
-        posts = ControllerPublications.loadSpecDataForPosts(apiAccount.id, posts)
+        posts = ControllerPublications.loadSpecDataForPosts(apiAccount.id, posts, requestApiVersion)
 
         return Response(posts)
     }

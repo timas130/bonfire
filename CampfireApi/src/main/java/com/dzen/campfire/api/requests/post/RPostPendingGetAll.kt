@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.post
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -40,6 +41,11 @@ open class RPostPendingGetAll(
             publications = json.m(inp, "units", publications, Array<PublicationPost>::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (publication in publications) {
+                publication.fillImageRefs(receiver)
+            }
+        }
     }
 
 

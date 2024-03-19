@@ -12,8 +12,10 @@ import com.sayzen.campfiresdk.controllers.tCap
 import com.sayzen.campfiresdk.models.cards.CardPublication
 import com.sayzen.campfiresdk.screens.account.stickers.SStickersView
 import com.sayzen.campfiresdk.screens.reports.SReports
-import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sayzen.campfiresdk.support.load
+import com.sayzen.campfiresdk.support.loadGif
 import com.sup.dev.android.libs.image_loader.ImageLoader
+import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.screens.SImageView
@@ -24,7 +26,7 @@ class CardSticker(
         val isShowReports: Boolean = false
 ) : CardPublication(if (isShowFullInfo) R.layout.card_sticker_info else R.layout.card_sticker, publication) {
 
-    var onClick: (PublicationSticker) -> Unit = { Navigator.to(SImageView(ImageLoader.load(if (publication.gifId == 0L) publication.imageId else publication.gifId))) }
+    var onClick: (PublicationSticker) -> Unit = { Navigator.to(SImageView(ImageLoader.load(if (publication.gif.isEmpty()) publication.image else publication.gif))) }
     var onLongClick: ((PublicationSticker) -> Unit)? = null
 
     override fun bindView(view: View) {
@@ -57,7 +59,7 @@ class CardSticker(
             vRootContainer.setBackgroundColor(0x00000000)
         }
 
-        ImageLoader.loadGif(publication.imageId, publication.gifId, vImage, vProgress)
+        ImageLoader.loadGif(publication.image, publication.gif, vImage, vProgress)
     }
 
     override fun updateAccount() {
@@ -89,7 +91,7 @@ class CardSticker(
 
     override fun notifyItem() {
         val publication = xPublication.publication as PublicationSticker
-        ImageLoader.load(publication.imageId).intoCash()
+        ImageLoader.load(publication.image).intoCash()
     }
 
 }

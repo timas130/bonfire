@@ -5,12 +5,12 @@ import com.sup.dev.java.libs.json.Json
 
 class PageText : Page() {
     companion object {
-        val SIZE_0 = 0
-        val SIZE_1 = 1
+        const val SIZE_0 = 0
+        const val SIZE_1 = 1
 
-        val ALIGN_LEFT = 0
-        val ALIGN_RIGHT = 1
-        val ALIGN_CENTER = 2
+        const val ALIGN_LEFT = 0
+        const val ALIGN_RIGHT = 1
+        const val ALIGN_CENTER = 2
     }
 
     var text = ""

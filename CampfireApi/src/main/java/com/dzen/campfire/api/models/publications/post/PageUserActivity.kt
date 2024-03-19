@@ -2,11 +2,11 @@ package com.dzen.campfire.api.models.publications.post
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.activities.UserActivity
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
 class PageUserActivity : Page() {
-
     var userActivity = UserActivity()
 
     override fun getType() = API.PAGE_TYPE_USER_ACTIVITY
@@ -26,4 +26,8 @@ class PageUserActivity : Page() {
         return super.json(inp, json)
     }
 
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        super.fillImageRefs(receiver)
+        userActivity.fillImageRefs(receiver)
+    }
 }

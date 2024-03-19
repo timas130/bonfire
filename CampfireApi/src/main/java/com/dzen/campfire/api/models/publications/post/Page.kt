@@ -1,13 +1,15 @@
 package com.dzen.campfire.api.models.publications.post
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.tools.client.Request
 import com.dzen.campfire.api.tools.server.IControllerResources
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonPolimorf
 
 
-abstract class Page : JsonPolimorf {
+abstract class Page : JsonPolimorf, ImageHolder {
 
     override fun json(inp: Boolean, json: Json): Json {
         if (inp) json.put(J_PAGE_TYPE, getType())
@@ -28,13 +30,17 @@ abstract class Page : JsonPolimorf {
 
     abstract fun fillResourcesList(list: ArrayList<Long>)
 
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+
+    }
+
     open fun duplicateResources(res: IControllerResources, unitId: Long) {}
 
     open fun prepareForServer(page: Page) {
 
     }
 
-    open fun copyChangeData(page:Page){
+    open fun copyChangeData(page: Page) {
 
     }
 

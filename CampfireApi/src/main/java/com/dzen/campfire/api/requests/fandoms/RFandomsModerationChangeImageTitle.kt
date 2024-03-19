@@ -1,5 +1,7 @@
 package com.dzen.campfire.api.requests.fandoms
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -38,23 +40,33 @@ open class RFandomsModerationChangeImageTitle(
 
     class Response : Request.Response {
 
+        var image = ImageRef()
+        @Deprecated("use ImageRefs")
         var imageId = 0L
+        var imageGif = ImageRef()
+        @Deprecated("use ImageRefs")
         var imageGifId = 0L
 
         constructor(json: Json) {
             json(false, json)
         }
 
-        constructor(imageId: Long, imageGifId: Long) {
-            this.imageId = imageId
-            this.imageGifId = imageGifId
+        constructor(image: Long, imageGif: Long) {
+            this.image = ImageRef(image)
+            this.imageGif = ImageRef(imageGif)
         }
 
         override fun json(inp: Boolean, json: Json) {
+            image = json.m(inp, "image", image)
             imageId = json.m(inp, "imageId", imageId)
+            imageGif = json.m(inp, "imageGif", imageGif)
             imageGifId = json.m(inp, "imageGifId", imageGifId)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            receiver.add(image, imageId)
+            receiver.add(imageGif, imageGifId)
+        }
     }
 
 

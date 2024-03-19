@@ -2,6 +2,7 @@ package com.dzen.campfire.api.requests.fandoms
 
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.fandoms.Fandom
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -61,6 +62,10 @@ open class RFandomsSuggestedGet(var fandomId: Long) : Request<RFandomsSuggestedG
             notes = json.m(inp, "notes", notes)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            fandom?.fillImageRefs(receiver)
+            creator.fillImageRefs(receiver)
+        }
     }
 
 

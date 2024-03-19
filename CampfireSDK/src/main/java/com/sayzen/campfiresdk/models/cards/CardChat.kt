@@ -6,6 +6,7 @@ import android.widget.TextView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.chat.ChatParamsFandomSub
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatAnswer
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessage
 import com.dzen.campfire.api.models.publications.chat.Chat
@@ -27,6 +28,7 @@ import com.sayzen.campfiresdk.screens.chat.create.SChatCreate
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sayzen.campfiresdk.support.adapters.XFandom
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
@@ -60,7 +62,7 @@ class CardChat(
             .subscribe(EventFandomChatRemove::class) { this.onEventFandomChatRemove(it) }
             .subscribe(EventFandomChatChanged::class) { this.onEventFandomChatChanged(it) }
             .subscribe(EventChatMessageChanged::class) { onEventChanged(it) }
-            .subscribe(EventFandomBackgroundImageChanged::class) { if(chat.tag == it.chatTag) chat.backgroundImageId = it.imageId }
+            .subscribe(EventFandomBackgroundImageChanged::class) { if(chat.tag == it.chatTag) chat.backgroundImage = it.image }
 
     init {
         chat.tag.setMyAccountId(ControllerApi.account.getId())
@@ -115,7 +117,7 @@ class CardChat(
                 vAvatar.setTitle(xAccount.getName())
             }
             else -> {
-                ImageLoader.load(chat.customImageId).into(vAvatar.vAvatar.vImageView)
+                ImageLoader.load(chat.customImage).into(vAvatar.vAvatar.vImageView)
                 vAvatar.setTitle(chat.customName)
                 vAvatar.vAvatar.setOnClickListener { SChatCreate.instance(chat.tag.targetId, Navigator.TO) }
                 vAvatar.vAvatar.vChip.visibility = View.GONE
@@ -161,12 +163,12 @@ class CardChat(
     private fun showMenu(vSwipe: View, x: Float, y: Float) {
         if (chat.chatMessage.chatType == API.CHAT_TYPE_CONFERENCE) {
             ApiRequestsSupporter.executeProgressDialog(RChatGet(chat.tag, 0)) { r ->
-                ControllerChats.instanceChatPopup(chat.tag, chat.params, chat.customImageId, r.chat.memberStatus).asPopupShow(vSwipe, x, y)
+                ControllerChats.instanceChatPopup(chat.tag, chat.params, chat.customImage, r.chat.memberStatus).asPopupShow(vSwipe, x, y)
             }.onError {
-                ControllerChats.instanceChatPopup(chat.tag, chat.params, chat.customImageId, API.CHAT_MEMBER_STATUS_DELETE_AND_LEAVE).asPopupShow(vSwipe, x, y)
+                ControllerChats.instanceChatPopup(chat.tag, chat.params, chat.customImage, API.CHAT_MEMBER_STATUS_DELETE_AND_LEAVE).asPopupShow(vSwipe, x, y)
             }
         } else {
-            ControllerChats.instanceChatPopup(chat.tag, Json(), 0, null).asPopupShow(vSwipe, x, y)
+            ControllerChats.instanceChatPopup(chat.tag, Json(), ImageRef(), null).asPopupShow(vSwipe, x, y)
         }
     }
 

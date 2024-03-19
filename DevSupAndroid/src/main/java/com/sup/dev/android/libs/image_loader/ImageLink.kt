@@ -22,7 +22,7 @@ abstract class ImageLink {
     internal var customSetHolder: (() -> Unit)? = null
     internal var holder: Any? = null
 
-    internal var forsedKey:String? = null
+    internal var forsedKey: String? = null
 
     internal var cropSquareCenter = false
     internal var w = 0
@@ -87,9 +87,13 @@ abstract class ImageLink {
     fun startLoad(): ByteArray? {
         val bytes = if (!noLoadFromCash) getFromCash() else null
         if (bytes != null) return bytes
-        if(fromCash) return null
+        if (fromCash) return null
         val data = load()
-        if (data != null && !noCash && data.size <= autoDiskCashMaxSize) ToolsCash.put(data, "" + getKey().replace("/", "_").hashCode(), immortalCash)
+        if (data != null && !noCash && data.size <= autoDiskCashMaxSize) ToolsCash.put(
+            data,
+            "" + getKey().replace("/", "_").hashCode(),
+            immortalCash
+        )
         return data
     }
 
@@ -136,7 +140,9 @@ abstract class ImageLink {
     }
 
     override fun equals(other: Any?): Boolean {
-        if (javaClass == other?.javaClass && getParamsSum() == (other as ImageLink).getParamsSum()) return equalsTo(other)
+        if (javaClass == other?.javaClass && getParamsSum() == (other as ImageLink).getParamsSum()) return equalsTo(
+            other
+        )
         return false
     }
 
@@ -168,7 +174,7 @@ abstract class ImageLink {
         return this
     }
 
-    fun immortalCash(): ImageLink{
+    fun immortalCash(): ImageLink {
         immortalCash = true
         return this
     }
@@ -325,7 +331,7 @@ abstract class ImageLink {
         return this
     }
 
-    fun setKey(key:String): ImageLink{
+    fun setKey(key: String): ImageLink {
         this.forsedKey = key
         return this
     }
@@ -371,12 +377,12 @@ abstract class ImageLink {
 
             if (autocropIfLostBounds) {
                 //  ToolsView.dpToPx(1) защита от хвостов при маштабировании
-                if (generatedW+ToolsView.dpToPx(1) < minW || generatedH-ToolsView.dpToPx(1) > maxH) {
+                if (generatedW + ToolsView.dpToPx(1) < minW || generatedH - ToolsView.dpToPx(1) > maxH) {
                     crop(minW, maxH)
                     generateSizesIfNeed()
                     return
                 }
-                if (generatedH+ToolsView.dpToPx(1) < minH || generatedW-ToolsView.dpToPx(1) > maxW) {
+                if (generatedH + ToolsView.dpToPx(1) < minH || generatedW - ToolsView.dpToPx(1) > maxW) {
                     crop(maxW, minH)
                     generateSizesIfNeed()
                     return
@@ -415,7 +421,7 @@ abstract class ImageLink {
     fun getPreviewImageLoader() = previewImageLoader
 
     fun getKey(): String {
-        if(forsedKey != null) return forsedKey!!
+        if (forsedKey != null) return forsedKey!!
         generateSizesIfNeed()
         return getKeyOfImage() + ":" + getParamsSum().hashCode()
     }

@@ -4,6 +4,7 @@ import android.view.View
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.quests.QuestDetails
 import com.dzen.campfire.api.requests.quests.RQuestsGetDrafts
 import com.dzen.campfire.api.requests.quests.RQuestsGetParts
@@ -17,6 +18,8 @@ import com.sayzen.campfiresdk.models.cards.CardQuestDetails
 import com.sayzen.campfiresdk.models.events.publications.EventPostStatusChange
 import com.sayzen.campfiresdk.models.events.quests.EventQuestChanged
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.screens.SLoadingRecycler
@@ -46,7 +49,7 @@ class SQuestDrafts : SLoadingRecycler<CardQuestDetails, QuestDetails>() {
         setTitle(t(API_TRANSLATE.quests_drafts))
         setTextEmpty(t(API_TRANSLATE.quests_empty))
         setTextProgress(t(API_TRANSLATE.quests_loading))
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_31)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_31))
 
         vFab.visibility = View.VISIBLE
         vFab.setImageResource(R.drawable.ic_add_white_24dp)

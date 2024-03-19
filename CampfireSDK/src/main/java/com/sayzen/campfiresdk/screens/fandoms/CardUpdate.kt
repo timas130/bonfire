@@ -5,10 +5,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.project.EventApiVersionChanged
+import com.sayzen.campfiresdk.support.load
 import com.sayzen.devsupandroidgoogle.ToolsInAppUpdates
 import com.sayzen.devsupandroidgoogle.events.EventInAppUpdatesChanged
 import com.sup.dev.android.app.SupAndroid
@@ -38,7 +40,7 @@ class CardUpdate : Card(R.layout.screen_fandom_card_update) {
 
         vContainer.visibility = View.GONE
 
-        ImageLoader.load(API_RESOURCES.IMAGE_BACKGROUND_LEVEL_9).noHolder().into(vImage)
+        ImageLoader.load(ApiResources.IMAGE_BACKGROUND_LEVEL_9).noHolder().into(vImage)
         vUpdate.setOnClickListener { ToolsIntent.startPlayMarket(SupAndroid.appId) }
 
         when {

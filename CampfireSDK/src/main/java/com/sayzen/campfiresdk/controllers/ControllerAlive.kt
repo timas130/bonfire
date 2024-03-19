@@ -1,13 +1,14 @@
 package com.sayzen.campfiresdk.controllers
 
 import android.content.Intent
-import com.dzen.campfire.api.API_RESOURCES
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.notifications.project.NotificationAlive
 import com.dzen.campfire.api.requests.project.RProjectVersionGet
-import com.dzen.campfire.api_media.requests.RResourcesGet
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.models.events.account.EventAccountCurrentChanged
 import com.sayzen.campfiresdk.models.events.notifications.EventNotification
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.tools.ToolsJobScheduler
 import com.sup.dev.android.tools.ToolsStorage
 import com.sup.dev.java.libs.debug.info
@@ -18,8 +19,8 @@ import com.sup.dev.java.tools.ToolsThreads
 object ControllerAlive {
 
     private val eventBus = EventBus
-            .subscribe(EventAccountCurrentChanged::class) { schedule() }
-            .subscribe(EventNotification::class) { if (it.notification is NotificationAlive) onPush() }
+        .subscribe(EventAccountCurrentChanged::class) { schedule() }
+        .subscribe(EventNotification::class) { if (it.notification is NotificationAlive) onPush() }
 
     fun init() {
     }
@@ -44,39 +45,55 @@ object ControllerAlive {
 
     private fun checkServer(tryCount: Int = 10) {
         RProjectVersionGet()
-                .onComplete {
-                    info("ControllerAlive", "Check server done")
-                }
-                .onError {
-                    info("ControllerAlive", "Check server ERROR")
-                    if (tryCount <= 0)
-                        ControllerNotifications.chanelOther.post(R.drawable.logo_campfire_alpha_black_and_white_no_margins, "Алерт!", "Сервер недоступен!", Intent(), "ControllerAlive_1")
-                    else
-                        ToolsThreads.main(10000) { checkServerMedia(tryCount - 1) }
-                }
-                .send(api)
+            .onComplete {
+                info("ControllerAlive", "Check server done")
+            }
+            .onError {
+                info("ControllerAlive", "Check server ERROR")
+                if (tryCount <= 0)
+                    ControllerNotifications.chanelOther.post(
+                        R.drawable.logo_campfire_alpha_black_and_white_no_margins,
+                        "Алерт!",
+                        "Сервер недоступен!",
+                        Intent(),
+                        "ControllerAlive_1"
+                    )
+                else
+                    ToolsThreads.main(10000) { checkServerMedia(tryCount - 1) }
+            }
+            .send(api)
     }
 
     private fun checkServerMedia(tryCount: Int = 10) {
-        RResourcesGet(API_RESOURCES.AVATAR_1)
-                .onComplete {
-                    info("ControllerAlive", "Check media server done")
+        ImageLoader.load(ApiResources.AVATAR_1).intoBytes {
+            if (it == null) {
+                info("ControllerAlive", "Media server check: failed")
+                if (tryCount <= 0) {
+                    ControllerNotifications.chanelOther.post(
+                        R.drawable.logo_campfire_alpha_black_and_white_no_margins,
+                        "Алерт!",
+                        "Медиа сервер недоступен!",
+                        Intent(),
+                        "ControllerAlive_2"
+                    )
+                } else {
+                    ToolsThreads.main(10000) { checkServerMedia(tryCount - 1) }
                 }
-                .onError {
-                    info("ControllerAlive", "Check media server ERROR")
-                    if (tryCount <= 0)
-                        ControllerNotifications.chanelOther.post(R.drawable.logo_campfire_alpha_black_and_white_no_margins, "Алерт!", "Медиа сервер недоступен!", Intent(), "ControllerAlive_2")
-                    else
-                        ToolsThreads.main(10000) { checkServerMedia(tryCount - 1) }
-                }
-                .send(apiMedia)
+            }
+        }
     }
 
     private fun checkPush() {
         val time = ToolsStorage.getLong("ControllerAlive.push", 0)
         if (time < System.currentTimeMillis() - 1000L * 60 * 60) {
             info("ControllerAlive", "Check push ERROR")
-            ControllerNotifications.chanelOther.post(R.drawable.logo_campfire_alpha_black_and_white_no_margins, "Алерт!", "Пуши не работают. Последний пуш: ${ToolsDate.dateToString(time)}", Intent(), "ControllerAlive_2")
+            ControllerNotifications.chanelOther.post(
+                R.drawable.logo_campfire_alpha_black_and_white_no_margins,
+                "Алерт!",
+                "Пуши не работают. Последний пуш: ${ToolsDate.dateToString(time)}",
+                Intent(),
+                "ControllerAlive_2"
+            )
         } else {
             info("ControllerAlive", "Check push done")
         }

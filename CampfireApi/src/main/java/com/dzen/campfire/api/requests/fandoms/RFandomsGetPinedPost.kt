@@ -1,7 +1,6 @@
 package com.dzen.campfire.api.requests.fandoms
 
-import com.dzen.campfire.api.models.fandoms.Fandom
-import com.dzen.campfire.api.models.fandoms.FandomLink
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -42,6 +41,9 @@ open class RFandomsGetPinedPost(
             pinnedPost = json.mNull(inp, "pinnedPost", pinnedPost, PublicationPost::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            pinnedPost?.fillImageRefs(receiver)
+        }
     }
 
 }

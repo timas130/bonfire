@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.tags
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.tags.PublicationTag
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -30,6 +31,9 @@ open class RTagsGet(var tagId: Long) : Request<RTagsGet.Response>() {
             tag = json.m(inp, "tag", tag, PublicationTag::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            tag.fillImageRefs(receiver)
+        }
     }
 
 }

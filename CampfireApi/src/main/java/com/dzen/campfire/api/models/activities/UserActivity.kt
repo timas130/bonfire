@@ -2,18 +2,24 @@ package com.dzen.campfire.api.models.activities
 
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.fandoms.Fandom
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonParsable
 
-class UserActivity : JsonParsable {
-
+class UserActivity : JsonParsable, ImageHolder {
     var id = 0L
     var type = 0L
     var fandom = Fandom()
     var currentAccount = Account()
     var dateCreate = 0L
     var name = ""
+    var image = ImageRef()
+    @Deprecated("use ImageRefs")
     var imageId = 0L
+    var background = ImageRef()
+    @Deprecated("use ImageRefs")
     var backgroundId = 0L
     var creatorId = 0L
     var params = ""
@@ -38,7 +44,9 @@ class UserActivity : JsonParsable {
         currentAccount = json.m(inp, "currentAccount", currentAccount)
         dateCreate = json.m(inp, "dateCreate", dateCreate)
         name = json.m(inp, "name", name)
+        image = json.m(inp, "image", image)
         imageId = json.m(inp, "imageId", imageId)
+        background = json.m(inp, "background", background)
         backgroundId = json.m(inp, "backgroundId", backgroundId)
         creatorId = json.m(inp, "creatorId", creatorId)
         params = json.m(inp, "params", params)
@@ -55,4 +63,10 @@ class UserActivity : JsonParsable {
         return json
     }
 
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        receiver.add(image, imageId)
+        receiver.add(background, backgroundId)
+        fandom.fillImageRefs(receiver)
+        currentAccount.fillImageRefs(receiver)
+    }
 }

@@ -4,6 +4,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.chat.ChatParamsFandomSub
 import com.dzen.campfire.api.models.chat.ChatTag
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatAnswer
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessage
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatRead
@@ -25,6 +26,7 @@ import com.sayzen.campfiresdk.models.objects.MChatMessagesPool
 import com.sayzen.campfiresdk.screens.chat.create.SChatCreate
 import com.sayzen.campfiresdk.screens.fandoms.chats.SFandomChatsCreate
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.*
@@ -56,28 +58,28 @@ object ControllerChats {
 
     fun getSystemText(publication: PublicationChatMessage): String {
 
-        when {
-            publication.systemType == PublicationChatMessage.SYSTEM_TYPE_BLOCK -> return if (publication.blockDate > 0) {
+        when (publication.systemType) {
+            PublicationChatMessage.SYSTEM_TYPE_BLOCK -> return if (publication.blockDate > 0) {
                 "${t(API_TRANSLATE.chat_block_message, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_blocked), t(API_TRANSLATE.she_blocked)), ControllerLinks.linkToAccount(publication.systemTargetName))} " + "\n ${t(API_TRANSLATE.app_comment)}: ${publication.systemComment}"
             } else {
                 "${t(API_TRANSLATE.chat_system_block, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_warn), t(API_TRANSLATE.she_warn)), ControllerLinks.linkToAccount(publication.systemTargetName))} " + "\n ${t(API_TRANSLATE.app_comment)}: ${publication.systemComment}"
             }
-            publication.systemType == PublicationChatMessage.SYSTEM_TYPE_ADD_USER -> return "${t(API_TRANSLATE.chat_system_add, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_add), t(API_TRANSLATE.she_add)), ControllerLinks.linkToAccount(publication.systemTargetName))}"
-            publication.systemType == PublicationChatMessage.SYSTEM_TYPE_CREATE -> return "${t(API_TRANSLATE.chat_system_create, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_created), t(API_TRANSLATE.she_created)))}"
-            publication.systemType == PublicationChatMessage.SYSTEM_TYPE_REMOVE_USER -> return "${t(API_TRANSLATE.chat_system_remove, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_remove), t(API_TRANSLATE.she_remove)), ControllerLinks.linkToAccount(publication.systemTargetName))}"
-            publication.systemType == PublicationChatMessage.SYSTEM_TYPE_CHANGE_IMAGE -> return "${t(API_TRANSLATE.chat_system_change_image, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_changed), t(API_TRANSLATE.she_changed)), publication.systemTargetName)}"
-            publication.systemType == PublicationChatMessage.SYSTEM_TYPE_CHANGE_NAME -> return "${t(API_TRANSLATE.chat_system_change_name, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_changed), t(API_TRANSLATE.she_changed)), publication.systemTargetName)}"
-            publication.systemType == PublicationChatMessage.SYSTEM_TYPE_LEAVE -> return "${t(API_TRANSLATE.chat_system_leave, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_leave), t(API_TRANSLATE.she_leave)))}"
-            publication.systemType == PublicationChatMessage.SYSTEM_TYPE_ENTER -> return "${t(API_TRANSLATE.chat_system_enter, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_reenter), t(API_TRANSLATE.she_reenter)))}"
-            publication.systemType == PublicationChatMessage.SYSTEM_TYPE_PARAMS -> return "${t(API_TRANSLATE.chat_system_params, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_changed), t(API_TRANSLATE.he_changed)))}"
-            publication.systemType == PublicationChatMessage.SYSTEM_TYPE_LEVEL -> return "${t(API_TRANSLATE.chat_system_level, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_changed), t(API_TRANSLATE.he_changed)), ControllerLinks.linkToAccount(publication.systemTargetName), if (publication.systemTag == API.CHAT_MEMBER_LVL_USER) t(API_TRANSLATE.app_user) else if (publication.systemTag == API.CHAT_MEMBER_LVL_MODERATOR) t(API_TRANSLATE.app_moderator) else t(API_TRANSLATE.app_admin))}"
-            publication.systemType == PublicationChatMessage.SYSTEM_TYPE_CHANGE_BACKGROUND -> return "${t(API_TRANSLATE.chat_system_background, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_changed), t(API_TRANSLATE.he_changed)))}"
+            PublicationChatMessage.SYSTEM_TYPE_ADD_USER -> return t(API_TRANSLATE.chat_system_add, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_add), t(API_TRANSLATE.she_add)), ControllerLinks.linkToAccount(publication.systemTargetName))
+            PublicationChatMessage.SYSTEM_TYPE_CREATE -> return t(API_TRANSLATE.chat_system_create, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_created), t(API_TRANSLATE.she_created)))
+            PublicationChatMessage.SYSTEM_TYPE_REMOVE_USER -> return t(API_TRANSLATE.chat_system_remove, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_remove), t(API_TRANSLATE.she_remove)), ControllerLinks.linkToAccount(publication.systemTargetName))
+            PublicationChatMessage.SYSTEM_TYPE_CHANGE_IMAGE -> return t(API_TRANSLATE.chat_system_change_image, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_changed), t(API_TRANSLATE.she_changed)), publication.systemTargetName)
+            PublicationChatMessage.SYSTEM_TYPE_CHANGE_NAME -> return t(API_TRANSLATE.chat_system_change_name, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_changed), t(API_TRANSLATE.she_changed)), publication.systemTargetName)
+            PublicationChatMessage.SYSTEM_TYPE_LEAVE -> return t(API_TRANSLATE.chat_system_leave, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_leave), t(API_TRANSLATE.she_leave)))
+            PublicationChatMessage.SYSTEM_TYPE_ENTER -> return t(API_TRANSLATE.chat_system_enter, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_reenter), t(API_TRANSLATE.she_reenter)))
+            PublicationChatMessage.SYSTEM_TYPE_PARAMS -> return t(API_TRANSLATE.chat_system_params, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_changed), t(API_TRANSLATE.he_changed)))
+            PublicationChatMessage.SYSTEM_TYPE_LEVEL -> return t(API_TRANSLATE.chat_system_level, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_changed), t(API_TRANSLATE.he_changed)), ControllerLinks.linkToAccount(publication.systemTargetName), if (publication.systemTag == API.CHAT_MEMBER_LVL_USER) t(API_TRANSLATE.app_user) else if (publication.systemTag == API.CHAT_MEMBER_LVL_MODERATOR) t(API_TRANSLATE.app_moderator) else t(API_TRANSLATE.app_admin))
+            PublicationChatMessage.SYSTEM_TYPE_CHANGE_BACKGROUND -> return t(API_TRANSLATE.chat_system_background, ControllerLinks.linkToAccount(publication.systemOwnerName), ToolsResources.sex(publication.systemOwnerSex, t(API_TRANSLATE.he_changed), t(API_TRANSLATE.he_changed)))
             else -> return ""
         }
 
     }
 
-    fun instanceChatPopup(chatTag: ChatTag, paramsJson: Json, imageId: Long, memberStatus: Long?, onRemove: () -> Unit = {}): SplashMenu {
+    fun instanceChatPopup(chatTag: ChatTag, paramsJson: Json, image: ImageRef, memberStatus: Long?, onRemove: () -> Unit = {}): SplashMenu {
         return SplashMenu()
                 .add(t(API_TRANSLATE.app_copy_link)) { ToolsAndroid.setToClipboard(ControllerLinks.linkToChat(chatTag.targetId, chatTag.targetSubId));ToolsToast.show(t(API_TRANSLATE.app_copied)) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_ROOT)
                 .add(t(API_TRANSLATE.app_copy_link)) { ToolsAndroid.setToClipboard(ControllerLinks.linkToConf(chatTag.targetId));ToolsToast.show(t(API_TRANSLATE.app_copied)) }.condition(chatTag.chatType == API.CHAT_TYPE_CONFERENCE)
@@ -86,7 +88,7 @@ object ControllerChats {
                 .add(t(API_TRANSLATE.chat_remove)) { chatRemove(chatTag, onRemove) }
                 .add(t(API_TRANSLATE.chat_leave)) { leave(chatTag) }.condition(chatTag.chatType == API.CHAT_TYPE_CONFERENCE && memberStatus == API.CHAT_MEMBER_STATUS_ACTIVE)
                 .add(t(API_TRANSLATE.chat_enter)) { enter(chatTag) }.condition(chatTag.chatType == API.CHAT_TYPE_CONFERENCE && memberStatus == API.CHAT_MEMBER_STATUS_LEAVE)
-                .add(t(API_TRANSLATE.fandom_chat_show_info)) { showFandomChatInfo(chatTag, paramsJson, imageId) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_SUB)
+                .add(t(API_TRANSLATE.fandom_chat_show_info)) { showFandomChatInfo(chatTag, paramsJson, image) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_SUB)
                 .add(t(API_TRANSLATE.fandoms_menu_background_change)) { changeBackgroundImage(chatTag) }.condition(chatTag.chatType == API.CHAT_TYPE_CONFERENCE && memberStatus == API.CHAT_MEMBER_STATUS_ACTIVE)
                 .add(t(API_TRANSLATE.fandoms_menu_background_remove)) { removeBackgroundImage(chatTag) }.condition(chatTag.chatType == API.CHAT_TYPE_CONFERENCE && memberStatus == API.CHAT_MEMBER_STATUS_ACTIVE)
                 .spoiler(t(API_TRANSLATE.app_moderator))
@@ -98,10 +100,10 @@ object ControllerChats {
                 .add(t(API_TRANSLATE.app_remove)) { removeFandomChat(chatTag.targetId) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_SUB && ControllerApi.can(chatTag.targetId, chatTag.targetSubId, API.LVL_MODERATOR_CHATS)).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
     }
 
-    fun showFandomChatInfo(chatTag: ChatTag, paramsJson: Json, imageId: Long) {
+    fun showFandomChatInfo(chatTag: ChatTag, paramsJson: Json, image: ImageRef) {
         val chatParams = ChatParamsFandomSub(paramsJson)
         SplashAlert()
-                .setTitleImage { ImageLoader.load(imageId).into(it) }
+                .setTitleImage { ImageLoader.load(image).into(it) }
                 .setText(chatParams.text)
                 .setOnEnter(t(API_TRANSLATE.app_continue)) {
                     ControllerSettings.viewedChats = ToolsCollections.add(chatTag.targetId, ControllerSettings.viewedChats)
@@ -144,7 +146,7 @@ object ControllerChats {
 
     private fun changeBackgroundImageNow(chatTag: ChatTag, dialog: Splash, bytes: ByteArray?) {
         ApiRequestsSupporter.executeProgressDialog(dialog, RChatSetBackgroundImage(chatTag.targetId, bytes)) { r ->
-            EventBus.post(EventFandomBackgroundImageChanged(chatTag, r.imageId))
+            EventBus.post(EventFandomBackgroundImageChanged(chatTag, r.image))
             ToolsToast.show(t(API_TRANSLATE.app_done))
         }.onApiError { ToolsToast.show(t(API_TRANSLATE.error_low_lvl_or_karma)) }
     }
@@ -180,7 +182,7 @@ object ControllerChats {
 
     private fun changeBackgroundImageNowModeration(fandomId: Long, languageId: Long, dialog: Splash, bytes: ByteArray?, comment: String) {
         ApiRequestsSupporter.executeProgressDialog(dialog, RFandomsModerationChangeImageBackground(fandomId, languageId, bytes, comment)) { r ->
-            EventBus.post(EventFandomBackgroundImageChangedModeration(fandomId, languageId, r.imageId))
+            EventBus.post(EventFandomBackgroundImageChangedModeration(fandomId, languageId, r.image))
             ToolsToast.show(t(API_TRANSLATE.app_done))
         }
     }

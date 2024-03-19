@@ -2,8 +2,8 @@ package com.sayzen.campfiresdk.screens.post.drafts
 
 import android.view.View
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.fandoms.RFandomsGet
@@ -11,15 +11,17 @@ import com.dzen.campfire.api.requests.publications.RPublicationsDraftsGetAll
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
-import com.sayzen.campfiresdk.models.cards.CardPost
-import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
-import com.sayzen.campfiresdk.screens.post.create.SPostCreate
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.models.cards.CardPost
 import com.sayzen.campfiresdk.models.events.publications.EventPostDraftCreated
 import com.sayzen.campfiresdk.models.events.publications.EventPostStatusChange
+import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
+import com.sayzen.campfiresdk.screens.post.create.SPostCreate
 import com.sayzen.campfiresdk.screens.post.pending.SPending
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.views.screens.SLoadingRecycler
 import com.sup.dev.android.views.splash.SplashMenu
@@ -38,7 +40,7 @@ class SDrafts constructor(
         setTitle(t(API_TRANSLATE.app_drafts))
         setTextEmpty(t(API_TRANSLATE.post_drafts_empty_text))
         setTextProgress(t(API_TRANSLATE.post_drafts_loading))
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_2)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_2))
 
         addToolbarIcon(R.drawable.ic_more_vert_white_24dp) { view ->
             SplashMenu()

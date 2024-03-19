@@ -2,11 +2,14 @@ package com.sayzen.campfiresdk.screens.fandoms.rating
 
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.requests.fandoms.RFandomsRatingGet
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.screens.SLoadingRecycler
@@ -22,7 +25,7 @@ class SRating(
         disableNavigation()
         setTitle(t(API_TRANSLATE.app_users))
         setTextEmpty(t(API_TRANSLATE.app_empty))
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_10)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_10))
 
         adapter.setBottomLoader { onLoad, cards ->
 

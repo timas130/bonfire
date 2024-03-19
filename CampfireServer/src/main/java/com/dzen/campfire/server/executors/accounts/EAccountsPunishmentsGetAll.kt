@@ -37,7 +37,7 @@ class EAccountsPunishmentsGetAll : RAccountsPunishmentsGetAll(0, 0) {
             p.ownerId = v.next()
             p.fandomId = v.next()
             p.languageId = v.next()
-            p.fandomImageId = v.next()
+            p.fandomAvatarId = v.next()
             p.fandomName = v.next()
             p.dateCreate = v.next()
             p.parseSupportString(v.next())

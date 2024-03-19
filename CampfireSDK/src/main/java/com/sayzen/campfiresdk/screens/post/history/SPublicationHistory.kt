@@ -2,12 +2,15 @@ package com.sayzen.campfiresdk.screens.post.history
 
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.history.HistoryPublication
 import com.dzen.campfire.api.requests.publications.RPublicationsHistoryGetAll
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.history.CardHistoryPublication
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.views.screens.SLoadingRecycler
 
 class SPublicationHistory(
@@ -20,7 +23,7 @@ class SPublicationHistory(
 
         setTitle(t(API_TRANSLATE.app_history))
         setTextEmpty(t(API_TRANSLATE.app_empty))
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_4)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_4))
 
         adapter.setBottomLoader { onLoad, cards ->
             RPublicationsHistoryGetAll(publicationId, cards.size.toLong())

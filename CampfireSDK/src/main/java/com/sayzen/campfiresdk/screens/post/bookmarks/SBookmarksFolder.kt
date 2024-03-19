@@ -1,20 +1,22 @@
 package com.sayzen.campfiresdk.screens.post.bookmarks
 
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.BookmarksFolder
-import com.dzen.campfire.api.requests.bookmarks.RBookmarksGetAll
-import com.sayzen.campfiresdk.models.cards.CardPublication
 import com.dzen.campfire.api.models.publications.Publication
+import com.dzen.campfire.api.requests.bookmarks.RBookmarksGetAll
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.ControllerSettings
-import com.sayzen.campfiresdk.models.events.publications.EventPublicationBookmarkChange
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.models.cards.CardPublication
 import com.sayzen.campfiresdk.models.events.bookmarks.EventBookmarkFolderChanged
 import com.sayzen.campfiresdk.models.events.bookmarks.EventBookmarkFolderRemove
+import com.sayzen.campfiresdk.models.events.publications.EventPublicationBookmarkChange
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsToast
@@ -39,7 +41,7 @@ class SBookmarksFolder constructor(
         setTitle(folder.name)
         setTextEmpty(t(API_TRANSLATE.bookmarks_empty_folder))
         setTextProgress(t(API_TRANSLATE.bookmarks_loading))
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_1)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_1))
 
         adapter.setBottomLoader { onLoad, cards ->
             RBookmarksGetAll(cards.size.toLong(), "", ControllerCampfireSDK.ROOT_FANDOM_ID, 0, folder.id, emptyArray())

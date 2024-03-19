@@ -1,13 +1,10 @@
 package com.dzen.campfire.server.controllers
 
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.models.publications.history.HistoryMultilingual
-import com.dzen.campfire.api.models.publications.history.HistoryNotMultolingual
 import com.dzen.campfire.api.models.publications.post.*
-import com.dzen.campfire.api.tools.ApiAccount
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.tables.TCollisions
 import com.dzen.campfire.server.tables.TPublications
-import com.dzen.campfire.api.tools.ApiException
 import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsCollections
 import com.sup.dev.java.tools.ToolsText
@@ -152,12 +149,12 @@ object ControllerPost {
                 for (i in page.insertImagesMini) {
                     if (i == null) throw ApiException(eBadPage, "PageImages. Bad imageMini")
                     if (!ToolsBytes.isGif(i) && i.size > API.PAGE_IMAGES_MINI_WEIGHT) throw ApiException(eBadPage, "PageImages. Bad imageMini")
-                    if (ToolsBytes.isGif(i) && i.size > API.PAGE_IMAGES_WEIGHT_GIF) throw ApiException(eBadPage, "PageImages. Bad imageMini")
+                    if (ToolsBytes.isGif(i) && i.size > API.PAGE_IMAGES_MINI_WEIGHT_GIF) throw ApiException(eBadPage, "PageImages. Bad imageMini")
                     val scale = ToolsImage.getImgScaleUnknownType(i, true, true, true)
                     val w = scale[0]
                     val h = scale[1]
                     if (!ToolsBytes.isGif(i) && (w > API.PAGE_IMAGES_MINI_SIDE || h > API.PAGE_IMAGES_MINI_SIDE)) throw ApiException(eBadPage, "PageImages. Bad imageMini sides $w $h")
-                    if (ToolsBytes.isGif(i) && (w > API.PAGE_IMAGES_SIDE_GIF || h > API.PAGE_IMAGES_SIDE_GIF)) throw ApiException(eBadPage, "PageImages. Bad imageMini sides $w $h")
+                    if (ToolsBytes.isGif(i) && (w > API.PAGE_IMAGES_MINI_SIDE_GIF || h > API.PAGE_IMAGES_MINI_SIDE_GIF)) throw ApiException(eBadPage, "PageImages. Bad imageMini sides $w $h")
                 }
 
             }

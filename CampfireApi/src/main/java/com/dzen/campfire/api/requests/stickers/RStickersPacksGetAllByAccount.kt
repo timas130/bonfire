@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.stickers
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.stickers.PublicationStickersPack
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -36,6 +37,11 @@ open class RStickersPacksGetAllByAccount(
             stickersPacks = json.m(inp, "stickersPacks", stickersPacks, Array<PublicationStickersPack>::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (stickersPack in stickersPacks) {
+                stickersPack.fillImageRefs(receiver)
+            }
+        }
     }
 
 }

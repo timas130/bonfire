@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.quests
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.quests.QuestPart
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -28,6 +29,12 @@ open class RQuestsGetParts(
             parts = json.m(inp, "parts", parts)
             stateVariables = json.m(inp, "stateVariables", stateVariables)
             stateIndex = json.m(inp, "stateIndex", stateIndex)
+        }
+
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (part in parts) {
+                part.fillImageRefs(receiver)
+            }
         }
     }
 }

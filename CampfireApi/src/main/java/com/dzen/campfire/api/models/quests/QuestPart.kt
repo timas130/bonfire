@@ -1,11 +1,13 @@
 package com.dzen.campfire.api.models.quests
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonPolimorf
 
-abstract class QuestPart : JsonPolimorf {
+abstract class QuestPart : JsonPolimorf, ImageHolder {
     companion object {
         @JvmStatic
         fun instance(type: Long): QuestPart {
@@ -40,6 +42,9 @@ abstract class QuestPart : JsonPolimorf {
         type = json.m(inp, "type", type)
         devLabel = json.m(inp, "devLabel", devLabel)
         return json
+    }
+
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
     }
 
     open fun addInsertData(request: Request<*>) {}

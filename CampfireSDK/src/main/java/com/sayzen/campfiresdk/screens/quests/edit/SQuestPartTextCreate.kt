@@ -10,6 +10,7 @@ import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.quests.EventQuestChanged
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -107,8 +108,8 @@ class SQuestPartTextCreate(
             })
         }
 
-        if (part.imageId > 0) {
-            ImageLoader.load(part.imageId).into(vImage)
+        if (part.image.isNotEmpty()) {
+            ImageLoader.load(part.image).into(vImage)
             vImageIcon.visibility = GONE
         } else {
             vImageRemove.visibility = GONE

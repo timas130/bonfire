@@ -10,11 +10,12 @@ import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.activities.EventActivitiesRelayRaceRejected
 import com.sayzen.campfiresdk.screens.account.search.SAccountSearch
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
-import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
+import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsToast
-import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.android.views.splash.Splash
+import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsThreads
 
@@ -42,7 +43,7 @@ class SplashReject(
             Navigator.to(SAccountSearch(true, false) {
                 nextAccountId = it.id
                 vUser.setTitle(it.name)
-                ImageLoader.load(it.imageId).into(vUser.vAvatar.vImageView)
+                ImageLoader.load(it.image).into(vUser.vAvatar.vImageView)
                 ToolsThreads.main(true) { asSheetShow() }
             })
         }

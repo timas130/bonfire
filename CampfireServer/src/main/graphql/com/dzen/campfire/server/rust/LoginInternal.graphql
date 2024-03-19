@@ -1,0 +1,6 @@
+mutation LoginInternal($key: String!) {
+    loginInternal(key: $key) {
+        accessToken
+        refreshToken
+    }
+}

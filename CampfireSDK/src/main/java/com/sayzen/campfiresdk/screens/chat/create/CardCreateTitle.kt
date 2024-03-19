@@ -7,12 +7,17 @@ import android.widget.TextView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.chat.ChatParamsConf
+import com.dzen.campfire.api.models.images.ImageRef
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.t
-import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
-import com.sup.dev.android.tools.*
+import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sup.dev.android.tools.ToolsAndroid
+import com.sup.dev.android.tools.ToolsBitmap
+import com.sup.dev.android.tools.ToolsToast
+import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.cards.Card
 import com.sup.dev.android.views.screens.SCrop
 import com.sup.dev.android.views.settings.SettingsCheckBox
@@ -23,7 +28,7 @@ class CardCreateTitle(
         var chatId: Long,
         val myLvl: Long,
         val changeName: String,
-        val changeImageId: Long,
+        val changeImage: ImageRef,
         val params: ChatParamsConf,
         val updateFinish: () -> Unit
 ) : Card(R.layout.screen_chat_create_card_title) {
@@ -82,8 +87,8 @@ class CardCreateTitle(
             updateFinish.invoke()
         }
 
-        if (changeImageId != 0L) {
-            ImageLoader.load(changeImageId).into(vImage)
+        if (changeImage.isNotEmpty()) {
+            ImageLoader.load(changeImage).into(vImage)
             vImageIcon.visibility = View.GONE
         }
 

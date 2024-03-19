@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.wiki
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.wiki.WikiTitle
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -32,6 +33,9 @@ open class RWikiItemGet(
             wikiTitle = json.m(inp, "wikiTitle", wikiTitle)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            wikiTitle.fillImageRefs(receiver)
+        }
     }
 
 

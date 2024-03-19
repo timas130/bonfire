@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.fandoms
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.chat.PublicationChatMessage
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -55,6 +56,9 @@ open class RFandomsModerationBlock(
             publicationChatMessage = json.mNull(inp, "unitChatMessage", publicationChatMessage, PublicationChatMessage::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            publicationChatMessage?.fillImageRefs(receiver)
+        }
     }
 
 }

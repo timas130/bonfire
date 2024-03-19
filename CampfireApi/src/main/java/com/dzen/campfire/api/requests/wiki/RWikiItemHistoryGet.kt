@@ -1,7 +1,7 @@
 package com.dzen.campfire.api.requests.wiki
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.wiki.WikiPages
-import com.dzen.campfire.api.models.wiki.WikiTitle
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -41,6 +41,11 @@ open class RWikiItemHistoryGet(
             historyList = json.m(inp, "historyList", historyList)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (wikiPages in historyList) {
+                wikiPages.fillImageRefs(receiver)
+            }
+        }
     }
 
 

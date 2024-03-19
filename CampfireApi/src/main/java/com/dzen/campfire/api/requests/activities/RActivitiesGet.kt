@@ -1,6 +1,7 @@
 package com.dzen.campfire.api.requests.activities
 
 import com.dzen.campfire.api.models.activities.UserActivity
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -32,6 +33,9 @@ open class RActivitiesGet(
             userActivity = json.m(inp, "userActivity", userActivity)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            userActivity.fillImageRefs(receiver)
+        }
     }
 
 

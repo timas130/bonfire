@@ -56,7 +56,15 @@ pub struct EmailConfig {
 #[derive(Clone, Debug, Deserialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum ImagesConfig {
-    Local { root: String },
+    Local {
+        root: String,
+    },
+    S3 {
+        endpoint: String,
+        bucket: String,
+        key_id: String,
+        key_secret: String,
+    },
 }
 
 #[derive(Clone, Debug, Deserialize)]

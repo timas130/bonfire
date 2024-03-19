@@ -13,11 +13,11 @@ import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.stickers.EventStickersPackChanged
 import com.sayzen.campfiresdk.models.events.stickers.EventStickersPackCreate
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsBitmap
-import com.sup.dev.android.libs.image_loader.ImageLoader
-import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.screens.SCrop
 import com.sup.dev.android.views.settings.SettingsField
 import com.sup.dev.android.views.splash.SplashChooseImage
@@ -47,7 +47,7 @@ class SStickersPackCreate(
 
         if(publication != null){
             vName.setText(publication.name)
-            ImageLoader.load(publication.imageId).into(vImage)
+            ImageLoader.load(publication.image).into(vImage)
             vImageIcon.visibility = View.GONE
             vCreate.text = t(API_TRANSLATE.app_change)
         }

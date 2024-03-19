@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.account.Account
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.lvl.LvlInfoAdmin
 import com.dzen.campfire.api.models.lvl.LvlInfoUser
 import com.dzen.campfire.api.models.notifications.project.NotificationProjectABParamsChanged
@@ -18,9 +19,10 @@ import com.sayzen.campfiresdk.models.events.account.EventAccountEffectAdd
 import com.sayzen.campfiresdk.models.events.account.EventAccountEffectRemove
 import com.sayzen.campfiresdk.models.events.account.EventAccountOnlineChanged
 import com.sayzen.campfiresdk.models.events.notifications.EventNotification
-import com.sayzen.campfiresdk.screens.account.profile.CardEffect
 import com.sayzen.campfiresdk.screens.account.profile.SProfile
 import com.sayzen.campfiresdk.support.DrawableLevel
+import com.sayzen.campfiresdk.support.load
+import com.sayzen.campfiresdk.support.loadGif
 import com.sayzen.campfiresdk.views.SplashAccountInfo
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -30,11 +32,10 @@ import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsCollections
 import com.sup.dev.java.tools.ToolsDate
-import com.sup.dev.java.tools.ToolsThreads
 
 class XAccount {
 
-    companion object{
+    companion object {
 
         var GLOBAL_ON_TO_PROFILE_SCREEN: (Account) -> Unit = {
             SProfile.instance(it, Navigator.TO)
@@ -44,8 +45,8 @@ class XAccount {
 
     private var account = Account()
     private var date = 0L
-    private var titleImageId = 0L
-    private var titleImageGifId = 0L
+    private var titleImage = ImageRef()
+    private var titleImageGif = ImageRef()
     private var onChanged: () -> Unit = {}
     private var onToProfileScreen: (Account) -> Unit = GLOBAL_ON_TO_PROFILE_SCREEN
 
@@ -56,31 +57,31 @@ class XAccount {
     private var clickEnabled = true
 
     private val eventBus = EventBus
-            .subscribe(EventAccountChanged::class) { onEventAccountChanged(it) }
-            .subscribe(EventAccountOnlineChanged::class) { onEventAccountOnlineChanged(it) }
-            .subscribe(EventNotification::class) {
-                if (it.notification is NotificationProjectABParamsChanged) onChanged.invoke()
-            }
-            .subscribe(EventAccountEffectAdd::class) {
-                if (it.accountId == account.id) {
-                    for(i in account.accountEffects) if(i.id == it.mEffect.id) {
-                        onChanged.invoke()
-                        return@subscribe
-                    }
-                    account.accountEffects = ToolsCollections.add(it.mEffect, account.accountEffects)
+        .subscribe(EventAccountChanged::class) { onEventAccountChanged(it) }
+        .subscribe(EventAccountOnlineChanged::class) { onEventAccountOnlineChanged(it) }
+        .subscribe(EventNotification::class) {
+            if (it.notification is NotificationProjectABParamsChanged) onChanged.invoke()
+        }
+        .subscribe(EventAccountEffectAdd::class) {
+            if (it.accountId == account.id) {
+                for (i in account.accountEffects) if (i.id == it.mEffect.id) {
                     onChanged.invoke()
+                    return@subscribe
                 }
+                account.accountEffects = ToolsCollections.add(it.mEffect, account.accountEffects)
+                onChanged.invoke()
             }
-            .subscribe(EventAccountEffectRemove::class) {
-                if (it.accountId == account.id) {
-                    account.accountEffects = ToolsCollections.removeIf(account.accountEffects) { o -> it.effectId == o.id }
-                    onChanged.invoke()
-                }
+        }
+        .subscribe(EventAccountEffectRemove::class) {
+            if (it.accountId == account.id) {
+                account.accountEffects = ToolsCollections.removeIf(account.accountEffects) { o -> it.effectId == o.id }
+                onChanged.invoke()
             }
+        }
 
 
     init {
-        ImageLoader.load(account.imageId).intoCash()
+        ImageLoader.load(account.image).intoCash()
     }
 
     //
@@ -131,12 +132,12 @@ class XAccount {
         return this
     }
 
-    fun setTitleImageId(titleImageId: Long): XAccount {
-        this.titleImageId = titleImageId; return this
+    fun setTitleImage(titleImage: ImageRef): XAccount {
+        this.titleImage = titleImage; return this
     }
 
-    fun setTitleImageGifId(titleImageGifId: Long): XAccount {
-        this.titleImageGifId = titleImageGifId; return this
+    fun setTitleImageGif(titleImageGif: ImageRef): XAccount {
+        this.titleImageGif = titleImageGif; return this
     }
 
     fun setOnChanged(onChanged: () -> Unit): XAccount {
@@ -161,12 +162,12 @@ class XAccount {
     //
 
     fun toProfileScreen() {
-        if(!clickEnabled) return
+        if (!clickEnabled) return
         onToProfileScreen.invoke(account)
     }
 
-    fun showProfileDialog(){
-        if(!longClickEnabled) return
+    fun showProfileDialog() {
+        if (!longClickEnabled) return
         SplashAccountInfo(account).asSheetShow()
     }
 
@@ -180,7 +181,8 @@ class XAccount {
         viewAvatar.vChip.visibility = if (!showLevel || account.lvl < 1) View.GONE else View.VISIBLE
         viewAvatar.setOnClickListener { toProfileScreen() }
         viewAvatar.setOnLongClickListener {
-            showProfileDialog();true }
+            showProfileDialog();true
+        }
     }
 
     fun setView(viewAvatar: ViewAvatarTitle) {
@@ -190,7 +192,7 @@ class XAccount {
     }
 
     fun setViewBig(vImage: ImageView) {
-        if (titleImageId != 0L) ImageLoader.loadGif(titleImageId, titleImageGifId, vImage)
+        if (titleImage.isNotEmpty()) ImageLoader.loadGif(titleImage, titleImageGif, vImage)
         else vImage.setImageBitmap(null)
     }
 
@@ -200,7 +202,7 @@ class XAccount {
             val background = ControllerEffects.getAvatarBackground(account)
             ImageLoader.load(effectImage).into(vImage)
             if (background != null) vImage.setBackgroundColor(background)
-        }else {
+        } else {
             val holidayImage = ControllerHoliday.getAvatar(account.id, account.lvl, account.karma30)
             if (holidayImage != null) {
                 val background = ControllerHoliday.getAvatarBackground(account.id)
@@ -209,7 +211,7 @@ class XAccount {
             } else if (account.imageId < 1) {
                 vImage.setImageResource(R.drawable.logo_campfire_128x128)
             } else {
-                ImageLoader.load(account.imageId).into(vImage)
+                ImageLoader.load(account.image).into(vImage)
             }
         }
     }
@@ -221,9 +223,9 @@ class XAccount {
     private fun onEventAccountChanged(e: EventAccountChanged) {
         if (account.id == e.accountId) {
             if (e.name.isNotEmpty()) account.name = e.name
-            if (e.imageId != -1L) account.imageId = e.imageId
-            if (e.imageTitleId != -1L) titleImageId = e.imageTitleId
-            if (e.imageTitleId != -1L) titleImageGifId = e.imageTitleGifId
+            if (e.image.isNotEmpty()) account.image = e.image
+            if (e.imageTitle.isNotEmpty()) titleImage = e.imageTitle
+            if (e.imageTitle.isNotEmpty()) titleImageGif = e.imageTitleGif
             onChanged.invoke()
         }
     }
@@ -239,7 +241,7 @@ class XAccount {
     }
 
     fun cashAvatar() {
-        ImageLoader.load(account.imageId).intoCash()
+        ImageLoader.load(account.image).intoCash()
     }
 
     //
@@ -268,12 +270,17 @@ class XAccount {
 
     fun isUser() = !isProtoadmin() && !isModerator()
 
-    fun getLevelColor() =  ToolsResources.getColor(if(isProtoadmin()) R.color.orange_700 else if(isAdmin()) R.color.red_700 else if(isModerator()) R.color.blue_700 else R.color.green_700)
+    fun getLevelColor() =
+        ToolsResources.getColor(if (isProtoadmin()) R.color.orange_700 else if (isAdmin()) R.color.red_700 else if (isModerator()) R.color.blue_700 else R.color.green_700)
 
-    fun getLevelColorHex() =  if(!isOnline()) "757575" else if(isProtoadmin()) "F57C00" else if(isAdmin()) "D32F2F" else if(isModerator()) "1976D2" else "388E3C"
+    fun getLevelColorHex() =
+        if (!isOnline()) "757575" else if (isProtoadmin()) "F57C00" else if (isAdmin()) "D32F2F" else if (isModerator()) "1976D2" else "388E3C"
 
     fun isBot() = ControllerApi.isBot(account.name)
 
+    fun getImage() = account.image
+
+    @Deprecated("use ImageRefs")
     fun getImageId() = account.imageId
 
     fun getId() = account.id
@@ -286,9 +293,9 @@ class XAccount {
 
     fun getSex() = account.sex
 
-    fun getTitleImageGifId() = titleImageGifId
+    fun getTitleImageGif() = titleImageGif
 
-    fun getTitleImageId() = titleImageId
+    fun getTitleImage() = titleImage
 
     fun getDateAccountCreated() = account.dateCreate
 }

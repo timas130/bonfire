@@ -3,6 +3,7 @@ package com.dzen.campfire.api_media.requests
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
+@Deprecated("use ImageRefs")
 open class RResourcesRemove(
         var resourceId: Long
 ) : Request<RResourcesRemove.Response>() {

@@ -6,24 +6,26 @@ import android.widget.Button
 import android.widget.TextView
 import com.dzen.campfire.R
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.requests.accounts.RAccountsChangeAvatar
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.account.EventAccountChanged
+import com.sayzen.campfiresdk.support.clear
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.views.ViewAvatar
 import com.sup.dev.java.libs.eventBus.EventBus
-import com.sup.dev.java.tools.ToolsThreads
 
 class Hello_Avatars(
-        val screen: SCampfireHello,
-        val demoMode: Boolean
+    val screen: SCampfireHello,
+    val demoMode: Boolean
 ) {
 
     val view: View = ToolsView.inflate(screen.vContainer, R.layout.screen_campfire_hello_avatars)
@@ -44,7 +46,7 @@ class Hello_Avatars(
     val vAvatar5_frame: ViewAvatar = view.findViewById(R.id.vAvatar5_frame)
     val vAvatar6_frame: ViewAvatar = view.findViewById(R.id.vAvatar6_frame)
 
-    var currentAvatar = 0L
+    var currentAvatar = ImageRef()
 
     init {
 
@@ -52,19 +54,19 @@ class Hello_Avatars(
         vSkip.text = t(API_TRANSLATE.app_skip)
         vTitle.text = t(API_TRANSLATE.into_hello_avatars)
 
-        ImageLoader.load(API_RESOURCES.AVATAR_1).into(vAvatar1)
-        ImageLoader.load(API_RESOURCES.AVATAR_2).into(vAvatar2)
-        ImageLoader.load(API_RESOURCES.AVATAR_3).into(vAvatar3)
-        ImageLoader.load(API_RESOURCES.AVATAR_4).into(vAvatar4)
-        ImageLoader.load(API_RESOURCES.AVATAR_5).into(vAvatar5)
-        ImageLoader.load(API_RESOURCES.AVATAR_6).into(vAvatar6)
+        ImageLoader.load(ApiResources.AVATAR_1).into(vAvatar1)
+        ImageLoader.load(ApiResources.AVATAR_2).into(vAvatar2)
+        ImageLoader.load(ApiResources.AVATAR_3).into(vAvatar3)
+        ImageLoader.load(ApiResources.AVATAR_4).into(vAvatar4)
+        ImageLoader.load(ApiResources.AVATAR_5).into(vAvatar5)
+        ImageLoader.load(ApiResources.AVATAR_6).into(vAvatar6)
 
-        vAvatar1.setOnClickListener { setAvatar(API_RESOURCES.AVATAR_1, vAvatar1_frame) }
-        vAvatar2.setOnClickListener { setAvatar(API_RESOURCES.AVATAR_2, vAvatar2_frame) }
-        vAvatar3.setOnClickListener { setAvatar(API_RESOURCES.AVATAR_3, vAvatar3_frame) }
-        vAvatar4.setOnClickListener { setAvatar(API_RESOURCES.AVATAR_4, vAvatar4_frame) }
-        vAvatar5.setOnClickListener { setAvatar(API_RESOURCES.AVATAR_5, vAvatar5_frame) }
-        vAvatar6.setOnClickListener { setAvatar(API_RESOURCES.AVATAR_6, vAvatar6_frame) }
+        vAvatar1.setOnClickListener { setAvatar(ApiResources.AVATAR_1, vAvatar1_frame) }
+        vAvatar2.setOnClickListener { setAvatar(ApiResources.AVATAR_2, vAvatar2_frame) }
+        vAvatar3.setOnClickListener { setAvatar(ApiResources.AVATAR_3, vAvatar3_frame) }
+        vAvatar4.setOnClickListener { setAvatar(ApiResources.AVATAR_4, vAvatar4_frame) }
+        vAvatar5.setOnClickListener { setAvatar(ApiResources.AVATAR_5, vAvatar5_frame) }
+        vAvatar6.setOnClickListener { setAvatar(ApiResources.AVATAR_6, vAvatar6_frame) }
 
         updateFinishEnabled()
 
@@ -72,7 +74,7 @@ class Hello_Avatars(
         vNext.setOnClickListener { send() }
     }
 
-    private fun setAvatar(avatar:Long, vFrame:ViewAvatar){
+    private fun setAvatar(avatar: ImageRef, vFrame: ViewAvatar) {
         currentAvatar = avatar
 
         vAvatar1_frame.vImageView.setImageDrawable(null)
@@ -88,11 +90,11 @@ class Hello_Avatars(
     }
 
     private fun updateFinishEnabled() {
-        vNext.isEnabled = currentAvatar > 0L
+        vNext.isEnabled = currentAvatar.isNotEmpty()
     }
 
     private fun send() {
-        if (demoMode || currentAvatar == 0L) {
+        if (demoMode || currentAvatar.isEmpty()) {
             screen.toNextScreen()
         } else {
             val vLoading = ToolsView.showProgressDialog()
@@ -101,16 +103,22 @@ class Hello_Avatars(
                     if (it == null) {
                         vLoading.hide()
                         ToolsToast.show(t(API_TRANSLATE.error_unknown))
-                    }else{
+                    } else {
                         RAccountsChangeAvatar(it)
-                                .onComplete {
-                                    ImageLoader.clear(ControllerApi.account.getImageId())
-                                    EventBus.post(EventAccountChanged(ControllerApi.account.getId(), ControllerApi.account.getName(), ControllerApi.account.getImageId()))
-                                    screen.toNextScreen()
-                                }
-                                .onError { ToolsToast.show(t(API_TRANSLATE.error_unknown)) }
-                                .onFinish { vLoading.hide() }
-                                .send(api)
+                            .onComplete {
+                                ImageLoader.clear(ControllerApi.account.getImage())
+                                EventBus.post(
+                                    EventAccountChanged(
+                                        ControllerApi.account.getId(),
+                                        ControllerApi.account.getName(),
+                                        ControllerApi.account.getImage()
+                                    )
+                                )
+                                screen.toNextScreen()
+                            }
+                            .onError { ToolsToast.show(t(API_TRANSLATE.error_unknown)) }
+                            .onFinish { vLoading.hide() }
+                            .send(api)
                     }
                 }
             }

@@ -4,6 +4,7 @@ import android.view.View
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.wiki.WikiTitle
 import com.dzen.campfire.api.requests.wiki.RWikiItemGet
 import com.dzen.campfire.api.requests.wiki.RWikiListGet
@@ -15,6 +16,8 @@ import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.wiki.EventWikiCreated
 import com.sayzen.campfiresdk.models.events.wiki.EventWikiListChanged
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsAndroid
@@ -65,7 +68,7 @@ class SWikiList(
 
         if (itemName.isEmpty()) setTitle(t(API_TRANSLATE.app_wiki)) else setTitle(itemName)
         setTextEmpty(t(API_TRANSLATE.wiki_list_empty))
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_29)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_29))
         (vFab as View).visibility = if (API.LANGUAGES.any { ControllerApi.can(fandomId, it.id, API.LVL_MODERATOR_WIKI_EDIT) }) View.VISIBLE else View.GONE
         if (onSelectSection != null) {
             vFab.setImageResource(R.drawable.ic_done_white_24dp)

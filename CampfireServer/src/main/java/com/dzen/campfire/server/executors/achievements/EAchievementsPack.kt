@@ -4,10 +4,11 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.AchievementInfo
 import com.dzen.campfire.api.requests.achievements.RAchievementsPack
 import com.dzen.campfire.server.controllers.ControllerAchievements
-import com.dzen.campfire.server.rust.RustAchievements
+import com.dzen.campfire.server.fragment.LevelRecountReport
+import com.dzen.campfire.server.rust.RustAchievements.achievements
 
 class EAchievementsPack : RAchievementsPack(0, 0) {
-    private lateinit var report: RustAchievements.LevelRecountReport
+    private lateinit var report: LevelRecountReport
 
     private val indexes = mutableListOf<Long>()
     private val progress = mutableListOf<Long>()
@@ -26,9 +27,10 @@ class EAchievementsPack : RAchievementsPack(0, 0) {
     }
 
     private fun load(a: AchievementInfo) {
-        if (report.achievements.containsKey(a.index)) {
+        val achievements = report.achievements()
+        if (achievements.containsKey(a.index)) {
             indexes.add(a.index)
-            progress.add(report.achievements[a.index]!!.count)
+            progress.add(achievements[a.index]!!.count)
         }
     }
 }

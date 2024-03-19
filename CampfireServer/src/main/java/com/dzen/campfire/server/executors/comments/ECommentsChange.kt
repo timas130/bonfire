@@ -33,7 +33,7 @@ class ECommentsChange : RCommentsChange(0, "", 0, false) {
         publication!!.changed = true
         publication!!.quoteId = 0
         publication!!.quoteText = ""
-        publication!!.quoteImages = emptyArray()
+        publication!!.quoteImageIds = emptyArray()
         publication!!.newFormatting = newFormatting
 
         if (quoteId != 0L) {
@@ -41,7 +41,7 @@ class ECommentsChange : RCommentsChange(0, "", 0, false) {
             if (quoteUnit != null && quoteUnit is PublicationComment) {
                 publication!!.quoteId = quoteUnit.id
                 publication!!.quoteText = quoteUnit.creator.name + ": " + quoteUnit.text
-                publication!!.quoteImages = if (quoteUnit.imageId > 0) Array(1) { quoteUnit.imageId } else emptyArray()
+                publication!!.quoteImageIds = if (quoteUnit.imageId > 0) Array(1) { quoteUnit.imageId } else emptyArray()
                 publication!!.quoteCreatorName = quoteUnit.creator.name
             }
         }

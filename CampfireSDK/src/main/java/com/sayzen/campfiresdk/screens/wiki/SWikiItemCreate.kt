@@ -19,16 +19,20 @@ import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.wiki.EventWikiChanged
 import com.sayzen.campfiresdk.models.events.wiki.EventWikiCreated
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.*
+import com.sup.dev.android.tools.ToolsBitmap
+import com.sup.dev.android.tools.ToolsGif
+import com.sup.dev.android.tools.ToolsToast
+import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.screens.SCrop
-import com.sup.dev.android.views.support.watchers.TextWatcherChanged
-import com.sup.dev.android.views.views.ViewChip
 import com.sup.dev.android.views.splash.SplashChooseImage
 import com.sup.dev.android.views.splash.SplashMenu
+import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.views.ViewButton
+import com.sup.dev.android.views.views.ViewChip
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsCollections
@@ -110,13 +114,13 @@ class SWikiItemCreate(
             addLanguage(ControllerApi.getLanguage(i.languageCode), i.name)
         }
 
-        if (item.imageId > 0) {
+        if (item.image.isNotEmpty()) {
             vImageMiniPlus.visibility = View.GONE
-            ImageLoader.loadGif(item.imageId, 0, vImageMini)
+            ImageLoader.load(item.image).into(vImageMini)
         }
-        if (item.imageBigId > 0) {
+        if (item.imageBig.isNotEmpty()) {
             vImageBigPlus.visibility = View.GONE
-            ImageLoader.loadGif(item.imageBigId, 0, vImageBig)
+            ImageLoader.load(item.imageBig).into(vImageBig)
         }
 
         if (item.itemId > 0) {

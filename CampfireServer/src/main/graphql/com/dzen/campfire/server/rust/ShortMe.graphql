@@ -1,0 +1,5 @@
+query ShortMe {
+    me {
+        ...ShortUser
+    }
+}

@@ -1,15 +1,15 @@
 package com.sayzen.campfiresdk.screens.account.karma
 
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.fandoms.KarmaInFandom
 import com.dzen.campfire.api.requests.accounts.RAccountsKarmaInFandomsGetAll
-import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
-import com.sup.dev.android.tools.ToolsResources
+import com.sayzen.campfiresdk.support.adapters.XAccount
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.views.screens.SLoadingRecycler
 
 class ScreenAccountKarma(
@@ -25,7 +25,7 @@ class ScreenAccountKarma(
     init {
         disableShadows()
         disableNavigation()
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_9)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_9))
         setTextEmpty(if (ControllerApi.isCurrentAccount(accountId)) t(API_TRANSLATE.profile_karma_empty) else t(API_TRANSLATE.profile_karma_empty_another))
         update()
 

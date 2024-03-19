@@ -1,9 +1,11 @@
 package com.dzen.campfire.api.models.publications.history
 
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonParsable
 
-class HistoryPublication : JsonParsable {
+class HistoryPublication : JsonParsable, ImageHolder {
 
     var id = 0L
     var publicationId = 0L
@@ -34,4 +36,7 @@ class HistoryPublication : JsonParsable {
         return json
     }
 
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        history.fillImageRefs(receiver)
+    }
 }

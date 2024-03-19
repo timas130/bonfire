@@ -8,6 +8,7 @@ import com.dzen.campfire.api.models.publications.Rate
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.support.adapters.XAccount
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.cards.CardAvatar
@@ -54,6 +55,6 @@ class CardRateText(
     }
 
     override fun notifyItem() {
-        ImageLoader.load(xAccount.getImageId()).intoCash()
+        ImageLoader.load(xAccount.getImage()).intoCash()
     }
 }

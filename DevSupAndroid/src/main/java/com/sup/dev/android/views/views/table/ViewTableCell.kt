@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.sup.dev.android.R
-import com.sup.dev.android.libs.image_loader.ImageLoader
+import com.sup.dev.android.libs.image_loader.ImageLink
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.views.ViewText
@@ -62,14 +62,14 @@ class ViewTableCell constructor(val vTableRow: ViewTableRow) : LinearLayout(vTab
         (vImage.layoutParams as LayoutParams).height = ViewGroup.LayoutParams.MATCH_PARENT
     }
 
-    fun setContentImageId(imageId: Long, onClick: (() -> Unit)? = null) {
+    fun setContentImage(imageLink: ImageLink, onClick: (() -> Unit)? = null) {
         val vImage = ImageView(context)
         vImage.scaleType = ImageView.ScaleType.CENTER_INSIDE
         if (onClick != null) vImage.setOnClickListener { onClick() }
         resetView(vImage)
         (vImage.layoutParams as LayoutParams).width = ViewGroup.LayoutParams.MATCH_PARENT
         (vImage.layoutParams as LayoutParams).height = ViewGroup.LayoutParams.MATCH_PARENT
-        ImageLoader.load(imageId).into(vImage)
+        imageLink.into(vImage)
     }
 
     //

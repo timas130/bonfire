@@ -1,7 +1,8 @@
 package com.dzen.campfire.api.requests.accounts
 
 import com.dzen.campfire.api.models.account.AccountLinks
-import com.dzen.campfire.api.models.account.MAccountEffect
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -31,7 +32,11 @@ open class RAccountsGetProfile(var accountId: Long, var accountName: String) : R
         var age = 0L
         var description = ""
         var links = AccountLinks()
+        var titleImage = ImageRef()
+        @Deprecated("use ImageRefs")
         var titleImageId = 0L
+        var titleImageGif = ImageRef()
+        @Deprecated("use ImageRefs")
         var titleImageGifId = 0L
         var bansCount = 0L
         var warnsCount = 0L
@@ -122,6 +127,11 @@ open class RAccountsGetProfile(var accountId: Long, var accountName: String) : R
             blackFandomsCount = json.m(inp, "blackFandomsCount", blackFandomsCount)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            pinnedPost?.fillImageRefs(receiver)
+            receiver.add(titleImage, titleImageId)
+            receiver.add(titleImageGif, titleImageGifId)
+        }
     }
 
 

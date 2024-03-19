@@ -45,3 +45,5 @@ target/
 
 .env
 config.toml
+
+/http-cacache

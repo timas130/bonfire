@@ -26,11 +26,11 @@ import com.sayzen.campfiresdk.models.events.publications.EventPostStatusChange
 import com.sayzen.campfiresdk.screens.post.create.SPostCreate
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.adapters.XFandom
-import com.sup.dev.android.libs.image_loader.ImageLoaderId
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.screens.SImageView
 import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapterLoading
 import com.sup.dev.android.views.views.ViewIcon
@@ -138,7 +138,7 @@ class SFandom private constructor(
             updateBackground()
         }
 
-        ImageLoaderId(fandom.imageId).noLoadFromCash().intoBitmap { EventBus.post(EventFandomChanged(xFandom.getId(), xFandom.getName())) }
+        ImageLoader.load(fandom.image).noLoadFromCash().intoBitmap { EventBus.post(EventFandomChanged(xFandom.getId(), xFandom.getName())) }
 
         ControllerApi.getIconForLanguage(fandom.languageId).into(vLanguage)
         vLanguage.setOnClickListener {
@@ -180,7 +180,7 @@ class SFandom private constructor(
 
     private fun updateBackground() {
         xFandom.setViewBig(vImageTitle)
-        vImageTitle.setOnClickListener { Navigator.to(SImageView(ImageLoaderId(if (xFandom.getImageTitleGifId() > 0) xFandom.getImageTitleGifId() else xFandom.getImageTitleId()))) }
+        vImageTitle.setOnClickListener { Navigator.to(SImageView(ImageLoader.load(if (xFandom.getImageTitleGif().isNotEmpty()) xFandom.getImageTitleGif() else xFandom.getImageTitle()))) }
     }
 
     private fun update() {

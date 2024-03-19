@@ -1,10 +1,11 @@
 package com.dzen.campfire.server.executors.chat
 
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.models.chat.ChatTag
 import com.dzen.campfire.api.models.chat.ChatMember
 import com.dzen.campfire.api.models.chat.ChatParamsConf
+import com.dzen.campfire.api.models.chat.ChatTag
 import com.dzen.campfire.api.requests.chat.RChatChange
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerCensor
 import com.dzen.campfire.server.controllers.ControllerChats
@@ -12,7 +13,6 @@ import com.dzen.campfire.server.controllers.ControllerResources
 import com.dzen.campfire.server.tables.TAccounts
 import com.dzen.campfire.server.tables.TChats
 import com.dzen.campfire.server.tables.TChatsSubscriptions
-import com.dzen.campfire.api.tools.ApiException
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
@@ -76,8 +76,11 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
 
         if (image != null) {
             if (!oldParams.allowUserNameAndImage && myLvl == API.CHAT_MEMBER_LVL_USER) throw ApiException(API.ERROR_ACCESS)
-            ControllerResources.replace(imageId, image!!, API.RESOURCES_PUBLICATION_DATABASE_LINKED)
-            ControllerChats.putChangeImage(apiAccount, tag, imageId)
+            val newImageId = ControllerResources.removeAndPut(imageId, image!!, API.RESOURCES_PUBLICATION_DATABASE_LINKED)
+            Database.update("EChatChange image", SqlQueryUpdate(TChats.NAME)
+                .where(TChats.id, "=", chatId)
+                .update(TChats.image_id, newImageId))
+            ControllerChats.putChangeImage(apiAccount, tag, newImageId)
         }
 
 

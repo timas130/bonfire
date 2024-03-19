@@ -3,6 +3,7 @@ package com.sayzen.campfiresdk.screens.account.search
 
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.requests.accounts.RAccountsFollowsChange
 import com.dzen.campfire.api.requests.accounts.RAccountsGetAll
@@ -15,6 +16,8 @@ import com.sayzen.campfiresdk.models.events.account.EventAccountsFollowsChange
 import com.sayzen.campfiresdk.screens.account.SAccountsOnline
 import com.sayzen.campfiresdk.screens.account.rating.SRating
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
@@ -71,7 +74,7 @@ class SAccountSearch(
                         isSubscriptionsOnly = r.isSubscriptions
                         onLoad.invoke(removeMyAccount(r.accounts))
                         setTextEmpty(t(API_TRANSLATE.app_nothing_found))
-                        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_4)
+                        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_4))
                     }
                     .onNetworkError { onLoad.invoke(null) }
                     .send(api)

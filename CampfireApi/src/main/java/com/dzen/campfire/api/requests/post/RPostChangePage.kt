@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.post
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.post.Page
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -52,6 +53,9 @@ open class RPostChangePage(
             page = json.mNull(inp, "page", page, Page::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            page?.fillImageRefs(receiver)
+        }
     }
 
 }

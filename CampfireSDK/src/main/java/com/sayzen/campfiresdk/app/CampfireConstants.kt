@@ -1,9 +1,10 @@
 package com.sayzen.campfiresdk.app
 
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.AchievementInfo
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.translate.Translate
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
@@ -119,149 +120,149 @@ object CampfireConstants {
     )
 
     val ACHIEVEMENTS = arrayOf(
-        Achievement(API.ACHI_APP_SHARE, API_TRANSLATE.achi_share, R.color.red_500, true, API_RESOURCES.IMAGE_ICHI_3_2),
+        Achievement(API.ACHI_APP_SHARE, API_TRANSLATE.achi_share, R.color.red_500, true, ApiResources.IMAGE_ICHI_3_2),
         Achievement(
             API.ACHI_CONTENT_SHARE,
             API_TRANSLATE.achi_content_share,
             R.color.pink_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_3_3
+            ApiResources.IMAGE_ICHI_3_3
         ),
         Achievement(
             API.ACHI_ADD_RECRUITER,
             API_TRANSLATE.achi_add_recruiter,
             R.color.green_500,
             true,
-            API_RESOURCES.IMAGE_ICHI_1_2
+            ApiResources.IMAGE_ICHI_1_2
         ),
         Achievement(
             API.ACHI_ENTERS,
             API_TRANSLATE.achi_enters,
             R.color.deep_purple_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_15_2
+            ApiResources.IMAGE_ICHI_15_2
         ),
         Achievement(
             API.ACHI_KARMA_COUNT,
             API_TRANSLATE.achi_karma_count,
             R.color.indigo_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_20_2
+            ApiResources.IMAGE_ICHI_20_2
         ),
         Achievement(
             API.ACHI_REFERRALS_COUNT,
             API_TRANSLATE.achi_referals_count,
             R.color.blue_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_1_3
+            ApiResources.IMAGE_ICHI_1_3
         ),
         Achievement(
             API.ACHI_RATES_COUNT,
             API_TRANSLATE.achi_rates_count,
             R.color.light_blue_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_10
+            ApiResources.IMAGE_ICHI_10
         ),
         Achievement(
             API.ACHI_POSTS_COUNT,
             API_TRANSLATE.achi_posts_count,
             R.color.cyan_900,
             false,
-            API_RESOURCES.IMAGE_ICHI_2_2
+            ApiResources.IMAGE_ICHI_2_2
         ),
         Achievement(
             API.ACHI_POST_KARMA,
             API_TRANSLATE.achi_posts_karma_count,
             R.color.teal_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_5_2
+            ApiResources.IMAGE_ICHI_5_2
         ),
         Achievement(
             API.ACHI_COMMENTS_KARMA,
             API_TRANSLATE.achi_comments_karma_count,
             R.color.light_green_900,
             false,
-            API_RESOURCES.IMAGE_ICHI_4_1
+            ApiResources.IMAGE_ICHI_4_1
         ),
         Achievement(
             API.ACHI_STICKERS_KARMA,
             API_TRANSLATE.achi_stickers_karma_count,
             R.color.lime_900,
             false,
-            API_RESOURCES.IMAGE_ICHI_4_2
+            ApiResources.IMAGE_ICHI_4_2
         ),
         Achievement(
             API.ACHI_COMMENTS_COUNT,
             API_TRANSLATE.achi_comments_count,
             R.color.orange_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_4_4
+            ApiResources.IMAGE_ICHI_4_4
         ),
-        Achievement(API.ACHI_LOGIN, API_TRANSLATE.achi_login, R.color.red_500, true, API_RESOURCES.IMAGE_ICHI_17),
-        Achievement(API.ACHI_CHAT, API_TRANSLATE.achi_chat, R.color.blue_500, false, API_RESOURCES.IMAGE_ICHI_3_1),
+        Achievement(API.ACHI_LOGIN, API_TRANSLATE.achi_login, R.color.red_500, true, ApiResources.IMAGE_ICHI_17),
+        Achievement(API.ACHI_CHAT, API_TRANSLATE.achi_chat, R.color.blue_500, false, ApiResources.IMAGE_ICHI_3_1),
         Achievement(
             API.ACHI_COMMENT,
             API_TRANSLATE.achi_comment,
             R.color.pink_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_4_2
+            ApiResources.IMAGE_ICHI_4_2
         ),
-        Achievement(API.ACHI_ANSWER, API_TRANSLATE.achi_answer, R.color.teal_500, false, API_RESOURCES.IMAGE_ICHI_4_3),
+        Achievement(API.ACHI_ANSWER, API_TRANSLATE.achi_answer, R.color.teal_500, false, ApiResources.IMAGE_ICHI_4_3),
         Achievement(
             API.ACHI_RATE,
             API_TRANSLATE.achi_rate,
             R.color.light_blue_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_1_5
+            ApiResources.IMAGE_ICHI_1_5
         ),
         Achievement(
             API.ACHI_CHANGE_PUBLICATION,
             API_TRANSLATE.achi_change_publication,
             R.color.deep_purple_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_2_3
+            ApiResources.IMAGE_ICHI_2_3
         ),
         Achievement(
             API.ACHI_CHANGE_COMMENT,
             API_TRANSLATE.achi_change_comment,
             R.color.indigo_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_4_5
+            ApiResources.IMAGE_ICHI_4_5
         ),
         Achievement(
             API.ACHI_FIRST_POST,
             API_TRANSLATE.achi_first_post,
             R.color.cyan_900,
             false,
-            API_RESOURCES.IMAGE_ICHI_2_2
+            ApiResources.IMAGE_ICHI_2_2
         ),
         Achievement(
             API.ACHI_SUBSCRIBE,
             API_TRANSLATE.achi_first_follow,
             R.color.teal_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_5_1
+            ApiResources.IMAGE_ICHI_5_1
         ),
         Achievement(
             API.ACHI_TAGS_SEARCH,
             API_TRANSLATE.achi_tags_search,
             R.color.pink_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_9
+            ApiResources.IMAGE_ICHI_9
         ),
         Achievement(
             API.ACHI_LANGUAGE,
             API_TRANSLATE.achi_language,
             R.color.cyan_900,
             false,
-            API_RESOURCES.IMAGE_ICHI_24
+            ApiResources.IMAGE_ICHI_24
         ),
         Achievement(
             API.ACHI_TITLE_IMAGE,
             API_TRANSLATE.achi_title_image,
             R.color.blue_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_8,
+            ApiResources.IMAGE_ICHI_8,
             arrayOf(ToolsText.numToStringRound(API.LVL_CAN_CHANGE_PROFILE_IMAGE.lvl / 100.0, 2))
         ),
         Achievement(
@@ -269,196 +270,196 @@ object CampfireConstants {
             API_TRANSLATE.achi_create_tag,
             R.color.teal_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_12
+            ApiResources.IMAGE_ICHI_12
         ),
-        Achievement(API.ACHI_QUESTS, API_TRANSLATE.achi_quests, R.color.teal_500, false, API_RESOURCES.IMAGE_ICHI_6),
+        Achievement(API.ACHI_QUESTS, API_TRANSLATE.achi_quests, R.color.teal_500, false, ApiResources.IMAGE_ICHI_6),
         Achievement(
             API.ACHI_FANDOMS,
             API_TRANSLATE.achi_fandoms,
             R.color.orange_500,
             true,
-            API_RESOURCES.IMAGE_ICHI_19_1
+            ApiResources.IMAGE_ICHI_19_1
         ),
         Achievement(
             API.ACHI_RULES_USER,
             API_TRANSLATE.achi_rules_user,
             R.color.teal_500,
             true,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_RULES_MODERATOR,
             API_TRANSLATE.achi_rules_moderator,
             R.color.cyan_900,
             true,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_FOLLOWERS,
             API_TRANSLATE.achi_followers,
             R.color.red_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_5_3
+            ApiResources.IMAGE_ICHI_5_3
         ),
         Achievement(
             API.ACHI_MODER_CHANGE_POST_TAGS,
             API_TRANSLATE.achi_moderators_tags,
             R.color.indigo_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_5_3
+            ApiResources.IMAGE_ICHI_5_3
         ),
-        Achievement(API.ACHI_FIREWORKS, API_TRANSLATE.achi_50, R.color.indigo_500, false, API_RESOURCES.IMAGE_ICHI_23),
-        Achievement(API.ACHI_MAKE_MODER, API_TRANSLATE.achi_51, R.color.orange_500, false, API_RESOURCES.IMAGE_ICHI_21),
-        Achievement(API.ACHI_CREATE_CHAT, API_TRANSLATE.achi_52, R.color.pink_500, false, API_RESOURCES.IMAGE_ICHI_13),
+        Achievement(API.ACHI_FIREWORKS, API_TRANSLATE.achi_50, R.color.indigo_500, false, ApiResources.IMAGE_ICHI_23),
+        Achievement(API.ACHI_MAKE_MODER, API_TRANSLATE.achi_51, R.color.orange_500, false, ApiResources.IMAGE_ICHI_21),
+        Achievement(API.ACHI_CREATE_CHAT, API_TRANSLATE.achi_52, R.color.pink_500, false, ApiResources.IMAGE_ICHI_13),
         Achievement(
             API.ACHI_REVIEW_MODER_ACTION,
             API_TRANSLATE.achi_53,
             R.color.cyan_900,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_ACCEPT_FANDOM,
             API_TRANSLATE.achi_54,
             R.color.teal_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_MODERATOR_COUNT,
             API_TRANSLATE.achi_55,
             R.color.teal_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_MODERATOR_ACTION_KARMA,
             API_TRANSLATE.achi_56,
             R.color.light_blue_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_KARMA_30,
             API_TRANSLATE.achi_57,
             R.color.deep_purple_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
-        Achievement(API.ACHI_UP_RATES, API_TRANSLATE.achi_58, R.color.indigo_500, false, API_RESOURCES.IMAGE_ICHI_21),
+        Achievement(API.ACHI_UP_RATES, API_TRANSLATE.achi_58, R.color.indigo_500, false, ApiResources.IMAGE_ICHI_21),
         Achievement(
             API.ACHI_UP_RATES_OVER_DOWN,
             API_TRANSLATE.achi_59,
             R.color.cyan_900,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_CHAT_SUBSCRIBE,
             API_TRANSLATE.achi_60,
             R.color.teal_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_RELAY_RACE_FIRST_POST,
             API_TRANSLATE.achi_64,
             R.color.orange_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_RELAY_RACE_FIRST_NEXT_MEMBER,
             API_TRANSLATE.achi_65,
             R.color.cyan_900,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_RELAY_RACE_FIRST_CREATE,
             API_TRANSLATE.achi_66,
             R.color.teal_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_RELAY_RACE_POSTS_COUNT,
             API_TRANSLATE.achi_67,
             R.color.red_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_RELAY_RACE_MY_RACE_POSTS_COUNT,
             API_TRANSLATE.achi_68,
             R.color.indigo_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_VICEROY_ASSIGN,
             API_TRANSLATE.achi_69,
             R.color.blue_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_VICEROY_POSTS_COUNT,
             API_TRANSLATE.achi_70,
             R.color.indigo_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_VICEROY_WIKI_COUNT,
             API_TRANSLATE.achi_71,
             R.color.cyan_900,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_VICEROY_KARMA_COUNT,
             API_TRANSLATE.achi_72,
             R.color.red_800,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_VICEROY_SUBSCRIBERS_COUNT,
             API_TRANSLATE.achi_73,
             R.color.orange_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_VICEROY_LINK,
             API_TRANSLATE.achi_74,
             R.color.indigo_800,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_VICEROY_IMAGES,
             API_TRANSLATE.achi_75,
             R.color.cyan_700,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_VICEROY_DESCRIPTION,
             API_TRANSLATE.achi_76,
             R.color.red_500,
             false,
-            API_RESOURCES.IMAGE_ICHI_21
+            ApiResources.IMAGE_ICHI_21
         ),
         Achievement(
             API.ACHI_QUEST_KARMA,
             API_TRANSLATE.achi_77,
             R.color.teal_a_400,
             false,
-            API_RESOURCES.IMAGE_ICHI_5_2
+            ApiResources.IMAGE_ICHI_5_2
         ),
-        Achievement(API.ACHI_BONUS, API_TRANSLATE.achi_78, R.color.indigo_800, false, API_RESOURCES.IMAGE_ICHI_7),
+        Achievement(API.ACHI_BONUS, API_TRANSLATE.achi_78, R.color.indigo_800, false, ApiResources.IMAGE_ICHI_7),
     )
 
     val LVLS = arrayOf(
@@ -615,7 +616,7 @@ object CampfireConstants {
             API_TRANSLATE.error_unknown,
             R.color.red_500,
             true,
-            API_RESOURCES.IMAGE_ICHI_10
+            ApiResources.IMAGE_ICHI_10
         )
     }
 
@@ -734,28 +735,28 @@ object CampfireConstants {
         return FandomParam(0, API_TRANSLATE.error_unknown)
     }
 
-    fun getLvlImage(lvl: Long): Long {
+    fun getLvlImage(lvl: Long): ImageRef {
         return when (lvl / 100) {
-            1L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_1
-            2L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_2
-            3L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_3
-            4L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_4
-            5L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_5
-            6L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_6
-            7L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_7
-            8L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_8
-            9L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_9
-            10L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_10
-            11L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_11
-            12L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_12
-            13L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_13
-            14L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_14
-            15L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_15
-            16L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_16
-            17L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_17
-            18L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_18
-            19L -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_19
-            else -> API_RESOURCES.IMAGE_BACKGROUND_LEVEL_20
+            1L -> ApiResources.IMAGE_BACKGROUND_LEVEL_1
+            2L -> ApiResources.IMAGE_BACKGROUND_LEVEL_2
+            3L -> ApiResources.IMAGE_BACKGROUND_LEVEL_3
+            4L -> ApiResources.IMAGE_BACKGROUND_LEVEL_4
+            5L -> ApiResources.IMAGE_BACKGROUND_LEVEL_5
+            6L -> ApiResources.IMAGE_BACKGROUND_LEVEL_6
+            7L -> ApiResources.IMAGE_BACKGROUND_LEVEL_7
+            8L -> ApiResources.IMAGE_BACKGROUND_LEVEL_8
+            9L -> ApiResources.IMAGE_BACKGROUND_LEVEL_9
+            10L -> ApiResources.IMAGE_BACKGROUND_LEVEL_10
+            11L -> ApiResources.IMAGE_BACKGROUND_LEVEL_11
+            12L -> ApiResources.IMAGE_BACKGROUND_LEVEL_12
+            13L -> ApiResources.IMAGE_BACKGROUND_LEVEL_13
+            14L -> ApiResources.IMAGE_BACKGROUND_LEVEL_14
+            15L -> ApiResources.IMAGE_BACKGROUND_LEVEL_15
+            16L -> ApiResources.IMAGE_BACKGROUND_LEVEL_16
+            17L -> ApiResources.IMAGE_BACKGROUND_LEVEL_17
+            18L -> ApiResources.IMAGE_BACKGROUND_LEVEL_18
+            19L -> ApiResources.IMAGE_BACKGROUND_LEVEL_19
+            else -> ApiResources.IMAGE_BACKGROUND_LEVEL_20
         }
     }
 

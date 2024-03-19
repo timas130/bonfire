@@ -2,22 +2,21 @@ package com.sayzen.campfiresdk.models.cards.post_pages
 
 import android.view.View
 import android.widget.TextView
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.PagesContainer
-
 import com.dzen.campfire.api.models.publications.post.PageImages
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.ControllerPost
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.views.views.ViewImagesContainer
 import com.sup.dev.android.views.views.ViewText
 
 class CardPageImages(
-        pagesContainer: PagesContainer?,
-        page: PageImages
+    pagesContainer: PagesContainer?,
+    page: PageImages
 ) : CardPage(R.layout.card_page_images, pagesContainer, page) {
 
     override fun bindView(view: View) {
@@ -35,19 +34,15 @@ class CardPageImages(
         vImagesContainer.clear()
         for (i in (page as PageImages).imagesIds.indices) {
             vImagesContainer.add(
-                    ImageLoader.load((page as PageImages).imagesMiniIds[i])
-                            .fullImageLoader(ImageLoader.load((page as PageImages).imagesIds[i]))
-                            .size(
-                                    if(i >= (page as PageImages).imagesMiniSizesW.size) 500 else (page as PageImages).imagesMiniSizesW[i],
-                                    if(i >= (page as PageImages).imagesMiniSizesH.size) 500 else (page as PageImages).imagesMiniSizesH[i]
-                            ),
-                    {
-                        if (pagesContainer != null) {
-                            ControllerPost.toImagesScreen(pagesContainer, (page as PageImages).imagesIds[i])
-                        } else {
-                            vImagesContainer.toImageView(ImageLoader.load((page as PageImages).imagesMiniIds[i]))
-                        }
-                    })
+                ImageLoader.load((page as PageImages).imagesMini[i])
+                    .fullImageLoader(ImageLoader.load((page as PageImages).images[i])),
+                {
+                    if (pagesContainer != null) {
+                        ControllerPost.toImagesScreen(pagesContainer, (page as PageImages).images[i])
+                    } else {
+                        vImagesContainer.toImageView(ImageLoader.load((page as PageImages).imagesMini[i]))
+                    }
+                })
         }
 
         ControllerLinks.makeLinkable(vTitle)
@@ -61,8 +56,8 @@ class CardPageImages(
     }
 
     override fun notifyItem() {
-        for (i in 0 until (page as PageImages).imagesIds.size) {
-            ImageLoader.load((page as PageImages).imagesIds[i]).intoCash()
+        for (i in 0 until (page as PageImages).images.size) {
+            ImageLoader.load((page as PageImages).images[i]).intoCash()
         }
     }
 }

@@ -2,6 +2,7 @@ package com.dzen.campfire.api.requests.accounts
 
 
 import com.dzen.campfire.api.models.account.Account
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -41,6 +42,15 @@ open class RAccountsRatingGet() : Request<RAccountsRatingGet.Response>() {
         override fun json(inp: Boolean, json: Json) {
             forceAccounts = json.m(inp, "forceAccounts", forceAccounts, Array<Account>::class)
             karmaAccounts = json.m(inp, "karmaAccounts", karmaAccounts, Array<Account>::class)
+        }
+
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (account in forceAccounts) {
+                account.fillImageRefs(receiver)
+            }
+            for (account in karmaAccounts) {
+                account.fillImageRefs(receiver)
+            }
         }
     }
 

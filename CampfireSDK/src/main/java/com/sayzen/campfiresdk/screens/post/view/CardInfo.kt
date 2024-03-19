@@ -4,16 +4,14 @@ import android.view.View
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.models.publications.tags.PublicationTag
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.support.adapters.*
 import com.sayzen.campfiresdk.controllers.ControllerPublications
-import com.sayzen.campfiresdk.models.events.publications.EventPostChanged
-import com.sayzen.campfiresdk.models.events.publications.EventPostStatusChange
 import com.sayzen.campfiresdk.models.events.publications.EventPostTagsChanged
 import com.sayzen.campfiresdk.screens.fandoms.rubrics.SRubricPosts
 import com.sayzen.campfiresdk.screens.post.search.SPostsSearch
-import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sayzen.campfiresdk.support.adapters.XPublication
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
-import com.sup.dev.android.tools.ToolsAndroid
+import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.cards.Card
 import com.sup.dev.android.views.views.ViewAvatar
@@ -110,7 +108,7 @@ class CardInfo(
         ControllerPublications.createTagMenu(vChip, t, false)
         if (vFlow.childCount != 0 && t.parentPublicationId == 0L) vFlow.addView(ViewSpace(vFlow.context, ToolsView.dpToPx(1).toInt(), 0))
         vFlow.addView(vChip)
-        if (t.imageId != 0L) ImageLoader.load(t.imageId).intoBitmap { vChip.setIcon(it)  }
+        if (t.image.isNotEmpty()) ImageLoader.load(t.image).intoBitmap { vChip.setIcon(it)  }
     }
 
 

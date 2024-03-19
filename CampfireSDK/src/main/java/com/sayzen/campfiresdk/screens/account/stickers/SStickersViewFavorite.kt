@@ -4,6 +4,7 @@ package com.sayzen.campfiresdk.screens.account.stickers
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.stickers.PublicationSticker
 import com.dzen.campfire.api.requests.stickers.RStickersGetAllFavorite
 import com.sayzen.campfiresdk.R
@@ -11,6 +12,8 @@ import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.stickers.CardSticker
 import com.sayzen.campfiresdk.models.events.stickers.EventStickerCollectionChanged
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.screens.SLoadingRecycler
@@ -41,7 +44,7 @@ class SStickersViewFavorite(
         disableShadows()
         setTitle(t(API_TRANSLATE.app_favorites))
         setTextEmpty(t(API_TRANSLATE.stickers_pack_view_empty))
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_4)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_4))
 
         val spanCount = if (ToolsAndroid.isScreenPortrait()) 3 else 6
         vRecycler.layoutManager = GridLayoutManager(context, spanCount)

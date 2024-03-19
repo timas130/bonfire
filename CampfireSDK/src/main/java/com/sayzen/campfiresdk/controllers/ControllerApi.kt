@@ -4,8 +4,8 @@ import android.graphics.Bitmap
 import android.text.Html
 import android.widget.TextView
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.ApiInfo
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.lvl.LvlInfo
@@ -19,11 +19,7 @@ import com.dzen.campfire.api.requests.publications.RPublicationsRemove
 import com.dzen.campfire.api.requests.publications.RPublicationsReport
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.api.tools.client.ApiClient
-import com.dzen.campfire.api.tools.client.DummyTokenProvider
 import com.dzen.campfire.api.tools.client.Request
-import com.dzen.campfire.api_media.APIMedia
-import com.dzen.campfire.api_media.requests.RResourcesGet
-import com.dzen.campfire.api_media.requests.RResourcesGetByTag
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.models.events.account.EventAccountCurrentChanged
 import com.sayzen.campfiresdk.models.events.account.EventAccountReportsCleared
@@ -35,11 +31,10 @@ import com.sayzen.campfiresdk.models.events.publications.EventPublicationReports
 import com.sayzen.campfiresdk.screens.fandoms.moderation.view.SModerationView
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.adapters.XAccount
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.image_loader.ImageLink
 import com.sup.dev.android.libs.image_loader.ImageLoader
-import com.sup.dev.android.libs.image_loader.ImageLoaderId
-import com.sup.dev.android.libs.image_loader.ImageLoaderTag
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.*
@@ -49,7 +44,6 @@ import com.sup.dev.android.views.splash.SplashField
 import com.sup.dev.android.views.splash.SplashMenu
 import com.sup.dev.java.classes.items.Item2
 import com.sup.dev.java.classes.items.Item3
-import com.sup.dev.java.classes.items.ItemNullable
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.libs.json.Json
@@ -71,16 +65,6 @@ val api: API = API(
     networkingProvider = OkHttpNetworkingProvider(
         SupAndroid.appContext!!,
         API.SERV_ROOT,
-    )
-}
-
-val apiMedia: APIMedia = APIMedia(
-    ControllerCampfireSDK.projectKey,
-    DummyTokenProvider
-).apply {
-    networkingProvider = OkHttpNetworkingProvider(
-        SupAndroid.appContext!!,
-        APIMedia.SERV_ROOT,
     )
 }
 
@@ -107,27 +91,6 @@ object ControllerApi {
 
     internal fun init() {
         ApiRequestsSupporter.init(api)
-
-        ImageLoaderId.loader = { imageId, pwd ->
-            val item = ItemNullable<ByteArray>(null)
-            if (imageId > 0) {
-                val r = RResourcesGet(imageId, pwd ?: "")
-                        .onComplete { r -> item.a = r.bytes }
-                        .onError { err("Error while loading image ID[$imageId] ex[$it]") }
-                r.noErrorLogs = true
-                r.sendNow(apiMedia)
-            }
-            item.a
-        }
-        ImageLoaderTag.loader = { imageTag ->
-            val item = ItemNullable<ByteArray>(null)
-            if (imageTag.isNotEmpty())
-                RResourcesGetByTag(imageTag)
-                        .onComplete { r -> item.a = r.bytes }
-                        .onError { err(it) }
-                        .sendNow(apiMedia)
-            item.a
-        }
     }
 
     fun getLanguageId(): Long {
@@ -168,15 +131,15 @@ object ControllerApi {
 
     fun getIconForLanguage(languageId: Long): ImageLink {
         return when (languageId) {
-            API.LANGUAGE_EN -> ImageLoader.load(API_RESOURCES.FLAG_EN)
-            API.LANGUAGE_RU -> ImageLoader.load(API_RESOURCES.FLAG_RU)
-            API.LANGUAGE_PT -> ImageLoader.load(API_RESOURCES.FLAG_PT)
-            API.LANGUAGE_UK -> ImageLoader.load(API_RESOURCES.FLAG_UK)
-            API.LANGUAGE_DE -> ImageLoader.load(API_RESOURCES.FLAG_DE)
-            API.LANGUAGE_IT -> ImageLoader.load(API_RESOURCES.FLAG_IT)
-            API.LANGUAGE_PL -> ImageLoader.load(API_RESOURCES.FLAG_PL)
-            API.LANGUAGE_FR -> ImageLoader.load(API_RESOURCES.FLAG_FR)
-            else -> ImageLoader.load(API_RESOURCES.FLAG_WORLD)
+            API.LANGUAGE_EN -> ImageLoader.load(ApiResources.FLAG_EN)
+            API.LANGUAGE_RU -> ImageLoader.load(ApiResources.FLAG_RU)
+            API.LANGUAGE_PT -> ImageLoader.load(ApiResources.FLAG_PT)
+            API.LANGUAGE_UK -> ImageLoader.load(ApiResources.FLAG_UK)
+            API.LANGUAGE_DE -> ImageLoader.load(ApiResources.FLAG_DE)
+            API.LANGUAGE_IT -> ImageLoader.load(ApiResources.FLAG_IT)
+            API.LANGUAGE_PL -> ImageLoader.load(ApiResources.FLAG_PL)
+            API.LANGUAGE_FR -> ImageLoader.load(ApiResources.FLAG_FR)
+            else -> ImageLoader.load(ApiResources.FLAG_WORLD)
         }
     }
 

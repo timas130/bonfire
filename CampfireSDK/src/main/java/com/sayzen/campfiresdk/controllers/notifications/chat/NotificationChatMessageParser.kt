@@ -23,6 +23,7 @@ import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.events.chat.EventChatRead
 import com.sayzen.campfiresdk.screens.chat.SChat
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -157,7 +158,7 @@ fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound
                         .setKey(message.creator.id.toString())
                         .setName(message.creator.name)
                         .setIcon(kotlin.run {
-                            val avatar = ImageLoader.load(message.creator.imageId).startLoad()
+                            val avatar = ImageLoader.load(message.creator.image).startLoad()
                             if (avatar != null) {
                                 ToolsBitmap.decode(avatar)?.getRounded()?.let { bitmap ->
                                     IconCompat.createWithBitmap(bitmap)

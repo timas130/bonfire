@@ -1,6 +1,9 @@
 package com.sayzen.campfiresdk.support
 
+import com.dzen.campfire.api.models.images.ImageRef
 import com.sayzen.campfiresdk.controllers.ControllerMention
+import com.sup.dev.android.libs.image_loader.ImageLoader
+import com.sup.dev.android.libs.image_loader.ImageLoaderRef
 import com.sup.dev.android.views.splash.SplashField
 import sh.sit.bonfire.formatting.BonfireMarkdown
 

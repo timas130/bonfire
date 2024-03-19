@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.accounts
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.notifications.Notification
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -46,6 +47,11 @@ open class RAccountsNotificationsGetAll(
             notifications = json.m(inp, "notifications", notifications, Array<Notification>::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (notification in notifications) {
+                notification.fillImageRefs(receiver)
+            }
+        }
     }
 
 }

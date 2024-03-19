@@ -1,6 +1,5 @@
 package com.sayzen.campfiresdk.screens.fandoms.suggest
 
-import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -24,6 +23,7 @@ import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
 import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.adapters.XAccount
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
@@ -34,18 +34,17 @@ import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.screens.SCrop
 import com.sup.dev.android.views.settings.SettingsCheckBox
 import com.sup.dev.android.views.settings.SettingsField
+import com.sup.dev.android.views.splash.SplashAlert
+import com.sup.dev.android.views.splash.SplashChooseImage
 import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.android.views.views.ViewChip
 import com.sup.dev.android.views.views.layouts.LayoutFlow
-import com.sup.dev.android.views.splash.SplashAlert
-import com.sup.dev.android.views.splash.SplashChooseImage
 import com.sup.dev.java.classes.Subscription
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsDate
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
-import java.util.*
 
 
 class SFandomSuggest(
@@ -155,8 +154,8 @@ class SFandomSuggest(
             updateSearch()
             vImagePlus.visibility = View.GONE
             vImageMiniPlus.visibility = View.GONE
-            ImageLoader.load(changeFandom.imageTitleId).into(vImage)
-            ImageLoader.load(changeFandom.imageId).into(vImageMini)
+            ImageLoader.load(changeFandom.imageTitle).into(vImage)
+            ImageLoader.load(changeFandom.image).into(vImageMini)
 
             for (i in 0 until vCategoriesContainer.childCount) {
                 val v = vCategoriesContainer.getChildAt(i) as ViewChip
@@ -306,7 +305,7 @@ class SFandomSuggest(
                     for (fandom in r.fandoms) {
                         val v = ViewChip.instance(context)
                         v.text = fandom.name
-                        ImageLoader.load(fandom.imageId).intoBitmap { v.setIcon(it) }
+                        ImageLoader.load(fandom.image).intoBitmap { v.setIcon(it) }
                         v.setOnClickListener { SFandom.instance(fandom.id, Navigator.TO) }
                         v.setChipBackgroundColorResource(R.color.focus)
                         vFandomsContainer.addView(v)

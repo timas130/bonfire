@@ -3,8 +3,8 @@ package com.dzen.campfire.screens.hello
 import android.view.View
 import android.view.ViewGroup
 import com.dzen.campfire.R
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.requests.project.RProjectMakeHelloPost
 import com.dzen.campfire.app.App
 import com.sayzen.campfiresdk.app.CampfireConstants
@@ -12,6 +12,7 @@ import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -50,12 +51,12 @@ class SCampfireHello(
 
         resetBack()
 
-        ImageLoader.load(API_RESOURCES.IMAGE_BACKGROUND_13).intoCash()
-        ImageLoader.load(API_RESOURCES.IMAGE_BACKGROUND_9).intoCash()
-        ImageLoader.load(API_RESOURCES.IMAGE_BACKGROUND_3).intoCash()
-        ImageLoader.load(API_RESOURCES.IMAGE_BACKGROUND_14).intoCash()
-        ImageLoader.load(API_RESOURCES.CAMPFIRE_IMAGE_3).intoCash()
-        ImageLoader.load(API_RESOURCES.CAMPFIRE_IMAGE_2).intoCash()
+        ImageLoader.load(ApiResources.IMAGE_BACKGROUND_13).intoCash()
+        ImageLoader.load(ApiResources.IMAGE_BACKGROUND_9).intoCash()
+        ImageLoader.load(ApiResources.IMAGE_BACKGROUND_3).intoCash()
+        ImageLoader.load(ApiResources.IMAGE_BACKGROUND_14).intoCash()
+        ImageLoader.load(ApiResources.CAMPFIRE_IMAGE_3).intoCash()
+        ImageLoader.load(ApiResources.CAMPFIRE_IMAGE_2).intoCash()
     }
 
     private fun resetBack() {
@@ -94,10 +95,10 @@ class SCampfireHello(
 
     private fun instanceScreen(): View {
 
-        if (screenIndex == 1) return Hello_Info.instnance_1(this).view
-        if (screenIndex == 2) return Hello_Info.instnance_2(this).view
-        if (screenIndex == 3) return Hello_Info.instnance_3(this).view
-        if (screenIndex == 4) return Hello_Info.instnance_4(this).view
+        if (screenIndex == 1) return Hello_Info.instance1(this).view
+        if (screenIndex == 2) return Hello_Info.instance2(this).view
+        if (screenIndex == 3) return Hello_Info.instance3(this).view
+        if (screenIndex == 4) return Hello_Info.instance4(this).view
         if (screenIndex == 5) {
             if (!demoMode && !ControllerApi.account.getName().contains("#")) screenIndex++
             else return Hello_Sex(this, demoMode).view

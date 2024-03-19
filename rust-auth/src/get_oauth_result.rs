@@ -2,6 +2,7 @@ use crate::AuthServer;
 use c_core::prelude::anyhow;
 use c_core::prelude::anyhow::anyhow;
 use c_core::prelude::chrono::Utc;
+use c_core::prelude::tracing::warn;
 use c_core::services::auth::{AuthError, OAuthProvider, OAuthResult, UserContext};
 use itertools::Itertools;
 use jsonwebtoken::{decode, decode_header, Algorithm, DecodingKey, Validation};
@@ -12,7 +13,6 @@ use openidconnect::{AuthorizationCode, Nonce, NonceVerifier, OAuth2TokenResponse
 use serde::Deserialize;
 use sqlx::{Postgres, Transaction};
 use std::str::FromStr;
-use c_core::prelude::tracing::warn;
 
 struct DummyNonceVerifier;
 

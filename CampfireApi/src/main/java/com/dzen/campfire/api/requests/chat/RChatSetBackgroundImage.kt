@@ -1,5 +1,7 @@
 package com.dzen.campfire.api.requests.chat
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -30,7 +32,8 @@ open class RChatSetBackgroundImage(
     }
 
     class Response : Request.Response {
-
+        var image = ImageRef()
+        @Deprecated("use ImageRefs")
         var imageId = 0L
 
         constructor(json: Json) {
@@ -43,8 +46,12 @@ open class RChatSetBackgroundImage(
 
         override fun json(inp: Boolean, json: Json) {
             imageId = json.m(inp, "imageId", imageId)
+            image = json.m(inp, "image", image)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            receiver.add(image, imageId)
+        }
     }
 
 

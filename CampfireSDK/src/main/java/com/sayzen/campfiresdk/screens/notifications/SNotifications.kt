@@ -2,27 +2,28 @@ package com.sayzen.campfiresdk.screens.notifications
 
 import android.view.View
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.notifications.Notification
 import com.dzen.campfire.api.requests.accounts.RAccountsNotificationsGetAll
 import com.dzen.campfire.api.requests.accounts.RAccountsNotificationsView
+import com.dzen.campfire.api.tools.client.Request
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerNotifications
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.api
+import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.notifications.EventNotification
 import com.sayzen.campfiresdk.models.events.notifications.EventNotificationsCountChanged
-import com.sup.dev.android.app.SupAndroid
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.load
+import com.sup.dev.android.app.SupAndroid
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.screens.SLoadingRecycler
 import com.sup.dev.android.views.splash.SplashCheckBoxes
-import com.dzen.campfire.api.tools.client.Request
-import com.sayzen.campfiresdk.controllers.t
-import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.java.libs.eventBus.EventBus
 
 class SNotifications private constructor() : SLoadingRecycler<CardNotification, Notification>() {
@@ -49,7 +50,7 @@ class SNotifications private constructor() : SLoadingRecycler<CardNotification, 
         setTitle(t(API_TRANSLATE.app_notifications))
         setTextEmpty(t(API_TRANSLATE.notifications_empty))
         setTextProgress(t(API_TRANSLATE.notifications_loading))
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_6)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_6))
         vFab.setImageResource(R.drawable.ic_done_all_white_24dp)
         vFab.setOnClickListener {
             ControllerNotifications.removeNotificationFromNewAll()

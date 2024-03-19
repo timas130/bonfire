@@ -14,6 +14,7 @@ import com.sayzen.campfiresdk.controllers.ControllerMention
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPageLinkImage
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -21,9 +22,9 @@ import com.sup.dev.android.tools.ToolsBitmap
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.screens.SCrop
 import com.sup.dev.android.views.settings.SettingsField
-import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashChooseImage
+import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
 
@@ -59,7 +60,7 @@ class SplashPageLinkImage(
         if (oldPage != null) {
             enterText = t(API_TRANSLATE.app_change)
             vLink.setText(this.oldPage.link)
-            ImageLoader.load(oldPage.imageId).into(vImage)
+            ImageLoader.load(oldPage.image).into(vImage)
             vImageIcon.visibility = View.GONE
         }
 

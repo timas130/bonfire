@@ -1,11 +1,12 @@
 package com.dzen.campfire.api.requests.wiki
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.wiki.WikiTitle
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
 open class RWikiGet(
-        var itemId: Long
+    var itemId: Long
 ) : Request<RWikiGet.Response>() {
 
 
@@ -19,7 +20,7 @@ open class RWikiGet(
 
     class Response : Request.Response {
 
-        var item =  WikiTitle()
+        var item = WikiTitle()
 
         constructor(json: Json) {
             json(false, json)
@@ -33,6 +34,9 @@ open class RWikiGet(
             item = json.m(inp, "item", item)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            item.fillImageRefs(receiver)
+        }
     }
 
 }

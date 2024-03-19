@@ -12,10 +12,7 @@ pub struct InternalCheckInMutation;
 #[Object]
 impl InternalCheckInMutation {
     /// Mark a user as logged in today
-    #[graphql(
-        visible = "is_system_caller",
-        guard = "PermissionLevelGuard::new(System)"
-    )]
+    #[graphql(guard = "PermissionLevelGuard::new(System)")]
     async fn internal_check_in(&self, ctx: &Context<'_>, user_id: ID) -> Result<OkResp, RespError> {
         let req = ctx.data_unchecked::<ReqContext>();
 

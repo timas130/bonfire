@@ -164,7 +164,7 @@ class FieldLogic(
     fun setQuote(publication: PublicationChatMessage) {
         var text = publication.creator.name + ": "
         if (publication.text.isNotEmpty()) text += publication.text
-        else if (publication.resourceId != 0L || publication.imageIdArray.isNotEmpty()) text += t(API_TRANSLATE.app_image)
+        else if (publication.resource.isNotEmpty() || publication.images.isNotEmpty()) text += t(API_TRANSLATE.app_image)
         else if (publication.stickerId != 0L) text += t(API_TRANSLATE.app_sticker)
         setQuote(text, publication.id)
     }

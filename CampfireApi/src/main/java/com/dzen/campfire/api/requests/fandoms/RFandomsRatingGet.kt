@@ -1,6 +1,7 @@
 package com.dzen.campfire.api.requests.fandoms
 
 import com.dzen.campfire.api.models.account.Account
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -46,6 +47,12 @@ open class RFandomsRatingGet(
         override fun json(inp: Boolean, json: Json) {
             karmaAccounts = json.m(inp, "karmaAccounts", karmaAccounts, Array<Account>::class)
             karmaCounts = json.m(inp, "karmaCounts", karmaCounts, Array<Long>::class)
+        }
+
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (karmaAccount in karmaAccounts) {
+                karmaAccount.fillImageRefs(receiver)
+            }
         }
     }
 

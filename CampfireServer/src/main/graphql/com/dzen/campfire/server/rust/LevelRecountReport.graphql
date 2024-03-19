@@ -1,0 +1,7 @@
+fragment LevelRecountReport on LevelRecountResult {
+    totalLevel
+    achievements
+    user {
+        id
+    }
+}

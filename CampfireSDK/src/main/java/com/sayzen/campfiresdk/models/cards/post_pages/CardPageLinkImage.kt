@@ -9,6 +9,7 @@ import com.dzen.campfire.api.models.publications.post.PageLinkImage
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.tools.ToolsToast
@@ -24,7 +25,7 @@ class CardPageLinkImage(
         val vImage: ImageView = view.findViewById(R.id.vImage)
         val vTouch: View = view.findViewById(R.id.vTouch)
 
-        ImageLoader.load((page as PageLinkImage).imageId).into(vImage)
+        ImageLoader.load((page as PageLinkImage).image).into(vImage)
 
         if (clickable){
             vTouch.setOnClickListener { ControllerLinks.openLink((page as PageLinkImage).link) }
@@ -48,6 +49,6 @@ class CardPageLinkImage(
 
 
     override fun notifyItem() {
-        ImageLoader.load((page as PageLinkImage).imageId).intoCash()
+        ImageLoader.load((page as PageLinkImage).image).intoCash()
     }
 }

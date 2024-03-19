@@ -1,13 +1,16 @@
 package com.dzen.campfire.api.tools.client
 
+import com.dzen.campfire.api.models.images.ImageHolder
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.ApiAccount
 import com.dzen.campfire.api.tools.ApiException
-import com.sup.dev.java.classes.callbacks.CallbacksList
 import com.dzen.campfire.api.tools.server.ApiRequest
+import com.dzen.campfire.api.tools.server.IControllerResources
 import com.sup.dev.java.classes.Subscription
+import com.sup.dev.java.classes.callbacks.CallbacksList
 import com.sup.dev.java.classes.callbacks.CallbacksList1
 import com.sup.dev.java.libs.json.Json
-import java.util.HashMap
 
 @ApiRequest
 abstract class Request<K : Request.Response> : Subscription(){
@@ -127,14 +130,31 @@ abstract class Request<K : Request.Response> : Subscription(){
     //  Response
     //
 
-    abstract class Response {
-
+    abstract class Response : ImageHolder {
         open fun json(inp: Boolean, json: Json) {
 
         }
 
         open fun getData(): ByteArray? {
             return null
+        }
+
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        }
+
+        fun signImages(resources: IControllerResources) {
+            fillImageRefs(object : ImageHolderReceiver {
+                override fun add(imageRef: ImageRef, legacyId: Long?, width: Int?, height: Int?) {
+                    if (legacyId != null && legacyId > 0) {
+                        imageRef.imageId = legacyId
+                        imageRef.width = width ?: 0
+                        imageRef.height = height ?: 0
+                    }
+                    if (imageRef.url.isEmpty() && imageRef.imageId > 0) {
+                        imageRef.url = resources.getPublicUrl(imageRef.imageId)
+                    }
+                }
+            })
         }
     }
 
@@ -198,13 +218,6 @@ abstract class Request<K : Request.Response> : Subscription(){
     }
 
     companion object {
-
-        //
-        //  Client Part
-        //
-
-        val J_REQUEST_NAME = "J_REQUEST_NAME"
+        const val J_REQUEST_NAME = "J_REQUEST_NAME"
     }
-
-
 }

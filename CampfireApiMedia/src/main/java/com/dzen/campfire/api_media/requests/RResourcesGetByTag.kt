@@ -4,6 +4,7 @@ import com.dzen.campfire.api.tools.client.ApiClient
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
+@Deprecated("use ImageRefs")
 open class RResourcesGetByTag(
         var tag: String
 ) : Request<RResourcesGetByTag.Response>() {

@@ -1,6 +1,9 @@
 package com.sayzen.campfiresdk.support
 
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.ColorFilter
+import android.graphics.Paint
+import android.graphics.PixelFormat
 import android.graphics.drawable.Drawable
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.support.adapters.XAccount

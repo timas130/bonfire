@@ -1,6 +1,7 @@
 package com.dzen.campfire.api.requests.chat
 
 import com.dzen.campfire.api.models.chat.ChatTag
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.chat.Chat
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -39,6 +40,9 @@ open class RChatGet(
             chat = json.m(inp, "chat", chat)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            chat.fillImageRefs(receiver)
+        }
     }
 
 

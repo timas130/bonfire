@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.stickers
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.stickers.PublicationSticker
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -52,6 +53,9 @@ open class RStickersAdd(
             sticker = json.m(inp, "sticker", sticker)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            sticker.fillImageRefs(receiver)
+        }
     }
 
 }

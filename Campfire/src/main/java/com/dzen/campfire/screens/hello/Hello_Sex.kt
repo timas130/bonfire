@@ -8,9 +8,11 @@ import android.widget.TextView
 import com.dzen.campfire.R
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
@@ -39,9 +41,9 @@ class Hello_Sex(
     var gender = -1L
 
     init {
-        ImageLoader.load(API_RESOURCES.CAMPFIRE_IMAGE_3).into(vImage_he)
-        ImageLoader.load(API_RESOURCES.CAMPFIRE_IMAGE_2).into(vImage_she)
-        ImageLoader.load(API_RESOURCES.CAMPFIRE_IMAGE_1).into(vImage_other)
+        ImageLoader.load(ApiResources.CAMPFIRE_IMAGE_3).into(vImage_he)
+        ImageLoader.load(ApiResources.CAMPFIRE_IMAGE_2).into(vImage_she)
+        ImageLoader.load(ApiResources.CAMPFIRE_IMAGE_1).into(vImage_other)
 
         vNext.text = t(API_TRANSLATE.app_continue)
         vLogin.hint = t(API_TRANSLATE.app_name_s)

@@ -4,12 +4,14 @@ import com.dzen.campfire.R
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.sayzen.campfiresdk.compose.AccountSecurityScreen
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
+import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
@@ -58,7 +60,7 @@ class SSettings : Screen(R.layout.screen_settings_actions) {
         vChatsTitle.setTitle(t(API_TRANSLATE.app_chats))
         vConferenceAllow.setTitle(t(API_TRANSLATE.settings_allow_adding_to_conferences))
 
-        ImageLoader.load(API_RESOURCES.CAMPFIRE_IMAGE_4).into(vAnonRates.vIcon)
+        ImageLoader.load(ApiResources.CAMPFIRE_IMAGE_4).into(vAnonRates.vIcon)
 
         vLanguage.setOnClickListener { changeLanguage() }
 

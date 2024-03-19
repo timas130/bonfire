@@ -11,11 +11,9 @@ import androidx.annotation.StringRes
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sup.dev.android.R
 import com.sup.dev.android.app.SupAndroid
-import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.image_loader.ImageLink
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
-import com.sup.dev.android.views.screens.SLoading
 import com.sup.dev.java.tools.ToolsThreads
 
 abstract class CardScreenLoading(@LayoutRes layoutRes: Int) : Card(0) {
@@ -121,10 +119,6 @@ abstract class CardScreenLoading(@LayoutRes layoutRes: Int) : Card(0) {
     protected fun setAction(textAction: String?, onAction: () -> Unit) {
         this.textAction = textAction
         this.onAction = onAction
-    }
-
-    fun setBackgroundImage(image: Any) {
-        setBackgroundImage(ImageLoader.loadByAny(image))
     }
 
     fun setBackgroundImage(image: ImageLink?) {

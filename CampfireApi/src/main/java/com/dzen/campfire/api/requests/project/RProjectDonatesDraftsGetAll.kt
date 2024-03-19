@@ -1,14 +1,15 @@
 package com.dzen.campfire.api.requests.project
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.project.Donate
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
 open class RProjectDonatesDraftsGetAll(
-        var offset:Long
+    var offset: Long
 ) : Request<RProjectDonatesDraftsGetAll.Response>() {
 
-    companion object{
+    companion object {
         val COUNT = 20
     }
 
@@ -26,7 +27,7 @@ open class RProjectDonatesDraftsGetAll(
 
     class Response : Request.Response {
 
-        var donates:Array<Donate> = emptyArray()
+        var donates: Array<Donate> = emptyArray()
 
         constructor(json: Json) {
             json(false, json)
@@ -40,6 +41,11 @@ open class RProjectDonatesDraftsGetAll(
             donates = json.m(inp, "donates", donates)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (donate in donates) {
+                donate.fillImageRefs(receiver)
+            }
+        }
     }
 
 }

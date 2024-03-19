@@ -1,24 +1,25 @@
 package com.sayzen.campfiresdk.screens.fandoms.search
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.view.View
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.fandoms.Fandom
 import com.dzen.campfire.api.requests.fandoms.RFandomsGetAll
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.models.cards.CardFandom
-import com.sayzen.campfiresdk.screens.fandoms.suggest.SFandomSuggest
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.models.cards.CardFandom
+import com.sayzen.campfiresdk.screens.fandoms.suggest.SFandomSuggest
+import com.sayzen.campfiresdk.support.load
 import com.sayzen.devsupandroidgoogle.ControllerFirebaseAnalytics
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.views.cards.CardDividerTitle
 import com.sup.dev.android.views.screens.SLoadingRecycler
 import com.sup.dev.java.tools.ToolsThreads
-import java.util.*
 
 class SFandomsSearch private constructor(
         private var name: String,
@@ -61,7 +62,7 @@ class SFandomsSearch private constructor(
         setTitle(t(API_TRANSLATE.app_fandoms))
         setTextEmpty(t(API_TRANSLATE.fandoms_empty))
         setTextProgress(t(API_TRANSLATE.fandoms_loading))
-        setBackgroundImage(API_RESOURCES.IMAGE_BACKGROUND_7)
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_7))
 
         if (ROOT_CATEGORY_ID > 0) categoryId = ROOT_CATEGORY_ID
 
