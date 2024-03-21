@@ -150,7 +150,10 @@ object AuthController : TokenProvider {
 
         // refreshing
         try {
-            val result = apollo.mutation(LoginRefreshMutation(state.refreshToken)).execute()
+            val result = apollo.mutation(LoginRefreshMutation(state.refreshToken))
+                // this bypasses the recursive call to here
+                .addHttpHeader("Authorization", "")
+                .execute()
                 .dataAssertNoErrors
             saveAuthState(AuthenticatedAuthState(
                 accessToken = result.loginRefresh.accessToken,

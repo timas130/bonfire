@@ -28,8 +28,10 @@ class AuthInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request().newBuilder()
             .apply {
-                AuthController.getAccessToken()?.let { token ->
-                    addHeader("Authorization", "Bearer $token")
+                if (chain.request().header("Authorization") == null) {
+                    AuthController.getAccessToken()?.let { token ->
+                        addHeader("Authorization", "Bearer $token")
+                    }
                 }
             }
             .build()
