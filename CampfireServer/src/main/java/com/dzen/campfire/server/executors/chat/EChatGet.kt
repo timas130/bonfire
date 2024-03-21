@@ -46,20 +46,23 @@ class EChatGet : RChatGet(ChatTag(), 0) {
                         .offset_count(0, 1)
         )
 
-        if (myChats.isEmpty) {
-            if (!isRetry && tag.chatType == API.CHAT_TYPE_PRIVATE) {
-                ControllerChats.createSubscriptionIfNotExist(apiAccount.id, tag, 1, API.CHAT_MEMBER_LVL_USER, 0, 0)
-                isRetry = true
-                return execute()
-            } else if(!isRetry && tag.chatType == API.CHAT_TYPE_CONFERENCE && ControllerChats.getChatParams(tag.targetId).isPublic){
-                ControllerChats.createSubscriptionIfNotExist(apiAccount.id, tag, 1, API.CHAT_MEMBER_LVL_USER, 0, 1)
-                isRetry = true
-                return execute()
-            }  else if(!isRetry && tag.chatType == API.CHAT_TYPE_FANDOM_SUB){
-                ControllerChats.createSubscriptionIfNotExist(apiAccount.id, tag, 1, API.CHAT_MEMBER_LVL_USER, 0, 1)
-                isRetry = true
-                return execute()
-            } else throw  ApiException(API.ERROR_GONE)
+        if (myChats.isEmpty && !isRetry) {
+            if (tag.chatType == API.CHAT_TYPE_CONFERENCE) {
+                if (!ControllerChats.getChatParams(tag.targetId).isPublic) {
+                    throw ApiException(API.ERROR_ACCESS)
+                }
+            }
+
+            ControllerChats.createSubscriptionIfNotExist(
+                accountId = apiAccount.id,
+                tag = tag,
+                isSubscribeValue = 1,
+                memberLvl = API.CHAT_MEMBER_LVL_USER,
+                memberOwner = 0,
+                enterDate = if (tag.chatType == API.CHAT_TYPE_PRIVATE) 0 else 1
+            )
+            isRetry = true
+            return execute()
         }
 
         val chat = ControllerChats.parseSelect_Sunscriptions(apiAccount.id, myChats)[0]
