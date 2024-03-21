@@ -9,6 +9,7 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.requests.accounts.RAccountsStatusSet
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
+import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.account.EventAccountBaned
@@ -61,6 +62,7 @@ class CardStatus(
             else "{grey Hello, world}"
         }
         BonfireMarkdown.setMarkdownInline(vStatus, statusText)
+        ControllerLinks.linkifyShort(vStatus)
 
         if (xAccount.isCurrentAccount()) {
             vStatusContainer.setOnClickListener { changeStatus() }
@@ -75,6 +77,7 @@ class CardStatus(
 
         vNote.visibility = if (note.isEmpty()) GONE else VISIBLE
         BonfireMarkdown.setMarkdownInline(vNote, "${t(API_TRANSLATE.app_note)}: $note")
+        ControllerLinks.linkifyShort(vNote)
     }
 
     private fun updateDateBan() {
