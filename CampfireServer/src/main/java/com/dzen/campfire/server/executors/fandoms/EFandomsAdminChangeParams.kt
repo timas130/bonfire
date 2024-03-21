@@ -29,7 +29,6 @@ class EFandomsAdminChangeParams : RFandomsAdminChangeParams(0, 0, 0, emptyArray(
             fandom!!.category != API.CATEGORY_RP &&
             fandom!!.category != API.CATEGORY_OTHER
         ) throw ApiException(E_BAD_TYPE)
-        if (fandom!!.category == API.CATEGORY_OTHER) ControllerFandom.checkCan(apiAccount, API.LVL_PROTOADMIN)
 
         if (paramsPosition < 1 || paramsPosition > 4) throw ApiException(E_BAD_TYPE)
         ControllerModeration.parseComment(comment)

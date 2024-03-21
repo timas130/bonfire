@@ -11,10 +11,8 @@ import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.tools.ToolsImage
 
 class EFandomsSuggest : RFandomsSuggest("", 0, false, null, null, emptyArray(), emptyArray(), emptyArray(), emptyArray(), "") {
-
     @Throws(ApiException::class)
     override fun check() {
-
         if (categoryId != API.CATEGORY_GAMES &&
             categoryId != API.CATEGORY_ANIME &&
             categoryId != API.CATEGORY_MOVIES &&
@@ -23,7 +21,6 @@ class EFandomsSuggest : RFandomsSuggest("", 0, false, null, null, emptyArray(), 
             categoryId != API.CATEGORY_RP &&
             categoryId != API.CATEGORY_OTHER
         ) throw ApiException(RFandomsAdminChangeParams.E_BAD_TYPE)
-        if (categoryId == API.CATEGORY_OTHER) ControllerFandom.checkCan(apiAccount, API.LVL_PROTOADMIN)
 
         ControllerAccounts.checkAccountBanned(apiAccount.id)
         if (image!!.size > API.FANDOM_TITLE_IMG_WEIGHT) throw ApiException(E_BAD_IMG_WEIGHT)

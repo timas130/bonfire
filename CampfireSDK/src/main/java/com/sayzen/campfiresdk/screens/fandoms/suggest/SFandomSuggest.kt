@@ -129,7 +129,6 @@ class SFandomSuggest(
         }
 
         for (g in CampfireConstants.CATEGORIES) {
-            if (!ControllerApi.can(API.LVL_PROTOADMIN) && g.index == API.CATEGORY_OTHER) continue
             val v = ViewChip.instanceChoose(context, g.name, g)
             v.setOnClickListener {
                 hideKeyboard()
