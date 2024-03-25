@@ -6,6 +6,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.sentry.android.gradle'
+apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 
 android {
     compileSdk 34

@@ -2048,6 +2048,7 @@ object API_TRANSLATE {
     val about_creators_saynok_subtitle = Translate("Разработчик Android-приложения Campfire до 2018 года")
     val about_creators_egor = Translate("Егор Королёв")
     val about_creators_egor_subtitle = Translate("Художник / Аниматор")
+    val about_libraries = Translate("Библиотеки и лицензии")
 
     val pages_count_one = Translate("страница")
     val pages_count_few = Translate("страницы")

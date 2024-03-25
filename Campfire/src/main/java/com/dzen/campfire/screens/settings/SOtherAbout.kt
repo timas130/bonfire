@@ -5,6 +5,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.screens.hello.SCampfireHello
 import com.dzen.campfire.screens.settings.statistic.SStatistic
+import com.sayzen.campfiresdk.compose.about.LibrariesScreen
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.screens.activities.administration.admins_events.SAdministrationAdminsEvents
@@ -33,6 +34,7 @@ class SOtherAbout : Screen(R.layout.screen_other_about) {
     private val vGallery: SettingsArrow = findViewById(R.id.vGallery)
     private val vMail: Settings = findViewById(R.id.vMail)
     private val vPolicy: Settings = findViewById(R.id.vPolicy)
+    private val vLibraries: Settings = findViewById(R.id.vLibraries)
 
     init {
         disableShadows()
@@ -50,6 +52,7 @@ class SOtherAbout : Screen(R.layout.screen_other_about) {
         vCreators.setTitle(t(API_TRANSLATE.about_creators))
         vAbout.setTitle(t(API_TRANSLATE.app_wiki))
         vGallery.setTitle(t(API_TRANSLATE.app_gallery))
+        vLibraries.setTitle(t(API_TRANSLATE.about_libraries))
 
         vPolicy.setTitle(t(API_TRANSLATE.about_privacy_policy))
 
@@ -64,6 +67,7 @@ class SOtherAbout : Screen(R.layout.screen_other_about) {
         vGallery.setOnClickListener{ Navigator.to(SGallery())}
         vPolicy.setOnClickListener { ToolsIntent.openLink("https://bonfire.moe/page/privacy") }
         vMail.setOnClickListener { ToolsIntent.startMail("me@bonfire.moe") }
+        vLibraries.setOnClickListener { Navigator.to(LibrariesScreen()) }
     }
 
 }
