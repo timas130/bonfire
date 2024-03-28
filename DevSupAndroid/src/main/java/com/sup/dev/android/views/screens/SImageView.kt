@@ -1,27 +1,25 @@
 package com.sup.dev.android.views.screens
 
-import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
-import androidx.viewpager.widget.ViewPager
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.viewpager.widget.ViewPager
 import com.sup.dev.android.R
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.image_loader.ImageLink
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.tools.*
 import com.sup.dev.android.views.cards.Card
-import com.sup.dev.android.views.support.drawable.DrawableGif
+import com.sup.dev.android.views.splash.SplashField
 import com.sup.dev.android.views.support.adapters.pager.PagerCardAdapter
+import com.sup.dev.android.views.support.drawable.DrawableGif
 import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.android.views.views.layouts.LayoutZoom
 import com.sup.dev.android.views.views.pager.ViewPagerIndicatorImages
-import com.sup.dev.android.views.splash.SplashField
 import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsColor
 import com.sup.dev.java.tools.ToolsThreads
-import java.io.ByteArrayOutputStream
 
 class SImageView private constructor()
     : Screen(R.layout.screen_image_view) {
@@ -146,21 +144,12 @@ disableNavigation()
             ToolsThreads.thread {
                 imageLoader.intoBytes { bytes ->
                     try {
-                        if (ToolsBytes.isGif(bytes)) {
-                            ToolsStorage.saveToPictures(bytes!!, "image/gif")
-                        } else {
-                            val bitmap = ToolsBitmap.decode(bytes!!)
-                            if (bitmap == null) {
-                                ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
-                                return@intoBytes
-                            }
-                            val outBytes = ByteArrayOutputStream()
-                            if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outBytes)) {
-                                ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
-                                return@intoBytes
-                            }
-                            ToolsStorage.saveToPictures(outBytes.toByteArray(), "image/jpeg")
+                        val mime = when {
+                            ToolsBytes.isGif(bytes) -> "image/gif"
+                            ToolsBytes.isPng(bytes) -> "image/png"
+                            else -> "image/jpeg"
                         }
+                        ToolsStorage.saveToPictures(bytes!!, mime)
                     } catch (e: Exception) {
                         e.printStackTrace()
                         ToolsToast.show(SupAndroid.TEXT_ERROR_PERMISSION_FILES)
