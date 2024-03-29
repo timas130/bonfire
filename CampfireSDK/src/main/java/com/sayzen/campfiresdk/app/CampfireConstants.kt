@@ -729,8 +729,8 @@ object CampfireConstants {
         }
     }
 
-    fun getParam(categoryId: Long, paramsPosition: Int, index: Long): FandomParam {
-        val params = getParams(categoryId, paramsPosition)!!
+    fun getParam(categoryId: Long, paramsPosition: Int, index: Long): FandomParam? {
+        val params = getParams(categoryId, paramsPosition) ?: return null
         for (i in params) if (i.index == index) return i
         return FandomParam(0, API_TRANSLATE.error_unknown)
     }

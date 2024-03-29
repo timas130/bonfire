@@ -76,13 +76,13 @@ class CardPublicationEventFandom(
                 text = tCap(API_TRANSLATE.publication_event_fandom_parameters, ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_changed), t(API_TRANSLATE.she_changed)), "" + e.fandomName)
 
                 if (e.newParams.isNotEmpty()) {
-                    text += "\n" + t(API_TRANSLATE.publication_event_fandom_genres_new) + " " + CampfireConstants.getParam(e.categoryId, e.paramsPosition, e.newParams[0]).name
-                    for (i in 1 until e.newParams.size) text += ", " + CampfireConstants.getParam(e.categoryId, e.paramsPosition, e.newParams[i]).name
+                    text += "\n" + t(API_TRANSLATE.publication_event_fandom_genres_new) + " " + CampfireConstants.getParam(e.categoryId, e.paramsPosition, e.newParams[0])?.name
+                    for (i in 1 until e.newParams.size) text += ", " + CampfireConstants.getParam(e.categoryId, e.paramsPosition, e.newParams[i])?.name
                 }
 
                 if (e.removedParams.isNotEmpty()) {
-                    text += "\n" + t(API_TRANSLATE.publication_event_fandom_genres_remove) + " " + CampfireConstants.getParam(e.categoryId, e.paramsPosition, e.removedParams[0]).name
-                    for (i in 1 until e.removedParams.size) text += ", " + CampfireConstants.getParam(e.categoryId, e.paramsPosition, e.removedParams[i]).name
+                    text += "\n" + t(API_TRANSLATE.publication_event_fandom_genres_remove) + " " + CampfireConstants.getParam(e.categoryId, e.paramsPosition, e.removedParams[0])?.name
+                    for (i in 1 until e.removedParams.size) text += ", " + CampfireConstants.getParam(e.categoryId, e.paramsPosition, e.removedParams[i])?.name
                 }
 
                 view.setOnClickListener {SFandom.instance(e.fandomId, Navigator.TO) }
