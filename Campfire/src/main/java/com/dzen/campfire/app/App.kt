@@ -7,10 +7,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.screens.intro.SIntro
 import com.google.firebase.FirebaseApp
-import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
-import com.sayzen.campfiresdk.controllers.ControllerLinks
-import com.sayzen.campfiresdk.controllers.ControllerPost
-import com.sayzen.campfiresdk.controllers.ControllerSettings
+import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
 import com.sayzen.campfiresdk.screens.other.rules.SGoogleRules
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
@@ -21,6 +18,7 @@ import com.sup.dev.android.libs.screens.activity.SActivity
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsAndroid
 import io.sentry.android.core.SentryAndroid
+import io.sentry.protocol.User
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import sh.sit.bonfire.auth.AuthController
@@ -45,6 +43,13 @@ class App : Application() {
             options.setBeforeSend { ev, _ ->
                 val haveConsent = runBlocking { AuthController.haveConsent.first() }
                 val mainApp = packageName == "sh.sit.bonfire"
+                if (ControllerApi.account.getId() > 0) {
+                    ev.user = User().apply {
+                        val account = ControllerApi.account
+                        id = account.getId().toString()
+                        username = account.getName()
+                    }
+                }
                 if (haveConsent && mainApp) {
                     ev
                 } else {
