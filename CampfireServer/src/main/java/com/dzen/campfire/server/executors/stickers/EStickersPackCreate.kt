@@ -1,13 +1,11 @@
 package com.dzen.campfire.server.executors.stickers
 
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.publications.stickers.PublicationStickersPack
 import com.dzen.campfire.api.requests.stickers.RStickersPackCreate
-import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.api.tools.ApiException
+import com.dzen.campfire.server.controllers.*
 import com.sup.dev.java.libs.json.Json
-import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java_pc.tools.ToolsImage
 
 class EStickersPackCreate : RStickersPackCreate("", null) {
@@ -20,7 +18,6 @@ class EStickersPackCreate : RStickersPackCreate("", null) {
         if (!ToolsImage.checkImageScaleUnknownType(avatar!!, API.STICKERS_PACK_IMAGE_SIDE, API.STICKERS_PACK_IMAGE_SIDE, true, false, true)) throw ApiException(E_BAD_IMAGE_SIZE)
 
         if (packName.length < API.STICKERS_PACK_NAME_L_MIN || packName.length > API.STICKERS_PACK_NAME_L_MAX) throw ApiException(E_BAD_NAME_SIZE)
-        if (!ToolsText.isOnly(packName, API.ENGLISH)) throw ApiException(E_BAD_NAME)
 
         if (ControllerStickers.getStickersPacksCount(apiAccount.id) >= API.STICKERS_PACK_MAX_COUNT_ON_ACCOUNT) throw ApiException(E_TOO_MANY)
     }

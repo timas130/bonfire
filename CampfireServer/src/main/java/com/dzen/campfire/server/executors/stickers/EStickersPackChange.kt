@@ -3,14 +3,13 @@ package com.dzen.campfire.server.executors.stickers
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.stickers.PublicationStickersPack
 import com.dzen.campfire.api.requests.stickers.RStickersPackChange
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerCensor
-import com.dzen.campfire.server.controllers.ControllerResources
 import com.dzen.campfire.server.controllers.ControllerPublications
+import com.dzen.campfire.server.controllers.ControllerResources
 import com.dzen.campfire.server.tables.TPublications
-import com.dzen.campfire.api.tools.ApiException
 import com.sup.dev.java.libs.json.Json
-import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
 import com.sup.dev.java_pc.tools.ToolsImage
@@ -36,7 +35,6 @@ class EStickersPackChange : RStickersPackChange(0, "", null) {
         }
 
         if (packName.length < API.STICKERS_PACK_NAME_L_MIN || packName.length > API.STICKERS_PACK_NAME_L_MAX) throw ApiException(E_BAD_NAME_SIZE)
-        if (!ToolsText.isOnly(packName, API.ENGLISH)) throw ApiException(E_BAD_NAME)
     }
 
     override fun execute(): Response {

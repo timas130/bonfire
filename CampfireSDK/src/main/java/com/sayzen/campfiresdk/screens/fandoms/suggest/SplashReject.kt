@@ -2,16 +2,13 @@ package com.sayzen.campfiresdk.screens.fandoms.suggest
 
 
 import android.widget.Button
-import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
-import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.settings.SettingsField
-import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashMenu
-import com.sup.dev.java.tools.ToolsText
+import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 
 internal class SplashReject(val callback: (String) -> Unit) : Splash(R.layout.screen_fandom_suggest_splash_reject) {
 
@@ -53,10 +50,6 @@ internal class SplashReject(val callback: (String) -> Unit) : Splash(R.layout.sc
     }
 
     private fun updateFinishEnabled() {
-        val commentCheck = ToolsText.isOnly(vComment.getText(), API.ENGLISH)
-        vComment.setError(if (commentCheck) null else t(API_TRANSLATE.error_use_english))
-        vEnter.isEnabled = commentCheck && vComment.getText().isNotEmpty()
+        vEnter.isEnabled = vComment.getText().isNotEmpty()
     }
-
-
 }

@@ -54,12 +54,8 @@ class SStickersPackCreate(
     }
 
     private fun updateFinishEnabled() {
-        var textCheck = ToolsText.isOnly(vName.getText(), API.ENGLISH)
-        vName.setError(if (textCheck) null else t(API_TRANSLATE.error_use_english))
-        if (textCheck) {
-            textCheck = vName.getText().length <= API.FANDOM_NAME_MAX
-            vName.setError(if (textCheck) null else t(API_TRANSLATE.error_too_long_text))
-        }
+        val textCheck = vName.getText().length <= API.FANDOM_NAME_MAX
+        vName.setError(if (textCheck) null else t(API_TRANSLATE.error_too_long_text))
 
         vCreate.isEnabled = textCheck && ToolsText.inBounds(vName.getText(), API.STICKERS_PACK_NAME_L_MIN, API.STICKERS_PACK_NAME_L_MAX)
                 && (image != null || publication != null)
