@@ -1,6 +1,8 @@
 package com.dzen.campfire.server.executors.achievements
 
+import com.dzen.campfire.api.API
 import com.dzen.campfire.api.requests.achievements.RAchievementsInfo
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerAchievements
 import com.dzen.campfire.server.rust.RustAchievements.achievements
@@ -14,7 +16,8 @@ class EAchievementsInfo : RAchievementsInfo(0) {
     override fun execute(): Response {
         val v = ControllerAccounts.get(accountId, TAccounts.karma_count_30)
 
-        val karma30:Long = v.next()
+        if (!v.hasNext()) throw ApiException(API.ERROR_GONE)
+        val karma30: Long = v.next()
 
         val report = ControllerAchievements.recount(accountId)
         for ((_, achievement) in report.achievements()) {
