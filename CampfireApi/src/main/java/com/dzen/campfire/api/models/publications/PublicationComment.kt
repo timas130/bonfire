@@ -146,7 +146,7 @@ class PublicationComment : Publication {
             quoteImages = Array(quoteImageIds.size) { ImageRef() }
         }
         if (images.isEmpty()) {
-            images = Array(images.size) { ImageRef() }
+            images = Array(imageIdArray.size) { ImageRef() }
         }
 
         for (i in 0 until quoteImages.size.coerceAtLeast(quoteImageIds.size)) {
