@@ -22,7 +22,7 @@ class API(
         const val PORT_SERV_JL_V1 = 7070
         const val PORT_SERV_JL = 7071
 
-        const val S3_ROOT = "https://s3.eu-central-2.wasabisys.com/bonfire"
+        const val S3_ROOT = "https://data.bonfire.moe/bonfire"
         const val MELIOR_ROOT = "https://api.bonfire.moe"
         const val SERV_ROOT = "https://cf2.bonfire.moe"
 
