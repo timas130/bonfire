@@ -37,6 +37,16 @@ class EProjectGetEvents : RProjectGetEvents() {
             })
         }
 
+        if ((1711962000000..1714467600000).contains(System.currentTimeMillis()) || apiAccount.id == 1L) {
+            events.add(ProjectEvent().apply {
+                id = "pixels"
+                title = "Bonfire Pixels"
+                description = "Для входа требуется последняя версия приложения.\n" +
+                        "Нажмите, чтобы поучаствовать."
+                url = "https://pxls.bonfire.moe/signin/bonfire?redirect=1"
+            })
+        }
+
         return Response(events.toTypedArray())
     }
 }

@@ -1,11 +1,14 @@
 package com.sayzen.campfiresdk.screens.achievements.daily_task
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -13,6 +16,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.daily_tasks.DailyTaskInfo
 import com.dzen.campfire.api.models.daily_tasks.DailyTaskType
@@ -21,6 +25,8 @@ import com.dzen.campfire.api.requests.project.RProjectGetEvents
 import com.sayzen.campfiresdk.compose.ComposeCard
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
+import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sup.dev.android.tools.ToolsIntent
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.java.tools.ToolsText
@@ -114,8 +120,12 @@ fun DailyTask(modifier: Modifier = Modifier, taskInfo: DailyTaskInfo?, compact: 
 
         // task progress indicator
         LinearProgressIndicator(
-            progress = taskInfo?.let { it.progress.toFloat() / it.task.amount.toFloat() }?.takeIf { it.isFinite() }
-                ?: 0f,
+            progress = {
+                taskInfo
+                    ?.let { it.progress.toFloat() / it.task.amount.toFloat() }
+                    ?.takeIf { it.isFinite() }
+                    ?: 0f
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(16.dp)
@@ -182,6 +192,7 @@ private fun TasksDescription(text: String) {
         style = MaterialTheme.typography.bodyMedium,
         modifier = Modifier
             .padding(horizontal = 16.dp)
+            .padding(bottom = 16.dp)
             .alpha(0.7F)
     )
 }
@@ -221,35 +232,66 @@ class PageDailyTasks(private val taskInfo: DailyTaskInfo) : ComposeCard() {
                 TasksDescription(t(API_TRANSLATE.events_tutorial))
             }
             item {
-                Text(
-                    if (events?.isEmpty() == true) {
-                        t(API_TRANSLATE.events_empty)
-                    } else if (events == null) {
-                        t(API_TRANSLATE.app_loading_dots)
-                    } else {
-                        ""
-                    },
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .padding(bottom = 64.dp)
-                )
+                if (events.isNullOrEmpty()) {
+                    Text(
+                        if (events?.isEmpty() == true) {
+                            t(API_TRANSLATE.events_empty)
+                        } else if (events == null) {
+                            t(API_TRANSLATE.app_loading_dots)
+                        } else {
+                            throw IllegalStateException()
+                        },
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .padding(top = 0.dp)
+                            .padding(bottom = 64.dp)
+                    )
+                }
             }
             items(events ?: arrayOf()) {
-                ListItem(
-                    headlineContent = { Text(it.title) },
-                    supportingContent = {
-                        Column {
-                            Text(it.description, modifier = Modifier.padding(bottom = 4.dp))
-                            LinearProgressIndicator(
-                                (it.progressCurrent.toFloat() / it.progressMax).coerceAtMost(1f),
-                            )
-                        }
-                    }
-                )
+                Event(it)
             }
         }
+    }
+}
+
+@Composable
+private fun Event(event: ProjectEvent) {
+    ListItem(
+        headlineContent = { Text(event.title) },
+        supportingContent = {
+            Column {
+                Text(event.description, modifier = Modifier.padding(bottom = 4.dp))
+                LinearProgressIndicator(
+                    progress = {
+                        (event.progressCurrent.toFloat() / event.progressMax).coerceAtMost(1f)
+                    },
+                    modifier = Modifier.fillMaxWidth().height(8.dp),
+                )
+            }
+        },
+        trailingContent = {
+            if (event.url != null) {
+                Icon(
+                    Icons.AutoMirrored.Default.KeyboardArrowRight,
+                    "",
+                )
+            }
+        },
+        modifier = Modifier
+            .clickable(event.url != null) {
+                event.followLink()
+            },
+    )
+}
+
+fun ProjectEvent.followLink() {
+    if (url!!.startsWith(API.DOMEN_DL)) {
+        ToolsIntent.openLink(url!!)
+    } else {
+        Navigator.to(EventWebpageScreen(this))
     }
 }

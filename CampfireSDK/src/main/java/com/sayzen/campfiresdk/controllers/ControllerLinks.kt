@@ -9,10 +9,13 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.chat.ChatTag
 import com.dzen.campfire.api.models.publications.PublicationComment
 import com.dzen.campfire.api.requests.achievements.RAchievementsOnFinish
+import com.dzen.campfire.api.requests.project.RProjectGetEvents
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.models.animations.*
 import com.sayzen.campfiresdk.screens.account.profile.SProfile
 import com.sayzen.campfiresdk.screens.account.stickers.SStickersView
+import com.sayzen.campfiresdk.screens.achievements.SAchievements
+import com.sayzen.campfiresdk.screens.achievements.daily_task.followLink
 import com.sayzen.campfiresdk.screens.activities.support.SDonate
 import com.sayzen.campfiresdk.screens.activities.user_activities.relay_race.SRelayRaceInfo
 import com.sayzen.campfiresdk.screens.chat.SChat
@@ -32,6 +35,7 @@ import com.sayzen.campfiresdk.screens.quests.SQuest
 import com.sayzen.campfiresdk.screens.translates.STranslates
 import com.sayzen.campfiresdk.screens.wiki.SWikiArticleView
 import com.sayzen.campfiresdk.screens.wiki.SWikiList
+import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsIntent
 import com.sup.dev.android.views.splash.SplashAlert
@@ -158,7 +162,20 @@ object ControllerLinks {
                 API.LINK_FANDOM_CHAT.link -> SChat.instance(ChatTag(API.CHAT_TYPE_FANDOM_SUB, params[0].toLong(), 0), 0, false, Navigator.TO)
                 API.LINK_ACTIVITY.link -> SRelayRaceInfo.instance(params[0].toLong(), Navigator.TO)
                 API.LINK_RUBRIC.link -> SRubricPosts.instance(params[0].toLong(), Navigator.TO)
-                API.LINK_QUEST.link -> SQuest.instance(params[0].toLong(), Navigator.TO)
+                API.LINK_QUEST.link -> {
+                    if (params.size == 1) SQuest.instance(params[0].toLong(), Navigator.TO)
+                    if (params.size == 2) SQuest.instance(params[0].toLong(), params[1].toLong(), Navigator.TO)
+                }
+                API.LINK_EVENT.link -> {
+                    ApiRequestsSupporter.executeProgressDialog(RProjectGetEvents()) { r ->
+                        val event = r.events.find { it.id == params[0] }
+                        if (event?.url != null) {
+                            event.followLink()
+                        } else {
+                            SAchievements.instance(false, Navigator.TO)
+                        }
+                    }
+                }
                 else -> {
                     if (ToolsText.isValidUsername(t)) {
                         SProfile.instance(t, Navigator.TO)
@@ -232,7 +249,8 @@ object ControllerLinks {
                 API.LINK_MODERATION.link -> params.size == 1 || params.size == 2
                 API.LINK_CHAT.link -> params.size == 1 || params.size == 2
                 API.LINK_CONF.link -> params.size == 1 || params.size == 2
-                API.LINK_QUEST.link -> true
+                API.LINK_QUEST.link -> params.size == 1 || params.size == 2
+                API.LINK_EVENT.link -> params.size == 1
                 else -> {
                     if (ToolsText.isValidUsername(t)) {
                         true
@@ -283,7 +301,7 @@ object ControllerLinks {
     fun linkToChatMessage(messageId: Long, fandomId: Long, languageId: Long) = API.LINK_CHAT.asWeb() + fandomId + "_" + languageId + "_" + messageId
     fun linkToConf(chatId: Long) = API.LINK_CONF.asWeb() + chatId
     fun linkToConfMessage(messageId: Long, chatId: Long) = API.LINK_CONF.asWeb() + chatId + "_" + messageId
-    fun linkToEvent(eventId: Long) = API.LINK_EVENT.asWeb() + eventId
+    fun linkToEvent(eventId: String) = API.LINK_EVENT.asWeb() + eventId
     fun linkToTag(tagId: Long) = API.LINK_TAG.asWeb() + tagId
     fun linkToComment(comment: PublicationComment) = linkToComment(comment.id, comment.parentPublicationType, comment.parentPublicationId)
     fun linkToComment(commentId: Long, publicationType: Long, publicationId: Long): String {
