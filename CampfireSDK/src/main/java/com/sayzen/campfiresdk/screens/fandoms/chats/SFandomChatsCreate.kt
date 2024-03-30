@@ -190,7 +190,7 @@ class SFandomChatsCreate(
 
                                 } else {
                                     val d = ToolsView.showProgressDialog()
-                                    ControllerApi.toBytes(b2, API.CHAT_IMG_WEIGHT_GIF, API.CHAT_IMG_SIDE, API.CHAT_IMG_SIDE) {
+                                    ControllerApi.toBytes(b2, API.CHAT_IMG_WEIGHT, API.CHAT_IMG_SIDE, API.CHAT_IMG_SIDE) {
                                         d.hide()
                                         if (it == null) ToolsToast.show(t(API_TRANSLATE.error_cant_load_image))
                                         else ToolsThreads.main { afterSelectImage(it, b2) }

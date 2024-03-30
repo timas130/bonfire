@@ -18,8 +18,6 @@ import com.sayzen.campfiresdk.models.events.chat.EventChatChanged
 import com.sayzen.campfiresdk.screens.account.search.SAccountSearch
 import com.sayzen.campfiresdk.screens.chat.SChat
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
-import com.sayzen.campfiresdk.support.load
-import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -174,10 +172,9 @@ class SChatCreate(
             changeAccountsLevels = changeAccountListLevels.toTypedArray(),
             chatParams = params
         )) { r ->
-            if (cardTitle.image != null) ImageLoader.load(changeImage).clear()
             var count = 0
             for (c in adapter.get(CardChatMember::class)) if (c.chatMember.memberStatus == API.CHAT_MEMBER_STATUS_ACTIVE || c.chatMember.memberStatus == 0L) count++
-            EventBus.post(EventChatChanged(chatId, cardTitle.text, changeImage, count))
+            EventBus.post(EventChatChanged(chatId, cardTitle.text, r.newImage, count))
             Navigator.remove(this)
             SChat.instance(r.tag, 0, false, Navigator.TO)
         }.onApiError { exception ->

@@ -17,12 +17,13 @@ open class RAchievementsInfo(
     }
 
     class Response : Request.Response {
-
         var karma30 = 0L
         var karmaForce = 0L
         var indexes: Array<Long> = emptyArray()
         var lvls: Array<Long> = emptyArray()
         var dailyTask = DailyTaskInfo()
+
+        constructor()
 
         constructor(json: Json) {
             json(false, json)

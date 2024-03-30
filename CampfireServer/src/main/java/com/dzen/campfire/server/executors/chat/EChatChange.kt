@@ -74,13 +74,16 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
             ControllerChats.putChangeName(apiAccount, tag, name!!)
         }
 
-        if (image != null) {
+        val newImageId = if (image != null) {
             if (!oldParams.allowUserNameAndImage && myLvl == API.CHAT_MEMBER_LVL_USER) throw ApiException(API.ERROR_ACCESS)
             val newImageId = ControllerResources.removeAndPut(imageId, image!!, API.RESOURCES_PUBLICATION_DATABASE_LINKED)
             Database.update("EChatChange image", SqlQueryUpdate(TChats.NAME)
                 .where(TChats.id, "=", chatId)
                 .update(TChats.image_id, newImageId))
             ControllerChats.putChangeImage(apiAccount, tag, newImageId)
+            newImageId
+        } else {
+            imageId
         }
 
 
@@ -192,8 +195,6 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
         }
 
 
-        return Response(tag)
+        return Response(tag, newImageId)
     }
-
-
 }

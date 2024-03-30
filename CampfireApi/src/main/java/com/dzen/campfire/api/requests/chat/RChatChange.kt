@@ -2,6 +2,7 @@ package com.dzen.campfire.api.requests.chat
 
 import com.dzen.campfire.api.models.chat.ChatParamsConf
 import com.dzen.campfire.api.models.chat.ChatTag
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -43,17 +44,20 @@ open class RChatChange(
     class Response : Request.Response {
 
         var tag = ChatTag()
+        var newImage = ImageRef()
 
         constructor(json: Json) {
             json(false, json)
         }
 
-        constructor(tag: ChatTag) {
+        constructor(tag: ChatTag, newImage: Long) {
             this.tag = tag
+            this.newImage = ImageRef(newImage)
         }
 
         override fun json(inp: Boolean, json: Json) {
             tag = json.m(inp, "tag", tag)
+            newImage = json.m(inp, "newImage", newImage)
         }
 
     }

@@ -55,6 +55,9 @@ open class RChatGetForChange(
 
         override fun fillImageRefs(receiver: ImageHolderReceiver) {
             receiver.add(chatImage, chatImageId)
+            for (account in accounts) {
+                account.fillImageRefs(receiver)
+            }
         }
     }
 }
