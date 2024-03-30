@@ -140,15 +140,12 @@ class XPolling(
 
         if (!isEditModeProvider.invoke() && !isPostIsDraftProvider.invoke()) {
             ControllerPolling.get(page.pollingId) { result ->
-
                 if (vContainer.tag != tag) return@get
 
                 val showResults = result.voted || !canVote()
 
-                if (showResults) {
-                    val vPollResults: ViewButton = view.findViewById(R.id.vPollResults)
-                    vPollResults.visibility = View.VISIBLE
-                }
+                val vPollResults: ViewButton = view.findViewById(R.id.vPollResults)
+                vPollResults.visibility = if (showResults) View.VISIBLE else View.GONE
 
                 var percentSum = 0
                 for (i in 0 until vContainer.childCount) {
