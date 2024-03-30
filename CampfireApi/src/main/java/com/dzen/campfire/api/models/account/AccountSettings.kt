@@ -39,6 +39,8 @@ class AccountSettings() : JsonParsable {
     var viewedChats: Array<Long> = emptyArray()
     var storyQuestIndex = 0L
     var storyQuestProgress = 0L
+    var hideBlacklistedPubs = false
+    var allowSentry = true
     //  Notifications Settings
     var notifications = true
     var autoReadNotifications = false
@@ -142,6 +144,8 @@ class AccountSettings() : JsonParsable {
         viewedChats = json.m(inp, "viewedChats", viewedChats)
         storyQuestIndex = json.m(inp, "storyQuestIndex", storyQuestIndex)
         storyQuestProgress = json.m(inp, "storyQuestProgress", storyQuestProgress)
+        hideBlacklistedPubs = json.m(inp, "hideBlacklistedPubs", hideBlacklistedPubs)
+        allowSentry = json.m(inp, "allowSentry", allowSentry)
 
         notifications = json.m(inp, "notifications", notifications)
         autoReadNotifications = json.m(inp, "autoReadNotifications", autoReadNotifications)

@@ -41,7 +41,7 @@ class App : Application() {
 
         SentryAndroid.init(this) { options ->
             options.setBeforeSend { ev, _ ->
-                val haveConsent = runBlocking { AuthController.haveConsent.first() }
+                val haveConsent = runBlocking { AuthController.haveConsent.first() } && ControllerSettings.allowSentry
                 val mainApp = packageName == "sh.sit.bonfire"
                 if (ControllerApi.account.getId() > 0) {
                     ev.user = User().apply {
@@ -51,6 +51,14 @@ class App : Application() {
                     }
                 }
                 if (haveConsent && mainApp) {
+                    ev
+                } else {
+                    null
+                }
+            }
+            options.setBeforeSendTransaction { ev, _ ->
+                val haveConsent = runBlocking { AuthController.haveConsent.first() } && ControllerSettings.allowSentry
+                if (haveConsent) {
                     ev
                 } else {
                     null

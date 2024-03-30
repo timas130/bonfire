@@ -20,6 +20,7 @@ import com.dzen.campfire.api.models.publications.stickers.PublicationStickersPac
 import com.dzen.campfire.api.models.quests.QuestDetails
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerLinks
+import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.events.CardPublicationEventAdmin
 import com.sayzen.campfiresdk.models.cards.events.CardPublicationEventFandom
@@ -170,10 +171,14 @@ abstract class CardPublication(
         val pub = xPublication.publication
 
         if (pub.blacklisted) {
-            vContentContainer.visibility = View.GONE
-            vBlacklistedText.visibility = View.VISIBLE
-            vBlacklistedText.text = t(API_TRANSLATE.publication_blacklisted, "@${pub.creator.name}")
-            ControllerLinks.makeLinkable(vBlacklistedText)
+            if (!ControllerSettings.hideBlacklistedPubs) {
+                vContentContainer.visibility = View.GONE
+                vBlacklistedText.visibility = View.VISIBLE
+                vBlacklistedText.text = t(API_TRANSLATE.publication_blacklisted, "@${pub.creator.name}")
+                ControllerLinks.makeLinkable(vBlacklistedText)
+            } else {
+                view.visibility = View.GONE
+            }
         } else {
             vContentContainer.visibility = View.VISIBLE
             vBlacklistedText.visibility = View.GONE

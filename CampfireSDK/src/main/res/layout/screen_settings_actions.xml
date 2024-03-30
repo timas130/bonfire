@@ -125,6 +125,27 @@
                 app:Settings_lineVisible="false"
                 app:Settings_icon_background="@color/lime_500" />
 
+            <com.sup.dev.android.views.settings.SettingsTitle
+                android:id="@+id/vPrivacyTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"/>
+
+            <com.sup.dev.android.views.settings.SettingsSwitcher
+                android:id="@+id/vHideBlacklist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_icon="@drawable/eye_off"
+                app:Settings_lineVisible="false"
+                app:Settings_icon_background="@color/red_400" />
+
+            <com.sup.dev.android.views.settings.SettingsSwitcher
+                android:id="@+id/vAllowSentry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_icon="@drawable/ic_mood_white_24dp"
+                app:Settings_lineVisible="false"
+                app:Settings_icon_background="@color/orange_400" />
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

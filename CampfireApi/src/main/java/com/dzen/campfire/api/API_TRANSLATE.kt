@@ -1127,6 +1127,10 @@ object API_TRANSLATE {
     val settings_email_not_verified = Translate("Адрес ещё не подтверждён", true)
     val settings_email_migrated = Translate("%s (мигрирован)", true)
     val settings_email_change_password_error = Translate("Не удалось войти, проверьте старый пароль", true)
+    val settings_privacy_title = Translate("Приватность")
+    val settings_privacy_hide_blacklist = Translate("Полностью скрывать публикации от пользователей из чёрного списка")
+    val settings_privacy_sentry = Translate("Отправлять отчёты об ошибках и использовании")
+    val settings_privacy_sentry_desc = Translate("Данные будут удалены в течение 30 дней, если вы отключите. Никакие данные не попадают к третьим лицам.")
 
     val publication_blacklisted = Translate("Публикация от %s скрыта", true)
 

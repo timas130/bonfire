@@ -295,6 +295,20 @@ object ControllerSettings {
             onSettingsUpdated()
         }
 
+    var hideBlacklistedPubs: Boolean
+        get() = accountSettings.hideBlacklistedPubs
+        set(b) {
+            accountSettings.hideBlacklistedPubs = b
+            onSettingsUpdated()
+        }
+
+    var allowSentry: Boolean
+        get() = accountSettings.allowSentry
+        set(b) {
+            accountSettings.allowSentry = b
+            onSettingsUpdated()
+        }
+
     //
     //  Notifications Settings
     //
