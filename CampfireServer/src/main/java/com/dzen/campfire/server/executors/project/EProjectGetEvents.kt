@@ -37,7 +37,7 @@ class EProjectGetEvents : RProjectGetEvents() {
             })
         }
 
-        if ((1711962000000..1714467600000).contains(System.currentTimeMillis()) || apiAccount.id == 1L) {
+        if ((1711971000000..1711990800000).contains(System.currentTimeMillis()) || apiAccount.id == 1L) {
             events.add(ProjectEvent().apply {
                 id = "pixels"
                 title = "Bonfire Pixels"
