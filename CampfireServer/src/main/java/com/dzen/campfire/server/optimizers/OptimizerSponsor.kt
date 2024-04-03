@@ -6,81 +6,87 @@ import com.sup.dev.java.tools.ToolsDate
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.Sql
 import com.sup.dev.java_pc.sql.SqlQuerySelect
+import java.util.concurrent.ConcurrentHashMap
 
 object OptimizerSponsor {
 
-    private val sponsorsCash = HashMap<Long, Long>()
-    private val sponsorsCountCash = HashMap<Long, Long>()
-    private var sponsorsDate = 0L
+    private val sponsorAmountCache = ConcurrentHashMap<Long, Long>()
+    private val sponsorMonthsCache = ConcurrentHashMap<Long, Long>()
+    private var lastStartOfMonth = 0L
 
     private fun sponsorsUpdate() {
         val date = ToolsDate.getStartOfMonth()
-        if (sponsorsDate != date) {
-            sponsorsCash.clear()
-            sponsorsCountCash.clear()
+        if (lastStartOfMonth != date) {
+            sponsorAmountCache.clear()
+            sponsorMonthsCache.clear()
         }
-        sponsorsDate = date
+        lastStartOfMonth = date
     }
 
     fun getSponsor(accountId: Long): Long {
         sponsorsUpdate()
-        if (sponsorsCash[accountId] == null) {
 
-            val v = Database.select("ControllerOptimizer getSponsor 1", SqlQuerySelect(TSupport.NAME, TSupport.id)
+        val cachedAmount = sponsorAmountCache[accountId]
+
+        return if (cachedAmount != null) {
+            cachedAmount
+        } else {
+            val v = Database.select(
+                "ControllerOptimizer getSponsor 1", SqlQuerySelect(TSupport.NAME, TSupport.id)
                     .where(TSupport.user_id, "=", accountId)
-                    .where(TSupport.date, "=", sponsorsDate)
+                    .where(TSupport.date, "=", lastStartOfMonth)
                     .where(TSupport.status, "=", API.STATUS_PUBLIC)
             )
 
-            if(v.hasNext()){
-
-                val vv = Database.select("ControllerOptimizer getSponsor 2", SqlQuerySelect(TSupport.NAME, Sql.SUM(TSupport.count))
+            if (v.hasNext()) {
+                val vv = Database.select(
+                    "ControllerOptimizer getSponsor 2", SqlQuerySelect(TSupport.NAME, Sql.SUM(TSupport.count))
                         .where(TSupport.user_id, "=", accountId)
                         .where(TSupport.status, "=", API.STATUS_PUBLIC)
                 )
+                val sum = vv.nextLongOrZero()
 
-                sponsorsCash[accountId] = vv.nextLongOrZero()
-                sponsorsCountCash.remove(accountId)
-            } else{
-                sponsorsCash[accountId] = 0L
+                sponsorAmountCache[accountId] = sum
+                sponsorMonthsCache.remove(accountId)
+                sum
+            } else {
+                sponsorAmountCache[accountId] = 0L
+                0L
             }
-
-
         }
-
-        return sponsorsCash[accountId]!!
     }
 
     fun getSponsorTimes(accountId: Long): Long {
         sponsorsUpdate()
 
-        if (sponsorsCountCash[accountId] == null) {
+        val cachedCount = sponsorMonthsCache[accountId]
 
+        @Suppress("IfThenToElvis") // nah, that's too kotlin for me
+        return if (cachedCount != null) {
+            cachedCount
+        } else {
             if (getSponsor(accountId) > 0) {
-
-                val v = Database.select("ControllerOptimizer getSponsorTimes", SqlQuerySelect(TSupport.NAME, TSupport.date)
+                val v = Database.select(
+                    "ControllerOptimizer getSponsorTimes", SqlQuerySelect(TSupport.NAME, Sql.COUNT_DISTINCT(TSupport.date))
                         .where(TSupport.user_id, "=", accountId)
                         .where(TSupport.status, "=", API.STATUS_PUBLIC)
                 )
+                val months = v.nextLongOrZero()
 
-                val dates = ArrayList<Long>()
-                while (v.hasNext()) {
-                    val date = v.nextLongOrZero()
-                    if (!dates.contains(date)) dates.add(date)
-                }
-
-                sponsorsCountCash[accountId] = dates.size.toLong()
+                sponsorMonthsCache[accountId] = months
+                0L
             } else {
-                sponsorsCountCash[accountId] = 0
+                sponsorMonthsCache[accountId] = 0L
+                0L
             }
         }
-        return sponsorsCountCash[accountId]!!
     }
 
     fun setSponsor(accountId: Long, count: Long) {
         sponsorsUpdate()
-        sponsorsCash[accountId] = getSponsor(accountId) + count
-        sponsorsCountCash.remove(accountId)
+        sponsorAmountCache.compute(accountId) { _, previous ->
+            (previous ?: 0L) + count
+        }
+        sponsorMonthsCache.remove(accountId) // flush cache for this one
     }
-
 }

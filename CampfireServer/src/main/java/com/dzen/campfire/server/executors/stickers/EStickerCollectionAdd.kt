@@ -2,11 +2,10 @@ package com.dzen.campfire.server.executors.stickers
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.requests.stickers.RStickerCollectionAdd
-import com.dzen.campfire.server.controllers.ControllerCollisions
-import com.dzen.campfire.server.controllers.ControllerStickers
-import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.api.tools.ApiException
-import com.dzen.campfire.server.optimizers.OptimizerStickersCount
+import com.dzen.campfire.server.controllers.ControllerCollisions
+import com.dzen.campfire.server.controllers.ControllerPublications
+import com.dzen.campfire.server.controllers.ControllerStickers
 
 class EStickerCollectionAdd : RStickerCollectionAdd(0) {
 
@@ -19,7 +18,6 @@ class EStickerCollectionAdd : RStickerCollectionAdd(0) {
 
     override fun execute(): Response {
         ControllerCollisions.putCollisionWithCheck(apiAccount.id, stickerId, API.COLLISION_ACCOUNT_STICKERS)
-        OptimizerStickersCount.increment(apiAccount.id)
         return Response()
     }
 }

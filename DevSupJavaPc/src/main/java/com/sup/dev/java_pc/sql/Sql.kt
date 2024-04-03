@@ -45,8 +45,8 @@ object Sql {
         return " AVG($column)"
     }
 
-    fun COUNT(column: String): String {
-        return " COUNT($column)"
+    fun COUNT_DISTINCT(column: String): String {
+        return " COUNT(DISTINCT $column)"
     }
 
     fun IF(param: Any, value: Any, ret1: Any, ret2: Any): String {

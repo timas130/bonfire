@@ -6,7 +6,6 @@ import com.dzen.campfire.api.requests.publications.RPublicationsKarmaAdd
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.app.App
 import com.dzen.campfire.server.controllers.*
-import com.dzen.campfire.server.optimizers.OptimizerRatesCount
 import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
@@ -78,9 +77,6 @@ class EPublicationsKarmaAdd : RPublicationsKarmaAdd(0, false, 0, false) {
         synchronized(App.accountProvider) {
             val added = ControllerKarma.addKarmaTransaction(apiAccount, karmaForce, karmaCof, canChangeKarma, publication!!.creator.id, publication!!.fandom.id, publication!!.fandom.languageId, publication!!.id, anon)
             if (!added) throw ApiException(E_ALREADY_EXIST)
-            else{
-                OptimizerRatesCount.increment(apiAccount.id)
-            }
         }
 
         ControllerOptimizer.putCollisionWithCheck(apiAccount.id, API.COLLISION_ACHIEVEMENT_RATE)

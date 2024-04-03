@@ -1,7 +1,6 @@
 package com.dzen.campfire.server.controllers
 
 import com.dzen.campfire.api.API
-import com.dzen.campfire.server.optimizers.OptimizerStickersCount
 import com.dzen.campfire.server.tables.TAccounts
 import com.dzen.campfire.server.tables.TCollisions
 import com.sup.dev.java.libs.debug.info
@@ -53,12 +52,6 @@ object ControllerStickers {
     }
 
     fun removeCollisionsSticker(id:Long){
-        val v = Database.select("ControllerStickers removeCollisionsSticker select", SqlQuerySelect(TCollisions.NAME, TCollisions.owner_id)
-                .where(TCollisions.collision_id, "=",id)
-                .where(TCollisions.collision_type, "=", API.COLLISION_ACCOUNT_STICKERS))
-        while (v.hasNext()){
-            OptimizerStickersCount.decrement(v.nextLongOrZero())
-        }
         Database.remove("ControllerStickers removeCollisionsSticker", SqlQueryRemove(TCollisions.NAME)
                 .where(TCollisions.collision_id, "=",id)
                 .where(TCollisions.collision_type, "=", API.COLLISION_ACCOUNT_STICKERS))

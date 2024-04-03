@@ -159,6 +159,26 @@ object ControllerAccounts {
         return ids
     }
 
+    fun getBlackListFandomCount(accountId: Long): Long {
+        val select = Database.select(
+            "ControllerAccounts.getBlackListFandomCount",
+            SqlQuerySelect(TCollisions.NAME, TCollisions.collision_id)
+                .where(TCollisions.collision_type, "=", API.COLLISION_ACCOUNT_BLACK_LIST_FANDOM)
+                .where(
+                    Sql.IFNULL(
+                        SqlQuerySelect(TFandoms.NAME, TFandoms.status).where(
+                            TFandoms.NAME + "." + TFandoms.id,
+                            "=",
+                            TCollisions.NAME + "." + TCollisions.collision_id
+                        ), API.STATUS_BLOCKED
+                    ), "=", API.STATUS_PUBLIC
+                )
+                .where(TCollisions.owner_id, "=", accountId)
+        )
+
+        return select.nextLongOrZero()
+    }
+
     fun getBlackListAccounts(accountId: Long): Array<Long> {
         val selectIds = SqlQuerySelect(TCollisions.NAME, TCollisions.collision_id)
             .where(TCollisions.collision_type, "=", API.COLLISION_ACCOUNT_BLACK_LIST_ACCOUNT)
@@ -168,6 +188,17 @@ object ControllerAccounts {
         val ids = Array<Long>(vIds.rowsCount) { vIds.next() }
 
         return ids
+    }
+
+    fun getBlackListAccountCount(accountId: Long): Long {
+        val select = Database.select(
+            "ControllerAccounts.getBlackListAccountCount",
+            SqlQuerySelect(TCollisions.NAME, Sql.COUNT)
+                .where(TCollisions.collision_type, "=", API.COLLISION_ACCOUNT_BLACK_LIST_ACCOUNT)
+                .where(TCollisions.owner_id, "=", accountId)
+        )
+
+        return select.nextLongOrZero()
     }
 
     fun ban(

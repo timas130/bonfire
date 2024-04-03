@@ -1,20 +1,13 @@
 package com.dzen.campfire.server.executors.accounts
 
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.account.AccountLinks
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.accounts.RAccountsGetProfile
-import com.dzen.campfire.server.controllers.*
-import com.dzen.campfire.server.tables.TAccounts
-import com.dzen.campfire.server.tables.TCollisions
-import com.dzen.campfire.server.tables.TPublicationsKarmaTransactions
 import com.dzen.campfire.api.tools.ApiException
+import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.server.optimizers.*
-import com.sup.dev.java.tools.ToolsDate
-import com.sup.dev.java_pc.sql.Database
-import com.sup.dev.java_pc.sql.Sql
-import com.sup.dev.java_pc.sql.SqlQuerySelect
+import com.dzen.campfire.server.tables.TAccounts
 
 class EAccountsGetProfile : RAccountsGetProfile(0, "") {
 
@@ -60,7 +53,7 @@ class EAccountsGetProfile : RAccountsGetProfile(0, "") {
         val imageTitleId = v.next<Long>()//480063
         val imageTitleGifId = v.next<Long>()//0
         val status: String = v.next()//{Grey Нажмите для изменения статуса}
-        val age:Long = v.next()//14
+        val age:Long = v.next()
         val description: String =  v.next()//Описание профиля ещё не заполнено.
         val links = AccountLinks(v.next())
         val note:String = v.next()
@@ -68,12 +61,16 @@ class EAccountsGetProfile : RAccountsGetProfile(0, "") {
         val bansCount:Long = v.next()
         val warnsCount:Long = v.next()
         val karmaTotal:Long = v.next()
-        val rates = OptimizerRatesCount.get(accountId)
-        val moderationFandomsCount = if(lvl < API.LVL_MODERATOR_BLOCK.lvl) 0L else OptimizerModerationFandomsCount.get(accountId)
-        val subscribedFandomsCount = OptimizerSubscribedFandoms.get(accountId)
-        val stickersCount = OptimizerStickersCount.get(accountId)
-        val blackAccountsCount = OptimizerBlackAccountsCount.get(accountId)
-        val blackFandomsCount = OptimizerBlackFandomsCount.get(accountId)
+        val rates = ControllerAccounts.get(accountId, TAccounts.RATES_COUNT_NO_ANON).nextMayNull<Long>() ?: 0L
+        val moderationFandomsCount = if (lvl < API.LVL_MODERATOR_BLOCK.lvl) {
+            0L
+        } else {
+            ControllerFandom.getModerationFandomsCount(accountId)
+        }
+        val subscribedFandomsCount = ControllerCollisions.getCollisionsCount(accountId, API.COLLISION_FANDOM_SUBSCRIBE)
+        val stickersCount = ControllerStickers.getStickersCount(accountId)
+        val blackAccountsCount = ControllerAccounts.getBlackListAccountCount(accountId)
+        val blackFandomsCount = ControllerAccounts.getBlackListFandomCount(accountId)
 
         var pinnedPost: PublicationPost? = if (pinnedPostId > 0) ControllerPublications.getPublication(pinnedPostId, apiAccount.id) as PublicationPost? else null
         if (pinnedPost != null && pinnedPost.status != API.STATUS_PUBLIC) pinnedPost = null
