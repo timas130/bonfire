@@ -162,7 +162,7 @@ object ControllerAccounts {
     fun getBlackListFandomCount(accountId: Long): Long {
         val select = Database.select(
             "ControllerAccounts.getBlackListFandomCount",
-            SqlQuerySelect(TCollisions.NAME, TCollisions.collision_id)
+            SqlQuerySelect(TCollisions.NAME, Sql.COUNT)
                 .where(TCollisions.collision_type, "=", API.COLLISION_ACCOUNT_BLACK_LIST_FANDOM)
                 .where(
                     Sql.IFNULL(
