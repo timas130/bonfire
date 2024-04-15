@@ -25,7 +25,7 @@ class EChatTyping : RChatTyping(ChatTag()) {
         if (tag.chatType == API.CHAT_TYPE_PRIVATE) {
             ControllerNotifications.push(tag.getAnotherId(), n)
         } else  {
-            ControllerNotifications.push(n, ControllerChats.getChatSubscribersIdsWithTokensNotDeleted(tag, apiAccount.id))
+            ControllerNotifications.push(ControllerChats.getChatSubscribersIdsWithTokensNotDeleted(tag, apiAccount.id), n)
         }
 
         return Response()

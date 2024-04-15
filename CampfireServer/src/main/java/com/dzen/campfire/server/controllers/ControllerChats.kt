@@ -196,8 +196,8 @@ object ControllerChats {
             }
         }
 
-        ControllerNotifications.push(NotificationChatMessage(message, tag, true), getConfChatSubscribersIdsWithTokensSubscribed(tag.targetId, tag.targetSubId, message.creator.id, parentCreatorId))
-        ControllerNotifications.push(NotificationChatMessage(message, tag, false), getConfChatSubscribersIdsWithTokensNotSubscribed(tag.targetId, tag.targetSubId, message.creator.id, parentCreatorId))
+        ControllerNotifications.push(getConfChatSubscribersIdsWithTokensSubscribed(tag.targetId, tag.targetSubId, message.creator.id, parentCreatorId), NotificationChatMessage(message, tag, true))
+        ControllerNotifications.push(getConfChatSubscribersIdsWithTokensNotSubscribed(tag.targetId, tag.targetSubId, message.creator.id, parentCreatorId), NotificationChatMessage(message, tag, false))
 
         ControllerPublications.parseMentions(message.text, message.id, message.publicationType, message.chatType, message.fandom.id, message.fandom.languageId, apiAccount, arrayOf(parentCreatorId))
     }
@@ -209,8 +209,8 @@ object ControllerChats {
             val subscribed = if (message.chatType != API.CHAT_TYPE_FANDOM_ROOT) true else isSubscribed(parentCreatorId, tag)
             if (parentCreatorId != apiAccount.id) ControllerNotifications.push(parentCreatorId, NotificationChatAnswer(message, tag, subscribed))
         }
-        ControllerNotifications.push(NotificationChatMessage(message, tag, true), getFandomChatSubscribersIdsWithTokensSubscribed(tag.targetId, tag.targetSubId, message.creator.id, parentCreatorId))
-        ControllerNotifications.push(NotificationChatMessage(message, tag, false), getFandomChatSubscribersIdsWithTokensNotSubscribed(tag.targetId, tag.targetSubId, message.creator.id, parentCreatorId))
+        ControllerNotifications.push(getFandomChatSubscribersIdsWithTokensSubscribed(tag.targetId, tag.targetSubId, message.creator.id, parentCreatorId), NotificationChatMessage(message, tag, true))
+        ControllerNotifications.push(getFandomChatSubscribersIdsWithTokensNotSubscribed(tag.targetId, tag.targetSubId, message.creator.id, parentCreatorId), NotificationChatMessage(message, tag, false))
 
         ControllerOptimizer.putCollisionWithCheck(apiAccount.id, API.COLLISION_ACHIEVEMENT_CHAT)
         ControllerAchievements.addAchievementWithCheck(apiAccount.id, API.ACHI_CHAT)
@@ -513,44 +513,43 @@ object ControllerChats {
     //
 
 
-    fun getFandomChatSubscribersIdsWithTokensNotDeleted(fandomId: Long, languageId: Long, vararg exclude: Long): Array<Item2<Long, String?>> {
+    fun getFandomChatSubscribersIdsWithTokensNotDeleted(fandomId: Long, languageId: Long, vararg exclude: Long): List<Long> {
         return getChatSubscribersIdsWithTokensNotDeleted(ChatTag(API.CHAT_TYPE_FANDOM_ROOT, fandomId, languageId), *exclude)
     }
 
-    fun getFandomChatSubscribersIdsWithTokensSubscribed(fandomId: Long, languageId: Long, vararg exclude: Long): Array<Item2<Long, String?>> {
+    fun getFandomChatSubscribersIdsWithTokensSubscribed(fandomId: Long, languageId: Long, vararg exclude: Long): List<Long> {
         return getChatSubscribersIdsWithTokensSubscribed(ChatTag(API.CHAT_TYPE_FANDOM_ROOT, fandomId, languageId), *exclude)
     }
 
-    fun getFandomChatSubscribersIdsWithTokensNotSubscribed(fandomId: Long, languageId: Long, vararg exclude: Long): Array<Item2<Long, String?>> {
+    fun getFandomChatSubscribersIdsWithTokensNotSubscribed(fandomId: Long, languageId: Long, vararg exclude: Long): List<Long> {
         return getChatSubscribersIdsWithTokensNotSubscribed(ChatTag(API.CHAT_TYPE_FANDOM_ROOT, fandomId, languageId), *exclude)
     }
 
-    fun getConfChatSubscribersIdsWithTokensNotDeleted(chatId: Long, vararg exclude: Long): Array<Item2<Long, String?>> {
+    fun getConfChatSubscribersIdsWithTokensNotDeleted(chatId: Long, vararg exclude: Long): List<Long> {
         return getChatSubscribersIdsWithTokensNotDeleted(ChatTag(API.CHAT_TYPE_CONFERENCE, chatId, 0), -2L, *exclude)
     }
 
-    fun getConfChatSubscribersIdsWithTokensSubscribed(chatId: Long, vararg exclude: Long): Array<Item2<Long, String?>> {
+    fun getConfChatSubscribersIdsWithTokensSubscribed(chatId: Long, vararg exclude: Long): List<Long> {
         return getChatSubscribersIdsWithTokensSubscribed(ChatTag(API.CHAT_TYPE_CONFERENCE, chatId, 0), *exclude)
     }
 
-    fun getConfChatSubscribersIdsWithTokensNotSubscribed(chatId: Long, vararg exclude: Long): Array<Item2<Long, String?>> {
+    fun getConfChatSubscribersIdsWithTokensNotSubscribed(chatId: Long, vararg exclude: Long): List<Long> {
         return getChatSubscribersIdsWithTokensNotSubscribed(ChatTag(API.CHAT_TYPE_CONFERENCE, chatId, 0), *exclude)
     }
 
-    fun getChatSubscribersIdsWithTokensNotDeleted(tag: ChatTag, vararg exclude: Long): Array<Item2<Long, String?>> {
+    fun getChatSubscribersIdsWithTokensNotDeleted(tag: ChatTag, vararg exclude: Long): List<Long> {
         return getChatSubscribersIdsWithTokens(tag, -2L, *exclude)
     }
 
-    fun getChatSubscribersIdsWithTokensSubscribed(tag: ChatTag, vararg exclude: Long): Array<Item2<Long, String?>> {
+    fun getChatSubscribersIdsWithTokensSubscribed(tag: ChatTag, vararg exclude: Long): List<Long> {
         return getChatSubscribersIdsWithTokens(tag, 1L, *exclude)
     }
 
-    fun getChatSubscribersIdsWithTokensNotSubscribed(tag: ChatTag, vararg exclude: Long): Array<Item2<Long, String?>> {
+    fun getChatSubscribersIdsWithTokensNotSubscribed(tag: ChatTag, vararg exclude: Long): List<Long> {
         return getChatSubscribersIdsWithTokens(tag, 0L, *exclude)
     }
 
-    private fun getChatSubscribersIdsWithTokens(tag: ChatTag, subscribed: Long, vararg exclude: Long): Array<Item2<Long, String?>> {
-
+    private fun getChatSubscribersIdsWithTokens(tag: ChatTag, subscribed: Long, vararg exclude: Long): List<Long> {
         val v = Database.select("ControllerChats.gethatSubscribersIdsWithTokens", SqlQuerySelect(TChatsSubscriptions.NAME, TChatsSubscriptions.account_id)
                 .where(TChatsSubscriptions.chat_type, "=", tag.chatType)
                 .where(TChatsSubscriptions.target_id, "=", tag.targetId)
@@ -560,7 +559,8 @@ object ControllerChats {
                 .where(TChatsSubscriptions.read_date, ">", System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 2)
         )
 
-        return ControllerNotifications.parseAccountsIdsWithTokens(v, *exclude)
+        return List(v.rowsCount) { v.nextLongOrZero() }
+            .filterNot { exclude.contains(it) }
     }
 
 

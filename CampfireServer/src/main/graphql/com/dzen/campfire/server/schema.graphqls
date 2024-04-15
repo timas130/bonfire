@@ -22,21 +22,6 @@ The `Boolean` scalar type represents `true` or `false`.
 scalar Boolean
 
 """
-Result of `check_image`
-"""
-type CheckImageResponse {
-  """
-  The resource's size in bytes
-  """
-  size: Int!
-
-  """
-  Is this resource a GIF
-  """
-  gif: Boolean!
-}
-
-"""
 Post this amount of comments in a specific fandom
 """
 type CommentInFandomTask implements DailyTask {
@@ -190,9 +175,34 @@ The `Int` scalar type represents non-fractional whole numeric values.
 scalar Int
 
 """
+A scalar that can represent any JSON value.
+"""
+scalar JSON
+
+"""
 A scalar that can represent any JSON Object value.
 """
 scalar JSONObject
+
+"""
+Legacy JSON notification
+"""
+type LegacyNotification {
+  """
+  Notification JSON
+  """
+  content: JSON!
+}
+
+"""
+Legacy JSON notification
+"""
+input LegacyNotificationInput {
+  """
+  Notification JSON
+  """
+  content: JSON!
+}
 
 """
 The internal result of recount a user's level
@@ -363,17 +373,94 @@ type Mutation {
   cancelEmailChange(token: String!): Ok!
 
   """
-  Upload an image/file and get its temporary key
-
-  This method requires authentication.
-  The calling user can only use the resulting key once.
+  Mark a single notification as read
   """
-  uploadImage(uploadType: UploadType!, file: Upload!): String!
+  readNotification(notificationId: ID!): Notification!
 
   """
-  Internal method for checking that an uploaded image is OK to be used
+  Mark every notification received by you as read
   """
-  checkImage(userId: ID!, key: String!, uploadTypes: [UploadType!]!): CheckImageResponse!
+  readAllNotifications: Ok!
+
+  """
+  Send a notification to a list of recipients
+  """
+  postNotification(input: NotificationInput!): Ok!
+
+  """
+  Set the notification token and type of the currently authenticated session
+
+  A session can only have a single notification token.
+  """
+  setNotificationToken(tokenType: NotificationTokenType!, token: String!): Ok!
+}
+
+"""
+A notification
+"""
+type Notification {
+  """
+  Notification payload
+  """
+  payload: NotificationPayload!
+
+  """
+  Time when notification was sent
+  """
+  createdAt: DateTime!
+
+  """
+  Whether notification has been read
+  """
+  read: Boolean!
+
+  """
+  Unique ID for this notification (unique across users)
+  """
+  id: ID!
+
+  """
+  User to whom this notification is directed
+  """
+  user: User!
+}
+
+input NotificationInput {
+  recipients: [NotificationRecipient!]!
+
+  payload: NotificationPayloadInput!
+
+  ephemeral: Boolean!
+
+  onlineOnly: Boolean!
+}
+
+union NotificationPayload = LegacyNotification
+
+"""
+Different types of notifications
+"""
+input NotificationPayloadInput {
+  """
+  Different types of notifications
+  """
+  legacy: LegacyNotificationInput
+}
+
+input NotificationRecipient {
+  user: UserRecipient
+
+  session: SessionRecipient
+}
+
+"""
+Kinds of upstream services for sending notifications
+"""
+enum NotificationTokenType {
+  """
+  Firebase Cloud Messaging
+  """
+  FCM
 }
 
 """
@@ -577,9 +664,11 @@ type Query {
   userBySlug(slug: String!): User
 
   """
-  Get limits for a specified upload type
+  List notifications received by you, newest first
+
+  Use `before` for pagination, including the last notification's `created_at`.
   """
-  uploadLimits(uploadType: UploadType!): UploadLimits!
+  notifications(before: DateTime, typeFilter: [Int!]): [Notification!]!
 }
 
 """
@@ -677,6 +766,10 @@ type Session {
   current: Boolean!
 }
 
+input SessionRecipient {
+  sessionId: Int!
+}
+
 """
 The `String` scalar type represents textual data, represented as UTF-8
 character sequences. The String type is most often used by GraphQL to
@@ -699,118 +792,6 @@ enum TfaType {
   sent to their address.
   """
   EMAIL_LINK
-}
-
-scalar Upload
-
-"""
-Image/file format
-"""
-enum UploadFormat {
-  """
-  Animated GIF
-  """
-  GIF
-
-  """
-  PNG or JPEG
-  """
-  PNG
-
-  """
-  JPEG
-  """
-  JPEG
-}
-
-"""
-Limits for an upload
-"""
-type UploadLimits {
-  """
-  Max size in bytes
-  """
-  size: Int!
-
-  """
-  Expected aspect ratio
-  """
-  ratio: Float
-
-  """
-  Maximum resolution (per side)
-  """
-  maxSide: Int!
-
-  """
-  File format
-  """
-  format: UploadFormat!
-}
-
-"""
-Purpose for the uploaded image, which defines its limits
-"""
-enum UploadType {
-  ACCOUNT_AVATAR
-
-  ACCOUNT_AVATAR_GIF
-
-  ACCOUNT_TITLE
-
-  ACCOUNT_TITLE_GIF
-
-  FANDOM_AVATAR
-
-  FANDOM_AVATAR_GIF
-
-  FANDOM_TITLE
-
-  FANDOM_TITLE_GIF
-
-  CHAT_BACKGROUND
-
-  FANDOM_GALLERY
-
-  CHAT_AVATAR
-
-  CHAT_AVATAR_GIF
-
-  WIKI_AVATAR
-
-  WIKI_AVATAR_GIF
-
-  WIKI_TITLE
-
-  WIKI_TITLE_GIF
-
-  CHAT_MESSAGE
-
-  CHAT_MESSAGE_GIF
-
-  TAG
-
-  STICKER_PACK_AVATAR
-
-  STICKER
-
-  STICKER_GIF
-
-  PAGE_IMAGE
-
-  PAGE_IMAGE_GIF
-
-  PAGE_IMAGES_MINI
-
-  PAGE_IMAGES_MINI_GIF
-
-  PAGE_IMAGES
-
-  PAGE_IMAGES_GIF
-
-  PAGE_IMAGE_LINK
-
-  QUEST_IMAGE
 }
 
 """
@@ -868,6 +849,10 @@ type User {
   the `multiplier` field in [`DailyTaskFandom`].
   """
   dailyTaskFandoms: [DailyTaskFandom!]!
+}
+
+input UserRecipient {
+  userId: Int!
 }
 
 type VerifyEmailResult {

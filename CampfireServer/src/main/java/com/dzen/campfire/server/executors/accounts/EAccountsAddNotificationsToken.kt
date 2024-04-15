@@ -1,7 +1,8 @@
 package com.dzen.campfire.server.executors.accounts
 
 import com.dzen.campfire.api.requests.accounts.RAccountsAddNotificationsToken
-import com.dzen.campfire.server.controllers.ControllerAccounts
+import com.dzen.campfire.server.rust.RustNotifications
+import com.dzen.campfire.server.type.NotificationTokenType
 
 class EAccountsAddNotificationsToken : RAccountsAddNotificationsToken("") {
 
@@ -10,7 +11,7 @@ class EAccountsAddNotificationsToken : RAccountsAddNotificationsToken("") {
     }
 
     override fun execute(): Response {
-        ControllerAccounts.addNotificationToken(apiAccount.id, token)
+        RustNotifications.setToken(accessToken!!, NotificationTokenType.FCM, token)
         return Response()
     }
 

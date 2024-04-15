@@ -15,6 +15,7 @@ struct RegisterEmailInput {
     /// Email address for the new account
     email: String,
     /// Password for the new account
+    #[graphql(secret)]
     password: String,
 }
 

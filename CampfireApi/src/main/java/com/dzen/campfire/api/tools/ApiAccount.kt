@@ -10,9 +10,6 @@ class ApiAccount(
     var accessTagSub: Long=0,
     var sex: Long=0,
     var settings: String="",
-    var accessToken: String? = null,
-    var refreshToken: String? = null,
-    var refreshTokenDateCreate: Long? = null,
     var lastOnlineTime: Long=0,
     var dateCreate: Long = 0,
 ) {

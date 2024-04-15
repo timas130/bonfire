@@ -212,4 +212,28 @@ class AccountSettings() : JsonParsable {
         return json
     }
 
+    fun notificationsFilterEnabled(type: Long): Boolean {
+        return when (type) {
+            API.NOTIF_FOLLOWS_PUBLICATION -> notificationsFilterFollowsPublications
+            API.NOTIF_ACCOUNT_FOLLOWS_ADD -> notificationsFilterFollows
+            API.NOTIF_ACHI -> notificationsFilterAchievements
+            API.NOTIF_COMMENT -> notificationsFilterComments
+            API.NOTIF_COMMENT_ANSWER -> notificationsFilterAnswers
+            API.NOTIF_KARMA_ADD -> notificationsFilterKarma
+            API.NOTIF_PUBLICATION_IMPORTANT -> notificationsFilterImportant
+            else -> notificationsFilterOther
+        }
+    }
+
+    fun getNotificationFilters(allowlist: Boolean = !notificationsFilterOther): Array<Long> {
+        val list = mutableListOf<Long>()
+        if (allowlist == notificationsFilterFollowsPublications) list.add(API.NOTIF_FOLLOWS_PUBLICATION)
+        if (allowlist == notificationsFilterFollows) list.add(API.NOTIF_ACCOUNT_FOLLOWS_ADD)
+        if (allowlist == notificationsFilterAchievements) list.add(API.NOTIF_ACHI)
+        if (allowlist == notificationsFilterComments) list.add(API.NOTIF_COMMENT)
+        if (allowlist == notificationsFilterAnswers) list.add(API.NOTIF_COMMENT_ANSWER)
+        if (allowlist == notificationsFilterKarma) list.add(API.NOTIF_KARMA_ADD)
+        if (allowlist == notificationsFilterImportant) list.add(API.NOTIF_PUBLICATION_IMPORTANT)
+        return list.toTypedArray()
+    }
 }

@@ -14,6 +14,7 @@ struct LoginEmailInput {
     /// User's email address
     email: String,
     /// User's password
+    #[graphql(secret)]
     password: String,
 }
 

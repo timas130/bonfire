@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update accounts set last_online_time = extract(epoch from now()) * 1000 where id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "31ddbdf44bbefad3663f8d125d08e5822e1b5d6fcfbb41af40ad0fde182e4079"
+}

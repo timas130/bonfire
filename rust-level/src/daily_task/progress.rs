@@ -13,9 +13,10 @@ impl LevelServer {
         user_id: i64,
         date: &NaiveDate,
     ) -> Result<i64, LevelError> {
-        let date_start = date.and_time(NaiveTime::MIN).timestamp_millis();
+        let date_start = date.and_time(NaiveTime::MIN).and_utc().timestamp_millis();
         let date_end = date
             .and_time(NaiveTime::from_hms_opt(23, 59, 59).unwrap())
+            .and_utc()
             .timestamp_millis();
 
         let progress = match task {

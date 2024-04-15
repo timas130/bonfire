@@ -11,7 +11,6 @@ import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.tools.ToolsFiles
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQuerySelect
-import com.sup.dev.java_pc.sql.SqlQueryUpdate
 
 class AccountProviderImpl : AccountProvider() {
     companion object {
@@ -22,12 +21,7 @@ class AccountProviderImpl : AccountProvider() {
         val user = RustAuth.getByToken(token ?: return null) ?: return null
 
         val account = select(instanceSelect().where(TAccounts.id, "=", user.id))
-        if (account != null) {
-            Database.update("AccountProviderImpl upd", SqlQueryUpdate(TAccounts.NAME)
-                .update(TAccounts.last_online_time, System.currentTimeMillis())
-                .where(TAccounts.id, "=", account.id))
-            return account
-        }
+        if (account != null) return account
 
         createAccount(user)
 
@@ -42,8 +36,6 @@ class AccountProviderImpl : AccountProvider() {
             TAccounts.lvl,
             TAccounts.karma_count_30,
             TAccounts.account_settings,
-            TAccounts.refresh_token,
-            TAccounts.refresh_token_date_create,
             TAccounts.subscribes,
             TAccounts.date_create)
 
@@ -60,8 +52,6 @@ class AccountProviderImpl : AccountProvider() {
         account.accessTag = v.next()
         account.accessTagSub = v.next()
         account.settings = v.nextMayNull<String>()?:""
-        account.refreshToken = v.next()
-        account.refreshTokenDateCreate = v.next()
         account.tag_s_1 = v.next()
         account.dateCreate = v.next()
 
@@ -92,8 +82,6 @@ class AccountProviderImpl : AccountProvider() {
             TAccounts.img_id, imgId,
             TAccounts.last_online_time, System.currentTimeMillis(),
             TAccounts.subscribes, "",
-            TAccounts.refresh_token, "",
-            TAccounts.refresh_token_date_create, 0L,
             TAccounts.account_settings, ""
         )
     }

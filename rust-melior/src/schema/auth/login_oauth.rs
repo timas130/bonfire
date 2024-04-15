@@ -21,6 +21,7 @@ pub struct OAuthLoginInput {
     /// [`OAuthUrl`]: super::oauth_url::OAuthUrl
     pub nonce: String,
     /// The authorization code
+    #[graphql(secret)]
     pub code: String,
 }
 

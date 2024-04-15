@@ -52,6 +52,11 @@
         "ordinal": 9,
         "name": "refresh_token",
         "type_info": "Varchar"
+      },
+      {
+        "ordinal": 10,
+        "name": "last_online",
+        "type_info": "Timestamptz"
       }
     ],
     "parameters": {
@@ -70,6 +75,7 @@
       false,
       true,
       true,
+      false,
       false
     ]
   },

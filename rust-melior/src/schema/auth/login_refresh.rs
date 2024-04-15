@@ -13,7 +13,7 @@ impl LoginRefreshMutation {
     async fn login_refresh(
         &self,
         ctx: &Context<'_>,
-        refresh_token: String,
+        #[graphql(secret)] refresh_token: String,
     ) -> Result<LoginResultSuccess, RespError> {
         let req = ctx.data_unchecked::<ReqContext>();
 

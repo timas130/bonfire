@@ -6,7 +6,7 @@
       {
         "ordinal": 0,
         "name": "json_db",
-        "type_info": "Jsonb"
+        "type_info": "Json"
       },
       {
         "ordinal": 1,

@@ -13,8 +13,8 @@ impl ChangePasswordMutation {
     async fn change_password(
         &self,
         ctx: &Context<'_>,
-        old_password: String,
-        new_password: String,
+        #[graphql(secret)] old_password: String,
+        #[graphql(secret)] new_password: String,
     ) -> Result<OkResp, RespError> {
         let req = ctx.data_unchecked::<ReqContext>();
 

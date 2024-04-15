@@ -1,3 +1,4 @@
+mod admin_get_sessions;
 mod bind_oauth;
 mod cancel_email_change;
 mod change_email;
@@ -14,12 +15,14 @@ mod get_meta_users;
 mod get_oauth_result;
 mod get_oauth_url;
 mod get_security_settings;
+mod get_session;
 mod get_sessions;
 mod get_tfa_info;
 mod hard_ban;
 mod login_email;
 mod login_internal;
 mod login_refresh;
+mod mark_online;
 mod recover_password;
 mod register_email;
 mod resend_verification;
@@ -221,6 +224,10 @@ impl AuthService for AuthServer {
         self._login_refresh(refresh_token, user_context).await
     }
 
+    async fn mark_online(self, _: Context, access_token: String) -> Result<(), AuthError> {
+        self._mark_online(access_token).await
+    }
+
     async fn send_password_recovery(
         self,
         _: Context,
@@ -346,6 +353,19 @@ impl AuthService for AuthServer {
 
     async fn get_by_token(self, _: Context, token: String) -> Result<(i64, AuthUser), AuthError> {
         self._get_by_token(token).await
+    }
+
+    async fn admin_get_sessions(
+        self,
+        _: Context,
+        user_id: i64,
+        offset: i64,
+    ) -> Result<Vec<Session>, AuthError> {
+        self._admin_get_sessions(user_id, offset).await
+    }
+
+    async fn get_session(self, _: Context, session_id: i64) -> Result<Session, AuthError> {
+        self._get_session(session_id).await
     }
 
     async fn unsafe_delete_user(self, _: Context, id: i64) -> Result<(), AuthError> {

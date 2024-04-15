@@ -1,7 +1,7 @@
 use crate::context::ReqContext;
 use crate::error::RespError;
 use crate::models::user::User;
-use crate::utils::permissions::{is_system_caller, PermissionLevelGuard};
+use crate::utils::permissions::PermissionLevelGuard;
 use async_graphql::{ComplexObject, Context, Object, SimpleObject};
 use c_core::prelude::tarpc::context;
 use c_core::prelude::tarpc::serde::Serialize;

@@ -71,7 +71,6 @@ object App {
             apiServer.onError = { key, ex -> ControllerStatistic.logError(key, ex) }
             apiServer.statisticCollector = { key, time, version -> ControllerStatistic.logRequest(key, time, version) }
 
-            ControllerNotifications.init()
             System.err.println("Starting migrator")
             ControllerMigrator.start()
             System.err.println("Starting daemons [ControllerUpdater]")

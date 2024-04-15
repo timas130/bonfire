@@ -22,7 +22,6 @@ import com.dzen.campfire.api.models.notifications.publications.*
 import com.dzen.campfire.api.models.notifications.rubrics.*
 import com.dzen.campfire.api.models.notifications.translates.NotificationTranslatesAccepted
 import com.dzen.campfire.api.models.notifications.translates.NotificationTranslatesRejected
-import com.dzen.campfire.api.requests.accounts.RAccountsNotificationsRemoveToken
 import com.dzen.campfire.api.requests.accounts.RAccountsNotificationsView
 import com.google.firebase.messaging.RemoteMessage
 import com.sayzen.campfiresdk.controllers.notifications.account.*
@@ -359,19 +358,6 @@ object ControllerNotifications {
     //
     //  Token
     //
-
-    fun clearToken(onClear: (() -> Unit)?, onError: (() -> Unit)?) {
-
-        if (token.isEmpty()) {
-            onClear!!.invoke()
-            return
-        }
-
-        RAccountsNotificationsRemoveToken(token)
-            .onComplete { onClear?.invoke() }
-            .onError { onError?.invoke() }
-            .send(api)
-    }
 
     private fun onToken(token: String?) {
         ControllerNotifications.token = token ?: ""

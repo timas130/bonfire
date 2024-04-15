@@ -1,0 +1,12 @@
+query GetAllNotifications($before: DateTime, $typeFilter: [Int!]) {
+    notifications(before: $before, typeFilter: $typeFilter) {
+        id
+        createdAt
+        payload {
+            ... on LegacyNotification {
+                content
+            }
+        }
+        read
+    }
+}

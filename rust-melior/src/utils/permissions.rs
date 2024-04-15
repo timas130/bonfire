@@ -3,14 +3,6 @@ use async_graphql::{Context, Guard};
 use async_trait::async_trait;
 use c_core::services::auth::user::PermissionLevel;
 
-pub fn is_system_caller(ctx: &Context<'_>) -> bool {
-    ctx.data_unchecked::<ReqContext>()
-        .user
-        .as_ref()
-        .map(|user| user.permission_level >= PermissionLevel::System)
-        .unwrap_or(false)
-}
-
 pub struct PermissionLevelGuard(PermissionLevel);
 
 impl PermissionLevelGuard {

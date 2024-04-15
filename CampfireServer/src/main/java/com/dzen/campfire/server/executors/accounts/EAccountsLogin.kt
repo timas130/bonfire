@@ -6,6 +6,8 @@ import com.dzen.campfire.api.models.account.AccountSettings
 import com.dzen.campfire.api.requests.accounts.RAccountsLogin
 import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.server.rust.RustDailyTask
+import com.dzen.campfire.server.rust.RustNotifications
+import com.dzen.campfire.server.type.NotificationTokenType
 import com.sup.dev.java.libs.json.Json
 
 class EAccountsLogin : RAccountsLogin("", 0, 0, 0) {
@@ -23,7 +25,9 @@ class EAccountsLogin : RAccountsLogin("", 0, 0, 0) {
         ControllerOptimizer.insertEnter(apiAccount.id)
 
         updateEnter()
-        ControllerAccounts.addNotificationToken(apiAccount.id, tokenNotification)
+        if (tokenNotification.isNotEmpty()) {
+            RustNotifications.setToken(accessToken!!, NotificationTokenType.FCM, tokenNotification)
+        }
         ControllerSubThread.inSub("EAccountsLogin") {
             if (languageId > 0) ControllerProjects.initAccountForProject(apiAccount, languageId, requestProjectKey)
         }

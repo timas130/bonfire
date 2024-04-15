@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select last_online_time from accounts where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "last_online_time",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "1e76b2d7a99a7904c48be1118e24e6094fb0200245cb38d9fc01440f6a51821f"
+}

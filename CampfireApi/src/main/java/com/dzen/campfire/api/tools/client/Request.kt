@@ -42,7 +42,6 @@ abstract class Request<K : Request.Response> : Subscription(){
 
     var apiAccount: ApiAccount = ApiAccount()
     var accessToken: String? = null
-    var loginToken: String? = null
     var botToken: String? = null
 
     //
@@ -73,11 +72,6 @@ abstract class Request<K : Request.Response> : Subscription(){
 
     fun setAccessToken(accessToken:String):Request<K>{
         this.accessToken = accessToken
-        return this
-    }
-
-    fun setLoginToken(loginToken:String):Request<K>{
-        this.loginToken = loginToken
         return this
     }
 

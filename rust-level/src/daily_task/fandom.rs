@@ -17,12 +17,15 @@ impl LevelServer {
     ) -> Result<Vec<DailyTaskFandom>, LevelError> {
         let start_posts = (*date - Days::new(7))
             .and_time(NaiveTime::MIN)
+            .and_utc()
             .timestamp_millis();
         let start_comments = (*date - Days::new(3))
             .and_time(NaiveTime::MIN)
+            .and_utc()
             .timestamp_millis();
         let end = date
             .and_time(NaiveTime::from_hms_opt(23, 59, 59).unwrap())
+            .and_utc()
             .timestamp_millis();
 
         // craziest query in bonfire yet

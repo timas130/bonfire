@@ -1,7 +1,6 @@
 package com.sayzen.campfiresdk.screens.notifications
 
 import android.view.View
-import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.notifications.Notification
@@ -31,7 +30,7 @@ class SNotifications private constructor() : SLoadingRecycler<CardNotification, 
     companion object {
 
         fun instance(action: NavigationAction) {
-            Navigator.reorderOrCreate(SNotifications::class){
+            Navigator.reorderOrCreate(SNotifications::class) {
                 SNotifications()
             }
         }
@@ -39,7 +38,7 @@ class SNotifications private constructor() : SLoadingRecycler<CardNotification, 
     }
 
     private val eventBus = EventBus
-            .subscribe(EventNotification::class) { this.onNotification(it) }
+        .subscribe(EventNotification::class) { this.onNotification(it) }
 
     private var subscriptionX: Request<*>? = null
     private var autoRead = false
@@ -63,21 +62,24 @@ class SNotifications private constructor() : SLoadingRecycler<CardNotification, 
 
         adapter.setBottomLoader { onLoad, cards ->
             subscriptionX = RAccountsNotificationsGetAll(
-                    if (cards.isEmpty()) 0 else cards[cards.size - 1].notification.dateCreate,
-                    getFilters(!ControllerSettings.filterOther), ControllerSettings.filterOther)
-                    .onComplete { r ->
-                        for (n in r.notifications) {
-                            if (n.status == 0L) ControllerNotifications.addNewNotifications(n)
-                            else if (n.status == 1L) ControllerNotifications.removeNotificationFromNew(n.id)
-                        }
-                        onLoad.invoke(r.notifications)
-                        if (Navigator.getCurrent() == this && SupAndroid.activityIsVisible)
-                            ControllerNotifications.hide(ControllerNotifications.TYPE_NOTIFICATIONS)
-
-                        (vFab as View).visibility = if (ControllerNotifications.getNewNotificationsCount() == 0) View.GONE else View.VISIBLE
+                offsetDate = if (cards.isEmpty()) 0 else cards[cards.size - 1].notification.dateCreate,
+                filters = ControllerSettings.getNotificationFilters(),
+                otherEnabled = ControllerSettings.filterOther,
+            )
+                .onComplete { r ->
+                    for (n in r.notifications) {
+                        if (n.status == 0L) ControllerNotifications.addNewNotifications(n)
+                        else if (n.status == 1L) ControllerNotifications.removeNotificationFromNew(n.id)
                     }
-                    .onNetworkError { onLoad.invoke(null) }
-                    .send(api)
+                    onLoad.invoke(r.notifications)
+                    if (Navigator.getCurrent() == this && SupAndroid.activityIsVisible)
+                        ControllerNotifications.hide(ControllerNotifications.TYPE_NOTIFICATIONS)
+
+                    (vFab as View).visibility =
+                        if (ControllerNotifications.getNewNotificationsCount() == 0) View.GONE else View.VISIBLE
+                }
+                .onNetworkError { onLoad.invoke(null) }
+                .send(api)
         }
         adapter.setRetryMessage(t(API_TRANSLATE.error_network), t(API_TRANSLATE.app_retry))
 
@@ -103,8 +105,8 @@ class SNotifications private constructor() : SLoadingRecycler<CardNotification, 
             if (ControllerSettings.autoReadNotifications) {
                 ControllerNotifications.removeNotificationFromNewAll()
             } else {
-                //  Читаем отключеные уведомления
-                ControllerNotifications.removeNotificationFromNew(getFilters(false))
+                // Читаем отключённые уведомления
+                ControllerNotifications.removeNotificationFromNew(ControllerSettings.getNotificationFilters(false))
             }
         }
     }
@@ -140,41 +142,37 @@ class SNotifications private constructor() : SLoadingRecycler<CardNotification, 
         val oldOther = ControllerSettings.filterOther
 
         SplashCheckBoxes()
-                .add(t(API_TRANSLATE.settings_notifications_filter_follows_publications)).onChange { ControllerSettings.filterFollowsPublications = it.isChecked }.checked(ControllerSettings.filterFollowsPublications)
-                .add(t(API_TRANSLATE.settings_notifications_filter_follows)).onChange { ControllerSettings.filterFollows = it.isChecked }.checked(ControllerSettings.filterFollows)
-                .add(t(API_TRANSLATE.app_achievements)).onChange {  ControllerSettings.filterAchievements = it.isChecked }.checked(ControllerSettings.filterAchievements)
-                .add(t(API_TRANSLATE.settings_notifications_filter_comments)).onChange { ControllerSettings.filterComments = it.isChecked }.checked(ControllerSettings.filterComments)
-                .add(t(API_TRANSLATE.settings_notifications_filter_answers)).onChange { ControllerSettings.filterAnswers = it.isChecked }.checked(ControllerSettings.filterAnswers)
-                .add(t(API_TRANSLATE.settings_notifications_filter_karma)).onChange {  ControllerSettings.filterKarma = it.isChecked }.checked(ControllerSettings.filterKarma)
-                .add(t(API_TRANSLATE.settings_notifications_filter_important)).onChange { ControllerSettings.filterImportant = it.isChecked }.checked(ControllerSettings.filterImportant)
-                .add(t(API_TRANSLATE.settings_notifications_filter_app_other)).onChange { ControllerSettings.filterOther = it.isChecked }.checked(ControllerSettings.filterOther)
-                .setOnHide {
-                    if (oldFollowsPublications != ControllerSettings.filterFollowsPublications
-                            || oldFollows != ControllerSettings.filterFollows
-                            || oldAchievements != ControllerSettings.filterAchievements
-                            || oldComments != ControllerSettings.filterComments
-                            || oldKarma != ControllerSettings.filterKarma
-                            || oldAnswers != ControllerSettings.filterAnswers
-                            || oldImportant != ControllerSettings.filterImportant
-                            || oldOther != ControllerSettings.filterOther
-                    ) {
-                        EventBus.post(EventNotificationsCountChanged())
-                        reload()
-                    }
+            .add(t(API_TRANSLATE.settings_notifications_filter_follows_publications))
+            .onChange { ControllerSettings.filterFollowsPublications = it.isChecked }
+            .checked(ControllerSettings.filterFollowsPublications)
+            .add(t(API_TRANSLATE.settings_notifications_filter_follows))
+            .onChange { ControllerSettings.filterFollows = it.isChecked }.checked(ControllerSettings.filterFollows)
+            .add(t(API_TRANSLATE.app_achievements)).onChange { ControllerSettings.filterAchievements = it.isChecked }
+            .checked(ControllerSettings.filterAchievements)
+            .add(t(API_TRANSLATE.settings_notifications_filter_comments))
+            .onChange { ControllerSettings.filterComments = it.isChecked }.checked(ControllerSettings.filterComments)
+            .add(t(API_TRANSLATE.settings_notifications_filter_answers))
+            .onChange { ControllerSettings.filterAnswers = it.isChecked }.checked(ControllerSettings.filterAnswers)
+            .add(t(API_TRANSLATE.settings_notifications_filter_karma))
+            .onChange { ControllerSettings.filterKarma = it.isChecked }.checked(ControllerSettings.filterKarma)
+            .add(t(API_TRANSLATE.settings_notifications_filter_important))
+            .onChange { ControllerSettings.filterImportant = it.isChecked }.checked(ControllerSettings.filterImportant)
+            .add(t(API_TRANSLATE.settings_notifications_filter_app_other))
+            .onChange { ControllerSettings.filterOther = it.isChecked }.checked(ControllerSettings.filterOther)
+            .setOnHide {
+                if (oldFollowsPublications != ControllerSettings.filterFollowsPublications
+                    || oldFollows != ControllerSettings.filterFollows
+                    || oldAchievements != ControllerSettings.filterAchievements
+                    || oldComments != ControllerSettings.filterComments
+                    || oldKarma != ControllerSettings.filterKarma
+                    || oldAnswers != ControllerSettings.filterAnswers
+                    || oldImportant != ControllerSettings.filterImportant
+                    || oldOther != ControllerSettings.filterOther
+                ) {
+                    EventBus.post(EventNotificationsCountChanged())
+                    reload()
                 }
-                .asSheetShow()
+            }
+            .asSheetShow()
     }
-
-    private fun getFilters(on: Boolean): Array<Long> {
-        val list = ArrayList<Long>()
-        if (on == ControllerSettings.filterFollowsPublications) list.add(API.NOTIF_FOLLOWS_PUBLICATION)
-        if (on == ControllerSettings.filterFollows) list.add(API.NOTIF_ACCOUNT_FOLLOWS_ADD)
-        if (on == ControllerSettings.filterAchievements) list.add(API.NOTIF_ACHI)
-        if (on == ControllerSettings.filterComments) list.add(API.NOTIF_COMMENT)
-        if (on == ControllerSettings.filterAnswers) list.add(API.NOTIF_COMMENT_ANSWER)
-        if (on == ControllerSettings.filterKarma) list.add(API.NOTIF_KARMA_ADD)
-        if (on == ControllerSettings.filterImportant) list.add(API.NOTIF_PUBLICATION_IMPORTANT)
-        return list.toTypedArray()
-    }
-
 }

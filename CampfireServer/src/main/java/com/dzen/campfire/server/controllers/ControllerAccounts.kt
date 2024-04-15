@@ -56,24 +56,6 @@ object ControllerAccounts {
         )
     }
 
-    fun addNotificationToken(accountId: Long, token: String) {
-        if (token.isNotEmpty()) {
-            val id = Database.insert(
-                "EAccountsLogin.addToken insert", TCollisions.NAME,
-                TCollisions.owner_id, accountId,
-                TCollisions.collision_type, API.COLLISION_ACCOUNT_NOTIFICATION_TOKEN,
-                TCollisions.value_2, token
-            )
-            Database.remove(
-                "EAccountsLogin.addToken remove", SqlQueryRemove(TCollisions.NAME)
-                    .where(TCollisions.collision_type, "=", API.COLLISION_ACCOUNT_NOTIFICATION_TOKEN)
-                    .where(TCollisions.id, "<>", id)
-                    .whereValue(TCollisions.value_2, "=", token)
-            )
-        }
-    }
-
-
     fun getFollows(accountId: Long, offset: Long = 0, count: Int = 0): Array<Account> {
         val ids = getFollowsIds(accountId, offset, count)
         if (ids.isEmpty()) return emptyArray()

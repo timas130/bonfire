@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into notification_tokens (session_id, service, token) values ($1, $2, $3) on conflict (session_id) do update set service = excluded.service, token = excluded.token",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int4",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "d1dbdba9edeba2be064d7d86537f3252b42404ebf024b03e207c0872888d4783"
+}

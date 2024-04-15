@@ -176,20 +176,35 @@ class ECommentsCreate : RCommentsCreate(0, "", null, null, 0, false, 0, 0, false
             ControllerNotifications.push(parentComment.creator.id, notification)
         }
 
-
-        val publicationName = ""
-
-        val tokens = ControllerNotifications.getCommentWatchers(publicationId, apiAccount.id, parentComment.creator.id)
+        val watchers = ControllerPublications.getCommentWatchers(publicationId)
+            .filter { it != apiAccount.id && it != parentComment.creator.id }
 
         val v = Database.select("ECommentsCreate.notifications", SqlQuerySelect(TCollisions.NAME, TCollisions.owner_id)
-            .where(SqlWhere.WhereIN(TCollisions.owner_id, tokens.map { it.a1 }.toTypedArray()))
+            .where(SqlWhere.WhereIN(TCollisions.owner_id, watchers.toTypedArray()))
             .where(TCollisions.collision_type, "=", API.COLLISION_ACCOUNT_BLACK_LIST_ACCOUNT)
             .where(TCollisions.collision_id, "=", apiAccount.id))
         val excludeBL: Array<Long> = Array(v.rowsCount) { v.next() }
 
-        val notification = NotificationComment(apiAccount.imageId, publicationId, comment.id, apiAccount.id, apiAccount.sex, apiAccount.name, publication!!.publicationType, publication!!.creator.id, publication!!.tag_s_1, comment.text, comment.imageId, comment.imageIdArray, publication!!.fandom.name, publicationName, comment.stickerId, ControllerPublications.getMaskText(publication!!), ControllerPublications.getMaskPageType(publication!!))
+        val notification = NotificationComment(
+            apiAccount.imageId,
+            publicationId,
+            comment.id,
+            apiAccount.id,
+            apiAccount.sex,
+            apiAccount.name,
+            publication!!.publicationType,
+            publication!!.creator.id,
+            publication!!.tag_s_1,
+            comment.text,
+            comment.imageId,
+            comment.imageIdArray,
+            publication!!.fandom.name,
+            comment.stickerId,
+            ControllerPublications.getMaskText(publication!!),
+            ControllerPublications.getMaskPageType(publication!!)
+        )
 
-        ControllerNotifications.push(notification, tokens.filterNot { excludeBL.contains(it.a1) }.toTypedArray())
+        ControllerNotifications.push(watchers.filterNot { excludeBL.contains(it) }.toTypedArray(), notification)
     }
 
     private fun parseGif() {

@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into notification_profiles (user_id, dnd_end_time) values ($1, $2) on conflict (user_id) do update set dnd_end_time = excluded.dnd_end_time",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Timestamptz"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "61b318ed6c747b1014fb249cc7d04eac48b1c6de23a062d6230f75bb5d66b072"
+}

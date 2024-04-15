@@ -1,28 +1,27 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select size, gif, upload_type from temp_images where user_id = $1 and key = $2",
+  "query": "select * from notification_tokens where session_id = $1",
   "describe": {
     "columns": [
       {
         "ordinal": 0,
-        "name": "size",
+        "name": "session_id",
         "type_info": "Int8"
       },
       {
         "ordinal": 1,
-        "name": "gif",
-        "type_info": "Bool"
+        "name": "service",
+        "type_info": "Int4"
       },
       {
         "ordinal": 2,
-        "name": "upload_type",
+        "name": "token",
         "type_info": "Text"
       }
     ],
     "parameters": {
       "Left": [
-        "Int8",
-        "Text"
+        "Int8"
       ]
     },
     "nullable": [
@@ -31,5 +30,5 @@
       false
     ]
   },
-  "hash": "ffd37d6b13dbdbd827c733852cfd462a9fb225f167c7cb186a35aad4fc25cd57"
+  "hash": "92136615186a01bae52ce7d4ad27dc5c59c1ee4091dcd3ea28e31b74a996dbc3"
 }

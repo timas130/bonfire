@@ -1,0 +1,3 @@
+mutation PostNotification($input: NotificationInput!) {
+    postNotification(input: $input)
+}

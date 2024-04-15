@@ -263,10 +263,14 @@ pub struct Session {
     /// It is also specified in [`jwt::TokenClaims`] as the
     /// first part of `jti`.
     pub id: i64,
+    /// ID of the user to whom this session corresponds
+    pub user_id: i64,
     /// Is the session still active (not expired)
     pub active: bool,
     /// Last login_refresh() call timestamp
     pub last_active: DateTime<Utc>,
+    /// Last request timestamp
+    pub last_online: DateTime<Utc>,
     /// The first time the session has been created
     pub created_at: DateTime<Utc>,
     /// Details about the device and location of the session owner
@@ -441,6 +445,11 @@ pub trait AuthService {
         user_context: Option<UserContext>,
     ) -> Result<String, AuthError>;
 
+    //// Online status
+
+    /// Update online status for the authenticated session and user
+    async fn mark_online(access_token: String) -> Result<(), AuthError>;
+
     //// Password recovery
 
     /// Send a link to `email` with a password recovery link.
@@ -530,6 +539,12 @@ pub trait AuthService {
     async fn get_by_token(token: String) -> Result<(i64, AuthUser), AuthError>;
 
     //// Administrative actions
+
+    /// Get a list of [`Session`]s (active and inactive) for a user.
+    async fn admin_get_sessions(user_id: i64, offset: i64) -> Result<Vec<Session>, AuthError>;
+
+    /// Get session information by its ID
+    async fn get_session(session_id: i64) -> Result<Session, AuthError>;
 
     /// Completely delete a user by their ID.
     async fn unsafe_delete_user(id: i64) -> Result<(), AuthError>;

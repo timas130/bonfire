@@ -1,5 +1,6 @@
 use config::{Environment, File};
 use serde::Deserialize;
+use yup_oauth2::ServiceAccountKey;
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct GlobalConfig {
@@ -14,6 +15,7 @@ pub struct GlobalConfig {
     pub images: ImagesConfig,
     pub google: OAuthConfig,
     pub firebase: FirebaseConfig,
+    pub notification: NotificationConfig,
 }
 impl GlobalConfig {
     pub(crate) fn load() -> anyhow::Result<Self> {
@@ -41,6 +43,7 @@ pub struct PortsConfig {
     pub email: u16,
     pub images: u16,
     pub level: u16,
+    pub notification: u16,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -75,10 +78,15 @@ pub struct OAuthConfig {
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct FirebaseConfig {
-    pub project_id: String,
+    pub service_account: ServiceAccountKey,
 
     pub scrypt_signer_key: String,
     pub scrypt_salt_separator: String,
     pub scrypt_rounds: u32,
     pub scrypt_mem_cost: u32,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct NotificationConfig {
+    pub threads: u32,
 }

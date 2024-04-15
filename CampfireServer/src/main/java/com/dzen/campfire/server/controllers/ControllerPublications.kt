@@ -667,4 +667,10 @@ object ControllerPublications {
         return if (v.isEmpty) 0 else v.next()
     }
 
+    fun getCommentWatchers(publicationId: Long): LongArray {
+        val v = Database.select("ControllerPublications.getComemntWatchers", SqlQuerySelect(TCollisions.NAME, TCollisions.owner_id)
+            .where(TCollisions.collision_type, "=", API.COLLISION_COMMENTS_WATCH)
+            .where(TCollisions.collision_id, "=", publicationId))
+        return LongArray(v.rowsCount) { v.nextLongOrZero() }
+    }
 }

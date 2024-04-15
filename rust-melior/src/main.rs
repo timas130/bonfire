@@ -21,7 +21,8 @@ use axum_extra::headers::authorization::Bearer;
 use axum_extra::headers::{Authorization, UserAgent};
 use axum_extra::TypedHeader;
 use c_core::prelude::tokio::net::TcpListener;
-use c_core::prelude::{anyhow, tokio};
+use c_core::prelude::{anyhow, tarpc, tokio};
+use c_core::services::auth::user::PermissionLevel;
 use c_core::ServiceBase;
 use sentry_tower::{NewSentryLayer, SentryHttpLayer};
 use std::net::SocketAddr;
@@ -58,6 +59,21 @@ async fn graphql_handler(
         user_agent,
     )
     .await;
+
+    if let Some(ref access_token) = req_context.access_token {
+        if let Some(ref user) = req_context.user {
+            // don't mark service accounts as online
+            if user.permission_level < PermissionLevel::System {
+                let auth = req_context.auth.clone();
+                let access_token = access_token.clone();
+                tokio::spawn(async move {
+                    let _ = auth
+                        .mark_online(tarpc::context::current(), access_token.clone())
+                        .await;
+                });
+            }
+        }
+    }
 
     schema
         .execute(req.into_inner().data(req_context))

@@ -1,7 +1,7 @@
 use crate::context::ReqContext;
 use crate::error::RespError;
 use crate::utils::ok::OkResp;
-use crate::utils::permissions::{is_system_caller, PermissionLevelGuard};
+use crate::utils::permissions::PermissionLevelGuard;
 use async_graphql::{Context, Object, ID};
 use c_core::prelude::tarpc::context;
 use c_core::services::auth::user::PermissionLevel::System;

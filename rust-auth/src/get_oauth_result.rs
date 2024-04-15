@@ -34,11 +34,16 @@ impl AuthServer {
         context: Option<&UserContext>,
     ) -> Result<OAuthResult, AuthError> {
         let mut validation = Validation::new(Algorithm::RS256);
-        validation.set_issuer(&[format!(
-            "https://securetoken.google.com/{}",
-            self.base.config.firebase.project_id
-        )]);
-        validation.set_audience(&[&self.base.config.firebase.project_id]);
+        let project_id = self
+            .base
+            .config
+            .firebase
+            .service_account
+            .project_id
+            .as_ref()
+            .expect("project_id is missing");
+        validation.set_issuer(&[format!("https://securetoken.google.com/{}", project_id,)]);
+        validation.set_audience(&[project_id]);
 
         let kid = decode_header(&id_token)
             .map_err(|_| AuthError::InvalidToken)

@@ -10,6 +10,7 @@ import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
 
+@Deprecated("migrate to melior")
 object GoogleNotification {
     private var allowedCustomEndpoints = emptyArray<String>()
 

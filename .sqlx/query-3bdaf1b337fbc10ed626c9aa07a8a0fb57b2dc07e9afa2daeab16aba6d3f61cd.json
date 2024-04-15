@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select read from notifications where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "read",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "3bdaf1b337fbc10ed626c9aa07a8a0fb57b2dc07e9afa2daeab16aba6d3f61cd"
+}

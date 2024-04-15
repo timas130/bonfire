@@ -14,7 +14,8 @@ impl LevelServer {
         // i'm not a fucking cryptography expert
         let mut rng = SplitMix64::seed_from_u64(user_id as u64);
         let user_bytes: [u8; 8] = rng.sample(Standard);
-        let mut rng = SplitMix64::seed_from_u64(date.and_time(NaiveTime::MIN).timestamp() as u64);
+        let mut rng =
+            SplitMix64::seed_from_u64(date.and_time(NaiveTime::MIN).and_utc().timestamp() as u64);
         let date_bytes: [u8; 8] = rng.sample(Standard);
 
         let mut tx = self.base.pool.begin().await?;

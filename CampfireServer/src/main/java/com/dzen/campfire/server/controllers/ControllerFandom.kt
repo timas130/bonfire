@@ -119,6 +119,17 @@ object ControllerFandom {
         return Database.select("ControllerFandom.getSubscribersCount_LastTwoDays", select).next()
     }
 
+    fun getSubscribersImportant(fandomId: Long, languageId: Long): LongArray {
+        val v = Database.select(
+            "ControllerFandom.getSubscribersImportant",
+            SqlQuerySelect(TCollisions.NAME, TCollisions.owner_id)
+                .where(TCollisions.collision_type, "=", API.COLLISION_FANDOM_NOTIFY_IMPORTANT)
+                .where(TCollisions.collision_id, "=", fandomId)
+                .where(TCollisions.collision_sub_id, "=", languageId),
+        )
+        return LongArray(v.rowsCount) { v.nextLongOrZero() }
+    }
+
     operator fun get(id: Long, vararg columns: String): AnyArray {
         val query = SqlQuerySelect(TFandoms.NAME, *columns)
         query.where(TFandoms.id, "=", id)

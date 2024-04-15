@@ -66,7 +66,6 @@ class ApiServer(
         val key = "[${request.requestProjectKey}] ${request.javaClass.simpleName}"
         onKeyFound.invoke(key)
         request.accessToken = json[ApiClient.J_API_ACCESS_TOKEN]
-        request.loginToken = json[ApiClient.J_API_LOGIN_TOKEN]
         request.botToken = json[ApiClient.J_API_BOT_TOKEN]
 
         val allowedAccounts = accountRateLimiter[ip] ?: listOf()
@@ -155,13 +154,6 @@ class ApiServer(
             ApiException(ApiClient.ERROR_UNAUTHORIZED).json(true, responseJsonContent)
             responseJson.put(ApiClient.J_RESPONSE, responseJsonContent)
         } else {
-            if (apiAccount != null) {
-                responseJson.put(ApiClient.J_API_ACCESS_TOKEN, apiAccount.accessToken)
-                if (request.loginToken != null) {
-                    responseJson.put(ApiClient.J_API_REFRESH_TOKEN, apiAccount.refreshToken)
-                }
-            }
-
             try {
                 request.check()
                 val response = request.execute()

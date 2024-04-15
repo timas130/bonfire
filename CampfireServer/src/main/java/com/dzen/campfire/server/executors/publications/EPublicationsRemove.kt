@@ -51,7 +51,7 @@ class EPublicationsRemove : RPublicationsRemove(0) {
 
             val n = NotificationChatMessageRemove(publication.id)
 
-            ControllerNotifications.push(n, ControllerChats.getChatSubscribersIdsWithTokensNotDeleted((publication as PublicationChatMessage).chatTag(), apiAccount.id))
+            ControllerNotifications.push(ControllerChats.getChatSubscribersIdsWithTokensNotDeleted((publication as PublicationChatMessage).chatTag(), apiAccount.id), n)
         }
 
         if (publication.publicationType == API.PUBLICATION_TYPE_COMMENT) {

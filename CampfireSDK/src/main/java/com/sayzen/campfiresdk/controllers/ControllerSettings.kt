@@ -642,18 +642,10 @@ object ControllerSettings {
             onSettingsUpdated()
         }
 
-    fun notificationsFilterEnabled(type: Long): Boolean {
-        return when (type) {
-            API.NOTIF_FOLLOWS_PUBLICATION -> filterFollowsPublications
-            API.NOTIF_ACCOUNT_FOLLOWS_ADD -> filterFollows
-            API.NOTIF_ACHI -> filterAchievements
-            API.NOTIF_COMMENT -> filterComments
-            API.NOTIF_COMMENT_ANSWER -> filterAnswers
-            API.NOTIF_KARMA_ADD -> filterKarma
-            API.NOTIF_PUBLICATION_IMPORTANT -> filterImportant
-            else -> filterOther
-        }
-    }
+    fun notificationsFilterEnabled(type: Long): Boolean = accountSettings.notificationsFilterEnabled(type)
+
+    fun getNotificationFilters(allowlist: Boolean = !filterOther): Array<Long> =
+        accountSettings.getNotificationFilters(allowlist)
 
     //
     //  Fandom

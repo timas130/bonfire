@@ -5,6 +5,7 @@ apply plugin: 'kotlin'
 
 dependencies {
     implementation project(':DevSupJava')
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 }
 
 jar {

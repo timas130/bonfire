@@ -3,10 +3,9 @@ package com.dzen.campfire.server.controllers
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.Publication
-import com.dzen.campfire.api.models.publications.post.PublicationPost
-import com.dzen.campfire.server.tables.*
+import com.dzen.campfire.server.tables.TPublications
+import com.dzen.campfire.server.tables.TTranslates
 import com.sup.dev.java.libs.debug.info
-import com.sup.dev.java.libs.debug.log
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsDate
 import com.sup.dev.java.tools.ToolsThreads
@@ -49,7 +48,6 @@ object ControllerGarbage {
     fun remove() {
         removeChatImagesByLifetime()
         removeChatMessagesByLifeTime()
-        removeNotificationsByLifetime()
     }
 
     fun removeDeep() {
@@ -61,7 +59,6 @@ object ControllerGarbage {
         val count_3: Long = Database.select("ControllerGarbage.removeDeep_3",SqlQuerySelect(TPublications.NAME, Sql.COUNT)).next()!!
         removeChatImagesByLifetime()
         val count_4: Long = Database.select("ControllerGarbage.removeDeep_4",SqlQuerySelect(TPublications.NAME, Sql.COUNT)).next()!!
-        removeNotificationsByLifetime()
 
         info("Size of table. " +
                 "$count_1 -> $count_2 (-${count_1 - count_2})" +
@@ -153,14 +150,6 @@ object ControllerGarbage {
         }
 
         info("Remove removeChatImagesByLifetime $count")
-    }
-
-    fun removeNotificationsByLifetime() {
-        System.err.println("removeNotificationsByLifetime....")
-        Database.remove("ControllerGarbage.removeNotificationsByLifetime",SqlQueryRemove(TAccountsNotification.NAME)
-                .where(TAccountsNotification.date_create, "<", System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 7))
-
-        info("Remove removeNotificationsByLifetime")
     }
 
     fun removeChatMessagesByLifeTime(){

@@ -18,7 +18,6 @@ class NotificationComment : Notification {
     var commentImageId = 0L
     var commentImagesIds:Array<Long> = emptyArray()
     var fandomName = ""
-    var publicationName = ""
     var stickerId = 0L
     var maskText = ""
     var maskPageType = 0L
@@ -44,7 +43,6 @@ class NotificationComment : Notification {
                 commentImageId: Long,
                 commentImagesIds: Array<Long>,
                 fandomName: String,
-                publicationName: String,
                 stickerId: Long,
                 maskText: String,
                 maskPageType: Long
@@ -61,7 +59,6 @@ class NotificationComment : Notification {
         this.commentImageId = commentImageId
         this.commentImagesIds = commentImagesIds
         this.fandomName = fandomName
-        this.publicationName = publicationName
         this.stickerId = stickerId
         this.maskText = maskText
         this.maskPageType = maskPageType
@@ -80,7 +77,6 @@ class NotificationComment : Notification {
         commentImageId = json.m(inp, "commentImageId", commentImageId)
         commentImagesIds = json.m(inp, "commentImagesIds", commentImagesIds)
         fandomName = json.m(inp, "fandomName", fandomName)
-        publicationName = json.m(inp, "unitName", publicationName)
         stickerId = json.m(inp, "stickerId", stickerId)
         maskText = json.m(inp, "maskText", maskText)
         maskPageType = json.m(inp, "maskPageType", maskPageType)

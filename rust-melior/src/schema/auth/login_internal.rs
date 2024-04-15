@@ -8,18 +8,13 @@ use c_core::services::auth::AuthError;
 #[derive(Default)]
 pub struct LoginInternalMutation;
 
-fn is_internal(ctx: &Context<'_>) -> bool {
-    let req = ctx.data_unchecked::<ReqContext>();
-    req.user_context.is_internal()
-}
-
 #[Object]
 impl LoginInternalMutation {
     /// Login as an internal service
     async fn login_internal(
         &self,
         ctx: &Context<'_>,
-        key: String,
+        #[graphql(secret)] key: String,
     ) -> Result<LoginResultSuccess, RespError> {
         let req = ctx.data_unchecked::<ReqContext>();
 
