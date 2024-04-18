@@ -15,12 +15,17 @@ open class ImageLoaderUrl(
             .url(url)
             .build()
         try {
-            return client
+            val resp = client
                 .newCall(request)
                 .execute()
-                .use {
-                    it.body!!.bytes()
-                }
+            if (!resp.isSuccessful) {
+                err("ImageLoaderUrl failed with status ${resp.code} ${resp.message}")
+                err(resp.use { it.body!!.string() })
+                return null
+            }
+            return resp.use {
+                it.body!!.bytes()
+            }
         } catch (e: Exception) {
             err("ImageLoaderUrl failed:")
             err(e)
