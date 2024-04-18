@@ -93,4 +93,5 @@
     <string name="security_sessions_active">Последняя активность: %s</string>
     <string name="security_sessions_logout">Выйти</string>
     <string name="error_session_too_new">Вашей сессии должно быть как минимум 7 дней, чтобы это сделать.</string>
+    <string name="support_link">Помощь</string>
 </resources>

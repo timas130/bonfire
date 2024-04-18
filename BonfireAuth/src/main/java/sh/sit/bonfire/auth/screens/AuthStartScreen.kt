@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.sup.dev.android.tools.ToolsIntent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -75,7 +76,14 @@ fun AuthStartScreen(
                 .padding(WindowInsets.safeDrawing.asPaddingValues())
                 .padding(horizontal = 16.dp)
         ) {
-            val (headline, buttons) = createRefs()
+            val (headline, buttons, help) = createRefs()
+
+            HelpButton(
+                Modifier.constrainAs(help) {
+                    top.linkTo(parent.top)
+                    end.linkTo(parent.end)
+                }
+            )
 
             Column(
                 Modifier
@@ -140,6 +148,16 @@ fun AuthStartScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun HelpButton(modifier: Modifier = Modifier) {
+    TextButton(
+        onClick = { ToolsIntent.openLink("https://bonfire.moe/help") },
+        modifier = modifier,
+    ) {
+        Text(stringResource(R.string.support_link))
     }
 }
 
