@@ -10,12 +10,12 @@ import com.sup.dev.java_pc.sql.SqlQueryRemove
 
 object ControllerMigrator {
     fun start() {
-        //migrateAccounts()
-
         if (!App.test) {
-            for (i in API_TRANSLATE.map.values) {
-                ru(i.key, i.text)
-            }
+            Thread {
+                for (i in API_TRANSLATE.map.values) {
+                    ru(i.key, i.text)
+                }
+            }.start()
         }
     }
 
