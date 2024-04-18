@@ -542,7 +542,7 @@ object API_TRANSLATE {
     val achi_75 = Translate("Добавьте изображения в галерею вашего фэндома.")
     val achi_76 = Translate("Добавьте описание к вашему фэндому.")
     val achi_77 = Translate("Заработайте карму на квесте.")
-    val achi_78 = Translate("Получите секретные бонусы.")
+    val achi_78 = Translate("Получайте другие бонусы за участие в жизни сообщества.")
 
     val profile_subtitle_text_1 = Translate("Пользователь Bonfire")
     val profile_subtitle_text_2 = Translate("Лучший пользователь Bonfire")

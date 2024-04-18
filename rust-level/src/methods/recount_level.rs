@@ -45,7 +45,7 @@ impl LevelServer {
         let mut hm = HashMap::new();
 
         #[rustfmt::skip]
-            let achievements_collisions = [
+        let achievements_collisions = [
             (AchiIndex::AppShare, collisions::COLLISION_ACHIEVEMENT_SHARE_APP),
             (AchiIndex::Chat, collisions::COLLISION_ACHIEVEMENT_CHAT),
             (AchiIndex::Answer, collisions::COLLISION_ACHIEVEMENT_ANSWER),
@@ -231,6 +231,15 @@ impl LevelServer {
         if account.date_create < 1693515600000 {
             bonus += 10;
         }
+
+        bonus += sqlx::query_scalar!(
+            "select sum(amount) from additional_levels \
+             where user_id = $1",
+            user_id,
+        )
+        .fetch_one(&self.base.pool)
+        .await?
+        .unwrap_or(0);
 
         let legacy_quests_finished = sqlx::query_scalar!(
             "select count(*) from collisions where owner_id = $1 and collision_type = $2",
