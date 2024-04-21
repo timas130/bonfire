@@ -175,12 +175,14 @@ object ControllerChats {
 
         updateReadOrSubscribeIfNotExistOrRemoved(apiAccount.id, tag, if (tag.chatType == API.CHAT_TYPE_FANDOM_ROOT) 0 else 1, API.CHAT_MEMBER_LVL_USER, 0, if (tag.chatType == API.CHAT_TYPE_PRIVATE) 0 else System.currentTimeMillis())
 
-        when {
-            message.chatType == API.CHAT_TYPE_FANDOM_ROOT -> parseFandom(apiAccount, message, tag)
-            message.chatType == API.CHAT_TYPE_CONFERENCE -> parseConf(apiAccount, message, tag)
-            else -> parsePrivate(apiAccount, message, tag)
+        if (!ControllerAccounts.isAccountShadowBanned(apiAccount.id)) {
+            when {
+                message.chatType == API.CHAT_TYPE_FANDOM_ROOT -> parseFandom(apiAccount, message, tag)
+                message.chatType == API.CHAT_TYPE_CONFERENCE -> parseConf(apiAccount, message, tag)
+                else -> parsePrivate(apiAccount, message, tag)
+            }
+            updateLastMessage(message.chatTag(), message)
         }
-        updateLastMessage(message.chatTag(), message)
 
         if (message.chatType == API.CHAT_TYPE_FANDOM_ROOT) markRead(apiAccount.id, tag)
     }
