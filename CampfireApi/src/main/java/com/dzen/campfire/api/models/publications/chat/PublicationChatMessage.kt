@@ -189,10 +189,11 @@ class PublicationChatMessage : Publication {
         }
 
         receiver.add(resource, resourceId, imageW, imageH)
-        for (i in 0 until quoteImages.size.coerceAtLeast(quoteImagesIds.size)) {
+        receiver.add(quoteStickerImage, quoteStickerImageId)
+        for (i in quoteImages.indices) {
             receiver.add(quoteImages[i], quoteImagesIds[i])
         }
-        for (i in 0 until images.size.coerceAtLeast(imageIdArray.size)) {
+        for (i in images.indices) {
             receiver.add(images[i], imageIdArray[i], imageWArray[i], imageHArray[i])
         }
         receiver.add(voiceResource, voiceResourceId)
