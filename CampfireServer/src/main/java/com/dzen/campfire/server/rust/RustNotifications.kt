@@ -9,15 +9,15 @@ import com.sup.dev.java.libs.json.Json
 import kotlin.random.Random
 
 object RustNotifications {
-    fun post(userId: Long, notification: Notification) {
+    internal fun post(userId: Long, notification: Notification) {
         post(listOf(userId), notification)
     }
 
-    fun post(userIds: Array<Long>, notification: Notification) {
+    internal fun post(userIds: Array<Long>, notification: Notification) {
         post(userIds.toList(), notification)
     }
 
-    fun post(userIds: Collection<Long>, notification: Notification) {
+    internal fun post(userIds: Collection<Long>, notification: Notification) {
         notification.randomCode = Random.nextInt().toLong()
         post(NotificationInput(
             recipients = userIds

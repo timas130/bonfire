@@ -2,7 +2,6 @@ package com.dzen.campfire.api.tools.client
 
 import com.dzen.campfire.api.models.images.ImageHolder
 import com.dzen.campfire.api.models.images.ImageHolderReceiver
-import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.ApiAccount
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.api.tools.server.ApiRequest
@@ -137,18 +136,7 @@ abstract class Request<K : Request.Response> : Subscription(){
         }
 
         fun signImages(resources: IControllerResources) {
-            fillImageRefs(object : ImageHolderReceiver {
-                override fun add(imageRef: ImageRef, legacyId: Long?, width: Int?, height: Int?) {
-                    if (legacyId != null && legacyId > 0) {
-                        imageRef.imageId = legacyId
-                        imageRef.width = width ?: 0
-                        imageRef.height = height ?: 0
-                    }
-                    if (imageRef.url.isEmpty() && imageRef.imageId > 0) {
-                        imageRef.url = resources.getPublicUrl(imageRef.imageId)
-                    }
-                }
-            })
+            fillImageRefs(resources)
         }
     }
 

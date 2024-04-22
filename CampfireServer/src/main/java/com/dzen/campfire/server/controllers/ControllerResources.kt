@@ -1,6 +1,7 @@
 package com.dzen.campfire.server.controllers
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.api.tools.server.IControllerResources
 import com.dzen.campfire.server.app.App
@@ -96,6 +97,17 @@ object ControllerResources : IControllerResources {
 
     override fun getPublicUrl(resourceId: Long): String {
         return storage.getPublicUrl(resourceId)
+    }
+
+    override fun add(imageRef: ImageRef, legacyId: Long?, width: Int?, height: Int?) {
+        if (legacyId != null && legacyId > 0) {
+            imageRef.imageId = legacyId
+            imageRef.width = width ?: 0
+            imageRef.height = height ?: 0
+        }
+        if (imageRef.url.isEmpty() && imageRef.imageId > 0) {
+            imageRef.url = getPublicUrl(imageRef.imageId)
+        }
     }
 
     //
