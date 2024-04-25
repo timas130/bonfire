@@ -464,7 +464,7 @@ object CampfireConstants {
 
     val LVLS = arrayOf(
         AppLevel(API.LVL_TRUSTED, API_TRANSLATE.lvl_trusted),
-        AppLevel(API.LVL_CAN_CHANGE_PROFILE_IMAGE, API_TRANSLATE.lvl_change_user_name),
+        AppLevel(API.LVL_CAN_CHANGE_PROFILE_IMAGE, API_TRANSLATE.lvl_app_profile_image),
         AppLevel(API.LVL_CAN_CHANGE_STATUS, API_TRANSLATE.lvl_app_status),
         AppLevel(API.LVL_CAN_MENTION, API_TRANSLATE.lvl_app_mention),
         AppLevel(API.LVL_CAN_CHANGE_AVATAR_GIF, API_TRANSLATE.lvl_avatar_gif),
