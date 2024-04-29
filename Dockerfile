@@ -4,7 +4,7 @@ COPY . /app
 WORKDIR /app/
 RUN gradle CampfireServer:build CampfireServerMedia:build --no-daemon
 
-FROM rust:1.72-buster AS rust-builder
+FROM rust:1.77-buster AS rust-builder
 
 WORKDIR /app
 COPY ./rust-auth /app/rust-auth
