@@ -1,0 +1,10 @@
+The following components of this software are provided under AGPL
+3.0 (available at `LICENSE.agpl3`) or a later version:
+
+- `rust-auth` (also known as c-auth),
+- `rust-core` (also known as c-core),
+- `rust-email` (also known as c-email).
+
+Unless stated otherwise, every other component of the software
+is provided under the Apache-2.0 license, available at
+`LICENSE.apache2`.
