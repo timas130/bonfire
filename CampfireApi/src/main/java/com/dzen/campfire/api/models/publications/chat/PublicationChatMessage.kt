@@ -189,6 +189,7 @@ class PublicationChatMessage : Publication {
         }
 
         receiver.add(resource, resourceId, imageW, imageH)
+        receiver.add(gif, gifId)
         receiver.add(quoteStickerImage, quoteStickerImageId)
         for (i in quoteImages.indices) {
             receiver.add(quoteImages[i], quoteImagesIds[i])
