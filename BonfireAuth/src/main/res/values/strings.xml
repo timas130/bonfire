@@ -96,4 +96,8 @@
     <string name="security_sessions_logout">Log out</string>
     <string name="error_session_too_new">Your session must be at least 7 days old to do this.</string>
     <string name="support_link">Help</string>
+    <string name="error_tfa_not_supported">This version of the app doesn\'t support two-factor authentication. Please
+        update and try again.
+    </string>
+    <string name="error_another_account_exists">Another user is already using this external account</string>
 </resources>

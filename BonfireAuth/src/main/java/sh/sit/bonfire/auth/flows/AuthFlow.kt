@@ -31,6 +31,7 @@ abstract class AuthFlow(val context: Context) {
         TryAgainLater,
         UserNotFound,
         SessionTooNew,
+        AnotherAccountExists,
         Unknown,
     }
 
@@ -53,6 +54,7 @@ abstract class AuthFlow(val context: Context) {
                     "TryAgainLater" -> FailureReason.TryAgainLater
                     "UserNotFound" -> FailureReason.UserNotFound
                     "SessionTooNew" -> FailureReason.SessionTooNew
+                    "AnotherAccountExists" -> FailureReason.AnotherAccountExists
                     else -> FailureReason.Unknown
                 }
 

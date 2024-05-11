@@ -27,6 +27,7 @@ fun AuthFlow.AuthException.toUiString(context: Context): String {
         FailureReason.TryAgainLater -> R.string.error_try_again_later
         FailureReason.UserNotFound -> R.string.error_user_not_found
         FailureReason.SessionTooNew -> R.string.error_session_too_new
+        FailureReason.AnotherAccountExists -> R.string.error_another_account_exists
         FailureReason.Unknown -> R.string.error_unknown
     }
 
