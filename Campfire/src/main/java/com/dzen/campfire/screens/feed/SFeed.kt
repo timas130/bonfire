@@ -6,6 +6,7 @@ import androidx.viewpager.widget.ViewPager
 import com.dzen.campfire.R
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.screens.feed.filters.SplashFilters
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerScreenAnimations
@@ -19,7 +20,6 @@ import com.sayzen.campfiresdk.screens.fandoms.CardUpdate
 import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
 import com.sayzen.campfiresdk.screens.post.create.SPostCreate
 import com.sayzen.campfiresdk.support.load
-import com.sayzen.devsupandroidgoogle.ControllerFirebaseAnalytics
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -90,12 +90,13 @@ class SFeed : Screen(R.layout.screen_feed), PostList {
         })
 
         findViewById<View>(R.id.vFab).setOnClickListener {
-            ControllerFirebaseAnalytics.post("Screen_Feed", "CreateDraft")
+            PostHog.capture("create_draft", properties = mapOf("from" to "feed"))
             SFandomsSearch.instance(Navigator.TO, false) { fandom ->
                 SPostCreate.instance(fandom.id, fandom.languageId, fandom.name, fandom.image, SPostCreate.PostParams(), Navigator.REPLACE)
             }
         }
         findViewById<View>(R.id.vFab).setOnLongClickListener {
+            PostHog.capture("create_draft", properties = mapOf("from" to "feed_longclick"))
             SPostCreate.instance(ControllerSettings.longPlusFandomId, ControllerSettings.longPlusFandomLanguageId, SPostCreate.PostParams(),
                     {
 

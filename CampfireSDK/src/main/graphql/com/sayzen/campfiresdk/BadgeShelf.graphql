@@ -1,0 +1,19 @@
+fragment BadgeShelfIcon on Badge {
+    id
+    name
+    image {
+        ...Ui
+    }
+}
+
+query BadgeShelf($userId: ID!) {
+    userById(id: $userId) {
+        id
+        profile {
+            userId
+            badgeShelf {
+                ...BadgeShelfIcon
+            }
+        }
+    }
+}

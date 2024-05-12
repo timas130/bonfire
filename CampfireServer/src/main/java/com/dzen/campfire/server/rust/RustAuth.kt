@@ -1,5 +1,7 @@
 package com.dzen.campfire.server.rust
 
+import com.apollographql.apollo3.cache.normalized.FetchPolicy
+import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.ChangeNameMutation
 import com.dzen.campfire.server.ShortMeQuery
@@ -11,6 +13,7 @@ object RustAuth {
         return try {
             ControllerRust.apollo
                 .query(ShortMeQuery())
+                .fetchPolicy(FetchPolicy.NetworkOnly)
                 .addHttpHeader("Authorization", "Bearer $accessToken")
                 .executeExt()
                 .me

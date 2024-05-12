@@ -1,0 +1,8 @@
+extend schema @link(url: "https://specs.apollo.dev/kotlin_labs/v0.2", import: ["@typePolicy", "@fieldPolicy"])
+
+extend type User @typePolicy(keyFields: "id" connectionFields: "badges")
+extend type AccountCustomization @typePolicy(keyFields: "userId")
+extend type ProfileCustomization @typePolicy(keyFields: "userId")
+extend type Badge @typePolicy(keyFields: "id")
+extend type Session @typePolicy(keyFields: "id")
+extend type Notification @typePolicy(keyFields: "id")

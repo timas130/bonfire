@@ -1,7 +1,7 @@
 package sh.sit.bonfire.auth.flows
 
 import android.content.Context
-import sh.sit.bonfire.BindOAuthMutation
+import sh.sit.bonfire.auth.BindOAuthMutation
 import sh.sit.bonfire.auth.apollo
 
 class BindGoogleFlow(context: Context) : AuthFlow(context) {

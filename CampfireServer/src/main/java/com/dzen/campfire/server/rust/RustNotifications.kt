@@ -4,8 +4,9 @@ import com.apollographql.apollo3.api.Optional
 import com.dzen.campfire.api.models.notifications.Notification
 import com.dzen.campfire.server.*
 import com.dzen.campfire.server.rust.ControllerRust.executeExt
-import com.dzen.campfire.server.type.*
 import com.sup.dev.java.libs.json.Json
+import sh.sit.bonfire.schema.DateTime
+import sh.sit.schema.type.*
 import kotlin.random.Random
 
 object RustNotifications {

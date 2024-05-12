@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select show_badge_shelf from profile_customization where user_id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "show_badge_shelf",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "b9ee6c33aa544104d1b98524b0d5dac98f7ce8577d049f412d1779dcfef9c0ae"
+}

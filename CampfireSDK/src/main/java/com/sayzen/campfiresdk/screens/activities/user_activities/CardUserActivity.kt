@@ -7,6 +7,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.activities.UserActivity
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerActivities
 import com.sayzen.campfiresdk.controllers.ControllerApi
@@ -139,6 +140,7 @@ class CardUserActivity(
     }
 
     private fun toPostCreate() {
+        PostHog.capture("create_draft", properties = mapOf("from" to "activity"))
         SplashTagsRelayRaceNextUser(userActivity.id) {
             SPostCreate.instance(userActivity.fandom.id, userActivity.fandom.languageId, userActivity.fandom.name, userActivity.fandom.image, SPostCreate.PostParams().setActivity(userActivity).setNextRelayRaceUserId(it), Navigator.TO)
         }

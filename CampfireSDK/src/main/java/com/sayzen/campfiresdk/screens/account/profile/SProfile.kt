@@ -14,7 +14,9 @@ import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.accounts.*
 import com.dzen.campfire.api.requests.publications.RPublicationsGetAll
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.profile.badges.shelf.BadgeShelfCard
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.PostList
 import com.sayzen.campfiresdk.models.cards.CardPost
@@ -44,7 +46,7 @@ import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
 
 class SProfile private constructor(
-        account: Account
+    account: Account,
 ) : Screen(R.layout.screen_profile), PostList {
     companion object {
         fun instance(account: Account, action: NavigationAction) {
@@ -106,6 +108,7 @@ class SProfile private constructor(
     val cardStatus = CardStatus(xAccount)
     private val cardButtonsMain = CardButtonsMain(xAccount)
     private val cardButtons = if (ControllerSettings.isProfileListStyle) CardButtonsInfoNew(xAccount) else CardButtonsInfoOld(xAccount)
+    private val cardBadges = BadgeShelfCard(account.id.toString())
     private val cardBio = CardBio(xAccount)
     private var cardPinnedPost: CardPost? = null
     private val cardFilters = CardFilters {
@@ -180,6 +183,9 @@ class SProfile private constructor(
         } else {
             adapter.add(cardButtons)
             if (!ControllerApi.isCurrentAccount(xAccount.getId())) adapter.add(cardButtonsMain)
+        }
+        if (PostHog.isFeatureEnabled("badges_profile")) {
+            adapter.add(cardBadges)
         }
         adapter.add(cardBio)
         adapter.add(cardFilters)

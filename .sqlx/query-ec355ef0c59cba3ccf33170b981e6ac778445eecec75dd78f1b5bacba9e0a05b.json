@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select nickname_color, active_badge from account_customization where user_id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "nickname_color",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "active_badge",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      true,
+      true
+    ]
+  },
+  "hash": "ec355ef0c59cba3ccf33170b981e6ac778445eecec75dd78f1b5bacba9e0a05b"
+}

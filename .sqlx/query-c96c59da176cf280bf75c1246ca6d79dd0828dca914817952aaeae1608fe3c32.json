@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into level_cache (user_id, level, recount_report) values ($1, $2, $3) on conflict (user_id) do update set level = excluded.level, recount_report = excluded.recount_report, updated_at = now()",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Jsonb"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "c96c59da176cf280bf75c1246ca6d79dd0828dca914817952aaeae1608fe3c32"
+}

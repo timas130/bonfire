@@ -4,7 +4,8 @@ members = [
     "rust-auth",
     "rust-level",
     "rust-melior",
-    "rust-notification"
+    "rust-notification",
+    "rust-profile"
 ]
 default-members = ["rust-melior"]
 resolver = "2"

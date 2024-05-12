@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update account_customization set active_badge = null where user_id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "90aeb2cc1e8c408c0b49418aff83077d8e133b82240134b790de42370db21fa8"
+}

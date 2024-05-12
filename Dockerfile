@@ -13,6 +13,7 @@ COPY ./rust-email /app/rust-email
 COPY ./rust-level /app/rust-level
 COPY ./rust-notification /app/rust-notification
 COPY ./rust-melior /app/rust-melior
+COPY ./rust-profile /app/rust-profile
 COPY ./.sqlx /app/.sqlx
 COPY ./migrations /app/migrations
 COPY ./Cargo.toml ./Cargo.lock /app/

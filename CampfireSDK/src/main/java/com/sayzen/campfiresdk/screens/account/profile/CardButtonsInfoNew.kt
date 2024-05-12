@@ -6,9 +6,9 @@ import android.view.View.VISIBLE
 import android.widget.TextView
 import com.dzen.campfire.api.API_TRANSLATE
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.profile.badges.list.BadgeListScreen
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.t
-import com.sayzen.campfiresdk.models.events.account.EventAccountsFollowsChange
 import com.sayzen.campfiresdk.screens.account.black_list.SBlackList
 import com.sayzen.campfiresdk.screens.account.fandoms.SAcounFandoms
 import com.sayzen.campfiresdk.screens.account.followers.SFollowers
@@ -22,10 +22,8 @@ import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsModeration
 import com.sayzen.campfiresdk.screens.punishments.SPunishments
 import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.views.cards.Card
 import com.sup.dev.android.views.settings.SettingsMini
 import com.sup.dev.android.views.views.layouts.LayoutCorned
-import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsText
 
 class CardButtonsInfoNew(
@@ -48,6 +46,7 @@ class CardButtonsInfoNew(
         val vBlackList: SettingsMini = view.findViewById(R.id.vBlackList)
         val vStickers: SettingsMini = view.findViewById(R.id.vStickers)
         val vFandoms: SettingsMini = view.findViewById(R.id.vFandoms)
+        val vBadgeList: SettingsMini = view.findViewById(R.id.vBadgeList)
         val vShowMoreTouch: View = view.findViewById(R.id.vShowMoreTouch)
 
         vBlackList.setTitle(t(API_TRANSLATE.settings_black_list))
@@ -61,6 +60,7 @@ class CardButtonsInfoNew(
         vModeratorButton.setTitle(t(API_TRANSLATE.app_moderator))
         vRatesButton.setTitle(t(API_TRANSLATE.app_rates))
         vStickers.setTitle(t(API_TRANSLATE.app_stickers))
+        vBadgeList.setTitle(R.string.badge_list_profile)
 
         vLayoutCorned.makeSoftware()
 
@@ -84,6 +84,7 @@ class CardButtonsInfoNew(
         vStickers.setOnClickListener { Navigator.to(SStickersPacks(xAccount.getId())) }
         vBlackList.setOnClickListener { Navigator.to(SBlackList(xAccount.getId(), xAccount.getName())) }
         vFandoms.setOnClickListener { Navigator.to(SAcounFandoms(xAccount.getId())) }
+        vBadgeList.setOnClickListener { Navigator.to(BadgeListScreen(xAccount.getId().toString())) }
 
         updateFollowersCount()
         updateSpoiler()

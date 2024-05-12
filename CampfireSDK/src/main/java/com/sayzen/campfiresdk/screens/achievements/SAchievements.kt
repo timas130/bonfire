@@ -6,6 +6,7 @@ import androidx.viewpager.widget.ViewPager
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.requests.achievements.RAchievementsInfo
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerStoryQuest
@@ -15,7 +16,6 @@ import com.sayzen.campfiresdk.screens.achievements.daily_task.PageDailyTasks
 import com.sayzen.campfiresdk.screens.achievements.lvl.PageLvl
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.adapters.XAccount
-import com.sayzen.devsupandroidgoogle.ControllerFirebaseAnalytics
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -78,9 +78,17 @@ class SAchievements private constructor(
 
         vPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
-                if (position == 1) {
-                    ControllerFirebaseAnalytics.post("Screen_Achievements", "To Privilege")
-                }
+                PostHog.capture(
+                    event = "achievements_navigate",
+                    properties = mapOf(
+                        "destination" to when (position) {
+                            0 -> "tasks"
+                            1 -> "achievements"
+                            2 -> "priveleges"
+                            else -> ""
+                        }
+                    )
+                )
             }
         })
 

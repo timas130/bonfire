@@ -22,6 +22,10 @@ open class ImageRef : JsonParsable {
         this.url = url
         this.imageId = -1L
     }
+    constructor(id: Long, url: String) {
+        this.imageId = id
+        this.url = url
+    }
 
     fun isEmpty() = imageId == 0L || url.isEmpty()
     fun isNotEmpty() = !isEmpty()

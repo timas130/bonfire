@@ -80,6 +80,14 @@
                 app:Settings_icon_background="@color/cyan_700"/>
 
             <com.sup.dev.android.views.settings.SettingsSwitcher
+                android:id="@+id/vNicknameColors"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"
+                app:Settings_icon="@drawable/palette_24px"
+                app:Settings_icon_background="@color/bonfire" />
+
+            <com.sup.dev.android.views.settings.SettingsSwitcher
                 android:id="@+id/vChatBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

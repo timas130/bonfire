@@ -18,6 +18,7 @@ pub struct ServiceBase {
     pub config: Arc<GlobalConfig>,
     pub pool: DBPool,
 
+    // TODO: move this shite into c-auth
     pub jwt_header: jsonwebtoken::Header,
     pub jwt_encoding_key: EncodingKey,
     pub jwt_decoding_key: DecodingKey,

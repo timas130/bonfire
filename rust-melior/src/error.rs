@@ -8,6 +8,7 @@ use c_core::services::auth::AuthError;
 use c_core::services::email::EmailError;
 use c_core::services::level::LevelError;
 use c_core::services::notification::NotificationError;
+use c_core::services::profile::ProfileError;
 use std::sync::Arc;
 use thiserror::Error;
 use tracing::warn;
@@ -27,6 +28,8 @@ pub enum RespError {
     Level(#[from] LevelError),
     #[error("{0}")]
     Notification(#[from] NotificationError),
+    #[error("{0}")]
+    Profile(#[from] ProfileError),
     #[error("Rpc: An unknown error has occurred: {0}")]
     Rpc(#[from] Arc<RpcError>),
     #[error("Anyhow: An unknown error has occurred: {0}")]

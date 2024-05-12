@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'com.apollographql.apollo3' version '3.8.2'
+    id 'com.apollographql.apollo3' version '3.8.4'
     id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
@@ -37,30 +37,14 @@ android {
     }
 }
 
-apollo {
-    service("melior") {
-        packageName.set("sh.sit.bonfire")
-
-        // use BonfireAuth:downloadMeliorApolloSchema to update schema
-        introspection {
-            endpointUrl.set("http://localhost:8000")
-            schemaFile.set(file("src/main/graphql/sh/sit/bonfire/schema.graphqls"))
-        }
-
-        mapScalar("DateTime", "sh.sit.bonfire.auth.DateTime", "sh.sit.bonfire.auth.DateTime.adapter")
-    }
-}
-
 dependencies {
     api project(":BonfireNetworking")
     api project(":DevSupAndroid")
     api project(":CampfireApi")
 
-    implementation('com.google.firebase:firebase-auth-ktx:21.1.0') {
-        exclude group: 'com.google.android.gms', module: 'play-services-safetynet'
-    }
+    implementation "com.posthog:posthog-android:3.2.1"
 
-    def composeBom = platform('androidx.compose:compose-bom:2024.02.01')
+    def composeBom = platform('androidx.compose:compose-bom:2024.05.00')
     implementation composeBom
     androidTestImplementation composeBom
     implementation 'androidx.compose.material3:material3-android'
@@ -76,13 +60,19 @@ dependencies {
     implementation "com.google.android.libraries.identity.googleid:googleid:1.1.0"
     api 'com.google.android.gms:play-services-auth:20.7.0'
 
-    implementation 'io.sentry:sentry-android:7.2.0'
-
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
-    implementation "com.apollographql.apollo3:apollo-runtime:3.8.2"
-    implementation "com.apollographql.apollo3:apollo-normalized-cache:3.8.2"
+    apolloMetadata project(':BonfireApollo')
+    implementation project(':BonfireApollo')
+    implementation "com.apollographql.apollo3:apollo-runtime:3.8.4"
+    implementation "com.apollographql.apollo3:apollo-normalized-cache-incubating:3.8.4"
     implementation "androidx.datastore:datastore-preferences:1.0.0"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0"
 
     implementation "joda-time:joda-time:2.12.6"
+}
+
+apollo {
+    service("melior") {
+        packageName.set("sh.sit.bonfire.auth")
+    }
 }

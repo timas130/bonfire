@@ -1,0 +1,4 @@
+fragment Ui on ImageLink {
+    u
+    i
+}

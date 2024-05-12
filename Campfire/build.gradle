@@ -1,11 +1,8 @@
-import io.sentry.android.gradle.instrumentation.logcat.LogcatLevel
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'io.sentry.android.gradle'
 apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 
 android {
@@ -17,6 +14,9 @@ android {
         versionCode 3_04_01
         versionName "3.4.1"
         applicationId "sh.sit.bonfire"
+
+        buildConfigField "String", "POSTHOG_API_KEY", "\"$POSTHOG_API_KEY\""
+        buildConfigField "String", "POSTHOG_HOST", "\"$POSTHOG_HOST\""
     }
 
     buildTypes {
@@ -39,23 +39,17 @@ android {
     namespace 'com.dzen.campfire'
 }
 
-sentry {
-    tracingInstrumentation {
-        logcat {
-            minLevel = LogcatLevel.DEBUG
-        }
-    }
-}
-
 dependencies {
     implementation project(':CampfireSDK')
-    implementation('com.google.firebase:firebase-auth-ktx:21.1.0') {
-        exclude group: 'com.google.android.gms', module: 'play-services-safetynet'
-    }
+    implementation "com.posthog:posthog-android:3.2.1"
 }
 
 tasks.withType(KotlinCompile).configureEach {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+
+aboutLibraries {
+    configPath = "config"
 }

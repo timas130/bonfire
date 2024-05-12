@@ -100,4 +100,6 @@
         update and try again.
     </string>
     <string name="error_another_account_exists">Another user is already using this external account</string>
+    <string name="consent_analytics">Allow collecting usage data</string>
+    <string name="consent_analytics_desc">This will help tremendously in the development of the app! You can opt out at any time.</string>
 </resources>

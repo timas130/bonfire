@@ -2,6 +2,7 @@ package com.sayzen.campfiresdk.controllers
 
 import android.net.Uri
 import com.dzen.campfire.api.API_TRANSLATE
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.models.AttacheAgent
 import com.sayzen.campfiresdk.screens.chat.SChat
 import com.sayzen.campfiresdk.screens.chat.SChats
@@ -37,6 +38,7 @@ object ControllerAttache {
             SplashMenu()
                     .add(t(API_TRANSLATE.app_create_post)) {
                         SFandomsSearch.instance(Navigator.TO) { fandom ->
+                            PostHog.capture("create_draft", properties = mapOf("from" to "share"))
                             val screen = SPostCreate(fandom.id, fandom.languageId, fandom.name, fandom.image, null, SPostCreate.PostParams(), false)
                             Navigator.to(screen)
                             parseAttache(text, image, screen, false)
@@ -49,6 +51,7 @@ object ControllerAttache {
                         Navigator.to(SChats { SChat.instance(it.tag, 0, true, Navigator.TO) { screen -> parseAttache(text, image, screen, false) } })
                     }
                     .add(t(API_TRANSLATE.app_fast_post_to, ControllerSettings.fastPublicationFandomName)) {
+                        PostHog.capture("create_draft", properties = mapOf("from" to "share_fast"))
                         SPostCreate.instance(ControllerSettings.fastPublicationFandomId, ControllerSettings.fastPublicationFandomLanguageId, SPostCreate.PostParams(), { screen -> parseAttache(text, image, screen, true) }, Navigator.TO)
                     }
                     .asSheetShow()

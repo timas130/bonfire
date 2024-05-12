@@ -8,6 +8,7 @@ import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.fandoms.RFandomsGet
 import com.dzen.campfire.api.requests.publications.RPublicationsDraftsGetAll
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
@@ -51,6 +52,7 @@ class SDrafts constructor(
         (vFab as View).visibility = View.VISIBLE
         vFab.setImageResource(R.drawable.ic_add_white_24dp)
         vFab.setOnClickListener {
+            PostHog.capture("create_draft", properties = mapOf("from" to "drafts"))
             if(ControllerCampfireSDK.ROOT_FANDOM_ID > 0){
                 val languageId = ControllerApi.getLanguageId()
                 ApiRequestsSupporter.executeProgressDialog(RFandomsGet(ControllerCampfireSDK.ROOT_FANDOM_ID, languageId, languageId)){ r->

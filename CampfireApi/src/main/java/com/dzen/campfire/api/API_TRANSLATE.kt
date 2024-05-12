@@ -1101,6 +1101,8 @@ object API_TRANSLATE {
     val settings_style_new_year_profile_animation = Translate("Анимация в профиле")
     val settings_style_rounding = Translate("Скругление")
     val settings_style_rounding_chat = Translate("Скругление сообщений в чате")
+    val settings_style_nickname_colors = Translate("Цветные ники")
+    val settings_style_nickname_colors_desc = Translate("Разрешить показывать цветные ники. Цвет может зависеть от настроек пользователя, его уровня и т.д.")
     val settings_style_default = Translate("Вернуть по умолчанию")
     val settings_style_theme = Translate("Тема")
     val settings_style_interface = Translate("Интерфейс")
@@ -1129,8 +1131,6 @@ object API_TRANSLATE {
     val settings_email_change_password_error = Translate("Не удалось войти, проверьте старый пароль", true)
     val settings_privacy_title = Translate("Приватность")
     val settings_privacy_hide_blacklist = Translate("Полностью скрывать публикации от пользователей из чёрного списка")
-    val settings_privacy_sentry = Translate("Отправлять отчёты об ошибках и использовании")
-    val settings_privacy_sentry_desc = Translate("Данные будут удалены в течение 30 дней, если вы отключите. Никакие данные не попадают к третьим лицам.")
 
     val publication_blacklisted = Translate("Публикация от %s скрыта", true)
 

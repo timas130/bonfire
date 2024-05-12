@@ -47,6 +47,9 @@ pub enum LevelError {
 pub struct LevelRecountResult {
     /// The ID of the user whose level has been counted
     pub user_id: i64,
+    /// Privilege category the user belongs in
+    #[serde(default)]
+    pub category: LevelCategory,
     /// The user's total level
     ///
     /// The minimum is 100. In UI, the level is shown
@@ -250,6 +253,21 @@ pub struct DailyTaskFandom {
     pub multiplier: f64,
 }
 
+/// Category derived from a user's level that determines their privileges
+#[derive(Default, Debug, Clone, Serialize, Deserialize, Eq, PartialEq, Ord, PartialOrd)]
+pub enum LevelCategory {
+    #[default]
+    User,
+    Trusted,
+    Experienced,
+    Curator,
+    Moderator,
+    Admin,
+    Superadmin,
+    Expert,
+    Protoadmin,
+}
+
 /// The leveling service
 ///
 /// See [module-level documentation]
@@ -266,8 +284,18 @@ pub trait LevelService {
     /// This also may call [`get_daily_task`] under the hood.
     ///
     /// > This is an expensive operation and its result
-    /// should be cached.
+    /// > should be cached.
+    /// > If you only want a cached total, call [`LevelService::get_level_cached`].
     async fn recount_level(user_id: i64) -> Result<LevelRecountResult, LevelError>;
+
+    /// Get the total level of a user from cache
+    ///
+    /// If a cache entry is not available, [`LevelService::recount_level`]
+    /// is automatically called, which might take as long as 50ms.
+    ///
+    /// This method does not automatically recount the level.
+    /// This behavior can change in the future.
+    async fn get_level_cached(user_id: i64) -> Result<(u64, LevelCategory), LevelError>;
 
     /// Get the daily task information for today
     ///

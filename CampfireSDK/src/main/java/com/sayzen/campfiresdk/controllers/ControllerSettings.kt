@@ -165,6 +165,13 @@ object ControllerSettings {
             onSettingsUpdated()
         }
 
+    var useNicknameColors: Boolean
+        get() = accountSettings.useNicknameColors
+        set(b) {
+            accountSettings.useNicknameColors = b
+            onSettingsUpdated()
+        }
+
     //
     //  App
     //
@@ -299,13 +306,6 @@ object ControllerSettings {
         get() = accountSettings.hideBlacklistedPubs
         set(b) {
             accountSettings.hideBlacklistedPubs = b
-            onSettingsUpdated()
-        }
-
-    var allowSentry: Boolean
-        get() = accountSettings.allowSentry
-        set(b) {
-            accountSettings.allowSentry = b
             onSettingsUpdated()
         }
 

@@ -11,6 +11,7 @@ import com.dzen.campfire.api.requests.achievements.RAchievementsOnFinish
 import com.dzen.campfire.api.requests.fandoms.RFandomsBlackListAdd
 import com.dzen.campfire.api.requests.fandoms.RFandomsBlackListContains
 import com.dzen.campfire.api.requests.fandoms.RFandomsBlackListRemove
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.models.events.account.EventAccountAddToBlackList
 import com.sayzen.campfiresdk.models.events.account.EventAccountBioChangedSex
@@ -216,6 +217,7 @@ object ControllerCampfireSDK {
                 .setHint(t(API_TRANSLATE.app_message))
                 .setOnCancel(t(API_TRANSLATE.app_cancel))
                 .setOnEnter(t(API_TRANSLATE.app_share)) { _, text ->
+                    PostHog.capture("share_app")
                     ToolsIntent.shareText("$text\n\rhttps://bonfire.moe/")
                     ToolsThreads.main(10000) { RAchievementsOnFinish(API.ACHI_APP_SHARE.index).send(api) }
                 }

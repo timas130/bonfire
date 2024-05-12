@@ -3,6 +3,7 @@ package com.sayzen.campfiresdk.screens.fandoms.rubrics
 import android.view.View
 import android.widget.TextView
 import com.dzen.campfire.api.models.fandoms.Rubric
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerRubrics
@@ -55,7 +56,10 @@ class CardRubric(val rubric: Rubric) : Card(R.layout.card_rubric) {
         val vTouch: View = view.findViewById(R.id.vTouch)
 
         vCreate.visibility = if (ControllerApi.isCurrentAccount(xAccount.getId()) && canCreatePost) View.VISIBLE else View.GONE
-        vCreate.setOnClickListener { SPostCreate.instance(xFandom.getId(), xFandom.getLanguageId(), xFandom.getName(), xFandom.getImage(), SPostCreate.PostParams().setRubric(rubric), Navigator.TO) }
+        vCreate.setOnClickListener {
+            PostHog.capture("create_draft", properties = mapOf("from" to "rubric"))
+            SPostCreate.instance(xFandom.getId(), xFandom.getLanguageId(), xFandom.getName(), xFandom.getImage(), SPostCreate.PostParams().setRubric(rubric), Navigator.TO)
+        }
 
         if (showFandom) xFandom.setView(vAvatar) else xAccount.setView(vAvatar)
         vAvatar.setTitle(rubric.name)

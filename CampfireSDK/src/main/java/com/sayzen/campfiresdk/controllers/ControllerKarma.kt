@@ -3,7 +3,7 @@ package com.sayzen.campfiresdk.controllers
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.requests.publications.RPublicationsKarmaAdd
-import com.sayzen.campfiresdk.R
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.models.events.publications.EventPublicationKarmaAdd
 import com.sayzen.campfiresdk.models.events.publications.EventPublicationKarmaStateChanged
@@ -45,6 +45,8 @@ object ControllerKarma {
     }
 
     fun rate(publicationId: Long, up: Boolean, anon: Boolean) {
+        PostHog.capture("karma_rate", properties = mapOf("up" to up, "anon" to anon))
+
         stop(publicationId)
         rates[publicationId] = Rate(publicationId, up, anon)
         EventBus.post(EventPublicationKarmaStateChanged(publicationId))

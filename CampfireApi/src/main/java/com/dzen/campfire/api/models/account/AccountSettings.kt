@@ -20,6 +20,7 @@ class AccountSettings() : JsonParsable {
     var fullscreen = false
     var isProfileListStyle = true
     var postFontSize = 15
+    var useNicknameColors = true
     //  App
     var watchPost = false
     var appLanguage = ""
@@ -40,7 +41,6 @@ class AccountSettings() : JsonParsable {
     var storyQuestIndex = 0L
     var storyQuestProgress = 0L
     var hideBlacklistedPubs = false
-    var allowSentry = true
     //  Notifications Settings
     var notifications = true
     var autoReadNotifications = false
@@ -125,6 +125,7 @@ class AccountSettings() : JsonParsable {
         postFontSize = json.m(inp, "postFontSize", postFontSize)
         styleNewYearSnow = json.m(inp, "styleNewYearSnow", styleNewYearSnow)
         styleNewYearProfileAnimation = json.m(inp, "styleNewYearProfileAnimation", styleNewYearProfileAnimation)
+        useNicknameColors = json.m(inp, "useNicknameColors", useNicknameColors)
 
         watchPost = json.m(inp, "watchPost", watchPost)
         appLanguage = json.m(inp, "appLanguage", appLanguage)
@@ -145,7 +146,6 @@ class AccountSettings() : JsonParsable {
         storyQuestIndex = json.m(inp, "storyQuestIndex", storyQuestIndex)
         storyQuestProgress = json.m(inp, "storyQuestProgress", storyQuestProgress)
         hideBlacklistedPubs = json.m(inp, "hideBlacklistedPubs", hideBlacklistedPubs)
-        allowSentry = json.m(inp, "allowSentry", allowSentry)
 
         notifications = json.m(inp, "notifications", notifications)
         autoReadNotifications = json.m(inp, "autoReadNotifications", autoReadNotifications)

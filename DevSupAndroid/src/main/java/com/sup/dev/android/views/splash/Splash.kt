@@ -52,7 +52,7 @@ abstract class Splash(layoutRes: Int) {
     }
 
     fun hide() {
-        isHided = true
+        onHide()
         if (viewWrapper != null) viewWrapper!!.hide()
     }
 
@@ -70,7 +70,7 @@ abstract class Splash(layoutRes: Int) {
 
     fun isHided() = isHided
 
-    fun isShoved() = !isHided
+    fun isShown() = !isHided
 
     fun getMaxW() = maxW
     fun getMaxH() = maxH
@@ -350,5 +350,15 @@ abstract class Splash(layoutRes: Int) {
         return card
     }
 
+    fun asOverlay(): SplashViewOverlay {
+        val overlay = SplashViewOverlay(this)
+        this.viewWrapper = overlay
+        return overlay
+    }
 
+    fun asOverlayShow(): SplashViewOverlay {
+        val overlay = asOverlay()
+        overlay.show()
+        return overlay
+    }
 }

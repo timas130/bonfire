@@ -1,0 +1,11 @@
+mod admin_put_badge;
+mod admin_remove_badge;
+mod admin_set_nickname_color;
+mod get_account_customization;
+mod get_badge;
+mod get_profile_customization;
+mod get_user_badges;
+mod set_active_badge;
+mod set_badge_shelf;
+mod set_nickname_color;
+mod set_show_badge_shelf;

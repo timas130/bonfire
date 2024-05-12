@@ -1,0 +1,14 @@
+query AccountCustomization($userId: Int!) {
+    internalAccountCustomization(userId: $userId) {
+        userId
+        nicknameColor {
+            int
+        }
+        activeBadge {
+            id
+            miniImage {
+                i
+            }
+        }
+    }
+}

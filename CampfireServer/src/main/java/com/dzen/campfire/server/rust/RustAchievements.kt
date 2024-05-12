@@ -11,6 +11,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import okio.Buffer
+import sh.sit.bonfire.schema.jsonReader
 
 object RustAchievements {
     @Serializable

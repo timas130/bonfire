@@ -1,8 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'io.sentry.android.gradle'
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.apollographql.apollo3' version '3.8.4'
+}
 
 android {
     compileSdk 34
@@ -37,21 +39,27 @@ dependencies {
     api project(':BonfireFormatting')
     api project(':BonfireAuth')
 
-    implementation 'io.sentry:sentry-android:7.2.0'
-    implementation('com.google.firebase:firebase-auth-ktx:21.1.0') {
-        exclude group: 'com.google.android.gms', module: 'play-services-safetynet'
-    }
-    implementation files('libs/YouTubeAndroidPlayerApi.jar')
-    api 'com.github.kbiakov:CodeView-Android:1.3.2' // https://github.com/kbiakov/CodeView-Android
-    implementation "com.github.hcaptcha:hcaptcha-android-sdk:1.3.0" // https://github.com/hCaptcha/hcaptcha-android-sdk
+    implementation "com.posthog:posthog-android:3.2.1"
 
-    def composeBom = platform('androidx.compose:compose-bom:2024.02.01')
+    api 'com.github.kbiakov:CodeView-Android:1.3.2' // https://github.com/kbiakov/CodeView-Android
+    implementation "com.github.hcaptcha:hcaptcha-android-sdk:1.3.0"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0'
+// https://github.com/hCaptcha/hcaptcha-android-sdk
+
+    def composeBom = platform('androidx.compose:compose-bom:2024.05.00')
     implementation composeBom
     androidTestImplementation composeBom
-    implementation 'androidx.compose.material3:material3-android'
+    implementation 'androidx.compose.material3:material3-android:1.3.0-alpha06'
     implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'androidx.compose.animation:animation-android:1.7.0-alpha08'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     implementation 'androidx.compose.material:material-icons-core'
+    implementation "com.valentinilk.shimmer:compose-shimmer:1.3.0"
+
+    implementation "com.apollographql.apollo3:apollo-runtime:3.8.4"
+    implementation "com.apollographql.apollo3:apollo-normalized-cache-incubating:3.8.4"
+    apolloMetadata project(":BonfireApollo")
+    implementation project(":BonfireApollo")
 
     implementation "com.mikepenz:aboutlibraries-core:11.1.1"
     implementation "com.mikepenz:aboutlibraries-compose-m3:11.1.1"
@@ -60,5 +68,12 @@ dependencies {
 tasks.withType(KotlinCompile).configureEach {
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+}
+
+apollo {
+    service("melior") {
+        packageName.set("com.sayzen.campfiresdk")
+        generateFragmentImplementations.set(true)
     }
 }

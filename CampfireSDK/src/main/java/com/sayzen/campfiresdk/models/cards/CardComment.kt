@@ -18,6 +18,7 @@ import com.dzen.campfire.api.models.notifications.publications.NotificationPubli
 import com.dzen.campfire.api.models.publications.PublicationComment
 import com.dzen.campfire.api.requests.publications.RPublicationsReactionAdd
 import com.dzen.campfire.api.requests.publications.RPublicationsReactionRemove
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.events.account.EventAccountAddToBlackList
@@ -548,6 +549,7 @@ open class CardComment protected constructor(
     }
 
     private fun change() {
+        PostHog.capture("open_comment_editor", properties = mapOf("from" to "change"))
         SplashComment(xPublication.publication as PublicationComment, false).asSheetShow()
     }
 

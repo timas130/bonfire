@@ -12,3 +12,4 @@ include ':Campfire',
         ':BonfireServerNetworking',
         ':BonfireFormatting'
 include ':BonfireAuth'
+include ':BonfireApollo'

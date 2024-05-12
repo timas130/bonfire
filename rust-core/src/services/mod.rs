@@ -3,6 +3,7 @@ pub mod email;
 pub mod images;
 pub mod level;
 pub mod notification;
+pub mod profile;
 
 #[macro_export]
 macro_rules! host_tcp {

@@ -2,7 +2,7 @@ package com.dzen.campfire.server.executors.accounts
 
 import com.dzen.campfire.api.requests.accounts.RAccountsAddNotificationsToken
 import com.dzen.campfire.server.rust.RustNotifications
-import com.dzen.campfire.server.type.NotificationTokenType
+import sh.sit.schema.type.NotificationTokenType
 
 class EAccountsAddNotificationsToken : RAccountsAddNotificationsToken("") {
 

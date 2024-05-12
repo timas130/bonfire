@@ -6,6 +6,7 @@ import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.requests.post.RPostFeedGetAll
 import com.dzen.campfire.api.tools.client.Request
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerSettings
@@ -59,6 +60,7 @@ abstract class APage(
 
     fun load() {
         if (wasLoaded) return
+        PostHog.capture("load_feed", properties = mapOf("type" to javaClass.simpleName))
         markLoaded()
         reload()
     }

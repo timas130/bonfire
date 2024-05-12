@@ -9,7 +9,7 @@ import com.dzen.campfire.server.DailyTaskFandomsQuery
 import com.dzen.campfire.server.DailyTaskQuery
 import com.dzen.campfire.server.fragment.DailyTaskFandom
 import com.dzen.campfire.server.rust.ControllerRust.executeExt
-import com.dzen.campfire.server.type.PageType
+import sh.sit.schema.type.PageType
 
 object RustDailyTask {
     fun getPossibleFandoms(userId: Long): List<DailyTaskFandom> {

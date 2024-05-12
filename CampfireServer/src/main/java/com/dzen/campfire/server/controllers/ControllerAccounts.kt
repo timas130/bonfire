@@ -16,6 +16,7 @@ import com.dzen.campfire.api.tools.ApiAccount
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.optimizers.OptimizerEffects
 import com.dzen.campfire.server.optimizers.OptimizerSponsor
+import com.dzen.campfire.server.rust.RustProfile
 import com.dzen.campfire.server.tables.*
 import com.sup.dev.java.classes.collections.AnyArray
 import com.sup.dev.java.classes.collections.Cache
@@ -39,7 +40,7 @@ object ControllerAccounts {
         imageId: Long,
         sex: Long,
         karma30: Long,
-        dateCreate: Long = 0
+        dateCreate: Long = 0,
     ): Account {
         return Account(
             accountId,
@@ -52,7 +53,8 @@ object ControllerAccounts {
             OptimizerSponsor.getSponsor(accountId),
             OptimizerSponsor.getSponsorTimes(accountId),
             OptimizerEffects.get(accountId),
-            dateCreate
+            dateCreate,
+            RustProfile.getAccountCustomization(accountId),
         )
     }
 

@@ -18,6 +18,7 @@ import com.sup.dev.android.tools.ToolsIntent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.launch
 import sh.sit.bonfire.auth.AuthController
 import sh.sit.bonfire.auth.R
@@ -28,6 +29,9 @@ class ConsentControllerState {
     private val _isOpen = MutableStateFlow(false)
     val isOpen = _isOpen.asStateFlow()
 
+    private val _allowAnalytics = MutableStateFlow(false)
+    val allowAnalytics = _allowAnalytics.asStateFlow()
+
     private val _consentStatus = MutableStateFlow<Boolean?>(null)
 
     suspend fun waitForConsent() {
@@ -35,6 +39,8 @@ class ConsentControllerState {
             // consent already received
             return
         }
+
+        _allowAnalytics.emit(AuthController.haveAnalyticsConsent.first())
 
         _consentStatus.emit(null)
         _isOpen.emit(true)
@@ -44,7 +50,11 @@ class ConsentControllerState {
         _isOpen.emit(false)
         if (status) {
             AuthController.setConsent(true)
+            //AuthController.setAnalyticsConsent(_allowAnalytics.value)
+            AuthController.setAnalyticsConsent(true)
         } else {
+            AuthController.setConsent(false)
+            AuthController.setAnalyticsConsent(false)
             throw NoConsentException()
         }
     }
@@ -55,6 +65,10 @@ class ConsentControllerState {
 
     internal suspend fun accept() {
         _consentStatus.emit(true)
+    }
+
+    internal fun toggleAnalytics() {
+        _allowAnalytics.getAndUpdate { !it }
     }
 }
 
@@ -71,6 +85,7 @@ private fun ConsentController(state: ConsentControllerState) {
     val scope = rememberCoroutineScope()
 
     val isOpen = state.isOpen.collectAsState().value
+    val allowAnalytics = state.allowAnalytics.collectAsState().value
 
     val decline = {
         scope.launch {
@@ -85,16 +100,16 @@ private fun ConsentController(state: ConsentControllerState) {
         Unit
     }
 
-    if (!isOpen) return
-
-    ModalBottomSheet(onDismissRequest = decline, windowInsets = WindowInsets(0)) {
+    BetterModalBottomSheet(open = isOpen, onDismissRequest = decline, windowInsets = WindowInsets(0)) {
         Column(
             Modifier.padding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom).asPaddingValues())
         ) {
             Text(
                 stringResource(R.string.start_consent_title),
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp).padding(horizontal = 16.dp),
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .padding(horizontal = 16.dp),
             )
 
             ListItem(
@@ -118,6 +133,22 @@ private fun ConsentController(state: ConsentControllerState) {
                     AuthController.openRules()
                 }
             )
+            /*
+            ListItem(
+                leadingContent = { Icon(Icons.Default.BarChart, "") },
+                headlineContent = { Text(stringResource(R.string.consent_analytics)) },
+                supportingContent = { Text(stringResource(R.string.consent_analytics_desc)) },
+                trailingContent = {
+                    Switch(
+                        checked = allowAnalytics,
+                        onCheckedChange = { state.toggleAnalytics() }
+                    )
+                },
+                modifier = Modifier.clickable {
+                    state.toggleAnalytics()
+                }
+            )
+            */
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),

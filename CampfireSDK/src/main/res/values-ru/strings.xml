@@ -18,5 +18,21 @@
     <string name="enter_email">Пожалуйста, введите свой email</string>
     <string name="recover_email_sent">Письмо со ссылкой для восстановления отправлено. Не забудьте проверить папку спам.</string>
     <string name="reset_password">Сбросить пароль</string>
+    <string name="badge_alt">Значок</string>
+    <string name="badge_more">Подробности</string>
+    <string name="badge_fandom">Посетить фэндом</string>
+    <string name="badge_error">Не удалось загрузить этот значок</string>
+    <string name="badge_close">Закрыть</string>
+    <string name="badge_shelf">Полка значков</string>
+    <string name="badge_shelf_more">Больше значков</string>
+    <string name="badge_list">Все значки</string>
+    <string name="badge_list_error">Не удалось загрузить больше значков</string>
+    <string name="badge_shelf_error">Не удалось загрузить полку значков</string>
+    <string name="badge_edit">Редактировать значок</string>
+    <string name="badge_choose">Выберите значок</string>
+    <string name="badge_list_empty">Значков не найдено</string>
+    <string name="badge_shelf_show">Показывать значки в профиле</string>
+    <string name="badge_shelf_hide">Скрыть полку значков</string>
+    <string name="badge_list_profile">Значки</string>
 
 </resources>

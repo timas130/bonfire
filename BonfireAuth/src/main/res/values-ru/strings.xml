@@ -98,4 +98,6 @@
         Пожалуйста, обновитесь и попробуйте ещё раз.
     </string>
     <string name="error_another_account_exists">Другой пользователь уже использует этот сторонний аккаунт</string>
+    <string name="consent_analytics">Разрешить собирать данные об использовании</string>
+    <string name="consent_analytics_desc">Это очень поможет в разработке приложения! Вы можете отказаться в любой момент.</string>
 </resources>

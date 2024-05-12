@@ -7,8 +7,8 @@ import com.dzen.campfire.api.requests.accounts.RAccountsLogin
 import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.server.rust.RustDailyTask
 import com.dzen.campfire.server.rust.RustNotifications
-import com.dzen.campfire.server.type.NotificationTokenType
 import com.sup.dev.java.libs.json.Json
+import sh.sit.schema.type.NotificationTokenType
 
 class EAccountsLogin : RAccountsLogin("", 0, 0, 0) {
 

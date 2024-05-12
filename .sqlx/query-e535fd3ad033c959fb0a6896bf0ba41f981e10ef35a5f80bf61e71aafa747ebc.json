@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select level from level_cache where user_id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "level",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "e535fd3ad033c959fb0a6896bf0ba41f981e10ef35a5f80bf61e71aafa747ebc"
+}

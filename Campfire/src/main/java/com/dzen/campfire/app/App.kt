@@ -7,7 +7,12 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.screens.intro.SIntro
 import com.google.firebase.FirebaseApp
-import com.sayzen.campfiresdk.controllers.*
+import com.posthog.android.PostHogAndroid
+import com.posthog.android.PostHogAndroidConfig
+import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
+import com.sayzen.campfiresdk.controllers.ControllerLinks
+import com.sayzen.campfiresdk.controllers.ControllerPost
+import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
 import com.sayzen.campfiresdk.screens.other.rules.SGoogleRules
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
@@ -17,8 +22,6 @@ import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.activity.SActivity
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsAndroid
-import io.sentry.android.core.SentryAndroid
-import io.sentry.protocol.User
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import sh.sit.bonfire.auth.AuthController
@@ -36,35 +39,12 @@ class App : Application() {
         SupAndroid.onLowMemory()
     }
 
+    private fun canSendAnalytics(): Boolean {
+        return runBlocking { AuthController.haveAnalyticsConsent.first() }
+    }
+
     override fun onCreate() {
         super.onCreate()
-
-        SentryAndroid.init(this) { options ->
-            options.setBeforeSend { ev, _ ->
-                val haveConsent = runBlocking { AuthController.haveConsent.first() } && ControllerSettings.allowSentry
-                val mainApp = packageName == "sh.sit.bonfire"
-                if (ControllerApi.account.getId() > 0) {
-                    ev.user = User().apply {
-                        val account = ControllerApi.account
-                        id = account.getId().toString()
-                        username = account.getName()
-                    }
-                }
-                if (haveConsent && mainApp) {
-                    ev
-                } else {
-                    null
-                }
-            }
-            options.setBeforeSendTransaction { ev, _ ->
-                val haveConsent = runBlocking { AuthController.haveConsent.first() } && ControllerSettings.allowSentry
-                if (haveConsent) {
-                    ev
-                } else {
-                    null
-                }
-            }
-        }
 
         FirebaseApp.initializeApp(applicationContext)
 
@@ -72,6 +52,13 @@ class App : Application() {
         SupAndroid.imgErrorGone = ImageLoader.load(ApiResources.IMAGE_BACKGROUND_17).noHolder()
         SupAndroid.imgErrorNetwork = ImageLoader.load(ApiResources.IMAGE_BACKGROUND_20).noHolder()
         ApiRequestsSupporter.USE_ID_RESOURCES = true
+
+        PostHogAndroid.setup(this, PostHogAndroidConfig(
+            apiKey = BuildConfig.POSTHOG_API_KEY,
+            host = BuildConfig.POSTHOG_HOST,
+        ).apply {
+            optOut = !canSendAnalytics()
+        })
 
         initSdk()
 

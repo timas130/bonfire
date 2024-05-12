@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into badge_shelf_items (user_id, badge_id, \"order\") values ($1, $2, $3) on conflict (user_id, \"order\") do update set badge_id = excluded.badge_id",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "29279f3b09c1b6fedc68a32f2c5ea8a20743d7c0b4875ccd99281815443fbbaf"
+}

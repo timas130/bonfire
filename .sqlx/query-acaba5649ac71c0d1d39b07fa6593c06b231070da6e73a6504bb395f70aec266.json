@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "delete from badge_shelf_items where user_id = $1 and \"order\" = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "acaba5649ac71c0d1d39b07fa6593c06b231070da6e73a6504bb395f70aec266"
+}

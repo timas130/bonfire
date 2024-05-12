@@ -5,6 +5,7 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostPendingGetAll
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
@@ -28,6 +29,7 @@ class SPending : SLoadingRecycler<CardPost, PublicationPost>() {
         (vFab as View).visibility = View.VISIBLE
         vFab.setImageResource(R.drawable.ic_add_white_24dp)
         vFab.setOnClickListener {
+            PostHog.capture("create_draft", properties = mapOf("from" to "pending"))
             SFandomsSearch.instance(Navigator.TO, true) { fandom ->
                 SPostCreate.instance(fandom.id, fandom.languageId, fandom.name, fandom.image, SPostCreate.PostParams(), Navigator.TO)
             }

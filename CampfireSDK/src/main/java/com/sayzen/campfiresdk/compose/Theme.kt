@@ -79,7 +79,9 @@ private val LegacyLightColors = lightColorScheme(
     primaryContainer = md_theme_light_primaryContainer,
     onPrimaryContainer = md_theme_light_onPrimaryContainer,
     surface = Color(0xFFE0E0E0),
+    surfaceContainerLow = Color(0xFFE0E0E0),
     surfaceVariant = md_theme_light_surfaceVariant,
+    secondaryContainer = md_theme_light_surfaceVariant,
 )
 
 // I have no idea blyat
@@ -91,8 +93,11 @@ private val LegacyDarkColors = darkColorScheme(
     primaryContainer = md_theme_dark_primaryContainer,
     onPrimaryContainer = md_theme_dark_onPrimaryContainer,
     surface = Color(0xFF363636),
+    surfaceContainerLow = Color(0xFF363636),
     surfaceVariant = md_theme_dark_surfaceVariant,
     onSurfaceVariant = Color(0xFFFFFFFF),
+    secondaryContainer = md_theme_dark_surfaceVariant,
+    onSecondaryContainer = Color(0xFFFFFFFF),
 )
 
 @Composable

@@ -4,10 +4,15 @@ use crate::error::RespError;
 use crate::schema::auth::security_settings::GSecuritySettings;
 use crate::schema::level::daily_task::DailyTaskInfo;
 use crate::schema::level::daily_task_fandoms::DailyTaskFandom;
+use crate::schema::profile::badge::GBadge;
+use crate::schema::profile::customization::account::GAccountCustomization;
+use crate::schema::profile::customization::profile::GProfileCustomization;
 use crate::utils::permissions::PermissionLevelGuard;
 use async_graphql::dataloader::DataLoader;
 use async_graphql::{ComplexObject, Context, Enum, SimpleObject, ID};
+use async_graphql::connection::Connection;
 use c_core::prelude::chrono::{DateTime, Utc};
+use c_core::prelude::tarpc::context;
 use c_core::services::auth::user::{AuthUser, PermissionLevel};
 
 /// User's base permission level
@@ -115,6 +120,17 @@ impl User {
         }
     }
 
+    /// Get the total level of a user (cached)
+    async fn cached_level(&self, ctx: &Context<'_>) -> Result<u64, RespError> {
+        let req = ctx.data_unchecked::<ReqContext>();
+        
+        let (level, _) = req.level
+            .get_level_cached(context::current(), self._id)
+            .await??;
+        
+        Ok(level)
+    }
+
     /// Get some security and login options for this user
     async fn security_settings(&self, ctx: &Context<'_>) -> Result<GSecuritySettings, RespError> {
         self._security_settings(ctx).await
@@ -135,5 +151,24 @@ impl User {
         ctx: &Context<'_>,
     ) -> Result<Vec<DailyTaskFandom>, RespError> {
         self._daily_task_fandoms(ctx).await
+    }
+
+    /// Full page profile information for this user
+    async fn profile(&self, ctx: &Context<'_>) -> Result<GProfileCustomization, RespError> {
+        self._profile(ctx).await
+    }
+
+    /// Account customization parameters (username, avatar, etc.)
+    async fn customization(&self, ctx: &Context<'_>) -> Result<GAccountCustomization, RespError> {
+        self._customization(ctx).await
+    }
+
+    /// Get all badges that a user owns, newest first
+    async fn badges(
+        &self,
+        ctx: &Context<'_>,
+        after: Option<String>,
+    ) -> Result<Connection<DateTime<Utc>, GBadge>, RespError> {
+        self._badges(ctx, after).await
     }
 }

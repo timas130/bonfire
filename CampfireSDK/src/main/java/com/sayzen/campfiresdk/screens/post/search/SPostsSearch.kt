@@ -6,6 +6,7 @@ import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.models.publications.tags.PublicationTag
 import com.dzen.campfire.api.requests.post.RPostGetAllByTag
 import com.dzen.campfire.api.requests.tags.RTagsGet
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
@@ -46,6 +47,7 @@ class SPostsSearch(val tag: PublicationTag) : SLoadingRecycler<CardPublication, 
         (vFab as View).visibility = View.VISIBLE
         vFab.setImageResource(R.drawable.ic_add_white_24dp)
         vFab.setOnClickListener {
+            PostHog.capture("create_draft", properties = mapOf("from" to "tag"))
             SPostCreate.instance(tag.fandom.id, tag.fandom.languageId, tag.fandom.name, tag.fandom.image, SPostCreate.PostParams().setTags(arrayOf(tag.id)), Navigator.TO)
         }
 

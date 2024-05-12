@@ -10,7 +10,11 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.GMobiledata
+import androidx.compose.material.icons.filled.Hiking
+import androidx.compose.material.icons.filled.Password
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -28,10 +32,6 @@ import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.java.tools.ToolsDate
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import sh.sit.bonfire.AccountSecurityQuery
-import sh.sit.bonfire.ChangeEmailMutation
-import sh.sit.bonfire.ChangePasswordMutation
-import sh.sit.bonfire.TerminateSessionMutation
 import sh.sit.bonfire.auth.*
 import sh.sit.bonfire.auth.R
 import sh.sit.bonfire.auth.components.BackButton
@@ -373,7 +373,7 @@ private fun LazyItemScope.SessionListItem(
                     CircularProgressIndicator()
                 } else {
                     IconButton(onClick = { scope.launch { terminate() } }, enabled = !session.current) {
-                        Icon(Icons.Default.Logout, stringResource(R.string.security_sessions_logout))
+                        Icon(Icons.AutoMirrored.Filled.Logout, stringResource(R.string.security_sessions_logout))
                     }
                 }
             }

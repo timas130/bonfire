@@ -12,6 +12,7 @@ import com.dzen.campfire.api.models.publications.post.Page
 import com.dzen.campfire.api.models.publications.post.PagePolling
 import com.dzen.campfire.api.models.publications.post.PageSpoiler
 import com.dzen.campfire.api.models.publications.post.PublicationPost
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.ControllerPost
@@ -272,6 +273,7 @@ class CardPost constructor(
         }
         if (publication.isPublic) {
             vComments.setOnLongClickListener {
+                PostHog.capture("open_comment_editor", properties = mapOf("from" to "post_longclick"))
                 SplashComment(publication.id, null, true) { }.asSheetShow()
                 true
             }

@@ -1,0 +1,74 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select \"order\", badges.* from badge_shelf_items inner join badges on id = badge_id order by \"order\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "order",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "user_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "mini_image_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 6,
+        "name": "image_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 7,
+        "name": "fandom_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 8,
+        "name": "link",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "0550a4c71810519c01f9e9b1d31b264b800ae920c3d69f8d8b7b2e0dbff71c11"
+}

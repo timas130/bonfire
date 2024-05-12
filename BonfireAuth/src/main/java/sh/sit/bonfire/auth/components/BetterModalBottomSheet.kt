@@ -3,6 +3,7 @@ package sh.sit.bonfire.auth.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -13,6 +14,7 @@ import androidx.compose.ui.unit.Dp
 fun BetterModalBottomSheet(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
+    open: Boolean = true,
     sheetState: SheetState = rememberModalBottomSheetState(),
     shape: Shape = BottomSheetDefaults.ExpandedShape,
     containerColor: Color = BottomSheetDefaults.ContainerColor,
@@ -24,9 +26,18 @@ fun BetterModalBottomSheet(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     if (
-        sheetState.targetValue != SheetValue.Expanded &&
-        sheetState.currentValue == sheetState.targetValue
+        sheetState.targetValue == SheetValue.Hidden &&
+        sheetState.currentValue == SheetValue.Hidden &&
+        !open
     ) return
+
+    LaunchedEffect(open) {
+        if (open) {
+            sheetState.show()
+        } else {
+            sheetState.hide()
+        }
+    }
 
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -41,7 +52,9 @@ fun BetterModalBottomSheet(
         windowInsets = windowInsets,
     ) {
         Column(
-            Modifier.padding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom).asPaddingValues())
+            Modifier
+                .padding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom).asPaddingValues())
+                .fillMaxWidth()
         ) {
             content()
         }

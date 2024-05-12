@@ -109,6 +109,14 @@
                 app:Settings_icon_filter="?colorOnPrimaryIcons"
                 app:Settings_lineVisible="false" />
 
+            <com.sup.dev.android.views.settings.SettingsMini
+                android:id="@+id/vBadgeList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_icon="@drawable/social_leaderboard_24"
+                app:Settings_icon_filter="?colorOnPrimaryIcons"
+                app:Settings_lineVisible="false" />
+
         </LinearLayout>
 
         <FrameLayout

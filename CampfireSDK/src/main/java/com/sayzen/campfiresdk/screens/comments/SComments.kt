@@ -1,15 +1,16 @@
 package com.sayzen.campfiresdk.screens.comments
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dzen.campfire.api.API_TRANSLATE
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
-import com.sayzen.campfiresdk.support.adapters.AdapterComments
 import com.sayzen.campfiresdk.models.events.publications.EventCommentsCountChanged
 import com.sayzen.campfiresdk.models.events.publications.EventPublicationRemove
 import com.sayzen.campfiresdk.models.splashs.SplashComment
+import com.sayzen.campfiresdk.support.adapters.AdapterComments
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -47,7 +48,10 @@ class SComments constructor(
 
         adapter = AdapterComments(publicationId, commentId, vRecycler)
 
-        vFab.setOnClickListener { SplashComment(publicationId, false) { comment -> adapter.addComment(comment) }.asSheetShow() }
+        vFab.setOnClickListener {
+            PostHog.capture("open_comment_editor", properties = mapOf("from" to "s_comments"))
+            SplashComment(publicationId, false) { comment -> adapter.addComment(comment) }.asSheetShow()
+        }
         vRecycler.adapter = adapter
     }
 

@@ -9,11 +9,10 @@ import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.lvl.LvlInfoAdmin
 import com.dzen.campfire.api.models.lvl.LvlInfoUser
 import com.dzen.campfire.api.models.notifications.project.NotificationProjectABParamsChanged
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.controllers.ControllerApi
-import com.sayzen.campfiresdk.controllers.ControllerEffects
-import com.sayzen.campfiresdk.controllers.ControllerHoliday
-import com.sayzen.campfiresdk.controllers.ControllerOnline
+import com.sayzen.campfiresdk.compose.profile.badges.BadgeFlyoutSplash
+import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.events.account.EventAccountChanged
 import com.sayzen.campfiresdk.models.events.account.EventAccountEffectAdd
 import com.sayzen.campfiresdk.models.events.account.EventAccountEffectRemove
@@ -194,6 +193,18 @@ class XAccount {
         setView(viewAvatar.vAvatar)
         viewAvatar.setTitle(account.name)
         if (date != 0L) viewAvatar.setSubtitle(ToolsDate.dateToString(date))
+
+        if (PostHog.isFeatureEnabled("badges_username")) {
+            account.customization.activeBadge?.let { badge ->
+                viewAvatar.vIcon.visibility = View.VISIBLE
+                viewAvatar.vIcon.setOnClickListener {
+                    BadgeFlyoutSplash(badge).asOverlayShow()
+                }
+                ImageLoader.load(badge.miniImage).into(viewAvatar.vIcon)
+            } ?: run {
+                viewAvatar.vIcon.visibility = View.GONE
+            }
+        }
     }
 
     fun setViewBig(vImage: ImageView) {
@@ -278,15 +289,27 @@ class XAccount {
     fun getLevelColor() =
         ToolsResources.getColor(if (isProtoadmin()) R.color.orange_700 else if (isAdmin()) R.color.red_700 else if (isModerator()) R.color.blue_700 else R.color.green_700)
 
-    fun getLevelColorHex() =
-        if (!isOnline()) "757575" else if (isProtoadmin()) "F57C00" else if (isAdmin()) "D32F2F" else if (isModerator()) "1976D2" else "388E3C"
+    fun getNicknameColorHex(): String {
+        if (!PostHog.isFeatureEnabled("username_colors")) {
+            return when {
+                !isOnline() -> "757575"
+                isProtoadmin() -> "F57C00"
+                isAdmin() -> "D32F2F"
+                isModerator() -> "1976D2"
+                else -> "388E3C"
+            }
+        }
+
+        if (!ControllerSettings.useNicknameColors) return "388E3C"
+        if (!isOnline()) return "757575"
+        return Integer.toHexString(account.customization.nicknameColor ?: 0xFFFFFFFF.toInt())
+            // this surely will not cause problems in the future
+            .drop(2)
+    }
 
     fun isBot() = ControllerApi.isBot(account.name)
 
     fun getImage() = account.image
-
-    @Deprecated("use ImageRefs")
-    fun getImageId() = account.imageId
 
     fun getId() = account.id
 

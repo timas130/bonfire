@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.TextView
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.stickers.PublicationStickersPack
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerStickers
 import com.sayzen.campfiresdk.controllers.t
@@ -67,6 +68,7 @@ class CardStickersPack(
             SComments.instance(publication.id, 0, Navigator.TO)
         }
         vComments.setOnLongClickListener {
+            PostHog.capture("open_comment_editor", properties = mapOf("from" to "stickers_longclick"))
             SplashComment(publication.id, null, true) { }.asSheetShow()
             true
         }

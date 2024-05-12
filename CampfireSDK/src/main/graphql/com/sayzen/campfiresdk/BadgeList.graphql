@@ -1,0 +1,26 @@
+fragment BadgeListItem on Badge {
+    id
+    image {
+        ...Ui
+    }
+    name
+    description
+    createdAt
+}
+
+query BadgeList($userId: ID!, $after: String) {
+    userById(id: $userId) {
+        id
+        badges(after: $after) {
+            edges {
+                cursor
+                node {
+                    ...BadgeListItem
+                }
+            }
+            pageInfo {
+                hasNextPage
+            }
+        }
+    }
+}

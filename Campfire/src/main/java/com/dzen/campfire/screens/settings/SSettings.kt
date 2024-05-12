@@ -4,7 +4,7 @@ import com.dzen.campfire.R
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
-import com.sayzen.campfiresdk.compose.AccountSecurityScreen
+import com.sayzen.campfiresdk.compose.auth.AccountSecurityScreen
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.ControllerSettings
@@ -19,6 +19,9 @@ import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.views.settings.Settings
 import com.sup.dev.android.views.settings.SettingsSwitcher
 import com.sup.dev.android.views.splash.SplashAlert
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import sh.sit.bonfire.auth.AuthController
 
 class SSettings : Screen(R.layout.screen_settings_actions) {
 
@@ -41,7 +44,7 @@ class SSettings : Screen(R.layout.screen_settings_actions) {
     private val vAnonRates: SettingsSwitcher = findViewById(R.id.vAnonRates)
     private val vConferenceAllow: SettingsSwitcher = findViewById(R.id.vConferenceAllow)
     private val vHideBlacklist: SettingsSwitcher = findViewById(R.id.vHideBlacklist)
-    private val vAllowSentry: SettingsSwitcher = findViewById(R.id.vAllowSentry)
+    private val vAllowAnalytics: SettingsSwitcher = findViewById(R.id.vAllowAnalytics)
 
     init {
         disableShadows()
@@ -65,8 +68,8 @@ class SSettings : Screen(R.layout.screen_settings_actions) {
         vConferenceAllow.setTitle(t(API_TRANSLATE.settings_allow_adding_to_conferences))
         vPrivacyTitle.setTitle(t(API_TRANSLATE.settings_privacy_title))
         vHideBlacklist.setTitle(t(API_TRANSLATE.settings_privacy_hide_blacklist))
-        vAllowSentry.setTitle(t(API_TRANSLATE.settings_privacy_sentry))
-        vAllowSentry.setSubtitle(t(API_TRANSLATE.settings_privacy_sentry_desc))
+        vAllowAnalytics.setTitle(R.string.consent_analytics)
+        vAllowAnalytics.setSubtitle(R.string.consent_analytics_desc)
 
         ImageLoader.load(ApiResources.CAMPFIRE_IMAGE_4).into(vAnonRates.vIcon)
 
@@ -96,7 +99,9 @@ class SSettings : Screen(R.layout.screen_settings_actions) {
         vAnonRates.setOnClickListener { ControllerSettings.anonRates = vAnonRates.isChecked() }
         vConferenceAllow.setOnClickListener { ControllerSettings.allowAddingToConferences = vConferenceAllow.isChecked() }
         vHideBlacklist.setOnClickListener { ControllerSettings.hideBlacklistedPubs = vHideBlacklist.isChecked() }
-        vAllowSentry.setOnClickListener { ControllerSettings.allowSentry = vAllowSentry.isChecked() }
+        vAllowAnalytics.setOnClickListener {
+            runBlocking { AuthController.setAnalyticsConsent(vAllowAnalytics.isChecked()) }
+        }
 
         updateValues()
     }
@@ -111,7 +116,7 @@ class SSettings : Screen(R.layout.screen_settings_actions) {
         vAnonRates.setChecked(ControllerSettings.anonRates)
         vConferenceAllow.setChecked(ControllerSettings.allowAddingToConferences)
         vHideBlacklist.setChecked(ControllerSettings.hideBlacklistedPubs)
-        vAllowSentry.setChecked(ControllerSettings.allowSentry)
+        vAllowAnalytics.setChecked(runBlocking { AuthController.haveAnalyticsConsent.first() })
 
         vAnonRates.isEnabled = ControllerApi.can(API.LVL_ANONYMOUS)
     }

@@ -1,0 +1,8 @@
+mutation SetBadgeShelfVisible($visible: Boolean!) {
+    showBadgeShelf(show: $visible) {
+        userId
+        badgeShelf {
+            ...BadgeShelfIcon
+        }
+    }
+}

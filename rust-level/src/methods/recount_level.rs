@@ -1,19 +1,25 @@
 use crate::consts::achi::*;
+use crate::consts::lvl::LevelCategoryExt;
 use crate::consts::publication::PublicationType;
 use crate::consts::status::Status;
 use crate::consts::{collisions, lvl};
 use crate::LevelServer;
 use c_core::prelude::sqlx;
-use c_core::services::level::{AchievementRecountResult, LevelError, LevelRecountResult};
+use c_core::services::level::{
+    AchievementRecountResult, LevelCategory, LevelError, LevelRecountResult,
+};
 use futures_util::TryStreamExt;
 use num_enum::TryFromPrimitive;
 use std::collections::{HashMap, HashSet};
+use tracing::warn;
 
 impl LevelServer {
     fn level_from_list(user_id: i64, list: Vec<AchievementRecountResult>) -> LevelRecountResult {
+        let total_level = 100 + list.iter().map(|report| report.level).sum::<u64>();
         LevelRecountResult {
             user_id,
-            total_level: 100 + list.iter().map(|report| report.level).sum::<u64>(),
+            category: LevelCategory::from_level(total_level),
+            total_level,
             achievements: list.into_iter().map(|report| (report.id, report)).collect(),
         }
     }
@@ -419,6 +425,31 @@ impl LevelServer {
         Ok(hm)
     }
 
+    async fn save_into_cache(&self, user_id: i64, report: &LevelRecountResult) {
+        let total_level = report.total_level as i64;
+        let Ok(report) = serde_json::to_value(report) else {
+            return;
+        };
+
+        let result = sqlx::query!(
+            "insert into level_cache (user_id, level, recount_report) \
+             values ($1, $2, $3) \
+             on conflict (user_id) do update \
+             set level = excluded.level, \
+                 recount_report = excluded.recount_report, \
+                 updated_at = now()",
+            user_id,
+            total_level,
+            report,
+        )
+        .execute(&self.base.pool)
+        .await;
+
+        if let Err(err) = result {
+            warn!("failed to save recount report into cache: {err}");
+        }
+    }
+
     pub(crate) async fn _recount_level(
         &self,
         user_id: i64,
@@ -430,6 +461,10 @@ impl LevelServer {
             .filter_map(|(def, count)| def.map(|def| (def, count)))
             .map(|(def, count)| Self::achievement_from_def(def, count))
             .collect::<Vec<AchievementRecountResult>>();
-        Ok(Self::level_from_list(user_id, counts))
+
+        let report = Self::level_from_list(user_id, counts);
+        self.save_into_cache(user_id, &report).await;
+
+        Ok(report)
     }
 }

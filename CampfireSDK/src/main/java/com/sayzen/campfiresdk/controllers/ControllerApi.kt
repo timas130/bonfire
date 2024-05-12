@@ -20,6 +20,7 @@ import com.dzen.campfire.api.requests.publications.RPublicationsReport
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.api.tools.client.ApiClient
 import com.dzen.campfire.api.tools.client.Request
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.models.events.account.EventAccountCurrentChanged
 import com.sayzen.campfiresdk.models.events.account.EventAccountReportsCleared
@@ -365,6 +366,10 @@ object ControllerApi {
                         API.PUBLICATION_TYPE_QUEST -> ControllerLinks.linkToQuest(publicationId)
                         else -> ControllerLinks.linkToPost(publicationId)
                     }
+                    PostHog.capture(
+                        event = "share_publication",
+                        properties = mapOf("publication_type" to publicationType)
+                    )
                     ToolsIntent.shareText(text + "\n\r" + link)
                     ToolsThreads.main(10000) { RPublicationsOnShare(publicationId).send(api) }
                 }

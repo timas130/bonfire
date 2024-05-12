@@ -75,6 +75,8 @@
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
             android:value="${crashlyticsEnabled}" />
+        <meta-data android:name="firebase_analytics_collection_deactivated" android:value="true" />
+        <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -90,17 +92,6 @@
             android:name="com.sup.dev.android.tools.ToolsJobScheduler$ToolsJobSchedulerService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
-
-        <meta-data android:name="io.sentry.dsn" android:value="https://b37ca71d1d671a94f8289a06435422c4@sentry.bonfire.moe/2" />
-
-        <meta-data android:name="io.sentry.traces.user-interaction.enable" android:value="true" />
-        <meta-data android:name="io.sentry.attach-screenshot" android:value="true" />
-        <meta-data android:name="io.sentry.attach-view-hierarchy" android:value="true" />
-
-        <meta-data android:name="io.sentry.traces.sample-rate" android:value="1.0" />
-        <meta-data android:name="io.sentry.traces.profiling.sample-rate" android:value="1.0" />
-
-        <meta-data android:name="io.sentry.auto-init" android:value="false" />
     </application>
 
 </manifest>

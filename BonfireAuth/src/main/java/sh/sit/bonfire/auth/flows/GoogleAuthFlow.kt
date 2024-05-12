@@ -8,12 +8,12 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.sup.dev.android.tools.ToolsIntent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import sh.sit.bonfire.LoginOAuthMutation
 import sh.sit.bonfire.auth.AuthController
+import sh.sit.bonfire.auth.LoginOAuthMutation
 import sh.sit.bonfire.auth.R
 import sh.sit.bonfire.auth.apollo
-import sh.sit.bonfire.type.OauthLoginInput
-import sh.sit.bonfire.type.OauthProvider
+import sh.sit.schema.type.OauthLoginInput
+import sh.sit.schema.type.OauthProvider
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine

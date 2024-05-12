@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.annotation.StringRes
 import com.sup.dev.android.R
 import com.sup.dev.android.app.SupAndroid
@@ -23,6 +24,7 @@ open class ViewAvatarTitle constructor(context: Context, attrs: AttributeSet? = 
     val vAvatar: ViewAvatar
     val vTitle: ViewText
     val vSubtitle: ViewText
+    val vIcon: ImageView
 
     private var chipModeAvatar = true
     private var avatarHeight = -1f
@@ -38,6 +40,7 @@ open class ViewAvatarTitle constructor(context: Context, attrs: AttributeSet? = 
         vAvatar = view.findViewById(R.id.vDevSupAvatar)
         vTitle = view.findViewById(R.id.vDevSupTitle)
         vSubtitle = view.findViewById(R.id.vDevSupSubtitle)
+        vIcon = view.findViewById(R.id.vDevSupIcon)
 
         addView(view)
 

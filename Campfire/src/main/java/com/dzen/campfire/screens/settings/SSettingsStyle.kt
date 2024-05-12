@@ -5,6 +5,7 @@ import com.dzen.campfire.R
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.account.AccountSettings
 import com.dzen.campfire.api.models.images.ImageRef
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.controllers.ControllerHoliday
 import com.sayzen.campfiresdk.controllers.ControllerScreenAnimations
 import com.sayzen.campfiresdk.controllers.ControllerSettings
@@ -28,6 +29,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
 
     private val vCircles: SettingsSwitcher = findViewById(R.id.vCircles)
     private val vRounding: SettingsSeek = findViewById(R.id.vRounding)
+    private val vNicknameColors: SettingsSwitcher = findViewById(R.id.vNicknameColors)
     private val vChatBackground: SettingsSwitcher = findViewById(R.id.vChatBackground)
     private val vRoundingChat: SettingsSeek = findViewById(R.id.vRoundingChat)
     private val vPostFontSize: SettingsSeek = findViewById(R.id.vPostFontSize)
@@ -56,6 +58,8 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vCircles.setTitle(t(API_TRANSLATE.settings_style_circles))
         vRounding.setTitle(t(API_TRANSLATE.settings_style_rounding))
         vRoundingChat.setTitle(t(API_TRANSLATE.settings_style_rounding_chat))
+        vNicknameColors.setTitle(t(API_TRANSLATE.settings_style_nickname_colors))
+        vNicknameColors.setSubtitle(t(API_TRANSLATE.settings_style_nickname_colors_desc))
         vChatBackground.setTitle(t(API_TRANSLATE.settings_fandom_background))
         vPostFontSize.setTitle(t(API_TRANSLATE.settings_style_post_font_size))
         vHolidayTitle.setTitle(t(API_TRANSLATE.settings_style_holidays))
@@ -104,6 +108,13 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vRounding.setMaxProgress(18)
         vRounding.setOnProgressChanged {
             ControllerSettings.styleAvatarsRounding = vRounding.progress
+        }
+
+        vNicknameColors.setOnClickListener {
+            ControllerSettings.useNicknameColors = vNicknameColors.isChecked()
+        }
+        if (!PostHog.isFeatureEnabled("username_colors")) {
+            vNicknameColors.visibility = GONE
         }
 
         vChatBackground.setOnClickListener {

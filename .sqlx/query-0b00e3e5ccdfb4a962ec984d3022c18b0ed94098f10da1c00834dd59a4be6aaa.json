@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into account_customization (user_id, active_badge) values ($1, $2) on conflict (user_id) do update set active_badge = excluded.active_badge",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "0b00e3e5ccdfb4a962ec984d3022c18b0ed94098f10da1c00834dd59a4be6aaa"
+}

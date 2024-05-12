@@ -2,7 +2,6 @@ package com.sayzen.campfiresdk.support.adapters
 
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.Publication
-import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerKarma
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.t
@@ -57,8 +56,7 @@ class XKarma (
             }else{
                 ToolsToast.show(t(API_TRANSLATE.error_too_late))
             }
-        }
-        else ControllerKarma.rate(publicationId, up, anon)
+        } else ControllerKarma.rate(publicationId, up, anon)
     }
 
 

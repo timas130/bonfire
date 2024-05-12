@@ -1,10 +1,7 @@
 package com.sup.dev.java.classes.callbacks
 
-import java.util.ArrayList
-
 class CallbacksList {
-
-    private val list = ArrayList<() -> Unit>()
+    private val list = mutableListOf<() -> Unit>()
 
     fun add(callback: () -> Unit) {
         list.add(callback)
@@ -15,7 +12,7 @@ class CallbacksList {
     }
 
     fun invoke() {
-        for (c in ArrayList(list)) c.invoke()
+        for (c in list) c.invoke()
     }
 
     fun clear() {
@@ -26,5 +23,4 @@ class CallbacksList {
         invoke()
         clear()
     }
-
 }

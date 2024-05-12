@@ -17,12 +17,26 @@
         android:paddingRight="16dp"
         android:orientation="vertical">
 
-        <com.sup.dev.android.views.views.ViewText
-            android:id="@+id/vDevSupTitle"
-            style="@style/Base.TextAppearance.AppCompat.Body1"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"/>
+            android:orientation="horizontal">
+
+            <com.sup.dev.android.views.views.ViewText
+                android:id="@+id/vDevSupTitle"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/vDevSupIcon"
+                android:visibility="gone"
+                android:layout_width="15sp"
+                android:layout_height="15sp"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="2dp"
+                android:paddingBottom="1sp" />
+        </LinearLayout>
 
         <com.sup.dev.android.views.views.ViewText
             android:id="@+id/vDevSupSubtitle"

@@ -6,6 +6,7 @@ import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.fandoms.Fandom
 import com.dzen.campfire.api.requests.fandoms.RFandomsGetAll
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.api
@@ -13,7 +14,6 @@ import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.CardFandom
 import com.sayzen.campfiresdk.screens.fandoms.suggest.SFandomSuggest
 import com.sayzen.campfiresdk.support.load
-import com.sayzen.devsupandroidgoogle.ControllerFirebaseAnalytics
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -70,7 +70,7 @@ class SFandomsSearch private constructor(
         (vFab as View).visibility = View.VISIBLE
         vFab.setImageResource(R.drawable.ic_search_white_24dp)
         vFab.setOnClickListener {
-            ControllerFirebaseAnalytics.post("Screen_FandomsSearch", "Search")
+            PostHog.capture("fandom_search")
             Navigator.to(SFandomsSearchParams(name, categoryId,
                     params1,
                     params2,

@@ -1,0 +1,29 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into badges (user_id, name, description, mini_image_id, image_id, fandom_id, link, created_at) values ($1, $2, $3, $4, $5, $6, $7, $8) returning id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Text",
+        "Text",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Text",
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "4a2fec8a954be8a04b944cb79a6e0e66e7cdf36392fc76e628dd8528cb8dddf4"
+}

@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into profile_customization (user_id, show_badge_shelf) values ($1, $2) on conflict (user_id) do update set show_badge_shelf = excluded.show_badge_shelf",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Bool"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "d8544bed07426bfea26decc45625e559af647f89ab502e22b3179ddad28a4760"
+}

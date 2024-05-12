@@ -3,5 +3,6 @@ query MeQuery {
         id
         username
         email
+        cachedLevel
     }
 }

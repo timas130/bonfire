@@ -13,10 +13,10 @@ import androidx.compose.ui.unit.dp
 import com.sup.dev.android.libs.image_loader.ImageLink
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import sh.sit.bonfire.ResendVerificationMutation
 import sh.sit.bonfire.auth.AuthController
 import sh.sit.bonfire.auth.AuthController.CanLoginResult
 import sh.sit.bonfire.auth.R
+import sh.sit.bonfire.auth.ResendVerificationMutation
 import sh.sit.bonfire.auth.apollo
 import sh.sit.bonfire.auth.components.FormScreen
 import sh.sit.bonfire.auth.components.RemoteImage

@@ -1,0 +1,8 @@
+mutation SetBadgeShelf($badges: [ID]!) {
+    setBadgeShelf(badgeIds: $badges) {
+        userId
+        badgeShelf {
+            ...BadgeShelfIcon
+        }
+    }
+}

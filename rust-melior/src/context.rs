@@ -1,15 +1,20 @@
+use crate::error::RespError;
 use async_graphql::Context;
 use async_trait::async_trait;
+use aws_sdk_s3::config::{Credentials, Region};
 use axum_extra::headers::UserAgent;
 use axum_extra::TypedHeader;
+use c_core::config::ImagesConfig;
 use c_core::prelude::{anyhow, tarpc};
 use c_core::services::auth::user::{AuthUser, PermissionLevel};
 use c_core::services::auth::{Auth, AuthError, AuthServiceClient, UserContext};
 use c_core::services::level::{Level, LevelServiceClient};
 use c_core::services::notification::{NotificationServiceClient, Notifications};
+use c_core::services::profile::{ProfileServiceClient, Profiles};
 use c_core::ServiceBase;
 use std::net::IpAddr;
 use std::sync::Arc;
+use tracing::error;
 
 #[derive(Clone)]
 pub struct GlobalContext {
@@ -17,6 +22,7 @@ pub struct GlobalContext {
     pub auth: Arc<AuthServiceClient>,
     pub level: Arc<LevelServiceClient>,
     pub notification: Arc<NotificationServiceClient>,
+    pub profile: Arc<ProfileServiceClient>,
 }
 impl GlobalContext {
     pub async fn new(base: ServiceBase) -> anyhow::Result<GlobalContext> {
@@ -26,6 +32,7 @@ impl GlobalContext {
             notification: Arc::new(
                 Notifications::client_tcp(base.config.ports.notification).await?,
             ),
+            profile: Arc::new(Profiles::client_tcp(base.config.ports.profile).await?),
             base: Arc::new(base),
         })
     }
@@ -37,6 +44,7 @@ pub struct ReqContext {
     pub auth: Arc<AuthServiceClient>,
     pub level: Arc<LevelServiceClient>,
     pub notification: Arc<NotificationServiceClient>,
+    pub profile: Arc<ProfileServiceClient>,
     pub user_context: UserContext,
     pub session_id: Option<i64>,
     pub user: Option<AuthUser>,
@@ -74,6 +82,7 @@ impl ReqContext {
             auth: global_context.auth,
             level: global_context.level,
             notification: global_context.notification,
+            profile: global_context.profile,
             user_context: UserContext {
                 ip: addr,
                 user_agent: user_agent
@@ -95,6 +104,30 @@ impl ReqContext {
                 .unwrap_or(AuthError::Unauthenticated));
         };
         Ok(user)
+    }
+
+    pub fn get_s3(&self) -> Result<(aws_sdk_s3::Client, &str), RespError> {
+        let ImagesConfig::S3 {
+            endpoint,
+            bucket,
+            key_id,
+            key_secret,
+            region,
+        } = &self.base.config.images
+        else {
+            error!("misconfiguration: images config expected s3, but it's not");
+            return Err(RespError::OutOfSync);
+        };
+
+        let config = aws_sdk_s3::Config::builder()
+            .endpoint_url(endpoint)
+            .credentials_provider(Credentials::new(key_id, key_secret, None, None, "Melior"))
+            .region(Some(Region::new(region.clone())))
+            .force_path_style(true)
+            .build();
+        let client = aws_sdk_s3::Client::from_conf(config);
+
+        Ok((client, bucket))
     }
 }
 

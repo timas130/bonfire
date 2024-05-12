@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update account_customization set nickname_color = null where user_id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "5907a8b7d8d28e458db7ca692384609617b849deded63c205ef73069ed65a0bd"
+}

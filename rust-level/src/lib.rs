@@ -5,7 +5,7 @@ mod methods;
 use c_core::prelude::tarpc::context::Context;
 use c_core::prelude::{anyhow, tarpc};
 use c_core::services::level::{
-    DailyTaskFandom, DailyTaskInfo, LevelError, LevelRecountResult, LevelService,
+    DailyTaskFandom, DailyTaskInfo, LevelCategory, LevelError, LevelRecountResult, LevelService,
 };
 use c_core::{host_tcp, ServiceBase};
 
@@ -33,6 +33,14 @@ impl LevelService for LevelServer {
         user_id: i64,
     ) -> Result<LevelRecountResult, LevelError> {
         self._recount_level(user_id).await
+    }
+
+    async fn get_level_cached(
+        self,
+        _: Context,
+        user_id: i64,
+    ) -> Result<(u64, LevelCategory), LevelError> {
+        self._get_level_cached(user_id).await
     }
 
     async fn get_daily_task(self, _: Context, user_id: i64) -> Result<DailyTaskInfo, LevelError> {

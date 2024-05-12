@@ -9,20 +9,19 @@ import com.dzen.campfire.api.models.notifications.comments.NotificationCommentAn
 import com.dzen.campfire.api.models.publications.PublicationComment
 import com.dzen.campfire.api.requests.comments.RCommentGet
 import com.dzen.campfire.api.requests.comments.RCommentsGetAll
-import com.sayzen.campfiresdk.R
+import com.dzen.campfire.api.tools.client.ApiClient
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.api
+import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.CardComment
 import com.sayzen.campfiresdk.models.events.notifications.EventNotification
 import com.sayzen.campfiresdk.models.events.publications.EventCommentsCountChanged
 import com.sayzen.campfiresdk.models.splashs.SplashComment
-import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.cards.CardSpace
-import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapterLoading
 import com.sup.dev.android.views.splash.SplashAlert
-import com.dzen.campfire.api.tools.client.ApiClient
-import com.sayzen.campfiresdk.controllers.t
+import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapterLoading
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsThreads
 
@@ -66,13 +65,19 @@ class AdapterComments(
             }
         }
         setRetryMessage(t(API_TRANSLATE.error_network), t(API_TRANSLATE.app_retry))
-        setEmptyMessage(t(API_TRANSLATE.comments_empty), t(API_TRANSLATE.app_comment)) { showCommentDialog() }
+        setEmptyMessage(t(API_TRANSLATE.comments_empty), t(API_TRANSLATE.app_comment)) {
+            PostHog.capture("open_comment_editor", properties = mapOf("from" to "empty"))
+            showCommentDialog()
+        }
         setNotifyCount(5)
         ToolsThreads.main(true) { this.loadBottom() }
     }
 
     fun setCommentButton(view: View) {
-        view.setOnClickListener { showCommentDialog() }
+        view.setOnClickListener {
+            PostHog.capture("open_comment_editor", properties = mapOf("from" to "comment_btn"))
+            showCommentDialog()
+        }
     }
 
     fun showCommentDialog(comment: PublicationComment? = null, changeComment: PublicationComment? = null, quoteId: Long = 0, quoteText: String = "") {
@@ -160,28 +165,38 @@ class AdapterComments(
     private fun instanceMapper():((PublicationComment)->CardComment) = {instanceCard(it)}
 
     private fun instanceCard(publication: PublicationComment): CardComment {
-        return CardComment.instance(publication, true, false,
-                { comment ->
-                    if (ControllerApi.isCurrentAccount(comment.creator.id)) return@instance false
-                    showCommentDialog(comment)
-                    true
-                },
-                { comment ->
-                    var quoteText = comment.creator.name + ": "
-                    if (comment.text.isNotEmpty()) quoteText += comment.text
-                    else if (comment.imageId != 0L || comment.imageIdArray.isNotEmpty()) quoteText += t(API_TRANSLATE.app_image)
-                    else if (comment.stickerId != 0L) quoteText += t(API_TRANSLATE.app_sticker)
+        return CardComment.instance(
+            publication = publication,
+            dividers = true,
+            miniSize = false,
+            onClick = { comment ->
+                if (ControllerApi.isCurrentAccount(comment.creator.id)) return@instance false
+                PostHog.capture("open_comment_editor", properties = mapOf("from" to "reply"))
+                showCommentDialog(comment)
+                true
+            },
+            onQuote = { comment ->
+                var quoteText = comment.creator.name + ": "
+                if (comment.text.isNotEmpty()) quoteText += comment.text
+                else if (comment.imageId != 0L || comment.imageIdArray.isNotEmpty()) quoteText += t(API_TRANSLATE.app_image)
+                else if (comment.stickerId != 0L) quoteText += t(API_TRANSLATE.app_sticker)
 
-                    showCommentDialog(if (ControllerApi.isCurrentAccount(comment.creator.id)) null else comment, null, comment.id, quoteText)
-                },
-                { id ->
-                    for (i in get(CardComment::class)) {
-                        if (i.xPublication.publication.id == id) {
-                            scrollToCard(i, 0)
-                            break
-                        }
+                PostHog.capture("open_comment_editor", properties = mapOf("from" to "quote"))
+                showCommentDialog(
+                    if (ControllerApi.isCurrentAccount(comment.creator.id)) null else comment,
+                    null,
+                    comment.id,
+                    quoteText
+                )
+            },
+            onGoTo = { id ->
+                for (i in get(CardComment::class)) {
+                    if (i.xPublication.publication.id == id) {
+                        scrollToCard(i, 0)
+                        break
                     }
                 }
+            }
         )
     }
 

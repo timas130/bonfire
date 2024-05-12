@@ -1,0 +1,15 @@
+query BadgeFlyoutQuery($id: ID!) {
+    badge(id: $id) {
+        id
+        image { ...Ui }
+        name
+        description
+        fandomId
+        link
+        user {
+            id
+            username
+        }
+        createdAt
+    }
+}

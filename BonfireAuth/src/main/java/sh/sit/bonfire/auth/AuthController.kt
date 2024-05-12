@@ -7,7 +7,11 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.apollographql.apollo3.cache.normalized.FetchPolicy
+import com.apollographql.apollo3.cache.normalized.fetchPolicy
+import com.apollographql.apollo3.cache.normalized.watch
 import com.dzen.campfire.api.tools.client.TokenProvider
+import com.posthog.PostHog
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.tools.ToolsTextAndroid
 import kotlinx.coroutines.Dispatchers
@@ -20,10 +24,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
-import sh.sit.bonfire.LoginRefreshMutation
-import sh.sit.bonfire.LogoutMutation
-import sh.sit.bonfire.MeQuery
-import sh.sit.bonfire.type.TfaType
+import sh.sit.schema.type.TfaType
 
 object AuthController : TokenProvider {
     lateinit var openRules: () -> Unit
@@ -44,6 +45,7 @@ object AuthController : TokenProvider {
 
     private val AUTH_STATE_KEY = stringPreferencesKey("authState")
     private val CONSENT_KEY = booleanPreferencesKey("hasConsent")
+    private val ANALYTICS_CONSENT_KEY = booleanPreferencesKey("hasAnalyticsConsent")
 
     private val json = Json {
         ignoreUnknownKeys = true
@@ -58,6 +60,29 @@ object AuthController : TokenProvider {
         .map<String?, AuthState?> { state -> state?.let { json.decodeFromString(it) } }
         .map { it ?: NoneAuthState }
 
+    val currentUser: Flow<MeQuery.Me?> by lazy {
+        ApolloController.apolloClient
+            .query(MeQuery())
+            .fetchPolicy(FetchPolicy.CacheFirst)
+            .watch()
+            .map {
+                it.data?.me
+            }
+            .map {
+                it?.let { user ->
+                    PostHog.identify(
+                        distinctId = user.id,
+                        userProperties = mapOf<String, Any>(
+                            "username" to user.username,
+                            "email" to (user.email ?: "no email"),
+                            "level" to user.cachedLevel,
+                        )
+                    )
+                }
+                it
+            }
+    }
+
     suspend fun saveAuthState(authState: AuthState) {
         dataStore.edit {
             it[AUTH_STATE_KEY] = json.encodeToString(authState)
@@ -71,6 +96,7 @@ object AuthController : TokenProvider {
         }
         val state = authState.first()
         return if (state is AuthenticatedAuthState) {
+            currentUser
             state.accessToken
         } else {
             null
@@ -194,10 +220,23 @@ object AuthController : TokenProvider {
     val haveConsent by lazy {
         dataStore.data.map { it[CONSENT_KEY] ?: false }
     }
+    val haveAnalyticsConsent by lazy {
+        dataStore.data.map { it[ANALYTICS_CONSENT_KEY] ?: true }
+    }
 
     suspend fun setConsent(consent: Boolean) {
         dataStore.edit {
             it[CONSENT_KEY] = consent
+        }
+    }
+    suspend fun setAnalyticsConsent(consent: Boolean) {
+        dataStore.edit {
+            it[ANALYTICS_CONSENT_KEY] = consent
+        }
+        if (consent) {
+            PostHog.optIn()
+        } else {
+            PostHog.optOut()
         }
     }
 }

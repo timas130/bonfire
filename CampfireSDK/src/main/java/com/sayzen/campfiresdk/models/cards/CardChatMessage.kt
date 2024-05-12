@@ -250,7 +250,7 @@ open class CardChatMessage constructor(
                 vLabel.text =
                     ToolsDate.dateToString(publication.dateCreate) + (if (publication.changed) " " + t(API_TRANSLATE.app_edited) else "")
             else {
-                val color = xPublication.xAccount.getLevelColorHex()
+                val color = xPublication.xAccount.getNicknameColorHex()
                 vLabel.text =
                     "{$color ${xPublication.xAccount.getName()}}  " + ToolsDate.dateToString(publication.dateCreate) + (if (publication.changed) " " + t(
                         API_TRANSLATE.app_edited

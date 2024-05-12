@@ -44,6 +44,7 @@ pub struct PortsConfig {
     pub images: u16,
     pub level: u16,
     pub notification: u16,
+    pub profile: u16,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -67,6 +68,7 @@ pub enum ImagesConfig {
         bucket: String,
         key_id: String,
         key_secret: String,
+        region: String,
     },
 }
 

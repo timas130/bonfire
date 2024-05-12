@@ -11,6 +11,7 @@ import com.dzen.campfire.api.models.publications.stickers.PublicationSticker
 import com.dzen.campfire.api.requests.chat.RChatMessageChange
 import com.dzen.campfire.api.requests.chat.RChatMessageCreate
 import com.dzen.campfire.api.requests.chat.RChatTyping
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.events.chat.EventChatMessageChanged
@@ -245,10 +246,30 @@ class FieldLogic(
         }
 
         if (publicationChange == null) {
+            capture("image" to attach.isHasContent(), "length" to text.length)
             if (attach.isHasContent()) sendImage(text, parentId)
             else if (ToolsText.isWebLink(text)) sendLink(text, parentId, true)
             else sendText(text, parentId)
-        } else sendChange(text)
+        } else {
+            PostHog.capture("change_chat_message")
+            sendChange(text)
+        }
+    }
+
+    private fun capture(vararg props: Pair<String, Any>) {
+        PostHog.capture(
+            event = "send_chat_message",
+            properties = mapOf(
+                "chat_type" to when (screen.chat.tag.chatType) {
+                    API.CHAT_TYPE_FANDOM_ROOT -> "fandom_root"
+                    API.CHAT_TYPE_FANDOM_SUB -> "fandom_sub"
+                    API.CHAT_TYPE_CONFERENCE -> "conf"
+                    API.CHAT_TYPE_PRIVATE -> "private"
+                    else -> ""
+                },
+                *props
+            )
+        )
     }
 
     private fun beforeSend() {
@@ -362,6 +383,7 @@ class FieldLogic(
         val quoteIdV = quoteId
         val parentId = getParentId()
         beforeSend()
+        capture("sticker" to true)
         screen.addCard(CardSending(screen, RChatMessageCreate(screen.chat.tag, "", null, null, null, parentId, quoteIdV, sticker.id, newFormatting)))
     }
 
@@ -370,6 +392,7 @@ class FieldLogic(
         val t = vText.text
         if (t == null || t.isEmpty()) return
         lastTypingSent = System.currentTimeMillis()
+        PostHog.capture("chat_typing")
         RChatTyping(screen.chat.tag).send(api)
     }
 

@@ -11,6 +11,7 @@ import com.dzen.campfire.api.models.publications.PublicationComment
 import com.dzen.campfire.api.models.publications.stickers.PublicationSticker
 import com.dzen.campfire.api.requests.comments.RCommentsChange
 import com.dzen.campfire.api.requests.comments.RCommentsCreate
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.controllers.ControllerMention
@@ -61,14 +62,18 @@ class SplashComment constructor(
 
     private var newFormatting = true
 
-    private var attach = Attach(vAttach, vAttachRecycler,
-            { updateSendEnabled() },
-            {
-                ToolsThreads.main(100) {
-                    if (isHided()) asSheetShow()
-                }
-            }, // Нужна задержка, иначе откроется и сразу закроется из-за смены экранов
-            { sendSticker(it) })
+    private var attach = Attach(
+        vAttach = vAttach,
+        vAttachRecycler = vAttachRecycler,
+        onUpdate = { updateSendEnabled() },
+        onSupportScreenHide = {
+            ToolsThreads.main(100) {
+                if (isHided()) asSheetShow()
+            }
+        },
+        onStickerSelected = { sendSticker(it) }
+        // Нужна задержка, иначе откроется и сразу закроется из-за смены экранов
+    )
 
     constructor(changeComment: PublicationComment, showToast: Boolean) : this(0, null, changeComment, 0, "", showToast, null)
 
@@ -217,10 +222,20 @@ class SplashComment constructor(
         }
 
         if (changeComment == null) {
+            PostHog.capture(
+                "comment",
+                properties = mapOf(
+                    "change" to false,
+                    "image" to attach.isHasContent(),
+                )
+            )
             if (attach.isHasContent()) sendImage(text, parentId)
             else if (ToolsText.isWebLink(text)) sendLink(text, parentId, true)
             else sendText(text, parentId)
-        } else sendChange(text)
+        } else {
+            PostHog.capture("change_comment", properties = mapOf("change" to true))
+            sendChange(text)
+        }
     }
 
 
@@ -341,6 +356,14 @@ class SplashComment constructor(
     }
 
     private fun sendSticker(sticker: PublicationSticker) {
+        PostHog.capture(
+            "comment",
+            properties = mapOf(
+                "change" to false,
+                "image" to false,
+                "sticker" to true,
+            )
+        )
 
         val text = getText()
         if (text.length > API.COMMENT_MAX_L) {
@@ -411,6 +434,6 @@ class SplashComment constructor(
         }
     }
 
-    override fun attacheAgentIsActive() = isShoved()
+    override fun attacheAgentIsActive() = isShown()
 
 }

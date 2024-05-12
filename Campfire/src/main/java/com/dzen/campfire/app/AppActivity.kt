@@ -16,6 +16,7 @@ import com.dzen.campfire.screens.feed.filters.SplashFilters
 import com.dzen.campfire.screens.hello.SCampfireHello
 import com.dzen.campfire.screens.intro.SIntro
 import com.dzen.campfire.screens.settings.SOther
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.events.account.EventAccountChanged
@@ -38,7 +39,6 @@ import com.sayzen.campfiresdk.screens.post.bookmarks.SBookmarks
 import com.sayzen.campfiresdk.screens.post.drafts.SDrafts
 import com.sayzen.campfiresdk.screens.quests.SQuests
 import com.sayzen.campfiresdk.support.adapters.XAccount
-import com.sayzen.devsupandroidgoogle.ControllerFirebaseAnalytics
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.activity.SActivity
@@ -104,11 +104,17 @@ class AppActivity : SActivity() {
         type.setIconsColor(if (ControllerSettings.styleTheme == 0) ToolsResources.getColor(R.color.grey_700) else ToolsResources.getColorAttr(R.attr.colorOnPrimary))
 
         vAchievements = type.addNavigationItem(R.drawable.ic_star_white_24dp, t(API_TRANSLATE.app_achievements), false, true) {
-            ControllerFirebaseAnalytics.post("Root", "To Achievements")
+            PostHog.capture(
+                event = "main_navigation",
+                properties = mapOf("destination" to "achievements")
+            )
             SAchievements.instance(false, Navigator.TO)
         }.setTargetScreen(SAchievements::class)
         vChats = type.addNavigationItem(R.drawable.ic_mode_comment_white_24dp, t(API_TRANSLATE.app_chats), false, true) {
-            ControllerFirebaseAnalytics.post("Root", "To Chats")
+            PostHog.capture(
+                event = "main_navigation",
+                properties = mapOf("destination" to "chats")
+            )
             if (Navigator.currentStack == stackChats) {
                 val last = Navigator.getLast(SChats::class)
                 if (last != null) Navigator.set(last)
@@ -120,7 +126,10 @@ class AppActivity : SActivity() {
         }.setTargetScreen(SChats::class, SChat::class)
         vFeed = type.addNavigationItem(R.drawable.ic_all_inclusive_white_24dp, t(API_TRANSLATE.app_feed), false, true,
         onClick = {
-                ControllerFirebaseAnalytics.post("Root", "To Feed")
+            PostHog.capture(
+                event = "main_navigation",
+                properties = mapOf("destination" to "feed")
+            )
                 if (Navigator.currentStack == stackFeed) {
                     val has = Navigator.getCurrent() is SNotifications || Navigator.getCurrent() is SAchievements
                     if (has) {
@@ -140,7 +149,10 @@ class AppActivity : SActivity() {
         }).makeDefaultTargetItem()
         vNotifications = type.addNavigationItem(R.drawable.ic_notifications_white_24dp, t(API_TRANSLATE.app_notifications), false, true,
                 onClick = {
-                    ControllerFirebaseAnalytics.post("Root", "To Notifications")
+                    PostHog.capture(
+                        event = "main_navigation",
+                        properties = mapOf("destination" to "notifications")
+                    )
                     SNotifications.instance(Navigator.TO_BACK_STACK_OR_NEW)
                 },
                 onLongClick = {
@@ -148,31 +160,52 @@ class AppActivity : SActivity() {
                 }).setTargetScreen(SNotifications::class)
         type.addNavigationDivider()
         vFandoms = type.addNavigationItem(R.drawable.ic_account_balance_white_24dp, t(API_TRANSLATE.app_fandoms), true, true) {
-            ControllerFirebaseAnalytics.post("Root", "To Fandoms")
+            PostHog.capture(
+                event = "main_navigation",
+                properties = mapOf("destination" to "fandoms")
+            )
             SFandomsSearch.instance(Navigator.TO_BACK_STACK_OR_NEW)
         }
         vActivities = type.addNavigationItem(R.drawable.ic_rowing_white_24dp, t(API_TRANSLATE.app_activities), true, true) {
-            ControllerFirebaseAnalytics.post("Root", "To Activity")
+            PostHog.capture(
+                event = "main_navigation",
+                properties = mapOf("destination" to "activities")
+            )
             Navigator.toBackStackOrNew(SActivities())
         }
         vUsers = type.addNavigationItem(R.drawable.ic_group_white_24dp, t(API_TRANSLATE.app_users), true, true) {
-            ControllerFirebaseAnalytics.post("Root", "To Users")
+            PostHog.capture(
+                event = "main_navigation",
+                properties = mapOf("destination" to "users")
+            )
             Navigator.toBackStackOrNew(SAccountSearch(false, false, false, true) { SProfile.instance(it, Navigator.TO) })
         }
         vDrafts = type.addNavigationItem(R.drawable.ic_mode_edit_white_24dp, t(API_TRANSLATE.app_drafts), true, true) {
-            ControllerFirebaseAnalytics.post("Root", "To Drafts")
+            PostHog.capture(
+                event = "main_navigation",
+                properties = mapOf("destination" to "drafts")
+            )
             Navigator.toBackStackOrNew(SDrafts())
         }
         vBookmarks = type.addNavigationItem(R.drawable.ic_bookmark_white_24dp, t(API_TRANSLATE.app_bookmarks), true, true) {
-            ControllerFirebaseAnalytics.post("Root", "To Bookmarks")
+            PostHog.capture(
+                event = "main_navigation",
+                properties = mapOf("destination" to "bookmarks")
+            )
             Navigator.toBackStackOrNew(SBookmarks())
         }
         vQuests = type.addNavigationItem(R.drawable.baseline_history_edu_white_24, t(API_TRANSLATE.quests), true, true) {
-            ControllerFirebaseAnalytics.post("Root", "To Quests")
+            PostHog.capture(
+                event = "main_navigation",
+                properties = mapOf("destination" to "quests")
+            )
             Navigator.toBackStackOrNew(SQuests())
         }
         vOther = type.addNavigationItem(R.drawable.ic_settings_white_24dp, t(API_TRANSLATE.app_other), true, true) {
-            ControllerFirebaseAnalytics.post("Root", "To Other")
+            PostHog.capture(
+                event = "main_navigation",
+                properties = mapOf("destination" to "other")
+            )
             Navigator.toBackStackOrNew(SOther())
         }
 

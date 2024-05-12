@@ -1,10 +1,10 @@
 package sh.sit.bonfire.auth.flows
 
 import android.content.Context
-import sh.sit.bonfire.RegisterEmailMutation
 import sh.sit.bonfire.auth.AuthController
+import sh.sit.bonfire.auth.RegisterEmailMutation
 import sh.sit.bonfire.auth.apollo
-import sh.sit.bonfire.type.RegisterEmailInput
+import sh.sit.schema.type.RegisterEmailInput
 
 class RegisterEmailFlow(context: Context, val email: String, val password: String) : AuthFlow(context) {
     override suspend fun start() {

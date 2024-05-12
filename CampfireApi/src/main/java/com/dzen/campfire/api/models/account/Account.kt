@@ -19,12 +19,26 @@ class Account : JsonParsable, ImageHolder {
     var sponsor = 0L
     var sponsorTimes = 0L
     var accountEffects: Array<MAccountEffect> = emptyArray()
+    var customization: AccountCustomization = AccountCustomization()
 
     var dateCreate = 0L
 
     constructor()
 
-    constructor(id: Long, lvl: Long, lastOnlineDate: Long, name: String, imageId: Long, sex: Long, karma30: Long, sponsor: Long, sponsorTimes: Long, accountEffects: Array<MAccountEffect>, dateCreate: Long = 0) {
+    constructor(
+        id: Long,
+        lvl: Long,
+        lastOnlineDate: Long,
+        name: String,
+        imageId: Long,
+        sex: Long,
+        karma30: Long,
+        sponsor: Long,
+        sponsorTimes: Long,
+        accountEffects: Array<MAccountEffect>,
+        dateCreate: Long = 0,
+        customization: AccountCustomization = AccountCustomization()
+    ) {
         this.id = id
         this.lvl = lvl
         this.lastOnlineDate = lastOnlineDate
@@ -36,6 +50,7 @@ class Account : JsonParsable, ImageHolder {
         this.sponsorTimes = sponsorTimes
         this.accountEffects = accountEffects
         this.dateCreate = dateCreate
+        this.customization = customization
     }
 
     override fun json(inp: Boolean, json: Json): Json {
@@ -51,6 +66,7 @@ class Account : JsonParsable, ImageHolder {
         sponsor = json.m(inp, "sponsor", sponsor)
         sponsorTimes = json.m(inp, "sponsorTimes", sponsorTimes)
         accountEffects = json.m(inp, "accountEffects", accountEffects)
+        customization = json.m(inp, "czt", customization)
         return json
     }
 

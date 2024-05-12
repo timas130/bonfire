@@ -18,5 +18,21 @@
     <string name="enter_email">Please enter your email</string>
     <string name="recover_email_sent">Recovery link sent, please check your inbox. Don\'t forget to check the spam folder, too.</string>
     <string name="reset_password">Reset password</string>
+    <string name="badge_alt">Badge</string>
+    <string name="badge_more">Details</string>
+    <string name="badge_fandom">Visit fandom</string>
+    <string name="badge_error">Error loading this badge</string>
+    <string name="badge_close">Close</string>
+    <string name="badge_shelf">Badge shelf</string>
+    <string name="badge_shelf_more">More badges</string>
+    <string name="badge_list">All badges</string>
+    <string name="badge_list_error">Error trying to load more badges. Reload the page</string>
+    <string name="badge_shelf_error">Error trying to load the badge shelf</string>
+    <string name="badge_edit">Edit badge</string>
+    <string name="badge_choose">Choose a badge</string>
+    <string name="badge_list_empty">No badges found</string>
+    <string name="badge_shelf_show">Show badges in profile</string>
+    <string name="badge_shelf_hide">Hide badge shelf</string>
+    <string name="badge_list_profile">Badges</string>
 
 </resources>

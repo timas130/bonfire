@@ -2,7 +2,7 @@ package com.sayzen.campfiresdk.screens.activities.quests
 
 import com.dzen.campfire.api.API_TRANSLATE
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.compose.auth.AuthStartScreen
+import com.sayzen.campfiresdk.compose.profile.badges.list.BadgeListScreen
 import com.sayzen.campfiresdk.controllers.t
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -25,10 +25,10 @@ class SQuestsList : Screen(R.layout.screen_quests_list) {
         vRubrics.setSubtitle("Квест от пользователей Bonfire")
         vRubrics.setOnClickListener { Navigator.to(SQuestDanTank()) }
 
-        vLogin.setTitle("Тесты входа")
-        vLogin.setSubtitle("Привет, Compose!")
+        vLogin.setTitle("Хз что это")
+        vLogin.setSubtitle("Привет, дебилы из гугла!")
         vLogin.setOnClickListener {
-            Navigator.to(AuthStartScreen {})
+            Navigator.to(BadgeListScreen("1"))
         }
     }
 }

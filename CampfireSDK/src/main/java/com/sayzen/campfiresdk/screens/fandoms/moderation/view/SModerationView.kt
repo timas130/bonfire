@@ -1,22 +1,22 @@
 package com.sayzen.campfiresdk.screens.fandoms.moderation.view
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.view.View
 import com.dzen.campfire.api.API_TRANSLATE
-
-import com.dzen.campfire.api.requests.fandoms.RFandomsModerationGet
-import com.sayzen.campfiresdk.support.ApiRequestsSupporter
-import com.sayzen.campfiresdk.support.adapters.AdapterComments
 import com.dzen.campfire.api.models.publications.moderations.PublicationModeration
+import com.dzen.campfire.api.requests.fandoms.RFandomsModerationGet
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerPublications
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.publications.EventCommentsCountChanged
 import com.sayzen.campfiresdk.models.splashs.SplashComment
-import com.sup.dev.android.libs.screens.navigator.NavigationAction
+import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sayzen.campfiresdk.support.adapters.AdapterComments
 import com.sup.dev.android.libs.screens.Screen
+import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.java.libs.eventBus.EventBus
 
@@ -56,7 +56,10 @@ class SModerationView private constructor(
         adapter.add(CardInfo(publication))
 
         vMenu.setOnClickListener { ControllerPublications.showModerationPopup(publication) }
-        vFab.setOnClickListener { SplashComment(publication.id, false) { comment -> adapter.addComment(comment) }.asSheetShow() }
+        vFab.setOnClickListener {
+            PostHog.capture("open_comment_editor", properties = mapOf("from" to "s_moderation"))
+            SplashComment(publication.id, false) { comment -> adapter.addComment(comment) }.asSheetShow()
+        }
         vRecycler.adapter = adapter
 
         ToolsView.recyclerHideFabWhenScrollEnd(vRecycler, vFab)

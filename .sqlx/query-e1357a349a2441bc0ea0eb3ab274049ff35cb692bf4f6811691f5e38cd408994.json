@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select user_id from badges where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "user_id",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "e1357a349a2441bc0ea0eb3ab274049ff35cb692bf4f6811691f5e38cd408994"
+}
