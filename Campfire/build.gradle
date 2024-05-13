@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdk 34
-        versionCode 3_04_01
-        versionName "3.4.1"
+        versionCode 3_05_00
+        versionName "3.5.0"
         applicationId "sh.sit.bonfire"
 
         buildConfigField "String", "POSTHOG_API_KEY", "\"$POSTHOG_API_KEY\""
