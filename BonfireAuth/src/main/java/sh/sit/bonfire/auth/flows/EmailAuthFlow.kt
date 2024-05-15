@@ -1,6 +1,7 @@
 package sh.sit.bonfire.auth.flows
 
 import android.content.Context
+import com.posthog.PostHog
 import sh.sit.bonfire.auth.AuthController
 import sh.sit.bonfire.auth.LoginEmailMutation
 import sh.sit.bonfire.auth.apollo
@@ -8,6 +9,8 @@ import sh.sit.schema.type.LoginEmailInput
 
 class EmailAuthFlow(context: Context, val email: String, val password: String) : AuthFlow(context) {
     override suspend fun start() {
+        PostHog.capture("auth_email")
+
         val response = try {
             apollo.mutation(LoginEmailMutation(LoginEmailInput(email = email, password = password)))
                 .execute()

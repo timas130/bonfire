@@ -5,6 +5,7 @@ import android.view.Gravity
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.GoogleApiClient
+import com.posthog.PostHog
 import com.sup.dev.android.tools.ToolsIntent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -29,6 +30,8 @@ class GoogleAuthFlow(context: Context) : AuthFlow(context) {
         //    e.printStackTrace()
         //    throw AuthException(FailureReason.AuthUrlRequest)
         //}
+
+        PostHog.capture("auth_oath", properties = mapOf("type" to "google"))
 
         val opt = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
