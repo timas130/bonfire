@@ -154,14 +154,25 @@ open class CardComment protected constructor(
         val vLabel: TextView? = view.findViewById(R.id.vLabel)
         val vLabelName: TextView? = view.findViewById(R.id.vLabelName)
         val vLabelDate: TextView? = view.findViewById(R.id.vLabelDate)
+        val vActiveBadge: ImageView? = view.findViewById(R.id.vActiveBadge)
 
-        if (vLabelName != null) vLabelName.text = publication.creator.name
-        if (vLabelDate != null) vLabelDate.text =
-            "${ToolsDate.dateToString(publication.dateCreate)}${if (publication.changed) " " + t(API_TRANSLATE.app_edited) else ""}"
-        if (vLabel != null) vLabel.text =
-            publication.creator.name + "   " + ToolsDate.dateToString(publication.dateCreate) + (if (publication.changed) " " + t(
-                API_TRANSLATE.app_edited
-            ) else "")
+        vLabelName?.text = publication.creator.name
+        vLabelDate?.text = buildString {
+            append(ToolsDate.dateToString(publication.dateCreate))
+            append(if (publication.changed) " " + t(API_TRANSLATE.app_edited) else "")
+        }
+        vLabel?.text = buildString {
+            append(publication.creator.name)
+            append("   ")
+            append(ToolsDate.dateToString(publication.dateCreate))
+
+            if (publication.changed) {
+                append(" ")
+                append(t(API_TRANSLATE.app_edited))
+            }
+        }
+
+        vActiveBadge?.let { xPublication.xAccount.setActiveBadge(it) }
     }
 
     fun updateImages() {

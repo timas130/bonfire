@@ -194,15 +194,19 @@ class XAccount {
         viewAvatar.setTitle(account.name)
         if (date != 0L) viewAvatar.setSubtitle(ToolsDate.dateToString(date))
 
+        setActiveBadge(viewAvatar.vIcon)
+    }
+
+    fun setActiveBadge(vIcon: ImageView) {
         if (PostHog.isFeatureEnabled("badges_username")) {
             account.customization.activeBadge?.let { badge ->
-                viewAvatar.vIcon.visibility = View.VISIBLE
-                viewAvatar.vIcon.setOnClickListener {
+                vIcon.visibility = View.VISIBLE
+                vIcon.setOnClickListener {
                     BadgeFlyoutSplash(badge).asOverlayShow()
                 }
-                ImageLoader.load(badge.miniImage).into(viewAvatar.vIcon)
+                ImageLoader.load(badge.miniImage).into(vIcon)
             } ?: run {
-                viewAvatar.vIcon.visibility = View.GONE
+                vIcon.visibility = View.GONE
             }
         }
     }
