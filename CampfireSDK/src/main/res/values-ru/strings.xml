@@ -34,5 +34,6 @@
     <string name="badge_shelf_show">Показывать значки в профиле</string>
     <string name="badge_shelf_hide">Скрыть полку значков</string>
     <string name="badge_list_profile">Значки</string>
+    <string name="badge_list_remove">Убрать значок</string>
 
 </resources>

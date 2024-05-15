@@ -23,7 +23,7 @@ import sh.sit.bonfire.auth.components.RemoteImage
 import sh.sit.bonfire.auth.load
 
 @Composable
-fun BadgeListItem(item: BadgeListItem?, shimmer: Shimmer, onChoose: ((BadgeListItem) -> Unit)?) {
+fun BadgeListItem(item: BadgeListItem?, shimmer: Shimmer, onChoose: ((BadgeListItem?) -> Unit)?) {
     var isOpen by remember { mutableStateOf(false) }
 
     if (onChoose == null) {

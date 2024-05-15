@@ -66,7 +66,7 @@ class BadgeShelfModel(
 
             val selectScreen = BadgeListScreen(userId) { newBadge ->
                 viewModelScope.launch {
-                    onEdit(replaceIdx, newBadge.id)
+                    onEdit(replaceIdx, newBadge?.id)
                 }
             }
 
@@ -74,7 +74,7 @@ class BadgeShelfModel(
         }
     }
 
-    private suspend fun onEdit(replaceIdx: Int, newId: String) {
+    private suspend fun onEdit(replaceIdx: Int, newId: String?) {
         val newShelf = shelf.first()!!
             .mapIndexed { idx, badge ->
                 if (idx == replaceIdx) newId
@@ -86,10 +86,12 @@ class BadgeShelfModel(
             ApolloController.apolloClient.apolloStore
                 .readFragment(
                     BadgeShelfIconImpl(),
-                    CacheKey(newId),
+                    CacheKey(newId!!),
                     ApolloController.apolloClient.customScalarAdapters
                 )
         } catch (e: CacheMissException) {
+            null
+        } catch (e: NullPointerException) {
             null
         }
         val optimisticUpdate = newBadge?.let {

@@ -1,13 +1,11 @@
 package com.sayzen.campfiresdk.compose.profile.badges.list
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -31,7 +29,7 @@ import sh.sit.bonfire.auth.components.BackButton
 
 class BadgeListScreen(
     private val userId: String,
-    private val onChoose: ((BadgeListItem) -> Unit)? = null,
+    private val onChoose: ((BadgeListItem?) -> Unit)? = null,
 ) : ComposeScreen() {
     @Composable
     override fun Content() {
@@ -41,7 +39,7 @@ class BadgeListScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BadgeList(userId: String, onChoose: ((BadgeListItem) -> Unit)?) {
+fun BadgeList(userId: String, onChoose: ((BadgeListItem?) -> Unit)?) {
     val model = viewModel<BadgeListScreenModel>(factory = BadgeListScreenModelFactory(userId))
 
     val isError by model.isError.collectAsState(false)
@@ -84,9 +82,20 @@ fun BadgeList(userId: String, onChoose: ((BadgeListItem) -> Unit)?) {
             modifier = Modifier
                 .fillMaxSize()
         ) {
+            item {
+                if (onChoose != null) {
+                    ListItem(
+                        headlineContent = {
+                            Text(stringResource(R.string.badge_list_remove))
+                        },
+                        modifier = Modifier.clickable { onChoose(null) }
+                    )
+                }
+            }
             items(badges ?: emptyList()) {
                 BadgeListItem(it.node.badgeListItem, shimmer, onChoose)
             }
+
             item {
                 if (isError) {
                     ErrorCard(text = stringResource(R.string.badge_list_error))
@@ -97,6 +106,7 @@ fun BadgeList(userId: String, onChoose: ((BadgeListItem) -> Unit)?) {
                     EmptyCard(text = stringResource(R.string.badge_list_empty))
                 }
             }
+
             items(arrayOfNulls<Unit?>(4)) {
                 if (hasMore != false && !isError) { // if null or true
                     BadgeListItem(null, shimmer, onChoose)
