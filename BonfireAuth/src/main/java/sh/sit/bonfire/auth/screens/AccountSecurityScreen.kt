@@ -1,6 +1,5 @@
 package sh.sit.bonfire.auth.screens
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -69,7 +68,7 @@ fun ChangeBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EmailChangeSheet(sheetState: SheetState, onChange: () -> Unit) {
+fun EmailChangeSheet(open: Boolean, close: () -> Unit, onChange: () -> Unit) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -85,7 +84,7 @@ fun EmailChangeSheet(sheetState: SheetState, onChange: () -> Unit) {
                 val error = AuthFlow.AuthException.fromError(resp.errors!!.first())
                 ToolsToast.show(error.toUiString(context))
             } else {
-                sheetState.hide()
+                close()
                 ToolsToast.show(R.string.security_email_change_done)
 
                 val currentAuthState = AuthController.authState.first() ?: AuthController.NoneAuthState
@@ -107,8 +106,8 @@ fun EmailChangeSheet(sheetState: SheetState, onChange: () -> Unit) {
     }
 
     BetterModalBottomSheet(
-        sheetState = sheetState,
-        onDismissRequest = { scope.launch { sheetState.hide() } },
+        open = open,
+        onDismissRequest = close,
     ) {
         Text(
             stringResource(R.string.security_email_change_title),
@@ -137,7 +136,7 @@ fun EmailChangeSheet(sheetState: SheetState, onChange: () -> Unit) {
         )
 
         ChangeBar(
-            onClose = { scope.launch { sheetState.hide() } },
+            onClose = { close() },
             onChange = { scope.launch { submit() } },
             isLoading = isLoading,
         )
@@ -146,7 +145,7 @@ fun EmailChangeSheet(sheetState: SheetState, onChange: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordChangeSheet(sheetState: SheetState) {
+fun PasswordChangeSheet(open: Boolean, close: () -> Unit) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -163,7 +162,7 @@ fun PasswordChangeSheet(sheetState: SheetState) {
                 val error = AuthFlow.AuthException.fromError(resp.errors!!.first())
                 ToolsToast.show(error.toUiString(context))
             } else {
-                sheetState.hide()
+                close()
                 ToolsToast.show(R.string.security_password_change_done)
             }
         } catch (e: Exception) {
@@ -173,13 +172,9 @@ fun PasswordChangeSheet(sheetState: SheetState) {
         }
     }
 
-    LaunchedEffect(sheetState.currentValue, sheetState.targetValue) {
-        Log.d("AccountSecurityScreen", "${sheetState.currentValue} ${sheetState.targetValue}")
-    }
-
     BetterModalBottomSheet(
-        sheetState = sheetState,
-        onDismissRequest = { scope.launch { sheetState.hide() } },
+        onDismissRequest = close,
+        open = open,
     ) {
         Text(
             stringResource(R.string.security_password_change_title),
@@ -226,7 +221,7 @@ fun PasswordChangeSheet(sheetState: SheetState) {
         )
 
         ChangeBar(
-            onClose = { scope.launch { sheetState.hide() } },
+            onClose = close,
             onChange = { scope.launch { submit() } },
             isLoading = isLoading,
         )
@@ -258,11 +253,18 @@ fun AccountSecurityScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val emailChangeSheet = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    EmailChangeSheet(sheetState = emailChangeSheet, onChange = onChangeEmail)
+    var emailChangeOpen by remember { mutableStateOf(false) }
+    EmailChangeSheet(
+        open = emailChangeOpen,
+        close = { emailChangeOpen = false },
+        onChange = onChangeEmail
+    )
 
-    val passwordChangeSheet = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    PasswordChangeSheet(sheetState = passwordChangeSheet)
+    var passwordChangeOpen by remember { mutableStateOf(false) }
+    PasswordChangeSheet(
+        open = passwordChangeOpen,
+        close = { passwordChangeOpen = false }
+    )
 
     Scaffold(
         topBar = {
@@ -280,19 +282,19 @@ fun AccountSecurityScreen(
             modifier = Modifier.fillMaxSize(),
         ) {
             item {
-                BottomSheetListItem(
+                SettingsListItem(
                     icon = Icons.Default.Email,
                     headlineContent = stringResource(R.string.security_email),
                     supportingContent = data.me.email ?: stringResource(R.string.security_email_not_set),
-                    sheet = emailChangeSheet
+                    onClick = { emailChangeOpen = true }
                 )
             }
             item {
-                BottomSheetListItem(
+                SettingsListItem(
                     icon = Icons.Default.Password,
                     headlineContent = stringResource(R.string.security_password),
                     supportingContent = stringResource(R.string.security_password_button),
-                    sheet = passwordChangeSheet,
+                    onClick = { passwordChangeOpen = true }
                 )
             }
             item {
@@ -382,16 +384,13 @@ private fun LazyItemScope.SessionListItem(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun BottomSheetListItem(
+private fun SettingsListItem(
     icon: ImageVector,
     headlineContent: String,
     supportingContent: String,
-    sheet: SheetState,
+    onClick: () -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
-
     ListItem(
         leadingContent = { Icon(icon, null) },
         headlineContent = { Text(headlineContent) },
@@ -400,9 +399,7 @@ private fun BottomSheetListItem(
         },
         modifier = Modifier
             .clickable {
-                scope.launch {
-                    sheet.show()
-                }
+                onClick()
             }
     )
 }
