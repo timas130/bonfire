@@ -9,6 +9,7 @@ import com.dzen.campfire.api.models.publications.PublicationComment
 import com.sup.dev.java.libs.json.Json
 
 class PublicationPost : Publication, PagesContainer {
+    var title = ""
     var pages: Array<Page> = emptyArray()
     var bestComment: PublicationComment? = null
     var rubricId = 0L
@@ -38,6 +39,7 @@ class PublicationPost : Publication, PagesContainer {
     }
 
     override fun jsonDBLocal(inp: Boolean, json: Json): Json {
+        title = json.m(inp, "title", title)
         pages = json.m(inp, "J_PAGES", pages, Array<Page>::class)
         return json
     }

@@ -2,7 +2,7 @@ package com.sayzen.campfiresdk.screens.activities.quests
 
 import com.dzen.campfire.api.API_TRANSLATE
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.compose.profile.badges.list.BadgeListScreen
+import com.sayzen.campfiresdk.compose.publication.post.TestPostScreen
 import com.sayzen.campfiresdk.controllers.t
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -26,9 +26,9 @@ class SQuestsList : Screen(R.layout.screen_quests_list) {
         vRubrics.setOnClickListener { Navigator.to(SQuestDanTank()) }
 
         vLogin.setTitle("Хз что это")
-        vLogin.setSubtitle("Привет, дебилы из гугла!")
+        vLogin.setSubtitle("Не нажимай, а то сломаешь приложение")
         vLogin.setOnClickListener {
-            Navigator.to(BadgeListScreen("1"))
+            Navigator.to(TestPostScreen())
         }
     }
 }

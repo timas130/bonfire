@@ -35,5 +35,10 @@
     <string name="badge_shelf_hide">Скрыть полку значков</string>
     <string name="badge_list_profile">Значки</string>
     <string name="badge_list_remove">Убрать значок</string>
+    <string name="post_more">Больше опций</string>
+    <string name="post_activity">Эстафета</string>
+    <string name="post_expand">Больше</string>
+    <string name="post_shrink">Меньше</string>
+    <string name="post_comment">Комментарии</string>
 
 </resources>

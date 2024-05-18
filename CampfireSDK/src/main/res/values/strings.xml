@@ -35,5 +35,10 @@
     <string name="badge_shelf_hide">Hide badge shelf</string>
     <string name="badge_list_profile">Badges</string>
     <string name="badge_list_remove">No badge</string>
+    <string name="post_more">More options</string>
+    <string name="post_activity">Relay race</string>
+    <string name="post_expand">Expand</string>
+    <string name="post_shrink">Shrink</string>
+    <string name="post_comment">Comments</string>
 
 </resources>
