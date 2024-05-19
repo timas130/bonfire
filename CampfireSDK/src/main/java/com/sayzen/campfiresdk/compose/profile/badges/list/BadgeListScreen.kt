@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.compose.ComposeScreen
@@ -40,12 +41,14 @@ class BadgeListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BadgeList(userId: String, onChoose: ((BadgeListItem?) -> Unit)?) {
-    val model = viewModel<BadgeListScreenModel>(factory = BadgeListScreenModelFactory(userId))
+    val model = viewModel<BadgeListScreenModel>(key = "BadgeListScreenModel:$userId") {
+        BadgeListScreenModel(get(APPLICATION_KEY)!!, userId)
+    }
 
-    val isError by model.isError.collectAsState(false)
-    val isLoading by model.isLoading.collectAsState(false)
-    val badges by model.badges.collectAsState(emptyList())
-    val hasMore by model.hasMore.collectAsState(null)
+    val isError by model.isError.collectAsState()
+    val isLoading by model.isLoading.collectAsState()
+    val badges by model.badges.collectAsState()
+    val hasMore by model.hasMore.collectAsState()
 
     val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.Window)
 

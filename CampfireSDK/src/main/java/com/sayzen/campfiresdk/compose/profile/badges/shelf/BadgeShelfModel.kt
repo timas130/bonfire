@@ -2,11 +2,7 @@ package com.sayzen.campfiresdk.compose.profile.badges.shelf
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.apollographql.apollo3.api.ApolloResponse
 import com.apollographql.apollo3.cache.normalized.api.CacheKey
 import com.apollographql.apollo3.cache.normalized.apolloStore
@@ -18,10 +14,15 @@ import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.SetBadgeShelfMutation
 import com.sayzen.campfiresdk.SetBadgeShelfVisibleMutation
 import com.sayzen.campfiresdk.compose.profile.badges.list.BadgeListScreen
+import com.sayzen.campfiresdk.compose.util.combineStates
+import com.sayzen.campfiresdk.compose.util.mapState
 import com.sayzen.campfiresdk.fragment.BadgeShelfIconImpl
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsToast
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import sh.sit.bonfire.auth.ApolloController
 import sh.sit.bonfire.auth.AuthController
@@ -32,16 +33,16 @@ class BadgeShelfModel(
     private val userId: String,
 ) : AndroidViewModel(application) {
     private val _query = MutableStateFlow<ApolloResponse<BadgeShelfQuery.Data>?>(null)
-    private val _currentUser = AuthController.currentUser
+    private val _currentUser = AuthController.currentUserState
 
-    val isVisible = _query.combine(_currentUser) { query, user ->
-        query == null || query.data?.userById?.profile?.badgeShelf != null
+    val isVisible = _query.mapState { query ->
+        query?.data?.userById?.profile?.badgeShelf != null
     }
-    val isError = _query.map { it?.hasErrors() == true }
-    val shelf = _query.map { it?.data?.userById?.profile?.badgeShelf }
+    val isError = _query.mapState { it?.hasErrors() == true }
+    val shelf = _query.mapState { it?.data?.userById?.profile?.badgeShelf }
     val isEditingAllowed = _currentUser.map { userId == it?.id }
 
-    val isShowButtonVisible = _query.combine(_currentUser) { query, user ->
+    val isShowButtonVisible = _query.combineStates(_currentUser) { query, user ->
         userId == user?.id && query != null && query.data?.userById?.profile?.badgeShelf == null
     }
 
@@ -183,11 +184,3 @@ class BadgeShelfModel(
         }
     }
 }
-
-class BadgeShelfModelFactory(private val userId: String) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        @Suppress("UNCHECKED_CAST")
-        return BadgeShelfModel(extras[APPLICATION_KEY]!!, userId) as T
-    }
-}
-

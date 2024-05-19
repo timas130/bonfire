@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.apollographql.apollo3.api.Optional
 import com.sayzen.campfiresdk.BadgeShelfQuery
@@ -24,10 +25,10 @@ import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.compose.ComposeCard
 import com.sayzen.campfiresdk.compose.profile.ui.CompatProfileCard
 import com.sayzen.campfiresdk.compose.util.ErrorCard
+import com.sayzen.campfiresdk.compose.util.mapState
 import com.sup.dev.android.tools.ToolsResources
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
-import kotlinx.coroutines.flow.map
 
 @Composable
 private fun BadgeShelf(
@@ -106,20 +107,23 @@ private fun BadgeShelf(
 
 @Composable
 fun BadgeShelfWrapper(userId: String) {
-    val model = viewModel<BadgeShelfModel>(factory = BadgeShelfModelFactory(userId))
+    val model = viewModel<BadgeShelfModel>(key = "BadgeShelfModel:$userId") {
+        BadgeShelfModel(get(APPLICATION_KEY)!!, userId)
+    }
 
     val shelf = model.shelf
-        .map { Optional.presentIfNotNull(it) }
-        .collectAsState(initial = null).value
-    val isError by model.isError.collectAsState(initial = false)
-    val isVisible by model.isVisible.collectAsState(initial = true)
-    val isShowButtonVisible by model.isShowButtonVisible.collectAsState(initial = false)
+        .mapState { Optional.presentIfNotNull(it) }
+        .collectAsState()
+        .value
+    val isError by model.isError.collectAsState()
+    val isVisible by model.isVisible.collectAsState()
+    val isShowButtonVisible by model.isShowButtonVisible.collectAsState()
 
     AnimatedVisibility(visible = isVisible) {
-        BadgeShelf(model, shelf?.getOrNull())
+        BadgeShelf(model, shelf.getOrNull())
     }
     AnimatedVisibility(visible = isShowButtonVisible) {
-        val isLoadingShow by model.isLoadingShow.collectAsState(initial = true)
+        val isLoadingShow by model.isLoadingShow.collectAsState()
         val context = LocalContext.current
 
         CompatProfileCard {

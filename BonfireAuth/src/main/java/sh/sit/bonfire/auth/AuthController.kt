@@ -9,16 +9,12 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
-import com.apollographql.apollo3.cache.normalized.watch
 import com.dzen.campfire.api.tools.client.TokenProvider
 import com.posthog.PostHog
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.tools.ToolsTextAndroid
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -60,28 +56,8 @@ object AuthController : TokenProvider {
         .map<String?, AuthState?> { state -> state?.let { json.decodeFromString(it) } }
         .map { it ?: NoneAuthState }
 
-    val currentUser: Flow<MeQuery.Me?> by lazy {
-        ApolloController.apolloClient
-            .query(MeQuery())
-            .fetchPolicy(FetchPolicy.CacheFirst)
-            .watch()
-            .map {
-                it.data?.me
-            }
-            .map {
-                it?.let { user ->
-                    PostHog.identify(
-                        distinctId = user.id,
-                        userProperties = mapOf<String, Any>(
-                            "username" to user.username,
-                            "email" to (user.email ?: "no email"),
-                            "level" to user.cachedLevel,
-                        )
-                    )
-                }
-                it
-            }
-    }
+    private val _currentUserState = MutableStateFlow<MeQuery.Me?>(null)
+    val currentUserState = _currentUserState.asStateFlow()
 
     suspend fun saveAuthState(authState: AuthState) {
         dataStore.edit {
@@ -89,14 +65,30 @@ object AuthController : TokenProvider {
         }
     }
 
-    @WorkerThread
     suspend fun getAccessTokenSuspend(): String? {
-        withContext(Dispatchers.IO) {
-            tryRefreshTokens()
-        }
+        tryRefreshTokens()
         val state = authState.first()
         return if (state is AuthenticatedAuthState) {
-            currentUser
+            val user = ApolloController.apolloClient
+                .query(MeQuery())
+                .addHttpHeader("Authorization", "Bearer ${state.accessToken}")
+                .fetchPolicy(FetchPolicy.CacheFirst)
+                .toFlow()
+                .map { it.data?.me }
+                .firstOrNull()
+
+            user?.let {
+                PostHog.identify(
+                    distinctId = it.id,
+                    userProperties = mapOf<String, Any>(
+                        "username" to it.username,
+                        "email" to (it.email ?: "no email"),
+                        "level" to it.cachedLevel,
+                    )
+                )
+            }
+            _currentUserState.emit(user)
+
             state.accessToken
         } else {
             null
