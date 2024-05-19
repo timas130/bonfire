@@ -21,7 +21,7 @@ data class DateTime(val inner: DateTime) {
                 customScalarAdapters: CustomScalarAdapters
             ): sh.sit.bonfire.schema.DateTime {
                 return sh.sit.bonfire.schema.DateTime(
-                    DateTime(ISODateTimeFormat.dateTime().parseDateTime(reader.nextString()!!))
+                    DateTime(ISODateTimeFormat.dateTimeParser().parseDateTime(reader.nextString()!!))
                 )
             }
 
