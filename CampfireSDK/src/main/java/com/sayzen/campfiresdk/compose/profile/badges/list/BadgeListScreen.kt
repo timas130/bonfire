@@ -23,6 +23,7 @@ import com.sayzen.campfiresdk.compose.util.EmptyCard
 import com.sayzen.campfiresdk.compose.util.ErrorCard
 import com.sayzen.campfiresdk.compose.util.InfiniteListHandler
 import com.sayzen.campfiresdk.fragment.BadgeListItem
+import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import sh.sit.bonfire.auth.DecorFitsSystemWindowEffect
@@ -91,7 +92,10 @@ fun BadgeList(userId: String, onChoose: ((BadgeListItem?) -> Unit)?) {
                         headlineContent = {
                             Text(stringResource(R.string.badge_list_remove))
                         },
-                        modifier = Modifier.clickable { onChoose(null) }
+                        modifier = Modifier.clickable {
+                            Navigator.back()
+                            onChoose(null)
+                        }
                     )
                 }
             }
