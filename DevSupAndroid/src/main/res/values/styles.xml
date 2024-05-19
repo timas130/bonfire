@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <attr name="colorOnPrimaryVariant" format="color" />
     <attr name="colorOnPrimaryIcons" format="color" />
@@ -18,6 +18,7 @@
     <attr name="selectorChipOutline" format="reference" />
 
     <style name="AppThemeDark" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
 
         <item name="android:statusBarColor">?colorPrimaryVariant</item>
         <item name="android:navigationBarColor">?colorPrimary</item>
@@ -45,7 +46,7 @@
         <item name="colorRevers">@color/white</item>
         <item name="colorReversVariant">@color/grey_200</item>
 
-        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="themeNavigationBarIsLight">false</item>
@@ -85,7 +86,7 @@
         <item name="colorRevers">@color/grey_700</item>
         <item name="colorReversVariant">@color/grey_800</item>
 
-        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="O_MR1">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="themeNavigationBarIsLight">true</item>
