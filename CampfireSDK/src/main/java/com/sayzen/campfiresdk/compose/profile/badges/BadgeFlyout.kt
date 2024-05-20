@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.apollographql.apollo3.api.ApolloResponse
 import com.dzen.campfire.api.models.account.AccountBadge
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.BadgeFlyoutQuery
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.compose.ComposeSplash
@@ -77,6 +78,11 @@ fun BadgeFlyout(
 
     LaunchedEffect(open) {
         if (!open) return@LaunchedEffect
+
+        PostHog.capture("badge flyout viewed", properties = mapOf(
+            "badge_id" to shortBadge.id,
+        ))
+
         withContext(Dispatchers.IO) {
             ApolloController.apolloClient
                 .query(BadgeFlyoutQuery(shortBadge.id.toString()))

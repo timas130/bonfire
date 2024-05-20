@@ -35,7 +35,7 @@ private fun BadgeShelf(
     model: BadgeShelfModel,
     shelf: List<BadgeShelfQuery.BadgeShelf?>?,
 ) {
-    val isEditingAllowed by model.isEditingAllowed.collectAsState(initial = false)
+    val isEditingAllowed by model.isEditingAllowed.collectAsState()
 
     CompatProfileCard {
         Row(

@@ -9,6 +9,7 @@ import com.apollographql.apollo3.cache.normalized.apolloStore
 import com.apollographql.apollo3.cache.normalized.optimisticUpdates
 import com.apollographql.apollo3.exception.ApolloException
 import com.apollographql.apollo3.exception.CacheMissException
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.BadgeShelfQuery
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.SetBadgeShelfMutation
@@ -22,7 +23,6 @@ import com.sup.dev.android.tools.ToolsToast
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import sh.sit.bonfire.auth.ApolloController
 import sh.sit.bonfire.auth.AuthController
@@ -40,7 +40,7 @@ class BadgeShelfModel(
     }
     val isError = _query.mapState { it?.hasErrors() == true }
     val shelf = _query.mapState { it?.data?.userById?.profile?.badgeShelf }
-    val isEditingAllowed = _currentUser.map { userId == it?.id }
+    val isEditingAllowed = _currentUser.mapState { userId == it?.id }
 
     val isShowButtonVisible = _query.combineStates(_currentUser) { query, user ->
         userId == user?.id && query != null && query.data?.userById?.profile?.badgeShelf == null
@@ -51,6 +51,10 @@ class BadgeShelfModel(
     }
 
     private fun load() {
+        PostHog.capture("\$feature_view", properties = mapOf(
+            "feature_flag" to "badges_profile",
+            "user_id" to userId,
+        ))
         viewModelScope.launch {
             ApolloController.apolloClient
                 .query(BadgeShelfQuery(userId))
@@ -62,6 +66,10 @@ class BadgeShelfModel(
     }
 
     fun onEditBadge(replaceIdx: Int) {
+        trackInteraction("editor")
+        PostHog.capture("badge shelf editor opened", properties = mapOf(
+            "index" to replaceIdx,
+        ))
         viewModelScope.launch {
             if (!isEditingAllowed.first()) return@launch
 
@@ -76,6 +84,8 @@ class BadgeShelfModel(
     }
 
     private suspend fun onEdit(replaceIdx: Int, newId: String?) {
+        trackInteraction("edit")
+
         val newShelf = shelf.first()!!
             .mapIndexed { idx, badge ->
                 if (idx == replaceIdx) newId
@@ -122,6 +132,12 @@ class BadgeShelfModel(
             )
         }
 
+        PostHog.capture("badge shelf edited", properties = mapOf(
+            "index" to replaceIdx,
+            "remove" to (newId == null),
+            "badge_name" to (newBadge?.name ?: "")
+        ))
+
         try {
             val resp = ApolloController.apolloClient
                 .mutation(SetBadgeShelfMutation(newShelf))
@@ -136,10 +152,16 @@ class BadgeShelfModel(
     }
 
     fun toList() {
+        trackInteraction("list")
+        PostHog.capture("badge list opened", properties = mapOf(
+            "from" to "shelf"
+        ))
         Navigator.to(BadgeListScreen(userId))
     }
 
     fun hide() {
+        trackInteraction("hide")
+        PostHog.capture("badge shelf hidden")
         viewModelScope.launch {
             try {
                 val resp = ApolloController.apolloClient
@@ -167,6 +189,8 @@ class BadgeShelfModel(
     val isLoadingShow = _isLoadingShow.asStateFlow()
 
     fun show() {
+        trackInteraction("show")
+        PostHog.capture("badge shelf shown")
         viewModelScope.launch {
             try {
                 _isLoadingShow.emit(true)
@@ -182,5 +206,15 @@ class BadgeShelfModel(
                 _isLoadingShow.emit(false)
             }
         }
+    }
+
+    private fun trackInteraction(action: String) {
+        PostHog.capture(
+            "\$feature_interaction", properties = mapOf(
+                "feature_flag" to "badges_profile",
+                "action" to action,
+                "user_id" to userId,
+            )
+        )
     }
 }
