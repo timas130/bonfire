@@ -28,7 +28,9 @@ impl ProfileServer {
                 "select \"order\", badges.* \
                  from badge_shelf_items \
                  inner join badges on id = badge_id \
-                 order by \"order\""
+                 where badge_shelf_items.user_id = $1
+                 order by \"order\"",
+                user_id,
             )
             .fetch(&self.base.pool)
             .map_ok(|raw| {
