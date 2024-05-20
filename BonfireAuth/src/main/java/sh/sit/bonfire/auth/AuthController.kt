@@ -82,7 +82,7 @@ object AuthController : TokenProvider {
                     distinctId = it.id,
                     userProperties = mapOf<String, Any>(
                         "username" to it.username,
-                        "email" to (it.email ?: "no email"),
+                        "email" to (it.email ?: ""),
                         "level" to it.cachedLevel,
                     )
                 )
