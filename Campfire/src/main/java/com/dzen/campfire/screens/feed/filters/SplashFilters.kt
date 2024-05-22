@@ -3,7 +3,6 @@ package com.dzen.campfire.screens.feed.filters
 import android.widget.Button
 import com.dzen.campfire.R
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
 import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.controllers.*

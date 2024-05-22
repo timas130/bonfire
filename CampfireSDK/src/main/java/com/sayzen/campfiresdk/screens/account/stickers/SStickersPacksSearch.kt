@@ -1,6 +1,5 @@
 package com.sayzen.campfiresdk.screens.account.stickers
 
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.stickers.PublicationStickersPack

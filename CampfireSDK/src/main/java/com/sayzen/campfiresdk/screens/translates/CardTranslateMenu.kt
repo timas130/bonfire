@@ -6,7 +6,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
 import com.sayzen.campfiresdk.R

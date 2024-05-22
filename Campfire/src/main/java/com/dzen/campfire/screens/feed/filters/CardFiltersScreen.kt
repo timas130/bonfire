@@ -4,7 +4,6 @@ import android.view.View
 import android.widget.Switch
 import android.widget.TextView
 import com.dzen.campfire.R
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
 import com.sayzen.campfiresdk.controllers.ControllerTranslate.t
 import com.sup.dev.android.tools.ToolsResources

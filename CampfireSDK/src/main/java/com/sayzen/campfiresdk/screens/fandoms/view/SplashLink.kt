@@ -3,7 +3,6 @@ package com.sayzen.campfiresdk.screens.fandoms.view
 
 import android.widget.Button
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
 import com.sayzen.campfiresdk.R

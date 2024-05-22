@@ -2,7 +2,6 @@ package com.sayzen.campfiresdk.screens.fandoms.rubrics
 
 import android.view.View
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_RESOURCES
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.fandoms.Rubric
