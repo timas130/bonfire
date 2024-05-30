@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "insert into random_seeds (date, seed)\n             values ($1, $2)\n             on conflict (date) do update set seed = excluded.seed\n             returning seed",
+  "query": "insert into random_seeds (date, seed)\n             values ($1, $2)\n             on conflict (date) do update set seed = random_seeds.seed\n             returning seed",
   "describe": {
     "columns": [
       {
@@ -19,5 +19,5 @@
       false
     ]
   },
-  "hash": "1e33a328c3b037d4ae41f1186bdd3b64ded95d88015be1e4719755f8de1886cb"
+  "hash": "8ec3046902f0d99b721e45227a58b184d0d8390fae83c1a905506cd152d14967"
 }

@@ -25,7 +25,7 @@ impl LevelServer {
         let today_seed = sqlx::query_scalar!(
             "insert into random_seeds (date, seed)
              values ($1, $2)
-             on conflict (date) do update set seed = excluded.seed
+             on conflict (date) do update set seed = random_seeds.seed
              returning seed",
             date,
             &random_seed,
