@@ -83,8 +83,9 @@ impl LevelServer {
 
         if !today_task_generated {
             let level = sqlx::query_scalar!("select lvl from accounts where id = $1", user_id)
-                .fetch_one(&mut *tx)
-                .await?;
+                .fetch_optional(&mut *tx)
+                .await?
+                .unwrap_or(100);
 
             let task = self.determine_task(user_id, level, &today).await?;
 

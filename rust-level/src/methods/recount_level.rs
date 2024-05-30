@@ -223,18 +223,34 @@ impl LevelServer {
              where id = $1",
             user_id
         )
-        .fetch_one(&self.base.pool)
+        .fetch_optional(&self.base.pool)
         .await?;
+        let account = account.as_ref();
 
-        hm.insert(AchiIndex::Login, i64::from(!account.name.contains('#')));
-        hm.insert(AchiIndex::TitleImage, i64::from(account.img_title_id > 0));
-        hm.insert(AchiIndex::AddRecruiter, i64::from(account.recruiter_id > 0));
-        hm.insert(AchiIndex::Karma30, account.karma_count);
+        hm.insert(
+            AchiIndex::Login,
+            i64::from(!account.map(|acc| acc.name.contains('#')).unwrap_or(true)),
+        );
+        hm.insert(
+            AchiIndex::TitleImage,
+            i64::from(account.map(|acc| acc.img_title_id > 0).unwrap_or(false)),
+        );
+        hm.insert(
+            AchiIndex::AddRecruiter,
+            i64::from(account.map(|acc| acc.recruiter_id > 0).unwrap_or(false)),
+        );
+        hm.insert(
+            AchiIndex::Karma30,
+            account.map(|acc| acc.karma_count).unwrap_or(0),
+        );
 
         let mut bonus = 0;
 
         // earlier than Fri Sep 01 2023 00:00:00 GMT+0300
-        if account.date_create < 1693515600000 {
+        if account
+            .map(|acc| acc.date_create < 1693515600000)
+            .unwrap_or(false)
+        {
             bonus += 10;
         }
 
