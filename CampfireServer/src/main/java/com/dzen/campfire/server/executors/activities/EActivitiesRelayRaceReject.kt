@@ -4,10 +4,10 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.notifications.activities.NotificationActivitiesRelayRejected
 import com.dzen.campfire.api.requests.activities.RActivitiesRelayRaceReject
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerActivities
 import com.dzen.campfire.server.controllers.ControllerNotifications
-import com.dzen.campfire.api.tools.ApiException
 
 class EActivitiesRelayRaceReject : RActivitiesRelayRaceReject(0, 0) {
 
@@ -19,6 +19,8 @@ class EActivitiesRelayRaceReject : RActivitiesRelayRaceReject(0, 0) {
 
         val activity = ControllerActivities.getActivity(activityId, apiAccount.id)
         if (activity == null) throw ApiException(API.ERROR_GONE)
+
+        if (activity.currentAccount.id != apiAccount.id) throw ApiException(API.ERROR_ACCESS)
 
         if (nextAccountId != 0L) {
             ControllerActivities.checkRelayNextAccount(apiAccount.id, activityId, nextAccountId, activity.fandom.id, activity.fandom.languageId)
@@ -42,7 +44,7 @@ class EActivitiesRelayRaceReject : RActivitiesRelayRaceReject(0, 0) {
 
         val newAccount = ControllerAccounts.getAccount(nextAccountId)
 
-        ControllerNotifications.push(activity.tag_3, NotificationActivitiesRelayRejected(apiAccount.id, apiAccount.name, apiAccount.sex, apiAccount.imageId, newAccount?.id?:0, newAccount?.name?:"", newAccount?.sex?:0, newAccount?.imageId?:0, activity.id, activity.name, activity.fandom.id, activity.fandom.imageId, activity.fandom.languageId, activity.fandom.name, true))
+        ControllerNotifications.push(apiAccount.id, NotificationActivitiesRelayRejected(apiAccount.id, apiAccount.name, apiAccount.sex, apiAccount.imageId, newAccount?.id?:0, newAccount?.name?:"", newAccount?.sex?:0, newAccount?.imageId?:0, activity.id, activity.name, activity.fandom.id, activity.fandom.imageId, activity.fandom.languageId, activity.fandom.name, true))
 
 
         return Response(Account(), 0)
