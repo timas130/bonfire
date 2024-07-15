@@ -10,10 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.GMobiledata
-import androidx.compose.material.icons.filled.Hiking
-import androidx.compose.material.icons.filled.Password
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -232,6 +229,7 @@ fun PasswordChangeSheet(open: Boolean, close: () -> Unit) {
 @Composable
 fun AccountSecurityScreen(
     onChangeEmail: () -> Unit,
+    onChangeBirthday: () -> Unit,
 ) {
     DecorFitsSystemWindowEffect()
 
@@ -302,6 +300,24 @@ fun AccountSecurityScreen(
             }
             item {
                 MigrationListItem(data)
+            }
+            item {
+                SettingsListItem(
+                    icon = Icons.Default.Cake,
+                    headlineContent = stringResource(R.string.birthday_label),
+                    supportingContent = if (data.me.birthday != null) {
+                        data.me.birthday.date.toString()
+                    } else {
+                        stringResource(R.string.birthday_not_specified)
+                    },
+                    onClick = {
+                        if (data.me.birthday != null) {
+                            ToolsToast.show(R.string.birthday_not_changeable)
+                        } else {
+                            onChangeBirthday()
+                        }
+                    }
+                )
             }
 
             item {

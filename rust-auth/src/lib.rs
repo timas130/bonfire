@@ -394,8 +394,9 @@ impl AuthService for AuthServer {
         _: Context,
         user_id: i64,
         new_name: String,
+        loose: bool,
     ) -> Result<(), AuthError> {
-        self._change_name(user_id, new_name).await
+        self._change_name(user_id, new_name, loose).await
     }
 
     async fn vacuum(self, _: Context) -> Result<(), AuthError> {

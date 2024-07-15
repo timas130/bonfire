@@ -5,8 +5,10 @@ import android.view.ViewGroup
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.sayzen.campfiresdk.R
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.views.cards.Card
@@ -22,15 +24,23 @@ abstract class ComposeCard : Card(0) {
         }
     }
 
+    private val viewModelStoreOwner = MyViewModelStoreOwner()
+
     override fun bindView(view: View) {
         val composeView: ComposeView = view.findViewById(R.id.vSheet)
         composeView.setContent {
             BonfireTheme {
-                Surface(color = getBackground()) {
-                    Content()
+                CompositionLocalProvider(LocalViewModelStoreOwner provides viewModelStoreOwner) {
+                    Surface(color = getBackground()) {
+                        Content()
+                    }
                 }
             }
         }
+    }
+
+    override fun onDetachView() {
+        viewModelStoreOwner.viewModelStore.clear()
     }
 
     @Composable

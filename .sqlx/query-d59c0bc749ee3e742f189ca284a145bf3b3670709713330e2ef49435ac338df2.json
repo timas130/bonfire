@@ -1,0 +1,31 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into user_integrity_checks (user_id, status, package_name, app_license, app_recognition, cert_digest, device_integrity, basic_integrity, strong_integrity, device_activity) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) returning id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Bool",
+        "Bool",
+        "Bool",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "d59c0bc749ee3e742f189ca284a145bf3b3670709713330e2ef49435ac338df2"
+}

@@ -4,19 +4,18 @@ import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
 open class RPostPagePollingVote(
-        var sourceType: Long,
-        var sourceId: Long,
-        var sourceIdSub: Long,
-        var pollingId: Long,
-        var itemId: Long
+    var sourceType: Long,
+    var sourceId: Long,
+    var sourceIdSub: Long,
+    var pollingId: Long,
+    var itemId: Long
 ) : Request<RPostPagePollingVote.Response>() {
-
     companion object {
-        val E_ALREADY = "E_ALREADY"
-        val E_LOW_LEVEL = "E_LOW_LEVEL"
-        val E_LOW_KARMA = "E_LOW_KARMA"
-        val E_LOW_DAYS = "E_LOW_DAYS"
-        val E_BLACKLISTED = "E_BLACKLISTED"
+        const val E_ALREADY = "E_ALREADY"
+        const val E_LOW_LEVEL = "E_LOW_LEVEL"
+        const val E_LOW_KARMA = "E_LOW_KARMA"
+        const val E_LOW_DAYS = "E_LOW_DAYS"
+        const val E_BLACKLISTED = "E_BLACKLISTED"
     }
 
     override fun jsonSub(inp: Boolean, json: Json) {
@@ -37,9 +36,7 @@ open class RPostPagePollingVote(
             json(false, json)
         }
 
-        constructor() {
-
-        }
+        constructor()
 
         override fun json(inp: Boolean, json: Json) {
 

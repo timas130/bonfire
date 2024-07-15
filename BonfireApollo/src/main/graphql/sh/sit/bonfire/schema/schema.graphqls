@@ -337,6 +337,16 @@ The `Int` scalar type represents non-fractional whole numeric values.
 scalar Int
 
 """
+Reason for starting an integrity/bot check
+"""
+enum IntentionType {
+  """
+  Just for the sake of it
+  """
+  GENERIC
+}
+
+"""
 A scalar that can represent any JSON value.
 """
 scalar JSON
@@ -570,7 +580,37 @@ type Mutation {
   Set a custom nickname color from the given presets
   """
   setNicknameColor(preset: GnicknameColorPreset): AccountCustomization!
+
+  """
+  Set own birthday for age verification purposes
+  """
+  setBirthday(birthday: NaiveDate!): User!
+
+  """
+  Decode and save Play Integrity token
+  """
+  savePlayIntegrity(packageName: String!, intentionToken: String!, token: String!): Ok!
+
+  """
+  Indicate that the user intends to do an integrity/bot check for
+  whatever reason.
+
+  An intention token is returned, which should be used as the
+  request hash (or equivalent)
+  """
+  createSecurityIntention(intentionType: IntentionType!): String!
 }
+
+"""
+ISO 8601 calendar date without timezone.
+Format: %Y-%m-%d
+
+# Examples
+
+* `1994-11-13`
+* `2000-02-24`
+"""
+scalar NaiveDate
 
 """
 A notification
@@ -1104,6 +1144,22 @@ type User {
   Get all badges that a user owns, newest first
   """
   badges(after: String): BadgeConnection!
+
+  """
+  Get the birthday date of this user
+
+  This field is only available to this user and System.
+  If the user hasn't set a birthday, `null` is returned.
+  """
+  birthday: NaiveDate
+
+  """
+  Get whether the user is `age` years old
+
+  This field is only available to this user and System.
+  If the user hasn't set a birthday, `null` is returned.
+  """
+  isYearsOld(age: Int!): Boolean
 }
 
 input UserRecipient {

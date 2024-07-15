@@ -10,7 +10,6 @@ import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerYoutube
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
-import com.sayzen.campfiresdk.models.cards.post_pages.CardPageVideo
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.tools.ToolsToast
@@ -21,7 +20,7 @@ import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.java.tools.ToolsText
 
 class SplashPageVideo(
-        private val requestPutPage:(page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage)->Unit))->Unit,
+        private val requestPutPage:(page: Page, screen: Screen?, splash: Splash?, onFinish: ((CardPage)->Unit))->Unit,
         private val requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page)->Unit) -> Unit,
         val card: CardPage?,
         val oldPage: PageVideo?
@@ -91,9 +90,9 @@ class SplashPageVideo(
             hide()
             page.insertBytes = bytes
             if(oldPage == null) {
-                requestPutPage.invoke(page, null, w, { page1 -> CardPageVideo(null, page1 as PageVideo) }){}
+                requestPutPage.invoke(page, null, w) {}
             }else{
-                requestChangePage.invoke(page, card!!, null, w){}
+                requestChangePage.invoke(page, card!!, null, w) {}
             }
 
         }

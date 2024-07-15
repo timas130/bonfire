@@ -15,12 +15,11 @@ import com.dzen.campfire.api.models.images.ImageRef
 import com.sayzen.campfiresdk.compose.profile.badges.BadgeFlyout
 import com.sayzen.campfiresdk.compose.util.shimmerExt
 import com.sayzen.campfiresdk.fragment.BadgeListItem
-import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.java.tools.ToolsDate
 import com.valentinilk.shimmer.Shimmer
-import sh.sit.bonfire.auth.components.RemoteImage
-import sh.sit.bonfire.auth.load
+import sh.sit.bonfire.images.RemoteImage
+import sh.sit.bonfire.images.toRef
 
 @Composable
 fun BadgeListItem(item: BadgeListItem?, shimmer: Shimmer, onChoose: ((BadgeListItem?) -> Unit)?) {
@@ -61,7 +60,7 @@ fun BadgeListItem(item: BadgeListItem?, shimmer: Shimmer, onChoose: ((BadgeListI
         leadingContent = {
             if (item != null) {
                 RemoteImage(
-                    link = ImageLoader.load(item.image.ui),
+                    link = item.image.ui.toRef(),
                     contentDescription = item.name,
                     Modifier
                         .size(32.dp),

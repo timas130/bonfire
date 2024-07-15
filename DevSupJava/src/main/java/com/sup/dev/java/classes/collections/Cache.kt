@@ -13,6 +13,10 @@ class Cache<K : Any, V : Any>(val length: Int) {
         return map[key]
     }
 
+    operator fun set(key: K, value: V) {
+        put(key, value)
+    }
+
     @Suppress("NewApi")
     fun put(key: K, value: V?) {
         if (value != null) map[key] = value

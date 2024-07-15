@@ -62,7 +62,19 @@ class SPostCreationTags private constructor(
 
         fun create(publicationId: Long, postParams: SPostCreate.PostParams, onCreate: () -> Unit) {
             SGoogleRules.acceptRulesDialog {
-                ApiRequestsSupporter.executeProgressDialog(RPostPublication(publicationId, postParams.tags, "", postParams.notifyFollowers, postParams.pendingTime, postParams.closed, postParams.multilingual, postParams.rubric?.id?:0, postParams.activity?.id ?: 0, postParams.nextUserId)) { _ ->
+                ApiRequestsSupporter.executeProgressDialog(RPostPublication(
+                    publicationId = publicationId,
+                    tags = postParams.tags,
+                    comment = "",
+                    notifyFollowers = postParams.notifyFollowers,
+                    pendingTime = postParams.pendingTime,
+                    closed = postParams.closed,
+                    multilingual = postParams.multilingual,
+                    rubricId = postParams.rubric?.id ?: 0,
+                    userActivityId = postParams.activity?.id ?: 0,
+                    userActivityNextUserId = postParams.nextUserId,
+                    nsfw = postParams.nsfw
+                )) { _ ->
                     onCreate.invoke()
                     ControllerStoryQuest.incrQuest(API.QUEST_STORY_POST)
                     ControllerActivities.reloadActivities()
@@ -158,7 +170,19 @@ class SPostCreationTags private constructor(
                     .setMin(API.MODERATION_COMMENT_MIN_L)
                     .setMax(API.MODERATION_COMMENT_MAX_L)
                     .setOnEnter(t(API_TRANSLATE.app_change)) { w, comment ->
-                        ApiRequestsSupporter.executeEnabled(w, RPostPublication(publicationId, postParams.tags, comment, false, 0, false, false, 0, 0, 0)) {
+                        ApiRequestsSupporter.executeEnabled(w, RPostPublication(
+                            publicationId = publicationId,
+                            tags = postParams.tags,
+                            comment = comment,
+                            notifyFollowers = false,
+                            pendingTime = 0,
+                            closed = false,
+                            multilingual = false,
+                            rubricId = 0,
+                            userActivityId = 0,
+                            userActivityNextUserId = 0,
+                            nsfw = false,
+                        )) {
                             Navigator.removeAll(SPostCreate::class)
                             EventBus.post(EventPostStatusChange(publicationId, API.STATUS_PUBLIC))
                             EventBus.post(EventPostTagsChanged(publicationId, selectedTagsWithCategories.toTypedArray()))

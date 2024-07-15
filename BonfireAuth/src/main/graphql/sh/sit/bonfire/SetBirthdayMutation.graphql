@@ -1,0 +1,5 @@
+mutation SetBirthdayMutation($birthday: NaiveDate!) {
+    setBirthday(birthday: $birthday) {
+        ...Me
+    }
+}

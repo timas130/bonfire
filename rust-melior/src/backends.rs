@@ -1,6 +1,7 @@
 use b_level::LevelServer;
 use b_notification::NotificationServer;
 use b_profile::ProfileServer;
+use b_security::SecurityServer;
 use c_auth::AuthServer;
 use c_core::ServiceBase;
 use c_email::EmailServer;
@@ -35,4 +36,5 @@ pub fn start_backends(base: &ServiceBase) {
     start_svc!(base, LevelServer);
     start_svc!(base, NotificationServer);
     start_svc!(base, ProfileServer);
+    start_svc!(base, SecurityServer);
 }

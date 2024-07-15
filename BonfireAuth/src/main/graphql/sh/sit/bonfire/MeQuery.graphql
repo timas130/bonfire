@@ -1,8 +1,14 @@
+fragment Me on User {
+    id
+    username
+    email
+    cachedLevel
+    birthday
+    nsfwAllowed: isYearsOld(age: 18)
+}
+
 query MeQuery {
     me {
-        id
-        username
-        email
-        cachedLevel
+        ...Me
     }
 }

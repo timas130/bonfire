@@ -1,0 +1,5 @@
+query CanSeeNsfw($userId: ID!) {
+    userById(id: $userId) {
+        canNsfw: isYearsOld(age: 18)
+    }
+}

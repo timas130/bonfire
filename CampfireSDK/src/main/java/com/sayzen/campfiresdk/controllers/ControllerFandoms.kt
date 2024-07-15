@@ -3,6 +3,7 @@ package com.sayzen.campfiresdk.controllers
 import android.view.View
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.requests.fandoms.*
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
@@ -130,7 +131,7 @@ object ControllerFandoms {
                     .setOnEnter(t(API_TRANSLATE.app_change)) { ww, comment ->
                         ApiRequestsSupporter.executeEnabled(ww, RFandomsModerationChangeImageTitle(xFandom.getId(), xFandom.getLanguageId(), image, imageGif, comment)) { r ->
                             ImageLoader.load(xFandom.getImageTitle()).clear()
-                            EventBus.post(EventFandomChanged(xFandom.getId(), "", -1, r.image, r.imageGif))
+                            EventBus.post(EventFandomChanged(xFandom.getId(), "", ImageRef(), r.image, r.imageGif))
                             ToolsToast.show(t(API_TRANSLATE.app_done))
                         }
                     }

@@ -100,4 +100,15 @@
     <string name="error_another_account_exists">Другой пользователь уже использует этот сторонний аккаунт</string>
     <string name="consent_analytics">Разрешить собирать данные об использовании</string>
     <string name="consent_analytics_desc">Это очень поможет в разработке приложения! Вы можете отказаться в любой момент.</string>
+    <string name="error_image_alt">Ошибка загрузки картинки</string>
+    <string name="set_birthday_title">Укажите возраст</string>
+    <string name="set_birthday_text">Чтобы дать вам доступ к некоторому контенту, нам надо спросить вашу реальную дату
+        рождения, чтобы определить ваш возраст. Эта информация не будет показана кому-либо, кроме вас, и не будет
+        передана другим лицам. Возраст, указанный в вашем профиле, останется нетронутым.
+    </string>
+    <string name="birthday_label">Дата рождения</string>
+    <string name="ok">ОК</string>
+    <string name="save">Сохранить</string>
+    <string name="birthday_not_specified">Не указана</string>
+    <string name="birthday_not_changeable">Вы не можете изменить свою дату рождения</string>
 </resources>

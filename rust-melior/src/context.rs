@@ -11,6 +11,7 @@ use c_core::services::auth::{Auth, AuthError, AuthServiceClient, UserContext};
 use c_core::services::level::{Level, LevelServiceClient};
 use c_core::services::notification::{NotificationServiceClient, Notifications};
 use c_core::services::profile::{ProfileServiceClient, Profiles};
+use c_core::services::security::{Security, SecurityServiceClient};
 use c_core::ServiceBase;
 use std::net::IpAddr;
 use std::sync::Arc;
@@ -23,6 +24,7 @@ pub struct GlobalContext {
     pub level: Arc<LevelServiceClient>,
     pub notification: Arc<NotificationServiceClient>,
     pub profile: Arc<ProfileServiceClient>,
+    pub security: Arc<SecurityServiceClient>,
 }
 impl GlobalContext {
     pub async fn new(base: ServiceBase) -> anyhow::Result<GlobalContext> {
@@ -33,6 +35,7 @@ impl GlobalContext {
                 Notifications::client_tcp(base.config.ports.notification).await?,
             ),
             profile: Arc::new(Profiles::client_tcp(base.config.ports.profile).await?),
+            security: Arc::new(Security::client_tcp(base.config.ports.security).await?),
             base: Arc::new(base),
         })
     }
@@ -45,6 +48,7 @@ pub struct ReqContext {
     pub level: Arc<LevelServiceClient>,
     pub notification: Arc<NotificationServiceClient>,
     pub profile: Arc<ProfileServiceClient>,
+    pub security: Arc<SecurityServiceClient>,
     pub user_context: UserContext,
     pub session_id: Option<i64>,
     pub user: Option<AuthUser>,
@@ -77,18 +81,26 @@ impl ReqContext {
             None => None,
         };
 
+        let user_context = UserContext {
+            ip: addr,
+            user_agent: user_agent
+                .map(|header| header.to_string())
+                .unwrap_or_else(|| String::from("[?]")),
+        };
+
+        // only allow having system permissions on localhost
+        let user = user.filter(|(_, user)| {
+            user.permission_level < PermissionLevel::System || user_context.is_internal()
+        });
+
         Self {
             base: global_context.base,
             auth: global_context.auth,
             level: global_context.level,
             notification: global_context.notification,
             profile: global_context.profile,
-            user_context: UserContext {
-                ip: addr,
-                user_agent: user_agent
-                    .map(|header| header.to_string())
-                    .unwrap_or_else(|| String::from("[?]")),
-            },
+            security: global_context.security,
+            user_context,
             session_id: user.as_ref().map(|(session_id, _)| *session_id),
             user: user.map(|(_, auth)| auth),
             user_auth_error,

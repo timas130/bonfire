@@ -20,7 +20,7 @@ class NotificationModerationPostClosedNo : Notification {
 
     override fun isNeedForcePush() = true
 
-    constructor(comment: String,fandomImageId: Long, moderationId: Long, moderatorSex: Long, moderatorName: String) : super(0) {
+    constructor(comment: String,fandomImageId: Long, moderationId: Long, moderatorSex: Long, moderatorName: String) : super(fandomImageId) {
         this.comment = comment
         this.fandomImageId = fandomImageId
         this.moderationId = moderationId

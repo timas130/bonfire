@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update security_intentions set check_id = $1, attempts = attempts + 1 where id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "111f0b35183fcb3b84f88fa1b8ee2bb86bdf1f4b750094108290cf8d13451389"
+}

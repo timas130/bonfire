@@ -10,7 +10,6 @@ import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
-import com.sayzen.campfiresdk.models.cards.post_pages.CardPageTable
 import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
@@ -26,7 +25,7 @@ import com.sup.dev.java.tools.ToolsThreads
 import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class SCreatePageTable(
-        private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage) -> Unit)) -> Unit,
+        private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, onFinish: ((CardPage) -> Unit)) -> Unit,
         private val requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page) -> Unit) -> Unit,
         private var card: CardPage?,
         private var oldPage: PageTable?
@@ -204,7 +203,7 @@ class SCreatePageTable(
         page.rowsCount = vTable.getRowsCount()
 
         if (oldPage == null) {
-            requestPutPage.invoke(page, null, dialog, { CardPageTable(null, it as PageTable) }) { card ->
+            requestPutPage.invoke(page, null, dialog) { card ->
                 this.card = card
                 this.oldPage = card.page as PageTable
                 onCreated.invoke()

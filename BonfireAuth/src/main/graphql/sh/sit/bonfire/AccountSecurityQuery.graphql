@@ -5,6 +5,7 @@ query AccountSecurityQuery {
             googleLinked
             firebaseLinked
         }
+        birthday
     }
     activeSessions(offset: 0) {
         id

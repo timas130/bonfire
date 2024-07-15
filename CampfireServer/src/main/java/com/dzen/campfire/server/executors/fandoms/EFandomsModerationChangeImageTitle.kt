@@ -4,8 +4,8 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.fandoms.Fandom
 import com.dzen.campfire.api.models.publications.moderations.fandom.ModerationTitleImage
 import com.dzen.campfire.api.requests.fandoms.RFandomsModerationChangeImageTitle
-import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.api.tools.ApiException
+import com.dzen.campfire.server.controllers.*
 import com.sup.dev.java_pc.tools.ToolsImage
 
 class EFandomsModerationChangeImageTitle : RFandomsModerationChangeImageTitle(0, 0, null, null, "") {

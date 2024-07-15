@@ -12,6 +12,7 @@ use c_core::services::profile::ProfileError;
 use std::sync::Arc;
 use thiserror::Error;
 use tracing::warn;
+use c_core::services::security::SecurityError;
 
 #[derive(Clone, Error, Debug)]
 pub enum RespError {
@@ -30,6 +31,8 @@ pub enum RespError {
     Notification(#[from] NotificationError),
     #[error("{0}")]
     Profile(#[from] ProfileError),
+    #[error("{0}")]
+    Security(#[from] SecurityError),
     #[error("Rpc: An unknown error has occurred: {0}")]
     Rpc(#[from] Arc<RpcError>),
     #[error("Anyhow: An unknown error has occurred: {0}")]

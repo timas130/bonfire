@@ -42,6 +42,8 @@ android {
 dependencies {
     implementation project(':CampfireSDK')
     implementation "com.posthog:posthog-android:3.2.1"
+
+    implementation "io.coil-kt:coil-gif:2.6.0"
 }
 
 tasks.withType(KotlinCompile).configureEach {

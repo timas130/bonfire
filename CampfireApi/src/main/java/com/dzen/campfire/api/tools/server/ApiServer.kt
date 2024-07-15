@@ -1,5 +1,7 @@
 package com.dzen.campfire.api.tools.server
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.ApiAccount
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.api.tools.client.ApiClient
@@ -157,7 +159,15 @@ class ApiServer(
             try {
                 request.check()
                 val response = request.execute()
-                resources?.let { response.signImages(it) }
+                response.fillImageRefs(object : ImageHolderReceiver {
+                    override fun add(imageRef: ImageRef, legacyId: Long?, width: Int?, height: Int?) {
+                        resources?.add(imageRef, legacyId, width, height)
+                    }
+
+                    override fun getRequestVersion(): String {
+                        return request.requestApiVersion
+                    }
+                })
                 response.json(true, responseJsonContent)
 
                 responseJson.put(ApiClient.J_STATUS, ApiClient.J_STATUS_OK)

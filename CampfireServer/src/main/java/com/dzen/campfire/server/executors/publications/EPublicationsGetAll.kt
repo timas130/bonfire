@@ -3,6 +3,7 @@ package com.dzen.campfire.server.executors.publications
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.requests.publications.RPublicationsGetAll
 import com.dzen.campfire.api.tools.ApiException
+import com.dzen.campfire.server.controllers.ControllerPost.filterNsfw
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java.tools.ToolsCollections
@@ -19,6 +20,7 @@ class EPublicationsGetAll : RPublicationsGetAll() {
     override fun execute(): Response {
         val select = ControllerPublications.instanceSelect(apiAccount.id)
 
+        select.filterNsfw(apiAccount.id, requestApiVersion)
         if (onlyWithFandom) select.where(TPublications.fandom_id, ">", 0)
         if (accountId != 0L) select.where(TPublications.creator_id, "=", accountId)
         if (publicationsTypes != null) select.where(SqlWhere.WhereIN(TPublications.publication_type, publicationsTypes!!))

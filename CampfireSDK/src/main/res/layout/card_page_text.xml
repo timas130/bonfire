@@ -23,6 +23,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
+        <view
+            class="com.sayzen.campfiresdk.models.cards.post_pages.CardPageText$ComposeCardPageText"
+            android:id="@+id/vCompose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
         <com.sup.dev.android.views.views.ViewText
             android:id="@+id/vText"
             android:layout_gravity="center"

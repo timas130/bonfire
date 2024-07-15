@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into real_user_birthdays (birthday, user_id) values ($1, $2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Date",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "a91c275cd7836332a46dd3c1fc28b4206f680f8cff4662e3b6c689af232b14d0"
+}

@@ -102,4 +102,15 @@
     <string name="error_another_account_exists">Another user is already using this external account</string>
     <string name="consent_analytics">Allow collecting usage data</string>
     <string name="consent_analytics_desc">This will help tremendously in the development of the app! You can opt out at any time.</string>
+    <string name="error_image_alt">Error loading image</string>
+    <string name="set_birthday_title">Set birthday</string>
+    <string name="set_birthday_text">To let you access some content, we\'ll have to ask for your real birth date to
+        determine your age. This information will not be shown to anybody other than you, and will not be sent to third
+        parties. Age you enter in your profile will not be affected.
+    </string>
+    <string name="birthday_label">Birth date</string>
+    <string name="ok">OK</string>
+    <string name="save">Save</string>
+    <string name="birthday_not_specified">Not specified</string>
+    <string name="birthday_not_changeable">You cannot change your birthday</string>
 </resources>

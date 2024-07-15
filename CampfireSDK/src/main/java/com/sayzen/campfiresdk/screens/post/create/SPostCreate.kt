@@ -229,6 +229,7 @@ class SPostCreate constructor(
         var pendingTime = 0L
         var closed = false
         var multilingual = false
+        var nsfw = false
 
         fun setTags(presetTags: Array<Long>): PostParams {
             this.tags = presetTags;return this

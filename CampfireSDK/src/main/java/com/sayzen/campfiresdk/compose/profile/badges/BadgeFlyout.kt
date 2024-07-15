@@ -20,8 +20,6 @@ import com.sayzen.campfiresdk.compose.ComposeSplash
 import com.sayzen.campfiresdk.compose.util.ErrorCard
 import com.sayzen.campfiresdk.compose.util.shimmerExt
 import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
-import com.sayzen.campfiresdk.support.load
-import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsIntent
 import com.valentinilk.shimmer.ShimmerBounds
@@ -31,9 +29,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import sh.sit.bonfire.auth.ApolloController
 import sh.sit.bonfire.auth.components.BetterModalBottomSheet
-import sh.sit.bonfire.auth.components.RemoteImage
-import sh.sit.bonfire.auth.load
 import sh.sit.bonfire.auth.watchExt
+import sh.sit.bonfire.images.RemoteImage
+import sh.sit.bonfire.images.toRef
 
 class BadgeFlyoutSplash(private val shortBadge: AccountBadge) : ComposeSplash() {
     private val isShownFlow = MutableStateFlow(isShown())
@@ -98,8 +96,7 @@ fun BadgeFlyout(
 
     BetterModalBottomSheet(open = open, onDismissRequest = close) {
         RemoteImage(
-            link = fullBadge?.image?.ui?.let { ImageLoader.load(it) }
-                ?: ImageLoader.load(shortBadge.miniImage),
+            link = fullBadge?.image?.ui?.toRef() ?: shortBadge.miniImage,
             contentDescription = stringResource(R.string.badge_alt),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)

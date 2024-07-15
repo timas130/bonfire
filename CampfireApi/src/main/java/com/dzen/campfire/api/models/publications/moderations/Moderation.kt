@@ -89,6 +89,7 @@ abstract class Moderation : JsonPolimorf, ImageHolder {
                 API.MODERATION_TYPE_ACTIVITIES_CHANGE -> ModerationActivitiesChange()
                 API.MODERATION_TYPE_ACTIVITIES_REMOVE -> ModerationActivitiesRemove()
                 API.MODERATION_TYPE_LINK_CHANGE -> ModerationLinkChange()
+                API.MODERATION_TYPE_SET_NSFW -> ModerationPostSetNsfw()
                 else -> ModerationUnknown()
             }
 

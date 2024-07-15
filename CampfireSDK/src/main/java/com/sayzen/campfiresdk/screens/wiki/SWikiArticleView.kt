@@ -17,7 +17,9 @@ import com.dzen.campfire.api.requests.wiki.RWikiGetPages
 import com.dzen.campfire.api.requests.wiki.RWikiItemGet
 import com.dzen.campfire.api.requests.wiki.RWikiItemHistoryCancel
 import com.dzen.campfire.api.requests.wiki.RWikiItemHistoryRestore
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.publication.post.pages.ComposePostPages
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
 import com.sayzen.campfiresdk.models.events.wiki.EventWikiPagesChanged
@@ -78,6 +80,8 @@ class SWikiArticleView(
     private var error = false
     private var wasSwitchedToEnglish = false
 
+    private val composeMode = PostHog.isFeatureEnabled("compose_post")
+
     init {
         disableNavigation()
         disableShadows()
@@ -105,8 +109,12 @@ class SWikiArticleView(
             vMore.visibility = View.GONE
             vEdit.visibility = View.GONE
             pages = startPages!!.pages
-            for (i in pages) adapter.add(CardPage.instance(this, i))
-            ControllerPost.updateSpoilers(adapter)
+            if (composeMode) {
+                adapter.add(ComposePostPages(pages.toList(), this))
+            } else {
+                for (i in pages) adapter.add(CardPage.instance(this, i))
+                ControllerPost.updateSpoilers(adapter)
+            }
             updateMessage()
             if (ControllerApi.can(wikiTitle.fandomId, languageId, API.LVL_MODERATOR_WIKI_EDIT)) {
                 if (startPages!!.wikiStatus == API.STATUS_REMOVED) {
@@ -176,8 +184,12 @@ class SWikiArticleView(
                         loadedPages = it.wikiPages
                         pages = it.wikiPages?.pages ?: emptyArray()
                         adapter.clear()
-                        for (i in pages) adapter.add(CardPage.instance(this, i))
-                        ControllerPost.updateSpoilers(adapter)
+                        if (composeMode) {
+                            adapter.add(ComposePostPages(pages.toList(), this))
+                        } else {
+                            for (i in pages) adapter.add(CardPage.instance(this, i))
+                            ControllerPost.updateSpoilers(adapter)
+                        }
                         updateMessage()
                     }
                 }
@@ -244,9 +256,14 @@ class SWikiArticleView(
                 reload()
             } else {
                 adapter.remove(CardPage::class)
+                adapter.remove(ComposePostPages::class)
                 pages = e.pages
-                for (i in pages) adapter.add(CardPage.instance(this, i))
-                ControllerPost.updateSpoilers(adapter)
+                if (composeMode) {
+                    adapter.add(ComposePostPages(pages.toList(), this))
+                } else {
+                    for (i in pages) adapter.add(CardPage.instance(this, i))
+                    ControllerPost.updateSpoilers(adapter)
+                }
                 updateMessage()
             }
         }

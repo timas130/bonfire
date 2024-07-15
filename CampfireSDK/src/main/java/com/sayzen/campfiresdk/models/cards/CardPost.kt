@@ -14,8 +14,11 @@ import com.dzen.campfire.api.models.publications.post.PageSpoiler
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.auth.SetBirthdayScreen
+import com.sayzen.campfiresdk.compose.publication.post.CardPostProxy
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.ControllerPost
+import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.PostList
 import com.sayzen.campfiresdk.models.cards.post_pages.*
@@ -29,20 +32,26 @@ import com.sayzen.campfiresdk.screens.reports.SReports
 import com.sayzen.campfiresdk.views.ViewKarma
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sup.dev.android.models.EventStyleChanged
 import com.sup.dev.android.tools.ToolsResources
+import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.views.ViewAvatarTitle
+import com.sup.dev.android.views.views.ViewButton
 import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.android.views.views.layouts.LayoutMaxSizes
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsDate
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
+import eightbitlab.com.blurview.BlurView
+import sh.sit.bonfire.auth.AuthController
 
-class CardPost constructor(
-        private val vRecycler: RecyclerView?,
-        publication: PublicationPost,
-        var onClick: ((PublicationPost) -> Unit)? = null
+class CardPost(
+    private val proxy: CardPostProxy,
+    private val vRecycler: RecyclerView?,
+    publication: PublicationPost,
+    var onClick: ((PublicationPost) -> Unit)? = null,
 ) : CardPublication(R.layout.card_publication_post, publication) {
 
     companion object {
@@ -118,6 +127,17 @@ class CardPost constructor(
                     publication.rubricId = it.rubric.id
                     publication.rubricName = it.rubric.name
                     updateAccount()
+                }
+            }
+            .subscribe(EventPostSetNsfw::class) {
+                if (publication.id == it.publicationId) {
+                    publication.nsfw = it.nsfw
+                    updateNsfwOverlay()
+                }
+            }
+            .subscribe(EventStyleChanged::class) {
+                if (!ControllerSettings.showNsfwPosts && publication.nsfw) {
+                    adapter.remove(proxy)
                 }
             }
 
@@ -203,6 +223,8 @@ class CardPost constructor(
         for (page in pages) {
             putView(page)
         }
+
+        nsfwOverlayActive = true
     }
 
     override fun bindView(view: View) {
@@ -227,12 +249,14 @@ class CardPost constructor(
         vMenu.setOnClickListener { ControllerPost.showPostMenu(vMenu, publication) }
 
         view.setOnClickListener {
-            if (onClick != null)
+            if (onClick != null) {
                 onClick!!.invoke(publication)
-            else if (publication.status == API.STATUS_DRAFT)
+            } else if (publication.status == API.STATUS_DRAFT) {
                 ControllerCampfireSDK.onToDraftClicked(publication.id, Navigator.TO)
-            else if (publication.status == API.STATUS_PUBLIC)
+            } else if (publication.status == API.STATUS_PUBLIC) {
+                PostHog.capture("post_open", properties = mapOf("type" to "full"))
                 ControllerCampfireSDK.onToPostClicked(publication.id, 0, Navigator.TO)
+            }
         }
 
         for (page in pages) {
@@ -268,8 +292,10 @@ class CardPost constructor(
             vBestCommentContainer.addView(cardCommentView)
         }
         vComments.setOnClickListener {
-            if (onClick == null && publication.status == API.STATUS_PUBLIC)
+            if (onClick == null && publication.status == API.STATUS_PUBLIC) {
+                PostHog.capture("post_open", properties = mapOf("type" to "comments"))
                 ControllerCampfireSDK.onToPostClicked(publication.id, -1, Navigator.TO)
+            }
         }
         if (publication.isPublic) {
             vComments.setOnLongClickListener {
@@ -282,6 +308,7 @@ class CardPost constructor(
         }
 
         updateShowAll()
+        updateNsfwOverlay()
     }
 
     override fun updateFandom() {
@@ -345,7 +372,7 @@ class CardPost constructor(
         Navigator.removeOnBack(onBack)
         if (isShowFull) {
             onBack = {
-                if (Navigator.getCurrent() is PostList && (Navigator.getCurrent() as PostList).contains(this)) {
+                if (Navigator.getCurrent() is PostList && (Navigator.getCurrent() as PostList).contains(proxy)) {
                     if (isShowFull) {
                         toggleShowFull()
                         getView() != null && getView()!!.findViewById<View>(R.id.vPagesCount).tag == this
@@ -360,7 +387,7 @@ class CardPost constructor(
         updateShowAll()
 
         if (!isShowFull && vRecycler != null) {
-            val index = adapter.indexOf(this)
+            val index = adapter.indexOf(proxy)
             if (index > -1 && index < adapter.size() - 1) vRecycler.scrollToPosition(index + 1)
         }
     }
@@ -396,6 +423,55 @@ class CardPost constructor(
         }
     }
 
+    private var nsfwOverlayActive = true
+    private fun updateNsfwOverlay() {
+        val view = getView() ?: return
+        val post = xPublication.publication as PublicationPost
+
+        val vNsfwOverlay: BlurView = view.findViewById(R.id.vNsfwOverlay)
+        vNsfwOverlay.isClickable = true
+        vNsfwOverlay
+            .setupWith(view as ViewGroup) // trust me bro
+            .setBlurRadius(16f)
+            .setOverlayColor(
+                ToolsResources.getColorAttr(view.context, R.attr.colorSurface)
+                    and 0xFFFFFF
+                    or 0x80000000.toInt() // set alpha to 0.5
+            )
+            .setBlurAutoUpdate(false)
+
+        if (post.nsfw && nsfwOverlayActive) {
+            val currentUser = AuthController.currentUserState.value
+            val vNsfwButton1: ViewButton = view.findViewById(R.id.vNsfwButton1)
+            val vNsfwButton2: ViewButton = view.findViewById(R.id.vNsfwButton2)
+
+            vNsfwOverlay.visibility = View.VISIBLE
+
+            if (currentUser?.birthday == null) {
+                vNsfwButton1.text = view.context.getString(R.string.nsfw_verify_age)
+                vNsfwButton1.setOnClickListener {
+                    Navigator.to(SetBirthdayScreen())
+                }
+
+                vNsfwButton2.visibility = View.VISIBLE
+                vNsfwButton2.text = view.context.getString(R.string.hide_nsfw_posts)
+                vNsfwButton2.setOnClickListener {
+                    ControllerSettings.showNsfwPosts = false
+                    ToolsToast.show(R.string.hide_nsfw_posts_desc)
+                }
+            } else if (currentUser.nsfwAllowed == true) {
+                vNsfwButton1.text = view.context.getString(R.string.nsfw_open)
+                vNsfwButton1.setOnClickListener {
+                    vNsfwOverlay.visibility = View.GONE
+                    nsfwOverlayActive = false
+                }
+
+                vNsfwButton2.visibility = View.GONE
+            }
+        } else {
+            vNsfwOverlay.visibility = View.GONE
+        }
+    }
 
     override fun notifyItem() {
         for (page in pages)
@@ -428,7 +504,7 @@ class CardPost constructor(
 
     private fun onEventPublicationDeepBlockRestore(e: EventPublicationDeepBlockRestore) {
         if (e.publicationId == xPublication.publication.id && xPublication.publication.status == API.STATUS_DEEP_BLOCKED) {
-            adapter.remove(this)
+            adapter.remove(proxy)
         }
     }
 
@@ -443,9 +519,9 @@ class CardPost constructor(
     private fun onEventPostStatusChange(e: EventPostStatusChange) {
         val publication = xPublication.publication as PublicationPost
         if (e.publicationId == publication.id) {
-            if (e.status != API.STATUS_DRAFT && publication.status == API.STATUS_DRAFT) adapter.remove(this)
-            if (e.status != API.STATUS_PUBLIC && publication.status == API.STATUS_PUBLIC) adapter.remove(this)
-            if (e.status != API.STATUS_PENDING && publication.status == API.STATUS_PENDING) adapter.remove(this)
+            if (e.status != API.STATUS_DRAFT && publication.status == API.STATUS_DRAFT) adapter.remove(proxy)
+            if (e.status != API.STATUS_PUBLIC && publication.status == API.STATUS_PUBLIC) adapter.remove(proxy)
+            if (e.status != API.STATUS_PENDING && publication.status == API.STATUS_PENDING) adapter.remove(proxy)
         }
     }
 

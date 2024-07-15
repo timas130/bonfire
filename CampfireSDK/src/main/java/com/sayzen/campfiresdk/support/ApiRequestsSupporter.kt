@@ -3,6 +3,7 @@ package com.sayzen.campfiresdk.support
 import androidx.annotation.StringRes
 import com.dzen.campfire.api.tools.client.ApiClient
 import com.dzen.campfire.api.tools.client.Request
+import com.sayzen.campfiresdk.controllers.sendSuspend
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
@@ -28,16 +29,26 @@ object ApiRequestsSupporter {
     }
 
     fun <K : Request.Response> executeWithRetry(request: Request<K>, onComplete: (K) -> Unit): Request<K> {
-        return executeWithRetry(5, request, onComplete)
+        return executeWithRetry(5, request, {}, onComplete)
     }
 
-    fun <K : Request.Response> executeWithRetry(tryCount:Int, request: Request<K>, onComplete: (K) -> Unit): Request<K> {
+    fun <K : Request.Response> executeWithRetry(
+        tryCount: Int,
+        request: Request<K>,
+        onFailure: () -> Unit = {},
+        onComplete: (K) -> Unit,
+    ): Request<K> {
         var tryCount = tryCount
-        if(tryCount < 1) return request
+        if (tryCount < 1) {
+            onFailure()
+            return request
+        }
         request.onNetworkError {
-            if(tryCount > 0) {
+            if (tryCount > 0) {
                 tryCount--
                 execute(request, false, onComplete)
+            } else {
+                onFailure()
             }
         }
         return execute(request, false, onComplete)
@@ -57,6 +68,21 @@ object ApiRequestsSupporter {
         else request.send(api!!)
 
         return request
+    }
+
+    suspend fun <K : Request.Response> Request<K>.sendSuspendExt(): K {
+        onNetworkError { ToolsToast.show(SupAndroid.TEXT_ERROR_NETWORK) }
+        onApiError(ApiClient.ERROR_ACCOUNT_IS_BANED) { ex ->
+            ToolsToast.show(
+                SupAndroid.TEXT_ERROR_ACCOUNT_BANED!!
+                    .format(ToolsDate.dateToStringFull(ex.params[0].toLong()))
+            )
+        }
+        onApiError(ApiClient.ERROR_GONE) {
+            ToolsToast.show(SupAndroid.TEXT_ERROR_GONE)
+        }
+
+        return sendSuspend(api!!)
     }
 
     fun <K : Request.Response> executeInterstitial(action: NavigationAction, request: Request<K>, onComplete: (K) -> Screen?): Request<K> {

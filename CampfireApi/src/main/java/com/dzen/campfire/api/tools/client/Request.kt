@@ -5,7 +5,6 @@ import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.tools.ApiAccount
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.api.tools.server.ApiRequest
-import com.dzen.campfire.api.tools.server.IControllerResources
 import com.sup.dev.java.classes.Subscription
 import com.sup.dev.java.classes.callbacks.CallbacksList
 import com.sup.dev.java.classes.callbacks.CallbacksList1
@@ -133,10 +132,6 @@ abstract class Request<K : Request.Response> : Subscription(){
         }
 
         override fun fillImageRefs(receiver: ImageHolderReceiver) {
-        }
-
-        fun signImages(resources: IControllerResources) {
-            fillImageRefs(resources)
         }
     }
 

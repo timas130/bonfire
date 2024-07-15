@@ -5,20 +5,19 @@ import com.sup.dev.java.libs.json.Json
 
 
 open class RPostPublication(
-        var publicationId: Long,
-        var tags: Array<Long>,
-        var comment:String,
-        var notifyFollowers:Boolean,
-        var pendingTime: Long,
-        var closed: Boolean,
-        var multilingual: Boolean,
-        var rubricId: Long,
-        var userActivityId: Long,
-        var userActivityNextUserId: Long
+    var publicationId: Long,
+    var tags: Array<Long>,
+    var comment:String,
+    var notifyFollowers:Boolean,
+    var pendingTime: Long,
+    var closed: Boolean,
+    var multilingual: Boolean,
+    var rubricId: Long,
+    var userActivityId: Long,
+    var userActivityNextUserId: Long,
+    var nsfw: Boolean,
 ) : Request<RPostPublication.Response>() {
-
     companion object {
-
         val E_BAD_STATUS = "E_BAD_STATUS"
         val E_BAD_TYPE = "E_BAD_TYPE"
         val E_BAD_TAGS = "E_BAD_TAGS"
@@ -36,6 +35,7 @@ open class RPostPublication(
         rubricId = json.m(inp, "rubricId", rubricId)
         userActivityId = json.m(inp, "userActivityId", userActivityId)
         userActivityNextUserId = json.m(inp, "userActivityNextUserId", userActivityNextUserId)
+        nsfw = json.m(inp, "nsfw", nsfw)
     }
 
     override fun instanceResponse(json: Json): Response {
@@ -43,7 +43,6 @@ open class RPostPublication(
     }
 
     class Response : Request.Response {
-
         constructor(json: Json) {
             json(false, json)
         }

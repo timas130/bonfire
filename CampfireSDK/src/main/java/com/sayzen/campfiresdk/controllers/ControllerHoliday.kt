@@ -1,6 +1,7 @@
 package com.sayzen.campfiresdk.controllers
 
 import com.dzen.campfire.api.ApiResources
+import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.images.ImageRef
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.models.animations.DrawAnimationConfetti
@@ -43,6 +44,8 @@ object ControllerHoliday {
         }
         return null
     }
+
+    fun getAvatar(account: Account) = getAvatar(account.id, account.lvl, account.karma30)
 
     fun getAvatar(accountId: Long, accountLvl: Long, karma30: Long): ImageRef? {
         if (isNewYear() && ControllerSettings.styleNewYearAvatars) {

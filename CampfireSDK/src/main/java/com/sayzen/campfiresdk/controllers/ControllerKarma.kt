@@ -29,6 +29,10 @@ object ControllerKarma {
 
     fun get(publicationId: Long) = karma[publicationId] ?: 0L
 
+    fun add(publicationId: Long, amount: Long) {
+        set(publicationId, get(publicationId) + amount)
+    }
+
     //
     //  Rate
     //
@@ -45,11 +49,16 @@ object ControllerKarma {
     }
 
     fun rate(publicationId: Long, up: Boolean, anon: Boolean) {
-        PostHog.capture("karma_rate", properties = mapOf("up" to up, "anon" to anon))
-
         stop(publicationId)
-        rates[publicationId] = Rate(publicationId, up, anon)
+        val rate = Rate(publicationId, up, anon)
+        rate.start()
+        rates[publicationId] = rate
         EventBus.post(EventPublicationKarmaStateChanged(publicationId))
+    }
+
+    fun rateNow(publicationId: Long, up: Boolean, anon: Boolean) {
+        stop(publicationId)
+        Rate(publicationId, up, anon).rateNow()
     }
 
     fun getStartTime(publicationId: Long): Long {
@@ -73,23 +82,35 @@ object ControllerKarma {
             val anon: Boolean,
             val rateStartTime: Long = System.currentTimeMillis()
     ) {
-
-        private val subscription: Subscription
+        private lateinit var subscription: Subscription
         private var isSend = false
 
-        init {
+        fun start() {
             subscription = ToolsThreads.main(CampfireConstants.RATE_TIME) {
-                isSend = true
-                ApiRequestsSupporter.execute(RPublicationsKarmaAdd(publicationId, up, ControllerApi.getLanguageId(), anon)) { r ->
-                    set(publicationId, get(publicationId) + r.myKarmaCount)
-                    EventBus.post(EventPublicationKarmaAdd(publicationId, r.myKarmaCount))
-                    ControllerStoryQuest.incrQuest(API.QUEST_STORY_KARMA)
-                    ToolsThreads.main(true) { EventBus.post(EventPublicationKarmaStateChanged(publicationId))  }
-                }
-                        .onApiError(RPublicationsKarmaAdd.E_SELF_PUBLICATION) { ToolsToast.show(t(API_TRANSLATE.error_rate_self_publication)) }
-                        .onApiError(RPublicationsKarmaAdd.E_CANT_DOWN) { ToolsToast.show(t(API_TRANSLATE.error_rate_cant_down)) }
-                        .onFinish { stop(publicationId) }
+                rateNow()
             }
+        }
+
+        fun rateNow() {
+            isSend = true
+            ApiRequestsSupporter.execute(
+                RPublicationsKarmaAdd(
+                    publicationId,
+                    up,
+                    ControllerApi.getLanguageId(),
+                    anon
+                )
+            ) { r ->
+                PostHog.capture("karma_rate", properties = mapOf("up" to up, "anon" to anon))
+
+                set(publicationId, get(publicationId) + r.myKarmaCount)
+                EventBus.post(EventPublicationKarmaAdd(publicationId, r.myKarmaCount))
+                ControllerStoryQuest.incrQuest(API.QUEST_STORY_KARMA)
+                ToolsThreads.main(true) { EventBus.post(EventPublicationKarmaStateChanged(publicationId)) }
+            }
+                .onApiError(RPublicationsKarmaAdd.E_SELF_PUBLICATION) { ToolsToast.show(t(API_TRANSLATE.error_rate_self_publication)) }
+                .onApiError(RPublicationsKarmaAdd.E_CANT_DOWN) { ToolsToast.show(t(API_TRANSLATE.error_rate_cant_down)) }
+                .onFinish { stop(publicationId) }
         }
 
         fun clearRate() {

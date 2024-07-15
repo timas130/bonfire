@@ -304,7 +304,7 @@ open class CardComment protected constructor(
         } else {
             BonfireMarkdown.setMarkdownInline(vText, text)
             ControllerLinks.linkifyShort(vText)
-            if (text.length > maxTextSize) {
+            if (vText.text.length > maxTextSize) {
                 // no spans lost! zeon is in tears!
                 vText.text = vText.text.subSequence(0, maxTextSize)
             }

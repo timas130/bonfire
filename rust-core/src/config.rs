@@ -16,6 +16,7 @@ pub struct GlobalConfig {
     pub google: OAuthConfig,
     pub firebase: FirebaseConfig,
     pub notification: NotificationConfig,
+    pub security: SecurityConfig,
 }
 impl GlobalConfig {
     pub(crate) fn load() -> anyhow::Result<Self> {
@@ -45,6 +46,7 @@ pub struct PortsConfig {
     pub level: u16,
     pub notification: u16,
     pub profile: u16,
+    pub security: u16,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -91,4 +93,9 @@ pub struct FirebaseConfig {
 #[derive(Clone, Debug, Deserialize)]
 pub struct NotificationConfig {
     pub threads: u32,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct SecurityConfig {
+    pub package_names: Vec<String>,
 }

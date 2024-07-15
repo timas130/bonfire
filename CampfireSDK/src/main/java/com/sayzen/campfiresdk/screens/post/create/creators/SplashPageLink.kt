@@ -11,7 +11,6 @@ import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.ControllerMention
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
-import com.sayzen.campfiresdk.models.cards.post_pages.CardPageLink
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.settings.SettingsField
@@ -21,7 +20,7 @@ import com.sup.dev.java.tools.ToolsText
 import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class SplashPageLink(
-    private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage) -> Unit)) -> Unit,
+    private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, onFinish: ((CardPage) -> Unit)) -> Unit,
     private val requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page) -> Unit) -> Unit,
     private val card: CardPage?,
     private val oldPage: PageLink?
@@ -79,7 +78,7 @@ class SplashPageLink(
         hide()
         val w = ToolsView.showProgressDialog()
         if (card == null)
-            requestPutPage.invoke(page, null, w, { page1 -> CardPageLink(null, page1 as PageLink) }) {}
+            requestPutPage.invoke(page, null, w) {}
         else
             requestChangePage.invoke(page, card, null, w) {}
 

@@ -46,6 +46,7 @@ import com.sup.dev.java.tools.ToolsMath
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
 import java.util.regex.Pattern
+import kotlin.system.exitProcess
 
 object ControllerLinks {
     private fun getRawLink(link: CharSequence): String {
@@ -99,7 +100,7 @@ object ControllerLinks {
                 API.LINK_BOX_WITH_AUTUMN.link -> ControllerScreenAnimations.addAnimationWithClear(DrawAnimationAutumn())
                 API.LINK_BOX_WITH_WINTER.link -> ControllerScreenAnimations.addAnimationWithClear(DrawAnimationWinter())
                 API.LINK_BOX_WITH_BOMB.link -> ControllerScreenAnimations.addAnimationWithClear(DrawAnimationBomb())
-                API.LINK_BOX_WITH_CRASH.link -> ToolsThreads.main(true) { ("Do Crash").toInt() }
+                API.LINK_BOX_WITH_CRASH.link -> ToolsThreads.main(true) { exitProcess(0) }
                 API.LINK_BOX_WITH_SNOW.link -> ControllerScreenAnimations.addAnimationWithClear(DrawAnimationSnow(100))
                 API.LINK_BOX_WITH_MINIGAME.link -> SMinigame.instance(Navigator.TO)
                 API.LINK_BOX_WITH_MAGIC_SCREEN_X2.link -> Navigator.to(SMagic(2f))

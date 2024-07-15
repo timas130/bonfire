@@ -5,7 +5,6 @@ import com.sup.dev.java.tools.ToolsText
 import com.support.json.json_simple.JSONArray
 import com.support.json.json_simple.JSONObject
 import com.support.json.json_simple.JSONValue
-import java.lang.Exception
 
 
 class JsonArray {
@@ -95,7 +94,7 @@ class JsonArray {
 
 
     fun getInts(): Array<Int> {
-        return Array(jsonArray.size) { (jsonArray[it] as Long).toInt() }
+        return Array(jsonArray.size) { (jsonArray[it] as? Long)?.toInt() ?: (jsonArray[it] as Int) }
     }
 
     fun getLongs(): Array<Long> {

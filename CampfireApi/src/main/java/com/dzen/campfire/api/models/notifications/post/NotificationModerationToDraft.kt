@@ -31,7 +31,7 @@ class NotificationModerationToDraft : Notification {
                 maskText: String,
                 maskPageType: Long,
                 publicationType: Long = API.PUBLICATION_TYPE_POST,
-    ) : super(0) {
+    ) : super(fandomImageId) {
         this.comment = comment
         this.fandomImageId = fandomImageId
         this.moderationId = moderationId

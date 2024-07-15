@@ -1,6 +1,7 @@
 package com.dzen.campfire.server.controllers
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.api.tools.server.IControllerResources
@@ -13,7 +14,7 @@ import com.sup.dev.java_pc.sql.SqlQuerySelect
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
 import com.sup.dev.java_pc.storage.S3StorageProvider
 
-object ControllerResources : IControllerResources {
+object ControllerResources : IControllerResources, ImageHolderReceiver {
     private val databaseLogin = App.secretsConfig.getString("database_media_login")
     private val databasePassword = App.secretsConfig.getString("database_media_password")
     private val databaseName = App.secretsConfig.getString("database_media_name")
@@ -105,9 +106,14 @@ object ControllerResources : IControllerResources {
             imageRef.width = width ?: 0
             imageRef.height = height ?: 0
         }
-        if (imageRef.url.isEmpty() && imageRef.imageId > 0) {
+        if (imageRef.imageId > 0) {
             imageRef.url = getPublicUrl(imageRef.imageId)
         }
+    }
+
+    override fun getRequestVersion(): String {
+        // stub
+        return API.VERSION
     }
 
     //

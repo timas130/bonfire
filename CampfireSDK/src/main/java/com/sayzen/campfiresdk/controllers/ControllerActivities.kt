@@ -6,6 +6,7 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.activities.UserActivity
 import com.dzen.campfire.api.models.notifications.activities.NotificationActivitiesRelayRaceTurn
 import com.dzen.campfire.api.requests.activities.*
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.models.events.activities.*
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomAccepted
@@ -15,7 +16,6 @@ import com.sayzen.campfiresdk.screens.activities.user_activities.SplashReject
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsAndroid
-import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.splash.SplashMenu
 import com.sup.dev.java.libs.debug.err
@@ -167,10 +167,12 @@ object ControllerActivities {
     //
 
     fun reject(userActivityId: Long) {
+        PostHog.capture("relay_race_rejected")
         SplashReject(userActivityId).asSheetShow()
     }
 
     fun member(userActivityId: Long) {
+        PostHog.capture("relay_race_membership", properties = mapOf("member" to true))
         ApiRequestsSupporter.executeEnabledConfirm(t(API_TRANSLATE.activities_relay_race_member_text), t(API_TRANSLATE.app_participate), RActivitiesRelayRaceMember(userActivityId, true)) { r ->
             ToolsToast.show(t(API_TRANSLATE.app_done))
             EventBus.post(EventActivitiesRelayRaceMemberStatusChanged(userActivityId, 1, r.myIsCurrentMember))
@@ -178,6 +180,7 @@ object ControllerActivities {
     }
 
     fun no_member(userActivityId: Long) {
+        PostHog.capture("relay_race_membership", properties = mapOf("member" to false))
         ApiRequestsSupporter.executeEnabledConfirm(t(API_TRANSLATE.activities_relay_race_member_text_no), t(API_TRANSLATE.app_participate_no), RActivitiesRelayRaceMember(userActivityId, false)) { r ->
             ToolsToast.show(t(API_TRANSLATE.app_done))
             setRelayRacesCount(getActivitiesCount() - 1)

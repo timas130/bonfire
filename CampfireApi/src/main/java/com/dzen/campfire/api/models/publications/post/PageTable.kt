@@ -113,5 +113,45 @@ class PageTable : Page() {
         override fun fillImageRefs(receiver: ImageHolderReceiver) {
             receiver.add(image, imageId)
         }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as Cell
+
+            if (rowIndex != other.rowIndex) return false
+            if (columnIndex != other.columnIndex) return false
+            if (text != other.text) return false
+            if (image != other.image) return false
+            if (imageId != other.imageId) return false
+            if (type != other.type) return false
+            if (insertImage != null) {
+                if (other.insertImage == null) return false
+                if (!insertImage.contentEquals(other.insertImage)) return false
+            } else if (other.insertImage != null) return false
+            if (insertImageIndex != other.insertImageIndex) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = rowIndex
+            result = 31 * result + columnIndex
+            result = 31 * result + text.hashCode()
+            result = 31 * result + image.hashCode()
+            result = 31 * result + imageId.hashCode()
+            result = 31 * result + type.hashCode()
+            result = 31 * result + (insertImage?.contentHashCode() ?: 0)
+            result = 31 * result + insertImageIndex
+            return result
+        }
+
+        companion object {
+            val Empty = Cell().apply {
+                type = CELL_TYPE_TEXT
+                text = ""
+            }
+        }
     }
 }

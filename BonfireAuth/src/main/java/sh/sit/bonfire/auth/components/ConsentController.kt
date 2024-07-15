@@ -115,6 +115,7 @@ private fun ConsentController(state: ConsentControllerState) {
             ListItem(
                 leadingContent = { Icon(Icons.Default.Shield, "") },
                 headlineContent = { Text(stringResource(R.string.start_privacy_policy)) },
+                colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
                 modifier = Modifier.clickable {
                     ToolsIntent.openLink("https://bonfire.moe/page/privacy")
                 }
@@ -122,6 +123,7 @@ private fun ConsentController(state: ConsentControllerState) {
             ListItem(
                 leadingContent = { Icon(Icons.Default.HistoryEdu, "") },
                 headlineContent = { Text(stringResource(R.string.start_terms)) },
+                colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
                 modifier = Modifier.clickable {
                     ToolsIntent.openLink("https://bonfire.moe/page/terms")
                 }
@@ -129,6 +131,7 @@ private fun ConsentController(state: ConsentControllerState) {
             ListItem(
                 leadingContent = { Icon(Icons.Default.Gavel, "") },
                 headlineContent = { Text(stringResource(R.string.start_app_rules)) },
+                colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
                 modifier = Modifier.clickable {
                     AuthController.openRules()
                 }

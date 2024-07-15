@@ -26,11 +26,13 @@ fun ImageLoader.loadGif(
     onInit: (ImageLink) -> Unit = {}
 ) {
     if (gif.isEmpty()) {
+        // only base image
         ToolsThreads.main { vGifProgressBar?.visibility = View.INVISIBLE }
         val load = load(image)
         onInit.invoke(load)
         load.into(vImage)
     } else if (image.isNotEmpty()) {
+        // base image and gif
         val load = load(image)
         onInit.invoke(load)
         load.into(vImage) {
@@ -39,6 +41,7 @@ fun ImageLoader.loadGif(
             loadGif.holder(vImage.drawable).into(vImage, vGifProgressBar)
         }
     } else {
+        // only gif
         val load = load(gif)
         onInit.invoke(load)
         load.holder(vImage.drawable).into(vImage, vGifProgressBar)

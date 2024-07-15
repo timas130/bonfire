@@ -39,6 +39,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <com.sup.dev.android.views.settings.SettingsCheckBox
+                android:id="@+id/vNsfw"
+                android:layout_gravity="center|left"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <com.sup.dev.android.views.settings.Settings
                 android:id="@+id/vRubric"
                 android:layout_width="match_parent"

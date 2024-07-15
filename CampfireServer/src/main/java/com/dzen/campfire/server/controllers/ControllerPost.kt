@@ -1,8 +1,10 @@
 package com.dzen.campfire.server.controllers
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.account.AccountSettings
 import com.dzen.campfire.api.models.publications.post.*
 import com.dzen.campfire.api.tools.ApiException
+import com.dzen.campfire.server.rust.RustProfile
 import com.dzen.campfire.server.tables.TCollisions
 import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java.tools.ToolsBytes
@@ -10,6 +12,7 @@ import com.sup.dev.java.tools.ToolsCollections
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryRemove
+import com.sup.dev.java_pc.sql.SqlQuerySelect
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
 import com.sup.dev.java_pc.tools.ToolsImage
 
@@ -284,6 +287,7 @@ object ControllerPost {
                 page.size = page.insertBytes!!.size.toLong()
                 page.insertBytes = null
             }
+            else -> {}
         }
 
     }
@@ -317,8 +321,19 @@ object ControllerPost {
             is PageDownload -> {
                 ControllerResources.remove(page.resourceId)
             }
+            else -> {}
         }
-
     }
 
+    fun canSeeNsfwPosts(userId: Long, apiVersion: String, settings: AccountSettings = ControllerAccounts.getSettings(userId)): Boolean {
+        if (apiVersion == "3.0") return false
+        if (!settings.showNsfwPosts) return false
+        val mature = RustProfile.canSeeNsfw(userId)
+        return mature == null || mature
+    }
+    fun SqlQuerySelect.filterNsfw(userId: Long, apiVersion: String) = apply {
+        if (!canSeeNsfwPosts(userId, apiVersion)) {
+            where(TPublications.nsfw, "=", false)
+        }
+    }
 }

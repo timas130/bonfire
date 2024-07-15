@@ -194,7 +194,7 @@ pub struct UserContext {
 impl UserContext {
     /// Is this user an internal service
     ///
-    /// This is only checked by IP and you RFC 2119 MUST not
+    /// This is only checked by IP and you RFC 2119 MUST NOT
     /// blindly trust this.
     pub fn is_internal(&self) -> bool {
         match &self.ip {
@@ -563,7 +563,7 @@ pub trait AuthService {
     async fn get_meta_users() -> Result<MetaUsers, AuthError>;
 
     /// Update a user's name.
-    async fn change_name(user_id: i64, new_name: String) -> Result<(), AuthError>;
+    async fn change_name(user_id: i64, new_name: String, loose: bool) -> Result<(), AuthError>;
 
     /// Clean all leftover data that is no longer needed.
     async fn vacuum() -> Result<(), AuthError>;

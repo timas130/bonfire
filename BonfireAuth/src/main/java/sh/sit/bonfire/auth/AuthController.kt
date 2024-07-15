@@ -9,17 +9,19 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
+import com.apollographql.apollo3.cache.normalized.watch
 import com.dzen.campfire.api.tools.client.TokenProvider
 import com.posthog.PostHog
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.tools.ToolsTextAndroid
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
+import sh.sit.bonfire.auth.fragment.Me
+import sh.sit.bonfire.auth.integrity.IntegrityController
+import sh.sit.bonfire.images.ImagesController
 import sh.sit.schema.type.TfaType
 
 object AuthController : TokenProvider {
@@ -28,6 +30,28 @@ object AuthController : TokenProvider {
 
     fun init(openRules: () -> Unit) {
         this.openRules = openRules
+
+        ImagesController.init(SupAndroid.appContext!!)
+        IntegrityController.init(SupAndroid.appContext!!)
+        startUpdatingUser()
+    }
+
+    private var currentUserJob: Job? = null
+    private fun startUpdatingUser() {
+        if (currentUserJob?.isActive == true) return
+        currentUserJob = MainScope().launch {
+            authState.collectLatest {
+                if (it !is AuthenticatedAuthState) return@collectLatest
+                ApolloController.apolloClient
+                    .query(MeQuery())
+                    .addHttpHeader("Authorization", "Bearer ${it.accessToken}")
+                    .fetchPolicy(FetchPolicy.CacheOnly)
+                    .watch(fetchThrows = false, refetchThrows = false)
+                    .collect { resp ->
+                        _currentUserState.emit(resp.data?.me?.me)
+                    }
+            }
+        }
     }
 
     @Serializable
@@ -56,7 +80,7 @@ object AuthController : TokenProvider {
         .map<String?, AuthState?> { state -> state?.let { json.decodeFromString(it) } }
         .map { it ?: NoneAuthState }
 
-    private val _currentUserState = MutableStateFlow<MeQuery.Me?>(null)
+    private val _currentUserState = MutableStateFlow<Me?>(null)
     val currentUserState = _currentUserState.asStateFlow()
 
     suspend fun saveAuthState(authState: AuthState) {
@@ -69,13 +93,17 @@ object AuthController : TokenProvider {
         tryRefreshTokens()
         val state = authState.first()
         return if (state is AuthenticatedAuthState) {
-            val user = ApolloController.apolloClient
-                .query(MeQuery())
-                .addHttpHeader("Authorization", "Bearer ${state.accessToken}")
-                .fetchPolicy(FetchPolicy.CacheFirst)
-                .toFlow()
-                .map { it.data?.me }
-                .firstOrNull()
+            val user = try {
+                ApolloController.apolloClient
+                    .query(MeQuery())
+                    .addHttpHeader("Authorization", "Bearer ${state.accessToken}")
+                    .fetchPolicy(FetchPolicy.CacheFirst)
+                    .execute()
+                    .data?.me?.me
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return state.accessToken
+            }
 
             user?.let {
                 PostHog.identify(

@@ -5,7 +5,7 @@ import com.dzen.campfire.api.models.images.ImageRef
 class EventFandomChanged(
     val fandomId: Long,
     val name: String = "",
-    val imageId: Long = -1,
+    val image: ImageRef = ImageRef(),
     val imageTitle: ImageRef = ImageRef(),
     val imageTitleGif: ImageRef = ImageRef(),
 )

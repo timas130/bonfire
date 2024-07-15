@@ -19,7 +19,7 @@ import sh.sit.schema.pagination.Pagination
 object ApolloController {
     @OptIn(ApolloExperimental::class)
     val apolloClient: ApolloClient = ApolloClient.Builder()
-        .serverUrl("https://api.bonfire.moe/")
+        .serverUrl("https://api.bonfire.moe")
         .httpEngine(DefaultHttpEngine(
             OkHttpController.getClient(SupAndroid.appContext!!) {
                 addInterceptor(AuthInterceptor())

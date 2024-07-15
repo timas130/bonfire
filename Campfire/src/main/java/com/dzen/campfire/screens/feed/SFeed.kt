@@ -8,6 +8,7 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.screens.feed.filters.SplashFilters
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.app.CampfireConstants
+import com.sayzen.campfiresdk.compose.publication.post.CardPostProxy
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerScreenAnimations
 import com.sayzen.campfiresdk.controllers.ControllerSettings
@@ -144,8 +145,8 @@ class SFeed : Screen(R.layout.screen_feed), PostList {
 
     }
 
-    override fun contains(card: CardPost): Boolean {
-        return (pagerCardAdapter.get(vPager.currentItem) as PostList).contains(card)
+    override fun contains(card: CardPostProxy): Boolean {
+        return (pagerCardAdapter[vPager.currentItem] as PostList).contains(card)
     }
 
 

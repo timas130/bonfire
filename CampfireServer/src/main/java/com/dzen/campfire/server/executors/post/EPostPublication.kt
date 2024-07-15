@@ -19,7 +19,7 @@ import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
 
 
-class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, false, 0, 0, 0) {
+class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, false, 0, 0, 0, false) {
 
     private var fandom: Fandom? = null
     private var publication: PublicationPost? = null
@@ -119,6 +119,7 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
                     .update(TPublications.tag_4, pendingTime)
                     .update(TPublications.tag_6, rubricId)
                     .update(TPublications.closed, if (closed) 1 else 0)
+                    .update(TPublications.nsfw, nsfw)
                     .update(TPublications.tag_3, if (pendingTime > 0L && notifyFollowers && publication!!.tag_3 == 0L) 2 else "${TPublications.NAME}.${TPublications.tag_3}")
                     .where(TPublications.id, "=", publicationId))
 

@@ -5,6 +5,7 @@ import android.text.TextWatcher
 import android.text.style.UnderlineSpan
 import android.widget.EditText
 import android.widget.TextView
+import com.posthog.PostHog
 import io.noties.markwon.Markwon
 import io.noties.markwon.SoftBreakAddsNewLinePlugin
 import io.noties.markwon.editor.MarkwonEditor
@@ -15,6 +16,7 @@ import io.noties.markwon.ext.tasklist.TaskListPlugin
 import io.noties.markwon.html.HtmlPlugin
 import io.noties.markwon.simple.ext.SimpleExtPlugin
 import me.saket.bettermovementmethod.BetterLinkMovementMethod
+import sh.sit.bonfire.formatting.core.BonfireFormatter
 import java.util.concurrent.Executors
 
 object BonfireMarkdown {
@@ -52,21 +54,22 @@ object BonfireMarkdown {
         markwonInline = createMarkwon(context, inlineOnly = true)
     }
 
-    // fixme: maybe don't do this?
-    private val shortReplacerRegex: Regex = Regex("([^]][^(]|^.?)https://bonfire\\.moe/r/")
-    private fun replaceLongLink(text: String): String {
-        return text.replace(shortReplacerRegex) { match -> match.groupValues[1] + "@" }
-    }
-
     fun setMarkdown(view: TextView, text: String) {
-        markwon.setMarkdown(view, replaceLongLink(text))
+        val start = System.currentTimeMillis()
+        markwon.setMarkdown(view, BonfireFormatter.replaceLongLink(text))
+
+        PostHog.capture("markdown_parse", properties = mapOf(
+            "length" to text.length,
+            "time_taken" to (System.currentTimeMillis() - start)
+        ))
+
         view.post {
             view.movementMethod = BetterLinkMovementMethod.getInstance()
         }
     }
 
     fun setMarkdownInline(view: TextView, text: String) {
-        markwonInline.setMarkdown(view, replaceLongLink(text))
+        markwonInline.setMarkdown(view, BonfireFormatter.replaceLongLink(text))
         view.post {
             view.movementMethod = BetterLinkMovementMethod.getInstance()
         }

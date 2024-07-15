@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_open_fail">Не удалось открыть ссылку. У тебя вообще есть браузер?</string>
+</resources>

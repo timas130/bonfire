@@ -519,6 +519,13 @@ object ControllerSettings {
             onSettingsUpdated()
         }
 
+    var showNsfwPosts: Boolean
+        get() = accountSettings.showNsfwPosts
+        set(b) {
+            accountSettings.showNsfwPosts = b
+            onSettingsUpdated()
+        }
+
     //
     //  Account
     //

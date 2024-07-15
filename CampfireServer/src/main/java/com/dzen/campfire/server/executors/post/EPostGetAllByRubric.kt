@@ -4,6 +4,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.requests.post.RPostGetAllByRubric
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerOptimizer
+import com.dzen.campfire.server.controllers.ControllerPost.filterNsfw
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java_pc.sql.Database
@@ -20,6 +21,7 @@ class EPostGetAllByRubric : RPostGetAllByRubric(0, 0) {
         val select = ControllerPublications.instanceSelect(apiAccount.id)
                 .where(TPublications.tag_6, "=", rubricId)
                 .where(TPublications.status, "=", API.STATUS_PUBLIC)
+                .filterNsfw(apiAccount.id, requestApiVersion)
                 .sort(TPublications.date_create, false)
                 .offset_count(offset, COUNT)
 

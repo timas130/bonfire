@@ -18,10 +18,9 @@ import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.compose.profile.badges.BadgeFlyout
 import com.sayzen.campfiresdk.compose.util.shimmerExt
 import com.sayzen.campfiresdk.fragment.BadgeShelfIcon
-import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.valentinilk.shimmer.Shimmer
-import sh.sit.bonfire.auth.components.RemoteImage
-import sh.sit.bonfire.auth.load
+import sh.sit.bonfire.images.RemoteImage
+import sh.sit.bonfire.images.toRef
 
 @Composable
 fun RowScope.BadgeIcon(
@@ -60,7 +59,7 @@ fun RowScope.BadgeIcon(
         ) {
             if (badgeIcon != null) {
                 RemoteImage(
-                    link = ImageLoader.load(badgeIcon.image.ui),
+                    link = badgeIcon.image.ui.toRef(),
                     contentDescription = badgeIcon.name,
                     modifier = Modifier
                         .padding(16.dp)

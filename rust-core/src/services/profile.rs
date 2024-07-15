@@ -5,7 +5,7 @@ use crate::page_info::Paginated;
 use crate::services::auth::AuthError;
 use crate::services::level::{LevelCategory, LevelError};
 use crate::util::{anyhow_clone, anyhow_unknown, sqlx_clone, sqlx_unknown};
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, NaiveDate, Utc};
 use educe::Educe;
 use serde::{Deserialize, Serialize};
 use strum_macros::EnumIter;
@@ -22,6 +22,8 @@ pub enum ProfileError {
     NotYourBadge,
     #[error("BadgeNotFound: This badge does not exist")]
     BadgeNotFound,
+    #[error("BirthdayAlreadySet: You have already set your birthday")]
+    BirthdayAlreadySet,
 
     #[error("{0}")]
     Auth(#[from] AuthError),
@@ -187,6 +189,21 @@ pub trait ProfileService {
         user_id: i64,
         color: Option<u32>,
     ) -> Result<AccountCustomization, ProfileError>;
+
+    // == birthday ==
+
+    /// Set the real birthday of a user (for age restricting purposes)
+    async fn set_birthday(user_id: i64, birthday: NaiveDate) -> Result<(), ProfileError>;
+
+    /// Get the real birthday of a user
+    ///
+    /// Returns `None` if a birthday hasn't been set.
+    async fn get_birthday(user_id: i64) -> Result<Option<NaiveDate>, ProfileError>;
+
+    /// Get whether the user is at least `age` years old
+    ///
+    /// Returns `None` if a birthday hasn't been set.
+    async fn is_age_at_least(user_id: i64, age: u32) -> Result<Option<bool>, ProfileError>;
 }
 
 pub struct Profiles;

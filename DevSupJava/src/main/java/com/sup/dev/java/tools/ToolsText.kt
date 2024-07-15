@@ -393,7 +393,7 @@ object ToolsText {
         return hexToBytes(macStringV)
     }
 
-    private val USERNAME_CHARS = LATIN + LATIN_UPPER + NUMBERS + charArrayOf('_')
+    private val USERNAME_CHARS = LATIN + LATIN_UPPER + NUMBERS
 
     fun isValidUsername(name: String): Boolean {
         return (3..25).contains(name.length)

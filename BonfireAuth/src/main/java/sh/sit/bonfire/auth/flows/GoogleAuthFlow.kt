@@ -8,11 +8,14 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.posthog.PostHog
 import com.sup.dev.android.tools.ToolsIntent
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.withContext
 import sh.sit.bonfire.auth.AuthController
 import sh.sit.bonfire.auth.LoginOAuthMutation
 import sh.sit.bonfire.auth.R
 import sh.sit.bonfire.auth.apollo
+import sh.sit.bonfire.auth.integrity.IntegrityController
+import sh.sit.schema.type.IntentionType
 import sh.sit.schema.type.OauthLoginInput
 import sh.sit.schema.type.OauthProvider
 import kotlin.coroutines.resume
@@ -144,5 +147,11 @@ class GoogleAuthFlow(context: Context) : AuthFlow(context) {
                 email = "",
             )
         )
+
+        try {
+            IntegrityController.sendIntegrityToken(MainScope(), IntentionType.GENERIC)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }

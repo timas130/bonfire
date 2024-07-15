@@ -408,6 +408,7 @@ object ControllerPublications {
                 TPublications.parent_publication_id, publication.parentPublicationId,
                 TPublications.publication_category, publication.category,
                 TPublications.publication_json, publication.jsonDB(true, Json()),
+                TPublications.nsfw, publication.nsfw,
                 TPublications.status, API.STATUS_PUBLIC,
                 TPublications.tag_1, publication.tag_1,
                 TPublications.tag_2, publication.tag_2,
@@ -504,7 +505,8 @@ object ControllerPublications {
                 TPublications.FANDOM_NAME,
                 TPublications.FANDOM_IMAGE_ID,
                 TPublications.parent_fandom_closed,
-                TPublications.FANDOM_KARMA_COF
+                TPublications.FANDOM_KARMA_COF,
+                TPublications.nsfw
         )
     }
 
@@ -541,6 +543,8 @@ object ControllerPublications {
         publication.creator = ControllerAccounts.instance(v)
         publication.fandom = Fandom(v.nextLongOrZero(), v.nextLongOrZero(), v.nextMayNull()
                 ?: "", v.nextLongOrZero(), v.nextLongOrZero() == 1L, v.nextLongOrZero())
+
+        publication.nsfw = v.next()
 
         publication.jsonDB(false, publication.jsonDB!!)
 

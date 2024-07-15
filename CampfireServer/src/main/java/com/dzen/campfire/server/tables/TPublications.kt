@@ -33,6 +33,7 @@ object TPublications {
     val publication_reports_count = "unit_reports_count"
     val publication_category = "unit_category"
     val fandom_key = "fandom_key"
+    val nsfw = "nsfw"
 
     val FANDOM_NAME = "(SELECT " + TFandoms.name + " FROM " + TFandoms.NAME + " WHERE " + TFandoms.id + "=" + fandom_id + ")"
     val FANDOM_IMAGE_ID = "(SELECT " + TFandoms.image_id + " FROM " + TFandoms.NAME + " WHERE " + TFandoms.id + "=" + fandom_id + ")"

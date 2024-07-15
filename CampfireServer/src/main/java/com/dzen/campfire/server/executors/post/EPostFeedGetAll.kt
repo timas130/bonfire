@@ -3,6 +3,7 @@ package com.dzen.campfire.server.executors.post
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.requests.post.RPostFeedGetAll
 import com.dzen.campfire.server.controllers.ControllerAccounts
+import com.dzen.campfire.server.controllers.ControllerPost.filterNsfw
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.tables.TAccounts
 import com.dzen.campfire.server.tables.TPublications
@@ -23,6 +24,7 @@ class EPostFeedGetAll : RPostFeedGetAll(0, emptyArray(), false, 0, false, false)
                 .where(SqlWhere.WhereIN(TPublications.language_id, arrayOf(*languagesId, -1L)))
                 .where(TPublications.status, "=", API.STATUS_PUBLIC)
                 .where(TPublications.date_create, "<", if (offsetDate == 0L) Long.MAX_VALUE else offsetDate)
+                .filterNsfw(apiAccount.id, requestApiVersion)
                 .count(COUNT)
                 .sort(TPublications.date_create, false)
 

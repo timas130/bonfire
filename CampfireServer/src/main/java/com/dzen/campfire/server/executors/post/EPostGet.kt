@@ -3,11 +3,11 @@ package com.dzen.campfire.server.executors.post
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostGet
-import com.dzen.campfire.server.controllers.ControllerPublications
-import com.dzen.campfire.server.tables.TPublications
 import com.dzen.campfire.api.tools.ApiException
-import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerFandom
+import com.dzen.campfire.server.controllers.ControllerPublications
+import com.dzen.campfire.server.rust.RustProfile
+import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java_pc.sql.Database
 
 class EPostGet : RPostGet(0) {
@@ -35,6 +35,9 @@ class EPostGet : RPostGet(0) {
                 throw ApiException(API.ERROR_GONE)
             }
         }
+
+        val canSeeNsfw = RustProfile.canSeeNsfw(apiAccount.id)
+        if (canSeeNsfw == false) throw ApiException(API.ERROR_ACCESS)
 
         ControllerPublications.loadSpecDataForPosts(apiAccount.id, arrayOf(publication))
 

@@ -84,6 +84,51 @@
 
             </com.sup.dev.android.views.views.layouts.LayoutMaxSizes>
 
+            <eightbitlab.com.blurview.BlurView
+                android:id="@+id/vNsfwOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:minHeight="150dp"
+                    android:maxHeight="400dp"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/nsfw_title"
+                        android:textAlignment="center"
+                        android:layout_marginBottom="8dp"
+                        style="@style/TextAppearance.AppCompat.Large" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                    >
+                        <com.sup.dev.android.views.views.ViewButton
+                            style="@style/Button.Text"
+                            android:id="@+id/vNsfwButton1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <com.sup.dev.android.views.views.ViewButton
+                            style="@style/Button.Text"
+                            android:id="@+id/vNsfwButton2"
+                            android:layout_width="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </eightbitlab.com.blurview.BlurView>
 
         </FrameLayout>
 

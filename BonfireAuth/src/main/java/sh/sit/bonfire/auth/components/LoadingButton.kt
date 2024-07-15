@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.onSizeChanged
@@ -67,11 +68,9 @@ fun LoadingButton(
         modifier = modifier
             .then(if (buttonSize != DpSize.Zero) Modifier.size(buttonSize) else Modifier)
             .onSizeChanged { size ->
-                if (buttonSize == DpSize.Zero) {
+                if (buttonSize == DpSize.Zero && !isLoading) {
                     buttonSize = with(density) {
-                        (size
-                            .toSize()
-                            .toDpSize()) - DpSize(width = 0.dp, height = contentPadding.calculateBottomPadding())
+                        (size.toSize().toDpSize()) - DpSize(width = 0.dp, height = contentPadding.calculateBottomPadding())
                     }
                 }
             },
@@ -86,6 +85,7 @@ fun LoadingButton(
         AnimatedContent(
             targetState = isLoading,
             label = "LoadingButtonContent",
+            contentAlignment = Alignment.Center,
         ) { state ->
             if (state) {
                 CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp)

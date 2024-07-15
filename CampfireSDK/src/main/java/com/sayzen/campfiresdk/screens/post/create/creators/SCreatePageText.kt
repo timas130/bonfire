@@ -13,7 +13,6 @@ import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.controllers.ControllerMention
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
-import com.sayzen.campfiresdk.models.cards.post_pages.CardPageText
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
@@ -28,7 +27,7 @@ import com.sup.dev.java.tools.ToolsText
 import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class SCreatePageText(
-        private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((Card) -> Unit)) -> Unit,
+        private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, onFinish: ((Card) -> Unit)) -> Unit,
         private val requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page) -> Unit) -> Unit,
         private val card: CardPage?,
         private val oldPage: PageText?
@@ -210,7 +209,7 @@ class SCreatePageText(
         page.icon = icon
         page.newFormatting = newFormatting
         if (oldPage == null)
-            requestPutPage.invoke(page, this, ToolsView.showProgressDialog(), { page1 -> CardPageText(null, page1 as PageText) }) {}
+            requestPutPage.invoke(page, this, ToolsView.showProgressDialog()) {}
         else
             requestChangePage.invoke(page, card!!, this, ToolsView.showProgressDialog()) {}
     }

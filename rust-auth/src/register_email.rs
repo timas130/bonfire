@@ -15,6 +15,8 @@ use std::time::Duration;
 
 lazy_static! {
     static ref USERNAME_REGEX: regex::Regex = regex::Regex::new(r"^[a-zA-Z0-9]{3,25}$").unwrap();
+    static ref USERNAME_LOOSE_REGEX: regex::Regex =
+        regex::Regex::new(r"^[a-zA-Z0-9#]{3,25}$").unwrap();
     static ref NUMBERS_ONLY_REGEX: regex::Regex = regex::Regex::new(r"^[0-9]+$").unwrap();
 }
 
@@ -24,8 +26,13 @@ impl AuthServer {
     pub(crate) fn is_email_valid(email: &str) -> bool {
         fast_chemail::is_valid_email(email)
     }
+    /// Checks if the username (suggested by the user) is valid
     pub(crate) fn is_username_valid(username: &str) -> bool {
         USERNAME_REGEX.is_match(username) && !NUMBERS_ONLY_REGEX.is_match(username)
+    }
+    /// Same as [`AuthServer::is_username_valid`], but also allows `#`
+    pub(crate) fn is_username_valid_loose(username: &str) -> bool {
+        USERNAME_LOOSE_REGEX.is_match(username) && !NUMBERS_ONLY_REGEX.is_match(username)
     }
     pub(crate) fn is_password_valid(password: &str) -> bool {
         PASSWORD_LENGTH.contains(&password.len())

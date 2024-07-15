@@ -21,6 +21,7 @@ fun EmptyCard(text: String) {
             .padding(bottom = 16.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(Icons.Default.Clear, null)
         Text(text)

@@ -677,6 +677,7 @@ dependencies = [
  "b-level",
  "b-notification",
  "b-profile",
+ "b-security",
  "c-auth",
  "c-core",
  "c-email",
@@ -714,6 +715,16 @@ version = "0.1.0"
 dependencies = [
  "c-core",
  "cached",
+ "sqlx",
+]
+
+[[package]]
+name = "b-security"
+version = "0.1.0"
+dependencies = [
+ "c-core",
+ "google-playintegrity1",
+ "nanoid",
  "sqlx",
 ]
 
@@ -1970,6 +1981,26 @@ name = "google-fcm1"
 version = "5.0.4+20240227"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6450dc787c4383cb1437c6ce89b192b6d559ab420a3ffcba5b2d6bdb9047958e"
+dependencies = [
+ "anyhow",
+ "google-apis-common",
+ "http 0.2.11",
+ "hyper 0.14.28",
+ "hyper-rustls 0.24.2",
+ "itertools 0.10.5",
+ "mime",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tower-service",
+ "url 1.7.2",
+]
+
+[[package]]
+name = "google-playintegrity1"
+version = "5.0.4+20240304"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7760922fff66a6123d2105c479a24d4ea35a55a9020e302b6ff1da7130f3928b"
 dependencies = [
  "anyhow",
  "google-apis-common",

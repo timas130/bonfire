@@ -7,6 +7,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.screens.intro.SIntro
 import com.google.firebase.FirebaseApp
+import com.posthog.PostHog
 import com.posthog.android.PostHogAndroid
 import com.posthog.android.PostHogAndroidConfig
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
@@ -59,6 +60,18 @@ class App : Application() {
         ).apply {
             optOut = !canSendAnalytics()
         })
+        Navigator.addOnScreenChanged {
+            val screen = Navigator.getCurrent()
+            if (screen != null) {
+                PostHog.screen(
+                    screen.javaClass.simpleName,
+                    mapOf(
+                        "navigation_visible" to screen.isNavigationVisible,
+                    )
+                )
+            }
+            false // do not remove from cb list
+        }
 
         initSdk()
 

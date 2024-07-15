@@ -5,6 +5,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
 import com.sayzen.campfiresdk.compose.auth.AccountSecurityScreen
+import com.sayzen.campfiresdk.compose.settings.ExperimentsScreen
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.ControllerSettings
@@ -34,6 +35,7 @@ class SSettings : Screen(R.layout.screen_settings_actions) {
 
     private val vStyle: Settings = findViewById(R.id.vStyle)
     private val vSecurity: Settings = findViewById(R.id.vSecurity)
+    private val vExperiments: Settings = findViewById(R.id.vExperiments)
     private val vLongPlus: Settings = findViewById(R.id.vLongPlus)
     private val vFastPost: Settings = findViewById(R.id.vFastPost)
     private val vLanguage: Settings = findViewById(R.id.vLanguage)
@@ -44,6 +46,7 @@ class SSettings : Screen(R.layout.screen_settings_actions) {
     private val vAnonRates: SettingsSwitcher = findViewById(R.id.vAnonRates)
     private val vConferenceAllow: SettingsSwitcher = findViewById(R.id.vConferenceAllow)
     private val vHideBlacklist: SettingsSwitcher = findViewById(R.id.vHideBlacklist)
+    private val vShowNsfw: SettingsSwitcher = findViewById(R.id.vShowNsfw)
     private val vAllowAnalytics: SettingsSwitcher = findViewById(R.id.vAllowAnalytics)
 
     init {
@@ -53,6 +56,8 @@ class SSettings : Screen(R.layout.screen_settings_actions) {
 
         vSecurity.setTitle(t(API_TRANSLATE.app_security))
         vStyle.setTitle(t(API_TRANSLATE.app_style))
+        vExperiments.setTitle(R.string.experiments_title)
+        vExperiments.setSubtitle(R.string.experiments_description)
         vAppTitle.setTitle(t(API_TRANSLATE.settings_app))
         vLanguage.setTitle(t(API_TRANSLATE.settings_language))
         vAnonRates.setTitle(t(API_TRANSLATE.settings_anon_rate))
@@ -68,6 +73,7 @@ class SSettings : Screen(R.layout.screen_settings_actions) {
         vConferenceAllow.setTitle(t(API_TRANSLATE.settings_allow_adding_to_conferences))
         vPrivacyTitle.setTitle(t(API_TRANSLATE.settings_privacy_title))
         vHideBlacklist.setTitle(t(API_TRANSLATE.settings_privacy_hide_blacklist))
+        vShowNsfw.setTitle(t(API_TRANSLATE.settings_show_nsfw))
         vAllowAnalytics.setTitle(R.string.consent_analytics)
         vAllowAnalytics.setSubtitle(R.string.consent_analytics_desc)
 
@@ -93,12 +99,14 @@ class SSettings : Screen(R.layout.screen_settings_actions) {
         }
         vSecurity.setOnClickListener { Navigator.to(AccountSecurityScreen()) }
         vStyle.setOnClickListener { Navigator.to(SSettingsStyle()) }
+        vExperiments.setOnClickListener { Navigator.to(ExperimentsScreen()) }
         vVoiceAutoLock.setOnClickListener { ControllerSettings.voiceMessagesAutoLock = vVoiceAutoLock.isChecked() }
         vVoiceAutoSend.setOnClickListener { ControllerSettings.voiceMessagesAutoSend = vVoiceAutoSend.isChecked() }
         vVoiceIgnore.setOnClickListener { ControllerSettings.voiceMessagesIgnore = vVoiceIgnore.isChecked() }
         vAnonRates.setOnClickListener { ControllerSettings.anonRates = vAnonRates.isChecked() }
         vConferenceAllow.setOnClickListener { ControllerSettings.allowAddingToConferences = vConferenceAllow.isChecked() }
         vHideBlacklist.setOnClickListener { ControllerSettings.hideBlacklistedPubs = vHideBlacklist.isChecked() }
+        vShowNsfw.setOnClickListener { ControllerSettings.showNsfwPosts = vShowNsfw.isChecked() }
         vAllowAnalytics.setOnClickListener {
             runBlocking { AuthController.setAnalyticsConsent(vAllowAnalytics.isChecked()) }
         }
@@ -116,6 +124,7 @@ class SSettings : Screen(R.layout.screen_settings_actions) {
         vAnonRates.setChecked(ControllerSettings.anonRates)
         vConferenceAllow.setChecked(ControllerSettings.allowAddingToConferences)
         vHideBlacklist.setChecked(ControllerSettings.hideBlacklistedPubs)
+        vShowNsfw.setChecked(ControllerSettings.showNsfwPosts)
         vAllowAnalytics.setChecked(runBlocking { AuthController.haveAnalyticsConsent.first() })
 
         vAnonRates.isEnabled = ControllerApi.can(API.LVL_ANONYMOUS)

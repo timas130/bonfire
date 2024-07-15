@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.sup.dev.android.libs.image_loader.ImageLink
+import com.dzen.campfire.api.ApiResources
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import sh.sit.bonfire.auth.AuthController
@@ -19,13 +19,12 @@ import sh.sit.bonfire.auth.R
 import sh.sit.bonfire.auth.ResendVerificationMutation
 import sh.sit.bonfire.auth.apollo
 import sh.sit.bonfire.auth.components.FormScreen
-import sh.sit.bonfire.auth.components.RemoteImage
 import sh.sit.bonfire.auth.components.TextLoadingButton
+import sh.sit.bonfire.images.RemoteImage
 
 @Composable
 fun VerifyEmailScreen(
     email: String,
-    imageLink: ImageLink,
     onBack: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -88,7 +87,7 @@ fun VerifyEmailScreen(
         snackbarHostState = snackbarHostState,
     ) {
         RemoteImage(
-            link = imageLink,
+            link = ApiResources.IMAGE_BACKGROUND_6,
             contentDescription = null,
             modifier = Modifier
                 .height(128.dp)

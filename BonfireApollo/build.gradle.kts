@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.jetbrains.kotlin.jvm")
+    kotlin("jvm")
     id("com.apollographql.apollo3").version("3.8.4")
 }
 
@@ -24,6 +24,7 @@ apollo {
         mapScalar("JSONObject", "kotlin.String", "sh.sit.bonfire.schema.JsonAdapter")
         mapScalar("JSON", "kotlin.String", "sh.sit.bonfire.schema.JsonAdapter")
         mapScalar("DateTime", "sh.sit.bonfire.schema.DateTime", "sh.sit.bonfire.schema.DateTime.adapter")
+        mapScalar("NaiveDate", "sh.sit.bonfire.schema.NaiveDate", "sh.sit.bonfire.schema.NaiveDate.adapter")
     }
 }
 repositories {

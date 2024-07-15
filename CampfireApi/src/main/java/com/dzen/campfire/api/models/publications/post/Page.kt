@@ -9,7 +9,9 @@ import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonPolimorf
 
 
-abstract class Page : JsonPolimorf, ImageHolder {
+sealed class Page : JsonPolimorf, ImageHolder {
+    // @ client internal
+    var index = 0
 
     override fun json(inp: Boolean, json: Json): Json {
         if (inp) json.put(J_PAGE_TYPE, getType())
@@ -53,39 +55,34 @@ abstract class Page : JsonPolimorf, ImageHolder {
         //
 
         @JvmStatic
+        fun instance(pageType: Long): Page {
+            return when (pageType) {
+                API.PAGE_TYPE_TEXT -> PageText()
+                API.PAGE_TYPE_IMAGE -> PageImage()
+                API.PAGE_TYPE_IMAGES -> PageImages()
+                API.PAGE_TYPE_LINK -> PageLink()
+                API.PAGE_TYPE_QUOTE -> PageQuote()
+                API.PAGE_TYPE_SPOILER -> PageSpoiler()
+                API.PAGE_TYPE_POLLING -> PagePolling()
+                API.PAGE_TYPE_VIDEO -> PageVideo()
+                API.PAGE_TYPE_TABLE -> PageTable()
+                API.PAGE_TYPE_DOWNLOAD -> PageDownload()
+                API.PAGE_TYPE_CAMPFIRE_OBJECT -> PageCampfireObject()
+                API.PAGE_TYPE_USER_ACTIVITY -> PageUserActivity()
+                API.PAGE_TYPE_LINK_IMAGE -> PageLinkImage()
+                API.PAGE_TYPE_CODE -> PageCode()
+                else -> PageText().apply { text = "[null]" }
+            }
+        }
+
+        @JvmStatic
         fun instance(json: Json): Page {
             val type = json.get<Long>(J_PAGE_TYPE)!!
-            var isNull = false
 
-            val page: Page
-            when (type) {
-                API.PAGE_TYPE_TEXT -> page = PageText()
-                API.PAGE_TYPE_IMAGE -> page = PageImage()
-                API.PAGE_TYPE_IMAGES -> page = PageImages()
-                API.PAGE_TYPE_LINK -> page = PageLink()
-                API.PAGE_TYPE_QUOTE -> page = PageQuote()
-                API.PAGE_TYPE_SPOILER -> page = PageSpoiler()
-                API.PAGE_TYPE_POLLING -> page = PagePolling()
-                API.PAGE_TYPE_VIDEO -> page = PageVideo()
-                API.PAGE_TYPE_TABLE -> page = PageTable()
-                API.PAGE_TYPE_DOWNLOAD -> page = PageDownload()
-                API.PAGE_TYPE_CAMPFIRE_OBJECT -> page = PageCampfireObject()
-                API.PAGE_TYPE_USER_ACTIVITY -> page = PageUserActivity()
-                API.PAGE_TYPE_LINK_IMAGE -> page = PageLinkImage()
-                API.PAGE_TYPE_CODE -> page = PageCode()
-                else -> {
-                    page = PageText()
-                    isNull = true
-                }
-            }
-
+            val page = instance(type)
             page.json(false, json)
-            if (isNull) {
-                (page as PageText).text = "[null]"
-                page.size = PageText.SIZE_0
-            }
+
             return page
         }
     }
-
 }

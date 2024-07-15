@@ -11,12 +11,11 @@ import com.dzen.campfire.api.models.publications.post.Page
 import com.dzen.campfire.api.models.publications.post.PageImage
 import com.dzen.campfire.api.models.publications.post.PageText
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerPost
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
-import com.sayzen.campfiresdk.models.cards.post_pages.CardPageImage
-import com.sayzen.campfiresdk.models.cards.post_pages.CardPageText
 import com.sayzen.campfiresdk.screens.post.create.creators.CardMove
 import com.sayzen.campfiresdk.screens.post.create.creators.SplashAdd
 import com.sup.dev.android.libs.screens.Screen
@@ -40,7 +39,8 @@ class PostCreator(
         val requestRemovePage: (Array<Int>, () -> Unit) -> Unit,
         val requestChangePage: (Splash?, Page, Int, (Page) -> Unit) -> Unit,
         val requestMovePage: (Int, Int, () -> Unit) -> Unit
-):PagesContainer {
+) : PagesContainer {
+    private val composeMode = PostHog.isFeatureEnabled("compose_post")
 
     enum class ActionType {
         STOP, ADD
@@ -62,9 +62,10 @@ class PostCreator(
     init {
 
         widgetAdd = SplashAdd(
-                { page, screen, widget, mapper, onFinish -> putPage(page, screen, widget, mapper, onFinish) },
-                { page, card, screen, widget, onFinish -> changePage(page, card, screen, widget, onFinish) }
-                , onBackEmptyAndNewerAdd)
+            requestPutPage = ::putPage,
+            requestChangePage = ::changePage,
+            onBackEmptyAndNewerAdd = onBackEmptyAndNewerAdd
+        )
         adapter = RecyclerCardAdapter()
         adapter.addItemsChangeListener { updateFinishEnabled() }
         adapter.add(CardSpace(72))
@@ -73,7 +74,7 @@ class PostCreator(
         vRecycler.adapter = adapter
         vRecycler.scrollToPosition(adapter.size() - 1)
 
-        for (p in oldPages) addPage(CardPage.instance(this, p))
+        for (p in oldPages) addPage(CardPage.instance(this, p, composeMode))
 
         vAdd.setOnClickListener { onFabClicked() }
 
@@ -104,7 +105,15 @@ class PostCreator(
     //
 
     private fun addPage(c: CardPage) {
-        adapter.add(adapter.size() - 1, c.setEditMod(true, { c1: CardPage -> this.startMove(c1) }, { c2: CardPage -> widgetAdd.changePage(c2) }, { c3: CardPage -> this.removePage(c3) }))
+        adapter.add(
+            adapter.size() - 1,
+            c.setEditMod(
+                editMode = true,
+                onMoveClicked = { c1: CardPage -> this.startMove(c1) },
+                onChangeClicked = { c2: CardPage -> widgetAdd.changePage(c2) },
+                onRemoveClicked = { c3: CardPage -> this.removePage(c3) }
+            )
+        )
         ControllerPost.openAllSpoilers(adapter)
     }
 
@@ -154,10 +163,9 @@ class PostCreator(
             widgetAdd.asSheetShow()
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun <K : Page, N : CardPage> onPageAdd(screen: Screen?, pages: Array<Page>, mapper: (K) -> N): CardPage {
+    private fun onPageAdd(screen: Screen?, pages: Array<Page>): CardPage {
         if (screen != null) Navigator.remove(screen)
-        val card = mapper.invoke(pages[0] as K)
+        val card = CardPage.instance(this, pages[0], composeMode)
         addPage(card)
         ToolsThreads.main(200) { vRecycler.scrollToPosition((vRecycler.adapter as RecyclerCardAdapter).indexOf(card) + 1) }
         return card
@@ -174,12 +182,12 @@ class PostCreator(
     //  Requests
     //
 
-    private fun putPage(page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage) -> Unit)) {
+    private fun putPage(page: Page, screen: Screen?, splash: Splash?, onFinish: ((CardPage) -> Unit)) {
         newerAdd = false
         screen?.isEnabled = false
 
         requestPutPage.invoke(splash, arrayOf(page), { pages ->
-            val card = onPageAdd(screen, pages, mapper)
+            val card = onPageAdd(screen, pages)
             onFinish.invoke(card)
         }, {
             screen?.isEnabled = true
@@ -225,9 +233,9 @@ class PostCreator(
         val page = PageText()
         page.text = text
         page.size = PageText.SIZE_0
-        putPage(page, null, null, { CardPageText(this, it as PageText) }, {
+        putPage(page, null, null) {
             onAdd.invoke()
-        })
+        }
     }
 
     fun addImage(image: Uri, onAdd: () -> Unit) {
@@ -248,9 +256,9 @@ class PostCreator(
                 }
                 page.insertBytes = ToolsBitmap.toBytes(ToolsBitmap.keepMaxSides(it, API.PAGE_IMAGE_SIDE), API.PAGE_IMAGE_WEIGHT)
                 ToolsThreads.main {
-                    putPage(page, null, w, { CardPageImage(this, it as PageImage) }, {
+                    putPage(page, null, w) {
                         onAdd.invoke()
-                    })
+                    }
                 }
             }, {
                 w.hide()
@@ -271,9 +279,9 @@ class PostCreator(
             val page = PageImage()
             page.insertBytes = ToolsBitmap.toBytes(ToolsBitmap.keepMaxSides(image, API.PAGE_IMAGE_SIDE), API.PAGE_IMAGE_WEIGHT)
             ToolsThreads.main {
-                putPage(page, null, w, { CardPageImage(this, it as PageImage) }, {
+                putPage(page, null, w) {
                     onAdd.invoke()
-                })
+                }
             }
         }
     }

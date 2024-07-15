@@ -1,12 +1,12 @@
 package com.sup.dev.android.views.cards
 
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.support.adapters.CardAdapter
 import com.sup.dev.android.views.support.adapters.CardAdapterStub
-import com.sup.dev.java.libs.debug.Debug
 
 abstract class Card(
         private val layout: Int
@@ -64,6 +64,11 @@ abstract class Card(
         return this.view
     }
 
+    fun setViewOverride(view: View) {
+        this.view = view
+        view.tag = this
+    }
+
     fun remove() {
         adapter.remove(this)
     }
@@ -74,6 +79,9 @@ abstract class Card(
 
     open fun instanceView(vParent: ViewGroup): View {
         return if (layout > 0) ToolsView.inflate(vParent, layout) else instanceView()
+    }
+    open fun instanceView(context: Context): View {
+        return if (layout > 0) ToolsView.inflate(context, layout) else instanceView()
     }
 
     open fun setCardAdapter(adapter: CardAdapter?) {

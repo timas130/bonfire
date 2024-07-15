@@ -4,8 +4,11 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Build.VERSION_CODES
+import android.util.Log
 import com.google.net.cronet.okhttptransport.CronetInterceptor
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import org.chromium.net.CronetEngine
 import java.util.concurrent.TimeUnit
 
@@ -23,6 +26,14 @@ object OkHttpController {
 
         return OkHttpClient.Builder()
             .apply(builderHook)
+            .addInterceptor(object : Interceptor {
+                override fun intercept(chain: Interceptor.Chain): Response {
+                    Log.i("OkHttpController", "sending request url=${chain.request().url} method=${chain.request().method}")
+                    val resp = chain.proceed(chain.request())
+                    Log.i("OkHttpController", "response url=${chain.request().url} protocol=${resp.protocol}")
+                    return resp
+                }
+            })
             .addInterceptor(CronetInterceptor.newBuilder(cronetEngine).build())
             .connectTimeout(5000, TimeUnit.MILLISECONDS)
             .readTimeout(5000, TimeUnit.MILLISECONDS)

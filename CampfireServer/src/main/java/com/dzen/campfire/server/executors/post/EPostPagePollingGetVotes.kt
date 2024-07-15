@@ -1,17 +1,10 @@
 package com.dzen.campfire.server.executors.post
 
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.models.publications.post.Page
-import com.dzen.campfire.api.models.publications.post.PagePolling
-import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostPagePollingGetVotes
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerAccounts
-import com.dzen.campfire.server.controllers.ControllerPublications
-import com.dzen.campfire.server.controllers.ControllerWiki
-import com.dzen.campfire.server.tables.TAccounts
 import com.dzen.campfire.server.tables.TCollisions
-import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQuerySelect
 
@@ -35,7 +28,9 @@ class EPostPagePollingGetVotes : RPostPagePollingGetVotes(0, 0, 0, 0, 0) {
             TCollisions.OWNER_KARMA_30,
         )
             .where(TCollisions.collision_type, "=", API.COLLISION_PAGE_POLLING_VOTE)
-            .where(TCollisions.collision_id, "=", pollingId))
+            .where(TCollisions.collision_id, "=", pollingId)
+            .count(30)
+            .offset(offset.toLong()))
 
         val result = Array(t.rowsCount) { PollingResultsItem() }
         for (row in result) {

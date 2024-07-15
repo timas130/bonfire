@@ -25,7 +25,7 @@ impl InternalChangeNameMutation {
         let user_id = user_id.try_into().map_err(|_| RespError::InvalidId)?;
 
         req.auth
-            .change_name(context::current(), user_id, new_name)
+            .change_name(context::current(), user_id, new_name, true)
             .await??;
 
         Ok(User::by_id(ctx, user_id)

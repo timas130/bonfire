@@ -97,6 +97,7 @@ abstract class Notification : JsonPolimorf, ImageHolder {
                 API.NOTIF_FANDOM_REMOVE_CANCEL -> notification = NotificationFandomRemoveCancel()
                 API.NOTIF_ACCOUNT_ADMIN_VOTE_CANCELED_FOR_USER -> notification = NotificationAccountAdminVoteCanceledForUser()
                 API.NOTIF_ACCOUNT_ADMIN_VOTE_CANCELED_FOR_ADMIN -> notification = NotificationAccountAdminVoteCanceledForAdmin()
+                API.NOTIF_MODERATION_POST_SET_NSFW -> notification = NotificationModerationPostSetNsfw()
 
                 else -> notification = NotificationUnknown()
             }

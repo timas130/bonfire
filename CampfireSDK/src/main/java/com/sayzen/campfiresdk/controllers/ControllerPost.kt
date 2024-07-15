@@ -32,10 +32,6 @@ import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdap
 import com.sup.dev.java.libs.eventBus.EventBus
 
 object ControllerPost {
-
-    var ON_PRE_SHOW_MENU: (Publication, SplashMenu) -> Unit = { _, _ -> }
-
-
     var ENABLED_BOOKMARK = false
     var ENABLED_WATCH = false
     var ENABLED_SHARE = false
@@ -61,60 +57,220 @@ object ControllerPost {
     var ENABLED_CLOSE = false
 
     fun showPostMenu(v: View, post: PublicationPost) {
-
-        val w = SplashMenu()
-                .add(t(API_TRANSLATE.app_change)) { ControllerCampfireSDK.onToDraftClicked(post.id, Navigator.TO) }.condition(ENABLED_CHANGE && (post.isPublic || post.status == API.STATUS_PENDING) && ControllerApi.isCurrentAccount(post.creator.id))
-                .add(t(API_TRANSLATE.post_menu_change_tags)) { changeTags(post) }.condition(ENABLED_CHANGE_TAGS && (post.isPublic || post.status == API.STATUS_PENDING) && post.fandom.languageId != -1L && ControllerApi.isCurrentAccount(post.creator.id))
-                .add(t(API_TRANSLATE.app_remove)) { remove(post) }.condition(ENABLED_REMOVE && ControllerApi.isCurrentAccount(post.creator.id))
-                .add(t(API_TRANSLATE.app_duplicate)) { duplicateDraft(post) }.condition(post.isDraft)
-                .add(t(API_TRANSLATE.app_to_drafts)) { toDrafts(post) }.condition(ENABLED_TO_DRAFTS && (post.isPublic || post.status == API.STATUS_PENDING) && ControllerApi.isCurrentAccount(post.creator.id))
-                .add(t(API_TRANSLATE.app_publish)) { publishPending(post) }.condition(post.status == API.STATUS_PENDING && ControllerApi.isCurrentAccount(post.creator.id))
-                .add(t(API_TRANSLATE.app_copy_link)) { copyLink(post) }.condition(ENABLED_COPY_LINK && post.isPublic)
-                .add(t(API_TRANSLATE.app_report)) { ControllerPublications.report(post) }.condition(ENABLED_REPORT && !ControllerApi.isCurrentAccount(post.creator.id))
-                .spoiler(t(API_TRANSLATE.app_additional)) { w, card ->
-                    card.setProgress(true)
-                    ApiRequestsSupporter.execute(RPostMenuInfoGet(post.id, Array(ControllerSettings.bookmarksFolders.size) { ControllerSettings.bookmarksFolders[it].id })) { r ->
-                        card.setProgress(false)
-                        w.spoiler(card)
-                                .add(if (!r.bookmark) t(API_TRANSLATE.bookmarks_add) else if(ControllerSettings.bookmarksFolders.isEmpty())t(API_TRANSLATE.bookmarks_remove) else t(API_TRANSLATE.bookmarks_remove_or_change)) { ControllerPublications.changeBookmark(post.id, r.bookmark, r.folderId) }.backgroundRes(R.color.focus).condition(ENABLED_BOOKMARK && post.isPublic)
-                                .add(if (r.follow) t(API_TRANSLATE.publication_menu_comments_watch_no) else t(API_TRANSLATE.publication_menu_comments_watch)) { ControllerPublications.changeWatchComments(post.id) }.backgroundRes(R.color.focus).condition(ENABLED_WATCH && post.isPublic)
-                                .add(t(API_TRANSLATE.app_share)) { ControllerApi.sharePost(post.id) }.backgroundRes(R.color.focus).condition(ENABLED_SHARE && post.isPublic)
-                                .add(t(API_TRANSLATE.app_history)) { Navigator.to(SPublicationHistory(post.id)) }.backgroundRes(R.color.focus).condition(ENABLED_HISTORY)
-                                .add(t(API_TRANSLATE.post_create_notify_followers)) { notifyFollowers(post.id) }.backgroundRes(R.color.focus).condition(ENABLED_NOTIFY_FOLLOWERS && post.isPublic && post.tag_3 == 0L && ControllerApi.isCurrentAccount(post.creator.id))
-                                .add(t(API_TRANSLATE.publication_menu_change_fandom)) { changeFandom(post.id) }.backgroundRes(R.color.focus).condition(ENABLED_CHANGE_FANDOM && post.fandom.languageId != -1L && (post.status == API.STATUS_PUBLIC || post.status == API.STATUS_DRAFT) && ControllerApi.isCurrentAccount(post.creator.id))
-                                .add(t(API_TRANSLATE.publication_menu_pin_in_profile)) { pinInProfile(post) }.backgroundRes(R.color.focus).condition(ENABLED_PIN_PROFILE && ControllerApi.can(API.LVL_CAN_PIN_POST) && post.isPublic && !post.isPined && ControllerApi.isCurrentAccount(post.creator.id))
-                                .add(t(API_TRANSLATE.publication_menu_unpin_in_profile)) { unpinInProfile(post) }.backgroundRes(R.color.focus).condition(ENABLED_PIN_PROFILE && post.isPined && ControllerApi.isCurrentAccount(post.creator.id))
-                                .add(t(API_TRANSLATE.publication_menu_multilingual)) { multilingual(post) }.backgroundRes(R.color.focus).condition(ENABLED_MAKE_MULTILINGUAL && post.fandom.languageId != -1L && post.status == API.STATUS_PUBLIC && ControllerApi.isCurrentAccount(post.creator.id))
-                                .add(t(API_TRANSLATE.publication_menu_multilingual_not)) { multilingualNot(post) }.backgroundRes(R.color.focus).condition(ENABLED_MAKE_MULTILINGUAL && post.fandom.languageId == -1L && post.status == API.STATUS_PUBLIC && ControllerApi.isCurrentAccount(post.creator.id))
-                                .add(t(API_TRANSLATE.app_close)) { close(post) }.backgroundRes(R.color.focus).condition(!post.closed && ControllerApi.isCurrentAccount(post.creator.id))
-                                .add(t(API_TRANSLATE.app_open)) { open(post) }.backgroundRes(R.color.focus).condition(post.closed && ControllerApi.isCurrentAccount(post.creator.id))
-                                .add(t(API_TRANSLATE.post_change_rubric)) { changeRubric(post) }.backgroundRes(R.color.focus).condition(ControllerApi.isCurrentAccount(post.creator.id) && post.dateCreate < System.currentTimeMillis() - 1000 * 3600 * 24 * 7)
-                                .finishItemBuilding()
-                    }
-                }
-                .groupCondition(post.isPublic)
-                .spoiler(t(API_TRANSLATE.app_moderator))
-                .add(t(API_TRANSLATE.app_clear_reports)) { ControllerPublications.clearReports(post) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(ENABLED_CLEAR_REPORTS && ControllerApi.can(post.fandom.id, post.fandom.languageId, API.LVL_MODERATOR_BLOCK) && post.reportsCount > 0 && !ControllerApi.isCurrentAccount(post.creator.id))
-                .add(t(API_TRANSLATE.app_block)) { ControllerPublications.block(post) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(ENABLED_BLOCK && ControllerApi.can(post.fandom.id, post.fandom.languageId, API.LVL_MODERATOR_BLOCK) && !ControllerApi.isCurrentAccount(post.creator.id))
-                .add(t(API_TRANSLATE.publication_menu_moderator_to_drafts)) { moderatorToDrafts(post.id) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(ENABLED_MODER_TO_DRAFT && ControllerApi.can(post.fandom.id, post.fandom.languageId, API.LVL_MODERATOR_TO_DRAFTS) && !ControllerApi.isCurrentAccount(post.creator.id))
-                .add(t(API_TRANSLATE.publication_menu_multilingual_not)) { moderatorMakeMultilingualNot(post) }.backgroundRes(R.color.blue_700).condition(ENABLED_MAKE_MULTILINGUAL && ControllerApi.can(post.fandom.id, post.fandom.languageId, API.LVL_MODERATOR_TO_DRAFTS) && post.fandom.languageId == -1L && !ControllerApi.isCurrentAccount(post.creator.id))
-                .add(t(API_TRANSLATE.post_menu_change_tags)) { changeTagsModer(post) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(ENABLED_MODER_CHANGE_TAGS && ControllerApi.can(post.fandom.id, post.fandom.languageId, API.LVL_MODERATOR_POST_TAGS) && post.fandom.languageId != -1L && !ControllerApi.isCurrentAccount(post.creator.id))
-                .add(t(API_TRANSLATE.publication_menu_pin_in_fandom)) { pinInFandom(post) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(ENABLED_PIN_FANDOM && ControllerApi.can(post.fandom.id, post.fandom.languageId, API.LVL_MODERATOR_PIN_POST) && post.isPublic && !post.isPined && Navigator.getCurrent() !is SProfile)
-                .add(t(API_TRANSLATE.publication_menu_unpin_in_fandom)) { unpinInFandom(post) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(ENABLED_PIN_FANDOM && ControllerApi.can(post.fandom.id, post.fandom.languageId, API.LVL_MODERATOR_PIN_POST) && post.isPined && Navigator.getCurrent() !is SProfile)
-                .add(t(API_TRANSLATE.app_close)) { closeAdmin(post) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(ENABLED_CLOSE && ControllerApi.can(post.fandom.id, post.fandom.languageId, API.LVL_MODERATOR_CLOSE_POST) && !post.closed && !ControllerApi.isCurrentAccount(post.creator.id))
-                .add(t(API_TRANSLATE.app_open)) { openAdmin(post) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(ENABLED_CLOSE && ControllerApi.can(post.fandom.id, post.fandom.languageId, API.LVL_MODERATOR_CLOSE_POST) && post.closed && !ControllerApi.isCurrentAccount(post.creator.id))
-                .add(if (post.important == API.PUBLICATION_IMPORTANT_IMPORTANT) t(API_TRANSLATE.publication_menu_important_unmark) else t(API_TRANSLATE.publication_menu_important_mark)) { markAsImportant(post.id, !(post.important == API.PUBLICATION_IMPORTANT_IMPORTANT)) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(ENABLED_INPORTANT && ControllerApi.can(post.fandom.id, post.fandom.languageId, API.LVL_MODERATOR_IMPORTANT) && post.isPublic && post.fandom.languageId != -1L)
-                .spoiler(t(API_TRANSLATE.app_admin))
-                .add(t(API_TRANSLATE.admin_make_moder)) { makeModerator(post) }.backgroundRes(R.color.red_700).textColorRes(R.color.white).condition(ENABLED_MAKE_MODER && ControllerApi.can(API.LVL_ADMIN_MAKE_MODERATOR) && post.fandom.languageId != -1L && !ControllerApi.isCurrentAccount(post.creator.id))
-                .add(t(API_TRANSLATE.publication_menu_remove_media)) { removeMedia(post) }.backgroundRes(R.color.red_700).textColorRes(R.color.white).condition(ControllerApi.can(API.LVL_ADMIN_REMOVE_MEDIA) && post.fandom.languageId != -1L)
-                .add(t(API_TRANSLATE.publication_menu_change_fandom)) { changeFandomAdmin(post.id) }.backgroundRes(R.color.red_700).textColorRes(R.color.white).condition(ENABLED_MODER_CHANGE_FANDOM && ControllerApi.can(API.LVL_ADMIN_POST_CHANGE_FANDOM) && post.fandom.languageId != -1L && !ControllerApi.isCurrentAccount(post.creator.id))
-                .groupCondition(ControllerApi.can(API.LVL_PROTOADMIN))
-                .spoiler(t(API_TRANSLATE.app_protoadmin))
-                .add("Востановить") { ControllerPublications.restoreDeepBlock(post.id) }.backgroundRes(R.color.orange_700).textColorRes(R.color.white).condition(post.status == API.STATUS_DEEP_BLOCKED)
-
-        ON_PRE_SHOW_MENU.invoke(post, w)
+        val w = getSplashMenu(post)
         w.asPopupShow(v)
     }
+
+    fun getSplashMenu(post: PublicationPost) = SplashMenu()
+        .add(t(API_TRANSLATE.app_change)) { ControllerCampfireSDK.onToDraftClicked(post.id, Navigator.TO) }.condition(
+            ENABLED_CHANGE && (post.isPublic || post.status == API.STATUS_PENDING) && ControllerApi.isCurrentAccount(
+                post.creator.id
+            )
+        )
+        .add(t(API_TRANSLATE.post_menu_change_tags)) { changeTags(post) }.condition(
+            ENABLED_CHANGE_TAGS && (post.isPublic || post.status == API.STATUS_PENDING) && post.fandom.languageId != -1L && ControllerApi.isCurrentAccount(
+                post.creator.id
+            )
+        )
+        .add(t(API_TRANSLATE.app_remove)) { remove(post) }
+        .condition(ENABLED_REMOVE && ControllerApi.isCurrentAccount(post.creator.id))
+        .add(t(API_TRANSLATE.app_duplicate)) { duplicateDraft(post) }.condition(post.isDraft)
+        .add(t(API_TRANSLATE.app_to_drafts)) { toDrafts(post) }.condition(
+            ENABLED_TO_DRAFTS && (post.isPublic || post.status == API.STATUS_PENDING) && ControllerApi.isCurrentAccount(
+                post.creator.id
+            )
+        )
+        .add(t(API_TRANSLATE.app_publish)) { publishPending(post) }
+        .condition(post.status == API.STATUS_PENDING && ControllerApi.isCurrentAccount(post.creator.id))
+        .add(t(API_TRANSLATE.app_copy_link)) { copyLink(post) }.condition(ENABLED_COPY_LINK && post.isPublic)
+        .add(t(API_TRANSLATE.app_report)) { ControllerPublications.report(post) }
+        .condition(ENABLED_REPORT && !ControllerApi.isCurrentAccount(post.creator.id))
+        .spoiler(t(API_TRANSLATE.app_additional)) { w, card ->
+            card.setProgress(true)
+            ApiRequestsSupporter.execute(
+                RPostMenuInfoGet(
+                    post.id,
+                    Array(ControllerSettings.bookmarksFolders.size) { ControllerSettings.bookmarksFolders[it].id })
+            ) { r ->
+                card.setProgress(false)
+                w.spoiler(card)
+                    .add(
+                        if (!r.bookmark) t(API_TRANSLATE.bookmarks_add) else if (ControllerSettings.bookmarksFolders.isEmpty()) t(
+                            API_TRANSLATE.bookmarks_remove
+                        ) else t(API_TRANSLATE.bookmarks_remove_or_change)
+                    ) { ControllerPublications.changeBookmark(post.id, r.bookmark, r.folderId) }
+                    .backgroundRes(R.color.focus).condition(ENABLED_BOOKMARK && post.isPublic)
+                    .add(if (r.follow) t(API_TRANSLATE.publication_menu_comments_watch_no) else t(API_TRANSLATE.publication_menu_comments_watch)) {
+                        ControllerPublications.changeWatchComments(
+                            post.id
+                        )
+                    }.backgroundRes(R.color.focus).condition(ENABLED_WATCH && post.isPublic)
+                    .add(t(API_TRANSLATE.app_share)) { ControllerApi.sharePost(post.id) }.backgroundRes(R.color.focus)
+                    .condition(ENABLED_SHARE && post.isPublic)
+                    .add(t(API_TRANSLATE.app_history)) { Navigator.to(SPublicationHistory(post.id)) }
+                    .backgroundRes(R.color.focus).condition(ENABLED_HISTORY)
+                    .add(t(API_TRANSLATE.post_create_notify_followers)) { notifyFollowers(post.id) }
+                    .backgroundRes(R.color.focus).condition(
+                        ENABLED_NOTIFY_FOLLOWERS && post.isPublic && post.tag_3 == 0L && ControllerApi.isCurrentAccount(
+                            post.creator.id
+                        )
+                    )
+                    .add(t(API_TRANSLATE.publication_menu_change_fandom)) { changeFandom(post.id) }
+                    .backgroundRes(R.color.focus).condition(
+                        ENABLED_CHANGE_FANDOM && post.fandom.languageId != -1L && (post.status == API.STATUS_PUBLIC || post.status == API.STATUS_DRAFT) && ControllerApi.isCurrentAccount(
+                            post.creator.id
+                        )
+                    )
+                    .add(t(API_TRANSLATE.publication_menu_pin_in_profile)) { pinInProfile(post) }
+                    .backgroundRes(R.color.focus).condition(
+                        ENABLED_PIN_PROFILE && ControllerApi.can(API.LVL_CAN_PIN_POST) && post.isPublic && !post.isPined && ControllerApi.isCurrentAccount(
+                            post.creator.id
+                        )
+                    )
+                    .add(t(API_TRANSLATE.publication_menu_unpin_in_profile)) { unpinInProfile(post) }
+                    .backgroundRes(R.color.focus)
+                    .condition(ENABLED_PIN_PROFILE && post.isPined && ControllerApi.isCurrentAccount(post.creator.id))
+                    .add(t(API_TRANSLATE.publication_menu_multilingual)) { multilingual(post) }
+                    .backgroundRes(R.color.focus).condition(
+                        ENABLED_MAKE_MULTILINGUAL && post.fandom.languageId != -1L && post.status == API.STATUS_PUBLIC && ControllerApi.isCurrentAccount(
+                            post.creator.id
+                        )
+                    )
+                    .add(t(API_TRANSLATE.publication_menu_multilingual_not)) { multilingualNot(post) }
+                    .backgroundRes(R.color.focus).condition(
+                        ENABLED_MAKE_MULTILINGUAL && post.fandom.languageId == -1L && post.status == API.STATUS_PUBLIC && ControllerApi.isCurrentAccount(
+                            post.creator.id
+                        )
+                    )
+                    .add(t(API_TRANSLATE.app_close)) { close(post) }.backgroundRes(R.color.focus)
+                    .condition(!post.closed && ControllerApi.isCurrentAccount(post.creator.id))
+                    .add(t(API_TRANSLATE.app_open)) { open(post) }.backgroundRes(R.color.focus)
+                    .condition(post.closed && ControllerApi.isCurrentAccount(post.creator.id))
+                    .add(t(API_TRANSLATE.publication_menu_set_nsfw)) { setNsfwUser(post, true) }.backgroundRes(R.color.focus)
+                    .condition(!post.nsfw && ControllerApi.isCurrentAccount(post.creator.id))
+                    .add(t(API_TRANSLATE.publication_menu_unset_nsfw)) { setNsfwUser(post, false) }.backgroundRes(R.color.focus)
+                    .condition(post.nsfw && ControllerApi.isCurrentAccount(post.creator.id))
+                    .add(t(API_TRANSLATE.post_change_rubric)) { changeRubric(post) }.backgroundRes(R.color.focus)
+                    .condition(ControllerApi.isCurrentAccount(post.creator.id) && post.dateCreate < System.currentTimeMillis() - 1000 * 3600 * 24 * 7)
+                    .finishItemBuilding()
+            }
+        }
+        .groupCondition(post.isPublic)
+        .spoiler(t(API_TRANSLATE.app_moderator))
+        .add(t(API_TRANSLATE.app_clear_reports)) { ControllerPublications.clearReports(post) }
+        .backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(
+            ENABLED_CLEAR_REPORTS && ControllerApi.can(
+                post.fandom.id,
+                post.fandom.languageId,
+                API.LVL_MODERATOR_BLOCK
+            ) && post.reportsCount > 0 && !ControllerApi.isCurrentAccount(post.creator.id)
+        )
+        .add(t(API_TRANSLATE.app_block)) { ControllerPublications.block(post) }.backgroundRes(R.color.blue_700)
+        .textColorRes(R.color.white).condition(
+            ENABLED_BLOCK && ControllerApi.can(
+                post.fandom.id,
+                post.fandom.languageId,
+                API.LVL_MODERATOR_BLOCK
+            ) && !ControllerApi.isCurrentAccount(post.creator.id)
+        )
+        .add(t(API_TRANSLATE.publication_menu_moderator_to_drafts)) { moderatorToDrafts(post.id) }
+        .backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(
+            ENABLED_MODER_TO_DRAFT && ControllerApi.can(
+                post.fandom.id,
+                post.fandom.languageId,
+                API.LVL_MODERATOR_TO_DRAFTS
+            ) && !ControllerApi.isCurrentAccount(post.creator.id)
+        )
+        .add(t(API_TRANSLATE.publication_menu_multilingual_not)) { moderatorMakeMultilingualNot(post) }
+        .backgroundRes(R.color.blue_700).condition(
+            ENABLED_MAKE_MULTILINGUAL && ControllerApi.can(
+                post.fandom.id,
+                post.fandom.languageId,
+                API.LVL_MODERATOR_TO_DRAFTS
+            ) && post.fandom.languageId == -1L && !ControllerApi.isCurrentAccount(post.creator.id)
+        )
+        .add(t(API_TRANSLATE.post_menu_change_tags)) { changeTagsModer(post) }.backgroundRes(R.color.blue_700)
+        .textColorRes(R.color.white).condition(
+            ENABLED_MODER_CHANGE_TAGS && ControllerApi.can(
+                post.fandom.id,
+                post.fandom.languageId,
+                API.LVL_MODERATOR_POST_TAGS
+            ) && post.fandom.languageId != -1L && !ControllerApi.isCurrentAccount(post.creator.id)
+        )
+        .add(t(API_TRANSLATE.publication_menu_pin_in_fandom)) { pinInFandom(post) }.backgroundRes(R.color.blue_700)
+        .textColorRes(R.color.white).condition(
+            ENABLED_PIN_FANDOM && ControllerApi.can(
+                post.fandom.id,
+                post.fandom.languageId,
+                API.LVL_MODERATOR_PIN_POST
+            ) && post.isPublic && !post.isPined && Navigator.getCurrent() !is SProfile
+        )
+        .add(t(API_TRANSLATE.publication_menu_unpin_in_fandom)) { unpinInFandom(post) }.backgroundRes(R.color.blue_700)
+        .textColorRes(R.color.white).condition(
+            ENABLED_PIN_FANDOM && ControllerApi.can(
+                post.fandom.id,
+                post.fandom.languageId,
+                API.LVL_MODERATOR_PIN_POST
+            ) && post.isPined && Navigator.getCurrent() !is SProfile
+        )
+        .add(t(API_TRANSLATE.app_close)) { closeAdmin(post) }.backgroundRes(R.color.blue_700)
+        .textColorRes(R.color.white).condition(
+            ENABLED_CLOSE && ControllerApi.can(
+                post.fandom.id,
+                post.fandom.languageId,
+                API.LVL_MODERATOR_CLOSE_POST
+            ) && !post.closed && !ControllerApi.isCurrentAccount(post.creator.id)
+        )
+        .add(t(API_TRANSLATE.app_open)) { openAdmin(post) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white)
+        .condition(
+            ENABLED_CLOSE && ControllerApi.can(
+                post.fandom.id,
+                post.fandom.languageId,
+                API.LVL_MODERATOR_CLOSE_POST
+            ) && post.closed && !ControllerApi.isCurrentAccount(post.creator.id)
+        )
+        .add(t(API_TRANSLATE.publication_menu_set_nsfw)) { setNsfwAdmin(post, true) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white)
+        .condition(
+            ControllerApi.can(post.fandom.id, post.fandom.languageId, API.LVL_MODERATOR_SET_NSFW)
+                    && !post.nsfw && !ControllerApi.isCurrentAccount(post.creator.id)
+        )
+        .add(t(API_TRANSLATE.publication_menu_unset_nsfw)) { setNsfwAdmin(post, false) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white)
+        .condition(
+            ControllerApi.can(post.fandom.id, post.fandom.languageId, API.LVL_MODERATOR_SET_NSFW)
+                    && post.nsfw && !ControllerApi.isCurrentAccount(post.creator.id)
+        )
+        .add(
+            if (post.important == API.PUBLICATION_IMPORTANT_IMPORTANT) t(API_TRANSLATE.publication_menu_important_unmark) else t(
+                API_TRANSLATE.publication_menu_important_mark
+            )
+        ) { markAsImportant(post.id, !(post.important == API.PUBLICATION_IMPORTANT_IMPORTANT)) }
+        .backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(
+            ENABLED_INPORTANT && ControllerApi.can(
+                post.fandom.id,
+                post.fandom.languageId,
+                API.LVL_MODERATOR_IMPORTANT
+            ) && post.isPublic && post.fandom.languageId != -1L
+        )
+        .spoiler(t(API_TRANSLATE.app_admin))
+        .add(t(API_TRANSLATE.admin_make_moder)) { makeModerator(post) }.backgroundRes(R.color.red_700)
+        .textColorRes(R.color.white).condition(
+            ENABLED_MAKE_MODER && ControllerApi.can(API.LVL_ADMIN_MAKE_MODERATOR) && post.fandom.languageId != -1L && !ControllerApi.isCurrentAccount(
+                post.creator.id
+            )
+        )
+        .add(t(API_TRANSLATE.publication_menu_remove_media)) { removeMedia(post) }.backgroundRes(R.color.red_700)
+        .textColorRes(R.color.white)
+        .condition(ControllerApi.can(API.LVL_ADMIN_REMOVE_MEDIA) && post.fandom.languageId != -1L)
+        .add(t(API_TRANSLATE.publication_menu_change_fandom)) { changeFandomAdmin(post.id) }
+        .backgroundRes(R.color.red_700).textColorRes(R.color.white).condition(
+            ENABLED_MODER_CHANGE_FANDOM && ControllerApi.can(API.LVL_ADMIN_POST_CHANGE_FANDOM) && post.fandom.languageId != -1L && !ControllerApi.isCurrentAccount(
+                post.creator.id
+            )
+        )
+        .groupCondition(ControllerApi.can(API.LVL_PROTOADMIN))
+        .spoiler(t(API_TRANSLATE.app_protoadmin))
+        .add("Востановить") { ControllerPublications.restoreDeepBlock(post.id) }.backgroundRes(R.color.orange_700)
+        .textColorRes(R.color.white).condition(post.status == API.STATUS_DEEP_BLOCKED)
 
     fun close(publications: PublicationPost) {
         ApiRequestsSupporter.executeEnabledConfirm(
@@ -185,6 +341,41 @@ object ControllerPost {
                     }
                 }
                 .asSheetShow()
+    }
+
+    fun setNsfwAdmin(post: PublicationPost, nsfw: Boolean) {
+        SplashField()
+            .setTitle(if (nsfw) {
+                t(API_TRANSLATE.publication_menu_set_nsfw_desc)
+            } else {
+                t(API_TRANSLATE.publication_menu_unset_nsfw_desc)
+            })
+            .setHint(t(API_TRANSLATE.comments_hint))
+            .setOnCancel(t(API_TRANSLATE.app_cancel))
+            .setMin(API.MODERATION_COMMENT_MIN_L)
+            .setMax(API.MODERATION_COMMENT_MAX_L)
+            .setOnEnter(t(API_TRANSLATE.app_confirm)) { w, comment ->
+                ApiRequestsSupporter.executeEnabled(w, RPostSetNsfwModerator(post.id, nsfw, comment)) {
+                    EventBus.post(EventPostSetNsfw(post.id, nsfw))
+                    ToolsToast.show(t(API_TRANSLATE.app_done))
+                }
+            }
+            .asSheetShow()
+    }
+
+    fun setNsfwUser(post: PublicationPost, nsfw: Boolean) {
+        ApiRequestsSupporter.executeEnabledConfirm(
+            if (nsfw) {
+                t(API_TRANSLATE.publication_menu_set_nsfw_desc)
+            } else {
+                t(API_TRANSLATE.publication_menu_unset_nsfw_desc)
+            },
+            t(API_TRANSLATE.app_edit),
+            RPostSetNsfw(post.id, nsfw)
+        ) {
+            EventBus.post(EventPostSetNsfw(post.id, nsfw))
+            ToolsToast.show(t(API_TRANSLATE.app_done))
+        }
     }
 
     fun publishPending(publications: PublicationPost) {
@@ -351,7 +542,13 @@ object ControllerPost {
                     RPostChangeFandom(publicationId, fandom.id, fandom.languageId, "")
             ) {
                 ToolsToast.show(t(API_TRANSLATE.app_done))
-                EventBus.post(EventPublicationFandomChanged(publicationId, fandom.id, fandom.languageId, fandom.name, fandom.imageId))
+                EventBus.post(EventPublicationFandomChanged(
+                    publicationId,
+                    fandom.id,
+                    fandom.languageId,
+                    fandom.name,
+                    fandom.image
+                ))
             }
                     .onApiError(RPostChangeFandom.E_SAME_FANDOM) { ToolsToast.show(t(API_TRANSLATE.error_same_fandom)) }
         }
@@ -377,7 +574,7 @@ object ControllerPost {
                                             fandom.id,
                                             fandom.languageId,
                                             fandom.name,
-                                            fandom.imageId
+                                            fandom.image
                                     )
                             )
                         }
@@ -543,6 +740,7 @@ object ControllerPost {
                         list.add(cell.image)
                     }
                 }
+                else -> {}
             }
         }
 

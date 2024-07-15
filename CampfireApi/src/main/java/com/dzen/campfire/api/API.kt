@@ -28,7 +28,7 @@ class API(
 
         const val DOMEN = "https://bonfire.moe/r/"
         const val DOMEN_DL = "bf://link/"
-        const val VERSION = "3.0"
+        const val VERSION = "3.1"
         const val SUPPORTED_VERSION = "2.0"
 
         const val PROJECT_KEY_CAMPFIRE = "Campfire"
@@ -256,6 +256,7 @@ class API(
         val LVL_MODERATOR_POST_TAGS = LvlInfoModeration(450L, 150)
         val LVL_MODERATOR_WIKI_EDIT = LvlInfoModeration(450L, 150)
         val LVL_ANONYMOUS = LvlInfoUser(450L, 150)
+        val LVL_MODERATOR_SET_NSFW = LvlInfoModeration(450L, 150)
 
         val LVL_CURATOR = LvlInfoUser(600L, 400)
         val LVL_MODERATOR_TRANSLATE = LvlInfoAdmin(600L, 400)
@@ -558,7 +559,6 @@ class API(
         const val MODERATION_TYPE_RUBRIC_CHANGE_OWNER = 178L
         const val MODERATION_TYPE_RUBRIC_CREATE = 179L
         const val MODERATION_TYPE_RUBRIC_REMOVE = 180L
-        const val MODERATION_TYPE_RUBRIC_MOVE_FANDOM = 188L
         const val MODERATION_TYPE_CHAT_CREATE = 181L
         const val MODERATION_TYPE_CHAT_CHANGE = 182L
         const val MODERATION_TYPE_CHAT_REMOVE = 183L
@@ -566,6 +566,8 @@ class API(
         const val MODERATION_TYPE_ACTIVITIES_CREATE = 185L
         const val MODERATION_TYPE_ACTIVITIES_CHANGE = 186L
         const val MODERATION_TYPE_ACTIVITIES_REMOVE = 187L
+        const val MODERATION_TYPE_RUBRIC_MOVE_FANDOM = 188L
+        const val MODERATION_TYPE_SET_NSFW = 189L
 
 
         const val PUBLICATION_EVENT_USER_ACHIEVEMENT = 1L
@@ -824,6 +826,8 @@ class API(
         const val HISTORY_PUBLICATION_TYPE_CLOSE_NO = 27L
         const val HISTORY_PUBLICATION_TYPE_ADMIN_CLOSE_NO = 28L
         const val HISTORY_PUBLICATION_TYPE_ADMIN_REMOVE_MEDIA = 29L
+        const val HISTORY_PUBLICATION_TYPE_SET_NSFW = 30L
+        const val HISTORY_PUBLICATION_TYPE_ADMIN_SET_NSFW = 31L
 
         //
         //  Post
@@ -944,6 +948,7 @@ class API(
         const val NOTIF_ACCOUNT_ADMIN_VOTE_CANCELED_FOR_ADMIN = 63L
         const val NOTIF_ACCOUNT_ADMIN_VOTE_CANCELED_FOR_USER = 64L
         const val NOTIF_ACCOUNT_FOLLOWS_REMOVE = 66L
+        const val NOTIF_MODERATION_POST_SET_NSFW = 67L
 
         val notificationTypes = setOf(
             NOTIF_KARMA_ADD,
@@ -1008,6 +1013,7 @@ class API(
             NOTIF_ACCOUNT_ADMIN_VOTE_CANCELED_FOR_ADMIN,
             NOTIF_ACCOUNT_ADMIN_VOTE_CANCELED_FOR_USER,
             NOTIF_ACCOUNT_FOLLOWS_REMOVE,
+            NOTIF_MODERATION_POST_SET_NSFW,
         )
 
         //

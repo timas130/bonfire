@@ -1,9 +1,9 @@
 package com.sayzen.campfiresdk.models
 
-import com.sayzen.campfiresdk.models.cards.CardPost
+import com.sayzen.campfiresdk.compose.publication.post.CardPostProxy
 
 interface PostList {
 
-    fun contains(card: CardPost):Boolean
+    fun contains(card: CardPostProxy):Boolean
 
 }

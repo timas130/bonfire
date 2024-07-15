@@ -13,7 +13,6 @@ import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.java.libs.eventBus.EventBus

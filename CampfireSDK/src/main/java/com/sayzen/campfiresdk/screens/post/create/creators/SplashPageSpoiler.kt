@@ -9,7 +9,6 @@ import com.dzen.campfire.api.models.publications.post.PageSpoiler
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
-import com.sayzen.campfiresdk.models.cards.post_pages.CardPageSpoiler
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.settings.SettingsField
@@ -19,7 +18,7 @@ import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class SplashPageSpoiler(
-        private val requestPutPage:(page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage)->Unit))->Unit,
+        private val requestPutPage:(page: Page, screen: Screen?, splash: Splash?, onFinish: ((CardPage)->Unit))->Unit,
         private val requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page)->Unit) -> Unit,
         private val card: CardPage?,
         private val oldPage: PageSpoiler?
@@ -68,7 +67,7 @@ class SplashPageSpoiler(
         page.count = vCounter.getCurrentIndex() + 1
 
         if (card == null)
-            requestPutPage.invoke(page, null, this, { page1 -> CardPageSpoiler(null, page1 as PageSpoiler) }){}
+            requestPutPage.invoke(page, null, this) {}
         else
             requestChangePage.invoke(page, card, null, this){}
 

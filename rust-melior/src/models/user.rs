@@ -8,10 +8,10 @@ use crate::schema::profile::badge::GBadge;
 use crate::schema::profile::customization::account::GAccountCustomization;
 use crate::schema::profile::customization::profile::GProfileCustomization;
 use crate::utils::permissions::PermissionLevelGuard;
+use async_graphql::connection::Connection;
 use async_graphql::dataloader::DataLoader;
 use async_graphql::{ComplexObject, Context, Enum, SimpleObject, ID};
-use async_graphql::connection::Connection;
-use c_core::prelude::chrono::{DateTime, Utc};
+use c_core::prelude::chrono::{DateTime, NaiveDate, Utc};
 use c_core::prelude::tarpc::context;
 use c_core::services::auth::user::{AuthUser, PermissionLevel};
 
@@ -123,11 +123,12 @@ impl User {
     /// Get the total level of a user (cached)
     async fn cached_level(&self, ctx: &Context<'_>) -> Result<u64, RespError> {
         let req = ctx.data_unchecked::<ReqContext>();
-        
-        let (level, _) = req.level
+
+        let (level, _) = req
+            .level
             .get_level_cached(context::current(), self._id)
             .await??;
-        
+
         Ok(level)
     }
 
@@ -170,5 +171,21 @@ impl User {
         after: Option<String>,
     ) -> Result<Connection<DateTime<Utc>, GBadge>, RespError> {
         self._badges(ctx, after).await
+    }
+
+    /// Get the birthday date of this user
+    ///
+    /// This field is only available to this user and System.
+    /// If the user hasn't set a birthday, `null` is returned.
+    async fn birthday(&self, ctx: &Context<'_>) -> Result<Option<NaiveDate>, RespError> {
+        self._birthday(ctx).await
+    }
+
+    /// Get whether the user is `age` years old
+    ///
+    /// This field is only available to this user and System.
+    /// If the user hasn't set a birthday, `null` is returned.
+    async fn is_years_old(&self, ctx: &Context<'_>, age: u32) -> Result<Option<bool>, RespError> {
+        self._is_years_old(ctx, age).await
     }
 }

@@ -517,6 +517,29 @@ object ControllerPublications {
             is ModerationRubricFandomMove -> {
                 text = tCap(API_TRANSLATE.moderation_rubric_move_fandom, ToolsResources.sex(publication.creator.sex, t(API_TRANSLATE.he_move), t(API_TRANSLATE.she_move)), m.rubricName, m.srcFandomName, m.destFandomName)
             }
+            is ModerationPostSetNsfw -> {
+                if (m.nsfw) {
+                    text = tCap(
+                        API_TRANSLATE.moderation_set_nsfw_true,
+                        ToolsResources.sex(
+                            publication.creator.sex,
+                            t(API_TRANSLATE.he_mark),
+                            t(API_TRANSLATE.she_mark),
+                        ),
+                        ControllerLinks.linkToPost(m.postId)
+                    )
+                } else {
+                    text = tCap(
+                        API_TRANSLATE.moderation_set_nsfw_false,
+                        ToolsResources.sex(
+                            publication.creator.sex,
+                            t(API_TRANSLATE.he_remove),
+                            t(API_TRANSLATE.she_remove),
+                        ),
+                        ControllerLinks.linkToPost(m.postId)
+                    )
+                }
+            }
         }
 
         if (publication.moderation != null)

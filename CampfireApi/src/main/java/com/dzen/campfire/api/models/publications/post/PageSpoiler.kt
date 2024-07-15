@@ -4,10 +4,11 @@ import com.dzen.campfire.api.API
 import com.sup.dev.java.libs.json.Json
 
 class PageSpoiler : Page() {
-
     var isOpen = false
     var count = 0
     var name: String? = null
+
+    var children = emptyList<Page>()
 
     override fun getType() = API.PAGE_TYPE_SPOILER
 

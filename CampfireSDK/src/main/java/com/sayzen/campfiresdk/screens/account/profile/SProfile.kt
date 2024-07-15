@@ -17,6 +17,7 @@ import com.dzen.campfire.api.requests.publications.RPublicationsGetAll
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.compose.profile.badges.shelf.BadgeShelfCard
+import com.sayzen.campfiresdk.compose.publication.post.CardPostProxy
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.PostList
 import com.sayzen.campfiresdk.models.cards.CardPost
@@ -110,7 +111,7 @@ class SProfile private constructor(
     private val cardButtons = if (ControllerSettings.isProfileListStyle) CardButtonsInfoNew(xAccount) else CardButtonsInfoOld(xAccount)
     private val cardBadges = BadgeShelfCard(account.id.toString())
     private val cardBio = CardBio(xAccount)
-    private var cardPinnedPost: CardPost? = null
+    private var cardPinnedPost: CardPostProxy? = null
     private val cardFilters = CardFilters {
         if (cardPinnedPost != null) setPinnedPost(cardPinnedPost!!.xPublication.publication as PublicationPost)
         getAdapter().reloadBottom()
@@ -229,7 +230,7 @@ class SProfile private constructor(
 
     private fun afterPackLoaded() {
         if (cardPinnedPost != null && ControllerSettings.getProfileFilters().contains(API.PUBLICATION_TYPE_POST))
-            for (c in adapter.get(CardPost::class))
+            for (c in adapter.get(CardPostProxy::class))
                 if (c.xPublication.publication.id == cardPinnedPost!!.xPublication.publication.id && !(c.xPublication.publication as PublicationPost).isPined)
                     adapter.remove(c)
     }
@@ -239,9 +240,13 @@ class SProfile private constructor(
         if (post == null) {
             cardPinnedPost = null
         } else {
-            for (c in adapter.get(CardPost::class)) if (c.xPublication.publication.id == post.id) adapter.remove(c)
+            for (c in adapter.get(CardPostProxy::class)) {
+                if (c.xPublication.publication.id == post.id) {
+                    adapter.remove(c)
+                }
+            }
             post.isPined = true
-            cardPinnedPost = CardPost(vRecycler, post)
+            cardPinnedPost = CardPostProxy(vRecycler, post)
             cardPinnedPost?.showFandom = true
             if (ControllerSettings.getProfileFilters().contains(API.PUBLICATION_TYPE_POST)) {
                 adapter.add(adapter.indexOf(cardFilters) + 1, cardPinnedPost!!)
@@ -249,7 +254,7 @@ class SProfile private constructor(
         }
     }
 
-    override fun contains(card: CardPost) = adapter.contains(card)
+    override fun contains(card: CardPostProxy) = adapter.contains(card)
 
     private fun updateTitleImage() {
         xAccount.setViewBig(vImage)

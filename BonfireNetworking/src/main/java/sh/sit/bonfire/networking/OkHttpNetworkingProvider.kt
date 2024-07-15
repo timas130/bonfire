@@ -3,12 +3,8 @@ package sh.sit.bonfire.networking
 import android.content.Context
 import androidx.annotation.WorkerThread
 import com.dzen.campfire.api.tools.client.NetworkingProvider
-import com.google.net.cronet.okhttptransport.CronetInterceptor
-import com.sup.dev.java.libs.debug.info
-import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.chromium.net.CronetEngine
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 
@@ -39,7 +35,6 @@ class OkHttpNetworkingProvider(
                 .build()
         )
         val response = call.execute()
-        info("OkHttpNetworkingProvider sendRequest used protocol=${response.protocol}")
         return response.use { it.body!!.bytes() }
     }
 }

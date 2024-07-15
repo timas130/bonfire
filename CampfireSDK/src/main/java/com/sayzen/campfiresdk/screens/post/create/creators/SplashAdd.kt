@@ -4,16 +4,16 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.post.*
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
-import com.sayzen.campfiresdk.models.cards.post_pages.*
+import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.views.splash.view.SplashViewSheet
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.android.views.splash.SplashMenu
+import com.sup.dev.android.views.splash.view.SplashViewSheet
 
 class SplashAdd(
-        private val requestPutPage: (Page, Screen?, Splash?, (Page) -> CardPage, ((CardPage) -> Unit)) -> Unit,
+        private val requestPutPage: (Page, Screen?, Splash?, ((CardPage) -> Unit)) -> Unit,
         private val requestChangePage: (Page, CardPage, Screen?, Splash?, (Page) -> Unit) -> Unit,
         private val onBackEmptyAndNewerAdd: () -> Unit
 ) : SplashMenu() {
@@ -69,18 +69,21 @@ class SplashAdd(
     }
 
     fun changePage(c: CardPage) {
-        if (c is CardPageText) Navigator.to(SCreatePageText(requestPutPage, requestChangePage, c, c.page as PageText))
-        if (c is CardPageImage) SplashPageImage.change(c.page, requestPutPage, requestChangePage, c)
-        if (c is CardPageVideo) SplashPageVideo(requestPutPage, requestChangePage, c, c.page as PageVideo).asSheetShow()
-        if (c is CardPageQuote) SplashPageQuote(requestPutPage, requestChangePage, c, c.page as PageQuote).asSheetShow()
-        if (c is CardPageLink) SplashPageLink(requestPutPage, requestChangePage, c, c.page as PageLink).asSheetShow()
-        if (c is CardPageLinkImage) SplashPageLinkImage(requestPutPage, requestChangePage, c, c.page as PageLinkImage).asSheetShow()
-        if (c is CardPageSpoiler) SplashPageSpoiler(requestPutPage, requestChangePage, c, c.page as PageSpoiler).asSheetShow()
-        if (c is CardPagePolling) Navigator.to(SCreatePagePolling(requestPutPage, requestChangePage, c, c.page as PagePolling))
-        if (c is CardPageImages) SplashPageImages(requestChangePage, c, c.page as PageImages).asSheetShow()
-        if (c is CardPageTable) Navigator.to(SCreatePageTable(requestPutPage, requestChangePage, c, c.page as PageTable))
-        if (c is CardPageCode) Navigator.to(SCreatePageCode(requestPutPage, requestChangePage, c, c.page as PageCode))
-        if (c is CardPageCampfireObject) SplashPageCampfireObject(requestPutPage, requestChangePage, c, c.page as PageCampfireObject).asSheetShow()
+        when (c.page) {
+            is PageText -> Navigator.to(SCreatePageText(requestPutPage, requestChangePage, c, c.page as PageText))
+            is PageImage -> SplashPageImage.change(c.page, requestPutPage, requestChangePage, c)
+            is PageVideo -> SplashPageVideo(requestPutPage, requestChangePage, c, c.page as PageVideo).asSheetShow()
+            is PageQuote -> SplashPageQuote(requestPutPage, requestChangePage, c, c.page as PageQuote).asSheetShow()
+            is PageLink -> SplashPageLink(requestPutPage, requestChangePage, c, c.page as PageLink).asSheetShow()
+            is PageLinkImage -> SplashPageLinkImage(requestPutPage, requestChangePage, c, c.page as PageLinkImage).asSheetShow()
+            is PageSpoiler -> SplashPageSpoiler(requestPutPage, requestChangePage, c, c.page as PageSpoiler).asSheetShow()
+            is PagePolling -> Navigator.to(SCreatePagePolling(requestPutPage, requestChangePage, c, c.page as PagePolling))
+            is PageImages -> SplashPageImages(requestChangePage, c, c.page as PageImages).asSheetShow()
+            is PageTable -> Navigator.to(SCreatePageTable(requestPutPage, requestChangePage, c, c.page as PageTable))
+            is PageCode -> Navigator.to(SCreatePageCode(requestPutPage, requestChangePage, c, c.page as PageCode))
+            is PageCampfireObject -> SplashPageCampfireObject(requestPutPage, requestChangePage, c, c.page as PageCampfireObject).asSheetShow()
+            else -> {}
+        }
     }
 
     override fun asSheetShow(): SplashViewSheet {

@@ -15,9 +15,9 @@ import com.dzen.campfire.api.requests.fandoms.RFandomsGet
 import com.dzen.campfire.api.requests.fandoms.RFandomsGetProfile
 import com.dzen.campfire.api.requests.publications.RPublicationsGetAll
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.publication.post.CardPostProxy
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.PostList
-import com.sayzen.campfiresdk.models.cards.CardPost
 import com.sayzen.campfiresdk.models.cards.CardPublication
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomChanged
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomRemove
@@ -81,7 +81,7 @@ class SFandom private constructor(
     private val cardButtons = CardButtons(xFandom)
     private val cardViceroy = CardViceroy(xFandom.getId(), xFandom.getLanguageId())
     private val cardFandomInfo = CardFandomInfo(xFandom, fandom.karmaCof)
-    private var cardPinnedPost: CardPost? = null
+    private var cardPinnedPost: CardPostProxy? = null
 
     init {
         vToolbarCollapsingShadow.background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(0x60000000, 0x00000000))
@@ -156,7 +156,7 @@ class SFandom private constructor(
 
     private fun afterPackLoaded() {
         if (cardPinnedPost != null && ControllerSettings.getFandomFilters().contains(API.PUBLICATION_TYPE_POST))
-            for (c in adapter.get(CardPost::class))
+            for (c in adapter.get(CardPostProxy::class))
                 if (c.xPublication.publication.id == cardPinnedPost!!.xPublication.publication.id && !(c.xPublication.publication as PublicationPost).isPined)
                     adapter.remove(c)
     }
@@ -166,16 +166,20 @@ class SFandom private constructor(
         if (post == null) {
             cardPinnedPost = null
         } else {
-            for (c in adapter.get(CardPost::class)) if (c.xPublication.publication.id == post.id) adapter.remove(c)
+            for (c in adapter.get(CardPostProxy::class)) {
+                if (c.xPublication.publication.id == post.id) {
+                    adapter.remove(c)
+                }
+            }
             post.isPined = true
-            cardPinnedPost = CardPost(vRecycler, post)
+            cardPinnedPost = CardPostProxy(vRecycler, post)
             if (ControllerSettings.getFandomFilters().contains(API.PUBLICATION_TYPE_POST)) {
                 adapter.add(adapter.indexOf(cardFilters) + 1, cardPinnedPost!!)
             }
         }
     }
 
-    override fun contains(card: CardPost) = adapter.contains(card)
+    override fun contains(card: CardPostProxy) = adapter.contains(card)
 
 
     private fun updateBackground() {

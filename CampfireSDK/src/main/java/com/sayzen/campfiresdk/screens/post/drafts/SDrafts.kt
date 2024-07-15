@@ -10,11 +10,11 @@ import com.dzen.campfire.api.requests.fandoms.RFandomsGet
 import com.dzen.campfire.api.requests.publications.RPublicationsDraftsGetAll
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.publication.post.CardPostProxy
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
-import com.sayzen.campfiresdk.models.cards.CardPost
 import com.sayzen.campfiresdk.models.events.publications.EventPostDraftCreated
 import com.sayzen.campfiresdk.models.events.publications.EventPostStatusChange
 import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
@@ -30,7 +30,7 @@ import com.sup.dev.java.libs.eventBus.EventBus
 
 class SDrafts constructor(
         val onSelect: ((Publication) -> Unit)? = null
-) : SLoadingRecycler<CardPost, Publication>() {
+) : SLoadingRecycler<CardPostProxy, Publication>() {
 
     private val eventBus = EventBus
             .subscribe(EventPostStatusChange::class) {this.onEventPostStatusChange(it) }
@@ -74,10 +74,10 @@ class SDrafts constructor(
         }
     }
 
-    override fun classOfCard() = CardPost::class
+    override fun classOfCard() = CardPostProxy::class
 
-    override fun map(item: Publication): CardPost {
-        val card = CardPost(vRecycler, item as PublicationPost)
+    override fun map(item: Publication): CardPostProxy {
+        val card = CardPostProxy(vRecycler, item as PublicationPost)
         if (onSelect != null) card.onClick = {
             Navigator.remove(this)
             onSelect.invoke(item)
@@ -95,7 +95,7 @@ class SDrafts constructor(
     }
 
     private fun onEventPostDraftCreated(e: EventPostDraftCreated) {
-        for (c in adapter.get(CardPost::class)) if (c.xPublication.publication.id == e.publicationId) return
+        for (c in adapter.get(CardPostProxy::class)) if (c.xPublication.publication.id == e.publicationId) return
         adapter.reloadBottom()
     }
 

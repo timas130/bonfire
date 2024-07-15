@@ -80,6 +80,8 @@ abstract class History : JsonParsable, ImageHolder {
                 API.HISTORY_PUBLICATION_TYPE_CLOSE_NO -> HistoryCloseNo()
                 API.HISTORY_PUBLICATION_TYPE_ADMIN_CLOSE_NO -> HistoryAdminCloseNo()
                 API.HISTORY_PUBLICATION_TYPE_ADMIN_REMOVE_MEDIA -> HistoryAdminRemoveMedia()
+                API.HISTORY_PUBLICATION_TYPE_SET_NSFW -> HistorySetNsfw()
+                API.HISTORY_PUBLICATION_TYPE_ADMIN_SET_NSFW -> HistoryAdminSetNsfw()
                 else -> HistoryUnknown()
             }
 

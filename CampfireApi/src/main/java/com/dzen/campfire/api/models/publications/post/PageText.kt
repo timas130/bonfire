@@ -1,7 +1,11 @@
 package com.dzen.campfire.api.models.publications.post
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.sup.dev.java.libs.json.Json
+import com.vdurmont.semver4j.Semver
+import sh.sit.bonfire.formatting.core.BonfireFormatter
+import sh.sit.bonfire.formatting.core.model.FormattedText
 
 class PageText : Page() {
     companion object {
@@ -14,6 +18,7 @@ class PageText : Page() {
     }
 
     var text = ""
+    var formattedText = FormattedText()
     var size = 0
     var align = 0
     var icon = 0
@@ -23,6 +28,10 @@ class PageText : Page() {
 
     override fun json(inp: Boolean, json: Json): Json {
         text = json.m(inp, "J_TEXT", text)
+        formattedText = json.m(inp, "formattedText", formattedText)
+        if (!inp && formattedText.text.isEmpty()) {
+            formattedText = BonfireFormatter.parse(text)
+        }
         icon = json.m(inp, "icon", icon)
         align = json.m(inp, "align", align)
         newFormatting = json.m(inp, "newFormatting", newFormatting)
@@ -33,6 +42,15 @@ class PageText : Page() {
             size = json.getInt("J_SIZE", SIZE_0)
 
         return super.json(inp, json)
+    }
+
+    override fun fillImageRefs(receiver: ImageHolderReceiver) {
+        val requestVersion = Semver(receiver.getRequestVersion(), Semver.SemverType.LOOSE)
+        val newFormattingVersion = Semver("3.1.0")
+
+        if (requestVersion >= newFormattingVersion) {
+            formattedText = BonfireFormatter.parse(text)
+        }
     }
 
     override fun fillResourcesList(list: ArrayList<Long>) {

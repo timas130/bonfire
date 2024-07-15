@@ -12,7 +12,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
-import com.sayzen.campfiresdk.models.cards.post_pages.CardPageCode
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.splash.Splash
@@ -22,7 +21,7 @@ import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.java.tools.ToolsText
 
 class SCreatePageCode(
-        private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage) -> Unit)) -> Unit,
+        private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, onFinish: ((CardPage) -> Unit)) -> Unit,
         private val requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page) -> Unit) -> Unit,
         private val card: CardPage?,
         private val oldPage: PageCode?
@@ -70,9 +69,7 @@ class SCreatePageCode(
         page.code = vField.text.toString()
         page.language = language
         if (oldPage == null)
-            requestPutPage.invoke(page, this, ToolsView.showProgressDialog(), { page1 ->
-                CardPageCode(null, page1 as PageCode)
-            }) {}
+            requestPutPage.invoke(page, this, ToolsView.showProgressDialog()) {}
         else
             requestChangePage.invoke(page, card!!, this, ToolsView.showProgressDialog()) {}
     }

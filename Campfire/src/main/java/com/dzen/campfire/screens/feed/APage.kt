@@ -8,12 +8,12 @@ import com.dzen.campfire.api.requests.post.RPostFeedGetAll
 import com.dzen.campfire.api.tools.client.Request
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.app.CampfireConstants
+import com.sayzen.campfiresdk.compose.publication.post.CardPostProxy
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.PostList
-import com.sayzen.campfiresdk.models.cards.CardPost
 import com.sayzen.campfiresdk.models.cards.CardPublication
 import com.sayzen.campfiresdk.models.events.project.EventStoryQuestUpdated
 import com.sayzen.campfiresdk.support.load
@@ -72,7 +72,7 @@ abstract class APage(
         adapterSub?.remove(screen.cardDonate)
     }
 
-    override fun contains(card: CardPost) = adapterSub != null && adapterSub!!.contains(card)
+    override fun contains(card: CardPostProxy) = adapterSub != null && adapterSub!!.contains(card)
 
 
     override fun instanceAdapter(): RecyclerCardAdapterLoading<CardPublication, Publication> {

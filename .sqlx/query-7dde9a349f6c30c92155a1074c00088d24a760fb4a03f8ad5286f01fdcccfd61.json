@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select birthday from real_user_birthdays where user_id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "birthday",
+        "type_info": "Date"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "7dde9a349f6c30c92155a1074c00088d24a760fb4a03f8ad5286f01fdcccfd61"
+}

@@ -2,9 +2,12 @@ package sh.sit.bonfire.auth.flows
 
 import android.content.Context
 import com.posthog.PostHog
+import kotlinx.coroutines.MainScope
 import sh.sit.bonfire.auth.AuthController
 import sh.sit.bonfire.auth.LoginEmailMutation
 import sh.sit.bonfire.auth.apollo
+import sh.sit.bonfire.auth.integrity.IntegrityController
+import sh.sit.schema.type.IntentionType
 import sh.sit.schema.type.LoginEmailInput
 
 class EmailAuthFlow(context: Context, val email: String, val password: String) : AuthFlow(context) {
@@ -32,6 +35,12 @@ class EmailAuthFlow(context: Context, val email: String, val password: String) :
                     refreshToken = data.onLoginResultSuccess.refreshToken,
                     email = email,
                 ))
+
+                try {
+                    IntegrityController.sendIntegrityToken(MainScope(), IntentionType.GENERIC)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
             data.onLoginResultTfaRequired != null -> {
                 AuthController.saveAuthState(AuthController.TfaAuthState(

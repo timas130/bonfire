@@ -8,6 +8,7 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.ApiInfo
 import com.dzen.campfire.api.models.account.Account
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.lvl.LvlInfo
 import com.dzen.campfire.api.models.lvl.LvlInfoAdmin
 import com.dzen.campfire.api.models.lvl.LvlInfoUser
@@ -130,19 +131,21 @@ object ControllerApi {
 
     fun getLanguage(languageId: Long) = API.getLanguage(languageId)
 
-    fun getIconForLanguage(languageId: Long): ImageLink {
+    fun getIconRefForLanguage(languageId: Long): ImageRef {
         return when (languageId) {
-            API.LANGUAGE_EN -> ImageLoader.load(ApiResources.FLAG_EN)
-            API.LANGUAGE_RU -> ImageLoader.load(ApiResources.FLAG_RU)
-            API.LANGUAGE_PT -> ImageLoader.load(ApiResources.FLAG_PT)
-            API.LANGUAGE_UK -> ImageLoader.load(ApiResources.FLAG_UK)
-            API.LANGUAGE_DE -> ImageLoader.load(ApiResources.FLAG_DE)
-            API.LANGUAGE_IT -> ImageLoader.load(ApiResources.FLAG_IT)
-            API.LANGUAGE_PL -> ImageLoader.load(ApiResources.FLAG_PL)
-            API.LANGUAGE_FR -> ImageLoader.load(ApiResources.FLAG_FR)
-            else -> ImageLoader.load(ApiResources.FLAG_WORLD)
+            API.LANGUAGE_EN -> ApiResources.FLAG_EN
+            API.LANGUAGE_RU -> ApiResources.FLAG_RU
+            API.LANGUAGE_PT -> ApiResources.FLAG_PT
+            API.LANGUAGE_UK -> ApiResources.FLAG_UK
+            API.LANGUAGE_DE -> ApiResources.FLAG_DE
+            API.LANGUAGE_IT -> ApiResources.FLAG_IT
+            API.LANGUAGE_PL -> ApiResources.FLAG_PL
+            API.LANGUAGE_FR -> ApiResources.FLAG_FR
+            else -> ApiResources.FLAG_WORLD
         }
     }
+    fun getIconForLanguage(languageId: Long): ImageLink =
+        ImageLoader.load(getIconRefForLanguage(languageId))
 
     @Suppress("DEPRECATION")
     fun makeTextHtml(vText: TextView) {

@@ -11,14 +11,13 @@ import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.screens.activities.user_activities.SRelayRacesList
 import com.sayzen.campfiresdk.screens.fandoms.rubrics.SRubricsList
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.settings.Settings
 import com.sup.dev.android.views.settings.SettingsCheckBox
-import com.sup.dev.android.views.splash.view.SplashViewSheet
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashChooseDate
 import com.sup.dev.android.views.splash.SplashChooseTime
+import com.sup.dev.android.views.splash.view.SplashViewSheet
 import com.sup.dev.java.tools.ToolsDate
 import com.sup.dev.java.tools.ToolsThreads
 
@@ -36,6 +35,7 @@ class SplashTagsAdditional(
     private val vPending: SettingsCheckBox = findViewById(R.id.vPending)
     private val vClose: SettingsCheckBox = findViewById(R.id.vClose)
     private val vMultilingual: SettingsCheckBox = findViewById(R.id.vMultilingual)
+    private val vNsfw: SettingsCheckBox = findViewById(R.id.vNsfw)
     private val vRubric: Settings = findViewById(R.id.vRubric)
     private val vRelayRace: Settings = findViewById(R.id.vRelayRace)
     private val vEnter: Button = findViewById(R.id.vEnter)
@@ -46,9 +46,11 @@ class SplashTagsAdditional(
         vPending.setChecked(postParams.pendingTime > 0)
         vClose.setChecked(postParams.closed)
         vMultilingual.setChecked(postParams.multilingual)
-        vEnter.setText(t(API_TRANSLATE.app_ok))
-        vMultilingual.setTitle(t(API_TRANSLATE.app_multilingual))
+        vNsfw.setChecked(postParams.nsfw)
 
+        vEnter.text = t(API_TRANSLATE.app_ok)
+        vMultilingual.setTitle(t(API_TRANSLATE.app_multilingual))
+        vNsfw.setTitle(t(API_TRANSLATE.post_create_nsfw))
         vNotifyFollowers.setTitle(t(API_TRANSLATE.post_create_notify_followers))
         vPending.setTitle(t(API_TRANSLATE.post_create_pending))
         vClose.setTitle(t(API_TRANSLATE.post_create_closed))
@@ -62,6 +64,7 @@ class SplashTagsAdditional(
         vNotifyFollowers.setOnClickListener { postParams.notifyFollowers = vNotifyFollowers.isChecked(); updateParamsText() }
         vClose.setOnClickListener { postParams.closed = vClose.isChecked(); updateParamsText() }
         vMultilingual.setOnClickListener { postParams.multilingual = vMultilingual.isChecked(); updateParamsText() }
+        vNsfw.setOnClickListener { postParams.nsfw = vNsfw.isChecked(); updateParamsText() }
 
         if (postParams.activity != null) {
             setRelayRace(postParams.activity!!, postParams.nextUserId)
@@ -79,6 +82,7 @@ class SplashTagsAdditional(
         if (postParams.multilingual) text += "\n" + t(API_TRANSLATE.app_multilingual)
         if (postParams.rubric != null) text += "\n" + postParams.rubric!!.name
         if (postParams.activity != null) text += "\n" + postParams.activity!!.name
+        if (postParams.nsfw) text += "\n" + t(API_TRANSLATE.post_create_nsfw)
 
         vParamsText.text = text
         vParamsText.visibility = if (text.isEmpty()) View.GONE else View.VISIBLE

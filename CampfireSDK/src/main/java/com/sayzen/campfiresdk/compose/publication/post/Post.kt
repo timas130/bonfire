@@ -1,138 +1,71 @@
 package com.sayzen.campfiresdk.compose.publication.post
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.layout.Placeable
-import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
-import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.recyclerview.widget.RecyclerView
+import com.dzen.campfire.api.API
 import com.dzen.campfire.api.ApiResources
+import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.fandoms.Fandom
 import com.dzen.campfire.api.models.publications.post.PublicationPost
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.compose.ComposeScreen
-import com.sayzen.campfiresdk.controllers.ControllerApi
+import com.sayzen.campfiresdk.compose.BonfireTheme
+import com.sayzen.campfiresdk.compose.ComposeCard
+import com.sayzen.campfiresdk.compose.util.mapState
 import com.sayzen.campfiresdk.controllers.ControllerSettings
-import com.sayzen.campfiresdk.screens.account.profile.SProfile
+import com.sayzen.campfiresdk.models.cards.CardComment
 import com.sayzen.campfiresdk.screens.activities.user_activities.relay_race.SRelayRaceInfo
-import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
+import com.sayzen.campfiresdk.screens.post.create.SPostCreate
 import com.sayzen.campfiresdk.screens.post.view.SPost
-import com.sayzen.campfiresdk.support.load
-import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.java.tools.ToolsDate
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import sh.sit.bonfire.auth.DecorFitsSystemWindowEffect
-import sh.sit.bonfire.auth.components.BackButton
-import sh.sit.bonfire.auth.components.RemoteImage
+import sh.sit.bonfire.auth.AuthController
+import sh.sit.bonfire.formatting.compose.LinksClickableText
+import sh.sit.bonfire.formatting.compose.buildInlineAnnotatedString
+import sh.sit.bonfire.formatting.core.BonfireFormatter
 
 @Composable
-private fun DividerDot() {
-    Box(
-        Modifier
-            .size(4.dp)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
-    )
-}
-
-@Composable
-private fun PostHeader(
-    post: PublicationPost,
-) {
-    Row(
-        Modifier
-            .padding(horizontal = 12.dp)
-            .padding(top = 12.dp, bottom = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        RemoteImage(
-            link = ImageLoader.load(post.fandom.image),
-            contentDescription = post.fandom.name,
-            modifier = Modifier
-                .size(28.dp)
-                .clip(RoundedCornerShape((ControllerSettings.styleAvatarsRounding * (14f / 18f)).dp))
-                .clickable {
-                    SFandom.instance(post.fandom.id, post.fandom.languageId, Navigator.TO)
-                }
-        )
-
+internal fun PostTitle(title: String) {
+    if (title.isNotEmpty()) {
         Text(
-            text = post.fandom.name,
-            style = MaterialTheme.typography.titleMedium,
+            text = title,
+            style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.clickable {
-                SFandom.instance(post.fandom, Navigator.TO)
-            }
+            modifier = Modifier
+                .padding(horizontal = 12.dp)
+                .padding(bottom = 8.dp),
         )
-        DividerDot()
-        Text(
-            text = "@${post.creator.name}",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-            modifier = Modifier.clickable {
-                SProfile.instance(post.creator, Navigator.TO)
-            }
-        )
-        DividerDot()
-        Text(
-            text = ToolsDate.dateToString(post.dateCreate),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-            overflow = TextOverflow.Ellipsis,
-            softWrap = false,
-            modifier = Modifier.weight(1f)
-        )
-
-        IconButton(
-            onClick = { /* TODO */ },
-            modifier = Modifier.size(28.dp)
-        ) {
-            Icon(Icons.Default.MoreVert, stringResource(R.string.post_more))
-        }
     }
 }
 
 @Composable
-private fun PostTitle(title: String) {
-    Text(
-        text = title,
-        style = MaterialTheme.typography.titleLarge,
-        color = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier
-            .padding(horizontal = 12.dp)
-            .padding(bottom = 8.dp),
-    )
-}
-
-@Composable
-private fun PostChips(post: PublicationPost) {
+internal fun PostChips(post: PublicationPost) {
     LazyRow(
         contentPadding = PaddingValues(horizontal = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -154,127 +87,115 @@ private fun PostChips(post: PublicationPost) {
     }
 }
 
-@Composable
-private fun PostFooter(
-    post: PublicationPost,
-    expanded: Boolean,
-    onExpand: (Boolean) -> Unit,
-) {
-    Row(
-        Modifier
-            .padding(horizontal = 12.dp)
-            .padding(bottom = 12.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        ExpandButton(onExpand, expanded)
-        Spacer(Modifier.weight(1f))
-        CommentButton(post)
+class PostModel(post: PublicationPost, onRemoved: State<() -> Unit>) : ViewModel() {
+    val dataSource = PostDataSource(post, onRemoved)
+
+    private val _expanded = MutableStateFlow(false)
+    val expanded = _expanded.asStateFlow()
+
+    private val _nsfwOverlayActive = MutableStateFlow(post.nsfw)
+    val nsfwOverlayActive = _nsfwOverlayActive.asStateFlow()
+
+    enum class NsfwOverlayButtonVariant {
+        None,
+        SpecifyAge,
+        Open
     }
-}
-
-@Composable
-private fun CommentButton(post: PublicationPost) {
-    FilledTonalButton(
-        onClick = {
-            SPost.instance(post.id, -1, Navigator.TO)
-        }
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.comment_24),
-            contentDescription = stringResource(R.string.post_comment),
-            modifier = Modifier
-                .size(ButtonDefaults.IconSize)
-        )
-        Spacer(Modifier.width(ButtonDefaults.IconSpacing))
-
-        AnimatedContent(targetState = post.subPublicationsCount, label = "CommentCount") {
-            Text(it.toString())
-        }
-    }
-}
-
-@Composable
-private fun ExpandButton(onExpand: (Boolean) -> Unit, expanded: Boolean) {
-    FilledTonalButton(
-        onClick = {
-            onExpand(!expanded)
-        }
-    ) {
-        val rotation by animateFloatAsState(
-            targetValue = if (expanded) 180f else 0f,
-            label = "ExpandedRotation",
-        )
-
-        Icon(
-            Icons.Default.KeyboardArrowDown,
-            contentDescription = null,
-            modifier = Modifier
-                .size(ButtonDefaults.IconSize)
-                .rotate(rotation)
-        )
-        Spacer(Modifier.width(ButtonDefaults.IconSpacing))
-
-        AnimatedContent(targetState = expanded, label = "ExpandedText") {
-            if (it) {
-                Text(stringResource(R.string.post_shrink))
-            } else {
-                Text(stringResource(R.string.post_expand))
-            }
-        }
-    }
-}
-
-@Composable
-private fun PostContent(expanded: Boolean) {
-    SubcomposeLayout(
-        Modifier
-            .heightIn(max = if (expanded) Dp.Unspecified else 256.dp)
-            .clipToBounds()
-            .padding(horizontal = 12.dp)
-            .animateContentSize()
-    ) { constraints ->
-        val items = subcompose(Unit) {
-            val text = remember { LoremIpsum(1000).values.single().split(" ") }
-            repeat(15) {
-                Text(text.subList(it * 10, it * 10 + 10).joinToString(" "))
-            }
-        }
-
-        val measurements = if (constraints.maxHeight == Constraints.Infinity) {
-            items.map { it.measure(constraints) }
+    val nsfwOverlayButtons = AuthController.currentUserState.mapState { user ->
+        if (user?.birthday == null) {
+            NsfwOverlayButtonVariant.SpecifyAge
+        } else if (user.nsfwAllowed == true) {
+            NsfwOverlayButtonVariant.Open
         } else {
-            val list = mutableListOf<Placeable>()
-            var y = 0
-            for (item in items) {
-                val measurement = item.measure(constraints)
-                list.add(measurement)
-                y += measurement.height
-
-                if (y >= constraints.maxHeight) break
-            }
-
-            list
+            NsfwOverlayButtonVariant.None
         }
+    }
 
-        layout(constraints.maxWidth, measurements.sumOf { it.height }) {
-            var yPosition = 0
-            for (measurement in measurements) {
-                measurement.placeRelative(0, yPosition)
-                yPosition += measurement.height
-            }
+    init {
+        viewModelScope.launch {
+            dataSource.flow
+                .map { it.nsfw }
+                .collect { _nsfwOverlayActive.value = it }
         }
+    }
+
+    fun expand() {
+        _expanded.value = true
+    }
+    fun shrink() {
+        _expanded.value = false
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        dataSource.destroy()
+    }
+
+    fun dismissNsfw() {
+        _nsfwOverlayActive.value = false
     }
 }
 
 @Composable
 fun Post(
-    post: PublicationPost,
+    initialPost: PublicationPost,
+    onRemoved: () -> Unit = {},
     scrollToTop: (() -> Unit)? = null,
     onClick: ((PublicationPost) -> Unit)? = null,
+    showBestComment: Boolean = true,
 ) {
-    var expanded by remember {
+    val onRemovedRef = rememberUpdatedState(onRemoved)
+    val model = viewModel(key = "Post:${initialPost.id}") {
+        PostModel(initialPost, onRemovedRef)
+    }
+
+    val post by model.dataSource.flow.collectAsState()
+    val expanded by model.expanded.collectAsState()
+
+    var expandable by remember {
         mutableStateOf(false)
     }
+
+    if (post.blacklisted) {
+        if (ControllerSettings.hideBlacklistedPubs) return
+
+        val hiddenString = stringResource(R.string.pub_hidden)
+        val colors = MaterialTheme.colorScheme
+
+        Surface(
+            Modifier
+                .padding(vertical = 8.dp)
+                .fillMaxWidth()
+        ) {
+            LinksClickableText(
+                text = remember(post.creator.name) {
+                    BonfireFormatter.parse(
+                        hiddenString.format(post.creator.name),
+                        inlineOnly = true
+                    ).buildInlineAnnotatedString(colors)
+                },
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp),
+            )
+        }
+        return
+    }
+
+    DisposableEffect(expanded) {
+        if (!expanded) return@DisposableEffect onDispose {}
+
+        val listener = {
+            model.shrink()
+            true
+        }
+        Navigator.addOnBack(listener)
+
+        onDispose {
+            Navigator.removeOnBack(listener)
+        }
+    }
+
+    val interactionSource = remember { MutableInteractionSource() }
 
     Card(
         shape = RectangleShape,
@@ -282,8 +203,35 @@ fun Post(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow
         ),
         modifier = Modifier
+            .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .clickable(onClick != null) { onClick!!(post) }
+            .indication(interactionSource, LocalIndication.current)
+            .pointerInput(Unit) {
+                awaitEachGesture {
+                    val down = awaitFirstDown()
+                    down.consume()
+                    val press = PressInteraction.Press(down.position)
+                    interactionSource.tryEmit(press)
+
+                    val up = waitForUpOrCancellation()
+                    if (up == null) {
+                        interactionSource.tryEmit(PressInteraction.Cancel(press))
+                        return@awaitEachGesture
+                    }
+                    up.consume()
+
+                    interactionSource.tryEmit(PressInteraction.Release(press))
+
+                    if (onClick != null) {
+                        onClick(post)
+                    } else if (post.status != API.STATUS_DRAFT) {
+                        PostHog.capture("post_open", properties = mapOf("type" to "full"))
+                        SPost.instance(post.id, Navigator.TO, skipNsfw = !model.nsfwOverlayActive.value)
+                    } else {
+                        SPostCreate.instance(post.id, Navigator.TO)
+                    }
+                }
+            }
     ) {
         PostHeader(post = post)
 
@@ -291,70 +239,116 @@ fun Post(
 
         PostChips(post = post)
 
-        PostContent(expanded = expanded)
+        PostContent(
+            post = post,
+            model = model,
+            onExpandableChanged = { expandable = it },
+            onExpand = model::expand,
+        )
 
         PostFooter(
             post = post,
-            expanded = expanded,
+            model = model,
+            expandable = expandable,
             onExpand = { expand ->
                 if (!expand) {
                     scrollToTop?.invoke()
+                    model.shrink()
+                } else {
+                    model.expand()
                 }
-                expanded = expand
             }
         )
-    }
-}
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TestPostScreenC() {
-    DecorFitsSystemWindowEffect()
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                navigationIcon = { BackButton() },
-                title = { Text(stringResource(R.string.post_comment)) }
-            )
-        },
-    ) { paddingValues ->
-        val listState = rememberLazyListState()
-        val scope = rememberCoroutineScope()
-
-        LazyColumn(contentPadding = paddingValues, state = listState) {
-            items(100) { index ->
-                Post(
-                    post = PublicationPost().apply {
-                        title = "Это новый пост."
-                        pages = arrayOf()
-                        creator = ControllerApi.account.getAccount()
-                        fandom = Fandom().apply {
-                            name = "Minecraft"
-                            image = ApiResources.AVATAR_2
-                        }
+        AnimatedVisibility(visible = post.bestComment != null && showBestComment) {
+            val card = remember(post.bestComment) {
+                CardComment.instance(
+                    publication = post.bestComment!!,
+                    dividers = false,
+                    miniSize = true,
+                    onClick = {
+                        SPost.instance(post.id, it.id, Navigator.TO)
+                        true
                     },
-                    scrollToTop = {
-                        scope.launch {
-                            val layoutInfo = listState.layoutInfo
-                            val topVisible = layoutInfo.visibleItemsInfo
-                                .find { it.index == index }
-                                ?.let { it.offset > 0 } == true
-
-                            if (!topVisible) {
-                                listState.animateScrollToItem(index)
-                            }
-                        }
+                    onGoTo = {
+                        SPost.instance(post.id, it, Navigator.TO)
                     }
                 )
             }
+
+            HorizontalDivider()
+            AndroidView(
+                factory = {
+                    val view = card.instanceView(it)
+                    card.bindCardView(view)
+                    view
+                },
+                update = {
+                    card.bindCardView(it)
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
         }
     }
 }
 
-class TestPostScreen : ComposeScreen() {
+internal val testPost = PublicationPost().apply {
+    id = -1
+    title = "Это новый пост."
+    pages = arrayOf()
+    creator = Account().apply {
+        id = 1
+        name = "sit"
+        lvl = 100
+    }
+    karmaCount = -4200
+    myKarma = 0
+    subPublicationsCount = 15
+    fandom = Fandom().apply {
+        name = "Minecraft"
+        image = ApiResources.AVATAR_2
+        karmaCof = 150
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun TestPost() {
+    BonfireTheme(useDarkTheme = isSystemInDarkTheme()) {
+        Column(Modifier.verticalScroll(rememberScrollState())) {
+            Post(initialPost = testPost, onClick = {})
+        }
+    }
+}
+
+class ComposeCardPost(
+    private val proxy: CardPostProxy,
+    private val vRecycler: RecyclerView?,
+    private val post: PublicationPost,
+    private val onClick: ((PublicationPost) -> Unit)? = null,
+) : ComposeCard() {
+    var showFandom: Boolean
+        set(_) {}
+        get() = false
+
     @Composable
     override fun Content() {
-        TestPostScreenC()
+        Post(
+            initialPost = post,
+            onRemoved = { adapter.remove(proxy) },
+            scrollToTop = {
+                val index = adapter.indexOf(proxy)
+                if (index == -1) return@Post
+
+                vRecycler?.scrollToPosition(index)
+            },
+            onClick = onClick,
+        )
+    }
+
+    @Composable
+    override fun getBackground(): Color {
+        return Color.Transparent
     }
 }

@@ -188,7 +188,7 @@ class XFandom() {
     private fun onEventFandomChanged(e: EventFandomChanged) {
         if (e.fandomId == fandom.id) {
             if (e.name.isNotEmpty()) fandom.name = e.name
-            if (e.imageId != -1L) fandom.imageId = e.imageId
+            if (e.image.isNotEmpty()) fandom.image = e.image
             if (e.imageTitle.isNotEmpty()) fandom.imageTitle = e.imageTitle
             if (e.imageTitleGif.isNotEmpty()) fandom.imageTitleGif = e.imageTitleGif
             onChanged.invoke()
@@ -200,7 +200,7 @@ class XFandom() {
             fandom.id = e.fandomId
             fandom.languageId = e.languageId
             fandom.name = e.fandomName
-            fandom.imageId = e.fandomImageId
+            fandom.image = e.fandomImage
             onChanged.invoke()
         }
     }

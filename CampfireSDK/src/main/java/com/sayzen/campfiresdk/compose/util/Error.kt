@@ -1,7 +1,7 @@
 package com.sayzen.campfiresdk.compose.util
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -15,12 +15,13 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ErrorCard(text: String) {
-    Row(
+    Column(
         Modifier
-            .padding(vertical = 32.dp)
+            .padding(vertical = 32.dp, horizontal = 16.dp)
             .padding(bottom = 16.dp)
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(Icons.Default.Warning, null)
         Text(text)

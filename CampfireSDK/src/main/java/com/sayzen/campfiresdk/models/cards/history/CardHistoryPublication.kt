@@ -64,6 +64,20 @@ class CardHistoryPublication(
                 vAvatar.setSubtitle(t(API_TRANSLATE.history_edit_public))
                 if (history.oldText.isNotEmpty())vAvatar.setSubtitle(vAvatar.getSubTitle() + "\n${t(API_TRANSLATE.app_was)}: \"${history.oldText}\"")
             }
+            is HistorySetNsfw -> {
+                if (history.nsfw) {
+                    vAvatar.setSubtitle(t(API_TRANSLATE.history_set_nsfw_true))
+                } else {
+                    vAvatar.setSubtitle(t(API_TRANSLATE.history_set_nsfw_false))
+                }
+            }
+            is HistoryAdminSetNsfw -> {
+                if (history.nsfw) {
+                    vAvatar.setSubtitle(t(API_TRANSLATE.history_set_nsfw_true))
+                } else {
+                    vAvatar.setSubtitle(t(API_TRANSLATE.history_set_nsfw_false))
+                }
+            }
         }
 
         if (history.comment.isNotEmpty()) vAvatar.setSubtitle(vAvatar.getSubTitle() + "\n" + t(API_TRANSLATE.app_comment) + ": " + history.comment)

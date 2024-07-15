@@ -40,5 +40,62 @@
     <string name="post_expand">Больше</string>
     <string name="post_shrink">Меньше</string>
     <string name="post_comment">Комментарии</string>
-
+    <string name="karma_down">Дизлайк</string>
+    <string name="karma_up">Лайк</string>
+    <string name="link">Ссылка</string>
+    <string name="spoiler_shrink">Свернуть</string>
+    <string name="spoiler_expand">Развернуть</string>
+    <string name="spoiler_label">%s (%d стр.)</string>
+    <string name="spoiler_label_default">Спойлер</string>
+    <string name="page_copy">Копировать эту страницу</string>
+    <string name="page_campfire_object">Объект Bonfire</string>
+    <string name="page_download_unsupported">[Тут должна была быть страница Загрузки, но они уже не поддерживаются в
+        Bonfire.]
+    </string>
+    <string name="page_unsupported">[Ошибка при загрузке страницы]</string>
+    <string name="page_image">Картинка</string>
+    <string name="page_link_image">Картинка-ссылка</string>
+    <string name="link_copied">Ссылка скопирована</string>
+    <string name="polling_already_voted">Вы уже проголосовали в этом опросе</string>
+    <string name="poll_results">Результаты</string>
+    <string name="poll_results_title">Результаты опроса</string>
+    <string name="list_error_generic">Ошибка во время загрузки элментов. Пожалуйста, перезагрузите страницу</string>
+    <string name="list_empty_generic">Нет элементов</string>
+    <string name="poll_results_error">Ошибка загрузки голосов. Пожалуйста, перезагрузките страницу</string>
+    <string name="poll_results_empty">Похоже, никто ещё не голосовал</string>
+    <string name="video_alt">Видео</string>
+    <string name="activity_no_user">Нет следующего пользователя</string>
+    <string name="activity_create_post">Создать пост</string>
+    <string name="activity_reject">Отклонить</string>
+    <string name="activity_leave">Не участвовать</string>
+    <string name="activity_join">Участвовать</string>
+    <string name="poll_limits">Ограничения:</string>
+    <string name="poll_limits_level">Уровень %.2f</string>
+    <string name="poll_limits_karma">Карма %d</string>
+    <string name="poll_limits_age">Возраст аккаунта %d дн.</string>
+    <string name="poll_limits_blacklist">Чёрный список</string>
+    <string name="poll_reload">Обновить</string>
+    <string name="pub_hidden">Публикация от %s была скрыта</string>
+    <string name="nsfw_title">NSFW-контент</string>
+    <string name="nsfw_verify_age">Указать возраст</string>
+    <string name="nsfw_open">Открыть</string>
+    <string name="post_move_here">Переместить сюда</string>
+    <string name="hide_nsfw_posts_desc">Все NSFW посты будут скрыты</string>
+    <string name="hide_nsfw_posts">Скрыть NSFW</string>
+    <string name="multilingual_badge_alt">Мультиязычный</string>
+    <string name="nsfw_warning_full">Этот пост содержит NSFW-контент, который может показаться вам непристойным. Вы уверены, что хотите его открыть?</string>
+    <string name="compose_post_title">Редизайн постов</string>
+    <string name="compose_post_description">Полный редизайн интерфейса поста, вплоть до дизайна страниц и небольших деталей.</string>
+    <string name="experiments_title">Эксперименты</string>
+    <string name="experiments_description">Заходите на страницу за различными экспериментальными изменениями в бета-тестировании!</string>
+    <string name="experiment_wait_snackbar">Пожалуйста, подождите, пока добрые ёжики изменяют ваш статус участия...</string>
+    <string name="experiment_enrolled_snackbar">Теперь вы часть эксперимента. Спасибо за помощь!</string>
+    <string name="experiment_left_snackbar">Спасибо за участие. Теперь вы не участвуете в эксперименте.</string>
+    <string name="experiment_error_snackbar">"Нам не удалось изменить ваш статус участия в эксперименте. Попробуйте
+        позже."
+    </string>
+    <string name="experiments_opted_out">Вы не можете участвовать в экспериментах, потому что вы отказались от отправки аналитической информации. Вы можете включить её обратно в настройках приватности.</string>
+    <string name="restart_button">Перезапустить</string>
+    <string name="restart_title">Перезапустить?</string>
+    <string name="restart_text">Этот эксперимент рекомендует перезапустить приложение, чтобы правильно примениться и не вызвать баги и вылеты. Перезапустить приложение сейчас?</string>
 </resources>

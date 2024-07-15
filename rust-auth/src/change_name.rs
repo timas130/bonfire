@@ -6,8 +6,14 @@ impl AuthServer {
         &self,
         user_id: i64,
         new_name: String,
+        loose: bool,
     ) -> Result<(), AuthError> {
-        if !Self::is_username_valid(&new_name) {
+        let username_valid = if loose {
+            Self::is_username_valid_loose(&new_name)
+        } else {
+            Self::is_username_valid(&new_name)
+        };
+        if !username_valid {
             return Err(AuthError::InvalidUsername);
         }
 

@@ -71,6 +71,7 @@ class AccountSettings() : JsonParsable {
     var feedCategories: Array<Long> =  emptyArray()
     var feedImportant = false
     var feedOrder: Array<Long> =  emptyArray()
+    var showNsfwPosts: Boolean = true
     //  Profile
     var profileFilterEvents = true
     var profileFilterPosts = true
@@ -176,6 +177,7 @@ class AccountSettings() : JsonParsable {
         feedCategories = json.m(inp, "feedCategories", feedCategories)
         feedImportant = json.m(inp, "feedImportant", feedImportant)
         feedOrder = json.m(inp, "feedOrder_v2", feedOrder)
+        showNsfwPosts = json.m(inp, "showNsfwPosts", showNsfwPosts)
 
         profileFilterEvents = json.m(inp, "profileFilterEvents", profileFilterEvents)
         profileFilterPosts = json.m(inp, "profileFilterPosts", profileFilterPosts)

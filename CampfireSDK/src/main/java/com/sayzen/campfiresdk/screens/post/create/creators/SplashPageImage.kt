@@ -9,8 +9,6 @@ import com.dzen.campfire.api.models.publications.post.PageImages
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
-import com.sayzen.campfiresdk.models.cards.post_pages.CardPageImage
-import com.sayzen.campfiresdk.models.cards.post_pages.CardPageImages
 import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
@@ -29,7 +27,7 @@ import com.sup.dev.java.tools.ToolsCollections
 import com.sup.dev.java.tools.ToolsThreads
 
 class SplashPageImage(
-        private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage) -> Unit)) -> Unit,
+        private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, onFinish: ((CardPage) -> Unit)) -> Unit,
         private val requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page) -> Unit) -> Unit
 ) : SplashChooseImage() {
 
@@ -85,7 +83,7 @@ class SplashPageImage(
     companion object {
 
         fun change(page: Page,
-                   requestPutPage: (page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage) -> Unit)) -> Unit,
+                   requestPutPage: (page: Page, screen: Screen?, splash: Splash?, onFinish: ((CardPage) -> Unit)) -> Unit,
                    requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page) -> Unit) -> Unit,
                    card: CardPage) {
             if ((page as PageImage).gif.isNotEmpty()) {
@@ -100,7 +98,7 @@ class SplashPageImage(
         }
 
         private fun parseChangeBytes(bytes: ByteArray?,
-                                     requestPutPage: (page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage) -> Unit)) -> Unit,
+                                     requestPutPage: (page: Page, screen: Screen?, splash: Splash?, onFinish: ((CardPage) -> Unit)) -> Unit,
                                      requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page) -> Unit) -> Unit,
                                      card: CardPage) {
             val d = ToolsView.showProgressDialog()
@@ -137,7 +135,7 @@ class SplashPageImage(
         }
 
         private fun createNow(bytes: ByteArray, d: Splash?,
-                              requestPutPage: (page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage) -> Unit)) -> Unit,
+                              requestPutPage: (page: Page, screen: Screen?, splash: Splash?, onFinish: ((CardPage) -> Unit)) -> Unit,
                               requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page) -> Unit) -> Unit,
                               card: CardPage?, onCreateFinish: () -> Unit) {
 
@@ -164,7 +162,7 @@ class SplashPageImage(
 
             ToolsThreads.main {
                 if (card == null)
-                    requestPutPage.invoke(page, null, d, { page1 -> CardPageImage(null, page1 as PageImage) }, { onCreateFinish.invoke() })
+                    requestPutPage.invoke(page, null, d) { onCreateFinish.invoke() }
                 else
                     requestChangePage.invoke(page, card, null, d) {}
 
@@ -174,7 +172,7 @@ class SplashPageImage(
         }
 
         private class ImagesListCreator(
-                val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage) -> Unit)) -> Unit
+                val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, onFinish: ((CardPage) -> Unit)) -> Unit
         ) {
 
             private val page = PageImages()
@@ -204,7 +202,7 @@ class SplashPageImage(
             }
 
             fun send(onFinish:()->Unit){
-                requestPutPage.invoke(page, null, null, {CardPageImages(null, it as PageImages)}){onFinish.invoke()}
+                requestPutPage.invoke(page, null, null) { onFinish.invoke() }
             }
         }
 

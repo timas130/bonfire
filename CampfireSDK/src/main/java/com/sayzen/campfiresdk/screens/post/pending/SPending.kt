@@ -7,9 +7,9 @@ import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostPendingGetAll
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.publication.post.CardPostProxy
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
-import com.sayzen.campfiresdk.models.cards.CardPost
 import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
 import com.sayzen.campfiresdk.screens.post.create.SPostCreate
 import com.sayzen.campfiresdk.support.load
@@ -17,7 +17,7 @@ import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.views.screens.SLoadingRecycler
 
-class SPending : SLoadingRecycler<CardPost, PublicationPost>() {
+class SPending : SLoadingRecycler<CardPostProxy, PublicationPost>() {
 
     init {
         setScreenColorBackground()
@@ -44,10 +44,10 @@ class SPending : SLoadingRecycler<CardPost, PublicationPost>() {
         }
     }
 
-    override fun classOfCard() = CardPost::class
+    override fun classOfCard() = CardPostProxy::class
 
-    override fun map(item: PublicationPost): CardPost {
-        val card = CardPost(vRecycler, item)
+    override fun map(item: PublicationPost): CardPostProxy {
+        val card = CardPostProxy(vRecycler, item)
         card.showFandom = true
         return card
     }

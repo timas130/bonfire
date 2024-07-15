@@ -1007,7 +1007,7 @@ object API_TRANSLATE {
     val mod_comment_11_label = Translate("Спойлеры")
     val mod_comment_11_full = Translate("Правило 6: Спойлеры. @app-rules и правила фэндома")
     val mod_comment_12_label = Translate("Бессмысленная публикация")
-    val mod_comment_12_full = Translate("Правло 10: Бессмысленная публикация. @app-rules\n\nОбъяснение: ")
+    val mod_comment_12_full = Translate("Правило 10: Бессмысленная публикация. @app-rules\n\nОбъяснение: ")
 
     val hello_get_started = Translate("Приступим")
     val hello_1_title = Translate("Один фэндом - одна тема")
@@ -1131,6 +1131,7 @@ object API_TRANSLATE {
     val settings_email_change_password_error = Translate("Не удалось войти, проверьте старый пароль", true)
     val settings_privacy_title = Translate("Приватность")
     val settings_privacy_hide_blacklist = Translate("Полностью скрывать публикации от пользователей из чёрного списка")
+    val settings_show_nsfw = Translate("Показывать NSFW публикации")
 
     val publication_blacklisted = Translate("Публикация от %s скрыта", true)
 
@@ -1180,6 +1181,8 @@ object API_TRANSLATE {
     val history_close_no = Translate("Публикация открыта")
     val history_admin_close = Translate("Публикация закрыта")
     val history_admin_close_no = Translate("Публикация открыта")
+    val history_set_nsfw_true = Translate("Публикация отмечена как NSFW")
+    val history_set_nsfw_false = Translate("Публикация отмечена как NSFW")
 
     val campfire_hello_annotation = Translate("Пост создан автоматически, поприветствуем нового пользователя Bonfire")
     val campfire_hello_1 = Translate("Всем привет, я %s.")
@@ -1225,6 +1228,7 @@ object API_TRANSLATE {
     val post_error_gone_block = Translate("Пост заблокирован доблестными модераторами Bonfire.")
     val post_error_gone_draft = Translate("Пост возвращен в черновики пользователя.")
     val post_error_gone_remove = Translate("Пост удалён пользователем.")
+    val post_error_access_nsfw = Translate("У вас нет доступа к этому посту, так как вы отключили показ NSFW-контента или не достигли возраста, чтобы его видеть.")
     val post_remove_confirm = Translate("Удалить этот пост?")
     val post_clear_reports_confirm = Translate("Удалить жалобы на этот пост?")
     val post_report_confirm = Translate("Пожаловаться на этот пост?")
@@ -1233,7 +1237,18 @@ object API_TRANSLATE {
     val post_confirm_to_draft = Translate("Вернуть пост в черновики?")
     val post_confirm_to_draft_enter = Translate("Вернуть")
     val post_page_text = Translate("Текст")
-    val post_page_text_hint = Translate("Введите текст страницы")
+    val post_page_text_hint = Translate("""
+        ## Заголовок
+        ### Заголовок поменьше
+        
+        **Жирный**, *наклонный*, __подчёркнутый__, ~~зачёркнутый~~ текст
+        [Ссылка](https://bonfire.moe)
+        
+        - Список
+        - Список
+        
+        Больше информации в вики фэндома Bonfire!
+    """.trimIndent())
     val post_page_text_new_formatting_off = Translate("Отключить новое форматирование")
     val post_page_text_new_formatting_on = Translate("Включить новое форматирование")
     val post_page_image = Translate("Картинка")
@@ -1292,6 +1307,7 @@ object API_TRANSLATE {
     val post_create_rubric = Translate("Добавить рубрику")
     val post_create_relay_race = Translate("Добавить эстафету")
     val post_create_relay_race_next_user = Translate("Вы можете выбрать кому передать эстафету, но это не обязательно.")
+    val post_create_nsfw = Translate("NSFW")
     val post_pending_publish = Translate("Опубликовать пост сейчас?")
     val post_close_confirm = Translate("Закрыть этот пост?")
     val post_open_confirm = Translate("Открыть этот пост?")
@@ -1430,6 +1446,10 @@ object API_TRANSLATE {
     val publication_menu_comments_watch_off = Translate("Вы больше не следите за комментариями")
     val publication_menu_moderator_to_drafts = Translate("В черновики")
     val publication_menu_moderator_to_drafts_confirm = Translate("Вернуть этот пост в черновики пользователя?")
+    val publication_menu_set_nsfw = Translate("Пометить пост как NSFW")
+    val publication_menu_unset_nsfw = Translate("Убрать пометку NSFW")
+    val publication_menu_set_nsfw_desc = Translate("Пометить этот пост как NSFW?")
+    val publication_menu_unset_nsfw_desc = Translate("Убрать пометку NSFW с этого поста?")
     val publication_event_make_moderator = Translate("Администратор %s %s этого пользователя модератором фэндома %s")
     val publication_event_make_moderator_admin = Translate("%s пользователя %s модератором фэндома %s")
     val publication_event_remove_moderator = Translate("Администратор %s %s этого пользователя права модерировать фэндом %s")
@@ -1595,11 +1615,11 @@ object API_TRANSLATE {
     val error_max_items_count = Translate("Слишком много элементов")
     val error_cant_create_tag_without_category = Translate("Нельзя создать тег пока нет категорий")
     val error_rate_self_publication = Translate("Вы не можете оценить свою публикацию")
-    val error_rate_cant_down = Translate("Вы получили древнее проклятие хейтеров и некоторое время не сможете отрицательно оценивать публикации")
+    val error_rate_cant_down = Translate("Вы получили проклятие хейтера и не можете отрицательно оценивать публикации")
     val error_already_blocked = Translate("Кто-то уже заблокировал это")
     val error_already_returned_to_drafts = Translate("Кто-то уже вернул это в черновики")
     val error_publications_blocks_limit = Translate("Проклятие вахтера. Вы превысили лимит блокировок на 24 часа.")
-    val error_publications_blocks_rejected = Translate("Вы не можете блокировать публикации, в течении 24 часов одну из ваших блокировок отклонили.")
+    val error_publications_blocks_rejected = Translate("Вы не можете блокировать публикации, в течение 24 часов одну из ваших блокировок отклонили.")
     val error_unsupported_link = Translate("Не поддерживаемая ссылка")
     val error_of_loading = Translate("Ошибка загрузки")
     val error_incorrect_value = Translate("Некорректное значение")
@@ -1883,6 +1903,8 @@ object API_TRANSLATE {
     val notifications_moderation_post_close_no = Translate("Модератор %s %s ваш пост")
     val notifications_moderation_tags = Translate("Модератор %s %s теги вашего поста")
     val notifications_moderation_forgive = Translate("Модератор %s %s вас в фэндоме %s")
+    val notifications_moderation_set_nsfw_true = Translate("Модератор %s %s ваш пост как NSFW")
+    val notifications_moderation_set_nsfw_false = Translate("Модератор %s %s отметку NSFW с вашего поста")
     val notification_post_comment = Translate("%s %s ваш пост%s")
     val notification_punishment_remove = Translate("%s %s вашe наказание")
     val notification_post_comment_watch = Translate("%s %s пост%s, за которым вы следите")
@@ -2033,6 +2055,8 @@ object API_TRANSLATE {
     val moderation_rubric_crete = Translate("%s рубрику %s и %s владельца %s")
     val moderation_rubric_remove = Translate("%s рубрику %s")
     val moderation_rubric_move_fandom = Translate("%s рубрику %s из фэндома %s в %s")
+    val moderation_set_nsfw_true = Translate("%s пост %s как NSFW")
+    val moderation_set_nsfw_false = Translate("%s отметку NSFW с поста %s")
 
     val administration_fandoms_empty = Translate("Никто не предлагал новые фэндомы")
     val administration_fandoms_remove_empty = Translate("Никто не удаляет фэндомы")

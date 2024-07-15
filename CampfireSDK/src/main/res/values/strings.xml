@@ -40,5 +40,69 @@
     <string name="post_expand">Expand</string>
     <string name="post_shrink">Shrink</string>
     <string name="post_comment">Comments</string>
+    <string name="karma_down">Dislike</string>
+    <string name="karma_up">Like</string>
+    <string name="link">Link</string>
+    <string name="spoiler_shrink">Shrink</string>
+    <string name="spoiler_expand">Expand</string>
+    <string name="spoiler_label">%s (%d pages)</string>
+    <string name="spoiler_label_default">Spoiler</string>
+    <string name="page_copy">Copy this page</string>
+    <string name="page_campfire_object">Bonfire Object</string>
+    <string name="page_download_unsupported">[There should\'ve been a Download page here, but they are not supported in
+        Bonfire anymore.]
+    </string>
+    <string name="page_unsupported">[Error displaying this page]</string>
+    <string name="page_image">Image</string>
+    <string name="page_link_image">Image with link</string>
+    <string name="link_copied">Link copied.</string>
+    <string name="polling_already_voted">You have already voted in this poll</string>
+    <string name="poll_results">Results</string>
+    <string name="poll_results_title">Poll results</string>
+    <string name="list_error_generic">Error loading more items. Please reload the page</string>
+    <string name="list_empty_generic">No items</string>
+    <string name="poll_results_error">Error loading more votes. Please reload the page</string>
+    <string name="poll_results_empty">Looks like no one has voted yet</string>
+    <string name="video_alt">Video</string>
+    <string name="activity_no_user">No next user</string>
+    <string name="activity_create_post">Create post</string>
+    <string name="activity_reject">Reject</string>
+    <string name="activity_join">Join</string>
+    <string name="activity_leave">Leave</string>
+    <string name="poll_limits">Limits:</string>
+    <string name="poll_limits_level">Level %.2f</string>
+    <string name="poll_limits_karma">Karma %d</string>
+    <string name="poll_limits_age">Account age %d days</string>
+    <string name="poll_limits_blacklist">Blacklist</string>
+    <string name="poll_reload">Refresh</string>
+    <string name="pub_hidden">%s\'s publication has been hidden</string>
+    <string name="nsfw_title">NSFW content</string>
+    <string name="nsfw_verify_age">Specify age</string>
+    <string name="nsfw_open">Open</string>
+    <string name="post_move_here">Move here</string>
+    <string name="hide_nsfw_posts_desc">All NSFW posts have been hidden</string>
+    <string name="hide_nsfw_posts">Hide NSFW</string>
+    <string name="multilingual_badge_alt">Multilingual</string>
+    <string name="nsfw_warning_full">This post contains NSFW content which might be inappropriate. Are you sure you want
+        to open the post?
+    </string>
+    <string name="compose_post_title">Post redesign</string>
+    <string name="compose_post_description">Complete rethinking of the post UI, down to the pages and the tiniest
+        details.
+    </string>
+    <string name="experiments_title">Experiments</string>
+    <string name="experiments_description">Check this page for various experimental features currently being
+        open for testing!
+    </string>
+    <string name="experiment_wait_snackbar">Please wait while friendly hogs are changing your enrollment status...</string>
+    <string name="experiment_enrolled_snackbar">You are now part of the experiment. Thank you!</string>
+    <string name="experiment_left_snackbar">Thank you for participating. You are no longer enrolled.</string>
+    <string name="experiment_error_snackbar">We couldn\'t change your status in the experiment. Try again later.</string>
+    <string name="experiments_opted_out">You are unable to participare in experiments because you have opted out of sending analytics data. You can enable it back in app privacy settings.</string>
+    <string name="restart_button">Restart</string>
+    <string name="restart_title">Restart?</string>
+    <string name="restart_text">This experiment recommends restarting the app to apply correctly and avoid bugs and
+        crashes. Restart now?
+    </string>
 
 </resources>

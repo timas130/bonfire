@@ -1,5 +1,5 @@
 use c_core::page_info::Paginated;
-use c_core::prelude::chrono::{DateTime, Utc};
+use c_core::prelude::chrono::{DateTime, NaiveDate, Utc};
 use c_core::prelude::tarpc::context::Context;
 use c_core::prelude::{anyhow, tarpc};
 use c_core::services::auth::{Auth, AuthServiceClient};
@@ -117,5 +117,31 @@ impl ProfileService for ProfileServer {
         color: Option<u32>,
     ) -> Result<AccountCustomization, ProfileError> {
         self._admin_set_nickname_color(user_id, color).await
+    }
+
+    async fn set_birthday(
+        self,
+        _: Context,
+        user_id: i64,
+        birthday: NaiveDate,
+    ) -> Result<(), ProfileError> {
+        self._set_birthday(user_id, birthday).await
+    }
+
+    async fn get_birthday(
+        self,
+        _: Context,
+        user_id: i64,
+    ) -> Result<Option<NaiveDate>, ProfileError> {
+        self._get_birthday(user_id).await
+    }
+
+    async fn is_age_at_least(
+        self,
+        _: Context,
+        user_id: i64,
+        age: u32,
+    ) -> Result<Option<bool>, ProfileError> {
+        self._is_age_at_least(user_id, age).await
     }
 }

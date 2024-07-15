@@ -1,12 +1,12 @@
-use async_graphql::connection::Connection;
-use async_graphql::Context;
-use c_core::prelude::chrono::{DateTime, Utc};
-use c_core::prelude::tarpc::context;
 use crate::context::ReqContext;
 use crate::error::RespError;
 use crate::models::user::User;
 use crate::schema::profile::badge::GBadge;
 use crate::utils::connection::PaginatedExt;
+use async_graphql::connection::Connection;
+use async_graphql::Context;
+use c_core::prelude::chrono::{DateTime, Utc};
+use c_core::prelude::tarpc::context;
 
 impl User {
     pub(crate) async fn _badges(

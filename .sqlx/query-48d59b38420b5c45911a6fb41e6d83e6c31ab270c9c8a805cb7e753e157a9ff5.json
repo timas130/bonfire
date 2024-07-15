@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into security_intentions (token, intention_type, user_id) values ($1, $2, $3)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Int4",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "48d59b38420b5c45911a6fb41e6d83e6c31ab270c9c8a805cb7e753e157a9ff5"
+}

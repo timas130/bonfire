@@ -13,7 +13,6 @@ import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.ControllerMention
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
-import com.sayzen.campfiresdk.models.cards.post_pages.CardPageLinkImage
 import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
@@ -29,7 +28,7 @@ import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
 
 class SplashPageLinkImage(
-        private val requestPutPage:(page: Page, screen: Screen?, splash: Splash?, mapper: (Page) -> CardPage, onFinish: ((CardPage)->Unit))->Unit,
+        private val requestPutPage:(page: Page, screen: Screen?, splash: Splash?, onFinish: ((CardPage)->Unit))->Unit,
         private val requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page)->Unit) -> Unit,
         private val card: CardPage?,
         private val oldPage: PageLinkImage?
@@ -104,7 +103,7 @@ class SplashPageLinkImage(
         hide()
         val w = ToolsView.showProgressDialog()
         if (card == null)
-            requestPutPage.invoke(page, null, w, { page1 -> CardPageLinkImage(null, page1 as PageLinkImage) }){}
+            requestPutPage.invoke(page, null, w) {}
         else {
             requestChangePage.invoke(page, card, null, w) {}
         }

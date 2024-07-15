@@ -43,6 +43,14 @@
                 app:Settings_icon_background="@color/deep_purple_500"
                 app:Settings_lineVisible="false" />
 
+            <com.sup.dev.android.views.settings.SettingsArrow
+                android:id="@+id/vExperiments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_icon="@drawable/experiment_24px"
+                app:Settings_icon_background="@color/yellow_700"
+                app:Settings_lineVisible="false" />
+
             <com.sup.dev.android.views.settings.Settings
                 android:id="@+id/vLanguage"
                 android:layout_width="match_parent"
@@ -138,6 +146,14 @@
                 app:Settings_icon="@drawable/eye_off"
                 app:Settings_lineVisible="false"
                 app:Settings_icon_background="@color/red_400" />
+
+            <com.sup.dev.android.views.settings.SettingsSwitcher
+                android:id="@+id/vShowNsfw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_icon="@drawable/ic_warning_white_24dp"
+                app:Settings_lineVisible="false"
+                app:Settings_icon_background="@color/red_500" />
 
             <com.sup.dev.android.views.settings.SettingsSwitcher
                 android:id="@+id/vAllowAnalytics"

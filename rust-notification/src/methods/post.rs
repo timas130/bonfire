@@ -3,6 +3,7 @@ use c_core::prelude::anyhow;
 use c_core::prelude::anyhow::anyhow;
 use c_core::prelude::chrono::{DateTime, Utc};
 use c_core::prelude::tarpc::context;
+use c_core::prelude::tracing::error;
 use c_core::services::notification::{
     Notification, NotificationError, NotificationInput, NotificationPayload, NotificationRecipient,
 };
@@ -18,8 +19,9 @@ impl NotificationServer {
             "select last_online_time from accounts where id = $1",
             user_id,
         )
-        .fetch_one(&self.base.pool)
+        .fetch_optional(&self.base.pool)
         .await
+        .map(|time| time.unwrap_or(Utc::now().timestamp_millis()))
         .map(DateTime::<Utc>::from_timestamp_millis)
         .map_err(anyhow::Error::from)?
         .ok_or(anyhow!("out of sync"))?)
@@ -53,7 +55,7 @@ impl NotificationServer {
             }
 
             let raw_notification = if !input.ephemeral {
-                sqlx::query_as!(
+                let result = sqlx::query_as!(
                     RawNotification,
                     "insert into notifications (user_id, payload, notification_type) \
                      values ($1, $2, $3) \
@@ -63,7 +65,19 @@ impl NotificationServer {
                     input.payload.get_type()?,
                 )
                 .fetch_one(&mut *tx)
-                .await?
+                .await;
+
+                if let Err(err) = result {
+                    error!(
+                        ?err,
+                        user_id,
+                        payload_type = ?input.payload.get_type()?,
+                        "could not create notification in db"
+                    );
+                    continue;
+                }
+
+                result.unwrap()
             } else {
                 RawNotification {
                     id: 0,

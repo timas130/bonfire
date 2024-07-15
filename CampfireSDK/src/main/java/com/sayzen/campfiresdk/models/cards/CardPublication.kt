@@ -19,6 +19,7 @@ import com.dzen.campfire.api.models.publications.stickers.PublicationSticker
 import com.dzen.campfire.api.models.publications.stickers.PublicationStickersPack
 import com.dzen.campfire.api.models.quests.QuestDetails
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.publication.post.CardPostProxy
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.t
@@ -56,7 +57,7 @@ abstract class CardPublication(
 
             val cardPublication = when (publication) {
                 is PublicationComment -> CardComment.instance(publication, dividers, false)
-                is PublicationPost -> CardPost(vRecycler, publication)
+                is PublicationPost -> CardPostProxy(vRecycler, publication)
                 is PublicationChatMessage -> CardChatMessage.instance(publication)
                 is PublicationModeration -> CardModeration(publication)
                 is PublicationEventUser -> CardPublicationEventUser(publication)
@@ -89,7 +90,7 @@ abstract class CardPublication(
     private var flash = false
     private var animationFlash: AnimationPendulumColor? = null
     private var subscriptionFlash: Subscription? = null
-    var showFandom = false
+    open var showFandom = false
     var flashViewId = 0
     var useBackgroundToFlash = false
     var updateFandomOnBind = true

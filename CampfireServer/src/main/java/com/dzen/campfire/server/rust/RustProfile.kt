@@ -4,6 +4,7 @@ import com.dzen.campfire.api.models.account.AccountBadge
 import com.dzen.campfire.api.models.account.AccountCustomization
 import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.server.AccountCustomizationQuery
+import com.dzen.campfire.server.CanSeeNsfwQuery
 import com.dzen.campfire.server.rust.ControllerRust.executeExt
 import com.sup.dev.java.classes.collections.Cache
 
@@ -30,5 +31,12 @@ object RustProfile {
         accountCustomizationCache.put(userId, customization)
 
         return customization
+    }
+
+    fun canSeeNsfw(userId: Long): Boolean? {
+        return ControllerRust.apollo.query(CanSeeNsfwQuery(userId.toString()))
+            .executeExt()
+            .userById
+            ?.canNsfw
     }
 }

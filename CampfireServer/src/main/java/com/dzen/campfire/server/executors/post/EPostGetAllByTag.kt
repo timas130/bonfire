@@ -5,6 +5,7 @@ import com.dzen.campfire.api.requests.post.RPostGetAllByTag
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerAchievements
 import com.dzen.campfire.server.controllers.ControllerOptimizer
+import com.dzen.campfire.server.controllers.ControllerPost.filterNsfw
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.tables.TCollisions
 import com.dzen.campfire.server.tables.TPublications
@@ -24,6 +25,7 @@ class EPostGetAllByTag : RPostGetAllByTag(0, 0) {
         val v = Database.select("EPostGetAllByTag select_1",SqlQuerySelect(TCollisions.NAME, TCollisions.owner_id)
                 .where(TCollisions.collision_id, "=", tagId)
                 .where(SqlWhere.WhereString("${API.STATUS_PUBLIC}=(SELECT ${TPublications.status} FROM ${TPublications.NAME} WHERE ${TPublications.id}=${TCollisions.owner_id})"))
+                .filterNsfw(apiAccount.id, requestApiVersion)
                 .offset_count(offset, COUNT)
                 .sort(TCollisions.collision_date_create, false))
 

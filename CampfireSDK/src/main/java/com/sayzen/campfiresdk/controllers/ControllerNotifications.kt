@@ -428,6 +428,7 @@ object ControllerNotifications {
             is NotificationEffectRemove -> NotificationEffectRemoveParser(n)
             is NotificationTranslatesAccepted -> NotificationTranslatesAcceptedParser(n)
             is NotificationTranslatesRejected -> NotificationTranslatesRejectedParser(n)
+            is NotificationModerationPostSetNsfw -> NotificationModerationPostSetNsfwParser(n)
             else -> NotificationUnknownParserParser(n)
 
         }
