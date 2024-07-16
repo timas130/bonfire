@@ -1,6 +1,5 @@
 use crate::context::ReqContext;
 use async_graphql::{Context, Guard};
-use async_trait::async_trait;
 use c_core::services::auth::user::PermissionLevel;
 
 pub struct PermissionLevelGuard(PermissionLevel);
@@ -11,7 +10,6 @@ impl PermissionLevelGuard {
     }
 }
 
-#[async_trait]
 impl Guard for PermissionLevelGuard {
     async fn check(&self, ctx: &Context<'_>) -> async_graphql::Result<()> {
         let passes = ctx

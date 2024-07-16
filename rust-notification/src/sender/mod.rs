@@ -37,7 +37,7 @@ impl NotificationSender {
     pub async fn new(base: ServiceBase) -> Result<Self, anyhow::Error> {
         let hyper_client = google_fcm1::hyper::Client::builder().build(
             HttpsConnectorBuilder::new()
-                .with_native_roots()
+                .with_native_roots()?
                 .https_only()
                 .enable_http1()
                 .build(),

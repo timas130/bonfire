@@ -2,7 +2,6 @@ use crate::context::GlobalContext;
 use crate::error::RespError;
 use crate::loader_impl;
 use async_graphql::dataloader::Loader;
-use async_trait::async_trait;
 use c_core::prelude::tarpc::context;
 use c_core::services::auth::user::AuthUser;
 use std::collections::HashMap;
@@ -12,7 +11,6 @@ pub struct AuthUserLoader {
 }
 loader_impl!(AuthUserLoader);
 
-#[async_trait]
 impl Loader<i64> for AuthUserLoader {
     type Value = AuthUser;
     type Error = RespError;
@@ -26,7 +24,6 @@ impl Loader<i64> for AuthUserLoader {
     }
 }
 
-#[async_trait]
 impl Loader<String> for AuthUserLoader {
     type Value = AuthUser;
     type Error = RespError;

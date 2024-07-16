@@ -24,7 +24,7 @@ impl SecurityServer {
     pub async fn with_base(base: ServiceBase) -> anyhow::Result<Self> {
         let hyper_client = google_playintegrity1::hyper::Client::builder().build(
             HttpsConnectorBuilder::new()
-                .with_native_roots()
+                .with_native_roots()?
                 .https_only()
                 .enable_http1()
                 .enable_http2()
