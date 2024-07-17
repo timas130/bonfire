@@ -5,6 +5,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.models.publications.Rate
 import com.dzen.campfire.api.requests.post.RPostRatesGetAll
 import com.sayzen.campfiresdk.R
@@ -18,8 +19,9 @@ class SPublicationRates(
         var myKarma: Long,
         val creatorId: Long,
         val publicationStatus: Long
-
 ) : SLoadingRecycler<CardRateText, Rate>(R.layout.screen_publication_rates) {
+    constructor(publication: Publication) :
+            this(publication.id, publication.myKarma, publication.creator.id, publication.status)
 
     val vMenuContainer: View = findViewById(R.id.vMenuContainer)
     val vAnon: CheckBox = findViewById(R.id.vAnon)

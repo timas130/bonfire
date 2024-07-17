@@ -9,12 +9,13 @@ import com.sayzen.campfiresdk.models.events.activities.EventActivitiesRelayRaceM
 import com.sayzen.campfiresdk.models.events.activities.EventActivitiesRelayRaceRejected
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter.sendSuspendExt
 
-class UserActivityDataSource(data: UserActivity) : BonfireDataSource<UserActivity>(data) {
+open class UserActivityDataSource(data: UserActivity) : BonfireDataSource<UserActivity>(data) {
     init {
         subscriber
             .subscribe(EventActivitiesRelayRaceRejected::class) {
                 edit(it.userActivityId) {
                     tag_2 = it.currentOwnerTime
+                    myMemberStatus = 0
                     currentAccount = it.currentAccount
                 }
             }

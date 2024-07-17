@@ -34,7 +34,8 @@ class PollingBlacklistScreen(val page: PagePolling) : ComposeScreen() {
             model = model,
             title = {
                 Text(stringResource(R.string.poll_limits_blacklist))
-            }
+            },
+            isRefreshable = false,
         ) { account, shimmer ->
             ListItem(
                 headlineContent = {

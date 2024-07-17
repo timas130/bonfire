@@ -58,21 +58,24 @@ object IntegrityController {
         }
 
         sendingTokenJob = scope.launch {
-            val intentionToken = apollo
-                .mutation(CreateSecurityIntentionMutation(IntentionType.GENERIC))
-                .execute()
-                .dataAssertNoErrors
-                .createSecurityIntention
+            var intentionToken: String? = null
 
             suspend fun sendToken(token: String) {
+                val intentionTokenNotNull = intentionToken ?: return
                 apollo
-                    .mutation(SavePlayIntegrityMutation(intentionToken, packageName, token))
+                    .mutation(SavePlayIntegrityMutation(intentionTokenNotNull, packageName, token))
                     .execute()
                     .dataAssertNoErrors
                     .savePlayIntegrity
             }
 
             try {
+                intentionToken = apollo
+                    .mutation(CreateSecurityIntentionMutation(IntentionType.GENERIC))
+                    .execute()
+                    .dataAssertNoErrors
+                    .createSecurityIntention
+
                 val tokenProvider = tokenProvider.first { it != null }!!
                     .getOrThrow()
 
@@ -93,7 +96,8 @@ object IntegrityController {
                 try {
                     sendToken("__error__:${errorCodeToName(e.errorCode)}")
                 } catch (_: Exception) {}
-                throw e
+            } catch (e: Exception) {
+                e.printStackTrace()
             } finally {
                 sendingTokenJob = null
                 sendingTokenIntentionType = null

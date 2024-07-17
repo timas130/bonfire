@@ -1,12 +1,15 @@
 package com.sayzen.campfiresdk.compose.publication.post
 
 import androidx.compose.runtime.State
+import com.dzen.campfire.api.models.activities.UserActivity
 import com.dzen.campfire.api.models.fandoms.Fandom
 import com.dzen.campfire.api.models.notifications.comments.NotificationComment
 import com.dzen.campfire.api.models.notifications.comments.NotificationCommentAnswer
+import com.dzen.campfire.api.models.publications.post.PageUserActivity
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.sayzen.campfiresdk.compose.fandom.FandomDataSource
 import com.sayzen.campfiresdk.compose.publication.PublicationDataSource
+import com.sayzen.campfiresdk.compose.publication.post.pages.activity.UserActivityDataSource
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.models.events.notifications.EventNotification
 import com.sayzen.campfiresdk.models.events.publications.*
@@ -70,9 +73,22 @@ class PostDataSource(post: PublicationPost, onRemoved: State<() -> Unit>) : Publ
         }
     }
 
+    private val userActivityDataSource = post.userActivity?.let { userActivity ->
+        object : UserActivityDataSource(userActivity) {
+            override fun edit(cond: Boolean, editor: UserActivity.() -> Unit) {
+                this@PostDataSource.edit(cond) {
+                    this.userActivity?.editor()
+                    (this.pages.find { it is PageUserActivity } as PageUserActivity?)
+                        ?.userActivity?.editor()
+                }
+            }
+        }
+    }
+
     override fun destroy() {
         super.destroy()
         fandomDataSource.destroy()
+        userActivityDataSource?.destroy()
     }
 
     override fun handleNotification(ev: EventNotification) {

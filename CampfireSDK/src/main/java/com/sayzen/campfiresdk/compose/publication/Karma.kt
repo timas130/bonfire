@@ -3,6 +3,10 @@ package com.sayzen.campfiresdk.compose.publication
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -17,8 +21,10 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
@@ -37,7 +43,9 @@ import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.ControllerStoryQuest
 import com.sayzen.campfiresdk.models.events.publications.EventPublicationKarmaAdd
 import com.sayzen.campfiresdk.models.events.publications.EventPublicationKarmaStateChanged
+import com.sayzen.campfiresdk.screens.rates.SPublicationRates
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter.sendSuspendExt
+import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.java.libs.eventBus.EventBus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -62,6 +70,15 @@ class KarmaCounterModel(
     val progress = _progress.asStateFlow()
 
     private var progressJob: Job? = null
+
+    fun canRate(): Boolean {
+        return rateButtonsEnabled() && publication.myKarma == 0L
+    }
+
+    fun rateButtonsEnabled(): Boolean {
+        return publication.isPublic &&
+                publication.creator.id != ControllerApi.account.getId()
+    }
 
     fun rate(
         scope: CoroutineScope,
@@ -175,7 +192,7 @@ internal fun KarmaCounter(publication: Publication) {
             ) {
                 KarmaCounterSide(up = false, model = model)
                 Divider()
-                KarmaCounterAmount(publication = publication)
+                KarmaCounterAmount(model = model)
                 Divider()
                 KarmaCounterSide(up = true, model = model)
             }
@@ -183,13 +200,15 @@ internal fun KarmaCounter(publication: Publication) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun KarmaCounterSide(up: Boolean, model: KarmaCounterModel) {
     val colors = ButtonDefaults.filledTonalButtonColors()
     val scope = rememberCoroutineScope()
+    val hapticFeedback = LocalHapticFeedback.current
 
     val accentColor = if (up) {
-        Color(0xFF388E3C)
+        Color(0xFF46B34B)
     } else {
         Color(0xFFE53935)
     }
@@ -231,11 +250,19 @@ internal fun KarmaCounterSide(up: Boolean, model: KarmaCounterModel) {
                     size = Size(fillProgress * (size.width + dividerThickness * 2), size.height)
                 )
                 drawContent()
-            },
-        enabled = model.publication.myKarma == 0L,
-        onClick = {
-            model.rate(scope, up)
-        },
+            }
+            .combinedClickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = ripple(),
+                enabled = model.canRate(),
+                onClick = {
+                    model.rate(scope, up)
+                },
+                onLongClick = {
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                    Navigator.to(SPublicationRates(model.publication))
+                },
+            ),
     ) {
         val isCurrentActive = if (up) model.publication.myKarma > 0 else model.publication.myKarma < 0
         val isOtherActive = !isCurrentActive && model.publication.myKarma != 0L
@@ -254,19 +281,26 @@ internal fun KarmaCounterSide(up: Boolean, model: KarmaCounterModel) {
                             slideOutVertically(specOffset) { it } + fadeOut(specFloat)
                 }
             }
-        ) { disabled ->
+        ) { currentActive ->
             Icon(
-                if (up) {
+                imageVector = if (up) {
                     Icons.Default.KeyboardArrowUp
                 } else {
                     Icons.Default.KeyboardArrowDown
                 },
-                if (up) {
+                contentDescription = if (up) {
                     stringResource(R.string.karma_up)
                 } else {
                     stringResource(R.string.karma_down)
                 },
-                Modifier
+                tint = if (currentActive) {
+                    accentColor
+                } else if (isOtherActive || !model.rateButtonsEnabled()) {
+                    LocalContentColor.current.copy(alpha = 0.6f)
+                } else {
+                    LocalContentColor.current
+                },
+                modifier = Modifier
                     .padding(
                         start = if (up) 6.dp else 10.dp,
                         end = if (up) 10.dp else 6.dp,
@@ -274,24 +308,39 @@ internal fun KarmaCounterSide(up: Boolean, model: KarmaCounterModel) {
                         bottom = 6.dp
                     )
                     .size(24.dp)
-                    .alpha(if (disabled || isOtherActive) 0.6f else 1f)
             )
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun KarmaCounterAmount(publication: Publication) {
+internal fun KarmaCounterAmount(model: KarmaCounterModel) {
+    val hapticFeedback = LocalHapticFeedback.current
+
     Column(
         Modifier
             .fillMaxHeight()
+            .then(if (model.canRate()) {
+                Modifier.combinedClickable(
+                    onClick = {},
+                    onLongClick = {
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                        Navigator.to(SPublicationRates(model.publication))
+                    }
+                )
+            } else {
+                Modifier.clickable {
+                    Navigator.to(SPublicationRates(model.publication))
+                }
+            })
             .padding(horizontal = 4.dp)
             .widthIn(min = 28.dp),
         verticalArrangement = Arrangement.spacedBy((-6).dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         AnimatedContent(
-            targetState = publication.karmaCount,
+            targetState = model.publication.karmaCount,
             transitionSpec = counterTransitionSpec,
             label = "KarmaAmount",
         ) {
@@ -308,9 +357,9 @@ internal fun KarmaCounterAmount(publication: Publication) {
             )
         }
 
-        if (publication.fandom.karmaCof != 100L) {
+        if (model.publication.fandom.karmaCof != 100L) {
             Text(
-                text = "x${"%.2f".format(publication.fandom.karmaCof / 100f)}",
+                text = "x${"%.2f".format(model.publication.fandom.karmaCof / 100f)}",
                 style = MaterialTheme.typography.labelSmall,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.alpha(0.6f)

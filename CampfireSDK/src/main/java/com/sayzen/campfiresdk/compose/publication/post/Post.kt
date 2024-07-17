@@ -273,7 +273,9 @@ fun Post(
                     onGoTo = {
                         SPost.instance(post.id, it, Navigator.TO)
                     }
-                )
+                ).apply {
+                    maxTextSize = 500
+                }
             }
 
             HorizontalDivider()

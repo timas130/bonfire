@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit
 object ImageLoader {
 
     internal val maxCashItemSize = 1024 * 1024 * 5
-    internal val maxCashSize = 1024 * 1024 * 50
+    internal val maxCashSize = 1024 * 1024 * 20
 
     private val cash = ArrayList<Item3<String, Bitmap?, ByteArray?>>()
     private var cashSize = 0

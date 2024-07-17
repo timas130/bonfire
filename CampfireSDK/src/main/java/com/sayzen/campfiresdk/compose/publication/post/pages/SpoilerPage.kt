@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
@@ -18,8 +20,12 @@ import com.dzen.campfire.api.models.publications.post.PageSpoiler
 import com.sayzen.campfiresdk.R
 
 @Composable
-internal fun PageSpoilerRenderer(page: PageSpoiler, source: PagesSource, onExpand: () -> Unit = {}) {
-    var expanded by remember { mutableStateOf(source.editMode) }
+internal fun PageSpoilerRenderer(
+    page: PageSpoiler,
+    model: PostPagesModel,
+    source: PagesSource,
+) {
+    val expanded by model.isSpoilerExpanded(page.index).collectAsState()
 
     ListItem(
         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
@@ -48,10 +54,9 @@ internal fun PageSpoilerRenderer(page: PageSpoiler, source: PagesSource, onExpan
         },
         modifier = Modifier.clickable {
             if (expanded) {
-                expanded = false
+                model.shrinkSpoiler(page.index)
             } else {
-                onExpand()
-                expanded = true
+                model.expandSpoiler(page.index)
             }
         }
     )
@@ -64,7 +69,7 @@ internal fun PageSpoilerRenderer(page: PageSpoiler, source: PagesSource, onExpan
         if (expanded) {
             page.children.forEachIndexed { index, child ->
                 PageMoveDestination(idx = index, source = source)
-                PostPage(page = child, onExpand = onExpand)
+                PostPage(page = child, model = model)
             }
             HorizontalDivider()
         }

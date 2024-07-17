@@ -67,9 +67,13 @@ fun Avatar(
     val dataSource = remember(account) { AccountDataSource(account) }
     val updatedAccount by dataSource.flow.collectAsState()
 
-    Box(modifier.clickable {
-        SProfile.instance(account, Navigator.TO)
-    }) {
+    DisposableEffect(account) {
+        onDispose {
+            dataSource.destroy()
+        }
+    }
+
+    Box(modifier, propagateMinConstraints = true) {
         RemoteImage(
             link = updatedAccount.getActiveImage(),
             contentDescription = updatedAccount.name,
@@ -77,6 +81,9 @@ fun Avatar(
                 .size(48.dp)
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(ControllerSettings.styleAvatarsRounding.dp))
+                .clickable {
+                    SProfile.instance(account, Navigator.TO)
+                }
         )
 
         if (showLevel && updatedAccount.lvl >= 100) {

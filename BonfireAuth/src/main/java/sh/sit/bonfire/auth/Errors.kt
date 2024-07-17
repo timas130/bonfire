@@ -28,6 +28,8 @@ fun AuthFlow.AuthException.toUiString(context: Context): String {
         FailureReason.UserNotFound -> R.string.error_user_not_found
         FailureReason.SessionTooNew -> R.string.error_session_too_new
         FailureReason.AnotherAccountExists -> R.string.error_another_account_exists
+        FailureReason.BirthdayAlreadySet -> R.string.error_birthday_already_set
+        FailureReason.TooYoung -> R.string.error_too_young
         FailureReason.Unknown -> R.string.error_unknown
     }
 

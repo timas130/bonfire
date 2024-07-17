@@ -14,6 +14,7 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -39,9 +40,12 @@ fun <T> PaginationScreen(
     emptyCard: @Composable () -> Unit = {
         EmptyCard(text = stringResource(R.string.list_empty_generic))
     },
+    isRefreshable: Boolean = true,
     // the outer should have onChoose already, so not including it here
     item: @Composable (item: T?, shimmer: Shimmer) -> Unit,
 ) {
+    val isRefreshableState by rememberUpdatedState(isRefreshable)
+
     val isError by model.isError.collectAsState()
     val isLoading by model.isLoading.collectAsState()
     val items by model.items.collectAsState()
@@ -63,6 +67,7 @@ fun <T> PaginationScreen(
         contentWindowInsets = WindowInsets.safeDrawing,
         modifier = Modifier
             .pullToRefresh(
+                enabled = { isRefreshableState },
                 isRefreshing = isLoading,
                 state = pullToRefresh,
                 onRefresh = { model.reload() }

@@ -47,6 +47,6 @@ class PageVideo : Page() {
 
     override fun fillImageRefs(receiver: ImageHolderReceiver) {
         super.fillImageRefs(receiver)
-        receiver.add(image, imageId)
+        receiver.add(image, imageId, w, h)
     }
 }

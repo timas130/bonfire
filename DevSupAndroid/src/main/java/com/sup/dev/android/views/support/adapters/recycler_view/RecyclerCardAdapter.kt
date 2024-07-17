@@ -107,7 +107,6 @@ open class RecyclerCardAdapter : RecyclerView.Adapter<RecyclerCardAdapter.Holder
     }
 
     override fun remove(card: Card) {
-        card.setCardAdapter(null)
         val position = indexOf(card)
         if (position == -1) return
         remove(position)
@@ -128,6 +127,7 @@ open class RecyclerCardAdapter : RecyclerView.Adapter<RecyclerCardAdapter.Holder
 
     open fun remove(position: Int) {
         val card = items.removeAt(position)
+        card.setCardAdapter(null)
         notifyItemRemoved(position)
         removeItemFromHolders(card)
         onItemsChangeListeners.invoke()

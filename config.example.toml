@@ -56,4 +56,4 @@ client_x509_cert_url = ""
 universe_domain = ""
 
 [security]
-allowed_packages = ["sh.sit.bonfire"]
+package_names = ["sh.sit.bonfire"]

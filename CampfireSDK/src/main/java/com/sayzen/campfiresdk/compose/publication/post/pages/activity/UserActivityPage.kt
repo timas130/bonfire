@@ -2,7 +2,6 @@ package com.sayzen.campfiresdk.compose.publication.post.pages.activity
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +21,7 @@ import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.compose.util.Avatar
 import com.sayzen.campfiresdk.controllers.ControllerActivities
 import com.sayzen.campfiresdk.controllers.ControllerApi
+import com.sayzen.campfiresdk.screens.activities.user_activities.relay_race.SRelayRaceInfo
 import com.sayzen.campfiresdk.screens.post.create.SPostCreate
 import com.sayzen.campfiresdk.screens.post.create.SplashTagsRelayRaceNextUser
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -38,15 +38,13 @@ internal fun PageUserActivityRenderer(page: PageUserActivity) {
     val dataSource = remember(page.userActivity.id) { UserActivityDataSource(page.userActivity) }
     val userActivity by dataSource.flow.collectAsState()
 
-    LaunchedEffect(userActivity) {
-        Log.i("UserActivity", "fucking user activity $userActivity")
-    }
-
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
         shape = RoundedCornerShape(8.dp),
-        modifier = Modifier
-            .padding(horizontal = 12.dp),
+        onClick = {
+            SRelayRaceInfo.instance(userActivity.id, Navigator.TO)
+        },
+        modifier = Modifier.padding(horizontal = 12.dp)
     ) {
         Column(Modifier.padding(16.dp)) {
             Text(
@@ -61,7 +59,7 @@ internal fun PageUserActivityRenderer(page: PageUserActivity) {
                 modifier = Modifier.padding(bottom = 8.dp),
             )
 
-            UserActivityUser(userActivity, dataSource)
+            UserActivityUser(userActivity)
 
             UserActivityButtons(userActivity)
         }
@@ -69,10 +67,7 @@ internal fun PageUserActivityRenderer(page: PageUserActivity) {
 }
 
 @Composable
-private fun UserActivityUser(
-    userActivity: UserActivity,
-    dataSource: UserActivityDataSource
-) {
+private fun UserActivityUser(userActivity: UserActivity) {
     AnimatedContent(
         targetState = Pair(userActivity.currentAccount, userActivity.hasUser),
         contentKey = { Pair(it.first.id, it.second) },
@@ -96,10 +91,7 @@ private fun UserActivityUser(
                     style = MaterialTheme.typography.bodyMedium,
                 )
 
-                UserActivityCountdown(
-                    dataSource = dataSource,
-                    stopAt = userActivity.deadline,
-                )
+                UserActivityCountdown(stopAt = userActivity.deadline)
             }
         } else {
             Text(
@@ -112,7 +104,7 @@ private fun UserActivityUser(
 }
 
 @Composable
-private fun UserActivityCountdown(dataSource: UserActivityDataSource, stopAt: Long) {
+private fun UserActivityCountdown(stopAt: Long) {
     val currentTime = remember {
         mutableLongStateOf(System.currentTimeMillis())
     }
@@ -133,13 +125,7 @@ private fun UserActivityCountdown(dataSource: UserActivityDataSource, stopAt: Lo
         }
     }
 
-    val remaining = stopAt - System.currentTimeMillis()
-
-    LaunchedEffect(remaining <= 0) {
-        if (remaining <= 0) {
-            dataSource.reload()
-        }
-    }
+    val remaining = stopAt - currentTime.longValue
 
     Text(
         text = ToolsDate.dayTimeToString_Ms_HH_MM_SS(remaining),
@@ -152,7 +138,7 @@ private fun UserActivityCountdown(dataSource: UserActivityDataSource, stopAt: Lo
 @Composable
 private fun UserActivityButtons(userActivity: UserActivity) {
     val _isCurrentUser = userActivity.hasUser && userActivity.currentAccount.id == ControllerApi.account.getId()
-    val _isParticipant = userActivity.mySubscribeStatus == 1L
+    val _isParticipant = userActivity.myMemberStatus == 1L
 
     AnimatedContent(
         targetState = Pair(_isCurrentUser, _isParticipant),

@@ -49,7 +49,7 @@ internal fun ContainerBlock(
                         size = Size(strokeWidth, size.height)
                     )
                 }
-                .padding(contentPadding)
+                .padding(vertical = 2.dp)
         } else {
             Modifier.fillMaxWidth()
         }
@@ -60,7 +60,7 @@ internal fun ContainerBlock(
                 fullInline = fullInline,
                 allBlocks = innerItems,
                 lists = lists,
-                contentPadding = contentPadding,
+                contentPadding = contentPadding.copy(start = 8.dp, end = 8.dp),
             )
         }
     }

@@ -12,6 +12,7 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.sayzen.campfiresdk.R
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.views.cards.Card
+import com.sup.dev.android.views.support.adapters.CardAdapter
 
 abstract class ComposeCard : Card(0) {
     override fun instanceView(): View {
@@ -39,8 +40,11 @@ abstract class ComposeCard : Card(0) {
         }
     }
 
-    override fun onDetachView() {
-        viewModelStoreOwner.viewModelStore.clear()
+    override fun setCardAdapter(adapter: CardAdapter?) {
+        super.setCardAdapter(adapter)
+        if (adapter == null) {
+            viewModelStoreOwner.viewModelStore.clear()
+        }
     }
 
     @Composable

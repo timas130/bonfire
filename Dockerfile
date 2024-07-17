@@ -28,6 +28,10 @@ RUN mkdir -p /app/CampfireServer/res /app/lib
 RUN apt-get update && apt-get install -y tar openssl bash findutils curl
 RUN curl -o /app/bcprov.jar https://downloads.bouncycastle.org/java/bcprov-jdk15on-170.jar
 
+RUN curl -o /app/libssl11.deb http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb
+RUN dpkg -i /app/libssl11.deb
+RUN rm /app/libssl11.deb
+
 COPY --from=builder /app/docker-entrypoint.sh /app/
 RUN chmod +x /app/docker-entrypoint.sh
 

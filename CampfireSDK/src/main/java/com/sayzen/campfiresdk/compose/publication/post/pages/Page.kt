@@ -2,7 +2,6 @@ package com.sayzen.campfiresdk.compose.publication.post.pages
 
 import android.view.View
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -17,6 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.PagesContainer
 import com.dzen.campfire.api.models.publications.post.*
@@ -25,7 +26,10 @@ import com.sayzen.campfiresdk.compose.BonfireTheme
 import com.sayzen.campfiresdk.compose.ComposeCard
 import com.sayzen.campfiresdk.compose.publication.post.pages.activity.PageUserActivityRenderer
 import com.sayzen.campfiresdk.compose.publication.post.pages.polling.PagePollingRenderer
+import com.sayzen.campfiresdk.compose.util.mapState
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 
 private fun spoilersNest(pages: List<Page>, start: Int = 0, size: Int = pages.size): Pair<List<Page>, Int> {
     val result = mutableListOf<Page>()
@@ -67,15 +71,39 @@ data class PagesSource(
     }
 }
 
+class PostPagesModel @JvmOverloads constructor(
+    private val onExpand: () -> Unit = {},
+) : ViewModel() {
+    private val _openSpoilers = MutableStateFlow(emptyList<Int>())
+
+    fun isSpoilerExpanded(id: Int) = _openSpoilers.mapState { it.contains(id) }
+
+    fun expandSpoiler(id: Int) {
+        _openSpoilers.update {
+            it + id
+        }
+        onExpand()
+    }
+    fun shrinkSpoiler(id: Int) {
+        _openSpoilers.update {
+            it - id
+        }
+    }
+}
+
 @Composable
-fun PostPage(page: Page, source: PagesSource = PagesSource.Unknown, onExpand: () -> Unit = {}) {
+fun PostPage(
+    page: Page,
+    source: PagesSource = PagesSource.Unknown,
+    model: PostPagesModel = viewModel(),
+) {
     when (page) {
         is PageText -> PageTextRenderer(page = page)
         is PageImage -> PageImageRenderer(page = page)
         is PageImages -> PageImagesRenderer(page = page)
         is PageLink -> PageLinkRenderer(page = page)
         is PageQuote -> PageQuoteRenderer(page = page)
-        is PageSpoiler -> PageSpoilerRenderer(page = page, source = source, onExpand = onExpand)
+        is PageSpoiler -> PageSpoilerRenderer(page = page, model = model, source = source)
         is PagePolling -> PagePollingRenderer(page = page, source = source)
         is PageVideo -> PageVideoRenderer(page = page)
         is PageTable -> PageTableRenderer(page = page)
@@ -90,8 +118,8 @@ fun PostPage(page: Page, source: PagesSource = PagesSource.Unknown, onExpand: ()
 @Composable
 internal fun PageMoveDestination(idx: Int, source: PagesSource) {
     AnimatedVisibility(visible = source.movingIndex != null, Modifier.fillMaxWidth()) {
-        Surface(Modifier.clickable {
-            if (source.movingIndex == null) return@clickable
+        Surface(onClick = {
+            if (source.movingIndex == null) return@Surface
             source.onMoveFinished(source.movingIndex, idx)
         }) {
             Box(
@@ -113,7 +141,7 @@ internal fun PageMoveDestination(idx: Int, source: PagesSource) {
 fun PostPages(
     pages: List<Page>,
     source: PagesSource = PagesSource.Unknown,
-    onExpand: () -> Unit = {}
+    model: PostPagesModel = viewModel(),
 ) {
     val nested = remember(pages) {
         spoilersNest(pages).first
@@ -121,12 +149,14 @@ fun PostPages(
 
     nested.forEachIndexed { index, page ->
         PageMoveDestination(idx = index, source = source)
-        PostPage(page = page, source = source, onExpand = onExpand)
+        PostPage(page = page, source = source)
     }
     PageMoveDestination(idx = nested.size, source = source)
 }
 
 class ComposeCardPage(pagesContainer: PagesContainer?, page: Page) : CardPage(R.layout.card_page_compose, pagesContainer, page) {
+    val model = PostPagesModel()
+
     override fun bindView(view: View) {
         super.bindView(view)
 
@@ -144,7 +174,8 @@ class ComposeCardPage(pagesContainer: PagesContainer?, page: Page) : CardPage(R.
                     ) {
                         PostPage(
                             page = page,
-                            source = PagesSource.Unknown.copy(editMode = this@ComposeCardPage.editMode)
+                            source = PagesSource.Unknown.copy(editMode = this@ComposeCardPage.editMode),
+                            model = model,
                         )
                     }
                 }
@@ -163,7 +194,9 @@ class ComposePostPages(
     @Composable
     override fun Content() {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             PostPages(
@@ -174,7 +207,8 @@ class ComposePostPages(
                         sourceId = it.getSourceId(),
                         sourceSubId = it.getSourceIdSub()
                     )
-                } ?: PagesSource.Unknown
+                } ?: PagesSource.Unknown,
+                model = viewModel(),
             )
         }
     }

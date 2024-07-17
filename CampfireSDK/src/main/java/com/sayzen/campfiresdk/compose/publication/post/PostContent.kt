@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastCoerceAtMost
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.sayzen.campfiresdk.R
@@ -35,6 +36,7 @@ import com.sayzen.campfiresdk.compose.auth.SetBirthdayScreen
 import com.sayzen.campfiresdk.compose.publication.post.PostModel.NsfwOverlayButtonVariant.*
 import com.sayzen.campfiresdk.compose.publication.post.pages.PagesSource
 import com.sayzen.campfiresdk.compose.publication.post.pages.PostPages
+import com.sayzen.campfiresdk.compose.publication.post.pages.PostPagesModel
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsToast
@@ -97,7 +99,7 @@ internal fun ExpandableColumn(
                 list.add(measurement)
                 y += measurement.height + spacedBy
 
-                if (y >= maxHeight) break
+                if ((y - spacedBy) >= maxHeight) break
             }
             expandable = (y - spacedBy) >= maxHeight
             expandableRef.value = expandable
@@ -128,6 +130,10 @@ internal fun PostContent(
     onExpandableChanged: (Boolean) -> Unit,
     onExpand: () -> Unit,
 ) {
+    val postPagesModel = viewModel {
+        PostPagesModel(onExpand = onExpand)
+    }
+
     val pagesSource = remember(post.id) {
         PagesSource(
             sourceType = API.PAGES_SOURCE_TYPE_POST,
@@ -173,7 +179,7 @@ internal fun PostContent(
                 PostPages(
                     pages = post.pages.toList(),
                     source = pagesSource,
-                    onExpand = onExpand
+                    model = postPagesModel,
                 )
             }
         }

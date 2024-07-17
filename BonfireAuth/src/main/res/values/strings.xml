@@ -113,4 +113,10 @@
     <string name="save">Save</string>
     <string name="birthday_not_specified">Not specified</string>
     <string name="birthday_not_changeable">You cannot change your birthday</string>
+    <string name="error_birthday_already_set">You have already specified a birthday for your account. Please restart the
+        app to apply these changes.
+    </string>
+    <string name="error_too_young">According to the Bonfire terms of service, you must be at least 13 years old to use
+        the service.
+    </string>
 </resources>

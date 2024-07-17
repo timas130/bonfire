@@ -24,6 +24,8 @@ pub enum ProfileError {
     BadgeNotFound,
     #[error("BirthdayAlreadySet: You have already set your birthday")]
     BirthdayAlreadySet,
+    #[error("TooYoung: According to the Bonfire privacy policy, you must be at least 13 years old to use the service")]
+    TooYoung,
 
     #[error("{0}")]
     Auth(#[from] AuthError),

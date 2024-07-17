@@ -2,7 +2,7 @@ package com.sayzen.campfiresdk.compose.publication.post.pages
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -24,8 +24,8 @@ internal fun PageVideoRenderer(page: PageVideo) {
         link = page.image,
         contentDescription = stringResource(R.string.video_alt),
         modifier = Modifier
+            .fillMaxWidth()
             .padding(horizontal = 12.dp)
-            .aspectRatio(16 / 9f)
             .clip(RoundedCornerShape(8.dp))
             .combinedClickable(
                 onLongClick = {

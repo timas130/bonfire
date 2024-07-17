@@ -111,4 +111,10 @@
     <string name="save">Сохранить</string>
     <string name="birthday_not_specified">Не указана</string>
     <string name="birthday_not_changeable">Вы не можете изменить свою дату рождения</string>
+    <string name="error_birthday_already_set">Вы уже указали дату рождения в своём аккаунте. Пожалуйста, перезапустите
+        приложение, чтобы применить изменения.
+    </string>
+    <string name="error_too_young">В соответствии с условиями использования Bonfire, вам должно быть как минимум 13 лет,
+        чтобы использовать сервис.
+    </string>
 </resources>
