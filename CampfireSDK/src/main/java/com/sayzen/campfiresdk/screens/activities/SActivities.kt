@@ -135,7 +135,7 @@ class SActivities : Screen(R.layout.screen_activities) {
 
         if (!ControllerApi.can(API.LVL_ADMIN_BAN)) {
             vUserReports.isEnabled = false
-            vUserReports.setSubtitle(t(API_TRANSLATE.activities_low_lvl) + ". (${t(API_TRANSLATE.app_level)} ${API.LVL_ADMIN_BAN.lvl/100}, ${t(API_TRANSLATE.app_karma)} ${API.LVL_ADMIN_BAN.karmaCount/100})")
+            vUserReports.setSubtitle(t(API_TRANSLATE.activities_low_lvl) + ". (${t(API_TRANSLATE.app_level)} ${API.LVL_ADMIN_BAN.lvl/100f}, ${t(API_TRANSLATE.app_karma)} ${API.LVL_ADMIN_BAN.karmaCount/100})")
             vUserReportsChip.visibility = View.GONE
         } else {
             vUserReportsChip.visibility = View.VISIBLE
@@ -143,7 +143,7 @@ class SActivities : Screen(R.layout.screen_activities) {
 
         if (!ControllerApi.can(API.LVL_ADMIN_BAN)) {
             vAdminVotes.isEnabled = false
-            vAdminVotes.setSubtitle(t(API_TRANSLATE.activities_low_lvl) + ". (${t(API_TRANSLATE.app_level)} ${API.LVL_ADMIN_BAN.lvl/100}, ${t(API_TRANSLATE.app_karma)} ${API.LVL_ADMIN_BAN.karmaCount/100})")
+            vAdminVotes.setSubtitle(t(API_TRANSLATE.activities_low_lvl) + ". (${t(API_TRANSLATE.app_level)} ${API.LVL_ADMIN_BAN.lvl/100f}, ${t(API_TRANSLATE.app_karma)} ${API.LVL_ADMIN_BAN.karmaCount/100})")
             vAdminVotesChip.visibility = View.GONE
         } else {
             vAdminVotesChip.visibility = View.VISIBLE
@@ -151,7 +151,7 @@ class SActivities : Screen(R.layout.screen_activities) {
 
         if (!ControllerApi.can(API.LVL_ADMIN_MODER)) {
             vReports.isEnabled = false
-            vReports.setSubtitle(t(API_TRANSLATE.activities_low_lvl) + ". (${t(API_TRANSLATE.app_level)} ${API.LVL_ADMIN_MODER.lvl/100}, ${t(API_TRANSLATE.app_karma)} ${API.LVL_ADMIN_MODER.karmaCount/100})")
+            vReports.setSubtitle(t(API_TRANSLATE.activities_low_lvl) + ". (${t(API_TRANSLATE.app_level)} ${API.LVL_ADMIN_MODER.lvl/100f}, ${t(API_TRANSLATE.app_karma)} ${API.LVL_ADMIN_MODER.karmaCount/100})")
             vReportsChip.visibility = View.GONE
         } else {
             vReportsChip.visibility = View.VISIBLE
@@ -159,7 +159,7 @@ class SActivities : Screen(R.layout.screen_activities) {
 
         if (!ControllerApi.can(API.LVL_ADMIN_FANDOMS_ACCEPT)) {
             vFandoms.isEnabled = false
-            vFandoms.setSubtitle(t(API_TRANSLATE.activities_low_lvl) + ". (${t(API_TRANSLATE.app_level)} ${API.LVL_ADMIN_FANDOMS_ACCEPT.lvl/100}, ${t(API_TRANSLATE.app_karma)} ${API.LVL_ADMIN_FANDOMS_ACCEPT.karmaCount/100})")
+            vFandoms.setSubtitle(t(API_TRANSLATE.activities_low_lvl) + ". (${t(API_TRANSLATE.app_level)} ${API.LVL_ADMIN_FANDOMS_ACCEPT.lvl/100f}, ${t(API_TRANSLATE.app_karma)} ${API.LVL_ADMIN_FANDOMS_ACCEPT.karmaCount/100})")
             vFandomsChip.visibility = View.GONE
         } else {
             vFandomsChip.visibility = View.VISIBLE
@@ -167,14 +167,14 @@ class SActivities : Screen(R.layout.screen_activities) {
 
         if (!ControllerApi.can(API.LVL_ADMIN_FANDOM_ADMIN)) {
             vBlock.isEnabled = false
-            vBlock.setSubtitle(t(API_TRANSLATE.activities_low_lvl) + ". (${t(API_TRANSLATE.app_level)} ${API.LVL_ADMIN_FANDOM_ADMIN.lvl/100}, ${t(API_TRANSLATE.app_karma)} ${API.LVL_ADMIN_FANDOM_ADMIN.karmaCount/100})")
+            vBlock.setSubtitle(t(API_TRANSLATE.activities_low_lvl) + ". (${t(API_TRANSLATE.app_level)} ${API.LVL_ADMIN_FANDOM_ADMIN.lvl/100f}, ${t(API_TRANSLATE.app_karma)} ${API.LVL_ADMIN_FANDOM_ADMIN.karmaCount/100})")
             vBlockChip.visibility = View.GONE
         } else {
             vBlockChip.visibility = View.VISIBLE
         }
 
         if (!ControllerApi.can(API.LVL_MODERATOR_TRANSLATE) && ControllerEffects.get(API.EFFECT_INDEX_TRANSLATOR) == null) {
-            vTranslates.setSubtitle(t(API_TRANSLATE.activities_low_lvl) + ". (${t(API_TRANSLATE.app_level)} ${API.LVL_MODERATOR_TRANSLATE.lvl/100}, ${t(API_TRANSLATE.app_karma)} ${API.LVL_MODERATOR_TRANSLATE.karmaCount/100})")
+            vTranslates.setSubtitle(t(API_TRANSLATE.activities_low_lvl) + ". (${t(API_TRANSLATE.app_level)} ${API.LVL_MODERATOR_TRANSLATE.lvl/100f}, ${t(API_TRANSLATE.app_karma)} ${API.LVL_MODERATOR_TRANSLATE.karmaCount/100})")
             vTranslatesChip.visibility = View.GONE
         } else {
             vTranslatesChip.visibility = View.VISIBLE
@@ -183,7 +183,7 @@ class SActivities : Screen(R.layout.screen_activities) {
 
         if (!ControllerApi.can(API.LVL_ADMIN_TRANSLATE_MODERATOR)) {
             vTranslatesModeration.isEnabled = false
-            vTranslatesModeration.setSubtitle(t(API_TRANSLATE.activities_low_lvl) + ". (${t(API_TRANSLATE.app_level)} ${API.LVL_ADMIN_TRANSLATE_MODERATOR.lvl/100}, ${t(API_TRANSLATE.app_karma)} ${API.LVL_ADMIN_TRANSLATE_MODERATOR.karmaCount/100})")
+            vTranslatesModeration.setSubtitle(t(API_TRANSLATE.activities_low_lvl) + ". (${t(API_TRANSLATE.app_level)} ${API.LVL_ADMIN_TRANSLATE_MODERATOR.lvl/100f}, ${t(API_TRANSLATE.app_karma)} ${API.LVL_ADMIN_TRANSLATE_MODERATOR.karmaCount/100})")
             vTranslatesModerationChip.visibility = View.GONE
         } else {
             vTranslatesModerationChip.visibility = View.VISIBLE
