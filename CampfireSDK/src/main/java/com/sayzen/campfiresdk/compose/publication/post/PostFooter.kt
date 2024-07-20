@@ -16,6 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -105,6 +107,8 @@ val counterTransitionSpec: AnimatedContentTransitionScope<Long>.() -> ContentTra
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun CommentButton(post: PublicationPost) {
+    val hapticFeedback = LocalHapticFeedback.current
+
     Surface(
         modifier = Modifier
             .height(36.dp)
@@ -116,6 +120,7 @@ internal fun CommentButton(post: PublicationPost) {
                 },
                 onLongClick = {
                     if (post.isPublic) {
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                         PostHog.capture("open_comment_editor", properties = mapOf("from" to "post_longclick"))
                         SplashComment(post.id, null, true) { }.asSheetShow()
                     }
