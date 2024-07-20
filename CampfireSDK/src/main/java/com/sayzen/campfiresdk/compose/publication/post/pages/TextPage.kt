@@ -33,7 +33,7 @@ internal fun PageTextRenderer(page: PageText) {
                 contentDescription = null,
                 modifier = Modifier.padding(top = 4.dp)
             )
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 PageTextContent(page = page)
             }
         }

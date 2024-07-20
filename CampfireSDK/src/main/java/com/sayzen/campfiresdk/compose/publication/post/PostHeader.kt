@@ -61,6 +61,7 @@ internal fun PostHeader(post: PublicationPost) {
         } else {
             MaterialTheme.colorScheme.surfaceContainerLow
         },
+        modifier = Modifier.padding(bottom = 8.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

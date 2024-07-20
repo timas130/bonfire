@@ -149,7 +149,7 @@ fun PostPages(
 
     nested.forEachIndexed { index, page ->
         PageMoveDestination(idx = index, source = source)
-        PostPage(page = page, source = source)
+        PostPage(page = page, source = source, model = model)
     }
     PageMoveDestination(idx = nested.size, source = source)
 }
@@ -170,7 +170,7 @@ class ComposeCardPage(pagesContainer: PagesContainer?, page: Page) : CardPage(R.
                 ) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         PostPage(
                             page = page,
@@ -197,7 +197,7 @@ class ComposePostPages(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             PostPages(
                 pages = pages,

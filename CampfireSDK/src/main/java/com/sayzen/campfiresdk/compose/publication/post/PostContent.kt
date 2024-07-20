@@ -48,7 +48,7 @@ internal fun ExpandableColumn(
     onExpandableChanged: (Boolean) -> Unit = {},
     content: @Composable () -> Unit,
 ) {
-    val spacedBy = with(LocalDensity.current) { 8.dp.roundToPx() }
+    val spacedBy = with(LocalDensity.current) { 12.dp.roundToPx() }
     val clipHeight = with(LocalDensity.current) { 16.dp.toPx() }
     val maxHeight = with(LocalDensity.current) { 324.dp.roundToPx() }
 

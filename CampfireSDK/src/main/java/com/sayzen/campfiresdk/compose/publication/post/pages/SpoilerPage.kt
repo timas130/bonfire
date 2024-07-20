@@ -27,51 +27,55 @@ internal fun PageSpoilerRenderer(
 ) {
     val expanded by model.isSpoilerExpanded(page.index).collectAsState()
 
-    ListItem(
-        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
-        leadingContent = {
-            val rotation by animateFloatAsState(if (expanded) 180f else 0f, label = "SpoilerExpand")
+    Column {
+        ListItem(
+            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+            leadingContent = {
+                val rotation by animateFloatAsState(if (expanded) 180f else 0f, label = "SpoilerExpand")
 
-            Icon(
-                imageVector = Icons.Default.KeyboardArrowDown,
-                contentDescription = stringResource(if (expanded) {
-                    R.string.spoiler_shrink
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowDown,
+                    contentDescription = stringResource(
+                        if (expanded) {
+                            R.string.spoiler_shrink
+                        } else {
+                            R.string.spoiler_expand
+                        }
+                    ),
+                    modifier = Modifier.rotate(rotation),
+                )
+            },
+            headlineContent = {
+                Text(
+                    text = stringResource(R.string.spoiler_label)
+                        .format(
+                            page.name?.takeUnless { it.isBlank() }
+                                ?: stringResource(R.string.spoiler_label_default),
+                            page.count
+                        )
+                )
+            },
+            modifier = Modifier.clickable {
+                if (expanded) {
+                    model.shrinkSpoiler(page.index)
                 } else {
-                    R.string.spoiler_expand
-                }),
-                modifier = Modifier.rotate(rotation),
-            )
-        },
-        headlineContent = {
-            Text(
-                text = stringResource(R.string.spoiler_label)
-                    .format(
-                        page.name?.takeUnless { it.isBlank() }
-                            ?: stringResource(R.string.spoiler_label_default),
-                        page.count
-                    )
-            )
-        },
-        modifier = Modifier.clickable {
+                    model.expandSpoiler(page.index)
+                }
+            }
+        )
+        Column(
+            Modifier
+                .animateContentSize()
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
             if (expanded) {
-                model.shrinkSpoiler(page.index)
-            } else {
-                model.expandSpoiler(page.index)
+                page.children.forEachIndexed { index, child ->
+                    PageMoveDestination(idx = index, source = source)
+                    PostPage(page = child, model = model)
+                }
+                HorizontalDivider()
             }
-        }
-    )
-    Column(
-        Modifier
-            .animateContentSize()
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        if (expanded) {
-            page.children.forEachIndexed { index, child ->
-                PageMoveDestination(idx = index, source = source)
-                PostPage(page = child, model = model)
-            }
-            HorizontalDivider()
         }
     }
 }
