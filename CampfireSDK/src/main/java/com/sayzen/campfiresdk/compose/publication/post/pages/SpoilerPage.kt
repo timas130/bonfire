@@ -3,9 +3,7 @@ package com.sayzen.campfiresdk.compose.publication.post.pages
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
@@ -70,6 +68,7 @@ internal fun PageSpoilerRenderer(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             if (expanded) {
+                Spacer(Modifier.height(2.dp))
                 page.children.forEachIndexed { index, child ->
                     PageMoveDestination(idx = index, source = source)
                     PostPage(page = child, model = model)
