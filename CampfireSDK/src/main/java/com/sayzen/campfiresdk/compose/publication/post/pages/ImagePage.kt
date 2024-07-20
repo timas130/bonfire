@@ -32,7 +32,7 @@ internal fun PageImageRenderer(page: PageImage) {
             matchHeightConstraintsFirst = true,
             modifier = Modifier
                 .padding(horizontal = 12.dp)
-                .heightIn(max = 500.dp)
+                .heightIn(max = 700.dp)
                 .align(Alignment.Center)
                 .clip(RoundedCornerShape(8.dp))
                 .clickable {
