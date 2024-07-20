@@ -57,18 +57,17 @@ internal fun PostHeader(post: PublicationPost) {
 
     Surface(
         color = if (post.important == API.PUBLICATION_IMPORTANT_IMPORTANT || post.isPined) {
-            MaterialTheme.colorScheme.tertiaryContainer
+            MaterialTheme.colorScheme.primaryContainer
         } else {
             MaterialTheme.colorScheme.surfaceContainerLow
         },
-        shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .padding(horizontal = 12.dp)
-                .padding(top = 12.dp, bottom = 8.dp)
+                .padding(top = 12.dp, bottom = 12.dp)
                 .fillMaxWidth()
         ) {
             Row(
