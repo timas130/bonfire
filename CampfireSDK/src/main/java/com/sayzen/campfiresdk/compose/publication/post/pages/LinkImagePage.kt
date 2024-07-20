@@ -37,7 +37,7 @@ internal fun PageLinkImageRenderer(page: PageLinkImage) {
             contentDescription = stringResource(R.string.page_link_image),
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(16f / 9f)
+                .aspectRatio(1f / 2f)
                 .clip(RoundedCornerShape(8.dp))
                 .combinedClickable(
                     onLongClick = {
