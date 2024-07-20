@@ -19,3 +19,19 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-dontwarn org.joda.convert.FromString
+-dontwarn org.joda.convert.ToString
+
+-keep class ** {
+    public static *** instance(com.sup.dev.java.libs.json.Json);
+}
+-keepclassmembernames class ** {
+    public static *** instance(com.sup.dev.java.libs.json.Json);
+}
+
+-keepclassmembernames class com.dzen.campfire.api.API_TRANSLATE { *; }
+-keepnames class com.dzen.campfire.api.**
+-keepnames class com.dzen.campfire.api_media.**
+
+-keepclasseswithmembernames class **

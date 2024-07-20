@@ -38,3 +38,9 @@ dependencies {
     implementation 'com.google.net.cronet:cronet-okhttp:0.1.0'
     implementation 'androidx.annotation:annotation-jvm:1.7.1'
 }
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
