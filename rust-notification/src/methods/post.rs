@@ -31,12 +31,11 @@ impl NotificationServer {
         &self,
         input: NotificationInput,
     ) -> Result<Vec<Notification>, NotificationError> {
-        let mut tx = self.base.pool.begin().await?;
-
         let payload = serde_json::to_value(&input.payload).map_err(anyhow::Error::from)?;
 
         let mut notifications = Vec::with_capacity(input.recipients.len());
         for recipient in input.recipients {
+            // get user id
             let user_id = match recipient {
                 NotificationRecipient::User(user_id) => user_id,
                 NotificationRecipient::Session(session_id) => {
@@ -49,6 +48,8 @@ impl NotificationServer {
                 }
             };
 
+            // create notification in database if needed
+            // (ephemeral notifications are not stored)
             struct RawNotification {
                 id: i64,
                 created_at: DateTime<Utc>,
@@ -64,7 +65,7 @@ impl NotificationServer {
                     payload,
                     input.payload.get_type()?,
                 )
-                .fetch_one(&mut *tx)
+                .fetch_one(&self.base.pool)
                 .await;
 
                 if let Err(err) = result {
@@ -85,6 +86,7 @@ impl NotificationServer {
                 }
             };
 
+            // modify legacy payload to include date of departure and nonce
             let payload = match input.payload.clone() {
                 NotificationPayload::Legacy(mut value) => {
                     value["J_N_ID"] = Value::from(raw_notification.id);
@@ -104,6 +106,7 @@ impl NotificationServer {
                 read: false,
             };
 
+            // identify sessions to send the notification to
             let sessions = match recipient {
                 NotificationRecipient::Session(session_id) => vec![self
                     .auth
@@ -117,6 +120,7 @@ impl NotificationServer {
                     .map_err(anyhow::Error::from)??,
             };
 
+            // send!
             for session in sessions {
                 if input.online_only && session.last_online < Utc::now() - Duration::from_secs(600)
                 {
@@ -127,8 +131,6 @@ impl NotificationServer {
 
             notifications.push(notification);
         }
-
-        tx.commit().await?;
 
         Ok(notifications)
     }
