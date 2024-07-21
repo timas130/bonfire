@@ -20,6 +20,7 @@ import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.java.tools.ToolsDate
+import sh.sit.bonfire.formatting.BonfireMarkdown
 
 class SplashAccountInfo(account: Account) : Splash(R.layout.splash_account_info) {
 
@@ -103,18 +104,14 @@ class SplashAccountInfo(account: Account) : Splash(R.layout.splash_account_info)
         } else {
             vTimeInApp.text = ""
         }
-        if (status.isEmpty()) {
-            vStatus.text = "Hello world"
-            vStatus.setTextColor(ToolsResources.getColor(R.color.grey_500))
-        } else {
-            vStatus.text = status
-            vStatus.setTextColor(ToolsResources.getColorAttr(R.attr.colorRevers))
-        }
 
-        vNote.text = t(API_TRANSLATE.app_note) + ": " + note
+        val statusText = status.ifEmpty { "{grey Hello, world}" }
+        BonfireMarkdown.setMarkdownInline(vStatus, statusText)
+        ControllerLinks.linkifyShort(vStatus)
+
         vNote.visibility = if (note.isEmpty()) View.GONE else View.VISIBLE
-
-        ControllerLinks.makeLinkable(vNote)
+        BonfireMarkdown.setMarkdownInline(vNote, t(API_TRANSLATE.app_note) + ": " + note)
+        ControllerLinks.linkifyShort(vNote)
 
         if (banDate > ControllerApi.currentTime()) {
             vBan.text = t(API_TRANSLATE.error_account_baned, ToolsDate.dateToString(banDate))
@@ -144,10 +141,10 @@ class SplashAccountInfo(account: Account) : Splash(R.layout.splash_account_info)
             else -> tCap(API_TRANSLATE.genderOther)
         })
         vAge.text = t(API_TRANSLATE.profile_age, if (age == 0L) t(API_TRANSLATE.profile_age_not_set) else age)
-        vDescription.text = if (description.isEmpty()) t(API_TRANSLATE.profile_bio_empty) else description
 
-        ControllerLinks.makeLinkable(vDescription)
-        ControllerLinks.makeLinkable(vStatus)
+        val descriptionText = description.ifEmpty { t(API_TRANSLATE.profile_bio_empty) }
+        BonfireMarkdown.setMarkdown(vDescription, descriptionText)
+        ControllerLinks.linkifyShort(vDescription)
 
         if (xAccount.isBot()) {
             vAvatar.setSubtitle(t(API_TRANSLATE.app_bot))
@@ -159,8 +156,5 @@ class SplashAccountInfo(account: Account) : Splash(R.layout.splash_account_info)
             vAvatar.setSubtitle(t(API_TRANSLATE.app_online))
             vAvatar.setSubtitleColor(ToolsResources.getColor(R.color.green_700))
         }
-
     }
-
-
 }
