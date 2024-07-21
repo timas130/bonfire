@@ -1,19 +1,17 @@
 package com.sayzen.campfiresdk.compose.util
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 
 // https://stackoverflow.com/a/71665355
@@ -74,7 +72,6 @@ fun Table(
 fun TableWithBorders(
     modifier: Modifier = Modifier,
     rowModifier: Modifier = Modifier,
-    horizontalScrollState: ScrollState = rememberScrollState(),
     columnCount: Int,
     rowCount: Int,
     cellContent: @Composable BoxScope.(columnIndex: Int, rowIndex: Int) -> Unit
@@ -83,14 +80,15 @@ fun TableWithBorders(
     val borderColor = DividerDefaults.color
 
     val tableState = rememberTableState()
+    var boxHeight by remember { mutableIntStateOf(0) }
 
-    // IntrinsicSize.Min results in fillMaxHeight() of the vertical dividers
-    // matching the Box's height instead of its parent's
     Box(
         modifier
             .horizontalScroll(rememberScrollState())
             .padding(end = DividerDefaults.Thickness)
-            .height(IntrinsicSize.Min)
+            .onSizeChanged {
+                boxHeight = it.height
+            }
     ) {
         Table(
             modifier = Modifier
@@ -125,10 +123,7 @@ fun TableWithBorders(
             rowCount = rowCount,
             tableState = tableState,
             cellContent = { col, row ->
-                Box(
-                    Modifier
-                        .padding(DividerDefaults.Thickness)
-                ) {
+                Box(Modifier.padding(DividerDefaults.Thickness)) {
                     cellContent(col, row)
                 }
             },
@@ -143,7 +138,11 @@ fun TableWithBorders(
 
                 sum.toDp()
             }
-            VerticalDivider(Modifier.offset(x = x))
+            VerticalDivider(
+                Modifier
+                    .height(with(LocalDensity.current) { boxHeight.toDp() })
+                    .offset(x = x)
+            )
         }
     }
 }
