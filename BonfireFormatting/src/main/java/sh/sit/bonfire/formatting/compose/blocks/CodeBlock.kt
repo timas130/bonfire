@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import io.github.kbiakov.codeview.highlight.ColorTheme
 import io.github.kbiakov.codeview.highlight.ColorThemeData
 import io.github.kbiakov.codeview.highlight.prettify.PrettifyParser
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import sh.sit.bonfire.formatting.core.model.spans.CodeBlock
 
 private fun ColorThemeData.buildColorsMap(): HashMap<String, Int> {
@@ -71,7 +73,9 @@ fun CodeBlock(
     var annotatedString by remember { mutableStateOf(blockText) }
 
     LaunchedEffect(blockText) {
-        annotatedString = block.buildAnnotatedString(blockText.toString())
+        annotatedString = withContext(Dispatchers.IO) {
+            block.buildAnnotatedString(blockText.toString())
+        }
     }
 
     Text(
