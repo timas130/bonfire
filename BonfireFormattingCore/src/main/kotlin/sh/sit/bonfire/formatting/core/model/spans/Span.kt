@@ -42,6 +42,7 @@ sealed class Span : JsonPolimorf {
         const val TYPE_SUBSCRIPT = 15
         const val TYPE_SUPERSCRIPT = 16
         const val TYPE_UNDERLINE = 17
+        const val TYPE_TASK_ITEM_MARKER = 18
 
         @JvmStatic
         fun instance(json: Json): Span {
@@ -63,6 +64,7 @@ sealed class Span : JsonPolimorf {
                 TYPE_SUBSCRIPT -> SubscriptSpan()
                 TYPE_SUPERSCRIPT -> SuperscriptSpan()
                 TYPE_UNDERLINE -> UnderlineSpan()
+                TYPE_TASK_ITEM_MARKER -> TaskItemMarker()
                 else -> EmptySpan()
             }
             span.json(false, json)

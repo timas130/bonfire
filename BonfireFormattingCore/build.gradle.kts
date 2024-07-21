@@ -17,6 +17,7 @@ dependencies {
     implementation("com.atlassian.commonmark:commonmark:0.13.0")
     implementation("com.atlassian.commonmark:commonmark-ext-autolink:0.13.0")
     implementation("com.atlassian.commonmark:commonmark-ext-gfm-strikethrough:0.13.0")
+    implementation("com.atlassian.commonmark:commonmark-ext-task-list-items:0.15.0")
 }
 
 tasks.test {

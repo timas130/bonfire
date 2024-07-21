@@ -1,6 +1,7 @@
 package sh.sit.bonfire.formatting.core
 
 import org.commonmark.ext.gfm.strikethrough.Strikethrough
+import org.commonmark.ext.task.list.items.TaskListItemMarker
 import org.commonmark.node.*
 import sh.sit.bonfire.formatting.core.bfm.color.ColorNode
 import sh.sit.bonfire.formatting.core.bfm.marked.MarkedNode
@@ -40,6 +41,7 @@ class SpanVisitor(buffer: Int = 64) : AbstractVisitor() {
             is SubscriptNode -> SubscriptSpan()
             is SuperscriptNode -> SuperscriptSpan()
             is MarkedNode -> MarkedSpan()
+            is TaskListItemMarker -> TaskItemMarker(node.isChecked)
             else -> EmptySpan()
         }
 

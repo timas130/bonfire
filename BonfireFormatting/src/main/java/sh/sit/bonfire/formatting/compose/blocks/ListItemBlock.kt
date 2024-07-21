@@ -3,6 +3,7 @@ package sh.sit.bonfire.formatting.compose.blocks
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
@@ -11,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.AnnotatedString
@@ -22,6 +25,7 @@ import sh.sit.bonfire.formatting.compose.filterNonOverlapping
 import sh.sit.bonfire.formatting.core.model.spans.ListBlock
 import sh.sit.bonfire.formatting.core.model.spans.ListItemBlock
 import sh.sit.bonfire.formatting.core.model.spans.Span
+import sh.sit.bonfire.formatting.core.model.spans.TaskItemMarker
 
 @Composable
 internal fun ListItemBlock(
@@ -35,6 +39,10 @@ internal fun ListItemBlock(
         it.start >= block.start && block.end >= it.end && it !== block
     }
     val innerBlocks = innerItems.filterNonOverlapping()
+
+    val taskItemMarker = innerItems
+        .firstOrNull()
+        ?.takeIf { it is TaskItemMarker } as TaskItemMarker?
 
     Row(
         Modifier
@@ -64,6 +72,20 @@ internal fun ListItemBlock(
                         .background(LocalContentColor.current)
                 )
             }
+        }
+
+        if (taskItemMarker != null) {
+            Checkbox(
+                checked = taskItemMarker.checked,
+                onCheckedChange = null,
+                modifier = Modifier
+                    .graphicsLayer(
+                        scaleX = 0.8f,
+                        scaleY = 0.8f,
+                        transformOrigin = TransformOrigin(0f, 0.5f)
+                    )
+                    .padding(end = 2.dp),
+            )
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {

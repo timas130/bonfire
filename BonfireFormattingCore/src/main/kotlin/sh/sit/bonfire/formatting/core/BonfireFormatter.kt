@@ -2,6 +2,7 @@ package sh.sit.bonfire.formatting.core
 
 import org.commonmark.ext.autolink.AutolinkExtension
 import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension
+import org.commonmark.ext.task.list.items.TaskListItemsExtension
 import org.commonmark.parser.Parser
 import sh.sit.bonfire.formatting.core.bfm.color.ColorExtension
 import sh.sit.bonfire.formatting.core.bfm.marked.MarkedExtension
@@ -28,7 +29,8 @@ object BonfireFormatter {
                 SuperscriptExtension(),
                 UnderlineExtension(),
                 MarkedExtension(),
-                MentionExtension()
+                MentionExtension(),
+                TaskListItemsExtension.create(),
             ))
             .apply {
                 if (inlineOnly) enabledBlockTypes(setOf())
