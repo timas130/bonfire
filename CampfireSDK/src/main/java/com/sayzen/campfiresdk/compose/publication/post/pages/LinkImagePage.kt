@@ -16,6 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,6 +33,8 @@ import sh.sit.bonfire.images.RemoteImage
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun PageLinkImageRenderer(page: PageLinkImage) {
+    val hapticFeedback = LocalHapticFeedback.current
+
     Box(Modifier.padding(horizontal = 12.dp)) {
         RemoteImage(
             link = page.image,
@@ -41,6 +45,7 @@ internal fun PageLinkImageRenderer(page: PageLinkImage) {
                 .clip(RoundedCornerShape(8.dp))
                 .combinedClickable(
                     onLongClick = {
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                         ToolsAndroid.setToClipboard(page.link)
                         ToolsToast.show(R.string.link_copied)
                     },

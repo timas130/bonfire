@@ -12,6 +12,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -50,6 +52,7 @@ internal fun PageLinkLayout(
     link: String,
 ) {
     val colors = MaterialTheme.colorScheme
+    val hapticFeedback = LocalHapticFeedback.current
     val formattedTitle = remember(title, colors) {
         BonfireFormatter
             .parse(title, inlineOnly = true)
@@ -65,6 +68,7 @@ internal fun PageLinkLayout(
             .combinedClickable(
                 onClick = { ToolsIntent.openLink(link) },
                 onLongClick = {
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                     ToolsAndroid.setToClipboard(link)
                     ToolsToast.show(R.string.link_copied)
                 }

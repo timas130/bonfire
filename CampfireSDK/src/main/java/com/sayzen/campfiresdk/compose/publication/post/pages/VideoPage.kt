@@ -8,6 +8,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.dzen.campfire.api.models.publications.post.PageVideo
@@ -20,6 +22,8 @@ import sh.sit.bonfire.images.RemoteImage
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun PageVideoRenderer(page: PageVideo) {
+    val hapticFeedback = LocalHapticFeedback.current
+
     RemoteImage(
         link = page.image,
         contentDescription = stringResource(R.string.video_alt),
@@ -29,6 +33,7 @@ internal fun PageVideoRenderer(page: PageVideo) {
             .clip(RoundedCornerShape(8.dp))
             .combinedClickable(
                 onLongClick = {
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                     ToolsAndroid.setToClipboard("https://youtu.be/${page.videoId}")
                     ToolsToast.show(R.string.link_copied)
                 },
