@@ -9,10 +9,10 @@ use c_core::services::email::EmailError;
 use c_core::services::level::LevelError;
 use c_core::services::notification::NotificationError;
 use c_core::services::profile::ProfileError;
+use c_core::services::security::SecurityError;
 use std::sync::Arc;
 use thiserror::Error;
 use tracing::warn;
-use c_core::services::security::SecurityError;
 
 #[derive(Clone, Error, Debug)]
 pub enum RespError {

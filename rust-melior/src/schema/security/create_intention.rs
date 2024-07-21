@@ -18,7 +18,7 @@ enum GIntentionType {
 impl From<GIntentionType> for IntentionType {
     fn from(value: GIntentionType) -> Self {
         match value {
-            GIntentionType::Generic => Self::Generic
+            GIntentionType::Generic => Self::Generic,
         }
     }
 }

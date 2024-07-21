@@ -11,7 +11,7 @@ impl ProfileServer {
     ) -> Result<(), ProfileError> {
         let birthday_dt = birthday.and_time(NaiveTime::MIN).and_utc();
         let current_age = Utc::now().years_since(birthday_dt).unwrap_or(0);
-        
+
         if current_age < 13 {
             warn!(user_id, %birthday, "too young triggered");
             return Err(ProfileError::TooYoung);
