@@ -33,5 +33,3 @@
 -keepclassmembernames class com.dzen.campfire.api.API_TRANSLATE { *; }
 -keepnames class com.dzen.campfire.api.**
 -keepnames class com.dzen.campfire.api_media.**
-
--keepclasseswithmembernames class **
