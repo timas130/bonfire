@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.input.pointer.PointerEventTimeoutCancellationException
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -208,12 +209,25 @@ fun Post(
             .indication(interactionSource, LocalIndication.current)
             .pointerInput(Unit) {
                 awaitEachGesture {
+                    // wait for and consume press start
                     val down = awaitFirstDown()
                     down.consume()
+
+                    // if canceled within 300ms, return
+                    // if not canceled within 300ms, show indication
+                    val maybeUp = try {
+                        withTimeout(300) {
+                            waitForUpOrCancellation()
+                        } ?: return@awaitEachGesture
+                    } catch (_: PointerEventTimeoutCancellationException) {
+                        null
+                    }
+
                     val press = PressInteraction.Press(down.position)
                     interactionSource.tryEmit(press)
 
-                    val up = waitForUpOrCancellation()
+                    // wait for up, if not already fired
+                    val up = maybeUp ?: waitForUpOrCancellation()
                     if (up == null) {
                         interactionSource.tryEmit(PressInteraction.Cancel(press))
                         return@awaitEachGesture
@@ -222,6 +236,7 @@ fun Post(
 
                     interactionSource.tryEmit(PressInteraction.Release(press))
 
+                    // do action
                     if (onClick != null) {
                         onClick(post)
                     } else if (post.status != API.STATUS_DRAFT) {
