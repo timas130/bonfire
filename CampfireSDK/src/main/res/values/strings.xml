@@ -104,5 +104,6 @@
     <string name="restart_text">This experiment recommends restarting the app to apply correctly and avoid bugs and
         crashes. Restart now?
     </string>
+    <string name="post_important">Important</string>
 
 </resources>

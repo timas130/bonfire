@@ -60,7 +60,7 @@ internal fun PostTitle(title: String) {
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .padding(horizontal = 12.dp)
-                .padding(bottom = 8.dp),
+                .padding(bottom = 8.dp, top = 4.dp),
         )
     }
 }
@@ -71,19 +71,35 @@ internal fun PostChips(post: PublicationPost) {
         contentPadding = PaddingValues(horizontal = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        item {
-            val activity = post.userActivity ?: return@item
-            SuggestionChip(
-                onClick = {
-                    SRelayRaceInfo.instance(activity.id, Navigator.TO)
-                },
-                icon = {
-                    Icon(painterResource(R.drawable.rowing_24), stringResource(R.string.post_activity))
-                },
-                label = {
-                    Text(activity.name)
-                }
-            )
+        if (post.important == API.PUBLICATION_IMPORTANT_IMPORTANT) {
+            item(key = "important") {
+                SuggestionChip(
+                    onClick = {},
+                    icon = {
+                        Icon(painterResource(R.drawable.priority_high_24px), contentDescription = null)
+                    },
+                    label = {
+                        Text(stringResource(R.string.post_important))
+                    }
+                )
+            }
+        }
+
+        val activity = post.userActivity
+        if (activity != null) {
+            item(key = "activity") {
+                SuggestionChip(
+                    onClick = {
+                        SRelayRaceInfo.instance(activity.id, Navigator.TO)
+                    },
+                    icon = {
+                        Icon(painterResource(R.drawable.rowing_24), stringResource(R.string.post_activity))
+                    },
+                    label = {
+                        Text(activity.name)
+                    }
+                )
+            }
         }
     }
 }

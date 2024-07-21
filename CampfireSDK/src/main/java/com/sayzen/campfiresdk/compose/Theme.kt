@@ -38,6 +38,7 @@ private val LegacyDarkColors = darkColorScheme(
     onSurfaceVariant = Color(0xAAFFFFFF),
     surface = Color(0xFF363636),
     surfaceContainerLow = Color(0xFF212121),
+    outline = Color(0xFF363636),
     outlineVariant = Color(0xFF363636),
     surfaceVariant = surfaceVariantDark,
     secondaryContainer = secondaryContainerDark,

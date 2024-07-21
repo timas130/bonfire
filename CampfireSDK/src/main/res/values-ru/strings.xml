@@ -98,4 +98,5 @@
     <string name="restart_button">Перезапустить</string>
     <string name="restart_title">Перезапустить?</string>
     <string name="restart_text">Этот эксперимент рекомендует перезапустить приложение, чтобы правильно примениться и не вызвать баги и вылеты. Перезапустить приложение сейчас?</string>
+    <string name="post_important">Важный</string>
 </resources>
