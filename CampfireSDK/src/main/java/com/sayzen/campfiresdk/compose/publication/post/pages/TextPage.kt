@@ -5,6 +5,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -44,11 +45,21 @@ internal fun PageTextRenderer(page: PageText) {
 
 @Composable
 private fun PageTextContent(page: PageText) {
+    val textAlign = when (page.align) {
+        PageText.ALIGN_LEFT -> TextAlign.Start
+        PageText.ALIGN_RIGHT -> TextAlign.End
+        PageText.ALIGN_CENTER -> TextAlign.Center
+        else -> TextAlign.Unspecified
+    }
+
     if (page.newFormatting) {
-        BonfireMarkdownContent(
-            text = page.formattedText,
-            contentPadding = PaddingValues(horizontal = 12.dp),
-        )
+        val textStyle = LocalTextStyle.current.merge(textAlign = textAlign)
+        CompositionLocalProvider(LocalTextStyle provides textStyle) {
+            BonfireMarkdownContent(
+                text = page.formattedText,
+                contentPadding = PaddingValues(horizontal = 12.dp),
+            )
+        }
     } else {
         val colors = MaterialTheme.colorScheme.primary
         val annotatedString = remember(page.text) {
@@ -70,15 +81,7 @@ private fun PageTextContent(page: PageText) {
             } else {
                 LocalTextStyle.current
             }.merge(
-                textAlign = if (page.align == PageText.ALIGN_LEFT) {
-                    TextAlign.Start
-                } else if (page.align == PageText.ALIGN_RIGHT) {
-                    TextAlign.End
-                } else if (page.align == PageText.ALIGN_CENTER) {
-                    TextAlign.Center
-                } else {
-                    TextAlign.Unspecified
-                }
+                textAlign = textAlign
             )
         )
     }

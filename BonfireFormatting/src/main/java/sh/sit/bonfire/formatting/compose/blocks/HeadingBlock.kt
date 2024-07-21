@@ -1,5 +1,6 @@
 package sh.sit.bonfire.formatting.compose.blocks
 
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,7 +26,9 @@ internal fun HeadingBlock(
             5 -> typography.titleMedium
             6 -> typography.titleSmall
             else -> typography.titleLarge
-        },
+        }.merge(
+            textAlign = LocalTextStyle.current.textAlign,
+        ),
         modifier = modifier
     )
 }
