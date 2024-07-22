@@ -13,7 +13,7 @@ class EFandomsAdminSetCof : RFandomsAdminSetCof(0, 0, "") {
     var fandom: Fandom? = null
 
     override fun check() {
-        comment = ControllerModeration.parseComment(comment)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
         ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_FANDOM_SET_COF)
         fandom = ControllerFandom.getFandom(fandomId)
         if (fandom == null) throw ApiException(API.ERROR_GONE)

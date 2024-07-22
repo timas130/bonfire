@@ -6,9 +6,9 @@ import com.dzen.campfire.api.models.publications.history.HistoryAdminClose
 import com.dzen.campfire.api.models.publications.moderations.posts.ModerationPostClose
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostCloseModerator
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.server.tables.TPublications
-import com.dzen.campfire.api.tools.ApiException
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
 
@@ -17,7 +17,7 @@ class EPostCloseModerator : RPostCloseModerator(0, "") {
     var publication = PublicationPost()
 
     override fun check() {
-        ControllerModeration.parseComment(comment)
+        ControllerModeration.parseComment(comment, apiAccount.id)
         val publication = ControllerPublications.getPublication(publicationId, apiAccount.id)
         if(publication == null) throw ApiException(API.ERROR_GONE)
         if(publication.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_GONE)

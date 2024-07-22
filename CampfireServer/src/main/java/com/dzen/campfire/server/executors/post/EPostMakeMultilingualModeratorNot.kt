@@ -6,12 +6,9 @@ import com.dzen.campfire.api.models.publications.history.HistoryAdminNotMultilin
 import com.dzen.campfire.api.models.publications.moderations.posts.ModerationMultilingualNot
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostMakeMultilingualModeratorNot
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.server.tables.TAccounts
-import com.dzen.campfire.server.tables.TPublications
-import com.dzen.campfire.api.tools.ApiException
-import com.sup.dev.java_pc.sql.Database
-import com.sup.dev.java_pc.sql.SqlQueryUpdate
 
 class EPostMakeMultilingualModeratorNot : RPostMakeMultilingualModeratorNot(0, "") {
 
@@ -28,7 +25,7 @@ class EPostMakeMultilingualModeratorNot : RPostMakeMultilingualModeratorNot(0, "
 
         ControllerFandom.checkCan(apiAccount, publication.fandom.id, publication.fandom.languageId, API.LVL_MODERATOR_TO_DRAFTS)
         if (!ControllerFandom.checkCanModerate(apiAccount, publication.creator.id, publication.fandom.id, publication.fandom.languageId)) throw ApiException(E_LOW_KARMA_FORCE)
-        ControllerModeration.parseComment(comment)
+        ControllerModeration.parseComment(comment, apiAccount.id)
 
     }
 
