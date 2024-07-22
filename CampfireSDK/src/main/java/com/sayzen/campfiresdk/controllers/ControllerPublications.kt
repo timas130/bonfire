@@ -132,15 +132,26 @@ object ControllerPublications {
     }
 
     fun toPublication(publicationType: Long, publicationId: Long, commentId: Long = 0) {
-        if (publicationType == API.PUBLICATION_TYPE_POST) ControllerCampfireSDK.onToPostClicked(publicationId, commentId, Navigator.TO)
-        if (publicationType == API.PUBLICATION_TYPE_MODERATION) ControllerCampfireSDK.onToModerationClicked(publicationId, commentId, Navigator.TO)
-        if (publicationType == API.PUBLICATION_TYPE_STICKER) SStickersView.instanceBySticker(publicationId, Navigator.TO)
-        if (publicationType == API.PUBLICATION_TYPE_CHAT_MESSAGE) SChat.instance(publicationId, true, Navigator.TO)
-        if (publicationType == API.PUBLICATION_TYPE_STICKERS_PACK) {
-            if (commentId == 0L) SStickersView.instance(publicationId, Navigator.TO)
-            else Navigator.to(SComments(publicationId, commentId))
+        when (publicationType) {
+            API.PUBLICATION_TYPE_POST -> {
+                ControllerCampfireSDK.onToPostClicked(publicationId, commentId, Navigator.TO)
+            }
+            API.PUBLICATION_TYPE_MODERATION -> {
+                ControllerCampfireSDK.onToModerationClicked(publicationId, commentId, Navigator.TO)
+            }
+            API.PUBLICATION_TYPE_STICKER -> {
+                SStickersView.instanceBySticker(publicationId, Navigator.TO)
+            }
+            API.PUBLICATION_TYPE_CHAT_MESSAGE -> {
+                SChat.instance(publicationId, true, Navigator.TO)
+            }
+            API.PUBLICATION_TYPE_STICKERS_PACK -> {
+                SStickersView.instanceComment(publicationId, commentId, Navigator.TO)
+            }
+            API.PUBLICATION_TYPE_QUEST -> {
+                SQuest.instance(publicationId, commentId, Navigator.TO)
+            }
         }
-        if (publicationType == API.PUBLICATION_TYPE_QUEST) SQuest.instance(publicationId, commentId, Navigator.TO)
     }
 
     fun block(publication: Publication, onBlock: () -> Unit = {}) {

@@ -19,7 +19,6 @@ import com.sayzen.campfiresdk.screens.achievements.daily_task.followLink
 import com.sayzen.campfiresdk.screens.activities.support.SDonate
 import com.sayzen.campfiresdk.screens.activities.user_activities.relay_race.SRelayRaceInfo
 import com.sayzen.campfiresdk.screens.chat.SChat
-import com.sayzen.campfiresdk.screens.comments.SComments
 import com.sayzen.campfiresdk.screens.fandoms.moderation.view.SModerationView
 import com.sayzen.campfiresdk.screens.fandoms.rubrics.SRubricPosts
 import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
@@ -132,7 +131,7 @@ object ControllerLinks {
                 API.LINK_STICKER.link -> SStickersView.instanceBySticker(params[0].toLong(), Navigator.TO)
                 API.LINK_STICKERS_PACK.link -> {
                     if (params.size == 1) SStickersView.instance(params[0].toLong(), Navigator.TO)
-                    if (params.size == 2) Navigator.to(SComments(params[0].toLong(), params[1].toLong()))
+                    if (params.size == 2) SStickersView.instanceComment(params[0].toLong(), params[1].toLong(), Navigator.TO)
                 }
                 API.LINK_POST.link -> {
                     if (params.size == 1) SPost.instance(params[0].toLong(), 0, Navigator.TO)

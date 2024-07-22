@@ -46,7 +46,6 @@ class SStickersView(
 ) : SLoadingRecycler<CardSticker, PublicationSticker>(R.layout.screen_stickers_view) {
 
     companion object {
-
         fun instanceBySticker(stickerId: Long, action: NavigationAction) {
             instance(0, stickerId, action)
         }
@@ -61,6 +60,13 @@ class SStickersView(
             }
         }
 
+        fun instanceComment(packId: Long, commentId: Long, action: NavigationAction) {
+            ApiRequestsSupporter.executeInterstitial(action, RStickersPacksGetInfo(packId, 0)) { r ->
+                Navigator.action(action, SStickersView(r.stickersPack, 0))
+                if (commentId != 0L) Navigator.action(action, SComments(packId, commentId))
+                null
+            }
+        }
     }
 
     private val eventBus = EventBus
