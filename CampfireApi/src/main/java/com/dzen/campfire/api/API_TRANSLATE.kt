@@ -2121,6 +2121,7 @@ object API_TRANSLATE {
     val effect_title_snow_description = Translate("У пользователя постоянно идет снег.")
     val effect_title_addmin_ban = Translate("Наказан")
     val effect_title_addmin_ban_description = Translate("Пользователь не может совершать модераторские или адинистраторские действия.")
+    val effect_title_admin_ban_comment_swearing = Translate("Наказан за маты на службе.")
     val effect_title_translator = Translate("Переводчик")
     val effect_title_translator_description = Translate("Этот пользователь имеет право переводить приложение не зависимо от уровня и кармы.")
     val effect_title_mention_lock = Translate("Пальцы на полке")

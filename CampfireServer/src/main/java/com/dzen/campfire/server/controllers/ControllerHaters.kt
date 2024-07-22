@@ -25,7 +25,7 @@ object ControllerHaters {
                 }
                 if(cash[accountId]!!.size >= MAX_RATE_COUNT){
                     if(canKarmaDown(accountId)){
-                        ControllerEffects.makeSystem(ControllerAccounts.getAccount(accountId)!!, API.EFFECT_INDEX_HATE, System.currentTimeMillis() + 1000L * 60 * 5)
+                        ControllerEffects.makeSystem(ControllerAccounts.getAccount(accountId)!!, API.EFFECT_INDEX_HATE, System.currentTimeMillis() + 1000L * 60 * 5, API.EFFECT_COMMENT_HATE)
                     }
                 }
             }

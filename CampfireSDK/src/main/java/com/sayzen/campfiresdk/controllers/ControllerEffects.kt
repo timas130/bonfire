@@ -185,15 +185,17 @@ object ControllerEffects {
     }
 
     fun getComment(mAccountEffect: MAccountEffect): String {
-        if (mAccountEffect.tag != API.EFFECT_TAG_SOURCE_SYSTEM) return mAccountEffect.comment
-        return when (mAccountEffect.effectIndex) {
-            API.EFFECT_INDEX_HATE ->
-                if (mAccountEffect.commentTag == API.EFFECT_COMMENT_TAG_GODS) t(API_TRANSLATE.effect_title_hater_comment_gods)
-                else t(API_TRANSLATE.effect_title_hater_comment)
-            API.EFFECT_INDEX_PIG -> t(API_TRANSLATE.effect_title_pig_comment)
-            API.EFFECT_INDEX_VAHTER ->
-                if (mAccountEffect.commentTag == API.EFFECT_COMMENT_TAG_REJECTED) t(API_TRANSLATE.effect_title_vahter_comment_rejected)
-                else t(API_TRANSLATE.effect_title_vahter_comment_too_namy)
+        if (mAccountEffect.tag != API.EFFECT_TAG_SOURCE_SYSTEM) {
+            return mAccountEffect.comment
+        }
+
+        return when (mAccountEffect.commentTag) {
+            API.EFFECT_COMMENT_TAG_GODS -> t(API_TRANSLATE.effect_title_hater_comment_gods)
+            API.EFFECT_COMMENT_TAG_REJECTED -> t(API_TRANSLATE.effect_title_vahter_comment_rejected)
+            API.EFFECT_COMMENT_TAG_TOO_MANY -> t(API_TRANSLATE.effect_title_vahter_comment_too_namy)
+            API.EFFECT_COMMENT_SWEARING -> t(API_TRANSLATE.effect_title_admin_ban_comment_swearing)
+            API.EFFECT_COMMENT_HATE -> t(API_TRANSLATE.effect_title_hater_comment)
+            API.EFFECT_COMMENT_UNCULTURED -> t(API_TRANSLATE.effect_title_pig_comment)
             else -> mAccountEffect.comment
         }
     }

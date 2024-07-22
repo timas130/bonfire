@@ -15,6 +15,10 @@ object ControllerCensor {
         trie = trieBuilder.build()
     }
 
+    fun containsSwearing(text: String): Boolean {
+        return trie.firstMatch(text) != null
+    }
+
     fun cens(text: String, mask: String = "{red %s}", letterReplace: String = "\\*"): String {
         val matches = trie.parseText(text)
         if (matches.isEmpty()) {

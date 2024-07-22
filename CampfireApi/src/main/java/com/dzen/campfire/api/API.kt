@@ -202,6 +202,9 @@ class API(
         const val EFFECT_COMMENT_TAG_GODS = 1L
         const val EFFECT_COMMENT_TAG_REJECTED = 2L
         const val EFFECT_COMMENT_TAG_TOO_MANY = 3L
+        const val EFFECT_COMMENT_SWEARING = 4L
+        const val EFFECT_COMMENT_HATE = 5L
+        const val EFFECT_COMMENT_UNCULTURED = 6L
         const val EFFECT_INDEX_HATE = 1L
         const val EFFECT_INDEX_PIG = 2L
         const val EFFECT_INDEX_VAHTER = 3L
