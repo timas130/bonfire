@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Size
@@ -230,11 +231,36 @@ private fun PollingItem(model: PollingModel, optionTitle: String, index: Int) {
                 .padding(horizontal = 8.dp, vertical = 4.dp)
                 .heightIn(min = 48.dp),
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = formattedOption,
                 style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(1f),
             )
+
+            AnimatedVisibility(visible = showResults) {
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    modifier = Modifier.padding(start = 8.dp)
+                ) {
+                    Text(
+                        text = result.count.toString(),
+                        style = MaterialTheme.typography.labelLarge,
+                        modifier = Modifier.padding(bottom = 2.dp),
+                        softWrap = false,
+                    )
+
+                    if (totalVotes > 0) {
+                        Text(
+                            text = "${(result.count / totalVotes.toFloat() * 100).roundToInt()}%",
+                            style = MaterialTheme.typography.labelSmall,
+                            softWrap = false,
+                            modifier = Modifier.alpha(0.7f),
+                        )
+                    }
+                }
+            }
         }
     }
 }
