@@ -29,6 +29,7 @@ import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.cards.Card
 import com.sup.dev.android.views.screens.SCrop
 import com.sup.dev.android.views.screens.SImageView
+import com.sup.dev.android.views.settings.SettingsCheckBox
 import com.sup.dev.android.views.settings.SettingsField
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashAlert
@@ -45,6 +46,7 @@ class SplashPageImages(
 ) : Splash(R.layout.screen_post_create_images) {
 
     private val vPageTitle: SettingsField = findViewById(R.id.vPgeTitle)
+    private val vModeTape: SettingsCheckBox = findViewById(R.id.vModeTape)
     private val vAdd: ViewButton = findViewById(R.id.vAdd)
     private val vAttachRecycler: RecyclerView = findViewById(R.id.vAttachRecycler)
     private val vTextEmpty: TextView = findViewById(R.id.vTextEmpty)
@@ -65,6 +67,9 @@ class SplashPageImages(
         vEnter.setOnClickListener { onEnter() }
         vAdd.setOnClickListener { addImage() }
 
+        vModeTape.setTitle(t(API_TRANSLATE.post_create_images_tape_mode))
+        vModeTape.setChecked(oldPage.mode == PageImages.MODE_TAPE)
+
         vAttachRecycler.layoutManager = LinearLayoutManager(vAttachRecycler.context, LinearLayoutManager.HORIZONTAL, false)
         vAttachRecycler.adapter = adapter
         adapter.setCardW(ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -83,6 +88,7 @@ class SplashPageImages(
 
     private fun onEnter() {
         oldPage.title = vPageTitle.getText()
+        oldPage.mode = if (vModeTape.isChecked()) PageImages.MODE_TAPE else PageImages.MODE_GRID
         requestChangePage.invoke(oldPage, card, null, this) { page ->
             oldPage = page as PageImages
         }
@@ -96,6 +102,7 @@ class SplashPageImages(
         pageNew.images = oldPage.images
         pageNew.imagesMini = oldPage.imagesMini
         pageNew.removePageIndex = index
+        pageNew.mode = oldPage.mode
 
         SplashAlert()
                 .setText(t(API_TRANSLATE.post_page_images_remove_confirm))
@@ -156,6 +163,7 @@ class SplashPageImages(
         pageNew.title = oldPage.title
         pageNew.images = oldPage.images
         pageNew.imagesMini = oldPage.imagesMini
+        pageNew.mode = oldPage.mode
 
         requestChangePage.invoke(pageNew, card, null, dialog) { page ->
             oldPage = page as PageImages

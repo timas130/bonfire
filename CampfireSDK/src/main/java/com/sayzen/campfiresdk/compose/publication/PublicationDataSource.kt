@@ -51,7 +51,9 @@ abstract class PublicationDataSource<T : Publication>(pub: T, private val onRemo
     }
 
     override fun edit(cond: Boolean, editor: T.() -> Unit) {
-        Log.d("PublicationDataSource", "modifying id=${data.id}")
+        if (cond) {
+            Log.d("PublicationDataSource", "modifying id=${data.id}")
+        }
         super.edit(cond, editor)
     }
 

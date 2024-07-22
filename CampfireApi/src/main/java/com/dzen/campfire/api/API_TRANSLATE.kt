@@ -1299,6 +1299,7 @@ object API_TRANSLATE {
     val post_create_spoiler_name = Translate("Название")
     val post_create_polling_hint = Translate("Текст варианта")
     val post_create_images_empty = Translate("Добавьте несколько картинок")
+    val post_create_images_tape_mode = Translate("В одну прокручиваемую строку")
     val post_create_notify_followers = Translate("Уведомить своих подписчиков")
     val post_create_objects_label = Translate("Поддерживаются ссылки на пользователя, пост, чат, форум, фэндом, набор стикеров, комментарии и квесты.", true)
     val post_create_pending = Translate("Отложенная публикация")

@@ -46,6 +46,7 @@ fun RemoteImage(
     contentScale: ContentScale = ContentScale.Fit,
     alpha: Float = DefaultAlpha,
     colorFilter: ColorFilter? = null,
+    forceAspectRatio: Boolean = true,
     matchHeightConstraintsFirst: Boolean = false,
 ) {
     var retryHash by remember { mutableIntStateOf(0) }
@@ -69,7 +70,7 @@ fun RemoteImage(
         },
         contentDescription = contentDescription,
         modifier = modifier
-            .then(if (activeImage.width > 0 && activeImage.height > 0) {
+            .then(if (activeImage.width > 0 && activeImage.height > 0 && forceAspectRatio) {
                 Modifier.aspectRatio(
                     ratio = activeImage.width / activeImage.height.toFloat(),
                     matchHeightConstraintsFirst = matchHeightConstraintsFirst

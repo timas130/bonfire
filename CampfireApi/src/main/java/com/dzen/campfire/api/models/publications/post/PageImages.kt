@@ -7,6 +7,11 @@ import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
 class PageImages : Page() {
+    companion object {
+        const val MODE_GRID = 1
+        const val MODE_TAPE = 2
+    }
+
     var title = ""
     var images = emptyArray<ImageRef>()
     var imagesMini = emptyArray<ImageRef>()
@@ -25,6 +30,8 @@ class PageImages : Page() {
     var insertImages: Array<ByteArray?> = emptyArray()
     var insertImagesMini: Array<ByteArray?> = emptyArray()
 
+    var mode = MODE_GRID
+
     var imagesCount = 0
 
     var replacePageIndex = -1
@@ -37,6 +44,7 @@ class PageImages : Page() {
     override fun prepareForServer(page: Page) {
         page as PageImages
         title = page.title
+        mode = page.mode
         insertImages = page.insertImages
         insertImagesMini = page.insertImagesMini
         removePageIndex = page.removePageIndex
@@ -71,6 +79,7 @@ class PageImages : Page() {
         removePageIndex = json.m(inp, "removePageIndex", removePageIndex)
         replacePageIndex = json.m(inp, "replacePageIndex", replacePageIndex)
         imagesCount = json.m(inp, "imagesCount", imagesCount)
+        mode = json.m(inp, "mode", mode)
         return super.json(inp, json)
     }
 
