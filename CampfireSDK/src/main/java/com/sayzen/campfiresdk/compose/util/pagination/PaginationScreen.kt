@@ -67,7 +67,7 @@ fun <T> PaginationScreen(
         contentWindowInsets = WindowInsets.safeDrawing,
         modifier = Modifier
             .pullToRefresh(
-                enabled = { isRefreshableState },
+                enabled = isRefreshableState,
                 isRefreshing = isLoading,
                 state = pullToRefresh,
                 onRefresh = { model.reload() }

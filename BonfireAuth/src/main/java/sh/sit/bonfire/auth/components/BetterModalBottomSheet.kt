@@ -49,7 +49,7 @@ fun BetterModalBottomSheet(
         tonalElevation = tonalElevation,
         scrimColor = scrimColor,
         dragHandle = dragHandle,
-        windowInsets = windowInsets,
+        contentWindowInsets = { windowInsets },
     ) {
         Column(
             Modifier

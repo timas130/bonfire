@@ -100,7 +100,7 @@ private fun ConsentController(state: ConsentControllerState) {
         Unit
     }
 
-    BetterModalBottomSheet(open = isOpen, onDismissRequest = decline, windowInsets = WindowInsets(0)) {
+    BetterModalBottomSheet(open = isOpen, onDismissRequest = decline) {
         Column(
             Modifier.padding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom).asPaddingValues())
         ) {
