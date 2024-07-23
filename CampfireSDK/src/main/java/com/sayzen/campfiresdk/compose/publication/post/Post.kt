@@ -104,7 +104,11 @@ internal fun PostChips(post: PublicationPost) {
     }
 }
 
-class PostModel(post: PublicationPost, onRemoved: State<() -> Unit>) : ViewModel() {
+class PostModel(
+    post: PublicationPost,
+    onRemoved: State<() -> Unit>,
+    val scrollToTop: State<(() -> Unit)?>
+) : ViewModel() {
     val dataSource = PostDataSource(post, onRemoved)
 
     private val _expanded = MutableStateFlow(false)
@@ -140,6 +144,7 @@ class PostModel(post: PublicationPost, onRemoved: State<() -> Unit>) : ViewModel
         _expanded.value = true
     }
     fun shrink() {
+        scrollToTop.value?.invoke()
         _expanded.value = false
     }
 
@@ -162,8 +167,9 @@ fun Post(
     showBestComment: Boolean = true,
 ) {
     val onRemovedRef = rememberUpdatedState(onRemoved)
+    val scrollToTopRef = rememberUpdatedState(scrollToTop)
     val model = viewModel(key = "Post:${initialPost.id}") {
-        PostModel(initialPost, onRemovedRef)
+        PostModel(initialPost, onRemovedRef, scrollToTopRef)
     }
 
     val post by model.dataSource.flow.collectAsState()
@@ -283,7 +289,6 @@ fun Post(
             expandable = expandable,
             onExpand = { expand ->
                 if (!expand) {
-                    scrollToTop?.invoke()
                     model.shrink()
                 } else {
                     model.expand()
