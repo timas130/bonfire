@@ -138,11 +138,11 @@ private fun PostFandom(post: PublicationPost) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
                 Modifier
+                    .padding(end = 6.dp)
+                    .clip(shape)
                     .clickable {
                         SFandom.instance(fandom.id, fandom.languageId, Navigator.TO)
                     }
-                    .padding(end = 6.dp)
-                    .clip(shape)
             ) {
                 RemoteImage(
                     link = fandom.image,
