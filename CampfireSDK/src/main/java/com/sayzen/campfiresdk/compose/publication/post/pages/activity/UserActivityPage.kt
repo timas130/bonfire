@@ -139,13 +139,15 @@ private fun UserActivityCountdown(stopAt: Long) {
 private fun UserActivityButtons(userActivity: UserActivity) {
     val _isCurrentUser = userActivity.hasUser && userActivity.currentAccount.id == ControllerApi.account.getId()
     val _isParticipant = userActivity.myMemberStatus == 1L
+    val _canParticipate = userActivity.myPostId == 0L
 
     AnimatedContent(
-        targetState = Pair(_isCurrentUser, _isParticipant),
+        targetState = Triple(_isCurrentUser, _isParticipant, _canParticipate),
         label = "UserActivityButtons",
     ) {
         val isCurrentUser = it.first
         val isParticipant = it.second
+        val canParticipate = it.third
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
@@ -171,7 +173,7 @@ private fun UserActivityButtons(userActivity: UserActivity) {
                 }) {
                     Text(stringResource(R.string.activity_leave))
                 }
-            } else {
+            } else if (canParticipate) {
                 Button(onClick = {
                     ControllerActivities.member(userActivity.id)
                 }) {
