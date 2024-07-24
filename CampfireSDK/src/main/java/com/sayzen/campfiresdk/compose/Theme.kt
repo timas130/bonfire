@@ -26,6 +26,26 @@ private val LegacyLightColors = lightColorScheme(
     surfaceContainer = surfaceContainerLight,
 )
 
+private val LegacyGreyColors = darkColorScheme(
+    background = Color(0xFF252525),
+    onBackground = Color(0xFFFFFFFF),
+    primary = primaryDark,
+    onPrimary = onPrimaryDark,
+    primaryContainer = primaryContainerDark,
+    onPrimaryContainer = onPrimaryContainerDark,
+    onSurface = Color(0xFFFFFFFF),
+    onSurfaceVariant = Color(0xAAFFFFFF),
+    surface = Color(0xFF363636),
+    surfaceContainerLow = Color(0xFF424242),
+    outline = Color(0xFF363636),
+    outlineVariant = Color(0xFF363636),
+    surfaceVariant = surfaceVariantDark,
+    secondaryContainer = secondaryContainerDark,
+    onSecondaryContainer = onSecondaryContainerDark,
+    surfaceContainerHighest = surfaceContainerHighestDark,
+    surfaceContainerHigh = surfaceContainerHighDark,
+)
+
 // I have no idea blyat
 private val LegacyDarkColors = darkColorScheme(
     background = Color(0xFF252525),
@@ -50,6 +70,7 @@ private val LegacyDarkColors = darkColorScheme(
 @Composable
 fun BonfireTheme(
     useDarkTheme: Boolean = ControllerApp.isDarkThem(),
+    useGreyTheme: Boolean = ControllerApp.isGreyTheme(),
     content: @Composable () -> Unit
 ) {
     // I WILL NOT REDESIGN THE WHOLE APP
@@ -57,7 +78,9 @@ fun BonfireTheme(
     // I WILL NOT REDESIGN THE WHOLE APP
     // I WILL NOT REDESIGN THE WHOLE APP
     // I WILL NOT REDESIGN THE WHOLE APP
-    val colors = if (useDarkTheme) {
+    val colors = if (useGreyTheme) {
+        LegacyGreyColors
+    } else if (useDarkTheme) {
         LegacyDarkColors
     } else {
         LegacyLightColors
