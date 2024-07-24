@@ -14,12 +14,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.dzen.campfire.api.models.publications.post.PageImage
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.util.RemoteImageShimmer
 import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.views.screens.SImageView
 import sh.sit.bonfire.images.RemoteImage
-import sh.sit.bonfire.images.RemoteImageLoader
 
 @Composable
 internal fun PageImageRenderer(page: PageImage) {
@@ -27,7 +27,7 @@ internal fun PageImageRenderer(page: PageImage) {
         RemoteImage(
             link = page.image,
             gifLink = page.gif,
-            loader = { RemoteImageLoader() },
+            loader = { RemoteImageShimmer() },
             contentDescription = stringResource(R.string.page_image),
             matchHeightConstraintsFirst = true,
             modifier = Modifier

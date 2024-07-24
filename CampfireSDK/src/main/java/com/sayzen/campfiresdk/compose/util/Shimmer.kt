@@ -1,6 +1,9 @@
 package com.sayzen.campfiresdk.compose.util
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -38,4 +41,11 @@ fun Modifier.shimmerExt(visible: Boolean, shimmer: Shimmer? = null): Modifier {
                 }
         )
     }
+}
+
+@Composable
+fun BoxScope.RemoteImageShimmer(shimmer: Shimmer? = null) {
+    Box(Modifier
+        .matchParentSize()
+        .shimmerExt(true, shimmer))
 }
