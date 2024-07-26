@@ -2,23 +2,23 @@ package com.sup.dev.android.views.splash
 
 import android.graphics.Bitmap
 import android.provider.MediaStore
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import androidx.recyclerview.widget.GridLayoutManager
 import android.util.SparseArray
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sup.dev.android.R
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.*
-import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapter
 import com.sup.dev.android.views.cards.Card
 import com.sup.dev.android.views.screens.SCrop
 import com.sup.dev.android.views.splash.view.SplashViewDialog
 import com.sup.dev.android.views.splash.view.SplashViewSheet
+import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapter
 import com.sup.dev.java.classes.items.Item
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.tools.ToolsBytes
@@ -189,8 +189,7 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
     }
 
     private fun openCamera() {
-        ToolsIntent.getCameraImage({
-            bytes ->
+        ToolsIntent.getCameraImage({ bytes ->
             try {
                 onSelected.invoke(this, bytes, 0)
                 hide()

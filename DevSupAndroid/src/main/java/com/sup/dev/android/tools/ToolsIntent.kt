@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.graphics.Bitmap
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -238,7 +240,11 @@ object ToolsIntent {
     //  Intents result
     //
 
-    fun getCameraImage(onResult: (ByteArray) -> Unit, onError: (Exception) -> Unit = {}) {
+    fun getCameraImage(
+        onResult: (ByteArray) -> Unit,
+        onError: (Exception) -> Unit = {},
+        allowReEncode: Boolean = true
+    ) {
         try {
             val dcimFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
             val imageFile = File.createTempFile("cam_", ".jpg", dcimFolder)
@@ -256,8 +262,29 @@ object ToolsIntent {
                     return@startIntentForResult
                 }
 
+                val bytes = if (allowReEncode) {
+                    val exif = ExifInterface(imageFile)
+                    val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+
+                    val bitmap = ToolsBitmap.decode(imageFile.readBytes())!!
+                    val matrix = Matrix()
+                    when (orientation) {
+                        ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+                        ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+                        ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+                        else -> {}
+                    }
+
+                    val transformedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+                    bitmap.recycle()
+
+                    ToolsBitmap.toBytes(transformedBitmap)!!
+                } else {
+                    imageFile.readBytes()
+                }
+
                 try {
-                    onResult(imageFile.readBytes())
+                    onResult(bytes)
                 } catch (e: Exception) {
                     onError(e)
                 }
