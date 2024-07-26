@@ -25,6 +25,7 @@ class ComposeCommentCard(
     private val allowSwipeReply: Boolean = false,
     private val allowEditing: Boolean = false,
     private val withPadding: Boolean = false,
+    private val onCreated: (PublicationComment) -> Unit = {},
 ) : ComposeCard() {
     var maxTextSize: Int
         get() = maxLines * 100
@@ -63,6 +64,7 @@ class ComposeCommentCard(
                 maxLines = maxLines,
                 allowSwipeReply = allowSwipeReply,
                 allowEditing = allowEditing,
+                onCreated = onCreated,
                 modifier = if (withPadding) {
                     Modifier.padding(vertical = 8.dp)
                 } else {

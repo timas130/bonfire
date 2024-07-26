@@ -19,6 +19,7 @@ class CardCommentProxy(
     allowEditing: Boolean = false,
     allowSwipeReply: Boolean = false,
     onGoTo: ((Long) -> Unit)? = null,
+    onCreated: (PublicationComment) -> Unit = {},
 ) : CardPublication(0, publication) {
     private val isComposeEnabled = PostHog.isFeatureEnabled("compose_comment")
     private val impl = if (isComposeEnabled) {
@@ -29,6 +30,7 @@ class CardCommentProxy(
             allowSwipeReply = allowSwipeReply,
             allowEditing = allowEditing,
             withPadding = !dividers, // don't ask me
+            onCreated = onCreated,
         )
     } else {
         CardComment(
@@ -58,7 +60,7 @@ class CardCommentProxy(
                     quoteId = comment.id,
                     quoteText = comment.makeQuoteText(),
                     showToast = true,
-                    onCreated = null
+                    onCreated = onCreated,
                 ).asSheetShow()
             },
             onGoTo = onGoTo
@@ -97,6 +99,7 @@ class CardCommentProxy(
     }
 
     override fun setCardAdapter(adapter: CardAdapter?) {
+        super.setCardAdapter(adapter)
         impl.setCardAdapter(adapter)
     }
 

@@ -23,9 +23,7 @@ internal fun CommentFooter(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
     ) {
-        ReplyButton(onClick = {
-            onReply(true)
-        })
+        ReplyButton(onClick = { onReply(true) })
 
         KarmaCounter(comment, mini = true)
     }

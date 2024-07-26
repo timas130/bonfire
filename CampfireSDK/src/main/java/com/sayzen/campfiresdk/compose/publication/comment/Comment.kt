@@ -71,13 +71,13 @@ fun Comment(
     modifier: Modifier = Modifier,
     showFandom: Boolean = false,
     onRemoved: () -> Unit,
-    scrollToComment: (id: PublicationComment) -> Unit = DefaultScrollToComment,
+    scrollToComment: (PublicationComment) -> Unit = DefaultScrollToComment,
     maxLines: Int = Int.MAX_VALUE,
     allowSwipeReply: Boolean = false,
     allowEditing: Boolean = false,
+    onCreated: (PublicationComment) -> Unit = {},
 ) {
     val view = LocalView.current
-    val hapticFeedback = LocalHapticFeedback.current
 
     val onRemovedRef = rememberUpdatedState(onRemoved)
     val model = viewModel(key = "Comment:${initialComment.id}") {
@@ -94,12 +94,11 @@ fun Comment(
             quoteId = comment.id,
             quoteText = comment.makeQuoteText(),
             showToast = showToast,
-            onCreated = { scrollToComment(it) },
+            onCreated = onCreated,
         ).asSheetShow()
     }
 
     val globalCardPosition = remember { mutableStateOf<LayoutCoordinates?>(null) }
-
 
     ReplySwipeable(
         onReply = { onReply(false) },

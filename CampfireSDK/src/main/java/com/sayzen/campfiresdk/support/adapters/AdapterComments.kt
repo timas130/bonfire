@@ -178,6 +178,9 @@ class AdapterComments(
                         break
                     }
                 }
+            },
+            onCreated = {
+                addComment(it)
             }
         )
     }
