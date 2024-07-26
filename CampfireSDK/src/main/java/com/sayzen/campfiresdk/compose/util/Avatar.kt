@@ -1,7 +1,9 @@
 package com.sayzen.campfiresdk.compose.util
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.size
@@ -17,16 +19,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.whenStarted
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.account.Account
+import com.dzen.campfire.api.models.fandoms.Fandom
 import com.dzen.campfire.api.models.images.ImageRef
 import com.sayzen.campfiresdk.compose.data.AccountDataSource
+import com.sayzen.campfiresdk.compose.fandom.FandomDataSource
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.screens.account.profile.SProfile
+import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
+import com.sayzen.campfiresdk.views.SplashAccountInfo
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.valentinilk.shimmer.Shimmer
 import sh.sit.bonfire.images.RemoteImage
@@ -58,12 +66,15 @@ private fun Account.getActiveImage(): ImageRef {
     return ApiResources.AVATAR_1
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Avatar(
     account: Account,
     modifier: Modifier = Modifier,
     showLevel: Boolean = true,
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
+
     val dataSource = remember(account) { AccountDataSource(account) }
     val updatedAccount by dataSource.flow.collectAsState()
 
@@ -73,17 +84,23 @@ fun Avatar(
         }
     }
 
-    Box(modifier, propagateMinConstraints = true) {
+    Box(propagateMinConstraints = true) {
         RemoteImage(
             link = updatedAccount.getActiveImage(),
             contentDescription = updatedAccount.name,
-            modifier = Modifier
+            modifier = modifier
                 .size(48.dp)
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(ControllerSettings.styleAvatarsRounding.dp))
-                .clickable {
-                    SProfile.instance(account, Navigator.TO)
-                }
+                .combinedClickable(
+                    onClick = {
+                        SProfile.instance(account, Navigator.TO)
+                    },
+                    onLongClick = {
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                        SplashAccountInfo(account).asSheetShow()
+                    }
+                )
         )
 
         if (showLevel && updatedAccount.lvl >= 100) {
@@ -108,6 +125,25 @@ fun Avatar(
             }
         }
     }
+}
+
+@Composable
+fun Avatar(fandom: Fandom, modifier: Modifier = Modifier) {
+    val dataSource = remember(fandom.id) { FandomDataSource(fandom) }
+
+    val updatedFandom by dataSource.flow.collectAsState()
+
+    RemoteImage(
+        link = updatedFandom.image,
+        contentDescription = updatedFandom.name,
+        modifier = modifier
+            .size(48.dp)
+            .aspectRatio(1f)
+            .clip(RoundedCornerShape(ControllerSettings.styleAvatarsRounding.dp))
+            .clickable {
+                SFandom.instance(fandom, Navigator.TO)
+            }
+    )
 }
 
 @Composable

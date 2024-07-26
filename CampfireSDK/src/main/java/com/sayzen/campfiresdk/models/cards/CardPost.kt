@@ -15,6 +15,7 @@ import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.compose.auth.SetBirthdayScreen
+import com.sayzen.campfiresdk.compose.publication.comment.CardCommentProxy
 import com.sayzen.campfiresdk.compose.publication.post.CardPostProxy
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.ControllerPost
@@ -285,7 +286,7 @@ class CardPost(
         vBestCommentRootContainer.visibility = if (publication.bestComment == null) View.GONE else View.VISIBLE
 
         if (publication.bestComment != null) {
-            val cardComment = CardComment.instance(publication.bestComment!!, false, true)
+            val cardComment = CardCommentProxy(publication.bestComment!!, false, true)
             cardComment.maxTextSize = 500
             val cardCommentView = cardComment.instanceView(vBestCommentContainer)
             cardComment.bindCardView(cardCommentView)

@@ -2,14 +2,16 @@ package com.sayzen.campfiresdk.compose.publication
 
 import android.util.Log
 import androidx.compose.runtime.State
+import com.dzen.campfire.api.models.account.Account
+import com.dzen.campfire.api.models.fandoms.Fandom
 import com.dzen.campfire.api.models.publications.Publication
 import com.sayzen.campfiresdk.compose.BonfireDataSource
+import com.sayzen.campfiresdk.compose.data.AccountDataSource
+import com.sayzen.campfiresdk.compose.fandom.FandomDataSource
+import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.models.events.account.EventAccountAddToBlackList
 import com.sayzen.campfiresdk.models.events.account.EventAccountRemoveFromBlackList
-import com.sayzen.campfiresdk.models.events.publications.EventPublicationBlocked
-import com.sayzen.campfiresdk.models.events.publications.EventPublicationFandomChanged
-import com.sayzen.campfiresdk.models.events.publications.EventPublicationKarmaAdd
-import com.sayzen.campfiresdk.models.events.publications.EventPublicationRemove
+import com.sayzen.campfiresdk.models.events.publications.*
 
 abstract class PublicationDataSource<T : Publication>(pub: T, private val onRemoved: State<() -> Unit>) : BonfireDataSource<T>(pub) {
     init {
@@ -38,12 +40,48 @@ abstract class PublicationDataSource<T : Publication>(pub: T, private val onRemo
                     fandom.name = it.fandomName
                 }
             }
+            .subscribe(EventPublicationReactionAdd::class) {
+                edit(it.publicationId) {
+                    reactions += Publication.Reaction(ControllerApi.account.getId(), it.reactionIndex)
+                }
+            }
+            .subscribe(EventPublicationReactionRemove::class) { ev ->
+                edit(ev.publicationId) {
+                    reactions = reactions
+                        .filterNot {
+                            ControllerApi.isCurrentAccount(it.accountId) && it.reactionIndex == ev.reactionIndex
+                        }
+                        .toTypedArray()
+                }
+            }
             .subscribe(EventPublicationRemove::class) {
                 remove(it.publicationId)
             }
             .subscribe(EventPublicationBlocked::class) {
                 remove(it.publicationId)
             }
+    }
+
+    private val fandomDataSource = object : FandomDataSource(pub.fandom) {
+        override fun edit(cond: Boolean, editor: Fandom.() -> Unit) {
+            this@PublicationDataSource.edit(cond) {
+                this.fandom.editor()
+            }
+        }
+    }
+
+    private val accountDataSource = object : AccountDataSource(pub.creator) {
+        override fun edit(cond: Boolean, editor: Account.() -> Unit) {
+            this@PublicationDataSource.edit(cond) {
+                this.creator.editor()
+            }
+        }
+    }
+
+    override fun destroy() {
+        super.destroy()
+        fandomDataSource.destroy()
+        accountDataSource.destroy()
     }
 
     fun edit(id: Long, editor: T.() -> Unit) {

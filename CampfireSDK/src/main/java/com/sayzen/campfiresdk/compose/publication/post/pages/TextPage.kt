@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -61,28 +62,51 @@ private fun PageTextContent(page: PageText) {
             )
         }
     } else {
-        val colors = MaterialTheme.colorScheme.primary
-        val annotatedString = remember(page.text) {
-            val filtered = page.text.replace("<", "&#60;")
-            val html = TextFormatter(filtered).parseHtml()
-                .replace("\n", "<br />")
-            AnnotatedString.fromHtml(
-                htmlString = html,
-                linkStyle = SpanStyle(color = colors, textDecoration = TextDecoration.Underline),
+        val textStyle = if (page.size == PageText.SIZE_1) {
+            MaterialTheme.typography.headlineMedium
+        } else {
+            LocalTextStyle.current
+        }.merge(
+            textAlign = textAlign
+        )
+        CompositionLocalProvider(LocalTextStyle provides textStyle) {
+            LegacyFormattedText(
+                text = page.text,
+                modifier = Modifier.padding(horizontal = 12.dp)
             )
         }
+    }
+}
 
-        LinksClickableText(
-            text = annotatedString,
-            modifier = Modifier
-                .padding(horizontal = 12.dp),
-            style = if (page.size == PageText.SIZE_1) {
-                MaterialTheme.typography.headlineMedium
-            } else {
-                LocalTextStyle.current
-            }.merge(
-                textAlign = textAlign
-            )
+@Composable
+fun LegacyFormattedText(
+    text: String,
+    maxLines: Int = Int.MAX_VALUE,
+    modifier: Modifier = Modifier
+) {
+    val colors = MaterialTheme.colorScheme
+    val annotatedString = remember(text) {
+        val filtered = text.replace("<", "&#60;")
+        val html = TextFormatter(filtered).parseHtml()
+            .replace("\n", "<br />")
+
+        val linkStyle = SpanStyle(color = colors.primary, textDecoration = TextDecoration.Underline)
+        val focusLinkStyle = linkStyle.copy(background = colors.primaryContainer)
+
+        AnnotatedString.fromHtml(
+            htmlString = html,
+            linkStyles = TextLinkStyles(
+                style = linkStyle,
+                focusedStyle = focusLinkStyle,
+                hoveredStyle = focusLinkStyle,
+                pressedStyle = focusLinkStyle,
+            ),
         )
     }
+
+    LinksClickableText(
+        text = annotatedString,
+        maxLines = maxLines,
+        modifier = modifier
+    )
 }

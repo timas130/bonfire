@@ -2,6 +2,9 @@ package com.sayzen.campfiresdk.compose
 
 import androidx.compose.ui.graphics.Color
 
+val bonfire = Color(0xFFF97316)
+val bonfireLight = Color(0xFFFB812C)
+
 val primaryLight = Color(0xFF8D4E2A)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFFFDBCA)

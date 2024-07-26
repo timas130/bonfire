@@ -8,7 +8,7 @@ import com.sayzen.campfiresdk.models.events.account.EventAccountEffectRemove
 import com.sayzen.campfiresdk.models.events.account.EventAccountOnlineChanged
 import com.sup.dev.java.tools.ToolsCollections
 
-class AccountDataSource(data: Account) : BonfireDataSource<Account>(data) {
+open class AccountDataSource(data: Account) : BonfireDataSource<Account>(data) {
     init {
         subscriber
             .subscribe(EventAccountChanged::class) {

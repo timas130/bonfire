@@ -94,16 +94,22 @@
     <string name="experiments_description">Check this page for various experimental features currently being
         open for testing!
     </string>
-    <string name="experiment_wait_snackbar">Please wait while friendly hogs are changing your enrollment status...</string>
+    <string name="experiment_wait_snackbar">Please wait while friendly hogs are changing your enrollment status…</string>
     <string name="experiment_enrolled_snackbar">You are now part of the experiment. Thank you!</string>
     <string name="experiment_left_snackbar">Thank you for participating. You are no longer enrolled.</string>
     <string name="experiment_error_snackbar">We couldn\'t change your status in the experiment. Try again later.</string>
-    <string name="experiments_opted_out">You are unable to participare in experiments because you have opted out of sending analytics data. You can enable it back in app privacy settings.</string>
+    <string name="experiments_opted_out">You are unable to participate in experiments because you have opted out of sending analytics data. You can enable it back in app privacy settings.</string>
     <string name="restart_button">Restart</string>
     <string name="restart_title">Restart?</string>
     <string name="restart_text">This experiment recommends restarting the app to apply correctly and avoid bugs and
         crashes. Restart now?
     </string>
     <string name="post_important">Important</string>
+    <string name="comment_sticker_alt">Sticker</string>
+    <string name="compose_comment_title">Redesigned comments</string>
+    <string name="compose_comment_description">The sequel to the post redesign: a complete overhaul of comments!
+    </string>
+    <string name="comment_edited">(edited)</string>
+    <string name="comment_reply">Reply</string>
 
 </resources>

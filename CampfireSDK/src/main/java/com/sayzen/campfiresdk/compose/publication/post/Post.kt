@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -35,9 +36,10 @@ import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.compose.BonfireTheme
 import com.sayzen.campfiresdk.compose.ComposeCard
+import com.sayzen.campfiresdk.compose.publication.comment.CardCommentProxy
+import com.sayzen.campfiresdk.compose.publication.comment.Comment
 import com.sayzen.campfiresdk.compose.util.mapState
 import com.sayzen.campfiresdk.controllers.ControllerSettings
-import com.sayzen.campfiresdk.models.cards.CardComment
 import com.sayzen.campfiresdk.screens.activities.user_activities.relay_race.SRelayRaceInfo
 import com.sayzen.campfiresdk.screens.post.create.SPostCreate
 import com.sayzen.campfiresdk.screens.post.view.SPost
@@ -297,36 +299,45 @@ fun Post(
         )
 
         AnimatedVisibility(visible = post.bestComment != null && showBestComment) {
-            val card = remember(post.bestComment) {
-                CardComment.instance(
-                    publication = post.bestComment!!,
-                    dividers = false,
-                    miniSize = true,
-                    onClick = {
-                        SPost.instance(post.id, it.id, Navigator.TO)
-                        true
-                    },
-                    onGoTo = {
-                        SPost.instance(post.id, it, Navigator.TO)
-                    }
-                ).apply {
-                    maxTextSize = 500
-                }
-            }
-
-            HorizontalDivider()
-            AndroidView(
-                factory = {
-                    val view = card.instanceView(it)
-                    card.bindCardView(view)
-                    view
-                },
-                update = {
-                    card.bindCardView(it)
-                },
-                modifier = Modifier.fillMaxWidth(),
-            )
+            PostBestComment(post)
         }
+    }
+}
+
+@Composable
+private fun PostBestComment(post: PublicationPost) {
+    HorizontalDivider(Modifier.zIndex(3f))
+
+    if (PostHog.isFeatureEnabled("compose_comment")) {
+        Comment(
+            initialComment = post.bestComment!!,
+            onRemoved = {}, // should be handled by PostDataSource? probably
+            maxLines = 6,
+        )
+    } else {
+        val card = remember(post.bestComment) {
+            CardCommentProxy(
+                publication = post.bestComment!!,
+                dividers = false,
+                miniSize = true,
+                allowEditing = false,
+                allowSwipeReply = false,
+            ).apply {
+                maxTextSize = 500
+            }
+        }
+
+        AndroidView(
+            factory = {
+                val view = card.instanceView(it)
+                card.bindCardView(view)
+                view
+            },
+            update = {
+                card.bindCardView(it)
+            },
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 

@@ -2,12 +2,10 @@ package com.sayzen.campfiresdk.compose.publication.post
 
 import androidx.compose.runtime.State
 import com.dzen.campfire.api.models.activities.UserActivity
-import com.dzen.campfire.api.models.fandoms.Fandom
 import com.dzen.campfire.api.models.notifications.comments.NotificationComment
 import com.dzen.campfire.api.models.notifications.comments.NotificationCommentAnswer
 import com.dzen.campfire.api.models.publications.post.PageUserActivity
 import com.dzen.campfire.api.models.publications.post.PublicationPost
-import com.sayzen.campfiresdk.compose.fandom.FandomDataSource
 import com.sayzen.campfiresdk.compose.publication.PublicationDataSource
 import com.sayzen.campfiresdk.compose.publication.post.pages.activity.UserActivityDataSource
 import com.sayzen.campfiresdk.controllers.ControllerSettings
@@ -65,14 +63,6 @@ class PostDataSource(post: PublicationPost, onRemoved: State<() -> Unit>) : Publ
             }
     }
 
-    private val fandomDataSource = object : FandomDataSource(post.fandom) {
-        override fun edit(cond: Boolean, editor: Fandom.() -> Unit) {
-            this@PostDataSource.edit(cond) {
-                this.fandom.editor()
-            }
-        }
-    }
-
     private val userActivityDataSource = post.userActivity?.let { userActivity ->
         object : UserActivityDataSource(userActivity) {
             override fun edit(cond: Boolean, editor: UserActivity.() -> Unit) {
@@ -87,7 +77,6 @@ class PostDataSource(post: PublicationPost, onRemoved: State<() -> Unit>) : Publ
 
     override fun destroy() {
         super.destroy()
-        fandomDataSource.destroy()
         userActivityDataSource?.destroy()
     }
 

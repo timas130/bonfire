@@ -122,7 +122,7 @@ internal fun CommentButton(post: PublicationPost) {
                     if (post.isPublic) {
                         hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                         PostHog.capture("open_comment_editor", properties = mapOf("from" to "post_longclick"))
-                        SplashComment(post.id, null, true) { }.asSheetShow()
+                        SplashComment(post.id, true) { }.asSheetShow()
                     }
                 },
             ),

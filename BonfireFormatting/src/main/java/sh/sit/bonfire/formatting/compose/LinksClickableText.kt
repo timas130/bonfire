@@ -20,6 +20,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import sh.sit.bonfire.formatting.R
 
 @Composable
@@ -28,6 +29,7 @@ fun LinksClickableText(
     modifier: Modifier = Modifier,
     onClick: ((Int) -> Boolean)? = null,
     style: TextStyle = LocalTextStyle.current,
+    maxLines: Int = Int.MAX_VALUE,
 ) {
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
     val realOnClick = onClick ?: createTextOnClick(text, LocalContext.current)
@@ -57,6 +59,8 @@ fun LinksClickableText(
         modifier = modifier then clickModifier,
         onTextLayout = { layoutResult.value = it },
         style = style,
+        maxLines = maxLines,
+        overflow = TextOverflow.Ellipsis
     )
 }
 

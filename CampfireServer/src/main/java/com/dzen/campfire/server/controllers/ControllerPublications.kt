@@ -506,7 +506,8 @@ object ControllerPublications {
                 TPublications.FANDOM_IMAGE_ID,
                 TPublications.parent_fandom_closed,
                 TPublications.FANDOM_KARMA_COF,
-                TPublications.nsfw
+                TPublications.nsfw,
+                TPublications.hotness,
         )
     }
 
@@ -545,6 +546,7 @@ object ControllerPublications {
                 ?: "", v.nextLongOrZero(), v.nextLongOrZero() == 1L, v.nextLongOrZero())
 
         publication.nsfw = v.next()
+        publication.hotness = v.next()
 
         publication.jsonDB(false, publication.jsonDB!!)
 

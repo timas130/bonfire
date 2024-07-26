@@ -139,6 +139,7 @@ class PublicationComment : Publication {
 
         receiver.add(quoteStickerImage, quoteStickerImageId)
         receiver.add(image, imageId, imageW, imageH)
+        receiver.add(gif, gifId, imageW, imageH)
         receiver.add(stickerImage, stickerImageId)
         receiver.add(stickerGif, stickerGifId)
 

@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -30,12 +31,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.core.graphics.ColorUtils
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.requests.publications.RPublicationsKarmaAdd
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
+import com.sayzen.campfiresdk.compose.bonfire
 import com.sayzen.campfiresdk.compose.publication.post.counterTransitionSpec
 import com.sayzen.campfiresdk.compose.util.KonfettiViewExt
 import com.sayzen.campfiresdk.controllers.ControllerApi
@@ -59,6 +62,9 @@ import nl.dionsegijn.konfetti.core.emitter.Emitter
 import nl.dionsegijn.konfetti.xml.KonfettiView
 import nl.dionsegijn.konfetti.xml.listeners.OnParticleSystemUpdateListener
 import java.util.concurrent.TimeUnit
+import kotlin.math.log10
+import kotlin.math.pow
+import kotlin.math.sign
 
 class KarmaCounterModel(
     val publication: Publication,
@@ -128,8 +134,36 @@ class KarmaCounterModel(
     }
 }
 
+private fun computeHotnessBounds(): Pair<Double, Double> {
+    val hotnessData = PostHog.getFeatureFlagPayload("hotness", mapOf("max" to 1200, "min" to 1000)) as? Map<*, *>
+    val min = (hotnessData?.get("min") as Int? ?: 10).toDouble()
+    val max = (hotnessData?.get("max") as Int? ?: 200).toDouble()
+    val epoch = (hotnessData?.get("epoch") as Int? ?: 1672520400)
+    val tf = (hotnessData?.get("tf") as Int? ?: 45000)
+
+    val now = System.currentTimeMillis() / 1000
+    val seconds = (now - epoch) / tf
+
+    val minHotness = run {
+        val ord = log10(min.coerceAtLeast(1.0))
+        val sign = min.sign
+        sign * ord + seconds
+    }
+    val maxHotness = run {
+        val ord = log10(max.coerceAtLeast(1.0))
+        val sign = max.sign
+        sign * ord + seconds
+    }
+
+    return Pair(minHotness, maxHotness)
+}
+
 @Composable
-internal fun KarmaCounter(publication: Publication) {
+internal fun KarmaCounter(
+    publication: Publication,
+    mini: Boolean = false,
+    modifier: Modifier = Modifier
+) {
     val colors = ButtonDefaults.filledTonalButtonColors()
 
     @Composable
@@ -176,13 +210,24 @@ internal fun KarmaCounter(publication: Publication) {
         )
     }
 
+    val hotnessBounds = computeHotnessBounds()
+    val hotnessNorm = (publication.hotness.coerceIn(hotnessBounds.first, hotnessBounds.second)
+            - hotnessBounds.first) / (hotnessBounds.second - hotnessBounds.first)
+    val hotnessAdj = hotnessNorm.pow(3)
+
+    val background = ColorUtils.blendARGB(
+        colors.containerColor.toArgb(),
+        bonfire.toArgb(),
+        hotnessAdj.toFloat()
+    )
+
     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
         Surface(
             shape = RoundedCornerShape(18.dp),
-            color = colors.containerColor,
+            color = Color(background),
             contentColor = colors.contentColor,
-            modifier = Modifier
-                .height(36.dp)
+            modifier = modifier
+                .height(if (mini) 32.dp else 36.dp)
                 .onGloballyPositioned {
                     counterCenter = it.localToWindow(Offset(it.size.width / 2f, it.size.height / 2f))
                 },
@@ -190,11 +235,11 @@ internal fun KarmaCounter(publication: Publication) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                KarmaCounterSide(up = false, model = model)
+                KarmaCounterSide(up = false, mini = mini, model = model)
                 Divider()
                 KarmaCounterAmount(model = model)
                 Divider()
-                KarmaCounterSide(up = true, model = model)
+                KarmaCounterSide(up = true, mini = mini, model = model)
             }
         }
     }
@@ -202,7 +247,11 @@ internal fun KarmaCounter(publication: Publication) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun KarmaCounterSide(up: Boolean, model: KarmaCounterModel) {
+internal fun KarmaCounterSide(
+    up: Boolean,
+    mini: Boolean,
+    model: KarmaCounterModel
+) {
     val colors = ButtonDefaults.filledTonalButtonColors()
     val scope = rememberCoroutineScope()
     val hapticFeedback = LocalHapticFeedback.current
@@ -241,7 +290,6 @@ internal fun KarmaCounterSide(up: Boolean, model: KarmaCounterModel) {
         modifier = Modifier
             .zIndex(1f)
             .drawWithContent {
-                drawRect(colors.containerColor)
                 // the shape is clipped anyway, so there's almost no point
                 // in separating rendering for up/down
                 drawRect(
@@ -302,10 +350,18 @@ internal fun KarmaCounterSide(up: Boolean, model: KarmaCounterModel) {
                 },
                 modifier = Modifier
                     .padding(
-                        start = if (up) 6.dp else 10.dp,
-                        end = if (up) 10.dp else 6.dp,
-                        top = 6.dp,
-                        bottom = 6.dp
+                        start = if (!mini) {
+                            if (up) 6.dp else 10.dp
+                        } else {
+                            if (up) 4.dp else 8.dp
+                        },
+                        end = if (!mini) {
+                            if (up) 10.dp else 6.dp
+                        } else {
+                            if (up) 8.dp else 4.dp
+                        },
+                        top = if (mini) 4.dp else 6.dp,
+                        bottom = if (mini) 4.dp else 6.dp
                     )
                     .size(24.dp)
             )

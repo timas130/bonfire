@@ -19,16 +19,20 @@ import sh.sit.bonfire.formatting.core.model.spans.*
 @Composable
 fun BonfireMarkdown(
     text: FormattedText,
+    selectable: Boolean = false,
+    maxLines: Int = Int.MAX_VALUE,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        BonfireMarkdownContent(text = text)
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        BonfireMarkdownContent(text, selectable, maxLines)
     }
 }
 
 @Composable
 fun BonfireMarkdownContent(
     text: FormattedText,
+    selectable: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     val theme = MaterialTheme.colorScheme
@@ -45,16 +49,25 @@ fun BonfireMarkdownContent(
     }
 
     for (block in blocks) {
-        SelectionContainer {
-            Box {
-                BonfireMarkdownBlock(
-                    block = block,
-                    fullInline = fullInline,
-                    allBlocks = allBlocks,
-                    lists = lists,
-                    contentPadding = contentPadding,
-                )
+        val content: @Composable () -> Unit = {
+            BonfireMarkdownBlock(
+                block = block,
+                fullInline = fullInline,
+                allBlocks = allBlocks,
+                lists = lists,
+                contentPadding = contentPadding,
+                maxLines = maxLines,
+            )
+        }
+
+        if (selectable) {
+            SelectionContainer {
+                Box {
+                    content()
+                }
             }
+        } else {
+            content()
         }
     }
 }
@@ -66,6 +79,7 @@ internal fun BonfireMarkdownBlock(
     allBlocks: List<Span>,
     lists: List<ListBlock>,
     contentPadding: PaddingValues,
+    maxLines: Int = Int.MAX_VALUE,
 ) {
     // this statement is a war zone
     val blockText = fullInline.subSequence(
@@ -77,9 +91,10 @@ internal fun BonfireMarkdownBlock(
         is ParagraphBlock -> {
             LinksClickableText(
                 text = blockText,
+                maxLines = maxLines,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(contentPadding)
+                    .padding(contentPadding),
             )
         }
         is HeadingBlock -> {

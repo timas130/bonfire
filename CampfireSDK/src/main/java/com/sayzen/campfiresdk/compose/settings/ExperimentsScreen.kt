@@ -33,7 +33,8 @@ private data class Experiment(
 )
 
 private val activeExperiments = listOf(
-    Experiment("compose_post", R.string.compose_post_title, R.string.compose_post_description)
+    Experiment("compose_post", R.string.compose_post_title, R.string.compose_post_description),
+    Experiment("compose_comment", R.string.compose_comment_title, R.string.compose_comment_description)
 )
 
 @OptIn(ExperimentalMaterial3Api::class)

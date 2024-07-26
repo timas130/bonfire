@@ -53,6 +53,7 @@ internal fun PageQuoteRenderer(page: PageQuote) {
                 ) {
                     BonfireMarkdown(
                         text = formattedAuthor,
+                        selectable = false,
                         modifier = Modifier
                             .padding(bottom = 4.dp)
                             .alpha(0.6f)

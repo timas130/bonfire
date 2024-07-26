@@ -2,12 +2,9 @@ package com.sayzen.campfiresdk.models.cards
 
 import android.annotation.SuppressLint
 import android.util.LongSparseArray
-import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
@@ -16,30 +13,26 @@ import com.dzen.campfire.api.models.notifications.comments.NotificationCommentAn
 import com.dzen.campfire.api.models.notifications.publications.NotificationMention
 import com.dzen.campfire.api.models.notifications.publications.NotificationPublicationReaction
 import com.dzen.campfire.api.models.publications.PublicationComment
-import com.dzen.campfire.api.requests.publications.RPublicationsReactionAdd
-import com.dzen.campfire.api.requests.publications.RPublicationsReactionRemove
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.publication.comment.CardCommentProxy
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.events.account.EventAccountAddToBlackList
 import com.sayzen.campfiresdk.models.events.account.EventAccountRemoveFromBlackList
-import com.sayzen.campfiresdk.models.events.publications.*
+import com.sayzen.campfiresdk.models.events.publications.EventCommentChange
+import com.sayzen.campfiresdk.models.events.publications.EventPublicationDeepBlockRestore
 import com.sayzen.campfiresdk.models.splashs.SplashComment
 import com.sayzen.campfiresdk.screens.account.stickers.SStickersView
-import com.sayzen.campfiresdk.screens.post.history.SPublicationHistory
 import com.sayzen.campfiresdk.screens.reports.SReports
-import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.load
 import com.sayzen.campfiresdk.support.loadGif
 import com.sayzen.campfiresdk.views.ViewKarma
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.screens.SImageView
-import com.sup.dev.android.views.splash.SplashMenu
 import com.sup.dev.android.views.views.*
 import com.sup.dev.android.views.views.layouts.LayoutMaxSizes
 import com.sup.dev.java.classes.collections.HashList
@@ -48,13 +41,14 @@ import com.sup.dev.java.libs.text_format.TextFormatter
 import com.sup.dev.java.tools.ToolsDate
 import sh.sit.bonfire.formatting.BonfireMarkdown
 
-open class CardComment protected constructor(
+open class CardComment(
+    private val proxy: CardCommentProxy,
     publication: PublicationComment,
-    private val dividers: Boolean,
-    protected val miniSize: Boolean,
+    dividers: Boolean,
+    private val miniSize: Boolean,
     private val onClick: ((PublicationComment) -> Boolean)? = null,
     private val onQuote: ((PublicationComment) -> Unit)? = null,
-    var onGoTo: ((Long) -> Unit)? = null
+    private val onGoTo: ((Long) -> Unit)? = null
 ) : CardPublication(
     if (miniSize) R.layout.card_comment_mini else if (dividers) R.layout.card_comment else R.layout.card_comment_card,
     publication
@@ -75,18 +69,6 @@ open class CardComment protected constructor(
         fun getViewFromCash(key: String): View? {
             return viewCash.removeOne(key)
         }
-
-        fun instance(
-            publication: PublicationComment,
-            dividers: Boolean,
-            miniSize: Boolean,
-            onClick: ((PublicationComment) -> Boolean)? = null,
-            onQuote: ((PublicationComment) -> Unit)? = null,
-            onGoTo: ((Long) -> Unit)? = null
-        ): CardComment {
-            return CardComment(publication, dividers, miniSize, onClick, onQuote, onGoTo)
-        }
-
     }
 
     private val eventBus = EventBus
@@ -106,9 +88,7 @@ open class CardComment protected constructor(
         }
 
     var maxTextSize = Integer.MAX_VALUE
-    var changeEnabled = true
     var quoteEnabled = true
-    var copyEnabled = true
 
     init {
         flashViewId = R.id.vFlashView
@@ -200,14 +180,14 @@ open class CardComment protected constructor(
 
         val vImages: ViewImagesContainer = vImagesContainer as ViewImagesContainer
 
-        ToolsView.setOnLongClickCoordinates(vImages) { v, x, y -> showMenu(v, x, y) }
+        ToolsView.setOnLongClickCoordinates(vImages) { v, x, y -> ControllerComment.showMenu(v, x, y, xPublication.publication) }
         vImages.setOnClickListener { Navigator.to(SImageView(ImageLoader.load(publication.image))) }
         vImages.clear()
 
         for (image in publication.images) {
             vImages.add(ImageLoader.load(image),
                 null,
-                { showMenu(it.view, it.x, it.y) }
+                { ControllerComment.showMenu(it.view, it.x, it.y, xPublication.publication) }
             )
         }
     }
@@ -237,7 +217,7 @@ open class CardComment protected constructor(
         val vImage: ImageView = vStickerContainer.findViewById(R.id.vImage)
         val vGifProgressBar: View = vStickerContainer.findViewById(R.id.vGifProgressBar)
 
-        ToolsView.setOnLongClickCoordinates(vImage) { v, x, y -> showMenu(v, x, y) }
+        ToolsView.setOnLongClickCoordinates(vImage) { v, x, y -> ControllerComment.showMenu(v, x, y, xPublication.publication) }
 
         vImage.setOnClickListener { SStickersView.instanceBySticker(publication.stickerId, Navigator.TO) }
         vImage.setOnLongClickListener { Navigator.to(SImageView(ImageLoader.load(if (publication.stickerGif.isEmpty()) publication.stickerImage else publication.stickerGif))); true }
@@ -275,7 +255,7 @@ open class CardComment protected constructor(
 
         vMaxSizes.setMaxWidth(if (miniSize) 124 else 200)
         vMaxSizes.setMaxHeight(if (miniSize) 124 else 200)
-        ToolsView.setOnLongClickCoordinates(vImage) { v, x, y -> showMenu(v, x, y) }
+        ToolsView.setOnLongClickCoordinates(vImage) { v, x, y -> ControllerComment.showMenu(v, x, y, xPublication.publication) }
 
         vImage.setOnClickListener { Navigator.to(SImageView(ImageLoader.load(if (publication.gif.isEmpty()) publication.image else publication.gif))) }
 
@@ -324,8 +304,8 @@ open class CardComment protected constructor(
         val vRootContainer: ViewGroup = view.findViewById(R.id.vRootContainer)
 
         if (vSwipe != null) {
-            vSwipe.onClick = { if (onClick()) showMenu(vSwipe, it.x, it.y) }
-            vSwipe.onLongClick = { showMenu(vSwipe, it.x, it.y) }
+            vSwipe.onClick = { if (onClick()) ControllerComment.showMenu(vSwipe, it.x, it.y, xPublication.publication) }
+            vSwipe.onLongClick = { ControllerComment.showMenu(vSwipe, it.x, it.y, xPublication.publication) }
             vSwipe.swipeEnabled = quoteEnabled && onQuote != null
             if (onQuote != null) {
                 vSwipe.onClick = {
@@ -336,8 +316,8 @@ open class CardComment protected constructor(
             }
         } else {
             ToolsView.setOnClickAndLongClickCoordinates(vRootContainer,
-                { if (onClick()) showMenu(vRootContainer, it.x, it.y) },
-                { showMenu(vRootContainer, it.x, it.y) })
+                { if (onClick()) ControllerComment.showMenu(vRootContainer, it.x, it.y, xPublication.publication) },
+                { ControllerComment.showMenu(vRootContainer, it.x, it.y, xPublication.publication) })
         }
     }
 
@@ -367,7 +347,10 @@ open class CardComment protected constructor(
         val vQuoteImage: ViewImagesContainer = vQuoteContainer.findViewById(R.id.vQuoteImage)
 
         vQuoteContainer.setOnClickListener { if (onGoTo != null) onGoTo!!.invoke(publication.quoteId) }
-        vQuoteContainer.setOnLongClickListener { showMenu(vQuoteContainer, it.x, it.y);true }
+        vQuoteContainer.setOnLongClickListener {
+            ControllerComment.showMenu(vQuoteContainer, it.x, it.y, xPublication.publication)
+            true
+        }
 
         val quoteText = ControllerLinks.getQuoteText(publication.quoteCreatorName, publication.quoteText)
         BonfireMarkdown.setMarkdownInline(vQuoteText, quoteText)
@@ -416,7 +399,7 @@ open class CardComment protected constructor(
             var v: ViewChip? = map.get(i.reactionIndex)
             if (v == null) {
                 v = ToolsView.inflate(R.layout.z_chip)
-                v.setOnClickListener { sendReaction(i.reactionIndex) }
+                v.setOnClickListener { ControllerComment.sendReaction(xPublication.publication, i.reactionIndex) }
                 v.tag = 0
                 v.iconStartPadding = dp / 2
                 v.iconEndPadding = dp / 2
@@ -427,7 +410,7 @@ open class CardComment protected constructor(
             v.tag = (v.tag as Int) + 1
             if (i.accountId == ControllerApi.account.getId()) {
                 v.setChipBackgroundColorResource(R.color.blue_700)
-                v.setOnClickListener { removeReaction(i.reactionIndex) }
+                v.setOnClickListener { ControllerComment.removeReaction(xPublication.publication, i.reactionIndex) }
             }
             v.setOnLongClickListener {
                 ControllerReactions.showAccounts(
@@ -478,118 +461,12 @@ open class CardComment protected constructor(
     //  Other
     //
 
-    fun showMenu(targetView: View, x: Float, y: Float) {
-        val view = getView() ?: return
-        val publication = xPublication.publication as PublicationComment
-
-        val vMenuReactions = FrameLayout(view.context)
-        val vMenuReactionsLinear = LinearLayout(view.context)
-        vMenuReactionsLinear.orientation = LinearLayout.HORIZONTAL
-        vMenuReactions.addView(vMenuReactionsLinear)
-        (vMenuReactionsLinear.layoutParams as FrameLayout.LayoutParams).gravity = Gravity.CENTER
-        (vMenuReactionsLinear.layoutParams as FrameLayout.LayoutParams).topMargin = ToolsView.dpToPx(8).toInt()
-        vMenuReactionsLinear.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
-        vMenuReactionsLinear.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-
-        val w = SplashMenu()
-            .addTitleView(vMenuReactions)
-            .add(t(API_TRANSLATE.app_copy_link)) {
-                ToolsAndroid.setToClipboard(ControllerLinks.linkToComment(publication));ToolsToast.show(
-                t(API_TRANSLATE.app_copied)
-            )
-            }
-            .groupCondition(ControllerApi.isCurrentAccount(publication.creator.id))
-            .add(t(API_TRANSLATE.app_remove)) {
-                ControllerApi.removePublication(
-                    publication.id,
-                    t(API_TRANSLATE.comment_remove_confirm),
-                    t(API_TRANSLATE.comment_error_gone)
-                ) { EventBus.post(EventCommentRemove(publication.id, publication.parentPublicationId)) }
-            }
-            .clearGroupCondition()
-            .add(t(API_TRANSLATE.app_copy)) {
-                ToolsAndroid.setToClipboard(publication.text);ToolsToast.show(
-                t(
-                    API_TRANSLATE.app_copied
-                )
-            )
-            }.condition(copyEnabled)
-            .add(t(API_TRANSLATE.app_history)) { Navigator.to(SPublicationHistory(publication.id)) }
-            .condition(ControllerPost.ENABLED_HISTORY)
-            .groupCondition(!ControllerApi.isCurrentAccount(publication.creator.id))
-            .add(t(API_TRANSLATE.app_report)) {
-                ControllerApi.reportPublication(
-                    publication.id,
-                    t(API_TRANSLATE.comment_report_confirm),
-                    t(API_TRANSLATE.comment_error_gone)
-                )
-            }
-            .spoiler(t(API_TRANSLATE.app_moderator))
-            .add(t(API_TRANSLATE.app_clear_reports)) {
-                ControllerApi.clearReportsPublication(
-                    publication.id,
-                    publication.publicationType
-                )
-            }.backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(
-                ControllerApi.can(
-                    publication.fandom.id,
-                    publication.fandom.languageId,
-                    API.LVL_MODERATOR_BLOCK
-                ) && publication.reportsCount > 0
-            )
-            .add(t(API_TRANSLATE.app_block)) { ControllerPublications.block(publication) }
-            .backgroundRes(R.color.blue_700).textColorRes(R.color.white)
-            .condition(ControllerApi.can(publication.fandom.id, publication.fandom.languageId, API.LVL_MODERATOR_BLOCK))
-            .clearGroupCondition()
-            .spoiler(t(API_TRANSLATE.app_protoadmin))
-            .add("Востановить") { ControllerPublications.restoreDeepBlock(publication.id) }
-            .backgroundRes(R.color.orange_700).textColorRes(R.color.white)
-            .condition(ControllerApi.can(API.LVL_PROTOADMIN) && publication.status == API.STATUS_DEEP_BLOCKED)
-            .asPopupShow(targetView, x, y)
-
-
-        val p = ToolsView.dpToPx(4).toInt()
-        for (i in API.REACTIONS.indices) {
-            val v: ViewIcon = ToolsView.inflate(vMenuReactionsLinear, R.layout.z_icon_18)
-            v.setPadding(p, p, p, p)
-            v.setOnClickListener { sendReaction(i.toLong()); w?.hide(); }
-            vMenuReactionsLinear.addView(v)
-            ImageLoader.load(API.REACTIONS[i]).into(v)
-        }
-
-    }
 
     private fun change() {
         PostHog.capture("open_comment_editor", properties = mapOf("from" to "change"))
         SplashComment(xPublication.publication as PublicationComment, false).asSheetShow()
     }
 
-    private fun sendReaction(reactionIndex: Long) {
-        ApiRequestsSupporter.executeProgressDialog(
-            RPublicationsReactionAdd(
-                xPublication.publication.id,
-                reactionIndex
-            )
-        ) { _ ->
-            ToolsToast.show(t(API_TRANSLATE.app_done))
-            EventBus.post(EventPublicationReactionAdd(xPublication.publication.id, reactionIndex))
-        }
-            .onApiError(API.ERROR_ALREADY) { ToolsToast.show(t(API_TRANSLATE.app_done)) }
-            .onApiError(API.ERROR_GONE) { ToolsToast.show(t(API_TRANSLATE.comment_error_gone)) }
-    }
-
-    private fun removeReaction(reactionIndex: Long) {
-        ApiRequestsSupporter.executeProgressDialog(
-            RPublicationsReactionRemove(
-                xPublication.publication.id,
-                reactionIndex
-            )
-        ) { _ ->
-            ToolsToast.show(t(API_TRANSLATE.app_done))
-            EventBus.post(EventPublicationReactionRemove(xPublication.publication.id, reactionIndex))
-        }
-            .onApiError(API.ERROR_GONE) { ToolsToast.show(t(API_TRANSLATE.comment_error_gone)) }
-    }
 
     override fun updateComments() {
         update()
@@ -638,7 +515,7 @@ open class CardComment protected constructor(
 
     private fun onEventPublicationDeepBlockRestore(e: EventPublicationDeepBlockRestore) {
         if (e.publicationId == xPublication.publication.id && xPublication.publication.status == API.STATUS_DEEP_BLOCKED) {
-            adapter.remove(this)
+            adapter.remove(proxy)
         }
     }
 

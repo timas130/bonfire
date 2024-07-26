@@ -5,8 +5,8 @@ import java.util.*
 
 object ToolsDate {
 
-    private val format1 = "dd MMM yyyy  HH:mm"
-    private val format2 = "dd MMM  HH:mm"
+    private val format1 = "dd MMM yyyy HH:mm"
+    private val format2 = "dd MMM HH:mm"
     private val format3 = "HH:mm"
 
     val currentDayOfWeek: Int

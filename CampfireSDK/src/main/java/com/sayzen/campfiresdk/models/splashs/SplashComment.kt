@@ -42,7 +42,7 @@ import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
 import sh.sit.bonfire.formatting.BonfireMarkdown
 
-class SplashComment constructor(
+class SplashComment(
         private val publicationId: Long,
         private val answer: PublicationComment?,
         private val changeComment: PublicationComment?,

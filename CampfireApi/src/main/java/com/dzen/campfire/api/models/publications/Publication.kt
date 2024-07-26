@@ -52,6 +52,7 @@ abstract class Publication : JsonPolimorf, ImageHolder {
     var reactions:Array<Reaction> = emptyArray()
     var blacklisted = false
     var nsfw = false
+    var hotness = 0.0
 
     //
     //  Getters
@@ -102,6 +103,7 @@ abstract class Publication : JsonPolimorf, ImageHolder {
         tag_s_1 = json.m(inp, "tag_s_1", tag_s_1)
         blacklisted = json.m(inp, "blacklisted", blacklisted)
         nsfw = json.m(inp, "nsfw", nsfw)
+        hotness = json.m(inp, "hotness", hotness)
 
         if (inp) jsonDB = jsonDB(true, Json())
         jsonDB = json.mNull(inp, "jsonDB", jsonDB, Json::class)

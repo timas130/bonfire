@@ -11,10 +11,10 @@ import com.dzen.campfire.api.requests.comments.RCommentGet
 import com.dzen.campfire.api.requests.comments.RCommentsGetAll
 import com.dzen.campfire.api.tools.client.ApiClient
 import com.posthog.PostHog
+import com.sayzen.campfiresdk.compose.publication.comment.CardCommentProxy
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
-import com.sayzen.campfiresdk.models.cards.CardComment
 import com.sayzen.campfiresdk.models.events.notifications.EventNotification
 import com.sayzen.campfiresdk.models.events.publications.EventCommentsCountChanged
 import com.sayzen.campfiresdk.models.splashs.SplashComment
@@ -30,7 +30,7 @@ class AdapterComments(
         private var scrollToCommentId: Long,
         private val vRecycler: RecyclerView,
         private val startFromBottom: Boolean = false
-) : RecyclerCardAdapterLoading<CardComment, PublicationComment>(CardComment::class, null) {
+) : RecyclerCardAdapterLoading<CardCommentProxy, PublicationComment>(CardCommentProxy::class, null) {
 
 
     private val eventBus = EventBus
@@ -98,7 +98,7 @@ class AdapterComments(
         }
     }
 
-    private fun scrollToCard(card: CardComment, owerscroll:Int=1) {
+    private fun scrollToCard(card: CardCommentProxy, owerscroll:Int=1) {
         ToolsThreads.main(500) {
             ToolsView.scrollRecycler(vRecycler, indexOf(card) + owerscroll)
             ToolsThreads.main(200) { card.flash() }
@@ -109,11 +109,11 @@ class AdapterComments(
         if (scrollToCommentId == -1L) {
             scrollToCommentId = 0
             scrollToCommentWasLoaded = false
-            val v = get(CardComment::class)
+            val v = get(CardCommentProxy::class)
             val index = if (v.isNotEmpty()) indexOf(v.get(0)) else size()
             vRecycler.scrollToPosition(index)
         } else if (scrollToCommentId != 0L) {
-            for (c in get(CardComment::class)) {
+            for (c in get(CardCommentProxy::class)) {
                 if (c.xPublication.publication.id == scrollToCommentId) {
                     scrollToCommentId = 0
                     scrollToCommentWasLoaded = false
@@ -148,7 +148,7 @@ class AdapterComments(
 
     }
 
-    fun addComment(publicationComment: PublicationComment): CardComment {
+    fun addComment(publicationComment: PublicationComment): CardCommentProxy {
         val card = instanceCard(publicationComment)
         remove(CardSpace::class)
         addWithHashBottom(card)
@@ -162,35 +162,17 @@ class AdapterComments(
         loadBottom()
     }
 
-    private fun instanceMapper():((PublicationComment)->CardComment) = {instanceCard(it)}
+    private fun instanceMapper():((PublicationComment)->CardCommentProxy) = {instanceCard(it)}
 
-    private fun instanceCard(publication: PublicationComment): CardComment {
-        return CardComment.instance(
+    private fun instanceCard(publication: PublicationComment): CardCommentProxy {
+        return CardCommentProxy(
             publication = publication,
             dividers = true,
             miniSize = false,
-            onClick = { comment ->
-                if (ControllerApi.isCurrentAccount(comment.creator.id)) return@instance false
-                PostHog.capture("open_comment_editor", properties = mapOf("from" to "reply"))
-                showCommentDialog(comment)
-                true
-            },
-            onQuote = { comment ->
-                var quoteText = comment.creator.name + ": "
-                if (comment.text.isNotEmpty()) quoteText += comment.text
-                else if (comment.imageId != 0L || comment.imageIdArray.isNotEmpty()) quoteText += t(API_TRANSLATE.app_image)
-                else if (comment.stickerId != 0L) quoteText += t(API_TRANSLATE.app_sticker)
-
-                PostHog.capture("open_comment_editor", properties = mapOf("from" to "quote"))
-                showCommentDialog(
-                    if (ControllerApi.isCurrentAccount(comment.creator.id)) null else comment,
-                    null,
-                    comment.id,
-                    quoteText
-                )
-            },
+            allowEditing = true,
+            allowSwipeReply = true,
             onGoTo = { id ->
-                for (i in get(CardComment::class)) {
+                for (i in get(CardCommentProxy::class)) {
                     if (i.xPublication.publication.id == id) {
                         scrollToCard(i, 0)
                         break
@@ -206,7 +188,7 @@ class AdapterComments(
 
     private fun onEventCommentsCountChanged(e: EventCommentsCountChanged) {
         if (e.publicationId == publicationId && e.change < 0) {
-            if (get(CardComment::class).size == 0) {
+            if (get(CardCommentProxy::class).size == 0) {
                 reloadBottom()
             }
         }
