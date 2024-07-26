@@ -156,7 +156,7 @@ class SPost private constructor(
             adapter.remove(ComposePostPages::class)
             if (composeMode) {
                 val post = xPublication.publication as PublicationPost
-                adapter.add(ComposePostPages(post.pages.toList(), post))
+                adapter.add(0, ComposePostPages(post.pages.toList(), post))
             } else {
                 for (i in 0 until e.pages.size) {
                     adapter.add(i, CardPage.instance(xPublication.publication as PublicationPost, e.pages[i]))
