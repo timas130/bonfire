@@ -29,9 +29,6 @@ class PageText : Page() {
     override fun json(inp: Boolean, json: Json): Json {
         text = json.m(inp, "J_TEXT", text)
         formattedText = json.m(inp, "formattedText", formattedText)
-        if (!inp && formattedText.text.isEmpty()) {
-            formattedText = BonfireFormatter.parse(text)
-        }
         icon = json.m(inp, "icon", icon)
         align = json.m(inp, "align", align)
         newFormatting = json.m(inp, "newFormatting", newFormatting)

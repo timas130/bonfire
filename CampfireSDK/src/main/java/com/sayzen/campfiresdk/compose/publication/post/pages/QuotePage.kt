@@ -25,7 +25,6 @@ import sh.sit.bonfire.formatting.core.BonfireFormatter
 @Composable
 internal fun PageQuoteRenderer(page: PageQuote) {
     val formattedAuthor = remember { BonfireFormatter.parse(page.author + ":", inlineOnly = true) }
-    val formattedText = remember { BonfireFormatter.parse(page.text) }
 
     val borderColor = MaterialTheme.colorScheme.onSurface
     val borderWidth = with(LocalDensity.current) { 4.dp.toPx() }
@@ -60,7 +59,7 @@ internal fun PageQuoteRenderer(page: PageQuote) {
                     )
                 }
             }
-            BonfireMarkdown(text = formattedText)
+            BonfireMarkdown(text = page.formattedText)
         }
     }
 }
