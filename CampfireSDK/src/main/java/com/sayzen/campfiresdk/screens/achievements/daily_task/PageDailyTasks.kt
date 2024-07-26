@@ -126,6 +126,7 @@ fun DailyTask(modifier: Modifier = Modifier, taskInfo: DailyTaskInfo?, compact: 
                     ?.takeIf { it.isFinite() }
                     ?: 0f
             },
+            trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(16.dp)
@@ -269,6 +270,7 @@ private fun Event(event: ProjectEvent) {
                     progress = {
                         (event.progressCurrent.toFloat() / event.progressMax).coerceAtMost(1f)
                     },
+                    trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                     modifier = Modifier.fillMaxWidth().height(8.dp),
                 )
             }

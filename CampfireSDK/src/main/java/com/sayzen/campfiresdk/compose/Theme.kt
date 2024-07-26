@@ -40,8 +40,8 @@ private val LegacyGreyColors = darkColorScheme(
     outline = Color(0xFF363636),
     outlineVariant = Color(0xFF363636),
     surfaceVariant = surfaceVariantDark,
-    secondaryContainer = secondaryContainerDark,
-    onSecondaryContainer = onSecondaryContainerDark,
+    secondaryContainer = Color(0xFF666666),
+    onSecondaryContainer = Color(0xFFFFFFFF),
     surfaceContainerHighest = surfaceContainerHighestDark,
     surfaceContainerHigh = surfaceContainerHighDark,
 )
@@ -61,8 +61,8 @@ private val LegacyDarkColors = darkColorScheme(
     outline = Color(0xFF363636),
     outlineVariant = Color(0xFF363636),
     surfaceVariant = surfaceVariantDark,
-    secondaryContainer = secondaryContainerDark,
-    onSecondaryContainer = onSecondaryContainerDark,
+    secondaryContainer = Color(0xFF363636),
+    onSecondaryContainer = Color(0xFFFFFFFF),
     surfaceContainerHighest = surfaceContainerHighestDark,
     surfaceContainerHigh = surfaceContainerHighDark,
 )
