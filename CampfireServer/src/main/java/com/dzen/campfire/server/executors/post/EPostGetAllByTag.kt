@@ -5,6 +5,7 @@ import com.dzen.campfire.api.requests.post.RPostGetAllByTag
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerAchievements
 import com.dzen.campfire.server.controllers.ControllerOptimizer
+import com.dzen.campfire.server.controllers.ControllerPost.filterNsfw
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.tables.TCollisions
 import com.dzen.campfire.server.tables.TPublications
@@ -33,7 +34,8 @@ class EPostGetAllByTag : RPostGetAllByTag(0, 0) {
         for (i in ids.indices) ids[i] = v.next<Long>()
 
         val selectPublications = ControllerPublications.instanceSelect(apiAccount.id)
-                .sort(TPublications.date_create, false)
+            .filterNsfw(apiAccount.id, requestApiVersion)
+            .sort(TPublications.date_create, false)
         selectPublications.where(SqlWhere.WhereIN(TPublications.id, ids))
 
         ControllerOptimizer.putCollisionWithCheck(apiAccount.id, API.COLLISION_ACHIEVEMENT_TAG_SEARCH)
