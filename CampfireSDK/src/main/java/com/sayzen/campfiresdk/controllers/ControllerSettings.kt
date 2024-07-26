@@ -172,6 +172,13 @@ object ControllerSettings {
             onSettingsUpdated()
         }
 
+    var karmaHotness: Boolean
+        get() = accountSettings.karmaHotness
+        set(b) {
+            accountSettings.karmaHotness = b
+            onSettingsUpdated()
+        }
+
     //
     //  App
     //

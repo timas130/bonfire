@@ -137,6 +137,14 @@
                 android:layout_height="wrap_content"
                 app:Settings_lineVisible="false"/>
 
+            <com.sup.dev.android.views.settings.SettingsSwitcher
+                android:id="@+id/vKarmaHotness"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"
+                app:Settings_icon="@drawable/ic_trending_up_white_24dp"
+                app:Settings_icon_background="@color/bonfire" />
+
             <com.sup.dev.android.views.settings.Settings
                 android:id="@+id/vDefault"
                 android:layout_width="match_parent"

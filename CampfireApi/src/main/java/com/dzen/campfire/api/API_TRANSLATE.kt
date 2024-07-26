@@ -1115,6 +1115,7 @@ object API_TRANSLATE {
     val settings_style_interface_2 = Translate("Скрытое меню")
     val settings_style_default_alert = Translate("Все ваши изменения будут потеряны.")
     val settings_style_post_font_size = Translate("Размер шрифта в постах")
+    val settings_style_karma_hotness = Translate("Цветной фон счётчика кармы")
     val settings_black_list_empty = Translate("Черный список пока пуст")
     val settings_style_theme_restatr = Translate("Перезапустить приложение для применения нового стиля?")
     val settings_restatr_alert = Translate("Перезапустить приложение для применения настроек?")

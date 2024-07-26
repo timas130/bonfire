@@ -210,16 +210,20 @@ internal fun KarmaCounter(
         )
     }
 
-    val hotnessBounds = computeHotnessBounds()
-    val hotnessNorm = (publication.hotness.coerceIn(hotnessBounds.first, hotnessBounds.second)
-            - hotnessBounds.first) / (hotnessBounds.second - hotnessBounds.first)
-    val hotnessAdj = hotnessNorm.pow(3)
+    val background = if (PostHog.isFeatureEnabled("hotness", true) && ControllerSettings.karmaHotness) {
+        val hotnessBounds = computeHotnessBounds()
+        val hotnessNorm = (publication.hotness.coerceIn(hotnessBounds.first, hotnessBounds.second)
+                - hotnessBounds.first) / (hotnessBounds.second - hotnessBounds.first)
+        val hotnessAdj = hotnessNorm.pow(3)
 
-    val background = ColorUtils.blendARGB(
-        colors.containerColor.toArgb(),
-        bonfire.toArgb(),
-        hotnessAdj.toFloat()
-    )
+        ColorUtils.blendARGB(
+            colors.containerColor.toArgb(),
+            bonfire.toArgb(),
+            hotnessAdj.toFloat()
+        )
+    } else {
+        colors.containerColor.toArgb()
+    }
 
     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
         Surface(

@@ -44,6 +44,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
     private val vHolidayTitle: Settings = findViewById(R.id.vHolidayTitle)
     private val vGrapTitle: Settings = findViewById(R.id.vGrapTitle)
     private val vAppOtherTitle: Settings = findViewById(R.id.vAppOtherTitle)
+    private val vKarmaHotness: SettingsSwitcher = findViewById(R.id.vKarmaHotness)
 
     init {
         disableShadows()
@@ -68,6 +69,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vNewYearProfileAnimation.setTitle(t(API_TRANSLATE.settings_style_new_year_profile_animation))
         vDefault.setTitle(t(API_TRANSLATE.settings_style_default))
         vAppOtherTitle.setTitle(t(API_TRANSLATE.app_other))
+        vKarmaHotness.setTitle(t(API_TRANSLATE.settings_style_karma_hotness))
 
         vFullscreen.visibility = View.GONE
         if(!ControllerHoliday.isHoliday()){
@@ -224,6 +226,13 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vActivityType.add(t(API_TRANSLATE.settings_style_interface_1))
         vActivityType.add(t(API_TRANSLATE.settings_style_interface_2))
 
+        vKarmaHotness.setOnClickListener {
+            ControllerSettings.karmaHotness = vKarmaHotness.isChecked()
+        }
+        if (!PostHog.isFeatureEnabled("hotness", true)) {
+            vKarmaHotness.visibility = GONE
+        }
+
         updateValues()
     }
 
@@ -241,5 +250,6 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vPostFontSize.progress = ControllerSettings.postFontSize
         if (vTheme.getTitles().size > ControllerSettings.styleTheme) vTheme.setCurrentIndex(ControllerSettings.styleTheme) else vTheme.setCurrentIndex(0)
         vActivityType.setCurrentIndex(ControllerSettings.interfaceType)
+        vKarmaHotness.setChecked(ControllerSettings.karmaHotness)
     }
 }
