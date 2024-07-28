@@ -122,8 +122,7 @@ class ECommentsCreate : RCommentsCreate(0, "", null, null, 0, false, 0, 0, false
             }
         }
 
-        comment.fandom.id = publication!!.fandom.id
-        comment.fandom.languageId = publication!!.fandom.languageId
+        comment.fandom = publication!!.fandom
         comment.category = publication!!.category
         comment.publicationType = API.PUBLICATION_TYPE_COMMENT
         comment.dateCreate = System.currentTimeMillis()
