@@ -108,8 +108,9 @@ internal fun PostHeader(post: PublicationPost) {
                 DividerDot()
 
                 // creation date
+                val creationTimestamp = post.tag_4.takeIf { post.status == API.STATUS_PENDING } ?: post.dateCreate
                 Text(
-                    text = ToolsDate.dateToString(post.dateCreate),
+                    text = ToolsDate.dateToString(creationTimestamp),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                     softWrap = false,
@@ -117,7 +118,7 @@ internal fun PostHeader(post: PublicationPost) {
                     modifier = Modifier
                         .then(if (overflowsWidth) Modifier.weight(1f, fill = false) else Modifier)
                         .clickable {
-                            ToolsToast.show(ToolsDate.dateToString(post.dateCreate))
+                            ToolsToast.show(ToolsDate.dateToString(creationTimestamp))
                         },
                 )
             }
