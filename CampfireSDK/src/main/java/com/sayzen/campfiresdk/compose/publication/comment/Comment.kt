@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.PublicationComment
 import com.sayzen.campfiresdk.compose.publication.PublicationReactions
@@ -120,7 +121,7 @@ fun Comment(
                                 changeComment = comment,
                                 showToast = true
                             ).asSheetShow()
-                        } else if (!allowEditing) {
+                        } else if (!allowEditing && comment.status == API.STATUS_PUBLIC) {
                             scrollToComment(comment)
                         }
                     },
@@ -185,7 +186,9 @@ private fun CommentContent(
 
             PublicationReactions(comment)
 
-            CommentFooter(comment, onReply)
+            if (comment.status == API.STATUS_PUBLIC) {
+                CommentFooter(comment, onReply)
+            }
         }
     }
 }
