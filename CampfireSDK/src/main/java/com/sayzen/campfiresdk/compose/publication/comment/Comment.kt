@@ -5,6 +5,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.LayoutCoordinates
@@ -18,6 +19,7 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.PublicationComment
 import com.sayzen.campfiresdk.compose.publication.PublicationReactions
 import com.sayzen.campfiresdk.compose.util.Avatar
+import com.sayzen.campfiresdk.compose.util.IconButtonWithOffset
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerComment
 import com.sayzen.campfiresdk.controllers.ControllerPublications
@@ -169,20 +171,30 @@ private fun CommentContent(
             )
         }
 
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            CommentHeader(comment, showFandom = showFandom)
+        Box {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                CommentHeader(comment, showFandom = showFandom)
 
-            CommentQuote(comment, scrollToComment = scrollToComment)
+                CommentQuote(comment, scrollToComment = scrollToComment)
 
-            CommentText(comment, maxLines = maxLines)
+                CommentText(comment, maxLines = maxLines)
 
-            CommentImage(comment)
+                CommentImage(comment)
 
-            PublicationReactions(comment)
+                PublicationReactions(comment)
 
-            if (comment.status == API.STATUS_PUBLIC) {
-                CommentFooter(comment, onReply, longClickEnabledFlag)
+                if (comment.status == API.STATUS_PUBLIC) {
+                    CommentFooter(comment, onReply, longClickEnabledFlag)
+                }
             }
+
+            val view = LocalView.current
+            IconButtonWithOffset(
+                onClick = { offset ->
+                    ControllerComment.showMenu(view, offset.x, offset.y, comment)
+                },
+                modifier = Modifier.align(Alignment.TopEnd),
+            )
         }
     }
 }
