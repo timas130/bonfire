@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.runtime.State
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.fandoms.Fandom
+import com.dzen.campfire.api.models.notifications.comments.NotificationComment
+import com.dzen.campfire.api.models.notifications.comments.NotificationCommentAnswer
 import com.dzen.campfire.api.models.publications.Publication
 import com.sayzen.campfiresdk.compose.BonfireDataSource
 import com.sayzen.campfiresdk.compose.data.AccountDataSource
@@ -11,6 +13,7 @@ import com.sayzen.campfiresdk.compose.fandom.FandomDataSource
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.models.events.account.EventAccountAddToBlackList
 import com.sayzen.campfiresdk.models.events.account.EventAccountRemoveFromBlackList
+import com.sayzen.campfiresdk.models.events.notifications.EventNotification
 import com.sayzen.campfiresdk.models.events.publications.*
 
 abstract class PublicationDataSource<T : Publication>(pub: T, private val onRemoved: State<() -> Unit>) : BonfireDataSource<T>(pub) {
@@ -60,6 +63,25 @@ abstract class PublicationDataSource<T : Publication>(pub: T, private val onRemo
             .subscribe(EventPublicationBlocked::class) {
                 remove(it.publicationId)
             }
+            .subscribe(EventCommentsCountChanged::class) {
+                edit(it.publicationId) {
+                    subPublicationsCount = it.commentsCount
+                }
+            }
+    }
+
+    override fun handleNotification(ev: EventNotification) {
+        super.handleNotification(ev)
+
+        if (ev.notification is NotificationComment) {
+            edit(ev.notification.publicationId) {
+                subPublicationsCount++
+            }
+        } else if (ev.notification is NotificationCommentAnswer) {
+            edit(ev.notification.publicationId) {
+                subPublicationsCount++
+            }
+        }
     }
 
     private val fandomDataSource = object : FandomDataSource(pub.fandom) {

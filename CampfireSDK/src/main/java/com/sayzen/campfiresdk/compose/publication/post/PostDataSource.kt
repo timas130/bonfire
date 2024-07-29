@@ -2,14 +2,11 @@ package com.sayzen.campfiresdk.compose.publication.post
 
 import androidx.compose.runtime.State
 import com.dzen.campfire.api.models.activities.UserActivity
-import com.dzen.campfire.api.models.notifications.comments.NotificationComment
-import com.dzen.campfire.api.models.notifications.comments.NotificationCommentAnswer
 import com.dzen.campfire.api.models.publications.post.PageUserActivity
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.sayzen.campfiresdk.compose.publication.PublicationDataSource
 import com.sayzen.campfiresdk.compose.publication.post.pages.activity.UserActivityDataSource
 import com.sayzen.campfiresdk.controllers.ControllerSettings
-import com.sayzen.campfiresdk.models.events.notifications.EventNotification
 import com.sayzen.campfiresdk.models.events.publications.*
 import com.sup.dev.android.models.EventStyleChanged
 
@@ -78,20 +75,5 @@ class PostDataSource(post: PublicationPost, onRemoved: State<() -> Unit>) : Publ
     override fun destroy() {
         super.destroy()
         userActivityDataSource?.destroy()
-    }
-
-    override fun handleNotification(ev: EventNotification) {
-        when (ev.notification) {
-            is NotificationComment -> {
-                edit(ev.notification.publicationId) {
-                    subPublicationsCount++
-                }
-            }
-            is NotificationCommentAnswer -> {
-                edit(ev.notification.publicationId) {
-                    subPublicationsCount++
-                }
-            }
-        }
     }
 }

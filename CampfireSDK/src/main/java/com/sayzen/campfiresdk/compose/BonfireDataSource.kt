@@ -19,6 +19,7 @@ abstract class BonfireDataSource<T : JsonParsable>(protected var data: T) {
     protected val _flow = MutableStateFlow(data)
     val flow = _flow.asStateFlow()
 
+    @CallSuper
     open fun handleNotification(ev: EventNotification) {}
 
     open fun edit(cond: Boolean, editor: T.() -> Unit) {
