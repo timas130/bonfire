@@ -1,11 +1,6 @@
 package com.sayzen.campfiresdk.compose.publication.comment
 
-import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalTextStyle
@@ -19,7 +14,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -69,34 +63,12 @@ internal fun CommentQuote(
         stickerImage = comment.quoteStickerImage
     }
 
-    val interactionSource = remember { MutableInteractionSource() }
-
     Column(
         modifier = modifier
-            .indication(interactionSource, LocalIndication.current)
-            .pointerInput(scrollToComment, quotedComment) {
-                awaitEachGesture {
-                    val down = awaitFirstDown()
-                    val press = PressInteraction.Press(down.position)
-                    interactionSource.tryEmit(press)
-
-                    down.consume()
-                    val up = withTimeoutOrNull(viewConfiguration.longPressTimeoutMillis) {
-                        waitForUpOrCancellation()
-                    }
-
-                    if (up == null) {
-                        interactionSource.tryEmit(PressInteraction.Cancel(press))
-                        return@awaitEachGesture
-                    }
-
-                    interactionSource.tryEmit(PressInteraction.Release(press))
-                    up.consume()
-
-                    scrollToComment(quotedComment)
-                }
-            }
             .fillMaxWidth()
+            .nestedClickable {
+                scrollToComment(quotedComment)
+            }
             .drawBehind {
                 drawRect(
                     color = colors.primaryContainer,
@@ -187,7 +159,7 @@ internal fun CommentImage(
                 modifier = modifier
                     .heightIn(max = 100.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .clickable {
+                    .nestedClickable {
                         val image = ImageLoader.load(comment.gif.takeIf { it.isNotEmpty() } ?: comment.image)
                         Navigator.to(SImageView(image))
                     },
@@ -209,15 +181,9 @@ internal fun CommentImage(
                     .height(150.dp)
                     .aspectRatio(1f, matchHeightConstraintsFirst = true)
                     .clip(RoundedCornerShape(8.dp))
-                    .combinedClickable(
-                        onLongClick = {
-                            val imageRef = comment.stickerGif.takeIf { it.isNotEmpty() } ?: comment.stickerImage
-                            Navigator.to(SImageView(ImageLoader.load(imageRef)))
-                        },
-                        onClick = {
-                            SStickersView.instanceBySticker(comment.stickerId, Navigator.TO)
-                        }
-                    )
+                    .nestedClickable {
+                        SStickersView.instanceBySticker(comment.stickerId, Navigator.TO)
+                    }
             )
         }
     }

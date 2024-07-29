@@ -6,17 +6,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -25,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.util.IconButtonWithOffset
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerPost
 import com.sayzen.campfiresdk.controllers.ControllerSettings
@@ -123,7 +121,11 @@ internal fun PostHeader(post: PublicationPost) {
                 )
             }
 
-            MoreVertButton(post)
+            val view = LocalView.current
+            IconButtonWithOffset(onClick = { offset ->
+                ControllerPost.getSplashMenu(post)
+                    .asPopupShow(view, offset.x, offset.y)
+            })
         }
     }
 }
@@ -182,29 +184,5 @@ private fun PostFandom(post: PublicationPost) {
                     },
             )
         }
-    }
-}
-
-@Composable
-private fun MoreVertButton(post: PublicationPost) {
-    val view = LocalView.current
-    var moreButtonOffset by remember { mutableStateOf(Offset.Zero) }
-    val localButtonCenter = with(LocalDensity.current) { Offset(14.dp.toPx(), 14.dp.toPx()) }
-    IconButton(
-        onClick = {
-            val offset = moreButtonOffset + localButtonCenter
-            val viewOffset = IntArray(2)
-            view.getLocationInWindow(viewOffset)
-
-            ControllerPost.getSplashMenu(post)
-                .asPopupShow(view, offset.x - viewOffset[0], offset.y - viewOffset[1])
-        },
-        modifier = Modifier
-            .size(28.dp)
-            .onGloballyPositioned {
-                moreButtonOffset = it.localToWindow(Offset.Zero)
-            }
-    ) {
-        Icon(Icons.Default.MoreVert, stringResource(R.string.post_more))
     }
 }

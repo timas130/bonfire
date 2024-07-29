@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -17,6 +19,7 @@ import com.sayzen.campfiresdk.compose.publication.KarmaCounter
 internal fun CommentFooter(
     comment: PublicationComment,
     onReply: (showToast: Boolean) -> Unit,
+    longClickEnabledFlag: MutableState<Boolean>,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -25,7 +28,13 @@ internal fun CommentFooter(
     ) {
         ReplyButton(onClick = { onReply(true) })
 
-        KarmaCounter(comment, mini = true)
+        KarmaCounter(
+            publication = comment,
+            mini = true,
+            onLongClick = {
+                longClickEnabledFlag.value = false
+            }
+        )
     }
 }
 
@@ -38,8 +47,11 @@ private fun ReplyButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
             shape = ButtonDefaults.filledTonalShape,
             color = theme.containerColor,
             contentColor = theme.contentColor,
-            modifier = modifier,
-            onClick = onClick,
+            modifier = modifier
+                .clip(ButtonDefaults.filledTonalShape)
+                .nestedClickable {
+                    onClick()
+                },
         ) {
             Row(
                 modifier = Modifier

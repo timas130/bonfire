@@ -72,6 +72,8 @@ fun Avatar(
     account: Account,
     modifier: Modifier = Modifier,
     showLevel: Boolean = true,
+    // this does not change behavior
+    onLongClick: () -> Unit = {},
 ) {
     val hapticFeedback = LocalHapticFeedback.current
 
@@ -98,6 +100,7 @@ fun Avatar(
                     },
                     onLongClick = {
                         hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onLongClick()
                         SplashAccountInfo(account).asSheetShow()
                     }
                 )

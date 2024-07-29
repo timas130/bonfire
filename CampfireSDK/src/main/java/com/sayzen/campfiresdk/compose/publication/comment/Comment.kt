@@ -1,27 +1,14 @@
 package com.sayzen.campfiresdk.compose.publication.comment
 
-import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
-import androidx.compose.foundation.indication
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.input.pointer.PointerEventTimeoutCancellationException
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -100,6 +87,7 @@ fun Comment(
     }
 
     val globalCardPosition = remember { mutableStateOf<LayoutCoordinates?>(null) }
+    val longClickEnabledFlag = remember { mutableStateOf(true) }
 
     ReplySwipeable(
         onReply = { onReply(false) },
@@ -114,7 +102,7 @@ fun Comment(
                 .onGloballyPositioned {
                     globalCardPosition.value = it
                 }
-                .veryComplicatedClickable(
+                .nestedClickableRoot(
                     onClick = {
                         if (allowEditing && ControllerApi.isCurrentAccount(comment.creator.id)) {
                             SplashComment(
@@ -136,7 +124,8 @@ fun Comment(
                             windowClickOffset.y - viewOffset[1],
                             comment
                         )
-                    }
+                    },
+                    longClickEnabledFlag = longClickEnabledFlag,
                 )
         ) {
             CommentContent(
@@ -144,7 +133,8 @@ fun Comment(
                 onReply = onReply,
                 showFandom = showFandom,
                 scrollToComment = scrollToComment,
-                maxLines = maxLines
+                maxLines = maxLines,
+                longClickEnabledFlag = longClickEnabledFlag,
             )
         }
     }
@@ -158,6 +148,7 @@ private fun CommentContent(
     showFandom: Boolean = false,
     scrollToComment: (id: PublicationComment) -> Unit = DefaultScrollToComment,
     maxLines: Int = Int.MAX_VALUE,
+    longClickEnabledFlag: MutableState<Boolean> = remember { mutableStateOf(true) },
 ) {
     Row(
         modifier = modifier.padding(10.dp),
@@ -171,6 +162,9 @@ private fun CommentContent(
         } else {
             Avatar(
                 account = comment.creator,
+                onLongClick = {
+                    longClickEnabledFlag.value = false
+                },
                 modifier = Modifier.size(32.dp),
             )
         }
@@ -187,68 +181,8 @@ private fun CommentContent(
             PublicationReactions(comment)
 
             if (comment.status == API.STATUS_PUBLIC) {
-                CommentFooter(comment, onReply)
+                CommentFooter(comment, onReply, longClickEnabledFlag)
             }
         }
     }
-}
-
-private fun Modifier.veryComplicatedClickable(
-    onClick: (Offset) -> Unit,
-    onLongClick: (Offset) -> Unit,
-) = composed {
-    val hapticFeedback = LocalHapticFeedback.current
-    val interactionSource = remember { MutableInteractionSource() }
-
-    Modifier
-        .indication(interactionSource, LocalIndication.current)
-        .pointerInput(onClick, onLongClick) {
-            awaitEachGesture {
-                // when CommentQuote is pressed, it consumes the down event.
-                // we don't care though because root Comment needs to handle long clicks.
-                val down = awaitFirstDown(requireUnconsumed = false)
-                val press = PressInteraction.Press(down.position)
-
-                // we can show the indication if it has not been shown in CommentQuote
-                val emitInteractions = !down.isConsumed
-                if (emitInteractions) {
-                    interactionSource.tryEmit(press)
-                    down.consume()
-                }
-
-                try {
-                    val up = withTimeout(viewConfiguration.longPressTimeoutMillis) {
-                        waitForUpOrCancellation()
-                    }
-                    if (up != null) {
-                        // on click
-                        up.consume()
-                        if (emitInteractions) {
-                            interactionSource.tryEmit(PressInteraction.Release(press))
-                        }
-                        onClick(down.position)
-                    } else {
-                        // canceled (or passed to CommentQuote)
-                        if (emitInteractions) {
-                            interactionSource.tryEmit(PressInteraction.Cancel(press))
-                        }
-                    }
-                } catch (e: PointerEventTimeoutCancellationException) {
-                    // on long click
-
-                    if (!emitInteractions) {
-                        interactionSource.tryEmit(press)
-                    }
-
-                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                    onLongClick(down.position)
-
-                    if (waitForUpOrCancellation() != null) {
-                        interactionSource.tryEmit(PressInteraction.Release(press))
-                    } else {
-                        interactionSource.tryEmit(PressInteraction.Cancel(press))
-                    }
-                }
-            }
-        }
 }

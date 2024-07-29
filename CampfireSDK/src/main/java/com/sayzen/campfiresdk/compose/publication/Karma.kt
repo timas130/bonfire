@@ -162,6 +162,8 @@ private fun computeHotnessBounds(): Pair<Double, Double> {
 internal fun KarmaCounter(
     publication: Publication,
     mini: Boolean = false,
+    // this argument does not override default long click behaviour
+    onLongClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val colors = ButtonDefaults.filledTonalButtonColors()
@@ -239,11 +241,11 @@ internal fun KarmaCounter(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                KarmaCounterSide(up = false, mini = mini, model = model)
+                KarmaCounterSide(up = false, mini, model, onLongClick,)
                 Divider()
-                KarmaCounterAmount(model = model)
+                KarmaCounterAmount(model, onLongClick)
                 Divider()
-                KarmaCounterSide(up = true, mini = mini, model = model)
+                KarmaCounterSide(up = true, mini, model, onLongClick)
             }
         }
     }
@@ -251,10 +253,11 @@ internal fun KarmaCounter(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun KarmaCounterSide(
+private fun KarmaCounterSide(
     up: Boolean,
     mini: Boolean,
-    model: KarmaCounterModel
+    model: KarmaCounterModel,
+    onLongClick: () -> Unit,
 ) {
     val colors = ButtonDefaults.filledTonalButtonColors()
     val scope = rememberCoroutineScope()
@@ -312,6 +315,7 @@ internal fun KarmaCounterSide(
                 },
                 onLongClick = {
                     hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onLongClick()
                     Navigator.to(SPublicationRates(model.publication))
                 },
             ),
@@ -375,7 +379,7 @@ internal fun KarmaCounterSide(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun KarmaCounterAmount(model: KarmaCounterModel) {
+private fun KarmaCounterAmount(model: KarmaCounterModel, onLongClick: () -> Unit) {
     val hapticFeedback = LocalHapticFeedback.current
 
     Column(
@@ -386,6 +390,7 @@ internal fun KarmaCounterAmount(model: KarmaCounterModel) {
                     onClick = {},
                     onLongClick = {
                         hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onLongClick()
                         Navigator.to(SPublicationRates(model.publication))
                     }
                 )
