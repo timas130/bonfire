@@ -42,7 +42,7 @@ class PageText : Page() {
     }
 
     override fun fillImageRefs(receiver: ImageHolderReceiver) {
-        val requestVersion = Semver(receiver.getRequestVersion(), Semver.SemverType.LOOSE)
+        val requestVersion = Semver(receiver.getRequestVersion(), Semver.SemverType.LOOSE).toStrict()
         val newFormattingVersion = Semver("3.1.0")
 
         if (requestVersion >= newFormattingVersion) {
