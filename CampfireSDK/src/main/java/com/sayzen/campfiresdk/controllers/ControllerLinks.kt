@@ -326,7 +326,7 @@ object ControllerLinks {
         linkifyShort(vText)
     }
 
-    private val linkRegex by lazy { Pattern.compile("[#@]([A-Za-z0-9-_#]+)") }
+    val linkRegex: Pattern by lazy { Pattern.compile("[#@]([A-Za-z0-9-_#]+)") }
 
     fun linkifyShort(vText: TextView) {
         LinkifyCompat.addLinks(

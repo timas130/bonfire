@@ -1,5 +1,6 @@
 package com.sayzen.campfiresdk.compose.publication.post.pages
 
+import android.text.util.Linkify
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
@@ -16,8 +17,15 @@ import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.core.text.HtmlCompat
+import androidx.core.text.toHtml
+import androidx.core.text.toSpannable
+import androidx.core.text.util.LinkifyCompat
+import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.post.PageText
 import com.sayzen.campfiresdk.app.CampfireConstants
+import com.sayzen.campfiresdk.controllers.ControllerLinks
+import com.sayzen.campfiresdk.controllers.ControllerLinks.isCorrectLink
 import com.sup.dev.java.libs.text_format.TextFormatter
 import sh.sit.bonfire.formatting.compose.BonfireMarkdownContent
 import sh.sit.bonfire.formatting.compose.LinksClickableText
@@ -90,11 +98,23 @@ fun LegacyFormattedText(
         val html = TextFormatter(filtered).parseHtml()
             .replace("\n", "<br />")
 
+        val spannable = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            .toSpannable()
+        LinkifyCompat.addLinks(spannable, Linkify.WEB_URLS)
+        LinkifyCompat.addLinks(
+            spannable,
+            ControllerLinks.linkRegex,
+            API.DOMEN,
+            null,
+            { link, start, end -> isCorrectLink(link.subSequence(start, end)) },
+            { match, _ -> "https://bonfire.moe/r/${match.group(1)}" }
+        )
+
         val linkStyle = SpanStyle(color = colors.primary, textDecoration = TextDecoration.Underline)
         val focusLinkStyle = linkStyle.copy(background = colors.primaryContainer)
 
         AnnotatedString.fromHtml(
-            htmlString = html,
+            htmlString = spannable.toHtml(HtmlCompat.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL),
             linkStyles = TextLinkStyles(
                 style = linkStyle,
                 focusedStyle = focusLinkStyle,
