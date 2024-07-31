@@ -44,3 +44,7 @@
 
 # for analytics
 -keepnames class ** extends com.sup.dev.android.libs.screens.Screen
+
+# for ndk
+-keepclasseswithmembers class com.waynejo.androidndkgif.** { *; }
+-keepclasseswithmembernames class com.waynejo.androidndkgif.** { *; }
