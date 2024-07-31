@@ -103,6 +103,22 @@ internal fun PostChips(post: PublicationPost) {
                 )
             }
         }
+
+        if (post.rubricId != 0L) {
+            item(key = "rubric") {
+                SuggestionChip(
+                    onClick = {
+                        SRubricPosts.instance(post.rubricId, Navigator.TO)
+                    },
+                    icon = {
+                        Icon(painterResource(R.drawable.full_coverage_24px), stringResource(R.string.post_rubric))
+                    },
+                    label = {
+                        Text(post.rubricName)
+                    }
+                )
+            }
+        }
     }
 }
 

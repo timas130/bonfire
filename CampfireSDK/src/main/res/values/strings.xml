@@ -111,5 +111,6 @@
     </string>
     <string name="comment_edited">(edited)</string>
     <string name="comment_reply">Reply</string>
+    <string name="post_rubric">Rubric</string>
 
 </resources>
