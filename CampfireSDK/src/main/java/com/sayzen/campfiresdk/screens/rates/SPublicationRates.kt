@@ -5,13 +5,16 @@ import android.widget.CheckBox
 import android.widget.TextView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.models.publications.Rate
 import com.dzen.campfire.api.requests.post.RPostRatesGetAll
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.support.adapters.XKarma
+import com.sayzen.campfiresdk.support.load
 import com.sayzen.campfiresdk.views.ViewKarma
+import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.views.screens.SLoadingRecycler
 
 class SPublicationRates(
@@ -34,6 +37,7 @@ class SPublicationRates(
         disableNavigation()
 
         setTitle(t(API_TRANSLATE.app_rates))
+        setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_21))
         setTextEmpty(t(API_TRANSLATE.post_rates_empty))
         vAnon.text = t(API_TRANSLATE.app_anonymously)
 
