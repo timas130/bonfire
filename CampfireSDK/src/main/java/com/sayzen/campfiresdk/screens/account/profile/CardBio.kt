@@ -219,8 +219,8 @@ class CardBio(
     }
 
     private fun setDescription(splash: Splash, description: String) {
-        ApiRequestsSupporter.executeEnabled(splash, RAccountsBioSetDescription(description)) {
-            EventBus.post(EventAccountBioChangedDescription(xAccount.getId(), description))
+        ApiRequestsSupporter.executeEnabled(splash, RAccountsBioSetDescription(description)) { resp ->
+            EventBus.post(EventAccountBioChangedDescription(xAccount.getId(), resp.bio))
             ToolsToast.show(t(API_TRANSLATE.app_done))
         }
     }

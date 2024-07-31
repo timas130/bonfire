@@ -19,12 +19,11 @@ open class RAccountsBioSetDescription(
         return Response()
     }
 
-    class Response : Request.Response() {
-
+    class Response(
+        var bio: String = ""
+    ) : Request.Response() {
         override fun json(inp: Boolean, json: Json) {
-
+            bio = json.m(inp, "bio", bio)
         }
-
     }
-
 }
