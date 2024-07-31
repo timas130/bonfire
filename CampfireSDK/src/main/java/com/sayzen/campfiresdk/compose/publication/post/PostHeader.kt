@@ -21,7 +21,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.post.PublicationPost
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.util.Avatar
 import com.sayzen.campfiresdk.compose.util.IconButtonWithOffset
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerPost
@@ -53,19 +55,21 @@ internal fun PostHeader(post: PublicationPost) {
         mutableStateOf(false)
     }
 
+    val highlighted = post.important == API.PUBLICATION_IMPORTANT_IMPORTANT || post.isPined
     Surface(
-        color = if (post.important == API.PUBLICATION_IMPORTANT_IMPORTANT || post.isPined) {
+        color = if (highlighted) {
             MaterialTheme.colorScheme.primaryContainer
         } else {
             MaterialTheme.colorScheme.surfaceContainerLow
         },
+        // sneaky!
+        modifier = Modifier.padding(bottom = if (highlighted) 8.dp else 0.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .padding(horizontal = 12.dp)
-                .padding(top = 12.dp, bottom = 12.dp)
+                .padding(horizontal = 12.dp, vertical = 8.dp)
                 .fillMaxWidth()
         ) {
             Row(
@@ -86,24 +90,30 @@ internal fun PostHeader(post: PublicationPost) {
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                // fandom
-                PostFandom(post)
-                DividerDot()
+                if (PostHog.isFeatureEnabled("post_fandom_chip")) {
+                    // creator
+                    PostCreator(post)
+                    DividerDot()
+                } else {
+                    // fandom
+                    PostFandom(post)
+                    DividerDot()
 
-                // creator
-                Text(
-                    text = "@${post.creator.name}",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                    softWrap = false,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier
-                        .then(if (overflowsWidth) Modifier.weight(2f, fill = false) else Modifier)
-                        .clickable {
-                            SProfile.instance(post.creator, Navigator.TO)
-                        },
-                )
-                DividerDot()
+                    // creator
+                    Text(
+                        text = "@${post.creator.name}",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                        softWrap = false,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
+                            .then(if (overflowsWidth) Modifier.weight(2f, fill = false) else Modifier)
+                            .clickable {
+                                SProfile.instance(post.creator, Navigator.TO)
+                            },
+                    )
+                    DividerDot()
+                }
 
                 // creation date
                 val creationTimestamp = post.tag_4.takeIf { post.status == API.STATUS_PENDING } ?: post.dateCreate
@@ -184,5 +194,30 @@ private fun PostFandom(post: PublicationPost) {
                     },
             )
         }
+    }
+}
+
+@Composable
+private fun PostCreator(post: PublicationPost, modifier: Modifier = Modifier) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
+        Avatar(
+            account = post.creator,
+            showLevel = false,
+            modifier = Modifier
+                .size(32.dp)
+                .padding(end = 6.dp),
+        )
+
+        Text(
+            text = post.creator.name,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            softWrap = false,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .clickable {
+                    SProfile.instance(post.creator, Navigator.TO)
+                },
+        )
     }
 }

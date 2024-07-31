@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
@@ -93,7 +94,7 @@ fun Avatar(
             modifier = modifier
                 .size(48.dp)
                 .aspectRatio(1f)
-                .clip(RoundedCornerShape(ControllerSettings.styleAvatarsRounding.dp))
+                .avatarRounding()
                 .combinedClickable(
                     onClick = {
                         SProfile.instance(account, Navigator.TO)
@@ -142,7 +143,7 @@ fun Avatar(fandom: Fandom, modifier: Modifier = Modifier) {
         modifier = modifier
             .size(48.dp)
             .aspectRatio(1f)
-            .clip(RoundedCornerShape(ControllerSettings.styleAvatarsRounding.dp))
+            .avatarRounding()
             .clickable {
                 SFandom.instance(fandom, Navigator.TO)
             }
@@ -195,4 +196,12 @@ private fun Modifier.avatarSponsorCircles(sponsorTimes: Int): Modifier = compose
 
         drawContent()
     }
+}
+
+fun Modifier.avatarRounding(): Modifier = graphicsLayer {
+    val baseRounding = ControllerSettings.styleAvatarsRounding
+    val rounding = baseRounding / 48f * size.width.toDp().value
+
+    shape = RoundedCornerShape(rounding.dp)
+    clip = true
 }

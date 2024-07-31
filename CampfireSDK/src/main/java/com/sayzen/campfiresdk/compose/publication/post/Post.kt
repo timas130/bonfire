@@ -38,9 +38,12 @@ import com.sayzen.campfiresdk.compose.BonfireTheme
 import com.sayzen.campfiresdk.compose.ComposeCard
 import com.sayzen.campfiresdk.compose.publication.comment.CardCommentProxy
 import com.sayzen.campfiresdk.compose.publication.comment.Comment
+import com.sayzen.campfiresdk.compose.util.avatarRounding
 import com.sayzen.campfiresdk.compose.util.mapState
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.screens.activities.user_activities.relay_race.SRelayRaceInfo
+import com.sayzen.campfiresdk.screens.fandoms.rubrics.SRubricPosts
+import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
 import com.sayzen.campfiresdk.screens.post.create.SPostCreate
 import com.sayzen.campfiresdk.screens.post.view.SPost
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -52,6 +55,7 @@ import sh.sit.bonfire.auth.AuthController
 import sh.sit.bonfire.formatting.compose.LinksClickableText
 import sh.sit.bonfire.formatting.compose.buildInlineAnnotatedString
 import sh.sit.bonfire.formatting.core.BonfireFormatter
+import sh.sit.bonfire.images.RemoteImage
 
 @Composable
 internal fun PostTitle(title: String) {
@@ -69,54 +73,79 @@ internal fun PostTitle(title: String) {
 
 @Composable
 internal fun PostChips(post: PublicationPost) {
-    LazyRow(
-        contentPadding = PaddingValues(horizontal = 12.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        if (post.important == API.PUBLICATION_IMPORTANT_IMPORTANT) {
-            item(key = "important") {
-                SuggestionChip(
-                    onClick = {},
-                    icon = {
-                        Icon(painterResource(R.drawable.priority_high_24px), contentDescription = null)
-                    },
-                    label = {
-                        Text(stringResource(R.string.post_important))
-                    }
-                )
+    CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(bottom = 8.dp),
+        ) {
+            if (PostHog.isFeatureEnabled("post_fandom_chip")) {
+                item(key = "creator") {
+                    SuggestionChip(
+                        onClick = {
+                            SFandom.instance(post.fandom, Navigator.TO)
+                        },
+                        icon = {
+                            RemoteImage(
+                                link = post.fandom.image,
+                                contentDescription = post.fandom.name,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .avatarRounding()
+                            )
+                        },
+                        label = {
+                            Text(post.fandom.name)
+                        },
+                    )
+                }
             }
-        }
 
-        val activity = post.userActivity
-        if (activity != null) {
-            item(key = "activity") {
-                SuggestionChip(
-                    onClick = {
-                        SRelayRaceInfo.instance(activity.id, Navigator.TO)
-                    },
-                    icon = {
-                        Icon(painterResource(R.drawable.rowing_24), stringResource(R.string.post_activity))
-                    },
-                    label = {
-                        Text(activity.name)
-                    }
-                )
+            if (post.important == API.PUBLICATION_IMPORTANT_IMPORTANT) {
+                item(key = "important") {
+                    SuggestionChip(
+                        onClick = {},
+                        icon = {
+                            Icon(painterResource(R.drawable.priority_high_24px), contentDescription = null)
+                        },
+                        label = {
+                            Text(stringResource(R.string.post_important))
+                        }
+                    )
+                }
             }
-        }
 
-        if (post.rubricId != 0L) {
-            item(key = "rubric") {
-                SuggestionChip(
-                    onClick = {
-                        SRubricPosts.instance(post.rubricId, Navigator.TO)
-                    },
-                    icon = {
-                        Icon(painterResource(R.drawable.full_coverage_24px), stringResource(R.string.post_rubric))
-                    },
-                    label = {
-                        Text(post.rubricName)
-                    }
-                )
+            val activity = post.userActivity
+            if (activity != null) {
+                item(key = "activity") {
+                    SuggestionChip(
+                        onClick = {
+                            SRelayRaceInfo.instance(activity.id, Navigator.TO)
+                        },
+                        icon = {
+                            Icon(painterResource(R.drawable.rowing_24), stringResource(R.string.post_activity))
+                        },
+                        label = {
+                            Text(activity.name)
+                        }
+                    )
+                }
+            }
+
+            if (post.rubricId != 0L) {
+                item(key = "rubric") {
+                    SuggestionChip(
+                        onClick = {
+                            SRubricPosts.instance(post.rubricId, Navigator.TO)
+                        },
+                        icon = {
+                            Icon(painterResource(R.drawable.full_coverage_24px), stringResource(R.string.post_rubric))
+                        },
+                        label = {
+                            Text(post.rubricName)
+                        }
+                    )
+                }
             }
         }
     }
