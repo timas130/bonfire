@@ -67,6 +67,12 @@ class CardCommentProxy(
         )
     }
 
+    init {
+        if (isComposeEnabled) {
+            xPublication.eventBus.unsubscribe()
+        }
+    }
+
     var maxTextSize: Int
         get() = when (impl) {
             is CardComment -> impl.maxTextSize

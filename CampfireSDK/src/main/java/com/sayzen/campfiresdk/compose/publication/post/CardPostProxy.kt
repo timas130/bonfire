@@ -31,6 +31,12 @@ class CardPostProxy(
         )
     }
 
+    init {
+        if (isComposeEnabled) {
+            xPublication.eventBus.unsubscribe()
+        }
+    }
+
     override fun setCardAdapter(adapter: CardAdapter?) {
         impl.setCardAdapter(adapter)
     }
