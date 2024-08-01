@@ -30,10 +30,8 @@ fun IconButtonWithOffset(
     IconButton(
         onClick = {
             val offset = moreButtonOffset + localButtonCenter
-            val viewOffset = IntArray(2)
-            view.getLocationInWindow(viewOffset)
 
-            onClick(Offset(offset.x - viewOffset[0], offset.y - viewOffset[1]))
+            onClick(offset.relativeToView(view))
         },
         modifier = modifier
             .size(28.dp)

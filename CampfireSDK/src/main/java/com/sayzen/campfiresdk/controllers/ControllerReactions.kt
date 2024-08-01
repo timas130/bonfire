@@ -9,17 +9,15 @@ import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.cards.Card
 
 object ControllerReactions {
-
-    fun showAccounts(publicationId:Long, reactionIndex:Long, view: View){
-
+    fun showAccounts(publicationId: Long, reactionIndex: Long, view: View, x: Int = 0, y: Int = 0) {
         val widgetCards = SplashCards()
-        widgetCards.asPopupShow(view)
+        widgetCards.asPopupShow(view, x, y)
 
-        ApiRequestsSupporter.execute(RPublicationsReactionGetAccounts(publicationId, reactionIndex)){r->
-            if(r.accounts.isEmpty()){
+        ApiRequestsSupporter.execute(RPublicationsReactionGetAccounts(publicationId, reactionIndex)) { r ->
+            if (r.accounts.isEmpty()) {
                 widgetCards.hide()
-            }else {
-                widgetCards.addCards(*Array<Card>(r.accounts.size){
+            } else {
+                widgetCards.addCards(*Array<Card>(r.accounts.size) {
                     val card = CardAccount(r.accounts[it])
                     card.setAvatarSize(ToolsView.dpToPx(32).toInt())
                     card.setShowLvl(false)
@@ -29,7 +27,5 @@ object ControllerReactions {
         }.onError {
             widgetCards.hide()
         }
-
     }
-
 }

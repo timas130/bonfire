@@ -20,6 +20,7 @@ import com.dzen.campfire.api.models.publications.PublicationComment
 import com.sayzen.campfiresdk.compose.publication.PublicationReactions
 import com.sayzen.campfiresdk.compose.util.Avatar
 import com.sayzen.campfiresdk.compose.util.IconButtonWithOffset
+import com.sayzen.campfiresdk.compose.util.relativeToView
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerComment
 import com.sayzen.campfiresdk.controllers.ControllerPublications
@@ -116,14 +117,13 @@ fun Comment(
                         }
                     },
                     onLongClick = { offset ->
-                        val viewOffset = IntArray(2)
-                        view.getLocationInWindow(viewOffset)
                         val windowClickOffset = globalCardPosition.value!!.localToWindow(offset)
+                        val relativeOffset = windowClickOffset.relativeToView(view)
 
                         ControllerComment.showMenu(
                             view,
-                            windowClickOffset.x - viewOffset[0],
-                            windowClickOffset.y - viewOffset[1],
+                            relativeOffset.x,
+                            relativeOffset.y,
                             comment
                         )
                     },
@@ -181,7 +181,7 @@ private fun CommentContent(
 
                 CommentImage(comment)
 
-                PublicationReactions(comment)
+                PublicationReactions(comment, onLongClick = { longClickEnabledFlag.value = false })
 
                 if (comment.status == API.STATUS_PUBLIC) {
                     CommentFooter(comment, onReply, longClickEnabledFlag)
