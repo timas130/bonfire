@@ -164,6 +164,7 @@ object AuthController : TokenProvider {
             "Unauthenticated" -> CanLoginResult.InvalidLogin
             "HardBanned" -> CanLoginResult.HardBanned
             "NotVerified" -> CanLoginResult.NotVerified
+            "InvalidToken" -> CanLoginResult.InvalidLogin
             else -> CanLoginResult.UnknownError
         }
     }
