@@ -130,8 +130,8 @@ class SFandom private constructor(
 
         ApiRequestsSupporter.executeWithRetry(RFandomsGetProfile(fandom.id, fandom.languageId)) { r ->
             setPinnedPost(r.pinnedPost)
-            xFandom.setImageTitleId(r.imageTitleId)
-            xFandom.setImageTitleGifId(r.imageTitleGifId)
+            xFandom.setImageTitle(r.imageTitle)
+            xFandom.setImageTitleGif(r.imageTitleGif)
             cardTitle.setParams(r.subscriptionType)
             cardViceroy.setParams(r.viceroyAccount, r.viceroyDate)
         }.onFinish{

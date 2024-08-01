@@ -34,6 +34,7 @@ class EFandomsModerationChangeImageTitle : RFandomsModerationChangeImageTitle(0,
     override fun execute(): Response {
 
         val oldCollisions = ControllerCollisions.getCollisionsValue1(fandomId, languageId, API.COLLISION_FANDOM_TITLE_IMAGE)
+        val oldCollisionsGif = ControllerCollisions.getCollisionsValue3(fandomId, languageId, API.COLLISION_FANDOM_TITLE_IMAGE)
 
         val imageId = ControllerResources.put(image, API.RESOURCES_PUBLICATION_DATABASE_LINKED)
         var imageGifId = 0L
@@ -42,6 +43,7 @@ class EFandomsModerationChangeImageTitle : RFandomsModerationChangeImageTitle(0,
         ControllerCollisions.putCollision(fandomId, languageId, null, API.COLLISION_FANDOM_TITLE_IMAGE, null, imageId, null, imageGifId, null, null)
 
         for (i in oldCollisions) ControllerResources.remove(i)
+        for (i in oldCollisionsGif) ControllerResources.remove(i)
 
         ControllerPublications.moderation(ModerationTitleImage(comment, fandom!!.imageTitleId), apiAccount.id, fandomId, languageId, 0)
 

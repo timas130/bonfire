@@ -89,12 +89,12 @@ class XFandom() {
         this.onChanged = onChanged; return this
     }
 
-    fun setImageTitleId(imageId:Long): XFandom {
-        this.fandom.imageTitleId = imageId; return this
+    fun setImageTitle(image: ImageRef): XFandom {
+        this.fandom.imageTitle = image; return this
     }
 
-    fun setImageTitleGifId(imageId:Long): XFandom {
-        this.fandom.imageTitleGifId = imageId; return this
+    fun setImageTitleGif(image: ImageRef): XFandom {
+        this.fandom.imageTitleGif = image; return this
     }
 
     //
