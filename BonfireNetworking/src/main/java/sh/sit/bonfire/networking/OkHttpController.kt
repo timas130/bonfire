@@ -23,9 +23,10 @@ object OkHttpController {
                 .setUserAgent(buildUserAgent(context))
                 .setStoragePath(context.cacheDir.resolve("cronet").also { it.mkdirs() }.absolutePath)
                 .enableHttpCache(CronetEngine.Builder.HTTP_CACHE_DISK, 1 * 1024 * 1024)
-                .addQuicHint("cf2.bonfire.moe", 443, 443)
+                // .addQuicHint("cf2.bonfire.moe", 443, 443)
                 .setQuicOptions(QuicOptions.builder()
-                    .enableTlsZeroRtt(true))
+                    .enableTlsZeroRtt(true)
+                    .retryWithoutAltSvcOnQuicErrors(true))
                 .build()
         }
 
