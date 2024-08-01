@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
@@ -21,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dzen.campfire.api.models.publications.post.PageLink
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.tools.ToolsIntent
 import com.sup.dev.android.tools.ToolsToast
@@ -60,11 +60,9 @@ internal fun PageLinkLayout(
     }
 
     Card(
-        onClick = {
-            ControllerLinks.openLink(link)
-        },
         modifier = Modifier
             .padding(horizontal = 12.dp)
+            .clip(CardDefaults.shape)
             .combinedClickable(
                 onClick = { ToolsIntent.openLink(link) },
                 onLongClick = {
