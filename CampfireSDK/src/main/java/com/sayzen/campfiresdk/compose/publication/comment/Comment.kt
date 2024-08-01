@@ -156,7 +156,7 @@ private fun CommentContent(
         modifier = modifier.padding(10.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        if (showFandom) {
+        if (showFandom && comment.fandom.id != 0L) {
             Avatar(
                 fandom = comment.fandom,
                 modifier = Modifier.size(32.dp),

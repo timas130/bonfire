@@ -26,7 +26,7 @@ internal fun CommentHeader(
 ) {
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = modifier) {
         Text(
-            text = if (showFandom) {
+            text = if (showFandom && comment.fandom.id != 0L) {
                 comment.fandom.name
             } else {
                 comment.creator.name
