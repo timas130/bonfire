@@ -16,12 +16,16 @@ open class RAccountsBioSetDescription(
     }
 
     override fun instanceResponse(json: Json): Response {
-        return Response()
+        return Response(json)
     }
 
     class Response(
         var bio: String = ""
     ) : Request.Response() {
+        constructor(json: Json) : this() {
+            json(false, json)
+        }
+
         override fun json(inp: Boolean, json: Json) {
             bio = json.m(inp, "bio", bio)
         }
