@@ -62,8 +62,8 @@ class EAccountsGetProfile : RAccountsGetProfile(0, "") {
         val warnsCount:Long = v.next()
         val karmaTotal:Long = v.next()
         val rates = ControllerAccounts.get(accountId, TAccounts.RATES_COUNT_NO_ANON).nextMayNull<Long>() ?: 0L
-        val ratesPositive = EAccountsGetStory.getRateCount(accountId, true)
-        val ratesNegative = EAccountsGetStory.getRateCount(accountId, false)
+        val ratesPositive = EAccountsGetStory.getRatesSum(accountId, true) / 100
+        val ratesNegative = EAccountsGetStory.getRatesSum(accountId, false) / 100
         val moderationFandomsCount = if (lvl < API.LVL_MODERATOR_BLOCK.lvl) {
             0L
         } else {

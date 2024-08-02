@@ -11,7 +11,7 @@ import com.sup.dev.java_pc.sql.SqlQuerySelect
 
 class EAccountsGetStory : RAccountsGetStory(0) {
     companion object {
-        fun getRateCount(accountId: Long, up: Boolean): Long {
+        fun getRatesSum(accountId: Long, up: Boolean): Long {
             return Database.select("EAccountsGetStory select_3", SqlQuerySelect(TPublicationsKarmaTransactions.NAME, Sql.SUM(TPublicationsKarmaTransactions.karma_count))
                 .where(TPublicationsKarmaTransactions.from_account_id, "=", accountId)
                 .where(TPublicationsKarmaTransactions.change_account_karma, "=", true)
@@ -38,8 +38,8 @@ class EAccountsGetStory : RAccountsGetStory(0) {
                 .where(TPublicationsKarmaTransactions.karma_count, "<", 0)
         ).sumOrZero()
 
-        val ratesPlus: Long = getRateCount(accountId, true)
-        val ratesMinus: Long = getRateCount(accountId, false)
+        val ratesPlus: Long = getRatesSum(accountId, true)
+        val ratesMinus: Long = getRatesSum(accountId, false)
 
         val posts: Long = Database.select("EAccountsGetStory select_5", SqlQuerySelect(TPublications.NAME, Sql.COUNT)
                 .where(TPublications.creator_id, "=", accountId)
