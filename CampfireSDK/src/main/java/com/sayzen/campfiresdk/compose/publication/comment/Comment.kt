@@ -10,21 +10,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.models.notifications.comments.NotificationComment
+import com.dzen.campfire.api.models.notifications.comments.NotificationCommentAnswer
+import com.dzen.campfire.api.models.notifications.publications.NotificationMention
+import com.dzen.campfire.api.models.notifications.publications.NotificationPublicationReaction
 import com.dzen.campfire.api.models.publications.PublicationComment
 import com.sayzen.campfiresdk.compose.publication.PublicationReactions
 import com.sayzen.campfiresdk.compose.util.Avatar
 import com.sayzen.campfiresdk.compose.util.IconButtonWithOffset
 import com.sayzen.campfiresdk.compose.util.relativeToView
-import com.sayzen.campfiresdk.controllers.ControllerApi
-import com.sayzen.campfiresdk.controllers.ControllerComment
-import com.sayzen.campfiresdk.controllers.ControllerPublications
-import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.splashs.SplashComment
 
 class CommentModel(comment: PublicationComment, onRemoved: State<() -> Unit>) : ViewModel() {
@@ -33,6 +35,18 @@ class CommentModel(comment: PublicationComment, onRemoved: State<() -> Unit>) : 
     override fun onCleared() {
         super.onCleared()
         dataSource.destroy()
+    }
+
+    private var notificationClear = false
+    fun onComponentVisible() {
+        if (notificationClear) return
+        notificationClear = true
+
+        val comment = dataSource.flow.value
+        ControllerNotifications.removeNotificationFromNew(NotificationComment::class, comment.id)
+        ControllerNotifications.removeNotificationFromNew(NotificationCommentAnswer::class, comment.id)
+        ControllerNotifications.removeNotificationFromNew(NotificationMention::class, comment.id)
+        ControllerNotifications.removeNotificationFromNew(NotificationPublicationReaction::class, comment.id)
     }
 }
 
@@ -104,6 +118,12 @@ fun Comment(
                 .fillMaxWidth()
                 .onGloballyPositioned {
                     globalCardPosition.value = it
+
+                    val parentTop = it.positionInParent().y
+                    val parentHeight = it.parentCoordinates!!.size.height
+                    if ((0..parentHeight).contains(parentTop.toInt())) {
+                        model.onComponentVisible()
+                    }
                 }
                 .nestedClickableRoot(
                     onClick = {
