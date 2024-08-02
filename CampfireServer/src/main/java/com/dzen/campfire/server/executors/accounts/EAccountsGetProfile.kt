@@ -62,6 +62,8 @@ class EAccountsGetProfile : RAccountsGetProfile(0, "") {
         val warnsCount:Long = v.next()
         val karmaTotal:Long = v.next()
         val rates = ControllerAccounts.get(accountId, TAccounts.RATES_COUNT_NO_ANON).nextMayNull<Long>() ?: 0L
+        val ratesPositive = EAccountsGetStory.getRateCount(accountId, true)
+        val ratesNegative = EAccountsGetStory.getRateCount(accountId, false)
         val moderationFandomsCount = if (lvl < API.LVL_MODERATOR_BLOCK.lvl) {
             0L
         } else {
@@ -76,29 +78,31 @@ class EAccountsGetProfile : RAccountsGetProfile(0, "") {
         if (pinnedPost != null && pinnedPost.status != API.STATUS_PUBLIC) pinnedPost = null
 
         return Response(
-                dateCreate,
-                banDate,
-                imageTitleId,
-                imageTitleGifId,
-                isInFollows,
-                followsYou,
-                followsCount,
-                followersCount,
-                status,
-                age,
-                description,
-                links,
-                note,
-                pinnedPost,
-                bansCount,
-                warnsCount,
-                karmaTotal,
-                rates,
-                moderationFandomsCount,
-                subscribedFandomsCount,
-                stickersCount,
-                blackAccountsCount,
-                blackFandomsCount
+            dateCreate,
+            pinnedPost,
+            banDate,
+            status,
+            note,
+            isInFollows,
+            followsYou,
+            followsCount,
+            followersCount,
+            age,
+            description,
+            links,
+            imageTitleId,
+            imageTitleGifId,
+            bansCount,
+            warnsCount,
+            karmaTotal,
+            rates,
+            ratesPositive,
+            ratesNegative,
+            moderationFandomsCount,
+            subscribedFandomsCount,
+            stickersCount,
+            blackAccountsCount,
+            blackFandomsCount,
         )
     }
 

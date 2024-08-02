@@ -3,6 +3,7 @@ package com.sayzen.campfiresdk.support.adapters
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.images.ImageRef
@@ -25,7 +26,6 @@ import com.sayzen.campfiresdk.support.loadGif
 import com.sayzen.campfiresdk.views.SplashAccountInfo
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.views.ViewAvatar
 import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.java.libs.eventBus.EventBus
@@ -270,9 +270,9 @@ class XAccount {
 
     fun getAccount() = account
 
-    fun can(lvl: LvlInfoAdmin) = ControllerApi.can(lvl)
+    fun can(lvl: LvlInfoAdmin) = ControllerApi.can(account, lvl)
 
-    fun can(lvl: LvlInfoUser) = ControllerApi.can(lvl)
+    fun can(lvl: LvlInfoUser) = ControllerApi.can(account, lvl)
 
     fun isCurrentAccount() = ControllerApi.isCurrentAccount(account.id)
 
@@ -290,8 +290,17 @@ class XAccount {
 
     fun isUser() = !isProtoadmin() && !isModerator()
 
-    fun getLevelColor() =
-        ToolsResources.getColor(if (isProtoadmin()) R.color.orange_700 else if (isAdmin()) R.color.red_700 else if (isModerator()) R.color.blue_700 else R.color.green_700)
+    @ColorInt
+    fun getLevelColor(): Int = when {
+        can(API.LVL_EXPERT) -> 0xFFF97316.toInt()
+        can(API.LVL_SUPER_ADMINISTRATOR) -> 0xFFD32F2F.toInt()
+        can(API.LVL_ADMINISTRATOR) -> 0xFFF57C00.toInt()
+        can(API.LVL_MODERATOR) -> 0xFF2979FF.toInt()
+        can(API.LVL_CURATOR) -> 0xFF03A9F4.toInt()
+        can(API.LVL_EXPERIENCED) -> 0xFF7B1FA2.toInt()
+        can(API.LVL_TRUSTED) -> 0xFF388E3C.toInt()
+        else -> 0xFF388E3C.toInt()
+    }
 
     fun getNicknameColorHex(): String {
         if (!PostHog.isFeatureEnabled("username_colors")) {

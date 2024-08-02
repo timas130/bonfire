@@ -336,15 +336,17 @@ object ControllerApi {
 
     fun isProtoadmin() = isProtoadmin(account.getAccount())
 
-    fun can(adminInfo: LvlInfoUser): Boolean {
-        if (protoadmins.contains(account.getId())) return true
-        return account.getLevel() >= adminInfo.lvl && (adminInfo.karmaCount < 1 || account.getKarma30() >= adminInfo.karmaCount)
+    fun can(adminInfo: LvlInfoUser): Boolean = can(account.getAccount(), adminInfo)
+    fun can(account: Account, adminInfo: LvlInfoUser): Boolean {
+        if (protoadmins.contains(account.id)) return true
+        return account.lvl >= adminInfo.lvl && (adminInfo.karmaCount < 1 || account.karma30 >= adminInfo.karmaCount)
     }
 
-    fun can(adminInfo: LvlInfoAdmin): Boolean {
-        if (protoadmins.contains(account.getId())) return true
+    fun can(adminInfo: LvlInfoAdmin): Boolean = can(account.getAccount(), adminInfo)
+    fun can(account: Account, adminInfo: LvlInfoAdmin): Boolean {
+        if (protoadmins.contains(account.id)) return true
         if (ControllerEffects.get(API.EFFECT_INDEX_ADMIN_BAN) != null) return false
-        return account.getLevel() >= adminInfo.lvl && (adminInfo.karmaCount < 1 || account.getKarma30() >= adminInfo.karmaCount)
+        return account.lvl >= adminInfo.lvl && (adminInfo.karmaCount < 1 || account.karma30 >= adminInfo.karmaCount)
     }
 
     fun can(fandomId: Long, languageId: Long, moderateInfo: LvlInfo): Boolean {

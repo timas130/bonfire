@@ -1,14 +1,21 @@
 package com.sayzen.campfiresdk.screens.account.profile
 
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.TextView
+import androidx.core.text.buildSpannedString
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.models.lvl.LvlInfoUser
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.compose.profile.badges.list.BadgeListScreen
 import com.sayzen.campfiresdk.controllers.ControllerApi
+import com.sayzen.campfiresdk.controllers.ControllerKarma
 import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.models.objects.AppLevel
 import com.sayzen.campfiresdk.screens.account.black_list.SBlackList
 import com.sayzen.campfiresdk.screens.account.fandoms.SAcounFandoms
 import com.sayzen.campfiresdk.screens.account.followers.SFollowers
@@ -24,7 +31,6 @@ import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.views.settings.SettingsMini
 import com.sup.dev.android.views.views.layouts.LayoutCorned
-import com.sup.dev.java.tools.ToolsText
 
 class CardButtonsInfoNew(
         private val xAccount: XAccount
@@ -69,7 +75,7 @@ class CardButtonsInfoNew(
             updateSpoiler()
         }
 
-        vAchievementsButton.setSubtitle(ToolsText.numToStringRound(xAccount.getLevel() / 100.0, 2))
+        updateAchievements()
 
         vModeratorButton.visibility = if (!xAccount.isAdmin() && xAccount.isModerator()) VISIBLE else GONE
 
@@ -86,9 +92,45 @@ class CardButtonsInfoNew(
         vFandoms.setOnClickListener { Navigator.to(SAcounFandoms(xAccount.getId())) }
         vBadgeList.setOnClickListener { Navigator.to(BadgeListScreen(xAccount.getId().toString())) }
 
+        if (profile != null) {
+            vFandoms.setSubtitle(profile!!.subscribedFandomsCount.toString())
+            vStickers.setSubtitle(profile!!.stickersCount.toString())
+            vBlackList.setSubtitle(t(
+                API_TRANSLATE.profile_blacklist_text,
+                profile!!.blackFandomsCount.toString(),
+                profile!!.blackAccountsCount.toString()
+            ))
+        }
+
         updateFollowersCount()
         updateSpoiler()
-        updatebansKarma()
+        updateKarma()
+        updateRates()
+    }
+
+    private fun updateAchievements() {
+        val view = getView() ?: return
+        val vAchievementsButton: SettingsMini = view.findViewById(R.id.vAchievementsButton)
+
+        var activeLevel: AppLevel? = null
+        for (lvl in CampfireConstants.keyLevels.reversed()) {
+            if (xAccount.can(lvl.lvl as LvlInfoUser)) {
+                activeLevel = lvl
+                break
+            }
+        }
+
+        val subtitle = buildSpannedString {
+            append("%.2f".format(xAccount.getLevel() / 100f))
+
+            if (activeLevel != null) {
+                append(" (")
+                append(activeLevel.text, ForegroundColorSpan(xAccount.getLevelColor()), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                append(")")
+            }
+        }
+
+        vAchievementsButton.setSubtitle(subtitle)
     }
 
     fun updateSpoiler() {
@@ -103,29 +145,84 @@ class CardButtonsInfoNew(
         val view = getView() ?: return
         val vFollowsButton: SettingsMini = view.findViewById(R.id.vFollowsButton)
         val vFollowersButton: SettingsMini = view.findViewById(R.id.vFollowersButton)
-        vFollowsButton.setSubtitle(if (followsCount == null) " " else "$followsCount")
-        vFollowersButton.setSubtitle(if (followersCount == null) " " else "$followersCount")
+        vFollowsButton.setSubtitle(profile?.followsCount?.toString() ?: " ")
+        vFollowersButton.setSubtitle(profile?.followersCount?.toString() ?: " ")
     }
 
-    override fun updatebansPunishments() {
+    override fun updatePunishments() {
         val view = getView() ?: return
         val vPunishmentsButton: SettingsMini = view.findViewById(R.id.vPunishmentsButton)
-        vPunishmentsButton.setSubtitle(if (followsCount == null) "-" else t(API_TRANSLATE.profile_button_punishments, bansCountCount.toString(), warnsCount.toString()))
+        if (profile == null) {
+            vPunishmentsButton.setSubtitle("-")
+        } else {
+            vPunishmentsButton.setSubtitle(t(
+                API_TRANSLATE.profile_button_punishments,
+                if (profile!!.bansCount > 0) {
+                    "{${CampfireConstants.RED} ${profile!!.bansCount}}"
+                } else {
+                    "0"
+                },
+                if (profile!!.warnsCount > 0) {
+                    "{${CampfireConstants.YELLOW} ${profile!!.warnsCount}}"
+                } else {
+                    "0"
+                }
+            ))
+            ControllerApi.makeTextHtml(vPunishmentsButton.vSubtitle!!)
+        }
     }
 
-    override fun updatebansKarma() {
+    override fun updateKarma() {
         val view = getView() ?: return
         val vKarmaButton: SettingsMini = view.findViewById(R.id.vKarmaButton)
 
-        val karmaColor30 = if (xAccount.getKarma30() == 0L) "757575" else if (xAccount.getKarma30() > 0) "388E3C" else "D32F2F"
-        val karmaColor = if (karmaTotal ?: 0L == 0L) "757575" else if (karmaTotal ?: 0 > 0) "388E3C" else "D32F2F"
+        val karmaColor30 = ControllerKarma.getKarmaColorHex(xAccount.getKarma30())
+        val karmaColor = ControllerKarma.getKarmaColorHex(profile?.karmaTotal ?: 0)
 
-        vKarmaButton.setSubtitle(t(API_TRANSLATE.profile_karma_text,
-                "{$karmaColor30 ${xAccount.getKarma30() / 100}}",
-                "{$karmaColor ${if (karmaTotal == null) "-" else "${karmaTotal!! / 100}"}}"))
-
+        vKarmaButton.setSubtitle(t(
+            API_TRANSLATE.profile_karma_text,
+            buildString {
+                append('{')
+                append(karmaColor30)
+                append(' ')
+                append(xAccount.getKarma30() / 100)
+                append('}')
+            },
+            buildString {
+                append('{')
+                append(karmaColor)
+                append(' ')
+                if (profile != null) {
+                    append((profile!!.karmaTotal / 100).toString())
+                } else {
+                    append("-")
+                }
+                append('}')
+            }
+        ))
         ControllerApi.makeTextHtml(vKarmaButton.vSubtitle!!)
-
     }
 
+    private fun updateRates() {
+        val view = getView() ?: return
+        val profile = this.profile ?: return
+
+        val vRatesButton: SettingsMini = view.findViewById(R.id.vRatesButton)
+        vRatesButton.setSubtitle(buildSpannedString {
+            append(profile.rates.toString())
+            append(" (")
+            append(
+                profile.ratesPositive.toString(),
+                ForegroundColorSpan(ControllerKarma.getKarmaColor(1)),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            append('/')
+            append(
+                profile.ratesNegative.toString(),
+                ForegroundColorSpan(ControllerKarma.getKarmaColor(-1)),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            append(')')
+        })
+    }
 }

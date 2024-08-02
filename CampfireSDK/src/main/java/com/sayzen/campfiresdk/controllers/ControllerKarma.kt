@@ -76,6 +76,17 @@ object ControllerKarma {
         return rate?.up ?: false
     }
 
+    fun getKarmaColor(amount: Long): Int = when {
+        amount > 0 -> 0xFF388E3C.toInt()
+        amount < 0 -> 0xFFD32F2F.toInt()
+        else -> 0xFF757575.toInt()
+    }
+    fun getKarmaColorHex(amount: Long): String = when {
+        amount > 0 -> "388E3C"
+        amount < 0 -> "D32F2F"
+        else -> "757575"
+    }
+
     private class Rate(
             val publicationId: Long,
             val up: Boolean,

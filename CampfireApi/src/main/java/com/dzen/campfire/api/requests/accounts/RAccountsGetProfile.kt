@@ -18,87 +18,40 @@ open class RAccountsGetProfile(var accountId: Long, var accountName: String) : R
         return Response(json)
     }
 
-    class Response : Request.Response {
-
-        var dateCreate = 0L
-        var pinnedPost:PublicationPost? = null
-        var banDate = 0L
-        var status = ""
-        var note = ""
-        var isFollow = false
-        var followsYou = false
-        var followsCount = 0L
-        var followersCount = 0L
-        var age = 0L
-        var description = ""
-        var links = AccountLinks()
-        var titleImage = ImageRef()
+    class Response(
+        var dateCreate: Long = 0L,
+        var pinnedPost: PublicationPost? = null,
+        var banDate: Long = 0L,
+        var status: String = "",
+        var note: String = "",
+        var isFollow: Boolean = false,
+        var followsYou: Boolean = false,
+        var followsCount: Long = 0L,
+        var followersCount: Long = 0L,
+        var age: Long = 0L,
+        var description: String = "",
+        var links: AccountLinks = AccountLinks(),
         @Deprecated("use ImageRefs")
-        var titleImageId = 0L
-        var titleImageGif = ImageRef()
+        var titleImageId: Long = 0L,
         @Deprecated("use ImageRefs")
-        var titleImageGifId = 0L
-        var bansCount = 0L
-        var warnsCount = 0L
-        var karmaTotal = 0L
-        var rates = 0L
-        var moderationFandomsCount = 0L
-        var subscribedFandomsCount = 0L
-        var stickersCount = 0L
-        var blackAccountsCount = 0L
-        var blackFandomsCount = 0L
+        var titleImageGifId: Long = 0L,
+        var bansCount: Long = 0L,
+        var warnsCount: Long = 0L,
+        var karmaTotal: Long = 0L,
+        var rates: Long = 0L,
+        var ratesPositive: Long = 0L,
+        var ratesNegative: Long = 0L,
+        var moderationFandomsCount: Long = 0L,
+        var subscribedFandomsCount: Long = 0L,
+        var stickersCount: Long = 0L,
+        var blackAccountsCount: Long = 0L,
+        var blackFandomsCount: Long = 0L,
+    ) : Request.Response() {
+        var titleImageGif: ImageRef = ImageRef()
+        var titleImage: ImageRef = ImageRef()
 
-        constructor(json: Json) {
+        constructor(json: Json) : this() {
             json(false, json)
-        }
-
-        constructor(dateCreate: Long,
-                    banDate: Long,
-                    titleImageId: Long,
-                    titleImageGifId: Long,
-                    isFollow: Boolean,
-                    followsYou: Boolean,
-                    followsCount: Long,
-                    followersCount: Long,
-                    status: String,
-                    age: Long,
-                    description: String,
-                    links: AccountLinks,
-                    note: String,
-                    pinnedPost: PublicationPost?,
-                    bansCount: Long,
-                    warnsCount: Long,
-                    karmaTotal: Long,
-                    rates: Long,
-                    moderationFandomsCount: Long,
-                    subscribedFandomsCount: Long,
-                    stickersCount: Long,
-                    blackAccountsCount: Long,
-                    blackFandomsCount: Long
-        ) {
-            this.dateCreate = dateCreate
-            this.banDate = banDate
-            this.titleImageId = titleImageId
-            this.titleImageGifId = titleImageGifId
-            this.isFollow = isFollow
-            this.followsYou = followsYou
-            this.followsCount = followsCount
-            this.followersCount = followersCount
-            this.status = status
-            this.age = age
-            this.description = description
-            this.links = links
-            this.note = note
-            this.pinnedPost = pinnedPost
-            this.bansCount = bansCount
-            this.warnsCount = warnsCount
-            this.karmaTotal = karmaTotal
-            this.rates = rates
-            this.moderationFandomsCount = moderationFandomsCount
-            this.subscribedFandomsCount = subscribedFandomsCount
-            this.stickersCount = stickersCount
-            this.blackAccountsCount = blackAccountsCount
-            this.blackFandomsCount = blackFandomsCount
         }
 
         override fun json(inp: Boolean, json: Json) {
@@ -122,6 +75,8 @@ open class RAccountsGetProfile(var accountId: Long, var accountName: String) : R
             warnsCount = json.m(inp, "warnsCount", warnsCount)
             karmaTotal = json.m(inp, "karmaTotal", karmaTotal)
             rates = json.m(inp, "rates", rates)
+            ratesPositive = json.m(inp, "ratesPositive", ratesPositive)
+            ratesNegative = json.m(inp, "ratesNegative", ratesNegative)
             moderationFandomsCount = json.m(inp, "moderationFandomsCount", moderationFandomsCount)
             subscribedFandomsCount = json.m(inp, "subscribedFandomsCount", subscribedFandomsCount)
             stickersCount = json.m(inp, "stickersCount", stickersCount)

@@ -1711,7 +1711,8 @@ object API_TRANSLATE {
     val profile_rate_stikers_pack = Translate("%s набор стикеров %s")
     val profile_rate_sticker = Translate("%s стикер %s")
     val profile_anonymous_text = Translate("Этот пользователь пожелал остаться неизвестным.")
-    val profile_karma_text = Translate("За 30 дней %s. Всего %s.")
+    val profile_karma_text = Translate("За 30 дней %s. Всего %s")
+    val profile_blacklist_text = Translate("Фэндомы: %s. Пользователи: %s")
 
     val fandoms_menu_rename = Translate("Переименовать")
     val fandoms_menu_black_list_add = Translate("В черный список")

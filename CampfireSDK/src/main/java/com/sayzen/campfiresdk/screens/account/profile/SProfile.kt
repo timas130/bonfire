@@ -221,8 +221,7 @@ class SProfile private constructor(
             cardButtonsMain.setIsFollow(r.isFollow)
             cardButtonsMain.setFollowsYou(r.followsYou)
 
-            cardButtons.setInfo(r.followsCount, r.followersCount, r.warnsCount, r.bansCount, r.karmaTotal, r.rates, r.moderationFandomsCount,
-                    r.subscribedFandomsCount, r.stickersCount, r.blackAccountsCount, r.blackFandomsCount)
+            cardButtons.setInfo(r)
 
             cardBio.setInfo(r.age, r.description, r.links)
         }

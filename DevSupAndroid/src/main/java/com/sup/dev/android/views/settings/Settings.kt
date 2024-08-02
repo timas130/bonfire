@@ -1,22 +1,21 @@
 package com.sup.dev.android.views.settings
 
 import android.content.Context
-import androidx.annotation.CallSuper
-import androidx.annotation.DrawableRes
-import androidx.annotation.LayoutRes
-import androidx.annotation.StringRes
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.annotation.CallSuper
+import androidx.annotation.DrawableRes
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
 import com.sup.dev.android.R
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.views.ViewCircleImage
-import java.util.ArrayList
 
 open class Settings @JvmOverloads constructor(
         context: Context,
@@ -96,9 +95,9 @@ open class Settings @JvmOverloads constructor(
         setSubtitle(ToolsResources.s(subtitleRes))
     }
 
-    fun setSubtitle(subtitle: String?) {
+    fun setSubtitle(subtitle: CharSequence?) {
         vSubtitle?.text = subtitle
-        vSubtitle?.visibility = if (subtitle != null && subtitle.isNotEmpty()) View.VISIBLE else View.GONE
+        vSubtitle?.visibility = if (!subtitle.isNullOrEmpty()) View.VISIBLE else View.GONE
     }
 
     fun setSubtitleColor(color: Int) {

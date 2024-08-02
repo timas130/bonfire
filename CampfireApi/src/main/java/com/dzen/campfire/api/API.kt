@@ -245,6 +245,7 @@ class API(
 
         val LVL_APP_ACCESS = LvlInfoUser(100L, 0L)
 
+        // NOTE: Every "key level" (e.g. trusted, experienced) MUST be a LvlInfoUser.
         val LVL_TRUSTED = LvlInfoUser(300L, 0L)
         val LVL_CAN_CHANGE_PROFILE_IMAGE = LvlInfoUser(300L, 0L)
         val LVL_CAN_CHANGE_STATUS = LvlInfoUser(300L, 0L)
@@ -314,7 +315,7 @@ class API(
         val LVL_ADMIN_MAKE_MODERATOR = LvlInfoAdmin(1200L, 1300)
         val LVL_ADMIN_FANDOM_REMOVE = LvlInfoAdmin(1200L, 1300)
 
-        val LVL_PROTOADMIN = LvlInfoAdmin(50000L, 1000000)
+        val LVL_PROTOADMIN = LvlInfoUser(50000L, 1000000)
         val LVL_ADMIN_REMOVE_MEDIA = LvlInfoAdmin(50000L, 1000000)
 
         const val KARMA_CHANGE_CALLDOWN = (1000 * 60 * 60 * 24).toLong()

@@ -462,6 +462,17 @@ object CampfireConstants {
         Achievement(API.ACHI_BONUS, API_TRANSLATE.achi_78, R.color.indigo_800, false, ApiResources.IMAGE_ICHI_7),
     )
 
+    val keyLevels = listOf(
+        AppLevel(API.LVL_TRUSTED, API_TRANSLATE.lvl_trusted),
+        AppLevel(API.LVL_EXPERIENCED, API_TRANSLATE.lvl_experienced),
+        AppLevel(API.LVL_CURATOR, API_TRANSLATE.lvl_curator),
+        AppLevel(API.LVL_MODERATOR, API_TRANSLATE.lvl_moderator),
+        AppLevel(API.LVL_ADMINISTRATOR, API_TRANSLATE.lvl_administrator),
+        AppLevel(API.LVL_SUPER_ADMINISTRATOR, API_TRANSLATE.lvl_super_administrator),
+        AppLevel(API.LVL_EXPERT, API_TRANSLATE.lvl_expert),
+        AppLevel(API.LVL_PROTOADMIN, API_TRANSLATE.lvl_protoadmin),
+    )
+
     val LVLS = arrayOf(
         AppLevel(API.LVL_TRUSTED, API_TRANSLATE.lvl_trusted),
         AppLevel(API.LVL_CAN_CHANGE_PROFILE_IMAGE, API_TRANSLATE.lvl_app_profile_image),

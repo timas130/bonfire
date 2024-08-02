@@ -1,15 +1,15 @@
 package com.sayzen.campfiresdk.screens.account.profile
 
+import android.text.Spannable
+import android.text.style.ForegroundColorSpan
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.widget.TextView
+import androidx.core.text.buildSpannedString
 import com.dzen.campfire.api.API_TRANSLATE
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.controllers.tPlural
-import com.sayzen.campfiresdk.models.events.account.EventAccountsFollowsChange
 import com.sayzen.campfiresdk.screens.account.black_list.SBlackList
 import com.sayzen.campfiresdk.screens.account.fandoms.SAcounFandoms
 import com.sayzen.campfiresdk.screens.account.followers.SFollowers
@@ -24,10 +24,6 @@ import com.sayzen.campfiresdk.screens.punishments.SPunishments
 import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
-import com.sup.dev.android.views.cards.Card
-import com.sup.dev.android.views.settings.SettingsMini
-import com.sup.dev.android.views.views.layouts.LayoutCorned
-import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsText
 
 class CardButtonsInfoOld(
@@ -94,7 +90,8 @@ class CardButtonsInfoOld(
         vFandomsTouch.setOnClickListener { Navigator.to(SAcounFandoms(xAccount.getId())) }
 
         updateFollowersCount()
-        updatebansKarma()
+        updatePunishments()
+        updateKarma()
     }
 
     override fun updateFollowersCount() {
@@ -108,13 +105,17 @@ class CardButtonsInfoOld(
         val vBlackListText:TextView = view.findViewById(R.id.vBlackListText)
         val vTimeText:TextView = view.findViewById(R.id.vTimeText)
 
-        vSubscribesText.text = if (followsCount == null) "-" else "$followsCount"
-        vSubscribersText.text = if (followersCount == null) "-" else "$followersCount"
-        vRatesText.text = if (rates == null) "-" else "$rates"
-        vModeratorText.text = if(xAccount.isProtoadmin()) "∞" else if(xAccount.isAdmin()) "∞" else if(xAccount.isModerator()) "${if (moderationFandomsCount == null) "-" else moderationFandomsCount}" else "-"
-        vFandomsText.text = if (subscribedFandomsCount == null) "-" else "$subscribedFandomsCount"
-        vStickersText.text = if (stickersCount == null) "-" else "$stickersCount"
-        vBlackListText.text = if (stickersCount == null) "-" else "${blackFandomsCount} / ${blackAccountsCount}"
+        vSubscribesText.text = if (profile == null) "-" else "${profile!!.followsCount}"
+        vSubscribersText.text = if (profile == null) "-" else "${profile!!.followersCount}"
+        vRatesText.text = if (profile == null) "-" else "${profile!!.rates}"
+        vModeratorText.text = when {
+            xAccount.isProtoadmin() || xAccount.isAdmin() -> "∞"
+            xAccount.isModerator() && profile != null -> profile!!.moderationFandomsCount.toString()
+            else -> "-"
+        }
+        vFandomsText.text = if (profile == null) "-" else "${profile!!.subscribedFandomsCount}"
+        vStickersText.text = if (profile == null) "-" else "${profile!!.stickersCount}"
+        vBlackListText.text = if (profile == null) "-" else "${profile!!.blackFandomsCount} / ${profile!!.blackAccountsCount}"
         if(xAccount.getDateAccountCreated() <= 0){
             vTimeText.text = "-"
         }else {
@@ -123,15 +124,32 @@ class CardButtonsInfoOld(
         }
     }
 
-    override fun updatebansPunishments() {
+    override fun updatePunishments() {
         val view = getView() ?: return
         val vPunishmentsText:TextView = view.findViewById(R.id.vPunishmentsText)
 
-        vPunishmentsText.text = if (followsCount == null) " " else "{${if(bansCountCount == 0L)"9E9E9E" else "D32F2F"} ${bansCountCount}} / {${if(warnsCount == 0L) "9E9E9E" else "FBC02D"} ${warnsCount}}"
-        ControllerApi.makeTextHtml(vPunishmentsText)
+        if (profile != null) {
+            vPunishmentsText.text = buildSpannedString {
+                val bansColor = if (profile!!.bansCount > 0) 0xFFD32F2F else 0xFF9E9E9E
+                append(
+                    profile!!.bansCount.toString(),
+                    ForegroundColorSpan(bansColor.toInt()),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+                append(" / ")
+
+                val warnsColor = if (profile!!.bansCount > 0) 0xFFFBC02D else 0xFF9E9E9E
+                append(
+                    profile!!.warnsCount.toString(),
+                    ForegroundColorSpan(warnsColor.toInt()),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+        }
     }
 
-    override fun updatebansKarma() {
+    override fun updateKarma() {
         val view = getView() ?: return
         val vKarmaText:TextView = view.findViewById(R.id.vKarmaText)
 
