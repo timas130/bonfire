@@ -102,6 +102,7 @@ class CardButtonsInfoNew(
             ))
         }
 
+        updatePunishments()
         updateFollowersCount()
         updateSpoiler()
         updateKarma()
