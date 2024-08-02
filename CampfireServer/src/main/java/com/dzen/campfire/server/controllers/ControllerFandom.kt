@@ -208,6 +208,15 @@ object ControllerFandom {
         return fandom
     }
 
+    fun can(account: ApiAccount, lvl: LvlInfoUser): Boolean {
+        try {
+            checkCan(account, lvl)
+            return true
+        } catch (e: Exception) {
+            return false
+        }
+    }
+
     fun checkCan(account: ApiAccount, lvl: LvlInfoUser) {
         if (ControllerOptimizer.isProtoadmin(account.id)) return
         if (account.accessTag < lvl.lvl) throw ApiException(API.ERROR_ACCESS)
