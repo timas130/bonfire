@@ -1108,6 +1108,7 @@ object API_TRANSLATE {
     val settings_style_interface = Translate("Интерфейс")
     val settings_style_fullscreen = Translate("Полный экран")
     val settings_style_profile_list = Translate("Профиль списком")
+    val settings_style_post_fandom_first = Translate("Показывать фэндом сверху поста")
     val settings_style_theme_1 = Translate("Черный")
     val settings_style_theme_2 = Translate("Темно-серый")
     val settings_style_theme_3 = Translate("Белый")

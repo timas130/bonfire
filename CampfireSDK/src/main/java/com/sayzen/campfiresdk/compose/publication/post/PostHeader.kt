@@ -91,8 +91,11 @@ internal fun PostHeader(post: PublicationPost) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (PostHog.isFeatureEnabled("post_fandom_chip")) {
-                    // creator
-                    PostCreator(post)
+                    if (ControllerSettings.postFandomFirst) {
+                        PostFandom(post)
+                    } else {
+                        PostCreator(post)
+                    }
                     DividerDot()
                 } else {
                     // fandom

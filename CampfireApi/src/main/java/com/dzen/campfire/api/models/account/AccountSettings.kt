@@ -22,6 +22,7 @@ class AccountSettings() : JsonParsable {
     var postFontSize = 15
     var useNicknameColors = true
     var karmaHotness = true
+    var postFandomFirst = false
     //  App
     var watchPost = false
     var appLanguage = ""
@@ -129,6 +130,7 @@ class AccountSettings() : JsonParsable {
         styleNewYearProfileAnimation = json.m(inp, "styleNewYearProfileAnimation", styleNewYearProfileAnimation)
         useNicknameColors = json.m(inp, "useNicknameColors", useNicknameColors)
         karmaHotness = json.m(inp, "karmaHotness", karmaHotness)
+        postFandomFirst = json.m(inp, "postFandomFirst", postFandomFirst)
 
         watchPost = json.m(inp, "watchPost", watchPost)
         appLanguage = json.m(inp, "appLanguage", appLanguage)

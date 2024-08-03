@@ -179,6 +179,13 @@ object ControllerSettings {
             onSettingsUpdated()
         }
 
+    var postFandomFirst: Boolean
+        get() = accountSettings.postFandomFirst
+        set(b) {
+            accountSettings.postFandomFirst = b
+            onSettingsUpdated()
+        }
+
     //
     //  App
     //

@@ -38,9 +38,11 @@ import com.sayzen.campfiresdk.compose.BonfireTheme
 import com.sayzen.campfiresdk.compose.ComposeCard
 import com.sayzen.campfiresdk.compose.publication.comment.CardCommentProxy
 import com.sayzen.campfiresdk.compose.publication.comment.Comment
+import com.sayzen.campfiresdk.compose.util.Avatar
 import com.sayzen.campfiresdk.compose.util.avatarRounding
 import com.sayzen.campfiresdk.compose.util.mapState
 import com.sayzen.campfiresdk.controllers.ControllerSettings
+import com.sayzen.campfiresdk.screens.account.profile.SProfile
 import com.sayzen.campfiresdk.screens.activities.user_activities.relay_race.SRelayRaceInfo
 import com.sayzen.campfiresdk.screens.fandoms.rubrics.SRubricPosts
 import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
@@ -81,23 +83,7 @@ internal fun PostChips(post: PublicationPost) {
         ) {
             if (PostHog.isFeatureEnabled("post_fandom_chip")) {
                 item(key = "creator") {
-                    SuggestionChip(
-                        onClick = {
-                            SFandom.instance(post.fandom, Navigator.TO)
-                        },
-                        icon = {
-                            RemoteImage(
-                                link = post.fandom.image,
-                                contentDescription = post.fandom.name,
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .avatarRounding()
-                            )
-                        },
-                        label = {
-                            Text(post.fandom.name)
-                        },
-                    )
+                    PostCreatorChip(post)
                 }
             }
 
@@ -148,6 +134,45 @@ internal fun PostChips(post: PublicationPost) {
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun PostCreatorChip(post: PublicationPost) {
+    if (ControllerSettings.postFandomFirst) {
+        SuggestionChip(
+            onClick = {
+                SProfile.instance(post.creator, Navigator.TO)
+            },
+            icon = {
+                Avatar(
+                    account = post.creator,
+                    showLevel = false,
+                    modifier = Modifier.size(24.dp)
+                )
+            },
+            label = {
+                Text(post.creator.name)
+            }
+        )
+    } else {
+        SuggestionChip(
+            onClick = {
+                SFandom.instance(post.fandom, Navigator.TO)
+            },
+            icon = {
+                RemoteImage(
+                    link = post.fandom.image,
+                    contentDescription = post.fandom.name,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .avatarRounding()
+                )
+            },
+            label = {
+                Text(post.fandom.name)
+            },
+        )
     }
 }
 

@@ -45,6 +45,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
     private val vGrapTitle: Settings = findViewById(R.id.vGrapTitle)
     private val vAppOtherTitle: Settings = findViewById(R.id.vAppOtherTitle)
     private val vKarmaHotness: SettingsSwitcher = findViewById(R.id.vKarmaHotness)
+    private val vPostFandomFirst: SettingsSwitcher = findViewById(R.id.vPostFandomFirst)
 
     init {
         disableShadows()
@@ -70,6 +71,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vDefault.setTitle(t(API_TRANSLATE.settings_style_default))
         vAppOtherTitle.setTitle(t(API_TRANSLATE.app_other))
         vKarmaHotness.setTitle(t(API_TRANSLATE.settings_style_karma_hotness))
+        vPostFandomFirst.setTitle(t(API_TRANSLATE.settings_style_post_fandom_first))
 
         vFullscreen.visibility = View.GONE
         if(!ControllerHoliday.isHoliday()){
@@ -231,6 +233,13 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         }
         if (!PostHog.isFeatureEnabled("hotness", true)) {
             vKarmaHotness.visibility = GONE
+        }
+
+        vPostFandomFirst.setOnClickListener {
+            ControllerSettings.postFandomFirst = vPostFandomFirst.isChecked()
+        }
+        if (!PostHog.isFeatureEnabled("post_fandom_chip") || !PostHog.isFeatureEnabled("compose_post")) {
+            vPostFandomFirst.visibility = GONE
         }
 
         updateValues()
