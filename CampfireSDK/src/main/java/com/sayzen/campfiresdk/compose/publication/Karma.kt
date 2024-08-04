@@ -422,7 +422,7 @@ private fun KarmaCounterAmount(model: KarmaCounterModel, onLongClick: () -> Unit
             )
         }
 
-        if (model.publication.fandom.karmaCof != 100L) {
+        if (model.publication.fandom.karmaCof != 100L && model.publication.fandom.karmaCof != 0L) {
             Text(
                 text = "x${"%.2f".format(model.publication.fandom.karmaCof / 100f)}",
                 style = MaterialTheme.typography.labelSmall,
