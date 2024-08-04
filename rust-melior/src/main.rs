@@ -20,6 +20,7 @@ use axum_client_ip::XForwardedFor;
 use axum_extra::headers::authorization::Bearer;
 use axum_extra::headers::{Authorization, UserAgent};
 use axum_extra::TypedHeader;
+use c_core::prelude::chrono::{TimeDelta, Utc};
 use c_core::prelude::tokio::net::TcpListener;
 use c_core::prelude::{anyhow, tarpc, tokio};
 use c_core::services::auth::user::PermissionLevel;
@@ -52,6 +53,7 @@ async fn graphql_handler(
     user_agent: Option<TypedHeader<UserAgent>>,
     req: GraphQLRequest,
 ) -> GraphQLResponse {
+    // authenticating user and getting full req context
     let req_context = ReqContext::new(
         global_context,
         auth_header.map(|header| header.token().to_string()),
@@ -60,13 +62,33 @@ async fn graphql_handler(
     )
     .await;
 
+    // marking user as online
     if let Some(ref access_token) = req_context.access_token {
         if let Some(ref user) = req_context.user {
             // don't mark service accounts as online
             if user.permission_level < PermissionLevel::System {
                 let auth = req_context.auth.clone();
                 let access_token = access_token.clone();
+                let user_id = user.id;
+                let online_cache = req_context.online_cache.clone();
+
                 tokio::spawn(async move {
+                    let mut online_cache = online_cache.lock().await;
+
+                    // ratelimit updates at 3 minutes (online period is 5 minutes)
+                    let last_online = online_cache.get(&user_id);
+                    if let Some(last_online) = last_online {
+                        if Utc::now().signed_duration_since(last_online) > TimeDelta::minutes(3) {
+                            return;
+                        }
+                    }
+
+                    // record update time
+                    online_cache.put(user_id, Utc::now());
+
+                    // unlock mutex
+                    drop(online_cache);
+
                     let _ = auth
                         .mark_online(tarpc::context::current(), access_token.clone())
                         .await;

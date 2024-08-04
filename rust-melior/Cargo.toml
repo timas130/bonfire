@@ -33,3 +33,4 @@ serde_json = "1.0"
 nanoid = "0.4"
 strum = { version = "0.26", features = ["derive"] }
 aws-sdk-s3 = { version = "1.25", features = ["behavior-version-latest"] }
+lru = "0.12"

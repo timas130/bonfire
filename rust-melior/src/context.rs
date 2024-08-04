@@ -5,6 +5,8 @@ use aws_sdk_s3::config::{Credentials, Region};
 use axum_extra::headers::UserAgent;
 use axum_extra::TypedHeader;
 use c_core::config::ImagesConfig;
+use c_core::prelude::chrono::{DateTime, Utc};
+use c_core::prelude::tokio::sync::Mutex;
 use c_core::prelude::{anyhow, tarpc};
 use c_core::services::auth::user::{AuthUser, PermissionLevel};
 use c_core::services::auth::{Auth, AuthError, AuthServiceClient, UserContext};
@@ -13,7 +15,9 @@ use c_core::services::notification::{NotificationServiceClient, Notifications};
 use c_core::services::profile::{ProfileServiceClient, Profiles};
 use c_core::services::security::{Security, SecurityServiceClient};
 use c_core::ServiceBase;
+use lru::LruCache;
 use std::net::IpAddr;
+use std::num::NonZeroUsize;
 use std::sync::Arc;
 use tracing::error;
 
@@ -25,6 +29,8 @@ pub struct GlobalContext {
     pub notification: Arc<NotificationServiceClient>,
     pub profile: Arc<ProfileServiceClient>,
     pub security: Arc<SecurityServiceClient>,
+
+    pub online_cache: Arc<Mutex<LruCache<i64, DateTime<Utc>>>>,
 }
 impl GlobalContext {
     pub async fn new(base: ServiceBase) -> anyhow::Result<GlobalContext> {
@@ -37,6 +43,8 @@ impl GlobalContext {
             profile: Arc::new(Profiles::client_tcp(base.config.ports.profile).await?),
             security: Arc::new(Security::client_tcp(base.config.ports.security).await?),
             base: Arc::new(base),
+
+            online_cache: Arc::new(Mutex::new(LruCache::new(NonZeroUsize::new(10000).unwrap()))),
         })
     }
 }
@@ -49,6 +57,8 @@ pub struct ReqContext {
     pub notification: Arc<NotificationServiceClient>,
     pub profile: Arc<ProfileServiceClient>,
     pub security: Arc<SecurityServiceClient>,
+    pub online_cache: Arc<Mutex<LruCache<i64, DateTime<Utc>>>>,
+
     pub user_context: UserContext,
     pub session_id: Option<i64>,
     pub user: Option<AuthUser>,
@@ -100,6 +110,7 @@ impl ReqContext {
             notification: global_context.notification,
             profile: global_context.profile,
             security: global_context.security,
+            online_cache: global_context.online_cache,
             user_context,
             session_id: user.as_ref().map(|(session_id, _)| *session_id),
             user: user.map(|(_, auth)| auth),
