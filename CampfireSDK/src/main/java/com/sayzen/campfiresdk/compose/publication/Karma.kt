@@ -276,7 +276,7 @@ private fun KarmaCounterSide(
     } else {
         0f
     }
-    val fillProgress = animateFloatAsState(
+    val fillProgress by animateFloatAsState(
         targetValue = targetValue,
         animationSpec = if (targetValue == 1f) {
             tween(durationMillis = CampfireConstants.RATE_TIME.toInt())
@@ -284,7 +284,7 @@ private fun KarmaCounterSide(
             tween(durationMillis = 300)
         },
         label = "${if (up) "Up" else "Down"}Fill"
-    ).value
+    )
 
     Surface(
         shape = if (up) {

@@ -78,7 +78,9 @@ internal fun ExpandButton(onExpand: (Boolean) -> Unit, model: PostModel) {
             contentDescription = null,
             modifier = Modifier
                 .size(ButtonDefaults.IconSize)
-                .rotate(rotation)
+                .graphicsLayer {
+                    rotationZ = rotation
+                }
         )
         Spacer(Modifier.width(ButtonDefaults.IconSpacing))
 

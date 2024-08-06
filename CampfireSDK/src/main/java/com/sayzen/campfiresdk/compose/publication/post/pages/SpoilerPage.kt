@@ -40,7 +40,10 @@ internal fun PageSpoilerRenderer(
                             R.string.spoiler_expand
                         }
                     ),
-                    modifier = Modifier.rotate(rotation),
+                    modifier = Modifier
+                        .graphicsLayer {
+                            rotationZ = rotation
+                        },
                 )
             },
             headlineContent = {

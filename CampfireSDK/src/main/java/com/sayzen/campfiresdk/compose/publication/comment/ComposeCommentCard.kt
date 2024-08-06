@@ -5,7 +5,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -48,13 +47,12 @@ class ComposeCommentCard(
             label = "CommentFlash"
         )
 
-        LaunchedEffect(flashValue) {
-            if (flashValue == 0.4f) flashState.value = false
-        }
-
         Box(Modifier.drawWithContent {
             drawContent()
             drawRect(Color.White.copy(alpha = flashValue))
+            if (flashValue == 0.4f && flashState.value) {
+                flashState.value = false
+            }
         }) {
             Comment(
                 initialComment = initialComment,
