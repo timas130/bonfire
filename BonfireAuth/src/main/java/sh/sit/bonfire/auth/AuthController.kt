@@ -105,17 +105,19 @@ object AuthController : TokenProvider {
                 return state.accessToken
             }
 
-            user?.let {
-                PostHog.identify(
-                    distinctId = it.id,
-                    userProperties = mapOf<String, Any>(
-                        "username" to it.username,
-                        "email" to (it.email ?: ""),
-                        "level" to it.cachedLevel,
+            if (_currentUserState.value != user) {
+                user?.let {
+                    PostHog.identify(
+                        distinctId = it.id,
+                        userProperties = mapOf<String, Any>(
+                            "username" to it.username,
+                            "email" to (it.email ?: ""),
+                            "level" to it.cachedLevel,
+                        )
                     )
-                )
+                }
+                _currentUserState.emit(user)
             }
-            _currentUserState.emit(user)
 
             state.accessToken
         } else {
