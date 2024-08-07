@@ -105,4 +105,7 @@
     <string name="comment_edited">(ред.)</string>
     <string name="comment_reply">Ответить</string>
     <string name="post_rubric">Рубрика</string>
+    <string name="fandom_subscribe">Подписаться</string>
+    <string name="fandom_subscribed">Вы подписаны</string>
+
 </resources>
