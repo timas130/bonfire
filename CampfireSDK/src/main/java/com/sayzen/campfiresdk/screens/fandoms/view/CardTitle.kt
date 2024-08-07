@@ -69,8 +69,10 @@ class CardTitle(
 
         val vSubscription: ComposeSubscribeButton = view.findViewById(R.id.vSubscription)
 
-        vSubscription.visibility = if (loaded) View.VISIBLE else View.INVISIBLE
         vSubscription.setSubscriptionType(subscriptionType)
+        if (loaded) {
+            vSubscription.setLoaded()
+        }
 
         vSubscription.onClick = fun(_) {
             if (!loaded) {
@@ -118,15 +120,21 @@ class CardTitle(
         attrs: AttributeSet? = null
     ) : AbstractComposeView(context, attrs) {
         private val _subscriptionType = MutableStateFlow(API.PUBLICATION_IMPORTANT_DEFAULT)
+        private val _loaded = MutableStateFlow(false);
         var onClick: (View) -> Unit = { }
 
         fun setSubscriptionType(type: Long) {
             _subscriptionType.value = type
         }
 
+        fun setLoaded() {
+            _loaded.value = true
+        }
+
         @Composable
         override fun Content() {
             val subscriptionType = _subscriptionType.collectAsState().value
+            val loaded = _loaded.collectAsState().value
 
             BonfireTheme {
                 FilledTonalButton(
@@ -135,11 +143,11 @@ class CardTitle(
                     modifier = Modifier
                         .height(36.dp)
                 ) {
-                    AnimatedContent(subscriptionType) {
+                    AnimatedContent(Pair(subscriptionType, loaded)) {
                         Row {
-                            if (it != API.PUBLICATION_IMPORTANT_NONE) {
+                            if (it.first != API.PUBLICATION_IMPORTANT_NONE && it.second) {
                                 Icon(
-                                    if (it == API.PUBLICATION_IMPORTANT_IMPORTANT) Icons.Outlined.Notifications
+                                    if (it.first == API.PUBLICATION_IMPORTANT_IMPORTANT) Icons.Outlined.Notifications
                                         else Icons.Filled.Notifications,
                                     contentDescription = null,
                                     modifier = Modifier
@@ -148,7 +156,9 @@ class CardTitle(
                                 Spacer(Modifier.width(ButtonDefaults.IconSpacing))
                             }
 
-                            if (it == API.PUBLICATION_IMPORTANT_NONE) {
+                            if (!it.second) {
+                                Text(stringResource(R.string.fandom_subscribe_loading))
+                            } else if (it.first == API.PUBLICATION_IMPORTANT_NONE) {
                                 Text(stringResource(R.string.fandom_subscribe))
                             } else {
                                 Text(stringResource(R.string.fandom_subscribed))

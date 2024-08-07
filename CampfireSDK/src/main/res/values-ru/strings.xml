@@ -107,5 +107,6 @@
     <string name="post_rubric">Рубрика</string>
     <string name="fandom_subscribe">Подписаться</string>
     <string name="fandom_subscribed">Вы подписаны</string>
+    <string name="fandom_subscribe_loading">Загрузка</string>
 
 </resources>

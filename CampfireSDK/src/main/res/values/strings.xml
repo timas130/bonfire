@@ -114,5 +114,6 @@
     <string name="post_rubric">Rubric</string>
     <string name="fandom_subscribe">Subscribe</string>
     <string name="fandom_subscribed">Subscribed</string>
+    <string name="fandom_subscribe_loading">Loading</string>
 
 </resources>
