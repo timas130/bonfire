@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material3.*
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -31,12 +34,10 @@ import com.sayzen.campfiresdk.support.adapters.XFandom
 import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.cards.Card
 import com.sup.dev.android.views.screens.SImageView
 import com.sup.dev.android.views.views.ViewAvatarTitle
-import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.java.libs.eventBus.EventBus
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -82,7 +83,7 @@ class CardTitle(
 
             ControllerStoryQuest.incrQuest(API.QUEST_STORY_FANDOM)
             if (subscriptionType == API.PUBLICATION_IMPORTANT_NONE) {
-                ApiRequestsSupporter.executeProgressDialog(
+                ApiRequestsSupporter.execute(
                     RFandomsSubscribeChange(
                         xFandom.getId(),
                         xFandom.getLanguageId(),
@@ -90,13 +91,23 @@ class CardTitle(
                         true
                     )
                 ) { _ ->
-                    EventBus.post(EventFandomSubscribe(xFandom.getId(), xFandom.getLanguageId(), API.PUBLICATION_IMPORTANT_DEFAULT, true))
+                    EventBus.post(EventFandomSubscribe(
+                        fandomId = xFandom.getId(),
+                        languageId = xFandom.getLanguageId(),
+                        subscriptionType = API.PUBLICATION_IMPORTANT_DEFAULT,
+                        notifyImportant = true
+                    ))
                     ControllerApi.setHasFandomSubscribes(true)
                     ToolsToast.show(t(API_TRANSLATE.app_done))
                 }
             } else {
-                ApiRequestsSupporter.executeProgressDialog(RFandomsGetSubscribtion(xFandom.getId(), xFandom.getLanguageId())) { r ->
-                    SplashSubscription(xFandom.getId(), xFandom.getLanguageId(), r.subscriptionType, r.notifyImportant).asSheetShow()
+                ApiRequestsSupporter.execute(RFandomsGetSubscribtion(xFandom.getId(), xFandom.getLanguageId())) { r ->
+                    SplashSubscription(
+                        fandomId = xFandom.getId(),
+                        languageId = xFandom.getLanguageId(),
+                        type = r.subscriptionType,
+                        notifyImportant = r.notifyImportant
+                    ).asSheetShow()
                 }
             }
         }
@@ -143,12 +154,15 @@ class CardTitle(
                     modifier = Modifier
                         .height(36.dp)
                 ) {
-                    AnimatedContent(Pair(subscriptionType, loaded)) {
+                    AnimatedContent(Pair(subscriptionType, loaded), label = "SubscriptionStatus") {
                         Row {
                             if (it.first != API.PUBLICATION_IMPORTANT_NONE && it.second) {
                                 Icon(
-                                    if (it.first == API.PUBLICATION_IMPORTANT_IMPORTANT) Icons.Outlined.Notifications
-                                        else Icons.Filled.Notifications,
+                                    if (it.first == API.PUBLICATION_IMPORTANT_IMPORTANT) {
+                                        Icons.Outlined.Notifications
+                                    } else {
+                                        Icons.Filled.Notifications
+                                    },
                                     contentDescription = null,
                                     modifier = Modifier
                                         .size(ButtonDefaults.IconSize)
