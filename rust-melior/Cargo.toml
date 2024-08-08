@@ -13,6 +13,7 @@ b-level = { path = "../rust-level" }
 b-notification = { path = "../rust-notification" }
 b-profile = { path = "../rust-profile" }
 b-security = { path = "../rust-security" }
+b-gif = { path = "../rust-gif" }
 tracing = { version = "0.1", features = ["attributes"] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 axum = { version = "0.7", features = ["http2", "macros"] }
@@ -34,3 +35,6 @@ nanoid = "0.4"
 strum = { version = "0.26", features = ["derive"] }
 aws-sdk-s3 = { version = "1.25", features = ["behavior-version-latest"] }
 lru = "0.12"
+maxminddb = "0.24"
+accept-language = "3.1"
+itertools = "0.13"

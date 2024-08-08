@@ -4,11 +4,10 @@ use c_core::prelude::tokio::time::sleep;
 use c_core::prelude::tracing::{error, info, span, warn, Instrument, Level};
 use c_core::prelude::{anyhow, tokio};
 use c_core::services::notification::{Notification, NotificationTokenType};
-use c_core::ServiceBase;
+use c_core::{google_api, ServiceBase};
 use deadqueue::unlimited::Queue;
 use google_fcm1::hyper::client::HttpConnector;
-use google_fcm1::hyper_rustls::{HttpsConnector, HttpsConnectorBuilder};
-use google_fcm1::oauth2::ServiceAccountAuthenticator;
+use google_fcm1::hyper_rustls::HttpsConnector;
 use google_fcm1::FirebaseCloudMessaging;
 use std::sync::Arc;
 use std::time::Duration;
@@ -35,19 +34,7 @@ pub(crate) struct NotificationSender {
 impl NotificationSender {
     /// Construct a new [`SenderQueue`] using config from [`ServiceBase`]
     pub async fn new(base: ServiceBase) -> Result<Self, anyhow::Error> {
-        let hyper_client = google_fcm1::hyper::Client::builder().build(
-            HttpsConnectorBuilder::new()
-                .with_native_roots()?
-                .https_only()
-                .enable_http1()
-                .build(),
-        );
-        let auth =
-            ServiceAccountAuthenticator::builder(base.config.firebase.service_account.clone())
-                .hyper_client(hyper_client.clone())
-                .build()
-                .await?;
-        let hub = FirebaseCloudMessaging::new(hyper_client, auth);
+        let hub = google_api!(base, google_fcm1, FirebaseCloudMessaging);
 
         Ok(Self {
             base,

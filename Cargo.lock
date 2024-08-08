@@ -13,6 +13,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "accept-language"
+version = "3.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8f27d075294830fcab6f66e320dab524bc6d048f4a151698e153205559113772"
+
+[[package]]
 name = "addr2line"
 version = "0.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -643,6 +649,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "b-gif"
+version = "0.1.0"
+dependencies = [
+ "c-core",
+ "google-tenor2",
+]
+
+[[package]]
 name = "b-level"
 version = "0.1.0"
 dependencies = [
@@ -664,6 +678,7 @@ dependencies = [
 name = "b-melior"
 version = "0.1.0"
 dependencies = [
+ "accept-language",
  "async-graphql",
  "async-graphql-axum",
  "async-trait",
@@ -671,6 +686,7 @@ dependencies = [
  "axum",
  "axum-client-ip",
  "axum-extra",
+ "b-gif",
  "b-level",
  "b-notification",
  "b-profile",
@@ -678,7 +694,9 @@ dependencies = [
  "c-auth",
  "c-core",
  "c-email",
+ "itertools 0.13.0",
  "lru",
+ "maxminddb",
  "nanoid",
  "o2o",
  "sentry",
@@ -942,7 +960,7 @@ dependencies = [
  "fast_chemail",
  "firebase-scrypt",
  "http-cache-reqwest",
- "itertools 0.12.1",
+ "itertools 0.13.0",
  "jsonwebtoken",
  "lazy_static",
  "nanoid",
@@ -995,7 +1013,7 @@ version = "0.1.0"
 dependencies = [
  "c-core",
  "crossbeam-queue",
- "itertools 0.12.1",
+ "itertools 0.13.0",
  "lettre",
  "nanoid",
  "reqwest 0.11.27",
@@ -2006,6 +2024,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "google-tenor2"
+version = "5.0.5+20240805"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ec787cd082c59bde8c9f9b319b5c4b857a8c2ac6f765b855b6d6e0a99d10da61"
+dependencies = [
+ "anyhow",
+ "google-apis-common",
+ "http 0.2.12",
+ "hyper 0.14.30",
+ "hyper-rustls 0.25.0",
+ "itertools 0.13.0",
+ "mime",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tower-service",
+ "url 1.7.2",
+]
+
+[[package]]
 name = "group"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2780,6 +2818,18 @@ name = "matchit"
 version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0e7465ac9959cc2b1404e8e2367b43684a6d13790fe23056cc8c6c5a6b7bcb94"
+
+[[package]]
+name = "maxminddb"
+version = "0.24.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d6087e5d8ea14861bb7c7f573afbc7be3798d3ef0fae87ec4fd9a4de9a127c3c"
+dependencies = [
+ "ipnetwork",
+ "log",
+ "memchr",
+ "serde",
+]
 
 [[package]]
 name = "md-5"

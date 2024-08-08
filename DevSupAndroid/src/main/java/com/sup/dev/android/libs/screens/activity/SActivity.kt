@@ -9,7 +9,9 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
+import android.window.OnBackInvokedDispatcher
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.BuildCompat
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import com.sup.dev.android.R
 import com.sup.dev.android.app.SupAndroid
@@ -64,6 +66,12 @@ abstract class SActivity : AppCompatActivity() {
         vActivityTouchLock!!.visibility = View.GONE
 
         type.onCreate()
+
+        if (BuildCompat.isAtLeastT()) {
+            onBackInvokedDispatcher.registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT) {
+                onBackPressed()
+            }
+        }
 
         ToolsThreads.main(true) {
             if (parseIntent(intent)) intent = Intent()
@@ -175,9 +183,9 @@ abstract class SActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(onBackPressedSplash()) return
-        if(type.onBackPressed()) return
-        if(Navigator.parseOnBackPressedCallbacks()) return
+        if (onBackPressedSplash()) return
+        if (type.onBackPressed()) return
+        if (Navigator.parseOnBackPressedCallbacks()) return
         onBackPressedScreen()
     }
 

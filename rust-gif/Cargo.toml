@@ -1,0 +1,8 @@
+[package]
+name = "b-gif"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+c-core = { path = "../rust-core" }
+google-tenor2 = "5.0"

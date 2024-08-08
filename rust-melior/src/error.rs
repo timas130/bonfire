@@ -6,6 +6,7 @@ use c_core::prelude::anyhow::Error;
 use c_core::prelude::tarpc::client::RpcError;
 use c_core::services::auth::AuthError;
 use c_core::services::email::EmailError;
+use c_core::services::gif::GifError;
 use c_core::services::level::LevelError;
 use c_core::services::notification::NotificationError;
 use c_core::services::profile::ProfileError;
@@ -33,6 +34,8 @@ pub enum RespError {
     Profile(#[from] ProfileError),
     #[error("{0}")]
     Security(#[from] SecurityError),
+    #[error("{0}")]
+    Gif(#[from] GifError),
     #[error("Rpc: An unknown error has occurred: {0}")]
     Rpc(#[from] Arc<RpcError>),
     #[error("Anyhow: An unknown error has occurred: {0}")]

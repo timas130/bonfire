@@ -1,4 +1,5 @@
 use crate::error::RespError;
+use crate::utils::language::AcceptLanguage;
 use async_graphql::Context;
 use async_trait::async_trait;
 use aws_sdk_s3::config::{Credentials, Region};
@@ -10,12 +11,15 @@ use c_core::prelude::tokio::sync::Mutex;
 use c_core::prelude::{anyhow, tarpc};
 use c_core::services::auth::user::{AuthUser, PermissionLevel};
 use c_core::services::auth::{Auth, AuthError, AuthServiceClient, UserContext};
+use c_core::services::gif::{Gif, GifServiceClient};
 use c_core::services::level::{Level, LevelServiceClient};
 use c_core::services::notification::{NotificationServiceClient, Notifications};
 use c_core::services::profile::{ProfileServiceClient, Profiles};
 use c_core::services::security::{Security, SecurityServiceClient};
 use c_core::ServiceBase;
 use lru::LruCache;
+use maxminddb::geoip2::City;
+use maxminddb::Reader;
 use std::net::IpAddr;
 use std::num::NonZeroUsize;
 use std::sync::Arc;
@@ -29,11 +33,18 @@ pub struct GlobalContext {
     pub notification: Arc<NotificationServiceClient>,
     pub profile: Arc<ProfileServiceClient>,
     pub security: Arc<SecurityServiceClient>,
+    pub gif: Arc<GifServiceClient>,
 
+    pub geoip_db: Arc<Option<Reader<Vec<u8>>>>,
     pub online_cache: Arc<Mutex<LruCache<i64, DateTime<Utc>>>>,
 }
 impl GlobalContext {
     pub async fn new(base: ServiceBase) -> anyhow::Result<GlobalContext> {
+        let geoip_db = match base.config.geoip_db {
+            Some(ref path) => Some(maxminddb::Reader::open_readfile(path)?),
+            None => None,
+        };
+
         Ok(Self {
             auth: Arc::new(Auth::client_tcp(base.config.ports.auth).await?),
             level: Arc::new(Level::client_tcp(base.config.ports.level).await?),
@@ -42,8 +53,10 @@ impl GlobalContext {
             ),
             profile: Arc::new(Profiles::client_tcp(base.config.ports.profile).await?),
             security: Arc::new(Security::client_tcp(base.config.ports.security).await?),
+            gif: Arc::new(Gif::client_tcp(base.config.ports.gif).await?),
             base: Arc::new(base),
 
+            geoip_db: Arc::new(geoip_db),
             online_cache: Arc::new(Mutex::new(LruCache::new(NonZeroUsize::new(10000).unwrap()))),
         })
     }
@@ -57,9 +70,12 @@ pub struct ReqContext {
     pub notification: Arc<NotificationServiceClient>,
     pub profile: Arc<ProfileServiceClient>,
     pub security: Arc<SecurityServiceClient>,
+    pub gif: Arc<GifServiceClient>,
     pub online_cache: Arc<Mutex<LruCache<i64, DateTime<Utc>>>>,
 
     pub user_context: UserContext,
+    pub user_country_code: Option<String>,
+    pub user_language: String,
     pub session_id: Option<i64>,
     pub user: Option<AuthUser>,
     pub user_auth_error: Option<AuthError>,
@@ -71,6 +87,7 @@ impl ReqContext {
         token: Option<String>,
         addr: IpAddr,
         user_agent: Option<TypedHeader<UserAgent>>,
+        accept_language: Option<TypedHeader<AcceptLanguage>>,
     ) -> Self {
         let mut user_auth_error = None;
         let user: Option<(i64, AuthUser)> = match token.clone() {
@@ -103,6 +120,15 @@ impl ReqContext {
             user.permission_level < PermissionLevel::System || user_context.is_internal()
         });
 
+        let geoip_result = match global_context.geoip_db.as_ref() {
+            Some(db) => db.lookup::<City>(addr).ok(),
+            None => None,
+        };
+        let user_country_code = geoip_result
+            .and_then(|city| city.country)
+            .and_then(|country| country.iso_code)
+            .map(String::from);
+
         Self {
             base: global_context.base,
             auth: global_context.auth,
@@ -110,8 +136,15 @@ impl ReqContext {
             notification: global_context.notification,
             profile: global_context.profile,
             security: global_context.security,
+            gif: global_context.gif,
             online_cache: global_context.online_cache,
+
             user_context,
+            user_country_code,
+            user_language: accept_language
+                .and_then(|locales| locales.0 .0.first().cloned())
+                .map(|(locale, _q)| locale.clone())
+                .unwrap_or_else(|| String::from("ru")),
             session_id: user.as_ref().map(|(session_id, _)| *session_id),
             user: user.map(|(_, auth)| auth),
             user_auth_error,

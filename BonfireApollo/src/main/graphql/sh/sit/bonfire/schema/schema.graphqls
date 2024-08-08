@@ -284,6 +284,88 @@ The `Float` scalar type represents signed double-precision fractional values as 
 scalar Float
 
 """
+A GIF
+"""
+type GifItem {
+  """
+  Unique identifier for this GIF
+  """
+  id: ID!
+
+  """
+  URL of a page with information about this GIF
+  """
+  browserUrl: String!
+
+  """
+  This GIF in different formats
+  """
+  media: GifMediaFormats!
+}
+
+type GifItemConnection {
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+
+  """
+  A list of edges.
+  """
+  edges: [GifItemEdge!]!
+
+  """
+  A list of nodes.
+  """
+  nodes: [GifItem!]!
+}
+
+"""
+An edge in a connection.
+"""
+type GifItemEdge {
+  """
+  The item at the end of the edge
+  """
+  node: GifItem!
+
+  """
+  A cursor for use in pagination
+  """
+  cursor: String!
+}
+
+"""
+Variants of a single GIF
+"""
+type GifMediaFormats {
+  """
+  Static preview image
+  """
+  preview: ImageLink!
+
+  """
+  Animated GIF (very big file)
+  """
+  gif: ImageLink!
+
+  """
+  Animated GIF of manageable size
+  """
+  tinyGif: ImageLink!
+
+  """
+  The animation in MP4 format
+  """
+  mp4: ImageLink!
+
+  """
+  The animation in a more compressed MP4
+  """
+  tinyMp4: ImageLink!
+}
+
+"""
 Presets for nickname colors, unlockable after
 """
 enum GnicknameColorPreset {
@@ -599,6 +681,15 @@ type Mutation {
   request hash (or equivalent)
   """
   createSecurityIntention(intentionType: IntentionType!): String!
+
+  """
+  Notify the server that a GIF has been shared
+
+  You must call this method when sharing a GIF.
+  If a GIF has been accessed from a search query, that
+  query should be passed into `query`.
+  """
+  registerGifShare(id: ID!, query: String): Ok!
 }
 
 """
@@ -944,6 +1035,26 @@ type Query {
   Get a single Badge by its ID
   """
   badge(id: ID!): Badge
+
+  """
+  Search for GIFs
+
+  If `query` is empty, a list of featured GIFs is returned.
+
+  ## Pagination
+
+  The `after` parameter MUST NOT use the `cursor` provided in `GifItemEdge`.
+  You should only use information from `PageInfo` there.
+  """
+  searchGif(term: String!, after: String): GifItemConnection!
+
+  """
+  Get some suggestions for a search query
+
+  If `query` is empty, a list of searchable categories
+  is returned.
+  """
+  gifSearchSuggestions(query: String!): [String!]!
 }
 
 """
@@ -1357,6 +1468,12 @@ points for query, mutation, and subscription operations.
 """
 type __Schema {
   """
+  description of __Schema for newer graphiql introspection schema
+  requirements
+  """
+  description: String!
+
+  """
   A list of all types supported by this server.
   """
   types: [__Type!]!
@@ -1467,14 +1584,30 @@ enum __TypeKind {
 }
 
 """
+Marks an element of a GraphQL schema as no longer supported.
+"""
+directive @deprecated ("A reason for why it is deprecated, formatted using Markdown syntax" reason: String = "No longer supported") on FIELD_DEFINITION|ARGUMENT_DEFINITION|INPUT_FIELD_DEFINITION|ENUM_VALUE
+
+"""
 Directs the executor to include this field or fragment only when the `if` argument is true.
 """
 directive @include ("Included when true." if: Boolean!) on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT
 
 """
+Indicates that an Input Object is a OneOf Input Object (and thus requires
+                        exactly one of its field be provided)
+"""
+directive @oneOf on INPUT_OBJECT
+
+"""
 Directs the executor to skip this field or fragment when the `if` argument is true.
 """
 directive @skip ("Skipped when true." if: Boolean!) on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT
+
+"""
+Provides a scalar specification URL for specifying the behavior of custom scalar types.
+"""
+directive @specifiedBy ("URL that specifies the behavior of this scalar." url: String!) on SCALAR
 
 schema {
   query: Query

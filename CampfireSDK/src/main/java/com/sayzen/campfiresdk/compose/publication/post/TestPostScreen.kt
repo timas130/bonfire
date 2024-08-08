@@ -11,10 +11,9 @@ import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostFeedGetAllSubscribe
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.compose.ComposeScreen
+import com.sayzen.campfiresdk.compose.attach.AttachFlyout
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.sendSuspend
-import com.sayzen.campfiresdk.models.events.publications.EventPublicationKarmaAdd
-import com.sup.dev.java.libs.eventBus.EventBus
 import kotlinx.coroutines.launch
 import sh.sit.bonfire.auth.DecorFitsSystemWindowEffect
 import sh.sit.bonfire.auth.components.BackButton
@@ -32,6 +31,10 @@ fun TestPostScreenC() {
         posts = resp.publications.filterIsInstance<PublicationPost>()
     }
 
+    var flyoutOpen by remember { mutableStateOf(false) }
+
+    AttachFlyout(open = flyoutOpen, onDismissRequest = { flyoutOpen = false })
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -45,12 +48,9 @@ fun TestPostScreenC() {
 
         LazyColumn(contentPadding = paddingValues, state = listState) {
             item {
-                Button(onClick = { EventBus.post(EventPublicationKarmaAdd(-1, 100)) }) {
-                    Text("Karma")
+                Button(onClick = { flyoutOpen = true }) {
+                    Text("Attach")
                 }
-            }
-            item {
-                Post(initialPost = testPost)
             }
             itemsIndexed(posts) { index, post ->
                 Post(

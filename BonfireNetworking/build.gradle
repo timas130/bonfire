@@ -36,7 +36,7 @@ dependencies {
     implementation 'org.chromium.net:cronet-embedded:119.6045.31'
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation 'com.google.net.cronet:cronet-okhttp:0.1.0'
-    implementation 'androidx.annotation:annotation-jvm:1.7.1'
+    implementation 'androidx.core:core-ktx:1.13.1'
 }
 
 java {

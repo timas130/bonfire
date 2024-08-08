@@ -9,6 +9,7 @@ pub(crate) mod utils;
 use crate::context::{GlobalContext, ReqContext};
 use crate::data_loaders::AuthUserLoader;
 use crate::error::LogErrorsMiddlewareFactory;
+use crate::utils::language::AcceptLanguage;
 use async_graphql::http::GraphiQLSource;
 use async_graphql::{EmptySubscription, Schema};
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
@@ -44,6 +45,7 @@ async fn graphiql() -> impl IntoResponse {
     )
 }
 
+#[allow(clippy::too_many_arguments)]
 async fn graphql_handler(
     Extension(schema): Extension<BSchema>,
     Extension(global_context): Extension<GlobalContext>,
@@ -51,6 +53,7 @@ async fn graphql_handler(
     forwarded_for: XForwardedFor,
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
     user_agent: Option<TypedHeader<UserAgent>>,
+    accept_language: Option<TypedHeader<AcceptLanguage>>,
     req: GraphQLRequest,
 ) -> GraphQLResponse {
     // authenticating user and getting full req context
@@ -59,6 +62,7 @@ async fn graphql_handler(
         auth_header.map(|header| header.token().to_string()),
         forwarded_for.0.first().cloned().unwrap_or(addr.ip()),
         user_agent,
+        accept_language,
     )
     .await;
 

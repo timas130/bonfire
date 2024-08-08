@@ -1,3 +1,4 @@
+use b_gif::GifServer;
 use b_level::LevelServer;
 use b_notification::NotificationServer;
 use b_profile::ProfileServer;
@@ -37,4 +38,5 @@ pub fn start_backends(base: &ServiceBase) {
     start_svc!(base, NotificationServer);
     start_svc!(base, ProfileServer);
     start_svc!(base, SecurityServer);
+    start_svc!(base, GifServer);
 }

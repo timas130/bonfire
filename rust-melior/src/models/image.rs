@@ -7,16 +7,16 @@ use std::time::Duration;
 use tracing::error;
 
 /// Information for downloading an image
-#[derive(SimpleObject)]
+#[derive(Clone, Debug, SimpleObject)]
 pub struct ImageLink {
     /// Temporary URL for downloading the image
-    u: String,
+    pub u: String,
     /// Width, if available
-    w: Option<i64>,
+    pub w: Option<i64>,
     /// Height, if available
-    h: Option<i64>,
+    pub h: Option<i64>,
     /// Unique image ID
-    i: i64,
+    pub i: i64,
 }
 
 impl ImageLink {

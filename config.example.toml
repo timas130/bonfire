@@ -3,6 +3,9 @@ jwt_secret = "secretsecretsecret"
 sentry_dsn = ""
 internal_key = "internal_key_dont_use"
 
+# optional geoip database
+# geoip_db = "./GeoLite2-City.mmdb"
+
 [urls]
 verify_link = "http://localhost:5173/auth/verify?t="
 email_tfa_link = "http://localhost:5173/auth/tfa?t="
@@ -18,6 +21,7 @@ images = 31003
 level = 31004
 notification = 31005
 security = 31007
+gif = 31008
 
 [email]
 host = "unused"
@@ -35,6 +39,9 @@ root = "./images"
 [google]
 client_id = ""
 client_secret = ""
+
+# used for Tenor
+api_key = ""
 
 [firebase]
 scrypt_signer_key = ""

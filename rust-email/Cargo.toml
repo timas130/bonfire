@@ -7,7 +7,7 @@ publish = false
 
 [dependencies]
 c-core = { path = "../rust-core" }
-itertools = "0.12"
+itertools = "0.13"
 nanoid = "0.4"
 crossbeam-queue = "0.3"
 reqwest = "0.11"

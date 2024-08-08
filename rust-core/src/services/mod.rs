@@ -1,5 +1,6 @@
 pub mod auth;
 pub mod email;
+pub mod gif;
 pub mod images;
 pub mod level;
 pub mod notification;
@@ -64,4 +65,29 @@ macro_rules! client_tcp {
             Ok(client)
         }
     };
+}
+
+#[macro_export]
+macro_rules! google_api {
+    ($base: ident, $api: ident, $api_struct: ident) => {{
+        use $api::hyper::client::HttpConnector;
+        use $api::hyper_rustls::{HttpsConnector, HttpsConnectorBuilder};
+        use $api::oauth2::ServiceAccountAuthenticator;
+        use $api::$api_struct;
+
+        let hyper_client = $api::hyper::Client::builder().build(
+            HttpsConnectorBuilder::new()
+                .with_native_roots()?
+                .https_only()
+                .enable_http1()
+                .enable_http2()
+                .build(),
+        );
+        let auth =
+            ServiceAccountAuthenticator::builder($base.config.firebase.service_account.clone())
+                .hyper_client(hyper_client.clone())
+                .build()
+                .await?;
+        $api_struct::new(hyper_client, auth)
+    }};
 }

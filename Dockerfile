@@ -32,6 +32,9 @@ RUN curl -o /app/libssl11.deb http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/o
 RUN dpkg -i /app/libssl11.deb
 RUN rm /app/libssl11.deb
 
+RUN apt-get install -y brotli
+RUN curl -L https://mmdbcdn.posthog.net | brotli --decompress --output=/app/geolite.mmdb
+
 COPY --from=builder /app/docker-entrypoint.sh /app/
 RUN chmod +x /app/docker-entrypoint.sh
 

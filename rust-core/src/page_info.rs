@@ -24,6 +24,19 @@ impl<T: Debug, Cursor: Debug> Edge<T, Cursor> {
             })
             .collect()
     }
+
+    pub fn map_indexed<Mapper>(list: Vec<T>, mapper: Mapper) -> Vec<Edge<T, Cursor>>
+    where
+        Mapper: Fn(usize, &T) -> Cursor,
+    {
+        list.into_iter()
+            .enumerate()
+            .map(|(idx, item)| Self {
+                cursor: mapper(idx, &item),
+                node: item,
+            })
+            .collect()
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]

@@ -3,10 +3,9 @@ mod methods;
 use c_core::prelude::tarpc::context::Context;
 use c_core::prelude::{anyhow, tarpc};
 use c_core::services::security::{IntentionType, SecurityError, SecurityService};
-use c_core::{host_tcp, ServiceBase};
+use c_core::{google_api, host_tcp, ServiceBase};
 use google_playintegrity1::hyper::client::HttpConnector;
-use google_playintegrity1::hyper_rustls::{HttpsConnector, HttpsConnectorBuilder};
-use google_playintegrity1::oauth2::ServiceAccountAuthenticator;
+use google_playintegrity1::hyper_rustls::HttpsConnector;
 use google_playintegrity1::PlayIntegrity;
 use std::sync::Arc;
 
@@ -22,20 +21,7 @@ impl SecurityServer {
     }
 
     pub async fn with_base(base: ServiceBase) -> anyhow::Result<Self> {
-        let hyper_client = google_playintegrity1::hyper::Client::builder().build(
-            HttpsConnectorBuilder::new()
-                .with_native_roots()?
-                .https_only()
-                .enable_http1()
-                .enable_http2()
-                .build(),
-        );
-        let auth =
-            ServiceAccountAuthenticator::builder(base.config.firebase.service_account.clone())
-                .hyper_client(hyper_client.clone())
-                .build()
-                .await?;
-        let play_integrity = PlayIntegrity::new(hyper_client, auth);
+        let play_integrity = google_api!(base, google_playintegrity1, PlayIntegrity);
 
         Ok(SecurityServer {
             base,

@@ -115,5 +115,9 @@
     <string name="fandom_subscribe">Subscribe</string>
     <string name="fandom_subscribed">Subscribed</string>
     <string name="fandom_subscribe_loading">Loading</string>
-
+    <string name="attach_tab_gallery">Gallery</string>
+    <string name="attach_tab_gif" translatable="false">GIF</string>
+    <string name="attach_tab_stickers">Stickers</string>
+    <string name="attach_modal_close">Close</string>
+    <string name="attach_album_all">All media</string>
 </resources>

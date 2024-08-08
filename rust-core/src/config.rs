@@ -9,11 +9,13 @@ pub struct GlobalConfig {
     pub sentry_dsn: String,
     pub internal_key: String,
 
+    pub geoip_db: Option<String>,
+
     pub urls: UrlsConfig,
     pub ports: PortsConfig,
     pub email: EmailConfig,
     pub images: ImagesConfig,
-    pub google: OAuthConfig,
+    pub google: GoogleConfig,
     pub firebase: FirebaseConfig,
     pub notification: NotificationConfig,
     pub security: SecurityConfig,
@@ -47,6 +49,7 @@ pub struct PortsConfig {
     pub notification: u16,
     pub profile: u16,
     pub security: u16,
+    pub gif: u16,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -75,9 +78,10 @@ pub enum ImagesConfig {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct OAuthConfig {
+pub struct GoogleConfig {
     pub client_id: String,
     pub client_secret: String,
+    pub api_key: String,
 }
 
 #[derive(Clone, Debug, Deserialize)]

@@ -28,7 +28,9 @@
             android:launchMode="singleInstance"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
-            android:exported="true">
+            android:exported="true"
+            android:enableOnBackInvokedCallback="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
