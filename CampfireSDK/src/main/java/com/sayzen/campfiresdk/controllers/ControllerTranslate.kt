@@ -1,19 +1,15 @@
 package com.sayzen.campfiresdk.controllers
 
-import androidx.annotation.PluralsRes
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.translate.Translate
 import com.dzen.campfire.api.requests.translates.RTranslateGetMap
 import com.sayzen.campfiresdk.models.events.translate.EventTranslateChanged
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
-import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.tools.ToolsStorage
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonArray
-import java.util.*
-import kotlin.collections.HashMap
 
 fun t(t: Translate, vararg args: Any) = ControllerTranslate.t(t, *args)
 
@@ -48,7 +44,7 @@ object ControllerTranslate {
         }
     }
 
-    fun tSex(sex: Long, m: Translate, w: Translate) = if (sex == 0L) t(m) else t(w)
+    fun tSex(sex: Long, m: Translate, w: Translate) = if (sex == 1L) t(w) else t(m)
 
     fun t(t: Translate, vararg args: Any):String{
         if(args.isEmpty()){
