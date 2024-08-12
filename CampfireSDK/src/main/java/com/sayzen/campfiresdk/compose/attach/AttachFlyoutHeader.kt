@@ -27,6 +27,7 @@ import androidx.compose.ui.util.fastRoundToInt
 import coil.compose.SubcomposeAsyncImage
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.compose.util.RemoteImageShimmer
+import com.sayzen.campfiresdk.compose.attach.SheetState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,0 +1,20 @@
+query GifSearch($query: String!, $after: String) {
+    searchGif(term: $query, after: $after) {
+        edges {
+            cursor
+            node {
+                id
+                media {
+                    preview { ...Ui w h }
+                    tinyGif { ...Ui w h }
+                }
+            }
+        }
+        pageInfo {
+            hasPreviousPage
+            hasNextPage
+            startCursor
+            endCursor
+        }
+    }
+}

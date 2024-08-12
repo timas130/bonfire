@@ -120,4 +120,15 @@
     <string name="attach_tab_stickers">Stickers</string>
     <string name="attach_modal_close">Close</string>
     <string name="attach_album_all">All media</string>
+    <string name="attach_scroll_recent">Recents</string>
+    <string name="attach_scroll_favourite">Favourite</string>
+    <string name="attach_scroll_trending">Trending</string>
+    <string name="attach_scroll_search">Search</string>
+    <string name="attach_search_tenor">Search Tenor</string>
+    <string name="attach_drag_handle">Drag handle</string>
+    <string name="attach_sheet">Bottom sheet</string>
+    <string name="attach_sheet_dismiss">Dismiss</string>
+    <string name="attach_sheet_partial_expand">Expand partially</string>
+    <string name="attach_sheet_expand">Expand</string>
+    <string name="attach_search_clear">Clear</string>
 </resources>

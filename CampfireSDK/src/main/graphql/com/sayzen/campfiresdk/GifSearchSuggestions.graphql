@@ -1,0 +1,3 @@
+query GifSearchSuggestions($query: String!) {
+    gifSearchSuggestions(query: $query)
+}

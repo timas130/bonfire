@@ -10,17 +10,18 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.posthog.PostHog
+import com.sayzen.campfiresdk.GifSearchSuggestionsQuery
 import com.sayzen.campfiresdk.compose.util.combineStates
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.internal.closeQuietly
+import sh.sit.bonfire.auth.apollo
 import java.io.File
 
-class AttachFlyoutModel(application: Application) : AndroidViewModel(application) {
+internal class AttachFlyoutModel(application: Application) : AndroidViewModel(application) {
     companion object {
         private val Context.attachDatastore by preferencesDataStore("attach")
 
@@ -91,6 +92,7 @@ class AttachFlyoutModel(application: Application) : AndroidViewModel(application
 
     val totalGalleryImages = galleryVersion.asStateFlow()
         .combineStates(galleryFilter) { _, _ -> galleryCursor?.count ?: 0 }
+
     fun getGalleryImage(offset: Int): GalleryImage? {
         val cached = galleryCache.getOrNull(offset)
         if (cached != null) {
@@ -190,31 +192,130 @@ class AttachFlyoutModel(application: Application) : AndroidViewModel(application
 
     // == gif ==
 
+    private var _trendingGifQueries = MutableStateFlow<List<String>?>(null)
+    private val _gifSearchSuggestions = MutableStateFlow<Pair<String, List<String>>?>(null)
 
+    private val _gifQuery = MutableStateFlow("")
+    val gifQuery = _gifQuery.asStateFlow()
+
+    private var gifTabStarted: Boolean = false
+
+    val gifSearchModel = GifSearchModel(application, gifQuery)
+
+    val searchSuggestions = gifQuery
+        .combineStates(_gifSearchSuggestions) { query, suggestions ->
+            if (query.isBlank()) {
+                Unit
+            } else {
+                suggestions
+            }
+        }
+        .combineStates(_trendingGifQueries) { suggestionsOrUnit, trending ->
+            if (suggestionsOrUnit is Unit) {
+                Pair("", trending)
+            } else {
+                @Suppress("UNCHECKED_CAST")
+                suggestionsOrUnit as Pair<String, List<String>>?
+            }
+        }
+
+    fun setGifQuery(query: String) {
+        _gifQuery.value = query
+    }
+
+    @OptIn(FlowPreview::class)
+    private fun startGifSuggestions() {
+        viewModelScope.launch {
+            gifQuery
+                .sample(300)
+                .distinctUntilChanged()
+                .filterNot { it.isBlank() }
+                .collectLatest { query ->
+                    try {
+                        val resp = apollo.query(GifSearchSuggestionsQuery(query))
+                            .execute()
+                            .dataAssertNoErrors
+
+                        _gifSearchSuggestions.emit(Pair(query, resp.gifSearchSuggestions))
+                    } catch (_: Exception) {
+                    }
+                }
+        }
+    }
+
+    private fun loadTrendingGifQueries() {
+        viewModelScope.launch {
+            if (_trendingGifQueries.value != null) return@launch
+            try {
+                val resp = apollo.query(GifSearchSuggestionsQuery(""))
+                    .execute()
+                    .dataAssertNoErrors
+
+                _trendingGifQueries.emit(resp.gifSearchSuggestions)
+            } catch (_: Exception) {
+            }
+        }
+    }
+
+    enum class ScrollMarker {
+        Recent,
+        Favorite,
+        Trending,
+        Search,
+    }
+
+    private val _gifScrollMarker = MutableStateFlow(ScrollMarker.Recent)
+    val gifScrollMarker = _gifScrollMarker.asStateFlow()
+
+    fun setGifScrollMarker(scrollMarker: ScrollMarker) {
+        _gifScrollMarker.value = scrollMarker
+    }
+    fun scrollToGifMarker(scrollMarker: ScrollMarker) {
+
+    }
 
     // == other public apis ==
 
-    fun switchTab(tab: Tab) {
-        PostHog.capture("attach flyout tab switched", properties = mapOf("tab" to tab.name))
-
+    fun switchTab(tab: Tab, userAction: Boolean = false) {
         _activeTab.value = tab
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                datastore.edit {
-                    it[lastActiveTab] = tab.name
+
+        when (tab) {
+            Tab.Gallery -> {
+                loadGallery()
+            }
+
+            Tab.Gif -> {
+                if (!gifTabStarted) {
+                    gifTabStarted = true
+                    startGifSuggestions()
+                    loadTrendingGifQueries()
+                    gifSearchModel.start()
+                }
+            }
+
+            Tab.Stickers -> {}
+        }
+
+        if (userAction) {
+            PostHog.capture("attach flyout tab switched", properties = mapOf("tab" to tab.name))
+
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    datastore.edit {
+                        it[lastActiveTab] = tab.name
+                    }
                 }
             }
         }
     }
 
     // constructor code is at the bottom to make sure all the properties
-    // are initialised before calling loadGallery()
+    // are initialised before calling init functions
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                _activeTab.emit(Tab.valueOf(datastore.data.first()[lastActiveTab] ?: Tab.Gallery.toString()))
+                switchTab(Tab.valueOf(datastore.data.first()[lastActiveTab] ?: Tab.Gallery.toString()))
             }
         }
-        loadGallery()
     }
 }

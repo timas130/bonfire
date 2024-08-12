@@ -67,6 +67,8 @@ pub struct GifContext {
     /// Two-letter country code where the user is from
     pub country: String,
     /// Two-letter (or `aa_BB`) language code to be used
+    ///
+    /// If present, the second part MUST be separated with an underscore.
     pub locale: Option<String>,
 }
 

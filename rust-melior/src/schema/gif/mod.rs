@@ -22,7 +22,8 @@ impl ReqContext {
             country: self
                 .user_country_code
                 .clone()
-                .unwrap_or_else(|| String::from("ru")),
+                .unwrap_or_else(|| String::from("ru"))
+                .replace('-', "_"),
         }
     }
 }

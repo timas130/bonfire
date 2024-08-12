@@ -1,10 +1,12 @@
 package com.sayzen.campfiresdk.compose.attach
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +27,7 @@ interface AttachFlyoutDelegate {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun AttachFlyout(
     open: Boolean,
@@ -54,9 +56,12 @@ fun AttachFlyout(
         }
     }
 
-    ModalBottomSheet(
+    ModalBottomSheetExt(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
+        properties = ModalBottomSheetProperties(
+            shouldDismissOnBackPress = !WindowInsets.isImeVisible
+        ),
         dragHandle = { AttachFlyoutHeader(model, sheetState, onDismissRequest) },
     ) {
         val scope = rememberCoroutineScope()
@@ -88,7 +93,7 @@ fun AttachFlyout(
                     }
 
                     AttachFlyoutModel.Tab.Gif -> {
-                        LazyColumn {  }
+                        GifTab(model)
                     }
                     AttachFlyoutModel.Tab.Stickers -> {
                         LazyColumn {  }
@@ -96,8 +101,8 @@ fun AttachFlyout(
                 }
             }
 
-            val safeDrawingInsets = WindowInsets.safeDrawing
-            Column(
+            val safeDrawingInsets = WindowInsets.safeDrawing.union(WindowInsets.ime)
+            Surface(
                 modifier = Modifier
                     .offset {
                         val offset = sheetState.requireOffset()
@@ -106,11 +111,15 @@ fun AttachFlyout(
                     }
                     .align(Alignment.BottomStart)
             ) {
-                Surface {
+                Column {
+                    AnimatedVisibility(activeTab == AttachFlyoutModel.Tab.Gif) {
+                        AttachGifFooter(model)
+                    }
+
                     Row(
                         modifier = Modifier
                             .padding(
-                                WindowInsets.safeDrawing
+                                safeDrawingInsets
                                     .only(WindowInsetsSides.Bottom)
                                     .asPaddingValues()
                             )

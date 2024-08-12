@@ -112,4 +112,15 @@
     <string name="attach_tab_stickers">Стикеры</string>
     <string name="attach_modal_close">Закрыть</string>
     <string name="attach_album_all">Все медиа</string>
+    <string name="attach_scroll_recent">Недавние</string>
+    <string name="attach_scroll_favourite">Избранное</string>
+    <string name="attach_scroll_trending">Популярное</string>
+    <string name="attach_scroll_search">Поиск</string>
+    <string name="attach_search_tenor">Поиск по Tenor</string>
+    <string name="attach_drag_handle">Перетаскиватор</string>
+    <string name="attach_sheet">Нижняя страница</string>
+    <string name="attach_sheet_dismiss">Закрыть</string>
+    <string name="attach_sheet_partial_expand">Открыть частично</string>
+    <string name="attach_sheet_expand">Открыть</string>
+    <string name="attach_search_clear">Очистить</string>
 </resources>
