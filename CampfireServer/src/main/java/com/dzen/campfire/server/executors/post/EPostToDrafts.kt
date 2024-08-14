@@ -46,6 +46,10 @@ class EPostToDrafts : RPostToDrafts(0) {
             update.update(TPublications.language_id, publication.tag_5)
         }
 
+        if (publication.status == API.STATUS_PENDING) {
+            update.update(TPublications.tag_3, 0)
+        }
+
         Database.update("EPostToDrafts update", update)
         if (publication is PublicationPost) {
             ControllerAccounts.updatePostsCount(apiAccount.id, -1)
