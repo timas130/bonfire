@@ -545,7 +545,9 @@ object ControllerPost {
                     API.getLanguage(fandom.languageId).name
                 ))
                 .setOnCancel(API.getLanguage(initialFandom.languageId).name) {
-                    cb(initialFandom)
+                    cb(fandom.copy().apply {
+                        languageId = initialFandom.languageId
+                    })
                 }
                 .setOnEnter(API.getLanguage(fandom.languageId).name) {
                     cb(fandom)
