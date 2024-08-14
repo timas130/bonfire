@@ -8,10 +8,10 @@ import com.dzen.campfire.api.models.publications.history.HistoryAdminChangeFando
 import com.dzen.campfire.api.models.publications.history.HistoryChangeFandom
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostChangeFandom
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.server.tables.TFandoms
 import com.dzen.campfire.server.tables.TPublications
-import com.dzen.campfire.api.tools.ApiException
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
 
@@ -60,6 +60,10 @@ class EPostChangeFandom : RPostChangeFandom(0, 0, 0, "") {
                 .update(TPublications.parent_fandom_closed, ControllerFandom.get(fandomId, TFandoms.fandom_closed).next<Int>())
                 .update(TPublications.language_id, languageId)
         )
+
+        if (publication.fandom.languageId == -1L) {
+            ControllerPost.setMultilingual(publication, true)
+        }
 
         val v = ControllerFandom.get(fandomId, TFandoms.name, TFandoms.image_id)
         val fandomName:String = v.next()
