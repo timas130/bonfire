@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
-import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.notifications.publications.NotificationFollowsPublication
 import com.dzen.campfire.api.models.notifications.publications.NotificationPublicationImportant
 import com.dzen.campfire.api.models.publications.post.PublicationPost
@@ -23,9 +22,7 @@ import com.sayzen.campfiresdk.models.events.publications.EventPostStatusChange
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.adapters.AdapterComments
 import com.sayzen.campfiresdk.support.adapters.XPublication
-import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.app.SupAndroid
-import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -82,13 +79,6 @@ class SPost private constructor(
                         actionNavigation = action
                     )
                 }
-            }.onApiError(API.ERROR_ACCESS) {
-                SAlert.showMessage(
-                    text = t(API_TRANSLATE.post_error_access_nsfw),
-                    action = t(API_TRANSLATE.app_back),
-                    img = ImageLoader.load(ApiResources.IMAGE_BACKGROUND_14),
-                    actionNavigation = action
-                )
             }
         }
     }
