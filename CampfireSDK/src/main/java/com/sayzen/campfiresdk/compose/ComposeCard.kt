@@ -27,8 +27,12 @@ abstract class ComposeCard : Card(0) {
 
     private val viewModelStoreOwner = MyViewModelStoreOwner()
 
+    override fun canCacheView(): Boolean = false
+
     override fun bindView(view: View) {
         val composeView: ComposeView = view.findViewById(R.id.vSheet)
+        // https://issuetracker.google.com/240449681 <- FFS
+        composeView.getChildAt(0)?.requestLayout()
         composeView.setContent {
             BonfireTheme {
                 CompositionLocalProvider(LocalViewModelStoreOwner provides viewModelStoreOwner) {

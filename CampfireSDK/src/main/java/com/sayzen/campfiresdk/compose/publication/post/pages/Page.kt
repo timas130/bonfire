@@ -162,6 +162,8 @@ class ComposeCardPage(pagesContainer: PagesContainer?, page: Page) : CardPage(R.
 
         val vCompose: ComposeView = view.findViewById(R.id.vCompose)
 
+        // https://issuetracker.google.com/240449681 <- FFS
+        vCompose.getChildAt(0)?.requestLayout()
         vCompose.setContent {
             BonfireTheme {
                 Surface(

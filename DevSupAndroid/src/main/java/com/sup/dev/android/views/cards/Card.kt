@@ -88,5 +88,6 @@ abstract class Card(
         this.adapter = adapter?:CardAdapterStub.INSTANCE
     }
 
+    open fun canCacheView(): Boolean = true
 
 }

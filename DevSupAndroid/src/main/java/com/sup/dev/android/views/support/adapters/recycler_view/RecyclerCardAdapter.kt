@@ -55,14 +55,21 @@ open class RecyclerCardAdapter : RecyclerView.Adapter<RecyclerCardAdapter.Holder
 
         val tag: KClass<out Card>? = frame.tag as KClass<out Card>?
 
-        if (frame.childCount != 0 && tag != null)
+        val canCacheView = card.canCacheView()
+
+        if (frame.childCount != 0 && tag != null && canCacheView) {
             viewCash.add(tag, frame.getChildAt(0))
+        }
         frame.removeAllViews()
 
-        var cardView = viewCash.removeOne(card::class)
-        if (cardView == null)
+        var cardView = if (canCacheView) {
+            viewCash.removeOne(card::class)
+        } else {
+            null
+        }
+        if (cardView == null) {
             cardView = card.instanceView(frame)
-
+        }
 
         frame.addView(ToolsView.removeFromParent(cardView))
         frame.tag = card::class
