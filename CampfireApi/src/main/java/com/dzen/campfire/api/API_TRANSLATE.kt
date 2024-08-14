@@ -1440,6 +1440,7 @@ object API_TRANSLATE {
     val publication_menu_pin_in_fandom = Translate("Закрепить в фэндоме")
     val publication_menu_remove_media = Translate("Удалить медиа")
     val publication_menu_unpin_in_fandom = Translate("Открепить от фэндома")
+    val publication_menu_change_fandom_language = Translate("Вы пытаетесь переместить этот пост в фэндом другого языка: %s → %s. Чтобы выбрать другой язык, зажмите фэндом в списке и выберете опцию \"Выбрать язык фэндома\". В фэндом какого языка переместить этот пост?")
     val publication_menu_change_fandom_confirm = Translate("Изменить фэндом этого поста?")
     val publication_menu_pin_profile_confirm = Translate("Закрепить пост в профиле?")
     val publication_menu_unpin_profile_confirm = Translate("Открепить пост от профиля?")

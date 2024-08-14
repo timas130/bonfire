@@ -3,6 +3,7 @@ package com.sayzen.campfiresdk.controllers
 import android.view.View
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.models.fandoms.Fandom
 import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.publications.PagesContainer
 import com.dzen.campfire.api.models.publications.Publication
@@ -26,6 +27,7 @@ import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.screens.SImageView
+import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.android.views.splash.SplashField
 import com.sup.dev.android.views.splash.SplashMenu
 import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapter
@@ -115,7 +117,7 @@ object ControllerPost {
                             post.creator.id
                         )
                     )
-                    .add(t(API_TRANSLATE.publication_menu_change_fandom)) { changeFandom(post.id) }
+                    .add(t(API_TRANSLATE.publication_menu_change_fandom)) { changeFandom(post) }
                     .backgroundRes(R.color.focus).condition(
                         ENABLED_CHANGE_FANDOM && post.fandom.languageId != -1L && (post.status == API.STATUS_PUBLIC || post.status == API.STATUS_DRAFT) && ControllerApi.isCurrentAccount(
                             post.creator.id
@@ -261,7 +263,7 @@ object ControllerPost {
         .add(t(API_TRANSLATE.publication_menu_remove_media)) { removeMedia(post) }.backgroundRes(R.color.red_700)
         .textColorRes(R.color.white)
         .condition(ControllerApi.can(API.LVL_ADMIN_REMOVE_MEDIA) && post.fandom.languageId != -1L)
-        .add(t(API_TRANSLATE.publication_menu_change_fandom)) { changeFandomAdmin(post.id) }
+        .add(t(API_TRANSLATE.publication_menu_change_fandom)) { changeFandomAdmin(post) }
         .backgroundRes(R.color.red_700).textColorRes(R.color.white).condition(
             ENABLED_MODER_CHANGE_FANDOM && ControllerApi.can(API.LVL_ADMIN_POST_CHANGE_FANDOM) && post.fandom.languageId != -1L && !ControllerApi.isCurrentAccount(
                 post.creator.id
@@ -534,29 +536,53 @@ object ControllerPost {
         }
     }
 
-    fun changeFandom(publicationId: Long) {
-        ControllerCampfireSDK.SEARCH_FANDOM.invoke { fandom ->
-            ApiRequestsSupporter.executeEnabledConfirm(
-                    t(API_TRANSLATE.publication_menu_change_fandom_confirm),
-                    t(API_TRANSLATE.app_change),
-                    RPostChangeFandom(publicationId, fandom.id, fandom.languageId, "")
-            ) {
-                ToolsToast.show(t(API_TRANSLATE.app_done))
-                EventBus.post(EventPublicationFandomChanged(
-                    publicationId,
-                    fandom.id,
-                    fandom.languageId,
-                    fandom.name,
-                    fandom.image
+    private fun checkFandomSameLanguage(initialFandom: Fandom, fandom: Fandom, cb: (Fandom) -> Unit) {
+        if (initialFandom.languageId != fandom.languageId && initialFandom.languageId != -1L) {
+            SplashAlert()
+                .setText(t(
+                    API_TRANSLATE.publication_menu_change_fandom_language,
+                    API.getLanguage(initialFandom.languageId).name,
+                    API.getLanguage(fandom.languageId).name
                 ))
-            }
-                    .onApiError(RPostChangeFandom.E_SAME_FANDOM) { ToolsToast.show(t(API_TRANSLATE.error_same_fandom)) }
+                .setOnCancel(API.getLanguage(initialFandom.languageId).name) {
+                    cb(initialFandom)
+                }
+                .setOnEnter(API.getLanguage(fandom.languageId).name) {
+                    cb(fandom)
+                }
+                .asSheetShow()
+        } else {
+            cb(fandom)
         }
     }
 
-    fun changeFandomAdmin(publicationId: Long) {
-        ControllerCampfireSDK.SEARCH_FANDOM.invoke { fandom ->
-            SplashField()
+    fun changeFandom(post: PublicationPost) {
+        ControllerCampfireSDK.SEARCH_FANDOM.invoke { selectedFandom ->
+            checkFandomSameLanguage(post.fandom, selectedFandom) { fandom ->
+                ApiRequestsSupporter.executeEnabledConfirm(
+                    t(API_TRANSLATE.publication_menu_change_fandom_confirm),
+                    t(API_TRANSLATE.app_change),
+                    RPostChangeFandom(post.id, fandom.id, fandom.languageId, "")
+                ) {
+                    ToolsToast.show(t(API_TRANSLATE.app_done))
+                    EventBus.post(EventPublicationFandomChanged(
+                        post.id,
+                        fandom.id,
+                        fandom.languageId,
+                        fandom.name,
+                        fandom.image
+                    ))
+                }.onApiError(RPostChangeFandom.E_SAME_FANDOM) {
+                    ToolsToast.show(t(API_TRANSLATE.error_same_fandom))
+                }
+            }
+        }
+    }
+
+    fun changeFandomAdmin(post: PublicationPost) {
+        ControllerCampfireSDK.SEARCH_FANDOM.invoke { selectedFandom ->
+            checkFandomSameLanguage(post.fandom, selectedFandom) { fandom ->
+                SplashField()
                     .setTitle(t(API_TRANSLATE.publication_menu_change_fandom_confirm))
                     .setHint(t(API_TRANSLATE.moderation_widget_comment))
                     .setOnCancel(t(API_TRANSLATE.app_cancel))
@@ -564,23 +590,25 @@ object ControllerPost {
                     .setMax(API.MODERATION_COMMENT_MAX_L)
                     .setOnEnter(t(API_TRANSLATE.app_change)) { w, comment ->
                         ApiRequestsSupporter.executeEnabled(
-                                w,
-                                RPostChangeFandom(publicationId, fandom.id, fandom.languageId, comment)
+                            w,
+                            RPostChangeFandom(post.id, fandom.id, fandom.languageId, comment)
                         ) {
                             ToolsToast.show(t(API_TRANSLATE.app_done))
                             EventBus.post(
-                                    EventPublicationFandomChanged(
-                                            publicationId,
-                                            fandom.id,
-                                            fandom.languageId,
-                                            fandom.name,
-                                            fandom.image
-                                    )
+                                EventPublicationFandomChanged(
+                                    post.id,
+                                    fandom.id,
+                                    fandom.languageId,
+                                    fandom.name,
+                                    fandom.image
+                                )
                             )
+                        }.onApiError(RPostChangeFandom.E_SAME_FANDOM) {
+                            ToolsToast.show(t(API_TRANSLATE.error_same_fandom))
                         }
-                                .onApiError(RPostChangeFandom.E_SAME_FANDOM) { ToolsToast.show(t(API_TRANSLATE.error_same_fandom)) }
                     }
                     .asSheetShow()
+            }
         }
     }
 
