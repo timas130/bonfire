@@ -10,12 +10,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import com.dzen.campfire.api.models.publications.post.PageSpoiler
 import com.sayzen.campfiresdk.R
+import sh.sit.bonfire.formatting.compose.buildInlineAnnotatedString
+import sh.sit.bonfire.formatting.core.BonfireFormatter
 
 @Composable
 internal fun PageSpoilerRenderer(
@@ -47,13 +51,20 @@ internal fun PageSpoilerRenderer(
                 )
             },
             headlineContent = {
+                val colors = MaterialTheme.colorScheme
+                val spoilerNameDefault = stringResource(R.string.spoiler_label_default)
+                val spoilerName = remember(page.name, spoilerNameDefault, colors) {
+                    val text = page.name?.takeUnless { it.isBlank() } ?: spoilerNameDefault
+                    BonfireFormatter.parse(text, inlineOnly = true)
+                        .buildInlineAnnotatedString(colors)
+                }
+
                 Text(
-                    text = stringResource(R.string.spoiler_label)
-                        .format(
-                            page.name?.takeUnless { it.isBlank() }
-                                ?: stringResource(R.string.spoiler_label_default),
-                            page.count
-                        )
+                    text = buildAnnotatedString {
+                        append(spoilerName)
+                        append(' ')
+                        append(stringResource(R.string.spoiler_suffix, page.count))
+                    }
                 )
             },
             modifier = Modifier.clickable {

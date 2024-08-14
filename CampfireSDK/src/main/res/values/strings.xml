@@ -45,7 +45,7 @@
     <string name="link">Link</string>
     <string name="spoiler_shrink">Shrink</string>
     <string name="spoiler_expand">Expand</string>
-    <string name="spoiler_label">%s (%d pages)</string>
+    <string name="spoiler_suffix">(%d pages)</string>
     <string name="spoiler_label_default">Spoiler</string>
     <string name="page_copy">Copy this page</string>
     <string name="page_campfire_object">Bonfire Object</string>

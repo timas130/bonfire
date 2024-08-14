@@ -45,7 +45,7 @@
     <string name="link">Ссылка</string>
     <string name="spoiler_shrink">Свернуть</string>
     <string name="spoiler_expand">Развернуть</string>
-    <string name="spoiler_label">%s (%d стр.)</string>
+    <string name="spoiler_suffix">(%d стр.)</string>
     <string name="spoiler_label_default">Спойлер</string>
     <string name="page_copy">Копировать эту страницу</string>
     <string name="page_campfire_object">Объект Bonfire</string>
