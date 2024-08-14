@@ -20,7 +20,6 @@ import com.sayzen.campfiresdk.compose.profile.badges.shelf.BadgeShelfCard
 import com.sayzen.campfiresdk.compose.publication.post.CardPostProxy
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.PostList
-import com.sayzen.campfiresdk.models.cards.CardPost
 import com.sayzen.campfiresdk.models.cards.CardPublication
 import com.sayzen.campfiresdk.models.events.account.EventAccountChanged
 import com.sayzen.campfiresdk.models.events.account.EventAccountStatusChanged
@@ -158,7 +157,6 @@ class SProfile private constructor(
                     if (cardFilters.fandomId > 0) {
                         req.setPublicationTypes(API.PUBLICATION_TYPE_POST)
                         req.setFandomId(cardFilters.fandomId)
-                        req.setLanguageId(cardFilters.fandomLanguageId)
                     } else {
                         req.setPublicationTypes(ControllerSettings.getProfileFilters())
                     }
