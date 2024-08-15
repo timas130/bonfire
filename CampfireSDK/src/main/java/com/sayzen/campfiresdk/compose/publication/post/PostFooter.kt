@@ -2,19 +2,17 @@ package com.sayzen.campfiresdk.compose.publication.post
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material3.*
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -24,7 +22,9 @@ import androidx.compose.ui.unit.dp
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.publication.CustomFilledTonalButton
 import com.sayzen.campfiresdk.compose.publication.KarmaCounter
+import com.sayzen.campfiresdk.compose.publication.ReportsButton
 import com.sayzen.campfiresdk.models.splashs.SplashComment
 import com.sayzen.campfiresdk.screens.post.view.SPost
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -48,7 +48,8 @@ internal fun PostFooter(
         Spacer(Modifier.weight(1f))
 
         if (post.isPublic) {
-            CommentButton(post)
+            ReportsButton(post, Modifier.height(36.dp))
+            CommentButton(post, Modifier.height(36.dp))
             KarmaCounter(post)
         }
     }
@@ -106,54 +107,38 @@ val counterTransitionSpec: AnimatedContentTransitionScope<Long>.() -> ContentTra
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun CommentButton(post: PublicationPost) {
+private fun CommentButton(post: PublicationPost, modifier: Modifier = Modifier) {
     val hapticFeedback = LocalHapticFeedback.current
 
-    Surface(
-        modifier = Modifier
-            .height(36.dp)
-            .clip(RoundedCornerShape(18.dp))
-            .combinedClickable(
-                onClick = {
-                    PostHog.capture("post_open", properties = mapOf("type" to "comments"))
-                    SPost.instance(post.id, -1, Navigator.TO)
-                },
-                onLongClick = {
-                    if (post.isPublic) {
-                        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                        PostHog.capture("open_comment_editor", properties = mapOf("from" to "post_longclick"))
-                        SplashComment(post.id, true) { }.asSheetShow()
-                    }
-                },
-            ),
-        color = ButtonDefaults.filledTonalButtonColors().containerColor,
-        contentColor = ButtonDefaults.filledTonalButtonColors().contentColor,
-        shape = RoundedCornerShape(18.dp)
-    ) {
-        Row(
-            Modifier.padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.comment_24),
-                contentDescription = stringResource(R.string.post_comment),
-                modifier = Modifier
-                    .size(ButtonDefaults.IconSize)
-            )
-            Spacer(Modifier.width(ButtonDefaults.IconSpacing))
-
-            AnimatedContent(
-                targetState = post.subPublicationsCount,
-                transitionSpec = counterTransitionSpec,
-                label = "CommentCount"
-            ) {
-                Text(
-                    text = it.toString(),
-                    style = MaterialTheme.typography.labelLarge
-                )
+    CustomFilledTonalButton(
+        onClick = {
+            PostHog.capture("post_open", properties = mapOf("type" to "comments"))
+            SPost.instance(post.id, -1, Navigator.TO)
+        },
+        onLongClick = {
+            if (post.isPublic) {
+                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                PostHog.capture("open_comment_editor", properties = mapOf("from" to "post_longclick"))
+                SplashComment(post.id, true) { }.asSheetShow()
             }
+        },
+        modifier = modifier
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.comment_24),
+            contentDescription = stringResource(R.string.post_comment),
+            modifier = Modifier
+                .size(ButtonDefaults.IconSize)
+        )
+        Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+
+        AnimatedContent(
+            targetState = post.subPublicationsCount,
+            transitionSpec = counterTransitionSpec,
+            label = "CommentCount"
+        ) {
+            Text(it.toString())
         }
     }
 }

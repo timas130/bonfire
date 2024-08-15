@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.dzen.campfire.api.models.publications.PublicationComment
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.compose.publication.KarmaCounter
+import com.sayzen.campfiresdk.compose.publication.ReportsButton
 
 @Composable
 internal fun CommentFooter(
@@ -26,6 +27,8 @@ internal fun CommentFooter(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
     ) {
+        ReportsButton(comment, Modifier.height(32.dp))
+
         ReplyButton(onClick = { onReply(true) })
 
         KarmaCounter(
