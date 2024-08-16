@@ -157,6 +157,10 @@ fun PostPages(
 class ComposeCardPage(pagesContainer: PagesContainer?, page: Page) : CardPage(R.layout.card_page_compose, pagesContainer, page) {
     val model = PostPagesModel()
 
+    override fun canCacheView(): Boolean {
+        return false
+    }
+
     override fun bindView(view: View) {
         super.bindView(view)
 
