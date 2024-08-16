@@ -17,6 +17,7 @@ email = 31002
 images = 31003
 level = 31004
 notification = 31005
+profile = 31006
 security = 31007
 
 [email]
@@ -57,3 +58,6 @@ universe_domain = ""
 
 [security]
 package_names = ["sh.sit.bonfire"]
+
+[notification]
+threads = 5
