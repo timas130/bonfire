@@ -17,6 +17,7 @@ email = 31002
 images = 31003
 level = 31004
 notification = 31005
+profile = 31006
 security = 31007
 
 [email]
@@ -54,6 +55,9 @@ token_uri = ""
 auth_provider_x509_cert_url = ""
 client_x509_cert_url = ""
 universe_domain = ""
+
+[notification]
+threads = 5
 
 [security]
 package_names = ["sh.sit.bonfire"]
