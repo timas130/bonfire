@@ -37,6 +37,10 @@ class CardPostProxy(
         }
     }
 
+    override fun canCacheView(): Boolean {
+        return impl.canCacheView()
+    }
+
     override fun setCardAdapter(adapter: CardAdapter?) {
         impl.setCardAdapter(adapter)
     }

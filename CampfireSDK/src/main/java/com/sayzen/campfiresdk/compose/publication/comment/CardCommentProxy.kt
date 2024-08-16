@@ -73,6 +73,10 @@ class CardCommentProxy(
         }
     }
 
+    override fun canCacheView(): Boolean {
+        return impl.canCacheView()
+    }
+
     var maxTextSize: Int
         get() = when (impl) {
             is CardComment -> impl.maxTextSize

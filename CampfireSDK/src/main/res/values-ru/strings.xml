@@ -108,5 +108,6 @@
     <string name="fandom_subscribe">Подписаться</string>
     <string name="fandom_subscribed">Вы подписаны</string>
     <string name="fandom_subscribe_loading">Загрузка</string>
+    <string name="publication_reports_alt">Жалобы</string>
 
 </resources>

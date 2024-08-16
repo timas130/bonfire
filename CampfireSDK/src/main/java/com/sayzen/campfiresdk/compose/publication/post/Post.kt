@@ -1,7 +1,6 @@
 package com.sayzen.campfiresdk.compose.publication.post
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -31,6 +30,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.fandoms.Fandom
+import com.dzen.campfire.api.models.publications.PublicationComment
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
@@ -38,6 +38,7 @@ import com.sayzen.campfiresdk.compose.BonfireTheme
 import com.sayzen.campfiresdk.compose.ComposeCard
 import com.sayzen.campfiresdk.compose.publication.comment.CardCommentProxy
 import com.sayzen.campfiresdk.compose.publication.comment.Comment
+import com.sayzen.campfiresdk.compose.util.AnimatedNullableVisibility
 import com.sayzen.campfiresdk.compose.util.Avatar
 import com.sayzen.campfiresdk.compose.util.avatarRounding
 import com.sayzen.campfiresdk.compose.util.mapState
@@ -368,26 +369,26 @@ fun Post(
             }
         )
 
-        AnimatedVisibility(visible = post.bestComment != null && showBestComment) {
-            PostBestComment(post)
+        AnimatedNullableVisibility(post.bestComment, condition = showBestComment) {
+            PostBestComment(it)
         }
     }
 }
 
 @Composable
-private fun PostBestComment(post: PublicationPost) {
+private fun PostBestComment(bestComment: PublicationComment) {
     HorizontalDivider(Modifier.zIndex(3f))
 
     if (PostHog.isFeatureEnabled("compose_comment")) {
         Comment(
-            initialComment = post.bestComment!!,
+            initialComment = bestComment,
             onRemoved = {}, // should be handled by PostDataSource? probably
             maxLines = 6,
         )
     } else {
-        val card = remember(post.bestComment) {
+        val card = remember(bestComment) {
             CardCommentProxy(
-                publication = post.bestComment!!,
+                publication = bestComment,
                 dividers = false,
                 miniSize = true,
                 allowEditing = false,

@@ -10,6 +10,7 @@ import androidx.compose.ui.node.Ref
 @Composable
 fun <T> AnimatedNullableVisibility(
     value: T?,
+    condition: Boolean = true,
     enter: EnterTransition = fadeIn() + expandVertically(),
     exit: ExitTransition = fadeOut() + shrinkVertically(),
     content: @Composable (T) -> Unit
@@ -21,7 +22,7 @@ fun <T> AnimatedNullableVisibility(
     ref.value = value ?: ref.value
 
     AnimatedVisibility(
-        visible = value != null,
+        visible = value != null && condition,
         enter = enter,
         exit = exit,
         content = {

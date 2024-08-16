@@ -68,6 +68,11 @@ abstract class PublicationDataSource<T : Publication>(pub: T, private val onRemo
                     subPublicationsCount = it.commentsCount
                 }
             }
+            .subscribe(EventReportsCountChanged::class) {
+                edit(it.publicationId) {
+                    reportsCount = it.reportsCount
+                }
+            }
     }
 
     override fun handleNotification(ev: EventNotification) {

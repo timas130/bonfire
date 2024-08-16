@@ -190,7 +190,7 @@ abstract class SActivity : AppCompatActivity() {
     //
 
     open fun onBackPressedSplash():Boolean{
-        if( vSplashContainer!!.childCount > 0){
+        if ((vSplashContainer?.childCount ?: 0) > 0) {
             val splash = vSplashContainer!!.getChildAt(vSplashContainer!!.childCount-1).tag as SplashView<out Any>
             return splash.onBackPressed()
         }
@@ -244,8 +244,8 @@ abstract class SActivity : AppCompatActivity() {
         }
     }
 
-    fun getToSplash():SplashView<out Any>?{
-        if( vSplashContainer!!.childCount > 0){
+    fun getToSplash(): SplashView<out Any>? {
+        if ((vSplashContainer?.childCount ?: 0) > 0){
             return vSplashContainer!!.getChildAt(vSplashContainer!!.childCount - 1).tag as SplashView<out Any>
         }
         return null
