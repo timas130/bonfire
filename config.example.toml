@@ -61,6 +61,3 @@ threads = 5
 
 [security]
 package_names = ["sh.sit.bonfire"]
-
-[notification]
-threads = 5
