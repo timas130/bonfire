@@ -78,7 +78,7 @@ async fn graphql_handler(
                     // ratelimit updates at 3 minutes (online period is 5 minutes)
                     let last_online = online_cache.get(&user_id);
                     if let Some(last_online) = last_online {
-                        if Utc::now().signed_duration_since(last_online) > TimeDelta::minutes(3) {
+                        if Utc::now().signed_duration_since(last_online) < TimeDelta::minutes(3) {
                             return;
                         }
                     }

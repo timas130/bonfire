@@ -73,7 +73,7 @@ object ControllerAccounts {
         return parseSelect(
             Database.select(
                 "EAccountsGetAllOnline", instanceSelect()
-                    .where(TAccounts.last_online_time, ">", System.currentTimeMillis() - 1000 * 60 * 5)
+                    .where(TAccounts.last_online_time, ">", System.currentTimeMillis() - 1000 * 60 * 15)
                     .where(TAccounts.last_online_time, ">", offsetDate)
                     .sort(TAccounts.last_online_time, false)
                     .offset_count(0, count)
