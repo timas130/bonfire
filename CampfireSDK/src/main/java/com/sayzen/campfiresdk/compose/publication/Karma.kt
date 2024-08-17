@@ -50,8 +50,8 @@ import com.sayzen.campfiresdk.screens.rates.SPublicationRates
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter.sendSuspendExt
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.java.libs.eventBus.EventBus
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -87,7 +87,6 @@ class KarmaCounterModel(
     }
 
     fun rate(
-        scope: CoroutineScope,
         up: Boolean,
         anon: Boolean = ControllerSettings.anonRates
     ) {
@@ -100,7 +99,7 @@ class KarmaCounterModel(
         }
         _progress.tryEmit(KarmaProgress(up))
 
-        progressJob = scope.launch {
+        progressJob = MainScope().launch {
             delay(CampfireConstants.RATE_TIME)
 
             try {
@@ -116,16 +115,13 @@ class KarmaCounterModel(
                     )
                 )
 
-                // launch it in outer scope, so job cancellation cannot affect us
-                scope.launch {
-                    progressJob = null
-                    _progress.emit(null)
-                    onFinish(up)
+                progressJob = null
+                _progress.emit(null)
+                onFinish(up)
 
-                    EventBus.post(EventPublicationKarmaAdd(publication.id, resp.myKarmaCount))
-                    ControllerStoryQuest.incrQuest(API.QUEST_STORY_KARMA)
-                    EventBus.post(EventPublicationKarmaStateChanged(publication.id))
-                }
+                EventBus.post(EventPublicationKarmaAdd(publication.id, resp.myKarmaCount))
+                ControllerStoryQuest.incrQuest(API.QUEST_STORY_KARMA)
+                EventBus.post(EventPublicationKarmaStateChanged(publication.id))
             } catch (_: Exception) {
                 progressJob = null
                 _progress.emit(null)
@@ -260,7 +256,6 @@ private fun KarmaCounterSide(
     onLongClick: () -> Unit,
 ) {
     val colors = ButtonDefaults.filledTonalButtonColors()
-    val scope = rememberCoroutineScope()
     val hapticFeedback = LocalHapticFeedback.current
 
     val accentColor = if (up) {
@@ -311,7 +306,7 @@ private fun KarmaCounterSide(
                 indication = ripple(),
                 enabled = model.canRate(),
                 onClick = {
-                    model.rate(scope, up)
+                    model.rate(up)
                 },
                 onLongClick = {
                     hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
