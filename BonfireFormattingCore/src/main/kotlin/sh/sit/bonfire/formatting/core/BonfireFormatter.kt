@@ -50,7 +50,12 @@ object BonfireFormatter {
 
         return FormattedText().apply {
             this.text = visitor.outputString.toString().trimEnd()
-            this.spans = visitor.outputSpans.toTypedArray()
+            this.spans = visitor.outputSpans
+                .map {
+                    it.end = it.end.coerceAtMost(this.text.length)
+                    it
+                }
+                .toTypedArray()
         }
     }
 }

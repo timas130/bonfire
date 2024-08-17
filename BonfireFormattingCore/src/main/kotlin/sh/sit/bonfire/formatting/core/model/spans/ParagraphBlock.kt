@@ -4,6 +4,6 @@ class ParagraphBlock : Span() {
     override fun getTypeId(): Int = TYPE_PARAGRAPH
     override fun isBlockSpan(): Boolean = true
     override fun toString(): String {
-        return "ParagraphSpan() ${super.toString()}"
+        return "ParagraphBlock() ${super.toString()}"
     }
 }
