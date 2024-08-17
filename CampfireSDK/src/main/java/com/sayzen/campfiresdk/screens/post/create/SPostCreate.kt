@@ -36,7 +36,7 @@ import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsThreads
 
-class SPostCreate constructor(
+class SPostCreate(
         val fandomId: Long,
         val languageId: Long,
         val fandomName: String,
@@ -50,7 +50,17 @@ class SPostCreate constructor(
 
         fun instance(publicationId: Long, action: NavigationAction, onOpen: (SPostCreate) -> Unit = {}) {
             ApiRequestsSupporter.executeInterstitial(action, RPostGetDraft(publicationId)) { r ->
-                val screen = SPostCreate(r.publication.fandom.id, r.publication.fandom.languageId, r.publication.fandom.name, r.publication.fandom.image, r.publication, PostParams().setTags(Array(r.tags.size) { r.tags[it].id }), true)
+                val screen = SPostCreate(
+                    fandomId = r.publication.fandom.id,
+                    languageId = r.publication.fandom.languageId,
+                    fandomName = r.publication.fandom.name,
+                    fandomImage = r.publication.fandom.image,
+                    changePost = r.publication,
+                    postParams = PostParams()
+                        .setTags(Array(r.tags.size) { r.tags[it].id })
+                        .setNsfw(r.publication.nsfw),
+                    showMenu = true
+                )
                 onOpen.invoke(screen)
                 screen
             }
@@ -263,6 +273,10 @@ class SPostCreate constructor(
             this.multilingual = multilingual;return this
         }
 
+        fun setNsfw(nsfw: Boolean): PostParams {
+            this.nsfw = nsfw
+            return this
+        }
     }
 
 }
