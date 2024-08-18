@@ -39,8 +39,7 @@ internal fun PostFooter(
     Row(
         Modifier
             .padding(horizontal = 12.dp)
-            .padding(bottom = 12.dp, top = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+            .padding(bottom = 12.dp, top = 8.dp)
     ) {
         if (expandable) {
             ExpandButton(onExpand, model)
@@ -48,9 +47,11 @@ internal fun PostFooter(
         Spacer(Modifier.weight(1f))
 
         if (post.isPublic) {
-            ReportsButton(post, Modifier.height(36.dp))
-            CommentButton(post, Modifier.height(36.dp))
-            KarmaCounter(post)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                ReportsButton(post, Modifier.height(36.dp))
+                CommentButton(post, Modifier.height(36.dp))
+                KarmaCounter(post)
+            }
         }
     }
 }
