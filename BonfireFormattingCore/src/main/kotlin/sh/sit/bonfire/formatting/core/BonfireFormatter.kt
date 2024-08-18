@@ -7,6 +7,7 @@ import org.commonmark.parser.Parser
 import sh.sit.bonfire.formatting.core.bfm.color.ColorExtension
 import sh.sit.bonfire.formatting.core.bfm.marked.MarkedExtension
 import sh.sit.bonfire.formatting.core.bfm.mention.MentionExtension
+import sh.sit.bonfire.formatting.core.bfm.spoiler.SpoilerExtension
 import sh.sit.bonfire.formatting.core.bfm.subscript.SubscriptExtension
 import sh.sit.bonfire.formatting.core.bfm.superscript.SuperscriptExtension
 import sh.sit.bonfire.formatting.core.bfm.underline.UnderlineExtension
@@ -31,6 +32,7 @@ object BonfireFormatter {
                 MarkedExtension(),
                 MentionExtension(),
                 TaskListItemsExtension.create(),
+                SpoilerExtension(),
             ))
             .apply {
                 if (inlineOnly) enabledBlockTypes(setOf())

@@ -5,6 +5,7 @@ import org.commonmark.ext.task.list.items.TaskListItemMarker
 import org.commonmark.node.*
 import sh.sit.bonfire.formatting.core.bfm.color.ColorNode
 import sh.sit.bonfire.formatting.core.bfm.marked.MarkedNode
+import sh.sit.bonfire.formatting.core.bfm.spoiler.SpoilerNode
 import sh.sit.bonfire.formatting.core.bfm.subscript.SubscriptNode
 import sh.sit.bonfire.formatting.core.bfm.superscript.SuperscriptNode
 import sh.sit.bonfire.formatting.core.bfm.underline.UnderlineNode
@@ -42,6 +43,7 @@ class SpanVisitor(buffer: Int = 64) : AbstractVisitor() {
             is SuperscriptNode -> SuperscriptSpan()
             is MarkedNode -> MarkedSpan()
             is TaskListItemMarker -> TaskItemMarker(node.isChecked)
+            is SpoilerNode -> SpoilerSpan()
             else -> EmptySpan()
         }
 

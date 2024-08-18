@@ -15,6 +15,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import sh.sit.bonfire.formatting.core.model.FormattedText
 import sh.sit.bonfire.formatting.core.model.spans.*
 
+const val SpoilerSpanTag = "SpoilerSpan"
+
 @OptIn(ExperimentalTextApi::class)
 fun FormattedText.buildInlineAnnotatedString(theme: ColorScheme): AnnotatedString {
     val builder = AnnotatedString.Builder(text)
@@ -85,6 +87,12 @@ fun FormattedText.buildInlineAnnotatedString(theme: ColorScheme): AnnotatedStrin
             )
             is MarkedSpan -> builder.addStyle(
                 style = SpanStyle(background = theme.primary.copy(alpha = 0.25f)),
+                start = span.start,
+                end = span.end,
+            )
+            is SpoilerSpan -> builder.addStringAnnotation(
+                tag = SpoilerSpanTag,
+                annotation = "",
                 start = span.start,
                 end = span.end,
             )

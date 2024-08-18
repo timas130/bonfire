@@ -13,6 +13,7 @@ import com.apollographql.apollo3.cache.normalized.watch
 import com.dzen.campfire.api.tools.client.TokenProvider
 import com.posthog.PostHog
 import com.sup.dev.android.app.SupAndroid
+import com.sup.dev.android.tools.ToolsPerformance
 import com.sup.dev.android.tools.ToolsTextAndroid
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -109,10 +110,11 @@ object AuthController : TokenProvider {
                 user?.let {
                     PostHog.identify(
                         distinctId = it.id,
-                        userProperties = mapOf<String, Any>(
+                        userProperties = mapOf(
                             "username" to it.username,
                             "email" to (it.email ?: ""),
                             "level" to it.cachedLevel,
+                            "device_performance_class" to ToolsPerformance.performanceClass.toString()
                         )
                     )
                 }

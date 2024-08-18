@@ -120,14 +120,14 @@ object ToolsMath {
 
     fun randomFloat(min: Float, max: Float): Float {
         return if (max == min) min
-        else if (max > min) (Math.random() * ((max + 1) - min)).toFloat() + min
-        else (Math.random() * ((min+1) - max)).toFloat() + max
+        else if (max > min) (Math.random() * (max - min)).toFloat() + min
+        else (Math.random() * (min - max)).toFloat() + max
     }
 
     fun randomDouble(min: Double, max: Double): Double {
         return if (max == min) min
-        else if (max > min) (Math.random() * ((max + 1) - min)).toFloat() + min
-        else (Math.random() * ((min+1) - max)) + max
+        else if (max > min) (Math.random() * (max - min)).toFloat() + min
+        else (Math.random() * (min - max)) + max
     }
 
     fun randomLong(min: Long, max: Long): Long {
