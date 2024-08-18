@@ -1,7 +1,6 @@
 package com.sup.dev.java.tools
 
 import com.sup.dev.java.libs.debug.err
-import com.sup.dev.java.libs.json.Json
 import java.io.*
 import java.net.MalformedURLException
 import java.net.URL
@@ -14,8 +13,8 @@ object ToolsNetwork {
     @JvmOverloads
     fun getBytesFromURL(src: String, count: Int = 0): ByteArray? {
         val output = ByteArrayOutputStream()
-        val url = URL(src)
         try {
+            val url = URL(src)
             val inputStream = url.openStream()
             var n: Int
             while (true) {
