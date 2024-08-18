@@ -60,6 +60,12 @@ object ControllerLinks {
         }).replace('_', '-').removeSuffix("-")
     }
 
+        private fun getDomainName(url: String): String? {
+        val uri = URI(url)
+        val domain: String = uri.host
+        return domain.removePrefix("www.")
+}
+
     fun parseLink(link: String): Boolean {
         try {
             val t = getRawLink(link)
@@ -272,7 +278,7 @@ object ControllerLinks {
         SplashAlert()
                 .setOnCancel(t(API_TRANSLATE.app_cancel))
                 .setOnEnter(t(API_TRANSLATE.app_open)) { ToolsIntent.openLink(link) }
-                .setText(t(API_TRANSLATE.message_link))
+                .setText(t(String.format(API_TRANSLATE.message_link, getDomainName(link))))
                 .setTextGravity(Gravity.CENTER)
                 .setTitleImage(R.drawable.ic_security_white_48dp)
                 .setTitleImageBackgroundRes(R.color.blue_700)
