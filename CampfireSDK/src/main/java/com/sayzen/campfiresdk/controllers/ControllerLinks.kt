@@ -61,10 +61,10 @@ object ControllerLinks {
         }).replace('_', '-').removeSuffix("-")
     }
 
-        private fun getDomainName(url: String): String? {
+    private fun getDomainName(url: String): String? {
         val uri = URI(url)
         val domain: String = uri.host
-        return domain.removePrefix("www.")
+        return domain
 }
 
     fun parseLink(link: String): Boolean {
