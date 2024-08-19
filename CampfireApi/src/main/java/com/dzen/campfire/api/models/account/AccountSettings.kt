@@ -11,6 +11,7 @@ class AccountSettings() : JsonParsable {
     var styleNewYearAvatars = true
     var styleNewYearProfileAnimation = true
     var styleNewYearSnow = 100
+    var styleHolidayEffects = true
     var styleSquare = true
     var styleCorned = 10
     var fandomBackground = true

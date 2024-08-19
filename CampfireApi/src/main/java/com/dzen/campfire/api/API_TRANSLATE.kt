@@ -1100,6 +1100,7 @@ object API_TRANSLATE {
     val settings_style_new_year_avatars = Translate("Новогодние аватары")
     val settings_style_new_year_snow = Translate("Интенсивность снега")
     val settings_style_new_year_profile_animation = Translate("Анимация в профиле")
+    val settings_style_holiday_effects = Translate("Коробки по праздникам")
     val settings_style_rounding = Translate("Скругление")
     val settings_style_rounding_chat = Translate("Скругление сообщений в чате")
     val settings_style_nickname_colors = Translate("Цветные ники")

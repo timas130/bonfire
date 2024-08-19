@@ -9,6 +9,9 @@ import com.sayzen.campfiresdk.models.animations.DrawAnimationGoose
 import com.sayzen.campfiresdk.models.animations.DrawAnimationSnow
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.views.views.draw_animations.DrawAnimation
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import sh.sit.bonfire.auth.AuthController
 import java.util.*
 
 object ControllerHoliday {
@@ -16,9 +19,15 @@ object ControllerHoliday {
     var myAnimation: DrawAnimation? = null
 
     fun onAppStart() {
+        if (!ControllerSettings.styleHolidayEffects) return
+
+        // don't show effects if not authenticated
+        val authState = runBlocking { AuthController.authState.first() }
+        if (authState !is AuthController.AuthenticatedAuthState) return
+
         if (isNewYear()) setAnimation(DrawAnimationSnow(ControllerSettings.styleNewYearSnow))
         if (isFirstApril()) setAnimation(DrawAnimationGoose())
-        if (isBirthday())  setAnimation(DrawAnimationConfetti())
+        if (isBirthday())  setAnimation(DrawAnimationConfetti(10))
     }
 
     fun setAnimation(animation: DrawAnimation){

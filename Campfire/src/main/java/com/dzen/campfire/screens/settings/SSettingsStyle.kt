@@ -41,6 +41,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
     private val vNewYearAvatars: SettingsSwitcher = findViewById(R.id.vNewYearAvatars)
     private val vNewYearSnow: SettingsSeek = findViewById(R.id.vNewYearSnow)
     private val vNewYearProfileAnimation: SettingsSwitcher = findViewById(R.id.vNewYearProfileAnimation)
+    private val vHolidayEffects: SettingsSwitcher = findViewById(R.id.vHolidayEffects)
     private val vHolidayTitle: Settings = findViewById(R.id.vHolidayTitle)
     private val vGrapTitle: Settings = findViewById(R.id.vGrapTitle)
     private val vAppOtherTitle: Settings = findViewById(R.id.vAppOtherTitle)
@@ -68,6 +69,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vNewYearAvatars.setTitle(t(API_TRANSLATE.settings_style_new_year_avatars))
         vNewYearSnow.setTitle(t(API_TRANSLATE.settings_style_new_year_snow))
         vNewYearProfileAnimation.setTitle(t(API_TRANSLATE.settings_style_new_year_profile_animation))
+        vHolidayEffects.setTitle(t(API_TRANSLATE.settings_style_holiday_effects))
         vDefault.setTitle(t(API_TRANSLATE.settings_style_default))
         vAppOtherTitle.setTitle(t(API_TRANSLATE.app_other))
         vKarmaHotness.setTitle(t(API_TRANSLATE.settings_style_karma_hotness))
@@ -76,6 +78,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vFullscreen.visibility = View.GONE
         if(!ControllerHoliday.isHoliday()){
             vHolidayTitle.visibility = View.GONE
+            vHolidayEffects.visibility = View.GONE
         }
         if(!ControllerHoliday.isNewYear()) {
             vNewYearAvatars.visibility = View.GONE
@@ -95,6 +98,16 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
             if(animation is DrawAnimationSnow) animation.arg = vNewYearSnow.progress
         }
         vNewYearSnow.setMaxProgress(1000)
+        vHolidayEffects.setOnClickListener {
+            ControllerSettings.styleHolidayEffects = vHolidayEffects.isChecked()
+
+            if (vHolidayEffects.isChecked()) {
+                ControllerHoliday.onAppStart()
+            } else {
+                ControllerScreenAnimations.clearAnimation()
+            }
+        }
+
         vFullscreen.setOnClickListener {
             ControllerSettings.fullscreen = vFullscreen.isChecked()
             SplashAlert()
@@ -250,6 +263,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vNewYearAvatars.setChecked(ControllerSettings.styleNewYearAvatars)
         vNewYearProfileAnimation.setChecked(ControllerSettings.styleNewYearProfileAnimation)
         vNewYearSnow.progress = ControllerSettings.styleNewYearSnow
+        vHolidayEffects.setChecked(ControllerSettings.styleHolidayEffects)
         vFullscreen.setChecked(ControllerSettings.fullscreen)
         vProfileListStyle.setChecked(ControllerSettings.isProfileListStyle)
         vRounding.progress = ControllerSettings.styleAvatarsRounding

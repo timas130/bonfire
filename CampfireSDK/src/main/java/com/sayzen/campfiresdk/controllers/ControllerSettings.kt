@@ -99,6 +99,13 @@ object ControllerSettings {
             accountSettings.styleNewYearSnow = b
             onSettingsUpdated()
         }
+    var styleHolidayEffects: Boolean
+        get() = accountSettings.styleHolidayEffects
+        set(b) {
+            accountSettings.styleHolidayEffects = b
+            onSettingsUpdated()
+        }
+
     var styleAvatarsSquare: Boolean
         get() = accountSettings.styleSquare
         set(b) {
