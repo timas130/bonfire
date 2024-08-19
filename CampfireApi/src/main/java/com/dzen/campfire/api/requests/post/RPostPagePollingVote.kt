@@ -15,6 +15,7 @@ open class RPostPagePollingVote(
         const val E_LOW_LEVEL = "E_LOW_LEVEL"
         const val E_LOW_KARMA = "E_LOW_KARMA"
         const val E_LOW_DAYS = "E_LOW_DAYS"
+        const val E_ENDED = "E_ENDED"
         const val E_BLACKLISTED = "E_BLACKLISTED"
     }
 

@@ -20,6 +20,7 @@ import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.settings.SettingsField
+import com.sup.dev.android.views.settings.SettingsSelection
 import com.sup.dev.android.views.settings.SettingsTitle
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashAlert
@@ -34,15 +35,16 @@ class SCreatePagePolling(
         private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, onFinish: ((CardPage) -> Unit)) -> Unit,
         private val requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page) -> Unit) -> Unit,
         private val card: CardPage?,
-        private val oldPage: PagePolling?
+        private val oldPage: PagePolling?,
+        private val sourceType: Long
 ) : Screen(R.layout.screen_post_create_polling) {
-
     private val vTitle: TextView = findViewById(R.id.vTitle)
     private val vOptionsLabel: TextView = findViewById(R.id.vOptionsLabel)
     private val vPageTitle: EditText = findViewById(R.id.vPgeTitle)
     private val vContainer: ViewGroup = findViewById(R.id.vContainer)
     private val vCreate: Button = findViewById(R.id.vCreate)
     private val vAdd: ViewButton = findViewById(R.id.vAdd)
+    private val vDuration: SettingsSelection = findViewById(R.id.vDuration)
     private val vLvl: SettingsField = findViewById(R.id.vLvl)
     private val vKarma: SettingsField = findViewById(R.id.vKarma)
     private val vDays: SettingsField = findViewById(R.id.vDays)
@@ -52,8 +54,21 @@ class SCreatePagePolling(
     private val vBlackListAdd: ViewButton = findViewById(R.id.vBlackListAdd)
 
     private val blackList: MutableList<Account> = mutableListOf()
+    private var duration = 0L
 
     init {
+        val durations = listOf(
+            0L,
+            1000L * 60 * 60,
+            1000L * 60 * 60 * 8,
+            1000L * 60 * 60 * 24,
+            1000L * 60 * 60 * 24 * 2,
+            1000L * 60 * 60 * 24 * 3,
+            1000L * 60 * 60 * 24 * 7,
+            1000L * 60 * 60 * 24 * 14,
+            1000L * 60 * 60 * 24 * 30,
+        )
+
         disableShadows()
         disableNavigation()
         setTitle(t(API_TRANSLATE.post_page_polling))
@@ -65,6 +80,22 @@ class SCreatePagePolling(
         vLvl.setHint(t(API_TRANSLATE.post_page_polling_lvl_title))
         vKarma.setHint(t(API_TRANSLATE.post_page_polling_karma_title))
         vDays.setHint(t(API_TRANSLATE.post_page_polling_days_title))
+
+        if (sourceType == API.PAGES_SOURCE_TYPE_POST) {
+            vDuration.add(t(API_TRANSLATE.post_page_polling_duration_infinite)) { duration = durations[0] }
+            vDuration.add(t(API_TRANSLATE.time_hour)) { duration = durations[1] }
+            vDuration.add(t(API_TRANSLATE.time_8_hour)) { duration = durations[2] }
+            vDuration.add(t(API_TRANSLATE.time_day)) { duration = durations[3] }
+            vDuration.add(t(API_TRANSLATE.time_2_day)) { duration = durations[4] }
+            vDuration.add(t(API_TRANSLATE.time_3_day)) { duration = durations[5] }
+            vDuration.add(t(API_TRANSLATE.time_week)) { duration = durations[6] }
+            vDuration.add(t(API_TRANSLATE.time_2_week)) { duration = durations[7] }
+
+            vDuration.setTitle(t(API_TRANSLATE.post_page_polling_duration_title))
+            vDuration.setSubtitle(t(API_TRANSLATE.post_page_polling_duration_infinite))
+        } else {
+            vDuration.setVisibility(View.GONE)
+        }
 
         vTitle.text = "${t(API_TRANSLATE.app_naming)} (${t(API_TRANSLATE.app_not_required)})"
         vPageTitle.addTextChangedListener(TextWatcherChanged { update() })
@@ -83,6 +114,7 @@ class SCreatePagePolling(
                             .asSheetShow()
                 }
             vCreate.text = t(API_TRANSLATE.app_change)
+            if (oldPage.duration > 0) vDuration.setCurrentIndex(durations.indexOf(oldPage.duration).takeIf { it != -1 } ?: 0)
             if (oldPage.minLevel > 0) vLvl.setText("${oldPage.minLevel / 100}")
             if (oldPage.minKarma > 0) vKarma.setText("${oldPage.minKarma / 100}")
             if (oldPage.minDays > 0) vDays.setText(oldPage.minDays.toString())
@@ -230,6 +262,7 @@ class SCreatePagePolling(
         val page = PagePolling()
         page.title = vPageTitle.text.toString()
         page.options = getOptions()
+        page.duration = duration
         page.minLevel = if (vLvl.getText().isEmpty()) 0L else (vLvl.getText().toFloat() * 100).toLong()
         page.minKarma = if (vKarma.getText().isEmpty()) 0L else vKarma.getText().toLong() * 100
         page.minDays = if (vDays.getText().isEmpty()) 0L else vDays.getText().toLong()

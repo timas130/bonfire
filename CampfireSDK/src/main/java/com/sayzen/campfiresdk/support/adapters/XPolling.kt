@@ -29,6 +29,7 @@ import com.sup.dev.android.views.views.ViewButton
 import com.sup.dev.android.views.views.ViewProgressLine
 import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.java.libs.eventBus.EventBus
+import com.sup.dev.java.tools.ToolsDate
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
 import sh.sit.bonfire.formatting.BonfireMarkdown
@@ -228,23 +229,29 @@ class XPolling(
     private fun updateLimits(view: View){
         val vLimit: ViewText = view.findViewById(R.id.vLimit)
 
-        if (page.minKarma <= 0 && page.minLevel <= 0 && page.minDays <= 0) {
-            vLimit.visibility = View.GONE
-        } else {
-            vLimit.visibility = View.VISIBLE
+        if (page.minKarma > 0 || page.minLevel > 0 || page.minDays > 0) {
             vLimit.text = "${t(API_TRANSLATE.app_limitations)}: "
             if (page.minLevel > 0) vLimit.text = "${vLimit.text} ${t(API_TRANSLATE.app_level)} ${ToolsText.numToStringRoundAndTrim(page.minLevel / 100f, 2)}  "
             if (page.minKarma > 0) vLimit.text = "${vLimit.text} ${t(API_TRANSLATE.app_karma)} ${((page.minKarma / 100).toInt())}"
             if (page.minDays > 0) vLimit.text = "${vLimit.text} ${t(API_TRANSLATE.post_page_polling_limit_days)} ${page.minDays}"
             if (page.blacklist.find { it.id == ControllerApi.account.getId() } != null)
                 vLimit.text = "${vLimit.text}  ${t(API_TRANSLATE.settings_black_list)}"
-            vLimit.setTextColor(ToolsResources.getColor(if (!canVote()) R.color.red_700 else R.color.green_700))
         }
+        if (page.duration > 0) {
+            if (!vLimit.text.isEmpty()) vLimit.text = "${vLimit.text}\n"
+            vLimit.text = "${vLimit.text}${t(API_TRANSLATE.app_ends)} ${ToolsDate.dateToString(
+                (pagesContainer?.getSourceDateCreate() ?: 0L).coerceAtLeast(page.dateCreate) + page.duration
+            )}"
+        }
+
+        vLimit.visibility = if (vLimit.text.isEmpty()) View.GONE else View.VISIBLE
+        vLimit.setTextColor(ToolsResources.getColor(if (!canVote()) R.color.red_700 else R.color.green_700))
     }
 
     private fun canVote() =
             ControllerApi.account.getLevel() >= page.minLevel &&
             ControllerApi.account.getKarma30() >= page.minKarma &&
             ((ControllerApi.currentTime() - ControllerApi.account.getDateAccountCreated()) / (3600000L * 24) + 1) >= page.minDays &&
-            page.blacklist.find { it.id == ControllerApi.account.getId() } == null
+            page.blacklist.find { it.id == ControllerApi.account.getId() } == null &&
+            (page.duration <= 0 || page.duration >= (System.currentTimeMillis() - (pagesContainer?.getSourceDateCreate() ?: 0L).coerceAtLeast(page.dateCreate)))
 }

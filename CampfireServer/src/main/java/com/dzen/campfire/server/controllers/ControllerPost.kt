@@ -65,7 +65,7 @@ object ControllerPost {
     }
 
     @Throws(ApiException::class)
-    fun checkPage(page: Page?, eBadPage: String, isChange: Boolean) {
+    fun checkPage(page: Page?, eBadPage: String, isChange: Boolean, sourceType: Long) {
 
         if (page == null) throw ApiException(eBadPage, "Page is null")
 
@@ -122,6 +122,7 @@ object ControllerPost {
                 page.title = ControllerCensor.cens(page.title)
                 if (page.title.length > API.PAGE_IMAGES_TITLE_MAX) throw ApiException(eBadPage, "PagePolling. Bad title")
                 if (page.options.size > API.PAGE_POLLING_OPTION_MAX_COUNT) throw ApiException(eBadPage, "PagePolling. Bad count")
+                if (page.duration < 0) throw ApiException(eBadPage, "PagePolling. Bad duration")
                 if (page.minLevel < 0) throw ApiException(eBadPage, "PagePolling. Bad min lvl")
                 if (page.minKarma < 0) throw ApiException(eBadPage, "PagePolling. Bad min karma")
                 for (i in page.options.indices) {
@@ -129,6 +130,7 @@ object ControllerPost {
                     if (page.options[i].length > API.PAGE_POLLING_OPTION_MAX_TEXT) throw ApiException(eBadPage, "PagePolling. Bad option size")
                 }
                 if (page.blacklist.size > API.PAGE_POLLING_BLACKLIST_MAX) throw ApiException(eBadPage, "PagePolling. Too many blacklisted users")
+                if (page.duration > 0 && sourceType == API.PAGES_SOURCE_TYPE_WIKI) throw ApiException(eBadPage, "PagePolling. Bad duration in a wiki article")
             }
             is PageImages -> {
                 page.title = ControllerCensor.cens(page.title)
@@ -231,6 +233,7 @@ object ControllerPost {
             }
             is PagePolling -> {
                 page.pollingId = System.nanoTime()
+                page.dateCreate = System.currentTimeMillis()
             }
             is PageImages -> {
                 if (page.replacePageIndex != -1) {

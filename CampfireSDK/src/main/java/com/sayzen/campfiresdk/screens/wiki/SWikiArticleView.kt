@@ -243,7 +243,7 @@ class SWikiArticleView(
     override fun getSourceType() = API.PAGES_SOURCE_TYPE_WIKI
     override fun getSourceId() = wikiTitle.itemId
     override fun getSourceIdSub() = languageId
-
+    override fun getSourceDateCreate() = 0L
 
     //
     //  EventBus

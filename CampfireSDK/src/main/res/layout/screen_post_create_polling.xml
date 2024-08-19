@@ -29,57 +29,72 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:id="@+id/vTitle"
-                style="@style/TextAppearance.AppCompat.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="?attr/colorStroke" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/TextInputLayout.Outlined"
-                android:layout_marginBottom="8dp">
-
-                <EditText
-                    android:id="@+id/vPgeTitle"
-                    style="@style/Field"
-                    android:inputType="textCapSentences|textAutoComplete|textAutoCorrect" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/vOptionsLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="?attr/colorStroke" />
-
-            <LinearLayout
-                android:id="@+id/vContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <com.sup.dev.android.views.views.ViewButton
-                android:id="@+id/vAdd"
-                style="@style/Button.Text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginLeft="-6dp"
-                android:layout_marginRight="-6dp">
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
-                <com.sup.dev.android.views.settings.SettingsTitle
-                    android:id="@+id/vTitleLimit"
+                <TextView
+                    android:id="@+id/vTitle"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorStroke" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/TextInputLayout.Outlined"
+                    android:layout_marginBottom="8dp">
+
+                    <EditText
+                        android:id="@+id/vPgeTitle"
+                        style="@style/Field"
+                        android:inputType="textCapSentences|textAutoComplete|textAutoCorrect" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/vOptionsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorStroke" />
+
+                <LinearLayout
+                    android:id="@+id/vContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:Settings_lineVisible="false"/>
+                    android:orientation="vertical" />
+
+                <com.sup.dev.android.views.views.ViewButton
+                    android:id="@+id/vAdd"
+                    style="@style/Button.Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <com.sup.dev.android.views.settings.SettingsTitle
+                android:id="@+id/vTitleLimit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"/>
+
+            <com.sup.dev.android.views.settings.SettingsSelection
+                android:id="@+id/vDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
 
                 <com.sup.dev.android.views.settings.SettingsField
                     android:id="@+id/vLvl"
@@ -102,30 +117,38 @@
                     android:inputType="number"
                     app:Settings_maxLength="4" />
 
+            </LinearLayout>
 
-                <com.sup.dev.android.views.settings.SettingsTitle
-                    android:id="@+id/vBlackListTitle"
+            <com.sup.dev.android.views.settings.SettingsTitle
+                android:id="@+id/vBlackListTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                app:Settings_lineVisible="false" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <LinearLayout
+                    android:id="@+id/vBlackListUsers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    app:Settings_lineVisible="false" />
+                    android:orientation="vertical" />
+
+                <com.sup.dev.android.views.views.ViewButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/vBlackListAdd"
+                    style="@style/Button.Text" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/vBlackListUsers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <com.sup.dev.android.views.views.ViewButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/vBlackListAdd"
-                style="@style/Button.Text" />
-
         </LinearLayout>
-
 
     </ScrollView>
 

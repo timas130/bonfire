@@ -57,4 +57,5 @@ class PublicationPost : Publication, PagesContainer {
     override fun getSourceType() = API.PAGES_SOURCE_TYPE_POST
     override fun getSourceId() = id
     override fun getSourceIdSub() = 0L
+    override fun getSourceDateCreate() = dateCreate
 }

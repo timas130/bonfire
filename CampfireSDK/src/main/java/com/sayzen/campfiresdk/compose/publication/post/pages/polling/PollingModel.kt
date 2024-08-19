@@ -94,7 +94,11 @@ class PollingModel(val page: PagePolling, val source: PagesSource) {
                 // have not voted
                 data.value?.results?.find { it.myVote } == null &&
                 // not editing
-                !source.editMode
+                !source.editMode &&
+                // not expired
+                (page.duration <= 0 || page.duration >= (
+                    System.currentTimeMillis() - source.sourceDateCreate.coerceAtLeast(page.dateCreate)
+                ))
     }
 
     fun getShowResults(account: Account = ControllerApi.account.getAccount()): StateFlow<Boolean> {

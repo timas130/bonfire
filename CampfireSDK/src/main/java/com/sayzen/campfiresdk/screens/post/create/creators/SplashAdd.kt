@@ -15,7 +15,8 @@ import com.sup.dev.android.views.splash.view.SplashViewSheet
 class SplashAdd(
         private val requestPutPage: (Page, Screen?, Splash?, ((CardPage) -> Unit)) -> Unit,
         private val requestChangePage: (Page, CardPage, Screen?, Splash?, (Page) -> Unit) -> Unit,
-        private val onBackEmptyAndNewerAdd: () -> Unit
+        private val onBackEmptyAndNewerAdd: () -> Unit,
+        private val sourceType: Long
 ) : SplashMenu() {
 
     var wasClicked = false
@@ -48,7 +49,7 @@ class SplashAdd(
         }.icon(R.drawable.eye_off)
         add(t(API_TRANSLATE.post_page_polling)) {
             wasClicked = true
-            Navigator.to(SCreatePagePolling(requestPutPage, requestChangePage, null, null))
+            Navigator.to(SCreatePagePolling(requestPutPage, requestChangePage, null, null, sourceType))
         }.icon(R.drawable.ic_check_box_white_24dp)
         add(t(API_TRANSLATE.post_page_link_image)) {
             wasClicked = true
@@ -77,7 +78,7 @@ class SplashAdd(
             is PageLink -> SplashPageLink(requestPutPage, requestChangePage, c, c.page as PageLink).asSheetShow()
             is PageLinkImage -> SplashPageLinkImage(requestPutPage, requestChangePage, c, c.page as PageLinkImage).asSheetShow()
             is PageSpoiler -> SplashPageSpoiler(requestPutPage, requestChangePage, c, c.page as PageSpoiler).asSheetShow()
-            is PagePolling -> Navigator.to(SCreatePagePolling(requestPutPage, requestChangePage, c, c.page as PagePolling))
+            is PagePolling -> Navigator.to(SCreatePagePolling(requestPutPage, requestChangePage, c, c.page as PagePolling, sourceType))
             is PageImages -> SplashPageImages(requestChangePage, c, c.page as PageImages).asSheetShow()
             is PageTable -> Navigator.to(SCreatePageTable(requestPutPage, requestChangePage, c, c.page as PageTable))
             is PageCode -> Navigator.to(SCreatePageCode(requestPutPage, requestChangePage, c, c.page as PageCode))

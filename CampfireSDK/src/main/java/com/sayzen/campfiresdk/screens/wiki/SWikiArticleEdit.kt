@@ -1,6 +1,7 @@
 package com.sayzen.campfiresdk.screens.wiki
 
 import androidx.recyclerview.widget.RecyclerView
+import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.post.Page
 import com.dzen.campfire.api.requests.wiki.*
@@ -37,7 +38,7 @@ class SWikiArticleEdit(
     private val vRecycler: RecyclerView = findViewById(R.id.vRecycler)
     private val vAdd: FloatingActionButton = findViewById(R.id.vAdd)
     private val vFinish: FloatingActionButton = findViewById(R.id.vFinish)
-    private val xPostCreator = PostCreator(pages, vRecycler, vAdd, vFinish, { backIfEmptyAndNewerAdd() }, requestPutPage(), requestRemovePage(), requestChangePage(), requestMovePage())
+    private val xPostCreator = PostCreator(pages, vRecycler, vAdd, vFinish, { backIfEmptyAndNewerAdd() }, requestPutPage(), requestRemovePage(), requestChangePage(), requestMovePage(), API.PAGES_SOURCE_TYPE_WIKI)
 
     init {
         disableShadows()
