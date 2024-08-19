@@ -7,11 +7,10 @@ import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostPagePollingVote
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
-import com.dzen.campfire.server.tables.TAccounts
 
 class EPostPagePollingVote : RPostPagePollingVote(0, 0, 0, 0, 0) {
     companion object {
-        fun getPolling(sourceType: Long, sourceId: Long, sourceIdSub: Long, pollingId: Long): Pair<PagePolling?, Long> {
+        fun getPolling(sourceType: Long, sourceId: Long, sourceIdSub: Long, pollingId: Long): Pair<PagePolling, Long>? {
             var pages: Array<Page> = emptyArray()
             var dateCreate = 0L
 
@@ -29,10 +28,10 @@ class EPostPagePollingVote : RPostPagePollingVote(0, 0, 0, 0, 0) {
 
             for (p in pages) {
                 if (p is PagePolling && p.pollingId == pollingId) {
-                    return Pair(p, dateCreate)
+                    return Pair(p, maxOf(dateCreate, p.dateCreate))
                 }
             }
-            return Pair(null, dateCreate)
+            return null
         }
     }
 
@@ -40,8 +39,8 @@ class EPostPagePollingVote : RPostPagePollingVote(0, 0, 0, 0, 0) {
     override fun check() {
         ControllerAccounts.checkAccountBanned(apiAccount.id)
         val (polling, dateCreate) = getPolling(sourceType, sourceId, sourceIdSub, pollingId)
+            ?: throw ApiException(API.ERROR_GONE)
 
-        if (polling == null) throw ApiException(API.ERROR_GONE)
         if (polling.minLevel > apiAccount.accessTag) throw ApiException(E_LOW_LEVEL)
         if (polling.minKarma > apiAccount.accessTagSub) throw ApiException(E_LOW_KARMA)
         val days = (System.currentTimeMillis() - apiAccount.dateCreate) / (3600000L * 24) + 1
@@ -49,7 +48,7 @@ class EPostPagePollingVote : RPostPagePollingVote(0, 0, 0, 0, 0) {
         if (
             polling.duration > 0 &&
             dateCreate != 0L &&
-            polling.duration < System.currentTimeMillis() - dateCreate.coerceAtLeast(polling.dateCreate)
+            polling.duration < System.currentTimeMillis() - dateCreate
         ) throw ApiException(E_ENDED)
 
         if (polling.blacklist.find { it.id == apiAccount.id } != null)

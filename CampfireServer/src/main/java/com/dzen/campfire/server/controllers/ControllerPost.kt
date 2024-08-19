@@ -122,7 +122,7 @@ object ControllerPost {
                 page.title = ControllerCensor.cens(page.title)
                 if (page.title.length > API.PAGE_IMAGES_TITLE_MAX) throw ApiException(eBadPage, "PagePolling. Bad title")
                 if (page.options.size > API.PAGE_POLLING_OPTION_MAX_COUNT) throw ApiException(eBadPage, "PagePolling. Bad count")
-                if (page.duration < 0) throw ApiException(eBadPage, "PagePolling. Bad duration")
+                if (page.duration < 0 || page.duration > API.PAGE_POLLING_MAX_DURATION) throw ApiException(eBadPage, "PagePolling. Bad duration")
                 if (page.minLevel < 0) throw ApiException(eBadPage, "PagePolling. Bad min lvl")
                 if (page.minKarma < 0) throw ApiException(eBadPage, "PagePolling. Bad min karma")
                 for (i in page.options.indices) {

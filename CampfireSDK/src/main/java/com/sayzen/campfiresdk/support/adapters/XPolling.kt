@@ -229,22 +229,43 @@ class XPolling(
     private fun updateLimits(view: View){
         val vLimit: ViewText = view.findViewById(R.id.vLimit)
 
-        if (page.minKarma > 0 || page.minLevel > 0 || page.minDays > 0) {
-            vLimit.text = "${t(API_TRANSLATE.app_limitations)}: "
-            if (page.minLevel > 0) vLimit.text = "${vLimit.text} ${t(API_TRANSLATE.app_level)} ${ToolsText.numToStringRoundAndTrim(page.minLevel / 100f, 2)}  "
-            if (page.minKarma > 0) vLimit.text = "${vLimit.text} ${t(API_TRANSLATE.app_karma)} ${((page.minKarma / 100).toInt())}"
-            if (page.minDays > 0) vLimit.text = "${vLimit.text} ${t(API_TRANSLATE.post_page_polling_limit_days)} ${page.minDays}"
-            if (page.blacklist.find { it.id == ControllerApi.account.getId() } != null)
-                vLimit.text = "${vLimit.text}  ${t(API_TRANSLATE.settings_black_list)}"
-        }
-        if (page.duration > 0) {
-            if (!vLimit.text.isEmpty()) vLimit.text = "${vLimit.text}\n"
-            vLimit.text = "${vLimit.text}${t(API_TRANSLATE.app_ends)} ${ToolsDate.dateToString(
-                (pagesContainer?.getSourceDateCreate() ?: 0L).coerceAtLeast(page.dateCreate) + page.duration
-            )}"
+        val limitsText = buildString {
+            if (page.minLevel > 0) {
+                append(t(API_TRANSLATE.app_level))
+                append(' ')
+                append(ToolsText.numToStringRoundAndTrim(page.minLevel / 100f, 2))
+                append("  ")
+            }
+
+            if (page.minKarma > 0) {
+                append(t(API_TRANSLATE.app_karma))
+                append(' ')
+                append((page.minKarma / 100).toInt())
+                append("  ")
+            }
+
+            if (page.minDays > 0) {
+                append(t(API_TRANSLATE.post_page_polling_limit_days))
+                append(' ')
+                append(page.minDays)
+                append("  ")
+            }
+
+            if (page.blacklist.any { it.id == ControllerApi.account.getId() }) {
+                append(t(API_TRANSLATE.settings_black_list))
+            }
+
+            if (page.duration > 0) {
+                append('\n')
+                append(t(API_TRANSLATE.app_ends))
+                append(' ')
+
+                val endDate = maxOf(pagesContainer?.getSourceDateCreate() ?: 0L, page.dateCreate) + page.duration
+                append(ToolsDate.dateToString(endDate))
+            }
         }
 
-        vLimit.visibility = if (vLimit.text.isEmpty()) View.GONE else View.VISIBLE
+        ToolsView.setTextOrGone(vLimit, limitsText)
         vLimit.setTextColor(ToolsResources.getColor(if (!canVote()) R.color.red_700 else R.color.green_700))
     }
 

@@ -854,6 +854,7 @@ class API(
         const val PAGE_LINK_SPOILER_NAME_MAX_L = 100
         const val PAGE_POLLING_OPTION_MAX_TEXT = 200
         const val PAGE_POLLING_OPTION_MAX_COUNT = 10
+        const val PAGE_POLLING_MAX_DURATION = 1000L * 60 * 60 * 24 * 30
         const val PAGE_POLLING_TITLE_MAX = 100
         const val PAGE_POLLING_BLACKLIST_MAX = 10
         const val PAGE_IMAGES_MINI_SIDE = 500

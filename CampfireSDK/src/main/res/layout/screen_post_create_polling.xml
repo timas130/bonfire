@@ -36,8 +36,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingTop="16dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingHorizontal="16dp">
 
                 <TextView
                     android:id="@+id/vTitle"
@@ -93,8 +92,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
+                android:paddingHorizontal="10dp">
 
                 <com.sup.dev.android.views.settings.SettingsField
                     android:id="@+id/vLvl"
@@ -131,8 +129,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingBottom="16dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingHorizontal="16dp">
 
                 <LinearLayout
                     android:id="@+id/vBlackListUsers"

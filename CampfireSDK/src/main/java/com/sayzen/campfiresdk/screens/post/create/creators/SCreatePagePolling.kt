@@ -58,15 +58,15 @@ class SCreatePagePolling(
 
     init {
         val durations = listOf(
-            0L,
-            1000L * 60 * 60,
-            1000L * 60 * 60 * 8,
-            1000L * 60 * 60 * 24,
-            1000L * 60 * 60 * 24 * 2,
-            1000L * 60 * 60 * 24 * 3,
-            1000L * 60 * 60 * 24 * 7,
-            1000L * 60 * 60 * 24 * 14,
-            1000L * 60 * 60 * 24 * 30,
+            API_TRANSLATE.post_page_polling_duration_infinite to 0L,
+            API_TRANSLATE.time_hour to 1000L * 60 * 60,
+            API_TRANSLATE.time_8_hour to 1000L * 60 * 60 * 8,
+            API_TRANSLATE.time_day to 1000L * 60 * 60 * 24,
+            API_TRANSLATE.time_2_day to 1000L * 60 * 60 * 24 * 2,
+            API_TRANSLATE.time_3_day to 1000L * 60 * 60 * 24 * 3,
+            API_TRANSLATE.time_week to 1000L * 60 * 60 * 24 * 7,
+            API_TRANSLATE.time_2_week to 1000L * 60 * 60 * 24 * 14,
+            API_TRANSLATE.time_month to 1000L * 60 * 60 * 24 * 30,
         )
 
         disableShadows()
@@ -82,19 +82,14 @@ class SCreatePagePolling(
         vDays.setHint(t(API_TRANSLATE.post_page_polling_days_title))
 
         if (sourceType == API.PAGES_SOURCE_TYPE_POST) {
-            vDuration.add(t(API_TRANSLATE.post_page_polling_duration_infinite)) { duration = durations[0] }
-            vDuration.add(t(API_TRANSLATE.time_hour)) { duration = durations[1] }
-            vDuration.add(t(API_TRANSLATE.time_8_hour)) { duration = durations[2] }
-            vDuration.add(t(API_TRANSLATE.time_day)) { duration = durations[3] }
-            vDuration.add(t(API_TRANSLATE.time_2_day)) { duration = durations[4] }
-            vDuration.add(t(API_TRANSLATE.time_3_day)) { duration = durations[5] }
-            vDuration.add(t(API_TRANSLATE.time_week)) { duration = durations[6] }
-            vDuration.add(t(API_TRANSLATE.time_2_week)) { duration = durations[7] }
+            for (variant in durations) {
+                vDuration.add(t(variant.first)) { duration = variant.second }
+            }
 
             vDuration.setTitle(t(API_TRANSLATE.post_page_polling_duration_title))
             vDuration.setSubtitle(t(API_TRANSLATE.post_page_polling_duration_infinite))
         } else {
-            vDuration.setVisibility(View.GONE)
+            vDuration.visibility = View.GONE
         }
 
         vTitle.text = "${t(API_TRANSLATE.app_naming)} (${t(API_TRANSLATE.app_not_required)})"
@@ -102,22 +97,34 @@ class SCreatePagePolling(
         if (oldPage != null) {
             vPageTitle.setText(oldPage.title)
             for (o in oldPage.options) addItem(o)
-            if (!SplashAlert.check("ALERT_POLLING_CHANGE"))
+            if (!SplashAlert.check("ALERT_POLLING_CHANGE")) {
                 ToolsThreads.main(100) {
                     SplashAlert()
-                            .setTopTitleText(t(API_TRANSLATE.app_attention))
-                            .setCancelable(false)
-                            .setTitleImageBackgroundRes(R.color.blue_700)
-                            .setText(t(API_TRANSLATE.post_page_polling_change_alert))
-                            .setChecker("ALERT_POLLING_CHANGE")
-                            .setOnEnter(t(API_TRANSLATE.app_got_it))
-                            .asSheetShow()
+                        .setTopTitleText(t(API_TRANSLATE.app_attention))
+                        .setCancelable(false)
+                        .setTitleImageBackgroundRes(R.color.blue_700)
+                        .setText(t(API_TRANSLATE.post_page_polling_change_alert))
+                        .setChecker("ALERT_POLLING_CHANGE")
+                        .setOnEnter(t(API_TRANSLATE.app_got_it))
+                        .asSheetShow()
                 }
+            }
             vCreate.text = t(API_TRANSLATE.app_change)
-            if (oldPage.duration > 0) vDuration.setCurrentIndex(durations.indexOf(oldPage.duration).takeIf { it != -1 } ?: 0)
-            if (oldPage.minLevel > 0) vLvl.setText("${oldPage.minLevel / 100}")
-            if (oldPage.minKarma > 0) vKarma.setText("${oldPage.minKarma / 100}")
-            if (oldPage.minDays > 0) vDays.setText(oldPage.minDays.toString())
+
+            if (oldPage.duration > 0) {
+                vDuration.setCurrentIndex(durations
+                    .indexOfFirst { it.second == oldPage.duration }
+                    .takeUnless { it == -1 } ?: 0)
+            }
+            if (oldPage.minLevel > 0) {
+                vLvl.setText("${oldPage.minLevel / 100}")
+            }
+            if (oldPage.minKarma > 0) {
+                vKarma.setText("${oldPage.minKarma / 100}")
+            }
+            if (oldPage.minDays > 0) {
+                vDays.setText(oldPage.minDays.toString())
+            }
         } else {
             addItem("")
             addItem("")
