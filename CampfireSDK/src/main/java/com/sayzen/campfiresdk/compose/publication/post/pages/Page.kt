@@ -58,6 +58,7 @@ data class PagesSource(
     val sourceType: Long,
     val sourceId: Long,
     val sourceSubId: Long = 0,
+    val sourceDateCreate: Long = 0,
 
     val editMode: Boolean = false,
     val movingIndex: Int? = null,
@@ -180,7 +181,15 @@ class ComposeCardPage(pagesContainer: PagesContainer?, page: Page) : CardPage(R.
                     ) {
                         PostPage(
                             page = page,
-                            source = PagesSource.Unknown.copy(editMode = this@ComposeCardPage.editMode),
+                            source = pagesContainer?.let {
+                                PagesSource(
+                                    sourceType = it.getSourceType(),
+                                    sourceId = it.getSourceId(),
+                                    sourceSubId = it.getSourceIdSub(),
+                                    sourceDateCreate = it.getSourceDateCreate(),
+                                    editMode = this@ComposeCardPage.editMode
+                                )
+                            } ?: PagesSource.Unknown.copy(editMode = this@ComposeCardPage.editMode),
                             model = model,
                         )
                     }
@@ -211,7 +220,8 @@ class ComposePostPages(
                     PagesSource(
                         sourceType = it.getSourceType(),
                         sourceId = it.getSourceId(),
-                        sourceSubId = it.getSourceIdSub()
+                        sourceSubId = it.getSourceIdSub(),
+                        sourceDateCreate = it.getSourceDateCreate()
                     )
                 } ?: PagesSource.Unknown,
                 model = viewModel(),

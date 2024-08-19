@@ -138,6 +138,7 @@ internal fun PostContent(
         PagesSource(
             sourceType = API.PAGES_SOURCE_TYPE_POST,
             sourceId = post.id,
+            sourceDateCreate = post.dateCreate,
         )
     }
 

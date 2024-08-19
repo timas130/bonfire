@@ -40,12 +40,12 @@ class EPostChangePage : RPostChangePage(0, null, 0) {
 
         if (publication!!.pages[pageIndex].isRemoveOnChange()) {
             page!!.copyChangeData(publication!!.pages[pageIndex])
-            ControllerPost.checkPage(page, E_BAD_PAGE, true)
+            ControllerPost.checkPage(page, E_BAD_PAGE, true, API.PAGES_SOURCE_TYPE_POST)
             ControllerPost.removePage(publication!!.pages[pageIndex])
             resultPage = page!!
         } else {
             publication!!.pages[pageIndex].prepareForServer(page!!)
-            ControllerPost.checkPage(publication!!.pages[pageIndex], E_BAD_PAGE, true)
+            ControllerPost.checkPage(publication!!.pages[pageIndex], E_BAD_PAGE, true, API.PAGES_SOURCE_TYPE_POST)
             resultPage = publication!!.pages[pageIndex]
         }
 

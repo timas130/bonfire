@@ -21,6 +21,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.post.PagePolling
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
@@ -28,6 +29,7 @@ import com.sayzen.campfiresdk.compose.BonfireTheme
 import com.sayzen.campfiresdk.compose.publication.post.pages.PagesSource
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sup.dev.java.tools.ToolsDate
 import sh.sit.bonfire.auth.components.TextLoadingButton
 import sh.sit.bonfire.formatting.compose.buildInlineAnnotatedString
 import sh.sit.bonfire.formatting.core.BonfireFormatter
@@ -66,7 +68,7 @@ internal fun PagePollingRenderer(page: PagePolling, source: PagesSource = PagesS
                 )
             }
 
-            PollLimits(page = page)
+            PollLimits(page = page, source = source)
 
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -109,9 +111,15 @@ private fun PollButtons(model: PollingModel) {
 }
 
 @Composable
-private fun PollLimits(page: PagePolling) {
+private fun PollLimits(page: PagePolling, source: PagesSource) {
     // if no limits
-    if (page.minDays <= 1 && page.minKarma <= 0 && page.minLevel <= 100) return
+    if (
+        page.duration <= 0 &&
+        page.minDays <= 1 &&
+        page.minKarma <= 0 &&
+        page.minLevel <= 100 &&
+        page.blacklist.isEmpty()
+    ) return
 
     Column(Modifier.padding(bottom = 8.dp)) {
         Text(
@@ -127,6 +135,19 @@ private fun PollLimits(page: PagePolling) {
                     .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
+                if (page.duration > 0) {
+                    val dateCreate = source.sourceDateCreate.coerceAtLeast(page.dateCreate)
+
+                    FilterChip(
+                        selected = page.duration >= (System.currentTimeMillis() - dateCreate),
+                        onClick = {},
+                        label = {
+                            Text(stringResource(R.string.poll_limits_duration).format(
+                                ToolsDate.dateToString(dateCreate + page.duration)
+                            ))
+                        }
+                    )
+                }
                 if (page.minLevel > 100) {
                     FilterChip(
                         selected = ControllerApi.account.getLevel() >= page.minLevel,
@@ -270,11 +291,19 @@ private fun PollingItem(model: PollingModel, optionTitle: String, index: Int) {
 private fun PollPreview() {
     BonfireTheme(useDarkTheme = isSystemInDarkTheme()) {
         Surface {
-            PollLimits(page = PagePolling().apply {
-                minLevel = 1000
-                minKarma = 50000
-                minDays = 5
-            })
+            PollLimits(
+                page = PagePolling().apply {
+                    duration = 1000L * 60 * 60
+                    minLevel = 1000
+                    minKarma = 50000
+                    minDays = 5
+                },
+                source = PagesSource(
+                    sourceType = 0,
+                    sourceId = API.PAGES_SOURCE_TYPE_POST,
+                    sourceDateCreate = System.currentTimeMillis()
+                )
+            )
         }
     }
 }

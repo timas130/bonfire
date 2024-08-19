@@ -38,12 +38,12 @@ class EWikiPageChange : RWikiPageChange(0, 0, null, 0) {
         val resultPage: Page
 
         if (wikiPagesOld.pages[pageIndex].isRemoveOnChange()) {
-            ControllerPost.checkPage(page, E_BAD_PAGE, true)
+            ControllerPost.checkPage(page, E_BAD_PAGE, true, API.PAGES_SOURCE_TYPE_WIKI)
             ControllerPost.removePage(wikiPagesOld.pages[pageIndex])
             resultPage = page!!
         } else {
             wikiPagesOld.pages[pageIndex].prepareForServer(page!!)
-            ControllerPost.checkPage(wikiPagesOld.pages[pageIndex], E_BAD_PAGE, true)
+            ControllerPost.checkPage(wikiPagesOld.pages[pageIndex], E_BAD_PAGE, true, API.PAGES_SOURCE_TYPE_WIKI)
             resultPage = wikiPagesOld.pages[pageIndex]
         }
 

@@ -11,4 +11,6 @@ interface PagesContainer {
     fun getSourceId(): Long
 
     fun getSourceIdSub(): Long
+
+    fun getSourceDateCreate(): Long
 }

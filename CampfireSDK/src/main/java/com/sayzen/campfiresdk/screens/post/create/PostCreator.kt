@@ -38,7 +38,8 @@ class PostCreator(
         val requestPutPage: (Splash?, Array<Page>, (Array<Page>) -> Unit, () -> Unit) -> Unit,
         val requestRemovePage: (Array<Int>, () -> Unit) -> Unit,
         val requestChangePage: (Splash?, Page, Int, (Page) -> Unit) -> Unit,
-        val requestMovePage: (Int, Int, () -> Unit) -> Unit
+        val requestMovePage: (Int, Int, () -> Unit) -> Unit,
+        private val sourceType: Long
 ) : PagesContainer {
     private val composeMode = PostHog.isFeatureEnabled("compose_post")
 
@@ -64,7 +65,8 @@ class PostCreator(
         widgetAdd = SplashAdd(
             requestPutPage = ::putPage,
             requestChangePage = ::changePage,
-            onBackEmptyAndNewerAdd = onBackEmptyAndNewerAdd
+            onBackEmptyAndNewerAdd = onBackEmptyAndNewerAdd,
+            sourceType = getSourceType()
         )
         adapter = RecyclerCardAdapter()
         adapter.addItemsChangeListener { updateFinishEnabled() }
@@ -297,9 +299,9 @@ class PostCreator(
     //
 
     override fun getPagesArray() = pages
-    override fun getSourceType() = API.PAGES_SOURCE_TYPE_POST
+    override fun getSourceType() = sourceType
     override fun getSourceId() = 0L
     override fun getSourceIdSub() = 0L
-
+    override fun getSourceDateCreate() = 0L
 
 }

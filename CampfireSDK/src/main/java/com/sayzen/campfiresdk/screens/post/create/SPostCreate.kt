@@ -87,7 +87,7 @@ class SPostCreate(
     private val vAdd: FloatingActionButton = findViewById(R.id.vAdd)
     private val vFinish: FloatingActionButton = findViewById(R.id.vFinish)
     private val vAvatarTitle: ViewAvatarTitle = findViewById(R.id.vAvatarTitle)
-    private val xPostCreator = PostCreator(changePost?.pages ?: emptyArray(), vRecycler, vAdd, vFinish, { backIfEmptyAndNewerAdd() }, requestPutPage(), requestRemovePage(), requestChangePage(), requestMovePage())
+    private val xPostCreator = PostCreator(changePost?.pages ?: emptyArray(), vRecycler, vAdd, vFinish, { backIfEmptyAndNewerAdd() }, requestPutPage(), requestRemovePage(), requestChangePage(), requestMovePage(), API.PAGES_SOURCE_TYPE_POST)
     private val xFandom = XFandom()
             .setId(fandomId)
             .setLanguageId(languageId)

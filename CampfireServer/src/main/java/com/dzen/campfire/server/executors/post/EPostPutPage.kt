@@ -57,7 +57,7 @@ class EPostPutPage : RPostPutPage(0, emptyArray(), 0, 0, "", "") {
             if (fandom!!.status != API.STATUS_PUBLIC) throw ApiException(RPostPublication.E_FANDOM_NOT_PUBLIC)
         }
 
-        for (p in pages) ControllerPost.checkPage(p, E_BAD_PAGE, false)
+        for (p in pages) ControllerPost.checkPage(p, E_BAD_PAGE, false, API.PAGES_SOURCE_TYPE_POST)
     }
 
     override fun execute(): Response {
