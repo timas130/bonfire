@@ -118,6 +118,7 @@ class AccountSettings() : JsonParsable {
 
     override fun json(inp: Boolean, json: Json): Json {
         styleNewYearAvatars = json.m(inp, "styleNewYearAvatars", styleNewYearAvatars)
+        styleHolidayEffects = json.m(inp, "styleHolidayEffects", styleHolidayEffects)
         styleSquare = json.m(inp, "styleSquare", styleSquare)
         styleCorned = json.m(inp, "styleCorned", styleCorned)
         fandomBackground = json.m(inp, "fandomBackground", fandomBackground)
