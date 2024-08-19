@@ -113,7 +113,13 @@ private fun PollButtons(model: PollingModel) {
 @Composable
 private fun PollLimits(page: PagePolling, source: PagesSource) {
     // if no limits
-    if (page.duration <= 0 && page.minDays <= 1 && page.minKarma <= 0 && page.minLevel <= 100) return
+    if (
+        page.duration <= 0 &&
+        page.minDays <= 1 &&
+        page.minKarma <= 0 &&
+        page.minLevel <= 100 &&
+        page.blacklist.isEmpty()
+    ) return
 
     Column(Modifier.padding(bottom = 8.dp)) {
         Text(
