@@ -96,7 +96,7 @@ object ControllerHoliday {
     fun isBirthday(): Boolean {
         val instance = GregorianCalendar.getInstance()
         instance.timeInMillis = ControllerApi.currentTime()
-        return instance.get(Calendar.MONTH) + 1 == 4 && instance.get(Calendar.DAY_OF_MONTH) == 10
+        return instance.get(Calendar.MONTH) + 1 == 8 && instance.get(Calendar.DAY_OF_MONTH) == 19
     }
 
 
