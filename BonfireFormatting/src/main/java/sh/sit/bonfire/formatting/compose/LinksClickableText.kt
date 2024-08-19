@@ -319,23 +319,30 @@ class SpoilerParticleSystem(canvasSize: Size, baseParticleColor: Color, dots: In
             this.initialized = true
         }
 
-        private val bitmap: Bitmap by lazy {
-            Bitmap.createBitmap(300, 300, Bitmap.Config.ARGB_8888)
+        private var currentElapsed = -1L
+        private var currentBitmap = 0
+        private val bitmaps: Array<Bitmap> by lazy {
+            Array(2) {
+                Bitmap.createBitmap(300, 300, Bitmap.Config.ARGB_8888)
+            }
         }
+
         private val system: SpoilerParticleSystem by lazy {
             SpoilerParticleSystem(Size(300f, 300f), colorScheme.tertiary, dots)
         }
 
-        private var currentElapsed = -1L
-
         fun drawCached(elapsed: Long): Bitmap {
-            if (currentElapsed == elapsed) return bitmap
+            if (currentElapsed == elapsed) return bitmaps[currentBitmap]
+
+            val newBitmapIdx = if (currentBitmap == 0) 1 else 0
+            val bitmap = bitmaps[newBitmapIdx]
 
             bitmap.eraseColor(android.graphics.Color.TRANSPARENT)
 
             val canvas = NativeCanvas(bitmap)
             system.draw(canvas, elapsed)
 
+            currentBitmap = newBitmapIdx
             currentElapsed = elapsed
 
             return bitmap
