@@ -52,7 +52,7 @@ object OptimizerEffects {
 
     fun remove(accountId: Long, effectId: Long) {
         cache.compute(accountId) { _, effects ->
-            effects?.filter { it.id == effectId }?.toTypedArray()
+            effects?.filterNot { it.id == effectId }?.toTypedArray()
         }
     }
 }
