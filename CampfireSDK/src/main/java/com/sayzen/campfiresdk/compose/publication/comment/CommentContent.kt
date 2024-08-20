@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -66,7 +67,9 @@ internal fun CommentQuote(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .nestedClickable {
+            // consume press event in initial event pass to prevent
+            // clicking on links
+            .nestedClickable(pass = PointerEventPass.Initial) {
                 scrollToComment(quotedComment)
             }
             .drawBehind {

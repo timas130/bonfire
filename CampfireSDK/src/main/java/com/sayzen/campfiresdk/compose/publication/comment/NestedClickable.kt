@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventTimeoutCancellationException
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -87,7 +88,10 @@ internal fun Modifier.nestedClickableRoot(
         }
 }
 
-internal fun Modifier.nestedClickable(onClick: (Offset) -> Unit) = composed {
+internal fun Modifier.nestedClickable(
+    pass: PointerEventPass = PointerEventPass.Main,
+    onClick: (Offset) -> Unit
+) = composed {
     val interactionSource = remember { MutableInteractionSource() }
     val onClickRef = rememberUpdatedState(onClick)
 
@@ -95,13 +99,13 @@ internal fun Modifier.nestedClickable(onClick: (Offset) -> Unit) = composed {
         .indication(interactionSource, LocalIndication.current)
         .pointerInput(Unit) {
             awaitEachGesture {
-                val down = awaitFirstDown()
+                val down = awaitFirstDown(pass = pass)
                 val press = PressInteraction.Press(down.position)
                 interactionSource.tryEmit(press)
 
                 down.consume()
                 val up = withTimeoutOrNull(viewConfiguration.longPressTimeoutMillis) {
-                    waitForUpOrCancellation()
+                    waitForUpOrCancellation(pass = pass)
                 }
 
                 if (up == null) {
