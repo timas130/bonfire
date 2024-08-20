@@ -48,6 +48,7 @@ import kotlin.properties.Delegates
 fun LinksClickableText(
     text: AnnotatedString,
     modifier: Modifier = Modifier,
+    onClick: ((idx: Int, offset: Offset) -> Boolean)? = null,
     style: TextStyle = LocalTextStyle.current,
     background: Color = MaterialTheme.colorScheme.surfaceContainerLow,
     maxLines: Int = Int.MAX_VALUE,
@@ -60,7 +61,7 @@ fun LinksClickableText(
 
     // click handler
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
-    val onClick = createTextOnClick(
+    val realOnClick = onClick ?: createTextOnClick(
         blockText = text,
         onSpoilerReveal = { offset ->
             if (spoilerRevealAnim.targetValue == 1f) {
@@ -75,7 +76,7 @@ fun LinksClickableText(
         },
         context = LocalContext.current
     )
-    val clickModifier = Modifier.pointerInput(onClick) {
+    val clickModifier = Modifier.pointerInput(realOnClick) {
         awaitEachGesture {
             val down = awaitFirstDown()
             val up = withTimeout(viewConfiguration.longPressTimeoutMillis) {
@@ -87,7 +88,7 @@ fun LinksClickableText(
             }
 
             layoutResult.value?.let {
-                val consume = onClick(it.getOffsetForPosition(up.position), up.position)
+                val consume = realOnClick(it.getOffsetForPosition(up.position), up.position)
                 if (consume) {
                     down.consume()
                     up.consume()
@@ -225,6 +226,11 @@ internal fun createTextOnClick(
     onSpoilerReveal: (offset: Offset) -> Boolean,
     context: Context,
 ) = fun(pos: Int, offset: Offset): Boolean {
+    val spoilerSpan = blockText.getStringAnnotations(SpoilerSpanTag, pos, pos + 1).firstOrNull()
+    if (spoilerSpan != null) {
+        return onSpoilerReveal(offset)
+    }
+
     val urlSpan = blockText.getUrlAnnotations(pos, pos + 1).firstOrNull()
     val url = urlSpan?.item?.url
     if (url != null) {
@@ -240,11 +246,6 @@ internal fun createTextOnClick(
             ).show()
         }
         return true
-    }
-
-    val spoilerSpan = blockText.getStringAnnotations(SpoilerSpanTag, pos, pos + 1).firstOrNull()
-    if (spoilerSpan != null) {
-        return onSpoilerReveal(offset)
     }
 
     return false
