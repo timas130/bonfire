@@ -227,8 +227,8 @@ internal fun createTextOnClick(
     context: Context,
 ) = fun(pos: Int, offset: Offset): Boolean {
     val spoilerSpan = blockText.getStringAnnotations(SpoilerSpanTag, pos, pos + 1).firstOrNull()
-    if (spoilerSpan != null) {
-        return onSpoilerReveal(offset)
+    if (spoilerSpan != null && onSpoilerReveal(offset)) {
+        return true
     }
 
     val urlSpan = blockText.getUrlAnnotations(pos, pos + 1).firstOrNull()
