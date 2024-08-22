@@ -54,21 +54,19 @@ class SCreatePagePolling(
     private val vBlackListAdd: ViewButton = findViewById(R.id.vBlackListAdd)
 
     private val blackList: MutableList<Account> = mutableListOf()
-    private var duration = 0L
+    private val durations = listOf(
+        API_TRANSLATE.post_page_polling_duration_infinite to 0L,
+        API_TRANSLATE.time_hour to 1000L * 60 * 60,
+        API_TRANSLATE.time_8_hour to 1000L * 60 * 60 * 8,
+        API_TRANSLATE.time_day to 1000L * 60 * 60 * 24,
+        API_TRANSLATE.time_2_day to 1000L * 60 * 60 * 24 * 2,
+        API_TRANSLATE.time_3_day to 1000L * 60 * 60 * 24 * 3,
+        API_TRANSLATE.time_week to 1000L * 60 * 60 * 24 * 7,
+        API_TRANSLATE.time_2_week to 1000L * 60 * 60 * 24 * 14,
+        API_TRANSLATE.time_month to 1000L * 60 * 60 * 24 * 30,
+    )
 
     init {
-        val durations = listOf(
-            API_TRANSLATE.post_page_polling_duration_infinite to 0L,
-            API_TRANSLATE.time_hour to 1000L * 60 * 60,
-            API_TRANSLATE.time_8_hour to 1000L * 60 * 60 * 8,
-            API_TRANSLATE.time_day to 1000L * 60 * 60 * 24,
-            API_TRANSLATE.time_2_day to 1000L * 60 * 60 * 24 * 2,
-            API_TRANSLATE.time_3_day to 1000L * 60 * 60 * 24 * 3,
-            API_TRANSLATE.time_week to 1000L * 60 * 60 * 24 * 7,
-            API_TRANSLATE.time_2_week to 1000L * 60 * 60 * 24 * 14,
-            API_TRANSLATE.time_month to 1000L * 60 * 60 * 24 * 30,
-        )
-
         disableShadows()
         disableNavigation()
         setTitle(t(API_TRANSLATE.post_page_polling))
@@ -83,7 +81,7 @@ class SCreatePagePolling(
 
         if (sourceType == API.PAGES_SOURCE_TYPE_POST) {
             for (variant in durations) {
-                vDuration.add(t(variant.first)) { duration = variant.second }
+                vDuration.add(t(variant.first)) { }
             }
 
             vDuration.setTitle(t(API_TRANSLATE.post_page_polling_duration_title))
@@ -269,7 +267,7 @@ class SCreatePagePolling(
         val page = PagePolling()
         page.title = vPageTitle.text.toString()
         page.options = getOptions()
-        page.duration = duration
+        page.duration = durations[vDuration.getCurrentIndex()].second
         page.minLevel = if (vLvl.getText().isEmpty()) 0L else (vLvl.getText().toFloat() * 100).toLong()
         page.minKarma = if (vKarma.getText().isEmpty()) 0L else vKarma.getText().toLong() * 100
         page.minDays = if (vDays.getText().isEmpty()) 0L else vDays.getText().toLong()
