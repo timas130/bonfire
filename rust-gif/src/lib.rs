@@ -1,6 +1,7 @@
 mod methods;
 
 use c_core::page_info::Paginated;
+use c_core::prelude::chrono::{DateTime, Utc};
 use c_core::prelude::tarpc::context::Context;
 use c_core::prelude::{anyhow, tarpc};
 use c_core::services::gif::{GifContext, GifError, GifItem, GifService};
@@ -71,5 +72,40 @@ impl GifService for GifServer {
         gif_context: GifContext,
     ) -> Result<(), GifError> {
         self._on_gif_share(id, query, gif_context).await
+    }
+
+    async fn get_recent_gifs(
+        self,
+        _: Context,
+        gif_context: GifContext,
+    ) -> Result<Vec<GifItem>, GifError> {
+        self._get_recent_gifs(gif_context).await
+    }
+
+    async fn add_to_favourites(
+        self,
+        _: Context,
+        id: String,
+        gif_context: GifContext,
+    ) -> Result<(), GifError> {
+        self._add_to_favourites(id, gif_context).await
+    }
+
+    async fn remove_from_favourites(
+        self,
+        _: Context,
+        id: String,
+        gif_context: GifContext,
+    ) -> Result<(), GifError> {
+        self._remove_from_favourites(id, gif_context).await
+    }
+
+    async fn get_favourite_gifs(
+        self,
+        _: Context,
+        gif_context: GifContext,
+        after: Option<DateTime<Utc>>,
+    ) -> Result<Paginated<GifItem, DateTime<Utc>>, GifError> {
+        self._get_favourite_gifs(gif_context, after).await
     }
 }

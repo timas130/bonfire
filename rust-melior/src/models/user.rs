@@ -2,6 +2,7 @@ use crate::context::{ContextExt, ReqContext};
 use crate::data_loaders::AuthUserLoader;
 use crate::error::RespError;
 use crate::schema::auth::security_settings::GSecuritySettings;
+use crate::schema::gif::search_gif::GGifItem;
 use crate::schema::level::daily_task::DailyTaskInfo;
 use crate::schema::level::daily_task_fandoms::DailyTaskFandom;
 use crate::schema::profile::badge::GBadge;
@@ -187,5 +188,16 @@ impl User {
     /// If the user hasn't set a birthday, `null` is returned.
     async fn is_years_old(&self, ctx: &Context<'_>, age: u32) -> Result<Option<bool>, RespError> {
         self._is_years_old(ctx, age).await
+    }
+
+    /// Get a paginated list of this user's favourite GIFs
+    ///
+    /// This field is only available to this user.
+    async fn favourite_gifs(
+        &self,
+        ctx: &Context<'_>,
+        after: Option<String>,
+    ) -> Result<Connection<DateTime<Utc>, GGifItem>, RespError> {
+        self._favourite_gifs(ctx, after).await
     }
 }

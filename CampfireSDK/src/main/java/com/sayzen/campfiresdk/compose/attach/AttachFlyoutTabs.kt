@@ -83,7 +83,7 @@ internal fun AttachFlyoutTabs(model: AttachFlyoutModel, pagerState: PagerState, 
         AttachFlyoutModel.Tab.entries.forEach { tab ->
             Tab(
                 selected = tab == activeTab,
-                onClick = { model.switchTab(tab) },
+                onClick = { model.switchTab(tab, userAction = true) },
                 text = {
                     Text(
                         when (tab) {

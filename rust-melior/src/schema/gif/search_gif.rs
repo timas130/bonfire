@@ -2,8 +2,8 @@ use crate::context::ReqContext;
 use crate::error::RespError;
 use crate::models::image::ImageLink;
 use crate::utils::connection::PaginatedExt;
-use async_graphql::connection::Connection;
-use async_graphql::{Context, Object, SimpleObject, ID};
+use async_graphql::connection::{Connection, ConnectionNameType, EdgeNameType, EmptyFields};
+use async_graphql::{Context, Object, OutputType, SimpleObject, ID};
 use c_core::prelude::tarpc::context;
 use c_core::services::gif::{GifItem, GifMediaFormats, GifMediaRef};
 use o2o::o2o;
@@ -59,6 +59,20 @@ pub struct GGifItem {
     pub media: GGifMediaFormats,
 }
 
+struct SearchGifConnectionName;
+impl ConnectionNameType for SearchGifConnectionName {
+    fn type_name<T: OutputType>() -> String {
+        "SearchGifItemConnection".into()
+    }
+}
+
+struct SearchGifEdgeName;
+impl EdgeNameType for SearchGifEdgeName {
+    fn type_name<T: OutputType>() -> String {
+        "SearchGifItemEdge".into()
+    }
+}
+
 #[Object]
 impl SearchGifQuery {
     /// Search for GIFs
@@ -74,14 +88,22 @@ impl SearchGifQuery {
         ctx: &Context<'_>,
         term: String,
         after: Option<String>,
-    ) -> Result<Connection<String, GGifItem>, RespError> {
+    ) -> Result<
+        Connection<
+            String,
+            GGifItem,
+            EmptyFields,
+            EmptyFields,
+            SearchGifConnectionName,
+            SearchGifEdgeName,
+        >,
+        RespError,
+    > {
         let req = ctx.data_unchecked::<ReqContext>();
-
-        req.require_user()?;
 
         Ok(req
             .gif
-            .search_gif(context::current(), term, after, req.get_gif_context())
+            .search_gif(context::current(), term, after, req.get_gif_context()?)
             .await??
             .into_connection())
     }

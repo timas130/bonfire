@@ -3,6 +3,7 @@ package com.sayzen.campfiresdk.compose.util
 import androidx.compose.animation.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.node.Ref
 
 // https://stackoverflow.com/a/70187622
@@ -10,6 +11,7 @@ import androidx.compose.ui.node.Ref
 @Composable
 fun <T> AnimatedNullableVisibility(
     value: T?,
+    modifier: Modifier = Modifier,
     enter: EnterTransition = fadeIn() + expandVertically(),
     exit: ExitTransition = fadeOut() + shrinkVertically(),
     content: @Composable (T) -> Unit
@@ -22,6 +24,7 @@ fun <T> AnimatedNullableVisibility(
 
     AnimatedVisibility(
         visible = value != null,
+        modifier = modifier,
         enter = enter,
         exit = exit,
         content = {

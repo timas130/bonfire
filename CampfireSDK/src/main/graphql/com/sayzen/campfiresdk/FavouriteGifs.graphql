@@ -1,0 +1,23 @@
+fragment FavouriteGifs on GifItemConnection {
+    edges {
+        cursor
+        node {
+            ...AttachGifItem
+        }
+    }
+    pageInfo {
+        hasPreviousPage
+        hasNextPage
+        startCursor
+        endCursor
+    }
+}
+
+query FavouriteGifs($after: String) {
+    me {
+        id
+        favouriteGifs(after: $after) {
+            ...FavouriteGifs
+        }
+    }
+}

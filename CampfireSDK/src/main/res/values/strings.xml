@@ -131,4 +131,8 @@
     <string name="attach_sheet_partial_expand">Expand partially</string>
     <string name="attach_sheet_expand">Expand</string>
     <string name="attach_search_clear">Clear</string>
+    <string name="attach_gallery_no_permission">We don\'t seem to have the necessary permissions to access your
+        photos.
+    </string>
+    <string name="attach_gallery_permission_settings">To settings</string>
 </resources>

@@ -1,0 +1,8 @@
+mutation ShareGif($query: String!, $id: ID!) {
+    registerGifShare(query: $query, id: $id) {
+        id
+        favouriteGifs(after: null) {
+            ...FavouriteGifs
+        }
+    }
+}

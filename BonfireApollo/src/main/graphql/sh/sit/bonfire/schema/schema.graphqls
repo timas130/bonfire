@@ -689,7 +689,17 @@ type Mutation {
   If a GIF has been accessed from a search query, that
   query should be passed into `query`.
   """
-  registerGifShare(id: ID!, query: String): Ok!
+  registerGifShare(id: ID!, query: String): User!
+
+  """
+  Add a GIF to favourites
+  """
+  addGifToFavourites(gifId: ID!): User!
+
+  """
+  Remove a GIF from favourites if it exists
+  """
+  removeGifFromFavourites(id: ID!): User!
 }
 
 """
@@ -1046,7 +1056,7 @@ type Query {
   The `after` parameter MUST NOT use the `cursor` provided in `GifItemEdge`.
   You should only use information from `PageInfo` there.
   """
-  searchGif(term: String!, after: String): GifItemConnection!
+  searchGif(term: String!, after: String): SearchGifItemConnection!
 
   """
   Get some suggestions for a search query
@@ -1055,6 +1065,11 @@ type Query {
   is returned.
   """
   gifSearchSuggestions(query: String!): [String!]!
+
+  """
+  Get up to 10 GIFs recently shared by the user
+  """
+  recentGifs: [GifItem!]!
 }
 
 """
@@ -1097,6 +1112,38 @@ type RegisterEmailResult {
   Newly registered user
   """
   user: User!
+}
+
+type SearchGifItemConnection {
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+
+  """
+  A list of edges.
+  """
+  edges: [SearchGifItemEdge!]!
+
+  """
+  A list of nodes.
+  """
+  nodes: [GifItem!]!
+}
+
+"""
+An edge in a connection.
+"""
+type SearchGifItemEdge {
+  """
+  The item at the end of the edge
+  """
+  node: GifItem!
+
+  """
+  A cursor for use in pagination
+  """
+  cursor: String!
 }
 
 """
@@ -1271,6 +1318,13 @@ type User {
   If the user hasn't set a birthday, `null` is returned.
   """
   isYearsOld(age: Int!): Boolean
+
+  """
+  Get a paginated list of this user's favourite GIFs
+
+  This field is only available to this user.
+  """
+  favouriteGifs(after: String): GifItemConnection!
 }
 
 input UserRecipient {

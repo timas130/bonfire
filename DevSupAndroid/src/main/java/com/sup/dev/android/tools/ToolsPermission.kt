@@ -1,16 +1,15 @@
 package com.sup.dev.android.tools
 
 import android.Manifest.permission.*
-import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.sup.dev.android.R
 import com.sup.dev.android.app.SupAndroid
-import com.sup.dev.java.libs.debug.Debug
 import com.sup.dev.java.tools.ToolsMapper
-import com.sup.dev.java.tools.ToolsThreads
 
 
 object ToolsPermission {
@@ -160,7 +159,11 @@ object ToolsPermission {
     //
 
     fun hasReadPermission(): Boolean {
-        return Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN || hasPermission(READ_EXTERNAL_STORAGE)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            hasPermissions(arrayOf(READ_MEDIA_IMAGES, READ_MEDIA_VIDEO))
+        } else {
+            hasPermission(READ_EXTERNAL_STORAGE)
+        }
     }
 
     fun hasWritePermission(): Boolean {
@@ -179,5 +182,14 @@ object ToolsPermission {
         return hasPermission(RECORD_AUDIO)
     }
 
+    //
+    //  Settings
+    //
 
+    fun navigateToSettings() {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        val uri = Uri.fromParts("package", SupAndroid.appContext!!.packageName, null)
+        intent.data = uri
+        ToolsIntent.startIntent(intent)
+    }
 }

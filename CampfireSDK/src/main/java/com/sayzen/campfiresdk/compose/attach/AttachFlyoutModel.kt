@@ -10,13 +10,15 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.posthog.PostHog
+import com.sayzen.campfiresdk.AttachGifTabQuery
 import com.sayzen.campfiresdk.GifSearchSuggestionsQuery
+import com.sayzen.campfiresdk.ShareGifMutation
 import com.sayzen.campfiresdk.compose.util.combineStates
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
+import com.sayzen.campfiresdk.compose.util.mapState
+import com.sayzen.campfiresdk.fragment.AttachGifItem
+import com.sup.dev.android.tools.ToolsPermission
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.internal.closeQuietly
 import sh.sit.bonfire.auth.apollo
 import java.io.File
@@ -51,8 +53,23 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
     // since we use its api to reserve capacity
     private val galleryCache = ArrayList<GalleryImage?>()
 
+    private val _galleryPermissionGranted = MutableStateFlow(true)
+    val galleryPermissionGranted = _galleryPermissionGranted.asStateFlow()
+
     private fun loadGallery(force: Boolean = false) {
         val context = getApplication<Application>().applicationContext
+
+        if (!ToolsPermission.hasReadPermission()) {
+            ToolsPermission.requestReadPermission(
+                onGranted = {
+                    _galleryPermissionGranted.value = true
+                    loadGallery(force = true)
+                },
+                onPermissionRestriction = {
+                    _galleryPermissionGranted.value = false
+                }
+            )
+        }
 
         galleryCursor?.let {
             val currentVersion = MediaStore.getVersion(context)
@@ -200,6 +217,11 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
 
     private var gifTabStarted: Boolean = false
 
+    private val _recentGifs = MutableStateFlow<List<AttachGifItem>?>(null)
+    val recentGifs = _recentGifs.asStateFlow()
+        .mapState { it?.subList(0, it.size.coerceAtMost(9)) }
+
+    val gifFavouritesModel = GifFavouritesModel(application)
     val gifSearchModel = GifSearchModel(application, gifQuery)
 
     val searchSuggestions = gifQuery
@@ -243,18 +265,47 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
         }
     }
 
-    private fun loadTrendingGifQueries() {
+    private fun loadGifTab() {
         viewModelScope.launch {
             if (_trendingGifQueries.value != null) return@launch
             try {
-                val resp = apollo.query(GifSearchSuggestionsQuery(""))
+                val resp = apollo.query(AttachGifTabQuery())
                     .execute()
                     .dataAssertNoErrors
 
+                _recentGifs.emit(resp.recentGifs.map { it.attachGifItem })
                 _trendingGifQueries.emit(resp.gifSearchSuggestions)
             } catch (_: Exception) {
             }
         }
+    }
+
+    fun shareGif(gif: AttachGifItem) {
+        MainScope().launch {
+            _recentGifs.update { recentGifs ->
+                listOf(gif) + (recentGifs ?: emptyList())
+            }
+
+            try {
+                apollo.mutation(ShareGifMutation(_gifQuery.value, gif.id))
+                    .execute()
+                    .dataAssertNoErrors
+            } catch (_: Exception) {
+            }
+        }
+
+        // STOPSHIP: delegate
+    }
+
+    private val _activeGifPopup = MutableStateFlow<Pair<String, AttachGifItem>?>(null)
+    val activeGifPopup = _activeGifPopup.asStateFlow()
+
+    fun openGifPopup(parentKey: String, item: AttachGifItem) {
+        _activeGifPopup.value = Pair(parentKey, item)
+    }
+
+    fun closeGifPopup() {
+        _activeGifPopup.value = null
     }
 
     enum class ScrollMarker {
@@ -271,13 +322,15 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
         _gifScrollMarker.value = scrollMarker
     }
     fun scrollToGifMarker(scrollMarker: ScrollMarker) {
-
+        // STOPSHIP
     }
 
     // == other public apis ==
 
     fun switchTab(tab: Tab, userAction: Boolean = false) {
         _activeTab.value = tab
+
+        if (!userAction) return
 
         when (tab) {
             Tab.Gallery -> {
@@ -287,8 +340,10 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
             Tab.Gif -> {
                 if (!gifTabStarted) {
                     gifTabStarted = true
+
                     startGifSuggestions()
-                    loadTrendingGifQueries()
+                    loadGifTab()
+                    gifFavouritesModel.start()
                     gifSearchModel.start()
                 }
             }
@@ -296,14 +351,12 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
             Tab.Stickers -> {}
         }
 
-        if (userAction) {
-            PostHog.capture("attach flyout tab switched", properties = mapOf("tab" to tab.name))
+        PostHog.capture("attach flyout tab switched", properties = mapOf("tab" to tab.name))
 
-            viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    datastore.edit {
-                        it[lastActiveTab] = tab.name
-                    }
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                datastore.edit {
+                    it[lastActiveTab] = tab.name
                 }
             }
         }

@@ -4,7 +4,8 @@
 
 use crate::client_tcp;
 use crate::page_info::Paginated;
-use crate::util::{anyhow_clone, anyhow_unknown};
+use crate::util::{anyhow_clone, anyhow_unknown, sqlx_clone, sqlx_unknown};
+use chrono::{DateTime, Utc};
 use educe::Educe;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
@@ -15,6 +16,18 @@ pub enum GifError {
     #[error("UpstreamError: Please try again in a few seconds.")]
     UpstreamError,
 
+    #[error("InvalidRequest: Invalid request, check the parameters.")]
+    InvalidRequest,
+
+    #[error("Sqlx: Unknown error: {source}")]
+    Sqlx {
+        #[source]
+        #[from]
+        #[serde(skip)]
+        #[serde(default = "sqlx_unknown")]
+        #[educe(Eq(ignore), Clone(method = "sqlx_clone"))]
+        source: sqlx::Error,
+    },
     #[error("Anyhow: Unknown error: {source}")]
     Anyhow {
         #[source]
@@ -70,6 +83,8 @@ pub struct GifContext {
     ///
     /// If present, the second part MUST be separated with an underscore.
     pub locale: Option<String>,
+    /// Unique ID for this user
+    pub user_id: i64,
 }
 
 #[tarpc::service]
@@ -109,6 +124,21 @@ pub trait GifService {
         query: Option<String>,
         gif_context: GifContext,
     ) -> Result<(), GifError>;
+
+    /// Get up to 10 GIFs recently shared by the user
+    async fn get_recent_gifs(gif_context: GifContext) -> Result<Vec<GifItem>, GifError>;
+
+    /// Add a GIF to favourites
+    async fn add_to_favourites(id: String, gif_context: GifContext) -> Result<(), GifError>;
+
+    /// Remove a GIF from favourites if it exists
+    async fn remove_from_favourites(id: String, gif_context: GifContext) -> Result<(), GifError>;
+
+    /// Get a paginated list of favourite GIFs
+    async fn get_favourite_gifs(
+        gif_context: GifContext,
+        after: Option<DateTime<Utc>>,
+    ) -> Result<Paginated<GifItem, DateTime<Utc>>, GifError>;
 }
 
 pub struct Gif;

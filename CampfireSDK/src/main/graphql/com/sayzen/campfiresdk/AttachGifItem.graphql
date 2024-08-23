@@ -1,0 +1,7 @@
+fragment AttachGifItem on GifItem {
+    id
+    media {
+        preview { ...Ui w h }
+        tinyGif { ...Ui w h }
+    }
+}

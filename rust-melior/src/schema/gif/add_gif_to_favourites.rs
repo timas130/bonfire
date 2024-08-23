@@ -5,27 +5,23 @@ use async_graphql::{Context, Object, ID};
 use c_core::prelude::tarpc::context;
 
 #[derive(Default)]
-pub struct RegisterGifShareMutation;
+pub struct AddGifToFavouritesMutation;
 
 #[Object]
-impl RegisterGifShareMutation {
-    /// Notify the server that a GIF has been shared
-    ///
-    /// You must call this method when sharing a GIF.
-    /// If a GIF has been accessed from a search query, that
-    /// query should be passed into `query`.
-    async fn register_gif_share(
+impl AddGifToFavouritesMutation {
+    /// Add a GIF to favourites
+    async fn add_gif_to_favourites(
         &self,
         ctx: &Context<'_>,
-        id: ID,
-        query: Option<String>,
+        gif_id: ID,
     ) -> Result<User, RespError> {
         let req = ctx.data_unchecked::<ReqContext>();
 
         let user = req.require_user()?;
+        let gif_context = req.get_gif_context()?;
 
         req.gif
-            .on_gif_share(context::current(), id.0, query, req.get_gif_context()?)
+            .add_to_favourites(context::current(), gif_id.0, gif_context)
             .await??;
 
         User::by_auth(ctx, user.clone()).await

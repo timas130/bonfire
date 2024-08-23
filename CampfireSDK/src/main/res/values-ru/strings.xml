@@ -123,4 +123,8 @@
     <string name="attach_sheet_partial_expand">Открыть частично</string>
     <string name="attach_sheet_expand">Открыть</string>
     <string name="attach_search_clear">Очистить</string>
+    <string name="attach_gallery_no_permission">Похоже, у нас нет необходимых разрешений, чтобы получить доступ к вашим
+        фото.
+    </string>
+    <string name="attach_gallery_permission_settings">В настройки</string>
 </resources>

@@ -3,11 +3,7 @@ query GifSearch($query: String!, $after: String) {
         edges {
             cursor
             node {
-                id
-                media {
-                    preview { ...Ui w h }
-                    tinyGif { ...Ui w h }
-                }
+                ...AttachGifItem
             }
         }
         pageInfo {

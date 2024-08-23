@@ -10,6 +10,7 @@ import android.window.OnBackInvokedCallback
 import android.window.OnBackInvokedDispatcher
 import androidx.activity.ComponentDialog
 import androidx.activity.addCallback
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.annotation.DoNotInline
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.Animatable
@@ -357,7 +358,11 @@ private class ModalBottomSheetDialogWrapper(
     }
 
     fun setContent(parentComposition: CompositionContext, children: @Composable () -> Unit) {
-        dialogLayout.setContent(parentComposition, children)
+        dialogLayout.setContent(parentComposition) {
+            CompositionLocalProvider(LocalOnBackPressedDispatcherOwner provides this) {
+                children()
+            }
+        }
     }
 
     private fun setSecurePolicy(securePolicy: SecureFlagPolicy) {

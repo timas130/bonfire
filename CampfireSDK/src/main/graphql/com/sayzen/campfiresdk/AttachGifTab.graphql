@@ -1,0 +1,6 @@
+query AttachGifTab {
+    gifSearchSuggestions(query: "")
+    recentGifs {
+        ...AttachGifItem
+    }
+}

@@ -19,11 +19,9 @@ impl GifSearchSuggestionsQuery {
     ) -> Result<Vec<String>, RespError> {
         let req = ctx.data_unchecked::<ReqContext>();
 
-        req.require_user()?;
-
         Ok(req
             .gif
-            .get_search_suggestions(context::current(), query, req.get_gif_context())
+            .get_search_suggestions(context::current(), query, req.get_gif_context()?)
             .await??)
     }
 }

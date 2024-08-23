@@ -4,7 +4,7 @@ use c_core::prelude::tracing::{span, warn, Instrument, Level};
 use c_core::services::gif::{GifContext, GifError, GifItem, GifMediaFormats, GifMediaRef};
 use google_tenor2::api::{GoogleSearchTenorV2MediaType, GoogleSearchTenorV2PostResult};
 
-const MEDIA_FILTER: &str = "preview,gif,tinygif,mp4,tinymp4";
+pub(crate) const MEDIA_FILTER: &str = "preview,gif,tinygif,mp4,tinymp4";
 
 impl GifServer {
     pub(crate) fn get_delegate(&self) -> ApiKeyDelegate {
@@ -149,7 +149,7 @@ impl GifServer {
     }
 }
 
-fn convert_post(value: GoogleSearchTenorV2PostResult) -> GifItem {
+pub(crate) fn convert_post(value: GoogleSearchTenorV2PostResult) -> GifItem {
     let mut media_formats = value.media_formats.unwrap();
     GifItem {
         id: value.id.unwrap().to_string(),
@@ -163,7 +163,7 @@ fn convert_post(value: GoogleSearchTenorV2PostResult) -> GifItem {
         },
     }
 }
-fn convert_media_type(value: GoogleSearchTenorV2MediaType) -> GifMediaRef {
+pub(crate) fn convert_media_type(value: GoogleSearchTenorV2MediaType) -> GifMediaRef {
     GifMediaRef {
         url: value.url.unwrap(),
         resolution: value.dims.unwrap().try_into().unwrap(),

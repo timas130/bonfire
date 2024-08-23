@@ -1,5 +1,6 @@
 package com.sayzen.campfiresdk.compose.attach
 
+import android.util.Log
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -320,9 +321,15 @@ internal fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
     onFling: (velocity: Float) -> Unit
 ): NestedScrollConnection =
     object : NestedScrollConnection {
+        // see https://issuetracker.google.com/353304855
+
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+            Log.d("ModalBottomSheet", "onPreScroll ${available.toFloat()}")
+
             val delta = available.toFloat()
-            return if (delta < 0 && source == NestedScrollSource.UserInput) {
+            val currentOffset = sheetState.requireOffset()
+            val minAnchor = sheetState.anchoredDraggableState.anchors.minAnchor()
+            return if (delta < 0 && source == NestedScrollSource.UserInput && currentOffset > minAnchor) {
                 sheetState.anchoredDraggableState.dispatchRawDelta(delta).toOffset()
             } else {
                 Offset.Zero
@@ -334,6 +341,8 @@ internal fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
             available: Offset,
             source: NestedScrollSource
         ): Offset {
+            Log.d("ModalBottomSheet", "onPostScroll ${consumed.toFloat()} ${available.toFloat()}")
+
             return if (source == NestedScrollSource.UserInput) {
                 sheetState.anchoredDraggableState.dispatchRawDelta(available.toFloat()).toOffset()
             } else {
@@ -342,19 +351,21 @@ internal fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
         }
 
         override suspend fun onPreFling(available: Velocity): Velocity {
+            Log.d("ModalBottomSheet", "onPreFling ${available.toFloat()}")
+
             val toFling = available.toFloat()
             val currentOffset = sheetState.requireOffset()
             val minAnchor = sheetState.anchoredDraggableState.anchors.minAnchor()
-            return if (toFling < 0 && currentOffset > minAnchor) {
+            if (toFling < 0 && currentOffset > minAnchor) {
                 onFling(toFling)
-                // since we go to the anchor with tween settling, consume all for the best UX
-                available
-            } else {
-                Velocity.Zero
             }
+
+            return Velocity.Zero
         }
 
         override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+            Log.d("ModalBottomSheet", "onPostFling ${consumed.toFloat()} ${available.toFloat()}")
+
             onFling(available.toFloat())
             return available
         }

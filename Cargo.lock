@@ -654,6 +654,8 @@ version = "0.1.0"
 dependencies = [
  "c-core",
  "google-tenor2",
+ "itertools 0.13.0",
+ "sqlx",
 ]
 
 [[package]]

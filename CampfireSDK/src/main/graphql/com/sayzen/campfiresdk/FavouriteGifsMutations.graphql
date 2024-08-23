@@ -1,0 +1,17 @@
+mutation AddGifToFavourites($id: ID!) {
+    addGifToFavourites(gifId: $id) {
+        id
+        favouriteGifs(after: null) {
+            ...FavouriteGifs
+        }
+    }
+}
+
+mutation RemoveGifFromFavourites($id: ID!) {
+    removeGifFromFavourites(id: $id) {
+        id
+        favouriteGifs(after: null) {
+            ...FavouriteGifs
+        }
+    }
+}

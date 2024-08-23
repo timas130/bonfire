@@ -1,5 +1,5 @@
 pub(crate) mod auth;
-mod gif;
+pub(crate) mod gif;
 mod internal;
 pub(crate) mod level;
 mod notification;
