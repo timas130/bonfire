@@ -4,25 +4,28 @@ import android.app.Application
 import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.posthog.PostHog
-import com.sayzen.campfiresdk.AttachGifTabQuery
-import com.sayzen.campfiresdk.GifSearchSuggestionsQuery
-import com.sayzen.campfiresdk.ShareGifMutation
+import com.sayzen.campfiresdk.*
 import com.sayzen.campfiresdk.compose.util.combineStates
 import com.sayzen.campfiresdk.compose.util.mapState
 import com.sayzen.campfiresdk.fragment.AttachGifItem
+import com.sayzen.campfiresdk.fragment.FavouriteGifs
 import com.sup.dev.android.tools.ToolsPermission
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import okhttp3.internal.closeQuietly
+import sh.sit.bonfire.auth.AuthController
 import sh.sit.bonfire.auth.apollo
+import sh.sit.bonfire.auth.optimisticUpdatesExt
 import java.io.File
 
+@OptIn(ExperimentalMaterial3Api::class)
 internal class AttachFlyoutModel(application: Application) : AndroidViewModel(application) {
     companion object {
         private val Context.attachDatastore by preferencesDataStore("attach")
@@ -40,6 +43,8 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
 
     private val _activeTab = MutableStateFlow(Tab.Gallery)
     val activeTab = _activeTab.asStateFlow()
+
+    val pagerScrollAllowed = MutableStateFlow(true)
 
     // == gallery ==
 
@@ -283,7 +288,11 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
     fun shareGif(gif: AttachGifItem) {
         MainScope().launch {
             _recentGifs.update { recentGifs ->
-                listOf(gif) + (recentGifs ?: emptyList())
+                if (recentGifs?.any { it.id == gif.id } == true) {
+                    recentGifs
+                } else {
+                    listOf(gif) + (recentGifs ?: emptyList())
+                }
             }
 
             try {
@@ -295,6 +304,71 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
         }
 
         // STOPSHIP: delegate
+    }
+
+    fun isGifInFavourites(id: String): Boolean {
+        return gifFavouritesModel.items.value?.any { it.node.id == id } == true
+    }
+
+    fun setGifFavourite(gif: AttachGifItem, favourite: Boolean): Job {
+        return viewModelScope.launch {
+            closeGifPopup()
+
+            fun AttachGifItem.toEdge(): FavouriteGifs.Edge {
+                return FavouriteGifs.Edge(
+                    cursor = id,
+                    node = FavouriteGifs.Node(
+                        id = id,
+                        attachGifItem = this,
+                        __typename = "GifItem"
+                    )
+                )
+            }
+
+            try {
+                val userId = AuthController.currentUserState.value!!.id
+                val currentFavouriteGifs = gifFavouritesModel.queryResponse.value.takeIf { it?.data != null }
+
+                if (favourite) {
+                    apollo.mutation(AddGifToFavouritesMutation(gif.id))
+                        .optimisticUpdatesExt(currentFavouriteGifs?.let {
+                            AddGifToFavouritesMutation.Data(
+                                addGifToFavourites = AddGifToFavouritesMutation.AddGifToFavourites(
+                                    id = userId,
+                                    favouriteGifs = AddGifToFavouritesMutation.FavouriteGifs(
+                                        __typename = "GifItemConnection",
+                                        favouriteGifs = it.data!!.me.favouriteGifs.favouriteGifs.copy(
+                                            edges = listOf(gif.toEdge())
+                                                    + it.data!!.me.favouriteGifs.favouriteGifs.edges
+                                        )
+                                    ),
+                                    __typename = "User"
+                                )
+                            )
+                        })
+                        .execute()
+                } else {
+                    apollo.mutation(RemoveGifFromFavouritesMutation(gif.id))
+                        .optimisticUpdatesExt(currentFavouriteGifs?.let { favouriteGifs ->
+                            RemoveGifFromFavouritesMutation.Data(
+                                removeGifFromFavourites = RemoveGifFromFavouritesMutation.RemoveGifFromFavourites(
+                                    id = userId,
+                                    favouriteGifs = RemoveGifFromFavouritesMutation.FavouriteGifs(
+                                        __typename = "GifItemConnection",
+                                        favouriteGifs = favouriteGifs.data!!.me.favouriteGifs.favouriteGifs.copy(
+                                            edges = favouriteGifs.data!!.me.favouriteGifs.favouriteGifs.edges
+                                                .filterNot { it.node.id == gif.id }
+                                        )
+                                    ),
+                                    __typename = "User"
+                                )
+                            )
+                        })
+                        .execute()
+                }
+            } catch (_: Exception) {
+            }
+        }
     }
 
     private val _activeGifPopup = MutableStateFlow<Pair<String, AttachGifItem>?>(null)
@@ -310,7 +384,7 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
 
     enum class ScrollMarker {
         Recent,
-        Favorite,
+        Favourite,
         Trending,
         Search,
     }
@@ -318,11 +392,15 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
     private val _gifScrollMarker = MutableStateFlow(ScrollMarker.Recent)
     val gifScrollMarker = _gifScrollMarker.asStateFlow()
 
+    private val _gifScrollMarkerRequest = MutableStateFlow<ScrollMarker?>(null)
+    val gifScrollMarkerRequest = _gifScrollMarkerRequest.asStateFlow()
+
     fun setGifScrollMarker(scrollMarker: ScrollMarker) {
         _gifScrollMarker.value = scrollMarker
+        _gifScrollMarkerRequest.value = null
     }
     fun scrollToGifMarker(scrollMarker: ScrollMarker) {
-        // STOPSHIP
+        _gifScrollMarkerRequest.value = scrollMarker
     }
 
     // == other public apis ==
@@ -360,6 +438,10 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
                 }
             }
         }
+    }
+
+    fun onClosed() {
+        closeGifPopup()
     }
 
     // constructor code is at the bottom to make sure all the properties

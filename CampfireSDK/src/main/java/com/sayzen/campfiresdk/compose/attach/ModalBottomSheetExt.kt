@@ -7,7 +7,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
@@ -202,13 +201,13 @@ internal fun BoxScope.ModalBottomSheetContent(
                 }
                 return@draggableAnchors newAnchors to sheetState.anchoredDraggableState.targetValue
             }
-            .draggable(
-                state = sheetState.anchoredDraggableState.draggableState,
-                orientation = Orientation.Vertical,
-                enabled = sheetState.isVisible,
-                startDragImmediately = sheetState.anchoredDraggableState.isAnimationRunning,
-                onDragStopped = { settleToDismiss(it) }
-            )
+//            .draggable(
+//                state = sheetState.anchoredDraggableState.draggableState,
+//                orientation = Orientation.Vertical,
+//                enabled = sheetState.isVisible,
+//                startDragImmediately = sheetState.anchoredDraggableState.isAnimationRunning,
+//                onDragStopped = { settleToDismiss(it) }
+//            )
             .semantics { paneTitle = bottomSheetPaneTitle }
             .graphicsLayer {
                 val sheetOffset = sheetState.anchoredDraggableState.offset

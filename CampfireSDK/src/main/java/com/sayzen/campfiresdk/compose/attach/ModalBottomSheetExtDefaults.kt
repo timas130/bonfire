@@ -1,6 +1,5 @@
 package com.sayzen.campfiresdk.compose.attach
 
-import android.util.Log
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -324,8 +323,6 @@ internal fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
         // see https://issuetracker.google.com/353304855
 
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-            Log.d("ModalBottomSheet", "onPreScroll ${available.toFloat()}")
-
             val delta = available.toFloat()
             val currentOffset = sheetState.requireOffset()
             val minAnchor = sheetState.anchoredDraggableState.anchors.minAnchor()
@@ -341,8 +338,6 @@ internal fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
             available: Offset,
             source: NestedScrollSource
         ): Offset {
-            Log.d("ModalBottomSheet", "onPostScroll ${consumed.toFloat()} ${available.toFloat()}")
-
             return if (source == NestedScrollSource.UserInput) {
                 sheetState.anchoredDraggableState.dispatchRawDelta(available.toFloat()).toOffset()
             } else {
@@ -351,21 +346,18 @@ internal fun ConsumeSwipeWithinBottomSheetBoundsNestedScrollConnection(
         }
 
         override suspend fun onPreFling(available: Velocity): Velocity {
-            Log.d("ModalBottomSheet", "onPreFling ${available.toFloat()}")
-
             val toFling = available.toFloat()
             val currentOffset = sheetState.requireOffset()
             val minAnchor = sheetState.anchoredDraggableState.anchors.minAnchor()
             if (toFling < 0 && currentOffset > minAnchor) {
                 onFling(toFling)
+                return available
             }
 
             return Velocity.Zero
         }
 
         override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
-            Log.d("ModalBottomSheet", "onPostFling ${consumed.toFloat()} ${available.toFloat()}")
-
             onFling(available.toFloat())
             return available
         }

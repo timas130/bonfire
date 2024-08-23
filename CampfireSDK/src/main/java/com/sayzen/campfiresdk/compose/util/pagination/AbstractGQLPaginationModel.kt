@@ -10,6 +10,7 @@ import com.sayzen.campfiresdk.compose.util.mapState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import sh.sit.bonfire.auth.ApolloController
@@ -24,6 +25,8 @@ abstract class AbstractGQLPaginationModel<T, D : Query.Data>(application: Applic
 
     private val _query = MutableStateFlow<ApolloResponse<D>?>(null)
     private val _isLoading = MutableStateFlow(false)
+
+    val queryResponse = _query.asStateFlow()
 
     override val isError = _query.mapState { !it?.errors.isNullOrEmpty() }
     override val isLoading = _query

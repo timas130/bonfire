@@ -3,8 +3,6 @@ package com.sayzen.campfiresdk.compose.attach
 import android.app.Application
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,10 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +37,7 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.sample
@@ -102,9 +98,8 @@ internal class GifSearchModel(application: Application, private val term: StateF
     }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-internal fun GifTab(model: AttachFlyoutModel, sharedTransitionScope: SharedTransitionScope) {
+internal fun GifTab(model: AttachFlyoutModel) {
     val recentGifs by model.recentGifs.collectAsState()
 
     val favouriteGifs by model.gifFavouritesModel.items.collectAsState()
@@ -122,6 +117,7 @@ internal fun GifTab(model: AttachFlyoutModel, sharedTransitionScope: SharedTrans
         searchResults?.chunked(3) ?: emptyList()
     }
 
+    val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
     val shimmer = rememberShimmer(ShimmerBounds.Window)
 
@@ -131,6 +127,66 @@ internal fun GifTab(model: AttachFlyoutModel, sharedTransitionScope: SharedTrans
 
     InfiniteListHandler(listState, buffer = 4 + 2) {
         model.gifSearchModel.loadNextPage()
+    }
+
+    val pagerScrollEnabled by derivedStateOf {
+        listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset < 100
+    }
+    LaunchedEffect(pagerScrollEnabled) {
+        model.pagerScrollAllowed.value = pagerScrollEnabled
+    }
+
+    val favouriteIdx by derivedStateOf {
+        if (chunkedRecentGifs?.isEmpty() != null && searchQuery.isBlank()) {
+            1 + (chunkedRecentGifs?.size ?: 3)
+        } else {
+            0
+        }
+    }
+    val searchIdx by derivedStateOf {
+        if (chunkedFavouriteGifs?.isEmpty() != null && searchQuery.isBlank()) {
+            favouriteIdx + 1 + (chunkedFavouriteGifs?.size ?: 0)
+        } else {
+            favouriteIdx
+        }
+    }
+
+    val scrollMarker by derivedStateOf {
+        val index = listState.firstVisibleItemIndex
+
+        if (index < favouriteIdx) {
+            AttachFlyoutModel.ScrollMarker.Recent
+        } else if (index < searchIdx) {
+            AttachFlyoutModel.ScrollMarker.Favourite
+        } else if (searchQuery.isBlank()) {
+            AttachFlyoutModel.ScrollMarker.Trending
+        } else {
+            AttachFlyoutModel.ScrollMarker.Search
+        }
+    }
+    LaunchedEffect(scrollMarker) {
+        model.setGifScrollMarker(scrollMarker)
+    }
+
+    val requestedScrollMarker by model.gifScrollMarkerRequest.collectAsState()
+    LaunchedEffect(requestedScrollMarker) {
+        scope.launch {
+            when (requestedScrollMarker) {
+                AttachFlyoutModel.ScrollMarker.Recent -> {
+                    listState.animateScrollToItem(0)
+                }
+
+                AttachFlyoutModel.ScrollMarker.Favourite -> {
+                    listState.animateScrollToItem(favouriteIdx)
+                }
+
+                AttachFlyoutModel.ScrollMarker.Trending, AttachFlyoutModel.ScrollMarker.Search -> {
+                    listState.animateScrollToItem(searchIdx)
+                }
+
+                null -> {}
+            }
+        }
     }
 
     LazyColumn(
@@ -152,12 +208,11 @@ internal fun GifTab(model: AttachFlyoutModel, sharedTransitionScope: SharedTrans
                     parentKey = "recent",
                     chunk = chunk,
                     model = model,
-                    shimmer = shimmer,
-                    sharedTransitionScope = sharedTransitionScope
+                    shimmer = shimmer
                 )
             }
             if (chunkedRecentGifs == null) {
-                items(3) {
+                items(3, key = { "recent:shimmer:$it" }) {
                     ShimmerGifsChunk(shimmer)
                 }
             }
@@ -166,7 +221,7 @@ internal fun GifTab(model: AttachFlyoutModel, sharedTransitionScope: SharedTrans
         if (chunkedFavouriteGifs?.isEmpty() != true && searchQuery.isBlank()) {
             item(key = "attach_scroll_favourites") {
                 AttachTabSubtitle {
-                    Icon(painterResource(R.drawable.favorite_20px), null)
+                    Icon(painterResource(R.drawable.favourite_20px), null)
 
                     Text(stringResource(R.string.attach_scroll_favourite))
                 }
@@ -177,18 +232,8 @@ internal fun GifTab(model: AttachFlyoutModel, sharedTransitionScope: SharedTrans
                     parentKey = "favourite",
                     chunk = chunk.map { it.node.attachGifItem },
                     model = model,
-                    shimmer = shimmer,
-                    sharedTransitionScope = sharedTransitionScope
+                    shimmer = shimmer
                 )
-            }
-            items(4) { idx ->
-                if (idx == 0) {
-                    LaunchedEffect(Unit) {
-                        model.gifFavouritesModel.loadNextPage()
-                    }
-                }
-
-                ShimmerGifsChunk(shimmer)
             }
         }
 
@@ -215,11 +260,10 @@ internal fun GifTab(model: AttachFlyoutModel, sharedTransitionScope: SharedTrans
                 parentKey = "search",
                 chunk = chunk.map { it.node.attachGifItem },
                 model = model,
-                shimmer = shimmer,
-                sharedTransitionScope = sharedTransitionScope
+                shimmer = shimmer
             )
         }
-        items(4) {
+        items(4, key = { "search:shimmer:$it" }) {
             ShimmerGifsChunk(shimmer)
         }
     }
@@ -239,37 +283,23 @@ private fun ShimmerGifsChunk(shimmer: Shimmer) {
     }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun GifsChunk(
     parentKey: String,
     chunk: List<AttachGifItem>,
     model: AttachFlyoutModel,
     shimmer: Shimmer,
-    sharedTransitionScope: SharedTransitionScope,
 ) {
-    val activeGifPopup by model.activeGifPopup.collectAsState()
-
     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
         chunk.forEach { gif ->
-            with(sharedTransitionScope) {
-                val isActivePopup by derivedStateOf {
-                    activeGifPopup?.second?.id == gif.id
-                }
-
-                GifItem(
-                    parentKey = parentKey,
-                    model = model,
-                    gif = gif,
-                    shimmer = shimmer,
-                    modifier = Modifier
-                        .weight(gif.media.preview.w!!.toFloat())
-                        .sharedElementWithCallerManagedVisibility(
-                            rememberSharedContentState("$parentKey:${gif.id}"),
-                            !isActivePopup,
-                        )
-                )
-            }
+            GifItem(
+                parentKey = parentKey,
+                model = model,
+                gif = gif,
+                shimmer = shimmer,
+                modifier = Modifier
+                    .weight(gif.media.preview.w!!.toFloat())
+            )
         }
 
         repeat(3 - chunk.size) {
@@ -311,15 +341,13 @@ private fun GifItem(
     )
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun BoxScope.AttachGifPopup(
     activePopup: Pair<String, AttachGifItem>,
     model: AttachFlyoutModel,
-    sharedTransitionScope: SharedTransitionScope,
     modifier: Modifier = Modifier
 ) {
-    val (parentKey, gif) = activePopup
+    val (_, gif) = activePopup
 
     // we have to check if the popup should still be fully visible
     // or whether it's in the process of fading out inside
@@ -344,22 +372,91 @@ internal fun BoxScope.AttachGifPopup(
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        with(sharedTransitionScope) {
-            RemoteImage(
-                link = gif.media.tinyGif.ui.toRef(),
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                forceAspectRatio = true,
-                matchHeightConstraintsFirst = true,
-                modifier = Modifier
-                    .padding(horizontal = 32.dp)
-                    .sharedElementWithCallerManagedVisibility(
-                        rememberSharedContentState(key = "$parentKey:${gif.id}"),
-                        popupStillActive,
-                    )
-                    .heightIn(max = 400.dp)
-            )
+        RemoteImage(
+            link = gif.media.tinyGif.ui.toRef(),
+            contentDescription = "",
+            forceAspectRatio = true,
+            matchHeightConstraintsFirst = true,
+            modifier = Modifier
+                .heightIn(max = 300.dp)
+                .fillMaxHeight()
+                .padding(horizontal = 32.dp)
+        )
+
+        Surface(shape = MaterialTheme.shapes.medium) {
+            Column(Modifier.width(IntrinsicSize.Max)) {
+                SendGifListItem(model, gif)
+
+                FavouriteListItem(model, gif)
+            }
         }
+    }
+}
+
+@Composable
+private fun SendGifListItem(
+    model: AttachFlyoutModel,
+    gif: AttachGifItem
+) {
+    ListItem(
+        leadingContent = {
+            Icon(painterResource(R.drawable.send_24px), contentDescription = null)
+        },
+        headlineContent = {
+            Text(
+                text = stringResource(R.string.attach_gif_send),
+                softWrap = false,
+            )
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                model.shareGif(gif)
+            }
+    )
+}
+
+@Composable
+private fun FavouriteListItem(
+    model: AttachFlyoutModel,
+    gif: AttachGifItem,
+) {
+    var loadingJob by remember { mutableStateOf<Job?>(null) }
+
+    if (!model.isGifInFavourites(gif.id)) {
+        ListItem(
+            leadingContent = {
+                Icon(painterResource(R.drawable.heart_plus_24px), contentDescription = null)
+            },
+            headlineContent = {
+                Text(
+                    text = stringResource(R.string.attach_gif_add_favourites),
+                    softWrap = false,
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    loadingJob = model.setGifFavourite(gif, true)
+                }
+        )
+    } else {
+        ListItem(
+            leadingContent = {
+                Icon(painterResource(R.drawable.heart_minus_24px), contentDescription = null)
+            },
+            headlineContent = {
+                Text(
+                    text = stringResource(R.string.attach_gif_del_favourites),
+                    softWrap = false,
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    loadingJob = model.setGifFavourite(gif, false)
+                }
+        )
     }
 }
 

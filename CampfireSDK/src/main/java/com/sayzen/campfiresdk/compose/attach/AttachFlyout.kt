@@ -1,8 +1,6 @@
 package com.sayzen.campfiresdk.compose.attach
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
@@ -35,7 +33,7 @@ interface AttachFlyoutDelegate {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun AttachFlyout(
     open: Boolean,
@@ -46,10 +44,26 @@ fun AttachFlyout(
         AttachFlyoutModel(get(ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY)!!)
     }
     val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
 
     if (sheetState.targetValue == SheetValue.Hidden &&
         sheetState.currentValue == SheetValue.Hidden &&
         !open) return
+
+    val activeGifPopup by model.activeGifPopup.collectAsState()
+
+    LaunchedEffect(activeGifPopup) {
+        if (activeGifPopup != null) {
+            scope.launch {
+                sheetState.animateTo(SheetValue.Expanded)
+            }
+        }
+    }
+    LaunchedEffect(sheetState.targetValue) {
+        if (sheetState.targetValue != SheetValue.Expanded) {
+            model.closeGifPopup()
+        }
+    }
 
     LaunchedEffect(open) {
         if (open) {
@@ -61,6 +75,7 @@ fun AttachFlyout(
             sheetState.show()
         } else {
             sheetState.hide()
+            model.onClosed()
         }
     }
 
@@ -72,7 +87,6 @@ fun AttachFlyout(
         ),
         dragHandle = { AttachFlyoutHeader(model, sheetState, onDismissRequest) },
     ) {
-        val scope = rememberCoroutineScope()
         val pagerState = rememberPagerState(pageCount = { AttachFlyoutModel.Tab.entries.size })
         val activeTab by model.activeTab.collectAsState()
 
@@ -87,45 +101,44 @@ fun AttachFlyout(
             model.switchTab(AttachFlyoutModel.Tab.entries[pagerState.currentPage], userAction = true)
         }
 
-        SharedTransitionScope { boxModifier ->
-            Box(boxModifier) {
-                HorizontalPager(
-                    state = pagerState,
-                    verticalAlignment = Alignment.Top,
-                    modifier = Modifier.fillMaxHeight()
-                ) { page ->
-                    val tab = AttachFlyoutModel.Tab.entries[page]
+        // TODO: When fix for https://issuetracker.google.com/336140982 is released,
+        //       add shared element transition for GIFs and stickers longclick
 
-                    when (tab) {
-                        AttachFlyoutModel.Tab.Gallery -> {
-                            GalleryTab(model)
-                        }
+        Box {
+            HorizontalPager(
+                state = pagerState,
+                verticalAlignment = Alignment.Top,
+                userScrollEnabled = model.pagerScrollAllowed.collectAsState().value,
+                modifier = Modifier.fillMaxHeight()
+            ) { page ->
+                val tab = AttachFlyoutModel.Tab.entries[page]
 
-                        AttachFlyoutModel.Tab.Gif -> {
-                            GifTab(model, this@SharedTransitionScope)
-                        }
-                        AttachFlyoutModel.Tab.Stickers -> {
-                            LazyColumn {  }
-                        }
+                when (tab) {
+                    AttachFlyoutModel.Tab.Gallery -> {
+                        GalleryTab(model)
+                    }
+
+                    AttachFlyoutModel.Tab.Gif -> {
+                        GifTab(model)
+                    }
+                    AttachFlyoutModel.Tab.Stickers -> {
+                        LazyColumn {  }
                     }
                 }
+            }
 
-                AttachFlyoutTabsWrapper(sheetState, activeTab, model, pagerState)
+            AttachFlyoutTabsWrapper(sheetState, activeTab, model, pagerState)
 
-                val activeGifPopup by model.activeGifPopup.collectAsState()
-
-                AnimatedNullableVisibility(
-                    value = activeGifPopup,
-                    modifier = Modifier
-                        .matchParentSize()
-                        .sheetPadding(sheetState)
-                ) {
-                    AttachGifPopup(
-                        activePopup = it,
-                        model = model,
-                        sharedTransitionScope = this@SharedTransitionScope,
-                    )
-                }
+            AnimatedNullableVisibility(
+                value = activeGifPopup,
+                modifier = Modifier
+                    .matchParentSize()
+                    .sheetPadding(sheetState)
+            ) {
+                AttachGifPopup(
+                    activePopup = it,
+                    model = model,
+                )
             }
         }
     }
@@ -139,13 +152,12 @@ private fun BoxScope.AttachFlyoutTabsWrapper(
     model: AttachFlyoutModel,
     pagerState: PagerState
 ) {
-    val safeDrawingInsets = WindowInsets.safeDrawing.union(WindowInsets.ime)
+    val safeDrawingInsets = WindowInsets.safeDrawing
     Surface(
         modifier = Modifier
             .sheetPadding(sheetState)
             .offset {
-                val inset = safeDrawingInsets.getBottom(this)
-                IntOffset(x = 0, y = inset)
+                IntOffset(x = 0, y = safeDrawingInsets.getBottom(this))
             }
             .align(Alignment.BottomStart)
     ) {

@@ -1,11 +1,14 @@
 package sh.sit.bonfire.auth
 
+import com.apollographql.apollo3.ApolloCall
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.annotations.ApolloExperimental
+import com.apollographql.apollo3.api.Mutation
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.api.*
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.normalizedCache
+import com.apollographql.apollo3.cache.normalized.optimisticUpdates
 import com.apollographql.apollo3.network.http.DefaultHttpEngine
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.image_loader.ImageLoader
@@ -55,3 +58,7 @@ val apollo: ApolloClient
     inline get() = ApolloController.apolloClient
 
 fun ImageLoader.load(ui: Ui) = ImageLoaderRef(ui.u, ui.i.toLong())
+
+fun <D : Mutation.Data> ApolloCall<D>.optimisticUpdatesExt(data: D?) = apply {
+    data?.let { optimisticUpdates(it) }
+}

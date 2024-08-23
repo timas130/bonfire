@@ -1,6 +1,8 @@
 package com.sayzen.campfiresdk.compose.attach
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -14,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -134,7 +137,7 @@ private fun AttachGifSearchSuggestions(model: AttachFlyoutModel, modifier: Modif
                     modifier = Modifier.animateItem()
                 ) {
                     ScrollMarkerItem(model, AttachFlyoutModel.ScrollMarker.Recent)
-                    ScrollMarkerItem(model, AttachFlyoutModel.ScrollMarker.Favorite)
+                    ScrollMarkerItem(model, AttachFlyoutModel.ScrollMarker.Favourite)
                     ScrollMarkerItem(model, AttachFlyoutModel.ScrollMarker.Trending)
                     VerticalDivider(Modifier.height(24.dp))
                 }
@@ -237,29 +240,36 @@ private fun ScrollMarkerItem(
     modifier: Modifier = Modifier
 ) {
     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
-        Surface(
-            color = if (active) {
-                MaterialTheme.colorScheme.surfaceContainerHigh
-            } else {
-                MaterialTheme.colorScheme.surface
-            },
-            shape = MaterialTheme.shapes.small,
-            onClick = onClick,
-            modifier = modifier
+        val shape = MaterialTheme.shapes.small
+        val background = if (active) {
+            MaterialTheme.colorScheme.primaryContainer
+        } else {
+            MaterialTheme.colorScheme.surface
+        }
+
+        Box(
+            modifier
+                .clip(shape)
+                .background(
+                    color = background,
+                    shape = shape
+                )
+                .clickable(onClick = onClick)
         ) {
             Icon(
                 painter = when (scrollMarker) {
                     AttachFlyoutModel.ScrollMarker.Recent -> painterResource(R.drawable.history_20px)
-                    AttachFlyoutModel.ScrollMarker.Favorite -> painterResource(R.drawable.favorite_20px)
+                    AttachFlyoutModel.ScrollMarker.Favourite -> painterResource(R.drawable.favourite_20px)
                     AttachFlyoutModel.ScrollMarker.Trending -> painterResource(R.drawable.trending_up_20px)
                     AttachFlyoutModel.ScrollMarker.Search -> painterResource(R.drawable.search_20px)
                 },
                 contentDescription = when (scrollMarker) {
                     AttachFlyoutModel.ScrollMarker.Recent -> stringResource(R.string.attach_scroll_recent)
-                    AttachFlyoutModel.ScrollMarker.Favorite -> stringResource(R.string.attach_scroll_favourite)
+                    AttachFlyoutModel.ScrollMarker.Favourite -> stringResource(R.string.attach_scroll_favourite)
                     AttachFlyoutModel.ScrollMarker.Trending -> stringResource(R.string.attach_scroll_trending)
                     AttachFlyoutModel.ScrollMarker.Search -> stringResource(R.string.attach_scroll_search)
                 },
+                tint = contentColorFor(background),
                 modifier = Modifier
                     .padding(6.dp)
                     .size(20.dp)

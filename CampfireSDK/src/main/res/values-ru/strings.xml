@@ -127,4 +127,7 @@
         фото.
     </string>
     <string name="attach_gallery_permission_settings">В настройки</string>
+    <string name="attach_gif_add_favourites">Добавить в избранное</string>
+    <string name="attach_gif_del_favourites">Удалить из избранного</string>
+    <string name="attach_gif_send">Отправить GIF</string>
 </resources>

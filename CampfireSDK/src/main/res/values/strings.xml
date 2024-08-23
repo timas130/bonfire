@@ -135,4 +135,7 @@
         photos.
     </string>
     <string name="attach_gallery_permission_settings">To settings</string>
+    <string name="attach_gif_add_favourites">Add to favourites</string>
+    <string name="attach_gif_del_favourites">Remove from favourites</string>
+    <string name="attach_gif_send">Send GIF</string>
 </resources>

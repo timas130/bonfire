@@ -16,7 +16,7 @@ impl GifServer {
         let gif_ids = sqlx::query!(
             "select gif_id, last_used_at from gif_favourites \
              where user_id = $1 and ($2::timestamptz is null or last_used_at < $2) \
-             order by last_used_at \
+             order by last_used_at desc \
              limit 50",
             gif_context.user_id,
             after,
