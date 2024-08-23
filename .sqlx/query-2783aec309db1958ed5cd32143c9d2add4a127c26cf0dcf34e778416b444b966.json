@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select gif_id from gif_favourites where last_used_at < $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "gif_id",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "2783aec309db1958ed5cd32143c9d2add4a127c26cf0dcf34e778416b444b966"
+}

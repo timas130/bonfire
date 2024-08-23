@@ -1,0 +1,29 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select gif_id, last_used_at from gif_favourites where user_id = $1 and ($2::timestamptz is null or last_used_at < $2) order by last_used_at desc limit 50",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "gif_id",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "last_used_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "163fd296045246650410afd6d007eb7e1082046761346faf62dba903b566ddcb"
+}

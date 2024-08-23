@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update gif_favourites set last_used_at = now() where user_id = $1 and gif_id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "8038b5a2667f5955db691eef53eeb72404cf30a4f0f302c8580f0023f84a1b8d"
+}

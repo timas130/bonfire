@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into gif_shares (user_id, gif_id, search_query, country, locale) values ($1, $2, $3, $4, $5)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Text",
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "4adac26e2793d2f6f688e08d71d7c462cfe6b586b55a9de1a7e1555ae3b65a20"
+}

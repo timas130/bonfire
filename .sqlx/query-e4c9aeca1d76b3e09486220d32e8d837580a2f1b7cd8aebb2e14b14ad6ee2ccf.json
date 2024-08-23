@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select gif_id from gif_shares where user_id = $1 group by gif_id order by max(created_at) desc limit 15",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "gif_id",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "e4c9aeca1d76b3e09486220d32e8d837580a2f1b7cd8aebb2e14b14ad6ee2ccf"
+}

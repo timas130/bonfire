@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "delete from gif_favourites where user_id = $1 and gif_id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "142b1a5a8a9006ff2e0c5c69a3b9cd477d47ad31a9dbaa65aa6368cc7161a1c1"
+}

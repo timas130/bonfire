@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into gif_favourites (user_id, gif_id) values ($1, $2) on conflict (user_id, gif_id) do update set last_used_at = now()",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "7823a8bd0fc93401126e0e16011f921c012255001c7bedb65dd70316e3f7c6e0"
+}
