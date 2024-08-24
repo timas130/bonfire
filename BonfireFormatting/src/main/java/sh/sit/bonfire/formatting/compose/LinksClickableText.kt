@@ -37,6 +37,7 @@ import androidx.compose.ui.util.fastForEach
 import androidx.core.graphics.ColorUtils
 import com.posthog.PostHog
 import com.sup.dev.android.tools.ToolsPerformance
+import com.sup.dev.android.views.views.text.IParticleSystem
 import com.sup.dev.java.tools.ToolsMath
 import kotlinx.coroutines.launch
 import sh.sit.bonfire.formatting.R
@@ -307,7 +308,7 @@ class SpoilerParticleSystem(canvasSize: Size, baseParticleColor: Color, dots: In
         }
     }
 
-    companion object {
+    companion object : IParticleSystem {
         private lateinit var colorScheme: ColorScheme
         private var dots by Delegates.notNull<Int>()
         private var initialized = false
@@ -332,7 +333,7 @@ class SpoilerParticleSystem(canvasSize: Size, baseParticleColor: Color, dots: In
             SpoilerParticleSystem(Size(300f, 300f), colorScheme.tertiary, dots)
         }
 
-        fun drawCached(elapsed: Long): Bitmap {
+        override fun drawCached(elapsed: Long): Bitmap {
             if (currentElapsed == elapsed) return bitmaps[currentBitmap]
 
             val newBitmapIdx = if (currentBitmap == 0) 1 else 0

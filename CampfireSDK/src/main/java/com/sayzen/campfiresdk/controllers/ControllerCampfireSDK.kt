@@ -13,6 +13,7 @@ import com.dzen.campfire.api.requests.fandoms.RFandomsBlackListContains
 import com.dzen.campfire.api.requests.fandoms.RFandomsBlackListRemove
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.getComposeTheme
 import com.sayzen.campfiresdk.models.events.account.EventAccountAddToBlackList
 import com.sayzen.campfiresdk.models.events.account.EventAccountBioChangedSex
 import com.sayzen.campfiresdk.models.events.account.EventAccountChanged
@@ -38,12 +39,14 @@ import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.android.views.splash.SplashCheckBoxes
 import com.sup.dev.android.views.splash.SplashField
 import com.sup.dev.android.views.splash.SplashMenu
+import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsColor
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
 import sh.sit.bonfire.auth.AuthController
 import sh.sit.bonfire.formatting.BonfireMarkdown
+import sh.sit.bonfire.formatting.compose.SpoilerParticleSystem
 
 object ControllerCampfireSDK {
 
@@ -84,6 +87,15 @@ object ControllerCampfireSDK {
         AuthController.init(
             openRules = { Navigator.to(SRulesUser()) }
         )
+
+        SpoilerParticleSystem.init(
+            colorScheme = getComposeTheme(
+                useDarkTheme = ControllerSettings.styleTheme < 18 && ControllerSettings.styleTheme != 2,
+                useGreyTheme = ControllerSettings.styleTheme == 1
+            ),
+            dots = 2000
+        )
+        ViewText.spoilerParticleSystem = SpoilerParticleSystem
 
         SAlert.GLOBAL_SHOW_WHOOPS = false
 

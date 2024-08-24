@@ -7,6 +7,7 @@ import android.text.TextPaint
 import android.text.style.CharacterStyle
 import android.text.style.ForegroundColorSpan
 import android.text.style.UpdateAppearance
+import com.sup.dev.android.views.views.ViewText
 import io.noties.markwon.MarkwonSpansFactory
 import io.noties.markwon.MarkwonVisitor
 import io.noties.markwon.Prop
@@ -16,6 +17,8 @@ import org.commonmark.ext.autolink.AutolinkExtension
 import org.commonmark.parser.Parser
 import sh.sit.bonfire.formatting.core.bfm.color.ColorExtension
 import sh.sit.bonfire.formatting.core.bfm.color.ColorNode
+import sh.sit.bonfire.formatting.core.bfm.spoiler.SpoilerExtension
+import sh.sit.bonfire.formatting.core.bfm.spoiler.SpoilerNode
 
 class GradientColorSpan(
     private val width: Float,
@@ -30,7 +33,7 @@ class GradientColorSpan(
     }
 }
 
-class BFMCorePlugin(val inlineOnly: Boolean) : CorePlugin() {
+class BFMCorePlugin(private val inlineOnly: Boolean) : CorePlugin() {
     companion object {
         @JvmStatic
         fun create(inlineOnly: Boolean): BFMCorePlugin = BFMCorePlugin(inlineOnly)
@@ -41,7 +44,7 @@ class BFMCorePlugin(val inlineOnly: Boolean) : CorePlugin() {
     }
 
     override fun configureParser(builder: Parser.Builder) {
-        builder.extensions(setOf(ColorExtension(), AutolinkExtension.create()))
+        builder.extensions(setOf(ColorExtension(), AutolinkExtension.create(), SpoilerExtension()))
         if (inlineOnly) {
             builder.enabledBlockTypes(setOf())
         }
@@ -56,6 +59,9 @@ class BFMCorePlugin(val inlineOnly: Boolean) : CorePlugin() {
                 ForegroundColorSpan(colorProp.get(props) ?: Color.RED)
             }
         }
+        builder.setFactory(SpoilerNode::class.java) { _, _ ->
+            ViewText.SpoilerSpan()
+        }
     }
 
     override fun configureVisitor(builder: MarkwonVisitor.Builder) {
@@ -65,6 +71,11 @@ class BFMCorePlugin(val inlineOnly: Boolean) : CorePlugin() {
             colorProp.set(visitor.renderProps(), node.color)
             colorListProp.set(visitor.renderProps(), node.colorList)
             textWidthProp.set(visitor.renderProps(), (visitor.length() - length).toFloat() * 20)
+            visitor.setSpansForNodeOptional(node, length)
+        }
+        builder.on(SpoilerNode::class.java) { visitor, node ->
+            val length = visitor.length()
+            visitor.visitChildren(node)
             visitor.setSpansForNodeOptional(node, length)
         }
     }

@@ -179,6 +179,8 @@ open class LayoutCorned @JvmOverloads constructor(context: Context, attrs: Attri
         }
     }
 
-    fun getCornedSize() = cornedSize
+    val actualBackground: Drawable?
+        get() = background ?: paint?.let { ColorDrawable(it.color) }
 
+    fun getCornedSize() = cornedSize
 }

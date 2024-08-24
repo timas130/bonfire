@@ -78,16 +78,21 @@ fun BonfireTheme(
     // I WILL NOT REDESIGN THE WHOLE APP
     // I WILL NOT REDESIGN THE WHOLE APP
     // I WILL NOT REDESIGN THE WHOLE APP
-    val colors = if (useGreyTheme) {
-        LegacyGreyColors
-    } else if (useDarkTheme) {
-        LegacyDarkColors
-    } else {
-        LegacyLightColors
-    }
+    val colors = getComposeTheme(useDarkTheme, useGreyTheme)
 
     MaterialTheme(
         colorScheme = colors,
         content = content
     )
+}
+
+fun getComposeTheme(
+    useDarkTheme: Boolean = ControllerApp.isDarkThem(),
+    useGreyTheme: Boolean = ControllerApp.isGreyTheme(),
+) = if (useGreyTheme) {
+    LegacyGreyColors
+} else if (useDarkTheme) {
+    LegacyDarkColors
+} else {
+    LegacyLightColors
 }
