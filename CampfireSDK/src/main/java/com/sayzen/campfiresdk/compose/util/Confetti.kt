@@ -22,10 +22,10 @@ fun KonfettiViewExt(
     DisposableEffect(Unit) {
         val view = KonfettiView(context)
         konfettiView.value = view
-        SupAndroid.activity!!.vSplashContainer!!.addView(view)
+        SupAndroid.activity!!.vActivityRoot!!.addView(view)
 
         onDispose {
-            SupAndroid.activity!!.vSplashContainer!!.removeView(view)
+            SupAndroid.activity!!.vActivityRoot!!.removeView(view)
         }
     }
 

@@ -38,7 +38,7 @@ abstract class SActivity : AppCompatActivity() {
     var screenStatusBarIsLight = 0
     var screenStatusBarColor = 0
 
-    var vActivityRoot: View? = null
+    var vActivityRoot: ViewGroup? = null
     var vActivityDrawAnimations: ViewDrawAnimations? = null
     var vActivityContainer: ViewGroup? = null
     var vSplashContainer: ViewGroup? = null
