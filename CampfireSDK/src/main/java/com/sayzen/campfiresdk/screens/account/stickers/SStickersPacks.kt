@@ -16,11 +16,9 @@ import com.sayzen.campfiresdk.models.events.stickers.EventStickersPackCreate
 import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.ToolsResources
+import com.sup.dev.android.views.cards.CardSpace
 import com.sup.dev.android.views.screens.SLoadingRecycler
-import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapterLoading
 import com.sup.dev.java.libs.eventBus.EventBus
-import kotlin.reflect.KClass
 
 class SStickersPacks(
         val accountId: Long
@@ -52,7 +50,11 @@ class SStickersPacks(
 
         adapter.setBottomLoader { onLoad, cards ->
             subscription = RStickersPacksGetAllByAccount(accountId, if (cards.isEmpty()) 0 else cards.get(cards.size - 1).xPublication.publication.dateCreate)
-                    .onComplete { r -> onLoad.invoke(r.stickersPacks) }
+                    .onComplete { r ->
+                        adapter.remove(CardSpace::class)
+                        onLoad.invoke(r.stickersPacks)
+                        adapter.add(CardSpace(124))
+                    }
                     .onNetworkError { onLoad.invoke(null) }
                     .send(api)
         }
