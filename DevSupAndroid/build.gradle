@@ -1,13 +1,14 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdk 34
+    compileSdk 35
     defaultConfig {
         minSdk 21
-        targetSdk 34
+        targetSdk 35
     }
     buildTypes {
         release {
@@ -22,20 +23,20 @@ android {
     namespace 'com.sup.dev.android'
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_1_8
+    }
+}
+
 dependencies {
-    api 'androidx.appcompat:appcompat:1.6.1'
-    api 'com.google.android.material:material:1.10.0'
-    api 'io.github.waynejo:androidndkgif:0.3.4'
-    api "androidx.media:media:1.7.0"
-    api 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    api libs.androidx.appcompat
+    api libs.material
+    api libs.android.ndkGif
+    api libs.androidx.media
+    api libs.androidx.swiperefreshlayout
+    implementation libs.okhttp
 
     api project(':DevSupJava')
     api project(':BonfireNetworking')
-}
-
-tasks.withType(KotlinCompile).configureEach {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
 }

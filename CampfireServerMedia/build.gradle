@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 apply plugin: 'java-library'
@@ -10,7 +11,7 @@ dependencies {
     implementation project(':DevSupJavaPc')
     implementation project(':CampfireApi')
     implementation project(':BonfireServerNetworking')
-    implementation 'org.slf4j:slf4j-simple:2.0.7'
+    implementation libs.slf4j.simple
 }
 
 
@@ -41,8 +42,8 @@ repositories {
     mavenCentral()
 }
 
-tasks.withType(KotlinCompile).configureEach {
-    kotlinOptions {
-        jvmTarget = "1.8"
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_1_8
     }
 }

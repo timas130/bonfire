@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastRoundToInt
 import androidx.compose.ui.zIndex
 import com.sayzen.campfiresdk.R
+import kotlinx.coroutines.flow.filterNot
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -39,7 +41,7 @@ internal fun ReplySwipeable(
             1 at dragWidth.toPx()
         }
     }
-    val anchoredDragState = remember {
+    val anchoredDragState = remember(anchors) {
         AnchoredDraggableState(
             initialValue = 0,
             anchors = anchors,
@@ -50,12 +52,13 @@ internal fun ReplySwipeable(
         )
     }
 
-    LaunchedEffect(anchoredDragState.settledValue) {
-        if (anchoredDragState.settledValue == 0) return@LaunchedEffect
-
-        onReply()
-
-        anchoredDragState.animateTo(0)
+    LaunchedEffect(anchoredDragState, onReply) {
+        snapshotFlow { anchoredDragState.settledValue }
+            .filterNot { it == 0 }
+            .collect {
+                onReply()
+                anchoredDragState.animateTo(0)
+            }
     }
 
     Box(

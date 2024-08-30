@@ -1,6 +1,7 @@
 package com.sayzen.campfiresdk.compose.attach
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
@@ -21,19 +22,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.compose.util.AnimatedNullableVisibility
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
-import java.io.File
 
-interface AttachFlyoutDelegate {
-    fun onSelectedImage(file: File)
-
-    object Stub : AttachFlyoutDelegate {
-        override fun onSelectedImage(file: File) {
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun AttachFlyout(
     open: Boolean,
@@ -52,17 +46,23 @@ fun AttachFlyout(
 
     val activeGifPopup by model.activeGifPopup.collectAsState()
 
-    LaunchedEffect(activeGifPopup) {
-        if (activeGifPopup != null) {
-            scope.launch {
-                sheetState.animateTo(SheetValue.Expanded)
+    LaunchedEffect(Unit) {
+        snapshotFlow { activeGifPopup }
+            .filterNotNull()
+            .distinctUntilChanged()
+            .collect {
+                scope.launch {
+                    sheetState.animateTo(SheetValue.Expanded)
+                }
             }
-        }
     }
-    LaunchedEffect(sheetState.targetValue) {
-        if (sheetState.targetValue != SheetValue.Expanded) {
-            model.closeGifPopup()
-        }
+    LaunchedEffect(sheetState) {
+        snapshotFlow { sheetState.targetValue }
+            .filter { it != SheetValue.Expanded }
+            .distinctUntilChanged()
+            .collect {
+                model.closeGifPopup()
+            }
     }
 
     LaunchedEffect(open) {
@@ -79,13 +79,24 @@ fun AttachFlyout(
         }
     }
 
+    val isImeVisible = WindowInsets.isImeVisible
+    val openedImage by model.openedImage.collectAsState()
+    val shouldDismissOnBackPress by derivedStateOf {
+        !isImeVisible && activeGifPopup == null && openedImage == null
+    }
+
     ModalBottomSheetExt(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
         properties = ModalBottomSheetProperties(
-            shouldDismissOnBackPress = !WindowInsets.isImeVisible
+            shouldDismissOnBackPress = shouldDismissOnBackPress
         ),
-        dragHandle = { AttachFlyoutHeader(model, sheetState, onDismissRequest) },
+        dragHandle = {
+            AttachFlyoutHeader(model, sheetState, onDismissRequest)
+        },
+        overlay = {
+            AttachFlyoutOverlay(model)
+        }
     ) {
         val pagerState = rememberPagerState(pageCount = { AttachFlyoutModel.Tab.entries.size })
         val activeTab by model.activeTab.collectAsState()
@@ -101,9 +112,6 @@ fun AttachFlyout(
             model.switchTab(AttachFlyoutModel.Tab.entries[pagerState.currentPage], userAction = true)
         }
 
-        // TODO: When fix for https://issuetracker.google.com/336140982 is released,
-        //       add shared element transition for GIFs and stickers longclick
-
         Box {
             HorizontalPager(
                 state = pagerState,
@@ -115,14 +123,15 @@ fun AttachFlyout(
 
                 when (tab) {
                     AttachFlyoutModel.Tab.Gallery -> {
-                        GalleryTab(model)
+                        GalleryTab(model, this@ModalBottomSheetExt)
                     }
 
                     AttachFlyoutModel.Tab.Gif -> {
-                        GifTab(model)
+                        GifTab(model, this@ModalBottomSheetExt)
                     }
+
                     AttachFlyoutModel.Tab.Stickers -> {
-                        LazyColumn {  }
+                        LazyColumn { }
                     }
                 }
             }
@@ -138,6 +147,7 @@ fun AttachFlyout(
                 AttachGifPopup(
                     activePopup = it,
                     model = model,
+                    sharedTransitionScope = this@ModalBottomSheetExt
                 )
             }
         }

@@ -130,4 +130,6 @@
     <string name="attach_gif_add_favourites">Добавить в избранное</string>
     <string name="attach_gif_del_favourites">Удалить из избранного</string>
     <string name="attach_gif_send">Отправить GIF</string>
+    <string name="attach_gallery_photo">Фото</string>
+    <string name="attach_gallery_crop">Обрезать</string>
 </resources>

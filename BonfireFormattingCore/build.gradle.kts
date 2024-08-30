@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin("jvm")
@@ -14,10 +14,10 @@ dependencies {
     testImplementation(kotlin("test"))
 
     implementation(project(":DevSupJava"))
-    implementation("com.atlassian.commonmark:commonmark:0.13.0")
-    implementation("com.atlassian.commonmark:commonmark-ext-autolink:0.13.0")
-    implementation("com.atlassian.commonmark:commonmark-ext-gfm-strikethrough:0.13.0")
-    implementation("com.atlassian.commonmark:commonmark-ext-task-list-items:0.15.0")
+    implementation(libs.commonmark)
+    implementation(libs.commonmark.ext.autolink)
+    implementation(libs.commonmark.ext.gfmStrikethrough)
+    implementation(libs.commonmark.ext.taskListItems)
 }
 
 tasks.test {
@@ -28,8 +28,8 @@ java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
-tasks.withType(KotlinCompile::class).configureEach {
-    kotlinOptions {
-        jvmTarget = "1.8"
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_1_8)
     }
 }

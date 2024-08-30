@@ -1,5 +1,7 @@
 package com.sayzen.campfiresdk.compose.attach
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.TweenSpec
@@ -69,6 +71,7 @@ import kotlin.math.min
  *   sheet's window behavior.
  * @param content The content to be displayed inside the bottom sheet.
  */
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 @ExperimentalMaterial3Api
 fun ModalBottomSheetExt(
@@ -84,7 +87,8 @@ fun ModalBottomSheetExt(
     dragHandle: @Composable (() -> Unit)? = { BottomSheetDefaults.DragHandle() },
     contentWindowInsets: @Composable () -> WindowInsets = { BottomSheetDefaults.windowInsets },
     properties: ModalBottomSheetProperties = ModalBottomSheetDefaults.properties,
-    content: @Composable ColumnScope.() -> Unit,
+    overlay: @Composable SharedTransitionScope.() -> Unit = {},
+    content: @Composable SharedTransitionScope.() -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val animateToDismiss: () -> Unit = {
@@ -121,28 +125,33 @@ fun ModalBottomSheetExt(
         },
         predictiveBackProgress = predictiveBackProgress,
     ) {
-        Box(modifier = Modifier.fillMaxSize().imePadding()) {
-            Scrim(
-                color = scrimColor,
-                onDismissRequest = animateToDismiss,
-                visible = sheetState.targetValue != Hidden
-            )
-            ModalBottomSheetContent(
-                predictiveBackProgress,
-                scope,
-                animateToDismiss,
-                settleToDismiss,
-                modifier,
-                sheetState,
-                sheetMaxWidth,
-                shape,
-                containerColor,
-                contentColor,
-                tonalElevation,
-                dragHandle,
-                contentWindowInsets,
-                content
-            )
+        SharedTransitionScope { boxModifier ->
+            Box(modifier = boxModifier.fillMaxSize().imePadding()) {
+                Scrim(
+                    color = scrimColor,
+                    onDismissRequest = animateToDismiss,
+                    visible = sheetState.targetValue != Hidden
+                )
+                ModalBottomSheetContent(
+                    predictiveBackProgress,
+                    scope,
+                    animateToDismiss,
+                    settleToDismiss,
+                    modifier,
+                    sheetState,
+                    sheetMaxWidth,
+                    shape,
+                    containerColor,
+                    contentColor,
+                    tonalElevation,
+                    dragHandle,
+                    contentWindowInsets,
+                    this@SharedTransitionScope,
+                    content
+                )
+
+                overlay()
+            }
         }
     }
     if (sheetState.hasExpandedState) {
@@ -150,6 +159,7 @@ fun ModalBottomSheetExt(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 @ExperimentalMaterial3Api
 internal fun BoxScope.ModalBottomSheetContent(
@@ -166,7 +176,8 @@ internal fun BoxScope.ModalBottomSheetContent(
     tonalElevation: Dp = BottomSheetDefaults.Elevation,
     dragHandle: @Composable (() -> Unit)? = { BottomSheetDefaults.DragHandle() },
     contentWindowInsets: @Composable () -> WindowInsets = { BottomSheetDefaults.windowInsets },
-    content: @Composable ColumnScope.() -> Unit
+    sharedTransitionScope: SharedTransitionScope,
+    content: @Composable SharedTransitionScope.() -> Unit
 ) {
     val bottomSheetPaneTitle = stringResource(R.string.attach_sheet)
 
@@ -276,7 +287,9 @@ internal fun BoxScope.ModalBottomSheetContent(
                     dragHandle()
                 }
             }
-            content()
+            with(sharedTransitionScope) {
+                content()
+            }
         }
     }
 }

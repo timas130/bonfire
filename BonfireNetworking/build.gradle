@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
@@ -24,19 +26,22 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_1_8
     }
 }
 
 dependencies {
     implementation project(':DevSupJava')
     implementation project(':CampfireApi')
-    implementation 'org.chromium.net:cronet-api:119.6045.31'
-    implementation 'org.chromium.net:cronet-embedded:119.6045.31'
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
-    implementation 'com.google.net.cronet:cronet-okhttp:0.1.0'
-    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation libs.cronet.api
+    implementation libs.cronet.embedded
+    implementation libs.cronet.okhttp
+    implementation libs.okhttp
+    implementation libs.androidx.coreKtx
 }
 
 java {

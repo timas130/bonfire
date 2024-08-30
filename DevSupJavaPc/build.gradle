@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 apply plugin: 'java-library'
@@ -6,13 +7,13 @@ apply plugin: 'kotlin'
 dependencies {
     implementation project(':DevSupJava')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.mysql:mysql-connector-j:8.0.31'
-    implementation 'org.postgresql:postgresql:42.3.8'
+    implementation libs.mysql
+    implementation libs.postgresql
 
-    implementation('software.amazon.awssdk:s3:2.25.11') {
+    implementation(libs.aws.s3) {
         exclude group: 'software.amazon.awssdk', module: 'apache-client'
     }
-    implementation('software.amazon.awssdk:url-connection-client:2.25.11')
+    implementation(libs.aws.urlConnectionClient)
 }
 
 jar {
@@ -25,9 +26,9 @@ repositories {
     mavenCentral()
 }
 
-tasks.withType(KotlinCompile).configureEach {
-    kotlinOptions {
-        jvmTarget = "1.8"
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_1_8
     }
 }
 

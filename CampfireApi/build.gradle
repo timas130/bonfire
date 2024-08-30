@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 apply plugin: 'java-library'
@@ -6,7 +7,7 @@ apply plugin: 'kotlin'
 dependencies {
     implementation project(':DevSupJava')
     implementation project(':BonfireFormattingCore')
-    implementation 'com.vdurmont:semver4j:3.1.0'
+    implementation libs.semver4j
 }
 
 jar {
@@ -19,9 +20,9 @@ repositories {
     mavenCentral()
 }
 
-tasks.withType(KotlinCompile).configureEach {
-    kotlinOptions {
-        jvmTarget = "1.8"
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_1_8
     }
 }
 

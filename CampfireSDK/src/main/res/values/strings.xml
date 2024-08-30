@@ -138,4 +138,6 @@
     <string name="attach_gif_add_favourites">Add to favourites</string>
     <string name="attach_gif_del_favourites">Remove from favourites</string>
     <string name="attach_gif_send">Send GIF</string>
+    <string name="attach_gallery_photo">Photo</string>
+    <string name="attach_gallery_crop">Crop</string>
 </resources>

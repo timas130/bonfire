@@ -90,7 +90,7 @@ object ToolsBitmap {
         val w = bitmap.width
         val h = bitmap.height
 
-        val output = Bitmap.createBitmap(w, h, bitmap.config)
+        val output = Bitmap.createBitmap(w, h, bitmap.config!!)
         for (xx in 0 until bitmap.width)
             for (yy in 0 until bitmap.height) {
 
@@ -202,7 +202,7 @@ object ToolsBitmap {
 
         if (bitmap == null) return null
 
-        val output = Bitmap.createBitmap(bitmap.width, bitmap.height, bitmap.config)
+        val output = Bitmap.createBitmap(bitmap.width, bitmap.height, bitmap.config!!)
         for (xx in 0 until bitmap.width)
             for (yy in 0 until bitmap.height) {
                 val pixel = bitmap.getPixel(xx, yy)

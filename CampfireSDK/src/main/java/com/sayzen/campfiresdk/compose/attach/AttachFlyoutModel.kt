@@ -3,13 +3,17 @@ package com.sayzen.campfiresdk.compose.attach
 import android.app.Application
 import android.content.Context
 import android.database.Cursor
+import android.graphics.Bitmap
 import android.provider.MediaStore
-import androidx.compose.material3.ExperimentalMaterial3Api
+import android.provider.MediaStore.Images.ImageColumns
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.dzen.campfire.api.models.publications.stickers.PublicationSticker
+import com.mr0xf00.easycrop.ImageCropper
+import com.mr0xf00.easycrop.crop
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.*
 import com.sayzen.campfiresdk.compose.util.combineStates
@@ -25,7 +29,27 @@ import sh.sit.bonfire.auth.apollo
 import sh.sit.bonfire.auth.optimisticUpdatesExt
 import java.io.File
 
-@OptIn(ExperimentalMaterial3Api::class)
+interface AttachFlyoutDelegate {
+    fun onSelectedImage(file: File)
+    fun onSelectedImages(files: List<File>)
+    fun onSelectedGif(gif: AttachGifItem)
+    fun onSelectedSticker(sticker: PublicationSticker)
+
+    object Stub : AttachFlyoutDelegate {
+        override fun onSelectedImage(file: File) {
+        }
+
+        override fun onSelectedImages(files: List<File>) {
+        }
+
+        override fun onSelectedGif(gif: AttachGifItem) {
+        }
+
+        override fun onSelectedSticker(sticker: PublicationSticker) {
+        }
+    }
+}
+
 internal class AttachFlyoutModel(application: Application) : AndroidViewModel(application) {
     companion object {
         private val Context.attachDatastore by preferencesDataStore("attach")
@@ -74,6 +98,7 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
                     _galleryPermissionGranted.value = false
                 }
             )
+            return
         }
 
         galleryCursor?.let {
@@ -89,7 +114,7 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
         val galleryFilter = this._galleryFilter.value
         val selection = if (galleryFilter != null) {
             Pair(
-                "${MediaStore.Images.ImageColumns.BUCKET_ID} = ?",
+                "${ImageColumns.BUCKET_ID} = ?",
                 arrayOf(galleryFilter.id.toString())
             )
         } else {
@@ -99,10 +124,10 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
         galleryCache.clear()
         galleryCursor = contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            arrayOf(MediaStore.Images.ImageColumns._ID, MediaStore.Images.ImageColumns.DATA),
+            arrayOf(ImageColumns._ID, ImageColumns.DATA, ImageColumns.WIDTH, ImageColumns.HEIGHT),
             selection.first,
             selection.second,
-            MediaStore.Images.ImageColumns.DATE_MODIFIED + " DESC"
+            ImageColumns.DATE_MODIFIED + " DESC"
         ) ?: return
         galleryVersion.value = MediaStore.getVersion(context)
     }
@@ -110,6 +135,8 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
     data class GalleryImage(
         val id: Int,
         val file: File,
+        val width: Int,
+        val height: Int,
     )
 
     val totalGalleryImages = galleryVersion.asStateFlow()
@@ -128,6 +155,8 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
         val galleryImage = GalleryImage(
             id = cursor.getInt(0),
             file = File(cursor.getString(1)),
+            width = cursor.getInt(2),
+            height = cursor.getInt(3),
         )
 
         galleryCache.ensureCapacity(offset + 1)
@@ -157,14 +186,16 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
         val cursor = contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             arrayOf(
-                MediaStore.Images.ImageColumns._ID,
-                MediaStore.Images.ImageColumns.DATA,
-                MediaStore.Images.ImageColumns.BUCKET_ID,
-                MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+                ImageColumns._ID,
+                ImageColumns.DATA,
+                ImageColumns.BUCKET_ID,
+                ImageColumns.BUCKET_DISPLAY_NAME,
+                ImageColumns.WIDTH,
+                ImageColumns.HEIGHT,
             ),
             null,
             null,
-            MediaStore.Images.ImageColumns.DATE_MODIFIED + " DESC"
+            ImageColumns.DATE_MODIFIED + " DESC"
         ) ?: return
 
         val albumMap = hashMapOf<Int, Album>()
@@ -174,6 +205,8 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
             val path = cursor.getString(1)
             val albumId = cursor.getInt(2)
             val albumName = cursor.getString(3)
+            val width = cursor.getInt(4)
+            val height = cursor.getInt(5)
 
             albumMap.compute(albumId) { _, album ->
                 if (album != null) {
@@ -184,7 +217,7 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
                         id = albumId,
                         name = albumName,
                         elements = 1,
-                        preview = GalleryImage(id = id, file = File(path))
+                        preview = GalleryImage(id = id, file = File(path), width = width, height = height)
                     )
                 }
             }
@@ -211,6 +244,52 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
         super.onCleared()
         galleryCursor?.closeQuietly()
     }
+
+    private val _selectedImages = MutableStateFlow<List<GalleryImage>>(emptyList())
+    val selectedImages = _selectedImages.asStateFlow()
+
+    fun selectedImageIndex(id: Int): StateFlow<Int> =
+        selectedImages.mapState { images ->
+            images.indexOfFirst { it.id == id }
+        }
+
+    fun setImageSelected(image: GalleryImage, selected: Boolean) {
+        _selectedImages.update { images ->
+            if (selected) {
+                if (images.any { it.id == image.id }) return@update images
+                images + image
+            } else {
+                images.filterNot { it.id == image.id }
+            }
+        }
+    }
+
+    private val _openedImage = MutableStateFlow<GalleryImage?>(null)
+    val openedImage = _openedImage.asStateFlow()
+
+    val imageCropper = ImageCropper()
+    var croppingJob: Job? = null
+
+    fun openImage(image: GalleryImage) {
+        _openedImage.value = image
+    }
+    fun closeImage() {
+        _openedImage.value = null
+
+        croppingJob?.cancel()
+        croppingJob = null
+    }
+
+    fun startImageCrop() {
+        croppingJob?.cancel()
+        croppingJob = viewModelScope.launch {
+            val openedImage = _openedImage.value ?: return@launch
+            imageCropper.crop(openedImage.file)
+        }
+    }
+
+    private val _alteredImages = MutableStateFlow<Map<Int, Bitmap>>(mapOf())
+    val alteredImages = _alteredImages.asStateFlow()
 
     // == gif ==
 
@@ -403,6 +482,19 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
         _gifScrollMarkerRequest.value = scrollMarker
     }
 
+    // == stickers ==
+
+    private val _recentStickers = MutableStateFlow<List<PublicationSticker>?>(null)
+    val recentStickers = _recentStickers.asStateFlow()
+
+    private fun loadRecentStickers() {
+
+    }
+
+    fun shareSticker(sticker: PublicationSticker) {
+
+    }
+
     // == other public apis ==
 
     fun switchTab(tab: Tab, userAction: Boolean = false) {
@@ -441,7 +533,10 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
     }
 
     fun onClosed() {
+        _selectedImages.value = emptyList()
+
         closeGifPopup()
+        closeImage()
     }
 
     // constructor code is at the bottom to make sure all the properties

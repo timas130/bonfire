@@ -1,6 +1,22 @@
-plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        google()
+    }
 }
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        google()
+        maven {
+            url = "https://jitpack.io"
+        }
+    }
+}
+
 include ':Campfire',
         ':DevSupJava',
         ':DevSupJavaPc',

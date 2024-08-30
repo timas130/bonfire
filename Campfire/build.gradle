@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -6,11 +6,11 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 
 android {
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         minSdkVersion 21
-        targetSdk 34
+        targetSdk 35
         versionCode 4_04_01
         versionName "4.4.1"
         applicationId "sh.sit.bonfire"
@@ -40,17 +40,17 @@ android {
     namespace 'com.dzen.campfire'
 }
 
-dependencies {
-    implementation project(':CampfireSDK')
-    implementation "com.posthog:posthog-android:3.2.1"
-
-    implementation "io.coil-kt:coil-gif:2.6.0"
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_1_8
+    }
 }
 
-tasks.withType(KotlinCompile).configureEach {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+dependencies {
+    implementation project(':CampfireSDK')
+    implementation libs.posthog.android
+
+    implementation libs.coil.gif
 }
 
 aboutLibraries {

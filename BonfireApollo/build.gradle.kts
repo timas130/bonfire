@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin("jvm")
@@ -32,17 +32,17 @@ repositories {
 }
 
 dependencies {
-    implementation("com.apollographql.apollo3:apollo-runtime:3.8.4")
-    implementation("com.apollographql.apollo3:apollo-normalized-cache-incubating:3.8.4")
-    implementation("joda-time:joda-time:2.12.6")
+    implementation(libs.apollo.runtime)
+    implementation(libs.apollo.normalizedCache)
+    implementation(libs.joda.time)
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
-tasks.withType(KotlinCompile::class).configureEach {
-    kotlinOptions {
-        jvmTarget = "1.8"
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_1_8)
     }
 }

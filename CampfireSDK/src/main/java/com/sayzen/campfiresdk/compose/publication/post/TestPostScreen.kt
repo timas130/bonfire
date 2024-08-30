@@ -1,11 +1,19 @@
 package com.sayzen.campfiresdk.compose.publication.post
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.res.stringResource
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostFeedGetAllSubscribe
@@ -68,6 +76,44 @@ fun TestPostScreenC() {
                         }
                     }
                 )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
+@Composable
+fun TestScreenDWrapper(modifier: Modifier = Modifier) {
+    val sheetState = rememberModalBottomSheetState()
+
+    ModalBottomSheet(
+        sheetState = sheetState,
+        onDismissRequest = {
+        }
+    ) {
+        SharedTransitionScope { boxModifier ->
+            Box(boxModifier) {
+                LazyVerticalGrid(GridCells.Fixed(3)) {
+                    items(100) {
+                        SubcomposeLayout(Modifier.aspectRatio(1f)) { constraints ->
+                            val measurables = subcompose(Unit) {
+                                Text(
+                                    text = "Item $it",
+                                    modifier = Modifier
+                                        .sharedElementWithCallerManagedVisibility(
+                                            sharedContentState = rememberSharedContentState("$it"),
+                                            visible = true
+                                        )
+                                )
+                            }
+                            val placeables = measurables.map { it.measure(constraints) }
+
+                            layout(constraints.maxWidth, constraints.maxHeight) {
+                                placeables.single().place(0, 0)
+                            }
+                        }
+                    }
+                }
             }
         }
     }

@@ -1,13 +1,14 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdk 34
+    compileSdk 35
     defaultConfig {
         minSdk 21
-        targetSdk 34
+        targetSdk 35
     }
     buildTypes {
         release {
@@ -18,17 +19,16 @@ android {
     namespace 'com.sayzen.devsupandroidgoogle'
 }
 
-dependencies {
-    api project(':DevSupAndroid')
-    api 'com.google.firebase:firebase-core:21.1.1'
-    api 'com.google.firebase:firebase-messaging:24.0.0'
-    api 'com.google.firebase:firebase-inappmessaging-display:21.0.0'
-    api 'com.google.android.gms:play-services-auth:21.2.0'
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_1_8
+    }
 }
 
-
-tasks.withType(KotlinCompile).configureEach {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+dependencies {
+    api project(':DevSupAndroid')
+    api libs.firebase.core
+    api libs.firebase.messaging
+    api libs.firebase.inappmessaging
+    api libs.gms.auth
 }

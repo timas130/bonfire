@@ -1,16 +1,17 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'com.apollographql.apollo3' version '3.8.4'
+    alias(libs.plugins.androidx.compose.compiler)
 }
 
 android {
-    compileSdk 34
+    compileSdk 35
     defaultConfig {
         minSdk 21
-        targetSdk 34
+        targetSdk 35
     }
     buildTypes {
         release {
@@ -20,9 +21,6 @@ android {
     }
     buildFeatures {
         compose true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -40,44 +38,42 @@ dependencies {
     api project(':BonfireFormattingCore')
     api project(':BonfireAuth')
 
-    implementation "com.posthog:posthog-android:3.2.1"
+    implementation libs.posthog.android
 
-    api 'com.github.kbiakov:CodeView-Android:1.3.2' // https://github.com/kbiakov/CodeView-Android
+    api libs.android.codeView // https://github.com/kbiakov/CodeView-Android
 
-    def composeBom = platform('androidx.compose:compose-bom:2024.08.00')
-    implementation composeBom
-    androidTestImplementation composeBom
-    implementation 'androidx.compose.material3:material3-android:1.3.0-beta05'
-    implementation 'androidx.compose.ui:ui-tooling-preview'
-    implementation 'androidx.compose.animation:animation-android:1.7.0-beta07'
-    debugImplementation 'androidx.compose.ui:ui-tooling'
-    implementation 'androidx.compose.material:material-icons-core'
-    implementation "com.valentinilk.shimmer:compose-shimmer:1.3.0"
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.4'
-    implementation 'androidx.activity:activity-compose:1.8.2'
-    implementation "androidx.datastore:datastore-preferences:1.1.1"
-    implementation "io.coil-kt:coil-compose:2.6.0"
-    implementation "io.coil-kt:coil-gif:2.6.0"
+    implementation libs.androidx.compose.ui
+    implementation libs.androidx.compose.material3.android
+    implementation libs.androidx.compose.ui.tooling.preview
+    implementation libs.androidx.compose.animation.android
+    debugImplementation libs.androidx.compose.ui.tooling
+    implementation libs.androidx.compose.material3.iconsCore
+    implementation libs.androidx.lifecycle.viewmodel.compose
+    implementation libs.androidx.lifecycle.runtimeKtx
+    implementation libs.androidx.activity.compose
+    implementation libs.androidx.datastore.preferences
 
-    implementation 'nl.dionsegijn:konfetti-xml:2.0.4'
-    implementation 'com.github.Dimezis:BlurView:version-2.0.3'
+    implementation libs.coil.compose
+    implementation libs.coil.gif
 
-    implementation "com.apollographql.apollo3:apollo-runtime:3.8.4"
-    implementation "com.apollographql.apollo3:apollo-normalized-cache-incubating:3.8.4"
+    implementation libs.android.composeShimmer
+    implementation libs.android.easycrop
+
+    implementation libs.android.konfetti.xml
+    implementation libs.android.blurview
+
+    implementation libs.apollo.runtime
+    implementation libs.apollo.normalizedCache
     apolloMetadata project(":BonfireApollo")
     implementation project(":BonfireApollo")
 
-    implementation "androidx.media3:media3-exoplayer:1.4.0"
-    implementation "androidx.media3:media3-ui:1.4.0"
-
-    implementation "com.mikepenz:aboutlibraries-core:11.1.1"
-    implementation "com.mikepenz:aboutlibraries-compose-m3:11.1.1"
+    implementation libs.aboutlibraries.core
+    implementation libs.aboutlibraries.compose.m3
 }
 
-tasks.withType(KotlinCompile).configureEach {
-    kotlinOptions {
-        jvmTarget = "1.8"
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_1_8
     }
 }
 
