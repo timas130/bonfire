@@ -117,5 +117,9 @@
     <string name="fandom_subscribed">Subscribed</string>
     <string name="fandom_subscribe_loading">Loading</string>
     <string name="publication_reports_alt">Reports</string>
+    <string name="link_alert">This link is taking you to the following website</string>
+    <string name="link_alert_trust">Trust %s links</string>
+    <string name="link_alert_cancel">Cancel</string>
+    <string name="link_alert_visit">Visit</string>
 
 </resources>

@@ -110,5 +110,9 @@
     <string name="fandom_subscribed">Вы подписаны</string>
     <string name="fandom_subscribe_loading">Загрузка</string>
     <string name="publication_reports_alt">Жалобы</string>
+    <string name="link_alert">Эта ссылка приведёт вас на следующий сайт</string>
+    <string name="link_alert_trust">Доверять ссылкам %s</string>
+    <string name="link_alert_cancel">Отмена</string>
+    <string name="link_alert_visit">Перейти</string>
 
 </resources>

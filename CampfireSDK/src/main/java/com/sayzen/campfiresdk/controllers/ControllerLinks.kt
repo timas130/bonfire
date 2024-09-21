@@ -11,6 +11,7 @@ import com.dzen.campfire.api.models.publications.PublicationComment
 import com.dzen.campfire.api.requests.achievements.RAchievementsOnFinish
 import com.dzen.campfire.api.requests.project.RProjectGetEvents
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.other.LinkAlertSplash
 import com.sayzen.campfiresdk.models.animations.*
 import com.sayzen.campfiresdk.screens.account.profile.SProfile
 import com.sayzen.campfiresdk.screens.account.stickers.SStickersView
@@ -37,17 +38,32 @@ import com.sayzen.campfiresdk.screens.wiki.SWikiList
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsIntent
+import com.sup.dev.android.tools.ToolsStorage
 import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.debug.info
+import com.sup.dev.java.libs.json.Json
+import com.sup.dev.java.libs.json.JsonParsable
 import com.sup.dev.java.tools.ToolsMath
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
+import java.net.URI
 import java.util.regex.Pattern
 import kotlin.system.exitProcess
 
 object ControllerLinks {
+    private val trustedLinks = TrustedLinks()
+
+    fun init() {
+        trustedLinks.json(false, ToolsStorage.getJson("ControllerLinks_trustedLinks") ?: Json())
+    }
+
+    private fun addTrustedLink(linkHost: String) {
+        trustedLinks.links += linkHost
+        ToolsStorage.put("ControllerLinks_trustedLinks", trustedLinks.json(true, Json()))
+    }
+
     private fun getRawLink(link: CharSequence): String {
         return (if (link.startsWith("@") || link.startsWith("#")) {
             link.substring(1)
@@ -269,14 +285,23 @@ object ControllerLinks {
 
     fun openLink(link: String) {
         if (parseLink(link)) return
-        SplashAlert()
-                .setOnCancel(t(API_TRANSLATE.app_cancel))
-                .setOnEnter(t(API_TRANSLATE.app_open)) { ToolsIntent.openLink(link) }
-                .setText(t(API_TRANSLATE.message_link))
-                .setTextGravity(Gravity.CENTER)
-                .setTitleImage(R.drawable.ic_security_white_48dp)
-                .setTitleImageBackgroundRes(R.color.blue_700)
-                .asSheetShow()
+
+        val linkHost = URI(link).getHost() ?: ""
+        if (linkHost in trustedLinks.links) {
+            ToolsIntent.openLink(link)
+            return
+        }
+
+        LinkAlertSplash(
+            link = link,
+            linkHost = linkHost,
+            onVisit = fun(trust) {
+                if (trust) {
+                    addTrustedLink(linkHost)
+                }
+                ToolsIntent.openLink(link)
+            }
+        ).asSheetShow()
     }
 
     fun linkToAccount(name: String) = API.LINK_PROFILE_NAME + name
@@ -356,6 +381,15 @@ object ControllerLinks {
         } else {
             val color = if (quoteCreatorName == ControllerApi.account.getName()) "FF6D00" else "90A4AE"
             "{$color $quoteCreatorName}: " + quoteText.substring(quoteCreatorName.length + 2)
+        }
+    }
+
+    class TrustedLinks() : JsonParsable {
+        var links: Array<String> = emptyArray()
+
+        override fun json(inp: Boolean, json: Json): Json {
+            links = json.m(inp, "links", links)
+            return json
         }
     }
 }
