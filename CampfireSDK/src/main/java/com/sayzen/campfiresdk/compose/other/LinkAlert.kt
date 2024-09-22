@@ -13,6 +13,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.sayzen.campfiresdk.R
@@ -23,7 +24,6 @@ import sh.sit.bonfire.auth.components.BetterModalBottomSheet
 
 class LinkAlertSplash(
     private val link: String,
-    private val linkHost: String,
     private val onVisit: (trust: Boolean) -> Unit
 ) : ComposeSplash() {
     private val isShownFlow = MutableStateFlow(isShown())
@@ -36,8 +36,7 @@ class LinkAlertSplash(
                 hide()
             },
             onVisit = onVisit,
-            link = link,
-            linkHost = linkHost
+            link = link
         )
     }
 
@@ -58,21 +57,22 @@ fun LinkAlert(
     open: Boolean,
     close: () -> Unit,
     onVisit: (trust: Boolean) -> Unit,
-    link: String,
-    linkHost: String
+    link: String
 ) {
     var trust by remember { mutableStateOf(false) }
 
-    val linkHostIndex = link.indexOf(string = linkHost, ignoreCase = false)
+    val uri = URI(link)
+    val host = uri.host ?: ""
+    val hostIndex = link.indexOf(string = host, ignoreCase = false)
     val spanLink = buildAnnotatedString {
         withStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurfaceVariant)) {
-            append(link.substring(0, linkHostIndex))
+            append(link.substring(0, hostIndex))
         }
         withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-            append(link.substring(linkHostIndex, linkHostIndex + linkHost.length))
+            append(link.substring(hostIndex, hostIndex + host.length))
         }
         withStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurfaceVariant)) {
-            append(link.substring(linkHostIndex + linkHost.length, link.length))
+            append(link.substring(hostIndex + host.length, link.length))
         }
     }
 
@@ -86,26 +86,27 @@ fun LinkAlert(
                     .padding(horizontal = 16.dp)
             )
 
-            Box {
-                Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .padding(vertical = 8.dp)
-                        .background(MaterialTheme.colorScheme.surface)
-                )
-
+            Box(
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .background(MaterialTheme.colorScheme.surface)
+            ) {
                 Text(
                     text = spanLink,
                     style = MaterialTheme.typography.bodyLarge,
+                    softWrap = false,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 16.dp)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
 
-            if (linkHost.length > 0) {
+            if (uri.host != null) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable(
@@ -118,8 +119,8 @@ fun LinkAlert(
                         checked = trust,
                         onCheckedChange = null
                     )
-                    Spacer(Modifier.width(6.dp))
-                    Text(stringResource(R.string.link_alert_trust).format(linkHost))
+
+                    Text(stringResource(R.string.link_alert_trust).format(uri.host!!))
                 }
             }
 

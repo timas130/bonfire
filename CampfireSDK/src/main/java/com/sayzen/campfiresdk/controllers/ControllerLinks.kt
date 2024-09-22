@@ -286,22 +286,24 @@ object ControllerLinks {
     fun openLink(link: String) {
         if (parseLink(link)) return
 
-        val linkHost = URI(link).getHost() ?: ""
-        if (linkHost in trustedLinks.links) {
-            ToolsIntent.openLink(link)
-            return
-        }
+        try {
+            val uri = URI(link)
 
-        LinkAlertSplash(
-            link = link,
-            linkHost = linkHost,
-            onVisit = fun(trust) {
-                if (trust) {
-                    addTrustedLink(linkHost)
-                }
+            if (uri.host?.let { it in trustedLinks.links } == true) {
                 ToolsIntent.openLink(link)
+                return
             }
-        ).asSheetShow()
+
+            LinkAlertSplash(
+                link = link,
+                onVisit = fun(trust) {
+                    uri.host.takeIf { trust }?.let { addTrustedLink(it) }
+                    ToolsIntent.openLink(link)
+                }
+            ).asSheetShow()
+        } catch (e: Exception) {
+            err(e)
+        }
     }
 
     fun linkToAccount(name: String) = API.LINK_PROFILE_NAME + name
