@@ -11,7 +11,7 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
-import com.sayzen.campfiresdk.controllers.ControllerLinks
+import com.sayzen.campfiresdk.controllers.ControllerExternalLinks
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.support.load
@@ -75,7 +75,7 @@ class SGoogleRules(
             span.setSpan(
                     object : ClickableSpan() {
                         override fun onClick(v: View) {
-                            ControllerLinks.openLink("https://play.google.com/intl/ru_ALL/about/restricted-content/inappropriate-content/")
+                            ControllerExternalLinks.openLink("https://play.google.com/intl/ru_ALL/about/restricted-content/inappropriate-content/")
                         }
                     },
                     t.indexOf(tGoogle),

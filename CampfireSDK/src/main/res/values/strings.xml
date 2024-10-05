@@ -121,5 +121,6 @@
     <string name="link_alert_trust">Trust %s links</string>
     <string name="link_alert_cancel">Cancel</string>
     <string name="link_alert_visit">Visit</string>
+    <string name="link_parse_error">Error parsing this link</string>
 
 </resources>

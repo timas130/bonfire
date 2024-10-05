@@ -11,7 +11,7 @@ import com.posthog.PostHog
 import com.posthog.android.PostHogAndroid
 import com.posthog.android.PostHogAndroidConfig
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
-import com.sayzen.campfiresdk.controllers.ControllerLinks
+import com.sayzen.campfiresdk.controllers.ControllerExternalLinks
 import com.sayzen.campfiresdk.controllers.ControllerPost
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.screens.fandoms.search.SFandomsSearch
@@ -78,7 +78,7 @@ class App : Application() {
         ToolsAndroid.setLanguage(applicationContext, ControllerSettings.appLanguage)
 
         SActivity.onUrlClicked = {
-            ControllerLinks.openLink(it)
+            ControllerExternalLinks.openLink(it)
         }
 
         ImageLoader.load(ApiResources.IMAGE_BACKGROUND_17).immortalCash().intoCash()

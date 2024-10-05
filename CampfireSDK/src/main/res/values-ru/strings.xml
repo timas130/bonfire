@@ -114,5 +114,6 @@
     <string name="link_alert_trust">Доверять ссылкам %s</string>
     <string name="link_alert_cancel">Отмена</string>
     <string name="link_alert_visit">Перейти</string>
+    <string name="link_parse_error">Не удалось разобрать эту ссылку</string>
 
 </resources>

@@ -104,7 +104,7 @@ class CardBio(
             vTitle.text = link.a1
             vUrl.text = link.a2
 
-            v.setOnClickListener { ControllerLinks.openLink(link.a2) }
+            v.setOnClickListener { ControllerExternalLinks.openLink(link.a2) }
 
             val w = SplashMenu()
                     .add(t(API_TRANSLATE.app_copy)) {

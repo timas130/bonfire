@@ -77,7 +77,7 @@ object ControllerCampfireSDK {
         this.projectKey = projectKey
         this.onLoginFailed = onLoginFailed
         ControllerSettings.init()
-        ControllerLinks.init()
+        ControllerExternalLinks.init()
         ControllerApi.init()
         ControllerActivities.init()
         ControllerChats.init()
