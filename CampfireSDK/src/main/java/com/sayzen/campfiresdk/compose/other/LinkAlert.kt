@@ -61,18 +61,37 @@ fun LinkAlert(
 ) {
     var trust by remember { mutableStateOf(false) }
 
+    // *probably* the best way to do this
     val uri = URI(link)
-    val host = uri.host ?: ""
-    val hostIndex = link.indexOf(string = host, ignoreCase = false)
     val spanLink = buildAnnotatedString {
         withStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurfaceVariant)) {
-            append(link.substring(0, hostIndex))
-        }
-        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-            append(link.substring(hostIndex, hostIndex + host.length))
-        }
-        withStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurfaceVariant)) {
-            append(link.substring(hostIndex + host.length, link.length))
+            uri.scheme?.let { append(it + ':') }
+            if (uri.isOpaque()) {
+                uri.schemeSpecificPart?.let { append(it) }
+            } else {
+                if (uri.host != null) {
+                    append("//")
+                    uri.userInfo?.let { append(it + '@') }
+                    val needBrackets = ((uri.host!!.indexOf(':') >= 0) &&
+                        !uri.host!!.startsWith("[") &&
+                        !uri.host!!.endsWith("]"));
+                    if (needBrackets) append('[')
+                    withStyle(SpanStyle(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Bold
+                    )) {
+                        append(uri.host!!)
+                    }
+                    if (needBrackets) append(']')
+                    uri.port.takeIf { it != -1 }?.let { append(':' + it.toString()) }
+                } else if (uri.authority != null) {
+                    append("//")
+                    append(uri.authority!!)
+                }
+                uri.path?.let { append(it) }
+                uri.query?.let { append('?' + it) }
+            }
+            uri.fragment?.let { append('#' + it) }
         }
     }
 
