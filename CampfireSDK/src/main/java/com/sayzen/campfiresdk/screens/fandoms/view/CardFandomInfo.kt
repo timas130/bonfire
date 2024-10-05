@@ -13,7 +13,7 @@ import com.dzen.campfire.api.requests.fandoms.*
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.controllers.ControllerApi
-import com.sayzen.campfiresdk.controllers.ControllerLinks
+import com.sayzen.campfiresdk.controllers.ControllerExternalLinks
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.notifications.ControllerApp
 import com.sayzen.campfiresdk.controllers.t
@@ -681,7 +681,7 @@ class CardFandomInfo(
                 w.asSheetShow()
                 true
             }
-            vLink.setOnClickListener { ControllerLinks.openLink(link.url) }
+            vLink.setOnClickListener { ControllerExternalLinks.openLink(link.url) }
 
             when (link.imageIndex) {
                 1L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_YOUTUBE_WHITE else ApiResources.ICON_YOUTUBE_BLACK)

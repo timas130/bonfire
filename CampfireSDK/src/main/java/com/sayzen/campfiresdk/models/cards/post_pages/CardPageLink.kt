@@ -6,6 +6,7 @@ import com.dzen.campfire.api.models.publications.PagesContainer
 
 import com.dzen.campfire.api.models.publications.post.PageLink
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.controllers.ControllerExternalLinks
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.t
 import com.sup.dev.android.tools.ToolsAndroid
@@ -26,7 +27,7 @@ class CardPageLink(
         val page = page as PageLink
 
         vTouch.visibility = if (clickable) View.VISIBLE else View.GONE
-        vTouch.setOnClickListener { ControllerLinks.openLink(page.link) }
+        vTouch.setOnClickListener { ControllerExternalLinks.openLink(page.link) }
         vTouch.setOnLongClickListener {
             ToolsAndroid.setToClipboard(page.link)
             ToolsToast.show(t(API_TRANSLATE.app_copied))

@@ -5,6 +5,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.controllers.ControllerExternalLinks
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.screens.account.profile.SProfile
@@ -69,21 +70,21 @@ class SAboutCreators : Screen(R.layout.screen_other_abount_creators) {
         vMoreZeon.setOnClickListener {
             SplashMenu()
                 .add(t(API_TRANSLATE.app_email)) { ToolsIntent.startMail("zeooon@ya.ru")  }
-                .add(t(API_TRANSLATE.app_vkontakte)) { ControllerLinks.openLink("https://vk.com/zeooon") }
+                .add(t(API_TRANSLATE.app_vkontakte)) { ControllerExternalLinks.openLink("https://vk.com/zeooon") }
                 .asSheetShow()
         }
 
         vMoreSaynok.setOnClickListener {
             SplashMenu()
                 .add(t(API_TRANSLATE.app_email)) { ToolsIntent.startMail("saynokdeveloper@gmail.com") }
-                .add(t(API_TRANSLATE.app_vkontakte)) { ControllerLinks.openLink("https://vk.com/saynok") }
+                .add(t(API_TRANSLATE.app_vkontakte)) { ControllerExternalLinks.openLink("https://vk.com/saynok") }
                 .asSheetShow()
         }
 
         vMoreEgor.setOnClickListener {
             SplashMenu()
                 .add(t(API_TRANSLATE.app_email)) { ToolsIntent.startMail("georgepro036@gmail.com") }
-                .add(t(API_TRANSLATE.app_vkontakte)) { ControllerLinks.openLink("https://vk.com/id216069359") }
+                .add(t(API_TRANSLATE.app_vkontakte)) { ControllerExternalLinks.openLink("https://vk.com/id216069359") }
                 .asSheetShow()
         }
 

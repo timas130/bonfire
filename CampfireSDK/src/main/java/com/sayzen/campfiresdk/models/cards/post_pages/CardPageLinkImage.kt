@@ -7,7 +7,7 @@ import com.dzen.campfire.api.models.publications.PagesContainer
 
 import com.dzen.campfire.api.models.publications.post.PageLinkImage
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.controllers.ControllerLinks
+import com.sayzen.campfiresdk.controllers.ControllerExternalLinks
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
@@ -28,7 +28,7 @@ class CardPageLinkImage(
         ImageLoader.load((page as PageLinkImage).image).into(vImage)
 
         if (clickable){
-            vTouch.setOnClickListener { ControllerLinks.openLink((page as PageLinkImage).link) }
+            vTouch.setOnClickListener { ControllerExternalLinks.openLink((page as PageLinkImage).link) }
             vTouch.setOnLongClickListener {
                 ToolsAndroid.setToClipboard((page as PageLinkImage).link)
                 ToolsToast.show(t(API_TRANSLATE.app_copied))
