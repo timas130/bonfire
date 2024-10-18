@@ -36,7 +36,6 @@ import com.sayzen.campfiresdk.screens.wiki.SWikiArticleView
 import com.sayzen.campfiresdk.screens.wiki.SWikiList
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.ToolsIntent
 import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.java.libs.debug.err
@@ -265,18 +264,6 @@ object ControllerLinks {
             err(e)
             return false
         }
-    }
-
-    fun openLink(link: String) {
-        if (parseLink(link)) return
-        SplashAlert()
-                .setOnCancel(t(API_TRANSLATE.app_cancel))
-                .setOnEnter(t(API_TRANSLATE.app_open)) { ToolsIntent.openLink(link) }
-                .setText(t(API_TRANSLATE.message_link))
-                .setTextGravity(Gravity.CENTER)
-                .setTitleImage(R.drawable.ic_security_white_48dp)
-                .setTitleImageBackgroundRes(R.color.blue_700)
-                .asSheetShow()
     }
 
     fun linkToAccount(name: String) = API.LINK_PROFILE_NAME + name
