@@ -5,6 +5,7 @@ import android.view.View
 import androidx.viewpager.widget.ViewPager
 import com.dzen.campfire.R
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.app.App
 import com.dzen.campfire.screens.feed.filters.SplashFilters
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.app.CampfireConstants
@@ -78,6 +79,9 @@ class SFeed : Screen(R.layout.screen_feed), PostList {
             vTitles.visibility = View.GONE
         }
         vTitles.setTitles(*titles.toTypedArray())
+        if (App.activity().type.getNavigationDrawable(this) == null) {
+            vTitles.offsetLeft = ToolsView.dpToPx(16).toInt()
+        }
 
         ToolsThreads.main(true) { (pagerCardAdapter.get(0) as APage).markLoaded() }
 
