@@ -175,7 +175,7 @@ object ControllerPublications {
     //  Tag
     //
 
-    fun createTagMenu(view: View, publication: PublicationTag, moderationAllowed:Boolean, tags: Array<TagParent> = emptyArray()) {
+    fun createTagMenu(view: View, publication: PublicationTag, moderationAllowed:Boolean, tags: Array<TagParent> = emptyArray(), isCategory: Boolean = false) {
 
         var parentTags = ArrayList<PublicationTag>()
         if (publication.parentPublicationId > 0) for (t in tags) if (t.tag.id == publication.parentPublicationId) parentTags = t.tags
@@ -188,7 +188,7 @@ object ControllerPublications {
                 .add(t(API_TRANSLATE.app_move)) { moveTag(publication, tags) }.condition(tags.size > 1 && publication.parentPublicationId > 0).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
                 .add(t(API_TRANSLATE.app_display_before)) { displayBefore(publication, parentTags) }.condition(parentTags.size > 1 && publication.parentPublicationId > 0).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
                 .add(t(API_TRANSLATE.app_display_above)) { displayAbove(publication, tags) }.condition(tags.size > 1 && publication.parentPublicationId == 0L).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
-                .add(t(API_TRANSLATE.app_remove)) { SplashTagRemove(publication) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white)
+                .add(t(API_TRANSLATE.app_remove)) { SplashTagRemove(publication, isCategory) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white)
 
         view.setOnLongClickListener {
             w.asPopupShow(view)

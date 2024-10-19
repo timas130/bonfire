@@ -87,7 +87,7 @@ class STags private constructor(
             vText.setOnClickListener { SPostsSearch.instance(tag.tag, Navigator.TO) }
 
             vContainer.addView(vText, vContainer.childCount - 1)
-            ControllerPublications.createTagMenu(vText, tag.tag, true, tags)
+            ControllerPublications.createTagMenu(vText, tag.tag, true, tags, true)
 
             val vFlow = LayoutFlow(context)
 
@@ -97,7 +97,7 @@ class STags private constructor(
                 v.setOnClickListener { SPostsSearch.instance(t, Navigator.TO) }
                 v.tag = t.id
                 vFlow.addView(v)
-                ControllerPublications.createTagMenu(v, t, true, tags)
+                ControllerPublications.createTagMenu(v, t, true, tags, false)
                 if (t.image.isNotEmpty()) {
                     v.setIcon(R.color.focus)
                     ImageLoader.load(t.image).size(ToolsView.dpToPx(24).toInt(),ToolsView.dpToPx(24).toInt()).intoBitmap { v.setIcon(it) }
