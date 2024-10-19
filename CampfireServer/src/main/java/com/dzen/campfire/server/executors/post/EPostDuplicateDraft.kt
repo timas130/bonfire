@@ -49,7 +49,8 @@ class EPostDuplicateDraft : RPostDuplicateDraft(0) {
             TPublications.tag_s_2, "",
             TPublications.publication_category, ControllerFandom.getCategory(post.fandom.id),
             TPublications.status, API.STATUS_DRAFT,
-            TPublications.fandom_key, "${post.fandom.id}-${post.fandom.languageId}-0")
+            TPublications.fandom_key, "${post.fandom.id}-${post.fandom.languageId}-0",
+            TPublications.nsfw, post.nsfw)
 
         for (p in post.pages) p.duplicateResources(ControllerResources, publication.id)
 
