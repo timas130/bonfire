@@ -65,7 +65,13 @@ class CardStatus(
         ControllerLinks.linkifyShort(vStatus)
 
         if (xAccount.isCurrentAccount()) {
-            vStatusContainer.setOnClickListener { changeStatus() }
+            vStatusContainer.setOnClickListener {
+                if (!loaded) {
+                    ToolsToast.show(t(API_TRANSLATE.profile_loading_in_profess))
+                } else {
+                    changeStatus()
+                }
+            }
         } else {
             vStatusContainer.setOnClickListener(null)
         }
