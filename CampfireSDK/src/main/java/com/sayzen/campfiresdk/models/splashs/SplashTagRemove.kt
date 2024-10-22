@@ -19,7 +19,8 @@ import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.java.tools.ToolsThreads
 
 class SplashTagRemove(
-        private val tag: PublicationTag
+        private val tag: PublicationTag,
+        private val isCategory: Boolean
 ) : Splash(R.layout.splash_remove) {
 
     private val vComment: SettingsField = findViewById(R.id.vComment)
@@ -65,7 +66,15 @@ class SplashTagRemove(
 
     private fun sendRemove() {
 
-        ApiRequestsSupporter.executeEnabledConfirm(t(API_TRANSLATE.fandom_tags_remove_conf), t(API_TRANSLATE.app_remove), RTagsRemove(vComment.getText(), tag.id)) {
+        ApiRequestsSupporter.executeEnabledConfirm(
+            if (!isCategory) {
+                t(API_TRANSLATE.fandom_tags_remove_conf)
+            } else {
+                t(API_TRANSLATE.fandom_category_remove_conf)
+            },
+            t(API_TRANSLATE.app_remove),
+            RTagsRemove(vComment.getText(), tag.id)
+        ) {
             ToolsToast.show(t(API_TRANSLATE.app_done))
             STags.instance(tag.fandom.id, tag.fandom.languageId, Navigator.REPLACE)
             hide()

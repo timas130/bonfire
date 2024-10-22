@@ -1756,6 +1756,7 @@ object API_TRANSLATE {
     val fandom_posts_empty = Translate("В этом фэндоме пока нет постов")
     val fandom_tags_remove_conf = Translate("Удалить этот тег?")
     val fandom_tags_name = Translate("Название тега")
+    val fandom_category_remove_conf = Translate("Удалить эту категорию?")
     val fandom_category_name = Translate("Название категории")
     val fandom_notification_accepted = Translate("Фэндом %s принят администратором %s.")
     val fandom_notification_rejected = Translate("Фэндом %s отклонен администратором %s. Комментарий: %s")

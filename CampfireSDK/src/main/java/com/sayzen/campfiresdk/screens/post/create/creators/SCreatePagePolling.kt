@@ -115,7 +115,7 @@ class SCreatePagePolling(
                     .takeUnless { it == -1 } ?: 0)
             }
             if (oldPage.minLevel > 0) {
-                vLvl.setText("${oldPage.minLevel / 100}")
+                vLvl.setText("${oldPage.minLevel / 100.0}")
             }
             if (oldPage.minKarma > 0) {
                 vKarma.setText("${oldPage.minKarma / 100}")

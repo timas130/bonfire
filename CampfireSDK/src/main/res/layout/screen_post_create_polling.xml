@@ -98,7 +98,7 @@
                     android:id="@+id/vLvl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     app:Settings_maxLength="3" />
 
                 <com.sup.dev.android.views.settings.SettingsField
