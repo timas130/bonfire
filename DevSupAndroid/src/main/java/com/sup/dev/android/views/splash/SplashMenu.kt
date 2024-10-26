@@ -182,6 +182,7 @@ open class SplashMenu : SplashRecycler() {
         buildItem = Item()
         buildItem!!.text = text
         buildItem!!.onClick = onClick
+        buildItem!!.iconFilter = ToolsResources.getColorAttr(SupAndroid.activity!!, R.attr.colorOnPrimaryIcons)
         return this
     }
 

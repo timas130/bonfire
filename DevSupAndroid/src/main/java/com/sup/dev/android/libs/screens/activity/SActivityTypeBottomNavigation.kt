@@ -139,7 +139,6 @@ open class SActivityTypeBottomNavigation(
             createExtraNavigationItem(useIconsFilters)
             val menuItem = widgetMenu!!.add(text) { onClick.invoke(it.card.getView()!!) }.icon(icon)
             if (onLongClick != null) menuItem.onLongClick { onLongClick.invoke(it.card.getView()!!) }
-            if(useIconsFilters) menuItem.iconFilter(getIconsColor())
             widgetMenu!!.finishItemBuilding()
             item.menuIndex = widgetMenu!!.getItemsCount() - 1
             return item
