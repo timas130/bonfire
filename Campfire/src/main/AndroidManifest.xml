@@ -26,7 +26,7 @@
         <activity
             android:name="com.dzen.campfire.app.AppActivity"
             android:launchMode="singleInstance"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="orientation|screenSize|uiMode"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>

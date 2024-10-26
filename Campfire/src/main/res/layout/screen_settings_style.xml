@@ -29,6 +29,13 @@
                 app:Settings_icon_background="@color/purple_500"/>
 
             <com.sup.dev.android.views.settings.SettingsSelection
+                android:id="@+id/vThemeColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"
+                app:Settings_icon_background="@color/purple_500"/>
+
+            <com.sup.dev.android.views.settings.SettingsSelection
                 android:id="@+id/vActivityType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

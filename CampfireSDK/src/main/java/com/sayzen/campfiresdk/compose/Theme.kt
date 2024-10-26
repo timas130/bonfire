@@ -5,7 +5,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.sayzen.campfiresdk.controllers.notifications.ControllerApp
+import com.sayzen.campfiresdk.controllers.ControllerTheme
 
 private val LegacyLightColors = lightColorScheme(
     background = Color(0xFFF5F5F5),
@@ -69,8 +69,8 @@ private val LegacyDarkColors = darkColorScheme(
 
 @Composable
 fun BonfireTheme(
-    useDarkTheme: Boolean = ControllerApp.isDarkThem(),
-    useGreyTheme: Boolean = ControllerApp.isGreyTheme(),
+    useDarkTheme: Boolean = ControllerTheme.isDarkTheme(),
+    useGreyTheme: Boolean = ControllerTheme.isGreyTheme(),
     content: @Composable () -> Unit
 ) {
     // I WILL NOT REDESIGN THE WHOLE APP
@@ -87,8 +87,8 @@ fun BonfireTheme(
 }
 
 fun getComposeTheme(
-    useDarkTheme: Boolean = ControllerApp.isDarkThem(),
-    useGreyTheme: Boolean = ControllerApp.isGreyTheme(),
+    useDarkTheme: Boolean = ControllerTheme.isDarkTheme(),
+    useGreyTheme: Boolean = ControllerTheme.isGreyTheme(),
 ) = if (useGreyTheme) {
     LegacyGreyColors
 } else if (useDarkTheme) {

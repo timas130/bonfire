@@ -101,7 +101,7 @@ class AppActivity : SActivity() {
         vNavigationTitle?.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
         type.addNavigationView(vNavigationTitleView!!, false)
 
-        type.setIconsColor(if (ControllerSettings.styleTheme == 0) ToolsResources.getColor(R.color.grey_700) else ToolsResources.getColorAttr(R.attr.colorOnPrimary))
+        type.setIconsColor(if (ControllerTheme.styleTheme == 0) ToolsResources.getColor(R.color.grey_700) else ToolsResources.getColorAttr(R.attr.colorOnPrimary))
 
         vAchievements = type.addNavigationItem(R.drawable.ic_star_white_24dp, t(API_TRANSLATE.app_achievements), false, true) {
             PostHog.capture(
@@ -272,8 +272,7 @@ class AppActivity : SActivity() {
     }
 
     override fun applyTheme() {
-
-        val themeResource = when (ControllerSettings.styleTheme) {
+        val themeResource = when (ControllerTheme.styleTheme) {
             1 -> {;R.style.CampfireThemeDarkGrey; }
             2 -> {;R.style.CampfireRootThemeWhite; }
 
@@ -313,7 +312,7 @@ class AppActivity : SActivity() {
         }
         setTheme(themeResource)
 
-        if (ControllerSettings.styleTheme == 2 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        if (ControllerTheme.styleTheme == 2 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
 

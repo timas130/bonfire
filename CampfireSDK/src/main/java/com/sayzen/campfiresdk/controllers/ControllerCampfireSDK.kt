@@ -78,6 +78,7 @@ object ControllerCampfireSDK {
         this.onLoginFailed = onLoginFailed
         ControllerSettings.init()
         ControllerExternalLinks.init()
+        ControllerTheme.init()
         ControllerApi.init()
         ControllerActivities.init()
         ControllerChats.init()
@@ -91,8 +92,8 @@ object ControllerCampfireSDK {
 
         SpoilerParticleSystem.init(
             colorScheme = getComposeTheme(
-                useDarkTheme = ControllerSettings.styleTheme < 18 && ControllerSettings.styleTheme != 2,
-                useGreyTheme = ControllerSettings.styleTheme == 1
+                useDarkTheme = ControllerTheme.isDarkTheme(),
+                useGreyTheme = ControllerTheme.isGreyTheme()
             ),
             dots = 2000
         )

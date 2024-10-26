@@ -16,7 +16,7 @@ class AccountSettings() : JsonParsable {
     var styleCorned = 10
     var fandomBackground = true
     var styleChatCorned = 8
-    var theme = 0
+    var theme = 33
     var interfaceType = 0
     var fullscreen = false
     var isProfileListStyle = true
