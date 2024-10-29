@@ -9,6 +9,7 @@ import com.posthog.PostHog
 import com.sayzen.campfiresdk.controllers.ControllerHoliday
 import com.sayzen.campfiresdk.controllers.ControllerScreenAnimations
 import com.sayzen.campfiresdk.controllers.ControllerSettings
+import com.sayzen.campfiresdk.controllers.ControllerTheme
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.animations.DrawAnimationSnow
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomBackgroundImageChangedModeration
@@ -35,6 +36,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
     private val vPostFontSize: SettingsSeek = findViewById(R.id.vPostFontSize)
     private val vDefault: Settings = findViewById(R.id.vDefault)
     private val vTheme: SettingsSelection = findViewById(R.id.vTheme)
+    private val vThemeColor: SettingsSelection = findViewById(R.id.vThemeColor)
     private val vActivityType: SettingsSelection = findViewById(R.id.vActivityType)
     private val vFullscreen: SettingsSwitcher = findViewById(R.id.vFullscreen)
     private val vProfileListStyle: SettingsSwitcher = findViewById(R.id.vProfileListStyle)
@@ -54,6 +56,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         setTitle(t(API_TRANSLATE.app_style))
 
         vTheme.setTitle(t(API_TRANSLATE.settings_style_theme))
+        vThemeColor.setTitle(t(API_TRANSLATE.settings_style_theme_color))
         vActivityType.setTitle(t(API_TRANSLATE.settings_style_interface))
         vFullscreen.setTitle(t(API_TRANSLATE.settings_style_fullscreen))
         vProfileListStyle.setTitle(t(API_TRANSLATE.settings_style_profile_list))
@@ -168,8 +171,8 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
                     .asSheetShow()
         }
 
-        vTheme.onSelected {
-            ControllerSettings.styleTheme = it
+        fun onThemeSelected(theme: Int, themeColor: Int) {
+            ControllerTheme.setStyleTheme(theme, themeColor)
             val dialog = ToolsView.showProgressDialog()
             ControllerSettings.setSettingsNow(
                     onFinish = {
@@ -188,44 +191,30 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
             )
 
         }
+        vTheme.onSelected { onThemeSelected(it, vThemeColor.getCurrentIndex()) }
+        vThemeColor.onSelected { onThemeSelected(vTheme.getCurrentIndex(), it) }
 
         vTheme.add(t(API_TRANSLATE.settings_style_theme_1))
         vTheme.add(t(API_TRANSLATE.settings_style_theme_2))
         vTheme.add(t(API_TRANSLATE.settings_style_theme_3))
+        vTheme.add(t(API_TRANSLATE.settings_style_theme_4))
 
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_1) + ": Red")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_1) + ": Pink")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_1) + ": Purple")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_1) + ": DeepPurple")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_1) + ": Indigo")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_1) + ": Blue")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_1) + ": LightBlue")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_1) + ": Cyan")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_1) + ": Teal")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_1) + ": Green")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_1) + ": LightGreen")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_1) + ": Lime")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_1) + ": DeepOrange")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_1) + ": Brown")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_1) + ": BlueGrey")
-
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_3) + ": Red")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_3) + ": Pink")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_3) + ": Purple")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_3) + ": DeepPurple")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_3) + ": Indigo")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_3) + ": Blue")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_3) + ": LightBlue")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_3) + ": Cyan")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_3) + ": Teal")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_3) + ": Green")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_3) + ": LightGreen")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_3) + ": Lime")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_3) + ": DeepOrange")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_3) + ": Brown")
-        vTheme.add(t(API_TRANSLATE.settings_style_theme_3) + ": BlueGrey")
-
-
+        vThemeColor.add(t(API_TRANSLATE.settings_style_theme_color_no))
+        vThemeColor.add(t(API_TRANSLATE.settings_style_theme_color_1))
+        vThemeColor.add(t(API_TRANSLATE.settings_style_theme_color_2))
+        vThemeColor.add(t(API_TRANSLATE.settings_style_theme_color_3))
+        vThemeColor.add(t(API_TRANSLATE.settings_style_theme_color_4))
+        vThemeColor.add(t(API_TRANSLATE.settings_style_theme_color_5))
+        vThemeColor.add(t(API_TRANSLATE.settings_style_theme_color_6))
+        vThemeColor.add(t(API_TRANSLATE.settings_style_theme_color_7))
+        vThemeColor.add(t(API_TRANSLATE.settings_style_theme_color_8))
+        vThemeColor.add(t(API_TRANSLATE.settings_style_theme_color_9))
+        vThemeColor.add(t(API_TRANSLATE.settings_style_theme_color_10))
+        vThemeColor.add(t(API_TRANSLATE.settings_style_theme_color_11))
+        vThemeColor.add(t(API_TRANSLATE.settings_style_theme_color_12))
+        vThemeColor.add(t(API_TRANSLATE.settings_style_theme_color_13))
+        vThemeColor.add(t(API_TRANSLATE.settings_style_theme_color_14))
+        vThemeColor.add(t(API_TRANSLATE.settings_style_theme_color_15))
 
         vActivityType.onSelected {
             ControllerSettings.interfaceType = it
@@ -271,7 +260,9 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vChatBackground.setChecked(ControllerSettings.fandomBackground)
         vRoundingChat.progress = ControllerSettings.styleChatRounding
         vPostFontSize.progress = ControllerSettings.postFontSize
-        if (vTheme.getTitles().size > ControllerSettings.styleTheme) vTheme.setCurrentIndex(ControllerSettings.styleTheme) else vTheme.setCurrentIndex(0)
+        vTheme.setCurrentIndex(ControllerTheme.getThemeRaw())
+        vThemeColor.setCurrentIndex(ControllerTheme.getThemeColor())
+        vThemeColor.isEnabled = ControllerTheme.getThemeHasColor()
         vActivityType.setCurrentIndex(ControllerSettings.interfaceType)
         vKarmaHotness.setChecked(ControllerSettings.karmaHotness)
     }
