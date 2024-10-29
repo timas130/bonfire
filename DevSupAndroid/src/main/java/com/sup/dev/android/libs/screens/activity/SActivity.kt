@@ -1,4 +1,4 @@
-﻿package com.sup.dev.android.libs.screens.activity
+package com.sup.dev.android.libs.screens.activity
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -155,7 +155,7 @@ abstract class SActivity : AppCompatActivity() {
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (parseIntent(intent)) setIntent(Intent())
     }

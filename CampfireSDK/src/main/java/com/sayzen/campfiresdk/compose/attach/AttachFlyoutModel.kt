@@ -3,23 +3,23 @@ package com.sayzen.campfiresdk.compose.attach
 import android.app.Application
 import android.content.Context
 import android.database.Cursor
-import android.graphics.Bitmap
 import android.provider.MediaStore
 import android.provider.MediaStore.Images.ImageColumns
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dzen.campfire.api.models.publications.stickers.PublicationSticker
-import com.mr0xf00.easycrop.ImageCropper
-import com.mr0xf00.easycrop.crop
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.*
 import com.sayzen.campfiresdk.compose.util.combineStates
 import com.sayzen.campfiresdk.compose.util.mapState
 import com.sayzen.campfiresdk.fragment.AttachGifItem
 import com.sayzen.campfiresdk.fragment.FavouriteGifs
+import com.sup.dev.android.tools.ToolsBitmap
 import com.sup.dev.android.tools.ToolsPermission
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -148,7 +148,7 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
             return cached
         }
 
-        val cursor = galleryCursor!!
+        val cursor = galleryCursor ?: return null
 
         if (offset >= cursor.count) return null
         cursor.moveToPosition(offset)
@@ -267,28 +267,44 @@ internal class AttachFlyoutModel(application: Application) : AndroidViewModel(ap
     private val _openedImage = MutableStateFlow<GalleryImage?>(null)
     val openedImage = _openedImage.asStateFlow()
 
-    val imageCropper = ImageCropper()
-    var croppingJob: Job? = null
+    private val _croppingImage = MutableStateFlow<ImageBitmap?>(null)
+    val croppingImage = _croppingImage.asStateFlow()
 
     fun openImage(image: GalleryImage) {
         _openedImage.value = image
     }
     fun closeImage() {
         _openedImage.value = null
-
-        croppingJob?.cancel()
-        croppingJob = null
+        _croppingImage.value = null
     }
 
     fun startImageCrop() {
-        croppingJob?.cancel()
-        croppingJob = viewModelScope.launch {
+        viewModelScope.launch {
             val openedImage = _openedImage.value ?: return@launch
-            imageCropper.crop(openedImage.file)
+            _croppingImage.value = withContext(Dispatchers.IO) {
+                try {
+                    ToolsBitmap.decode(openedImage.file.readBytes())!!
+                        .asImageBitmap()
+                } catch (e: Exception) {
+                    // could not decode / oom
+                    null
+                }
+            }
         }
     }
 
-    private val _alteredImages = MutableStateFlow<Map<Int, Bitmap>>(mapOf())
+    fun stopImageCrop() {
+        _croppingImage.value = null
+    }
+    fun finishImageCrop(bitmap: ImageBitmap) {
+        _croppingImage.value = null
+        _alteredImages.update {
+            it + (_openedImage.value!!.id to bitmap)
+        }
+        setImageSelected(_openedImage.value!!, true)
+    }
+
+    private val _alteredImages = MutableStateFlow<Map<Int, ImageBitmap>>(mapOf())
     val alteredImages = _alteredImages.asStateFlow()
 
     // == gif ==

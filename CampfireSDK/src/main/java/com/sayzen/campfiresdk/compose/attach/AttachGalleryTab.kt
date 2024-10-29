@@ -6,10 +6,8 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -46,7 +44,7 @@ internal fun GalleryTab(
     sharedTransitionScope: SharedTransitionScope,
 ) {
     val shimmer = rememberShimmer(ShimmerBounds.Window)
-    val listState = rememberLazyGridState()
+    val listState = rememberLazyListState()
 
     val totalGalleryImages by model.totalGalleryImages.collectAsState()
     val galleryFilter by model.galleryFilter.collectAsState()
@@ -67,21 +65,15 @@ internal fun GalleryTab(
         }
     }
 
-    LazyVerticalGrid(
+    LazyColumn(
         state = listState,
-        columns = GridCells.Adaptive(130.dp),
         contentPadding = PaddingValues(start = 4.dp, end = 4.dp, bottom = (48 + 8).dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier.fillMaxSize()
     ) {
         if (!galleryPermissionGranted) {
-            item(key = "permission", span = { GridItemSpan(3) }) {
-                Column(
-                    modifier = Modifier.animateItem(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
+            item(key = "permission") {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     ErrorCard(stringResource(R.string.attach_gallery_no_permission))
 
                     TextButton(onClick = { ToolsPermission.navigateToSettings() }) {
@@ -91,14 +83,18 @@ internal fun GalleryTab(
             }
         }
 
-        items(totalGalleryImages, key = { model.getGalleryImage(it)?.id ?: -it }) { index ->
-            GalleryItem(
-                index = index,
-                model = model,
-                shimmer = shimmer,
-                sharedTransitionScope = sharedTransitionScope,
-                modifier = Modifier.animateItem()
-            )
+        items(totalGalleryImages / 3 + 1, key = { model.getGalleryImage(it * 3)?.id ?: -it }) { index ->
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                repeat(3) {
+                    GalleryItem(
+                        index = index * 3 + it,
+                        model = model,
+                        shimmer = shimmer,
+                        sharedTransitionScope = sharedTransitionScope,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
         }
     }
 }
@@ -115,7 +111,12 @@ private fun GalleryItem(
     // force recompose when filter changes
     model.galleryFilter.collectAsState().value
 
-    val galleryImage = model.getGalleryImage(index) ?: return
+    val galleryImage = model.getGalleryImage(index)
+
+    if (galleryImage == null) {
+        Box(modifier)
+        return
+    }
 
     val hapticFeedback = LocalHapticFeedback.current
 

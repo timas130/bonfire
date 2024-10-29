@@ -9,7 +9,7 @@ android-composeShimmer = "1.3.0"
 android-konfetti = "2.0.4"
 android-material = "1.12.0"
 android-ndkGif = "0.3.4"
-androideasycrop = "0.1.1"
+android-photoEditor = "3.0.2"
 androidx-activityCompose = "1.8.2"
 androidx-appcompat = "1.6.1"
 androidx-compose-constraintlayout = "1.0.1"
@@ -88,7 +88,6 @@ androidx-compose-material3-iconsExtended = { module = "androidx.compose.material
 # Android Compose Misc
 androidx-compose-constraintLayout = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "androidx-compose-constraintlayout" }
 android-composeShimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "android-composeShimmer" }
-android-easycrop = { module = "io.github.mr0xf00:easycrop", version.ref = "androideasycrop" }
 
 # Android Coil
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
@@ -120,6 +119,7 @@ android-codeView = { module = "com.github.kbiakov:CodeView-Android", version.ref
 android-konfetti-xml = { module = "nl.dionsegijn:konfetti-xml", version.ref = "android-konfetti" }
 android-blurview = { module = "com.github.Dimezis:BlurView", version.ref = "android-blurview" }
 android-betterLinkMovementMethod = { module = "me.saket:better-link-movement-method", version.ref = "android-betterLinkMovementMethod" }
+android-photoEditor = { module = "com.burhanrashid52:photoeditor", version.ref = "android-photoEditor" }
 
 # Server DBs
 mysql = { module = "com.mysql:mysql-connector-j", version.ref = "mysql" }

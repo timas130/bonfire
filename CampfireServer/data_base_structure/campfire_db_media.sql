@@ -1,4 +1,4 @@
-﻿# Host: 46.254.16.245  (Version 5.5.5-10.1.23-MariaDB-9+deb9u1)
+# Host: 46.254.16.245  (Version 5.5.5-10.1.23-MariaDB-9+deb9u1)
 # Date: 2021-12-31 00:16:53
 # Generator: MySQL-Front 6.1  (Build 1.26)
 

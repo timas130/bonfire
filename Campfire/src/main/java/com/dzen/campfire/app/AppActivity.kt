@@ -317,7 +317,7 @@ class AppActivity : SActivity() {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (ControllerApi.account.getId() > 0) parseIntent_X(intent)
         setIntent(Intent())
