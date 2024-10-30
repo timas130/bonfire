@@ -24,6 +24,7 @@ import com.sup.dev.android.views.settings.SettingsSelection
 import com.sup.dev.android.views.settings.SettingsTitle
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashAlert
+import com.sup.dev.android.views.support.input_filters.InputFilterLevel
 import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.android.views.views.ViewButton
@@ -130,6 +131,8 @@ class SCreatePagePolling(
         vLvl.addOnTextChanged { update() }
         vKarma.addOnTextChanged { update() }
         vDays.addOnTextChanged { update() }
+
+        vLvl.vField.filters = arrayOf(InputFilterLevel())
 
         vLvl.setErrorChecker {
             try {

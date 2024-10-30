@@ -131,15 +131,16 @@ object ControllerTheme {
     //
 
     private fun onEventConfigurationChanged(e: EventConfigurationChanged) {
-        if (isSystemDependentTheme()) {
-            if (getSystemNightMode() != isSystemNightMode) {
-                SupAndroid.activity!!.recreate()
-                init()
-            }
+        if (isSystemDependentTheme() && getSystemNightMode() != isSystemNightMode) {
+            init()
+            SupAndroid.activity!!.recreate()
         }
     }
 
     private fun onEventStyleChanged(e: EventStyleChanged) {
-        init()
+        if (ControllerSettings.styleTheme != styleThemeRaw) {
+            init()
+            SupAndroid.activity!!.recreate()
+        }
     }
 }
