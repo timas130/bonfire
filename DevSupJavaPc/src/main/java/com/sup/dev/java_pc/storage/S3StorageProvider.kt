@@ -6,6 +6,7 @@ import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.http.urlconnection.UrlConnectionHttpClient
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.S3Configuration
 import software.amazon.awssdk.services.s3.model.*
 import software.amazon.awssdk.services.s3.presigner.S3Presigner
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest
@@ -39,6 +40,12 @@ class S3StorageProvider(
                 .region(Region.of(region))
                 .credentialsProvider(credentialsProvider)
                 .endpointOverride(URI.create(publicEndpoint))
+                .s3Client(client)
+                .serviceConfiguration(
+                    S3Configuration.builder()
+                        .pathStyleAccessEnabled(true)
+                        .build()
+                )
                 .build()
             return S3StorageProvider(client, bucket, presigner)
         }
