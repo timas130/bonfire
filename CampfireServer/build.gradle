@@ -9,7 +9,6 @@ plugins {
 }
 
 dependencies {
-    implementation project(':CampfireApiMedia')
     implementation project(':CampfireApi')
     implementation project(':DevSupJava')
     implementation project(':DevSupJavaPc')

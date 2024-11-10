@@ -33,7 +33,6 @@ android {
 
 dependencies {
     api project(':CampfireApi')
-    api project(':CampfireApiMedia')
     api project(':DevSupAndroidGoogle')
     api project(':BonfireNetworking')
     api project(':BonfireFormatting')
