@@ -20,6 +20,9 @@ object ControllerCensor {
     }
 
     fun cens(text: String, mask: String = "{red %s}", letterReplace: String = "\\*"): String {
+        // EXPERIMENT: Swearing is allowed
+        return text
+
         val matches = trie.parseText(text)
         if (matches.isEmpty()) {
             return text
