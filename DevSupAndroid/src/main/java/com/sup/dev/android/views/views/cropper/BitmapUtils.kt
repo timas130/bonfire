@@ -169,7 +169,7 @@ internal object BitmapUtils {
             var result = Bitmap.createBitmap(bitmap, rect.left, rect.top, rect.width(), rect.height(), matrix, true)
 
             if (result == bitmap)
-                result = bitmap.copy(bitmap.config, false)
+                result = bitmap.copy(bitmap.config!!, false)
 
             if (degreesRotated % 90 != 0)
                 result = cropForRotatedImage(result, points, rect, degreesRotated, fixAspectRatio, aspectRatioX, aspectRatioY)

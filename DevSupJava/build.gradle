@@ -5,7 +5,7 @@ apply plugin: 'kotlin'
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21'
+    api 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.23'
     implementation files('libs/json.jar')
 }
 

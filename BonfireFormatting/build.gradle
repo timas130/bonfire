@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'sh.sit.bonfire.formatting'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         minSdk 21
@@ -36,8 +36,8 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.13.1'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
 
     implementation project(':DevSupAndroid')
     implementation project(':BonfireFormattingCore')
@@ -51,7 +51,7 @@ dependencies {
     implementation "io.noties.markwon:simple-ext:$markwon_version"
     implementation "com.atlassian.commonmark:commonmark-ext-autolink:0.13.0"
 
-    def composeBom = platform('androidx.compose:compose-bom:2024.06.00')
+    def composeBom = platform('androidx.compose:compose-bom:2024.10.01')
     implementation composeBom
     androidTestImplementation composeBom
     implementation 'androidx.compose.material3:material3-android'

@@ -6,11 +6,11 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 
 android {
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         minSdkVersion 21
-        targetSdk 34
+        targetSdk 35
         versionCode 4_07_00
         versionName "4.7.0"
         applicationId "sh.sit.bonfire"
