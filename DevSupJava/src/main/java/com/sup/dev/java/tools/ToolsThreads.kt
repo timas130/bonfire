@@ -1,6 +1,8 @@
 package com.sup.dev.java.tools
 
 import com.sup.dev.java.classes.Subscription
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 object ToolsThreads {
 
@@ -94,4 +96,11 @@ object ToolsThreads {
         return subscription
     }
 
+    fun <T> timeout(timeoutMillis: Long, callable: () -> T): T {
+        val executor = Executors.newSingleThreadExecutor()
+        val future = executor.submit(callable)
+        executor.shutdown()
+
+        return future.get(timeoutMillis, TimeUnit.MILLISECONDS)
+    }
 }

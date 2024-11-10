@@ -32,11 +32,17 @@ android {
 dependencies {
     implementation project(':DevSupJava')
     implementation project(':CampfireApi')
-    implementation 'org.chromium.net:cronet-api:119.6045.31'
-    implementation 'org.chromium.net:cronet-embedded:119.6045.31'
+
+    // TODO: Implement cronet with mobileproxy fallback.
+    //       Or just wait until this BS is over.
+    // implementation 'org.chromium.net:cronet-api:119.6045.31'
+    // implementation 'org.chromium.net:cronet-embedded:119.6045.31'
+    // implementation 'com.google.net.cronet:cronet-okhttp:0.1.0'
+
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
-    implementation 'com.google.net.cronet:cronet-okhttp:0.1.0'
     implementation 'androidx.annotation:annotation-jvm:1.7.1'
+    implementation 'org.getoutline:mobileproxy:0.0.17'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
 }
 
 java {

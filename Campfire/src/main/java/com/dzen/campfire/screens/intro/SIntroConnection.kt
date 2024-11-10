@@ -31,13 +31,29 @@ import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.java.libs.debug.info
 import com.sup.dev.java.tools.ToolsThreads
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import sh.sit.bonfire.auth.AuthController
+import sh.sit.bonfire.networking.MobileProxyFactory
+import sh.sit.bonfire.networking.MobileProxyFactory.ProxyFactoryStatus
 
 class SIntroConnection : Screen(R.layout.screen_intro_connection) {
     enum class State {
         PROGRESS, ERROR
     }
+
+    sealed interface LoadingState {
+        enum class LoginStatus {
+            Idle,
+            LoadingAccount
+        }
+
+        data class Proxy(val status: ProxyFactoryStatus) : LoadingState
+        data class Login(val status: LoginStatus) : LoadingState
+    }
+
+    private val loadingState = MutableStateFlow<LoadingState>(LoadingState.Login(LoadingState.LoginStatus.Idle))
 
     private var loadedBackground = false
 
@@ -50,6 +66,7 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
     private val vBackgroundInfo: LinearLayout = findViewById(R.id.vBackgroundInfo)
     private val vTitle: TextView = findViewById(R.id.vTitle)
     private val vSubtitle: TextView = findViewById(R.id.vSubtitle)
+    private val vProgressSubtitle: TextView = findViewById(R.id.vProgressSubtitle)
     private var feedCategories: Array<Long> =
         emptyArray()  //  Костыль. Загрузка настроек может перезаписать выбранные пользователем фильтры
 
@@ -85,6 +102,29 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
 
         loadBackgroundImageData()
         sendLoginRequest()
+
+        coroutineScope.launch {
+            MobileProxyFactory.status.collect {
+                loadingState.value = LoadingState.Proxy(it)
+            }
+        }
+        coroutineScope.launch {
+            loadingState.collect {
+                vProgressSubtitle.setText(when (it) {
+                    is LoadingState.Proxy -> when (it.status) {
+                        ProxyFactoryStatus.Idle -> R.string.status_idle
+                        ProxyFactoryStatus.TestingConnection -> R.string.status_testing_connection
+                        ProxyFactoryStatus.TryingOptimistic -> R.string.status_trying_optimistic
+                        ProxyFactoryStatus.DownloadingRemoteConfig -> R.string.status_downloading_remote_config
+                        ProxyFactoryStatus.TryingRemoteConfig -> R.string.status_trying_remote_config
+                    }
+                    is LoadingState.Login -> when (it.status) {
+                        LoadingState.LoginStatus.Idle -> R.string.status_idle
+                        LoadingState.LoginStatus.LoadingAccount -> R.string.status_loading_account
+                    }
+                })
+            }
+        }
     }
 
     override fun onBackPressed(): Boolean {
@@ -145,6 +185,7 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
         val account = ControllerApi.getLastAccount()
         if (account.id == 0L) {
             ControllerChats.clearMessagesCount()
+            loadingState.value = LoadingState.Login(LoadingState.LoginStatus.LoadingAccount)
             sendLoginRequestNow(false)
 
             // if the fcm token is not ready yet, try to refresh
@@ -259,7 +300,7 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
 
     private fun loadBackgroundImageData() {
         val lastUpdate = ToolsStorage.getLong(LAST_UPDATE_TIME, 0L)
-        // if the last update is more than 1 day old
+        // if the last update is more than 1 hour old
         if (lastUpdate <= System.currentTimeMillis() - 1000 * 3600) {
             // refresh in the background
             RProjectGetLoadingPictures()

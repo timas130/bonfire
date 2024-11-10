@@ -5,47 +5,37 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Build.VERSION_CODES
 import android.util.Log
-import com.google.net.cronet.okhttptransport.CronetInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import org.chromium.net.CronetEngine
-import org.chromium.net.QuicOptions
 import java.util.concurrent.TimeUnit
 
 object OkHttpController {
-    private var cronetEngine: CronetEngine? = null
-
-    fun getClient(context: Context, builderHook: OkHttpClient.Builder.() -> Unit = {}): OkHttpClient {
-        if (cronetEngine == null) {
-            cronetEngine = CronetEngine.Builder(context)
-                .enableHttp2(true)
-                .enableQuic(true)
-                .setUserAgent(buildUserAgent(context))
-                .setStoragePath(context.cacheDir.resolve("cronet").also { it.mkdirs() }.absolutePath)
-                .enableHttpCache(CronetEngine.Builder.HTTP_CACHE_DISK, 1 * 1024 * 1024)
-                // .addQuicHint("cf2.bonfire.moe", 443, 443)
-                .setQuicOptions(QuicOptions.builder()
-                    .enableTlsZeroRtt(true)
-                    .retryWithoutAltSvcOnQuicErrors(true))
-                .build()
-        }
+    fun getClient(
+        @Suppress("UNUSED_PARAMETER") context: Context,
+        builderHook: OkHttpClient.Builder.() -> Unit = {}
+    ): OkHttpClient {
+        val userAgent = buildUserAgent(context)
 
         return OkHttpClient.Builder()
             .apply(builderHook)
             .addInterceptor(Interceptor { chain ->
-                Log.i("OkHttpController", "sending request url=${chain.request().url} method=${chain.request().method}")
+                Log.i("BonfireNetworking-OHC", "sending request url=${chain.request().url} method=${chain.request().method}")
                 val resp = chain.proceed(chain.request())
-                Log.i("OkHttpController", "response url=${chain.request().url} protocol=${resp.protocol}")
+                Log.i("BonfireNetworking-OHC", "response url=${chain.request().url} protocol=${resp.protocol}")
                 resp
             })
-            .addInterceptor(CronetInterceptor.newBuilder(cronetEngine).build())
-            .connectTimeout(5000, TimeUnit.MILLISECONDS)
-            .readTimeout(5000, TimeUnit.MILLISECONDS)
+            .addInterceptor(Interceptor { chain ->
+                chain.proceed(chain.request().newBuilder()
+                    .addHeader("User-Agent", userAgent)
+                    .build())
+            })
+            .proxySelector(OkHttpProxySelector())
+            .connectTimeout(3000, TimeUnit.MILLISECONDS)
+            .readTimeout(6000, TimeUnit.MILLISECONDS)
             .build()
     }
 
     private fun buildUserAgent(context: Context): String {
-        @Suppress("DEPRECATION")
         val packageVersion = if (Build.VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
             context.packageManager.getPackageInfo(
                 context.packageName,

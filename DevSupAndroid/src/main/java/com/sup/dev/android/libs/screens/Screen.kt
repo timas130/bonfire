@@ -16,6 +16,10 @@ import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.screens.activity.SActivity
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 
 open class Screen(
         protected val viewScreen: View
@@ -48,6 +52,8 @@ open class Screen(
     var isHideBottomNavigationWhenKeyboard = true
 
     protected var isAppbarExpanded: Boolean = false /* Обход разворачивания бара при повторном создании вью */
+
+    protected val coroutineScope = CoroutineScope(Job() + Dispatchers.Main)
 
     constructor(@LayoutRes layoutRes: Int) : this(ToolsView.inflate<View>(SupAndroid.activity!!, layoutRes))
 
@@ -134,6 +140,7 @@ open class Screen(
     @CallSuper
     open fun onDestroy() {
         onHide.invoke()
+        coroutineScope.cancel()
     }
 
     open fun onBackPressed(): Boolean {

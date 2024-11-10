@@ -51,6 +51,17 @@
             android:shadowColor="#6E000000"
             android:shadowRadius="6"
         />
+
+        <TextView
+            android:id="@+id/vProgressSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:shadowColor="#6E000000"
+            android:shadowRadius="6"
+        />
     </LinearLayout>
 
     <LinearLayout
