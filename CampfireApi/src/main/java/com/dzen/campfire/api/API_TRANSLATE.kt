@@ -1658,7 +1658,7 @@ object API_TRANSLATE {
     val profile_error_gone = Translate("Пользователь не найден")
     val profile_loading_in_profess = Translate("Профиль еще не загружен")
     val profile_report_confirm = Translate("Пожаловаться на пользователя?")
-    val profile_story = Translate("История")
+    val profile_story = Translate("Статистика")
     val profile_story_karma_total = Translate("Всего кармы")
     val profile_story_karma_total_plus = Translate("Кармы положительной")
     val profile_story_karma_total_minus = Translate("Кармы отрицательной")
