@@ -2,7 +2,7 @@ FROM gradle:8.7-jdk17 AS builder
 
 COPY . /app
 WORKDIR /app/
-RUN gradle CampfireServer:build CampfireServerMedia:build --no-daemon
+RUN gradle CampfireServer:build --no-daemon
 
 FROM rust:1.77-buster AS rust-builder
 
@@ -36,9 +36,7 @@ COPY --from=builder /app/docker-entrypoint.sh /app/
 RUN chmod +x /app/docker-entrypoint.sh
 
 COPY --from=builder /app/CampfireServer/build/distributions/CampfireServer.tar /app/
-COPY --from=builder /app/CampfireServerMedia/build/distributions/CampfireServerMedia.tar /app/
 RUN tar -xf CampfireServer.tar && rm CampfireServer.tar
-RUN tar -xf CampfireServerMedia.tar && rm CampfireServerMedia.tar
 
 COPY --from=builder /app/CampfireServer/res /app/CampfireServer/res
 

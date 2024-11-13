@@ -47,17 +47,7 @@ else
 fi
 
 if [ "$START_SERVER" != "false" ]; then
-    if [ "$START_MEDIA" != "false" ]; then
-        /app/CampfireServer/bin/CampfireServer &
-    else
-        /app/CampfireServer/bin/CampfireServer
-    fi
+    /app/CampfireServer/bin/CampfireServer
 else
     echo "[docker] CampfireServer start prevented, START_CAMPFIRE is false"
-fi
-
-if [ "$START_MEDIA" != "false" ]; then
-    /app/CampfireServerMedia/bin/CampfireServerMedia
-else
-    echo "[docker] CampfireServerMedia start prevented, START_MEDIA is false"
 fi
