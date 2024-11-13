@@ -62,6 +62,14 @@
             android:orientation="vertical">
 
             <com.sup.dev.android.views.settings.SettingsMini
+                android:id="@+id/vViceroyFandoms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_icon="@drawable/person_play_24px"
+                app:Settings_icon_filter="?colorOnPrimaryIcons"
+                app:Settings_lineVisible="false" />
+
+            <com.sup.dev.android.views.settings.SettingsMini
                 android:id="@+id/vFandoms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

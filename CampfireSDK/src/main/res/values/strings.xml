@@ -122,5 +122,10 @@
     <string name="link_alert_cancel">Cancel</string>
     <string name="link_alert_visit">Visit</string>
     <string name="link_parse_error">Error parsing this link</string>
+    <string name="account_viceroy_list">Viceroy list</string>
+    <string name="account_viceroy_list_error">Failed to load viceroy list</string>
+    <string name="account_viceroy_list_empty">This user is not a viceroy in any fandom.</string>
+    <string name="fandom_closed_tooltip">This fandom is hidden from the feed (closed)</string>
+    <string name="fandom_subscribers_alt">Subscribers</string>
 
 </resources>

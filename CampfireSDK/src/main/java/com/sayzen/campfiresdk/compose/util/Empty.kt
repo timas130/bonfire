@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 fun EmptyCard(text: String) {
     Row(
         Modifier
-            .padding(vertical = 32.dp)
+            .padding(vertical = 32.dp, horizontal = 16.dp)
             .padding(bottom = 16.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),

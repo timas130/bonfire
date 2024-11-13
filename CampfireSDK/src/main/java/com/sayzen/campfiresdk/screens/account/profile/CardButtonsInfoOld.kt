@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.core.text.buildSpannedString
 import com.dzen.campfire.api.API_TRANSLATE
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.account.AccountViceroyScreen
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.controllers.tPlural
@@ -59,6 +60,8 @@ class CardButtonsInfoOld(
         val vStickersTitle:TextView = view.findViewById(R.id.vStickersTitle)
         val vBlackListTouch:View = view.findViewById(R.id.vBlackListTouch)
         val vBlackListTitle:TextView = view.findViewById(R.id.vBlackListTitle)
+        val vViceroyFandomsTitle: TextView = view.findViewById(R.id.vViceroyFandomsTitle)
+        val vViceroyFandomsTouch: View = view.findViewById(R.id.vViceroyFandomsTouch)
 
         vSubscribesTitle.text = t(API_TRANSLATE.app_subscriptions)
         vKarmaTitle.text = t(API_TRANSLATE.app_karma)
@@ -73,6 +76,7 @@ class CardButtonsInfoOld(
         vStickersTitle.text = t(API_TRANSLATE.app_stickers)
         vModeratorTitle.text = t(if(xAccount.isProtoadmin()) API_TRANSLATE.app_protoadmin else if(xAccount.isAdmin()) API_TRANSLATE.app_admin else if(xAccount.isModerator()) API_TRANSLATE.app_moderator else API_TRANSLATE.app_user)
         vModeratorTitle.setTextColor(xAccount.getLevelColor())
+        vViceroyFandomsTitle.text = t(API_TRANSLATE.app_viceroy)
 
         vAchievementsText.text = ToolsText.numToStringRound(xAccount.getLevel() / 100.0, 2)
         vHistoryText.text = "-"
@@ -88,6 +92,7 @@ class CardButtonsInfoOld(
         vStickersTouch.setOnClickListener { Navigator.to(SStickersPacks(xAccount.getId())) }
         vBlackListTouch.setOnClickListener { Navigator.to(SBlackList(xAccount.getId(), xAccount.getName())) }
         vFandomsTouch.setOnClickListener { Navigator.to(SAcounFandoms(xAccount.getId())) }
+        vViceroyFandomsTouch.setOnClickListener { Navigator.to(AccountViceroyScreen(xAccount.getId())) }
 
         updateFollowersCount()
         updatePunishments()
@@ -104,6 +109,7 @@ class CardButtonsInfoOld(
         val vStickersText:TextView = view.findViewById(R.id.vStickersText)
         val vBlackListText:TextView = view.findViewById(R.id.vBlackListText)
         val vTimeText:TextView = view.findViewById(R.id.vTimeText)
+        val vViceroyFandomsText: TextView = view.findViewById(R.id.vViceroyFandomsText)
 
         vSubscribesText.text = if (profile == null) "-" else "${profile!!.followsCount}"
         vSubscribersText.text = if (profile == null) "-" else "${profile!!.followersCount}"
@@ -122,6 +128,8 @@ class CardButtonsInfoOld(
             val days = ((ControllerApi.currentTime() - xAccount.getDateAccountCreated()) / (1000L * 60 * 60 * 24)) + 1
             vTimeText.text = "$days ${tPlural(days.toInt(), API_TRANSLATE.days_count)}"
         }
+
+        vViceroyFandomsText.text = if (profile == null) "-" else "${profile!!.viceroyFandomsCount}"
     }
 
     override fun updatePunishments() {

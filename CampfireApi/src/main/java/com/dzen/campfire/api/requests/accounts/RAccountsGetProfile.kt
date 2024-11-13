@@ -8,7 +8,6 @@ import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
 open class RAccountsGetProfile(var accountId: Long, var accountName: String) : Request<RAccountsGetProfile.Response>() {
-
     override fun jsonSub(inp: Boolean, json: Json) {
         accountId = json.m(inp, "accountId", accountId)
         accountName = json.m(inp, "accountName", accountName)
@@ -43,6 +42,7 @@ open class RAccountsGetProfile(var accountId: Long, var accountName: String) : R
         var ratesNegative: Long = 0L,
         var moderationFandomsCount: Long = 0L,
         var subscribedFandomsCount: Long = 0L,
+        var viceroyFandomsCount: Long = 0L,
         var stickersCount: Long = 0L,
         var blackAccountsCount: Long = 0L,
         var blackFandomsCount: Long = 0L,
@@ -79,6 +79,7 @@ open class RAccountsGetProfile(var accountId: Long, var accountName: String) : R
             ratesNegative = json.m(inp, "ratesNegative", ratesNegative)
             moderationFandomsCount = json.m(inp, "moderationFandomsCount", moderationFandomsCount)
             subscribedFandomsCount = json.m(inp, "subscribedFandomsCount", subscribedFandomsCount)
+            viceroyFandomsCount = json.m(inp, "viceroyFandomsCount", viceroyFandomsCount)
             stickersCount = json.m(inp, "stickersCount", stickersCount)
             blackAccountsCount = json.m(inp, "blackAccountsCount", blackAccountsCount)
             blackFandomsCount = json.m(inp, "blackFandomsCount", blackFandomsCount)
@@ -90,6 +91,4 @@ open class RAccountsGetProfile(var accountId: Long, var accountName: String) : R
             receiver.add(titleImageGif, titleImageGifId)
         }
     }
-
-
 }

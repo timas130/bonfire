@@ -115,5 +115,10 @@
     <string name="link_alert_cancel">Отмена</string>
     <string name="link_alert_visit">Перейти</string>
     <string name="link_parse_error">Не удалось разобрать эту ссылку</string>
+    <string name="account_viceroy_list">Список наместника</string>
+    <string name="account_viceroy_list_error">Не удалось загрузить список наместника</string>
+    <string name="account_viceroy_list_empty">Этот пользователь не наместник ни в одном из фэндомов</string>
+    <string name="fandom_closed_tooltip">Этот фэндом скрыт из ленты (закрыт)</string>
+    <string name="fandom_subscribers_alt">Подписчики</string>
 
 </resources>

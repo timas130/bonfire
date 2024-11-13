@@ -22,9 +22,9 @@ abstract class AbstractLegacyPaginationModel<T> : PaginationModel<T>, ViewModel(
 
     final override fun reload() {
         if (_items.value != null) {
-            _isLoading.tryEmit(true)
             _items.value = null
         }
+        _isLoading.value = true
         loadNextPage()
     }
 

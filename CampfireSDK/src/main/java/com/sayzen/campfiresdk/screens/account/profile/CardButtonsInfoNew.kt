@@ -11,6 +11,7 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.lvl.LvlInfoUser
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
+import com.sayzen.campfiresdk.compose.account.AccountViceroyScreen
 import com.sayzen.campfiresdk.compose.profile.badges.list.BadgeListScreen
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerKarma
@@ -51,6 +52,7 @@ class CardButtonsInfoNew(
         val vStory: SettingsMini = view.findViewById(R.id.vStory)
         val vBlackList: SettingsMini = view.findViewById(R.id.vBlackList)
         val vStickers: SettingsMini = view.findViewById(R.id.vStickers)
+        val vViceroyFandoms: SettingsMini = view.findViewById(R.id.vViceroyFandoms)
         val vFandoms: SettingsMini = view.findViewById(R.id.vFandoms)
         val vBadgeList: SettingsMini = view.findViewById(R.id.vBadgeList)
         val vShowMoreTouch: View = view.findViewById(R.id.vShowMoreTouch)
@@ -62,6 +64,7 @@ class CardButtonsInfoNew(
         vPunishmentsButton.setTitle(t(API_TRANSLATE.app_punishments))
         vFollowersButton.setTitle(t(API_TRANSLATE.app_followers))
         vFollowsButton.setTitle(t(API_TRANSLATE.app_follows))
+        vViceroyFandoms.setTitle(t(API_TRANSLATE.app_viceroy))
         vFandoms.setTitle(t(API_TRANSLATE.app_fandoms))
         vModeratorButton.setTitle(t(API_TRANSLATE.app_moderator))
         vRatesButton.setTitle(t(API_TRANSLATE.app_rates))
@@ -89,16 +92,19 @@ class CardButtonsInfoNew(
         vKarmaButton.setOnClickListener { Navigator.to(ScreenAccountKarma(xAccount.getId(), xAccount.getName())) }
         vStickers.setOnClickListener { Navigator.to(SStickersPacks(xAccount.getId())) }
         vBlackList.setOnClickListener { Navigator.to(SBlackList(xAccount.getId(), xAccount.getName())) }
+        vViceroyFandoms.setOnClickListener { Navigator.to(AccountViceroyScreen(xAccount.getId())) }
         vFandoms.setOnClickListener { Navigator.to(SAcounFandoms(xAccount.getId())) }
         vBadgeList.setOnClickListener { Navigator.to(BadgeListScreen(xAccount.getId().toString())) }
 
+        val profile = profile
         if (profile != null) {
-            vFandoms.setSubtitle(profile!!.subscribedFandomsCount.toString())
-            vStickers.setSubtitle(profile!!.stickersCount.toString())
+            vViceroyFandoms.setSubtitle(profile.viceroyFandomsCount.toString())
+            vFandoms.setSubtitle(profile.subscribedFandomsCount.toString())
+            vStickers.setSubtitle(profile.stickersCount.toString())
             vBlackList.setSubtitle(t(
                 API_TRANSLATE.profile_blacklist_text,
-                profile!!.blackFandomsCount.toString(),
-                profile!!.blackAccountsCount.toString()
+                profile.blackFandomsCount.toString(),
+                profile.blackAccountsCount.toString()
             ))
         }
 

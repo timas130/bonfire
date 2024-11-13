@@ -70,6 +70,7 @@ class EAccountsGetProfile : RAccountsGetProfile(0, "") {
             ControllerFandom.getModerationFandomsCount(accountId)
         }
         val subscribedFandomsCount = ControllerCollisions.getCollisionsCount(accountId, API.COLLISION_FANDOM_SUBSCRIBE)
+        val viceroyFandomsCount = ControllerViceroy.getViceroyCount(accountId)
         val stickersCount = ControllerStickers.getStickersCount(accountId)
         val blackAccountsCount = ControllerAccounts.getBlackListAccountCount(accountId)
         val blackFandomsCount = ControllerAccounts.getBlackListFandomCount(accountId)
@@ -100,10 +101,10 @@ class EAccountsGetProfile : RAccountsGetProfile(0, "") {
             ratesNegative,
             moderationFandomsCount,
             subscribedFandomsCount,
+            viceroyFandomsCount,
             stickersCount,
             blackAccountsCount,
             blackFandomsCount,
         )
     }
-
 }

@@ -151,7 +151,7 @@ fun Avatar(fandom: Fandom, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun AvatarShimmer(shimmer: Shimmer, modifier: Modifier = Modifier) {
+fun AvatarShimmer(shimmer: Shimmer?, modifier: Modifier = Modifier) {
     Box(
         modifier
             .size(48.dp)

@@ -38,6 +38,8 @@ import com.dzen.campfire.api.requests.publications.RPublicationsKarmaAdd
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
+import com.sayzen.campfiresdk.compose.accentNegative
+import com.sayzen.campfiresdk.compose.accentPositive
 import com.sayzen.campfiresdk.compose.bonfire
 import com.sayzen.campfiresdk.compose.publication.post.counterTransitionSpec
 import com.sayzen.campfiresdk.compose.util.KonfettiViewExt
@@ -259,9 +261,9 @@ private fun KarmaCounterSide(
     val hapticFeedback = LocalHapticFeedback.current
 
     val accentColor = if (up) {
-        Color(0xFF46B34B)
+        accentPositive
     } else {
-        Color(0xFFE53935)
+        accentNegative
     }
     val dividerThickness = with(LocalDensity.current) { DividerDefaults.Thickness.toPx() }
 
