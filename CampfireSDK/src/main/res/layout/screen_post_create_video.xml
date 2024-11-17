@@ -34,7 +34,7 @@
             android:id="@+id/vPast"
             style="@style/Icon"
             android:layout_gravity="center|start"
-            android:src="@drawable/ic_content_copy_white_24dp"/>
+            android:src="@drawable/content_paste_24px" />
 
         <LinearLayout
             android:layout_width="wrap_content"
