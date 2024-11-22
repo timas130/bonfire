@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="retry">Повторити</string>
+    <string name="app_change_account">Змінити аккаунт</string>
+    <string name="app_error">Помилка</string>
+    <string name="connection_error">Помилка підключення</string>
+</resources>
