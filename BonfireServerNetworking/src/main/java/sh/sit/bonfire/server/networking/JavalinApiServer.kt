@@ -58,12 +58,32 @@ fun ApiServer.startJavalin(jksPath: String, jksPassword: String, portV1: Int, po
             NaiveRateLimit.requestPerTimeUnit(ctx, 300, TimeUnit.MINUTES)
             ctx.throwContentTooLargeIfContentTooLarge()
             val input = DataInputStream(ctx.bodyInputStream())
+            val jsonOnly = ctx.header("X-Json-Only") != null
 
-            val jsonSize = input.readInt()
-            if (jsonSize > ctx.contentLength()) throw HttpResponseException(HttpStatus.CONTENT_TOO_LARGE, "Content-Length doesn't match")
-            val jsonBytes = ByteArray(jsonSize)
-            input.readFully(jsonBytes, 0, jsonSize)
-            val json = Json(jsonBytes)
+            val json = if (jsonOnly) {
+                val jsonBytes = ctx.bodyAsBytes()
+                Json(jsonBytes)
+            } else {
+                val jsonSize = input.readInt()
+                if (jsonSize > ctx.contentLength()) {
+                    throw HttpResponseException(HttpStatus.CONTENT_TOO_LARGE, "Content-Length doesn't match")
+                }
+                val jsonBytes = ByteArray(jsonSize)
+                input.readFully(jsonBytes, 0, jsonSize)
+                Json(jsonBytes)
+            }
+
+            // supposed to be json only, but contains dataOutput
+            if (jsonOnly && !json.getInts("dataOutput").isNullOrEmpty()) {
+                throw HttpResponseException(
+                    HttpStatus.BAD_REQUEST,
+                    """
+                        >X-Json-Only
+                        >look inside
+                        >dataOutput
+                    """.trimIndent()
+                )
+            }
 
             val ip = ctx.header("X-Forwarded-For")?.split(",")?.get(0) ?: ctx.ip()
 
@@ -72,6 +92,8 @@ fun ApiServer.startJavalin(jksPath: String, jksPassword: String, portV1: Int, po
                 val resp = this.parseConnection(
                     json = json,
                     ip = ip,
+                    // this is fine even if x-json-only is set
+                    // because it will never be read if dataOutput is empty
                     additional = input,
                     onKeyFound = { key = it },
                 )
