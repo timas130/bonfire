@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="status_idle">Загрузка...</string>
-    <string name="status_testing_connection">Тестируем соединение...</string>
-    <string name="status_trying_optimistic">Пытаемся обойти ограничения сети...</string>
-    <string name="status_downloading_remote_config">Скачиваем обновлённую конфигурацию сети...</string>
-    <string name="status_trying_remote_config">Обходим ограничения, используя новую конфигурацию...</string>
-    <string name="status_loading_account">Входим в аккаунт...</string>
+    <string name="status_idle">Загрузка…</string>
+    <string name="status_testing_connection">Тестируем соединение…</string>
+    <string name="status_trying_optimistic">Пытаемся обойти ограничения сети…</string>
+    <string name="status_downloading_remote_config">Скачиваем обновлённую конфигурацию сети…</string>
+    <string name="status_trying_remote_config">Обходим ограничения, используя новую конфигурацию…</string>
+    <string name="status_loading_account">Входим в аккаунт…</string>
 </resources>

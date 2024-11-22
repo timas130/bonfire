@@ -1,9 +1,9 @@
 <resources>
 
-    <string name="status_idle">Loading...</string>
-    <string name="status_testing_connection">Testing connection...</string>
-    <string name="status_trying_optimistic">Trying to bypass network restrictions...</string>
-    <string name="status_downloading_remote_config">Downloading remote network config...</string>
-    <string name="status_trying_remote_config">Using remote config to bypass network restrictions...</string>
-    <string name="status_loading_account">Logging in...</string>
+    <string name="status_idle">Loading…</string>
+    <string name="status_testing_connection">Testing connection…</string>
+    <string name="status_trying_optimistic">Trying to bypass network restrictions…</string>
+    <string name="status_downloading_remote_config">Downloading remote network config…</string>
+    <string name="status_trying_remote_config">Using remote config to bypass network restrictions…</string>
+    <string name="status_loading_account">Logging in…</string>
 </resources>

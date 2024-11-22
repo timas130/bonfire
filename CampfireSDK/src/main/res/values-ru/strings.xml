@@ -89,7 +89,7 @@
     <string name="compose_post_description">Полный редизайн интерфейса поста, вплоть до дизайна страниц и небольших деталей.</string>
     <string name="experiments_title">Эксперименты</string>
     <string name="experiments_description">Заходите на страницу за различными экспериментальными изменениями в бета-тестировании!</string>
-    <string name="experiment_wait_snackbar">Пожалуйста, подождите, пока добрые ёжики изменяют ваш статус участия...</string>
+    <string name="experiment_wait_snackbar">Пожалуйста, подождите, пока добрые ёжики изменяют ваш статус участия…</string>
     <string name="experiment_enrolled_snackbar">Теперь вы часть эксперимента. Спасибо за помощь!</string>
     <string name="experiment_left_snackbar">Спасибо за участие. Теперь вы не участвуете в эксперименте.</string>
     <string name="experiment_error_snackbar">"Нам не удалось изменить ваш статус участия в эксперименте. Попробуйте
