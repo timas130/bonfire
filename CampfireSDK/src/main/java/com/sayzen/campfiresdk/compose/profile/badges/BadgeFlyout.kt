@@ -19,6 +19,7 @@ import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.compose.ComposeSplash
 import com.sayzen.campfiresdk.compose.util.ErrorCard
 import com.sayzen.campfiresdk.compose.util.shimmerExt
+import com.sayzen.campfiresdk.controllers.ControllerExternalLinks
 import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsIntent
@@ -139,7 +140,7 @@ fun BadgeFlyout(
                 ) {
                     AnimatedVisibility(visible = fullBadge == null || fullBadge.link != null) {
                         Button(
-                            onClick = { ToolsIntent.openLink(fullBadge?.link!!) },
+                            onClick = { ControllerExternalLinks.openLink(fullBadge?.link!!) },
                             enabled = fullBadge != null,
                         ) {
                             Text(stringResource(R.string.badge_more))

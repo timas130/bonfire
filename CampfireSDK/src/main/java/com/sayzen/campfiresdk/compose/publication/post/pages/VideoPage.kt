@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.dzen.campfire.api.models.publications.post.PageVideo
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.controllers.ControllerExternalLinks
 import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.tools.ToolsIntent
 import com.sup.dev.android.tools.ToolsToast
@@ -48,7 +49,7 @@ internal fun PageVideoRenderer(page: PageVideo) {
                         ToolsToast.show(R.string.link_copied)
                     },
                     onClick = {
-                        ToolsIntent.openLink("https://youtu.be/${page.videoId}")
+                        ControllerExternalLinks.openLink("https://youtu.be/${page.videoId}")
                     }
                 )
         )

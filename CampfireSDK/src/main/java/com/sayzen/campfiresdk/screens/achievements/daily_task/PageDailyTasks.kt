@@ -23,6 +23,7 @@ import com.dzen.campfire.api.models.daily_tasks.DailyTaskType
 import com.dzen.campfire.api.models.project.ProjectEvent
 import com.dzen.campfire.api.requests.project.RProjectGetEvents
 import com.sayzen.campfiresdk.compose.ComposeCard
+import com.sayzen.campfiresdk.controllers.ControllerExternalLinks
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -292,7 +293,7 @@ private fun Event(event: ProjectEvent) {
 
 fun ProjectEvent.followLink() {
     if (url!!.startsWith(API.DOMEN_DL)) {
-        ToolsIntent.openLink(url!!)
+        ControllerExternalLinks.openLink(url!!)
     } else {
         Navigator.to(EventWebpageScreen(this))
     }

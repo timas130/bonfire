@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.publications.post.PageLinkImage
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.controllers.ControllerExternalLinks
 import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.tools.ToolsIntent
 import com.sup.dev.android.tools.ToolsToast
@@ -50,7 +51,7 @@ internal fun PageLinkImageRenderer(page: PageLinkImage) {
                         ToolsToast.show(R.string.link_copied)
                     },
                     onClick = {
-                        ToolsIntent.openLink(page.link)
+                        ControllerExternalLinks.openLink(page.link)
                     }
                 )
         )

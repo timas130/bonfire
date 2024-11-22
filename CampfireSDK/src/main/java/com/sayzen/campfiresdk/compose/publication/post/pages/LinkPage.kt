@@ -22,8 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dzen.campfire.api.models.publications.post.PageLink
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.controllers.ControllerExternalLinks
 import com.sup.dev.android.tools.ToolsAndroid
-import com.sup.dev.android.tools.ToolsIntent
 import com.sup.dev.android.tools.ToolsToast
 import sh.sit.bonfire.formatting.compose.buildInlineAnnotatedString
 import sh.sit.bonfire.formatting.core.BonfireFormatter
@@ -64,7 +64,7 @@ internal fun PageLinkLayout(
             .padding(horizontal = 12.dp)
             .clip(CardDefaults.shape)
             .combinedClickable(
-                onClick = { ToolsIntent.openLink(link) },
+                onClick = { ControllerExternalLinks.openLink(link) },
                 onLongClick = {
                     hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                     ToolsAndroid.setToClipboard(link)
