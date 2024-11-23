@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="connection_error">Ошибка подключения</string>
     <string name="retry">Повторить</string>
@@ -44,9 +45,9 @@
     <string name="polling_already_voted">Вы уже проголосовали в этом опросе</string>
     <string name="poll_results">Результаты</string>
     <string name="poll_results_title">Результаты опроса</string>
-    <string name="list_error_generic">Ошибка во время загрузки элментов. Пожалуйста, перезагрузите страницу</string>
+    <string name="list_error_generic">Ошибка во время загрузки элементов. Пожалуйста, перезагрузите страницу</string>
     <string name="list_empty_generic">Нет элементов</string>
-    <string name="poll_results_error">Ошибка загрузки голосов. Пожалуйста, перезагрузките страницу</string>
+    <string name="poll_results_error">Ошибка загрузки голосов. Пожалуйста, перезагрузите страницу</string>
     <string name="poll_results_empty">Похоже, никто ещё не голосовал</string>
     <string name="video_alt">Видео</string>
     <string name="activity_no_user">Нет следующего пользователя</string>
@@ -77,9 +78,7 @@
     <string name="experiment_wait_snackbar">Пожалуйста, подождите, пока добрые ёжики изменяют ваш статус участия…</string>
     <string name="experiment_enrolled_snackbar">Теперь вы часть эксперимента. Спасибо за помощь!</string>
     <string name="experiment_left_snackbar">Спасибо за участие. Теперь вы не участвуете в эксперименте.</string>
-    <string name="experiment_error_snackbar">"Нам не удалось изменить ваш статус участия в эксперименте. Попробуйте
-        позже."
-    </string>
+    <string name="experiment_error_snackbar">Нам не удалось изменить ваш статус участия в эксперименте. Попробуйте позже.</string>
     <string name="experiments_opted_out">Вы не можете участвовать в экспериментах, потому что вы отказались от отправки аналитической информации. Вы можете включить её обратно в настройках приватности.</string>
     <string name="restart_button">Перезапустить</string>
     <string name="restart_title">Перезапустить?</string>
@@ -95,7 +94,7 @@
     <string name="fandom_subscribed">Вы подписаны</string>
     <string name="fandom_subscribe_loading">Загрузка</string>
     <string name="publication_reports_alt">Жалобы</string>
-    <string name="link_alert">Эта ссылка приведёт вас на следующий сайт</string>
+    <string name="link_alert">Эта ссылка приведёт вас на следующий сайт:</string>
     <string name="link_alert_trust">Доверять ссылкам %s</string>
     <string name="link_alert_cancel">Отмена</string>
     <string name="link_alert_visit">Перейти</string>
@@ -105,5 +104,4 @@
     <string name="account_viceroy_list_empty">Этот пользователь не наместник ни в одном из фэндомов</string>
     <string name="fandom_closed_tooltip">Этот фэндом скрыт из ленты (закрыт)</string>
     <string name="fandom_subscribers_alt">Подписчики</string>
-
 </resources>
