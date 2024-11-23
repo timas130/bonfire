@@ -101,4 +101,5 @@
     <string name="account_viceroy_list_empty">Цей користувач не є намісником у жодному з фендомів</string>
     <string name="fandom_closed_tooltip">Цей фендом приховано зі стрічки (закрито)</string>
     <string name="fandom_subscribers_alt">Підписники</string>
+    <string name="experiment_error_snackbar">Нам не вдалося змінити ваш статус участі в експерименті. Спробуйте пізніше.</string>
 </resources>
