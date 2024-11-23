@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="status_idle">Завантаження…</string>
+    <string name="status_testing_connection">Тестуємо з\'єднання…</string>
+    <string name="status_trying_optimistic">Намагаємося оминути обмеження мережі…</string>
+    <string name="status_downloading_remote_config">Завантажуємо оновлену конфігурацію мережі…</string>
+    <string name="status_trying_remote_config">Оминаємо обмеження, використовуємо нову конфігурацію…</string>
+    <string name="status_loading_account">Входимо в обліковий запис…</string>
+</resources>
