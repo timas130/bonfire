@@ -1,29 +1,50 @@
 package com.sup.dev.java.classes.callbacks
 
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.read
+import kotlin.concurrent.write
+
 class CallbacksList1<A1> {
+    private val lock = ReentrantReadWriteLock()
     private val list = mutableListOf<(A1) -> Unit>()
 
     fun add(callback: (A1) -> Unit) {
-        list.add(callback)
+        lock.write {
+            list.add(callback)
+        }
     }
 
     fun remove(callback: (A1) -> Unit) {
-        list.remove(callback)
+        lock.write {
+            list.remove(callback)
+        }
     }
 
     fun invoke(a1: A1) {
-        for (c in list) c.invoke(a1)
+        lock.read {
+            for (c in list) {
+                c.invoke(a1)
+            }
+        }
     }
 
     fun clear() {
-        list.clear()
+        lock.write {
+            list.clear()
+        }
     }
 
     fun invokeAndClear(source: A1) {
-        invoke(source)
-        list.clear()
+        lock.write {
+            invoke(source)
+            list.clear()
+        }
     }
 
-    fun isEmpty() = list.isEmpty()
-    fun isNotEmpty() = list.isNotEmpty()
+    fun isEmpty() = lock.read {
+        list.isEmpty()
+    }
+    fun isNotEmpty() = lock.read {
+        list.isNotEmpty()
+    }
 }
