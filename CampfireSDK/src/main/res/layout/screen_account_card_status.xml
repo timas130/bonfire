@@ -36,18 +36,24 @@
             android:textColor="@color/red_700"/>
 
         <FrameLayout
-            android:id="@+id/vStatusContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp">
+            android:layout_height="wrap_content">
 
             <com.sup.dev.android.views.views.ViewText
                 android:id="@+id/vStatus"
                 style="@style/TextAppearance.AppCompat.Body1"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingHorizontal="24dp"
                 android:gravity="center"/>
+
+            <com.sup.dev.android.views.views.ViewIcon
+                android:id="@+id/vStatusChange"
+                style="@style/Icon.12"
+                android:layout_gravity="right"
+                android:background="@drawable/shape_circle_focus_dark"
+                android:src="@drawable/ic_mode_edit_white_24dp" />
 
         </FrameLayout>
 

@@ -1,5 +1,6 @@
 package com.sayzen.campfiresdk.controllers
 
+import com.dzen.campfire.api.API
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.compose.other.LinkAlertSplash
 import com.sup.dev.android.tools.ToolsIntent
@@ -32,6 +33,7 @@ object ControllerExternalLinks {
     }
 
     private fun checkTrustedDomain(domain: String): Boolean {
+        if (domain == URI(API.DOMEN).host!!) return true
         return domain in trustedDomains.domains
     }
 
