@@ -33,7 +33,7 @@ impl<'de> Deserialize<'de> for Base64Blob {
 }
 
 struct Base64Visitor;
-impl<'de> Visitor<'de> for Base64Visitor {
+impl Visitor<'_> for Base64Visitor {
     type Value = Vec<u8>;
 
     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
