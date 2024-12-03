@@ -38,7 +38,6 @@
     <string name="error_invalid_username">Цей нік не відповідає вимогам.</string>
     <string name="error_email_taken">Ця пошта використовується іншим обліковим записом.</string>
     <string name="error_username_taken">Цей нік зайнятий іншим користувачем.</string>
-    <string name="error_wrong_password_or_email">Неправильна пошта чи пароль. Перевірте та спробуйте ще раз.</string>
     <string name="consent_analytics_desc">Це дуже допоможе в розробці застосунку! Ви зможете відмовитися в будь-який момент.</string>
     <string name="error_not_verified">Підтвердіть свою електронну пошту перед тим як це зробити.</string>
     <string name="error_tfa_expired">Ви занадто довго проходили перевірку. Почніть спочатку.</string>

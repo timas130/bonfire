@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::time::{Duration, SystemTime};
 use tracing::info;
 
-const JWT_ISS: &str = "https://bonfire.moe";
+pub const JWT_ISS: &str = "https://bonfire.moe";
 
 const JWT_VERIFY_AUD: &str = "verify-email";
 const JWT_VERIFY_EXPIRY: Duration = Duration::from_secs(600);

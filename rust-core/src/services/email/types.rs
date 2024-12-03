@@ -36,4 +36,11 @@ pub enum EmailTemplate {
         link: String,
         email: String,
     },
+    OAuthAuthorize {
+        username: String,
+        service_name: String,
+        time: DateTime<Utc>,
+        ip: IpAddr,
+        user_agent: String,
+    },
 }

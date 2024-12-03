@@ -10,6 +10,10 @@ mod login_oauth;
 mod login_refresh;
 mod logout;
 mod me;
+mod oauth2_authorize_accept;
+mod oauth2_authorize_info;
+mod oauth2_grants;
+mod oauth2_revoke_grant;
 mod oauth_url;
 mod recover_password;
 mod register_email;
@@ -33,6 +37,10 @@ use crate::schema::auth::login_oauth::LoginOAuthMutation;
 use crate::schema::auth::login_refresh::LoginRefreshMutation;
 use crate::schema::auth::logout::LogoutMutation;
 use crate::schema::auth::me::MeQuery;
+use crate::schema::auth::oauth2_authorize_accept::OAuth2AuthorizeAcceptMutation;
+use crate::schema::auth::oauth2_authorize_info::OAuth2AuthorizeInfoQuery;
+use crate::schema::auth::oauth2_grants::OAuth2GrantsQuery;
+use crate::schema::auth::oauth2_revoke_grant::OAuth2RevokeGrantMutation;
 use crate::schema::auth::oauth_url::OAuthUrlQuery;
 use crate::schema::auth::recover_password::RecoverPasswordMutation;
 use crate::schema::auth::register_email::RegisterEmailMutation;
@@ -52,6 +60,8 @@ pub struct AuthQuery(
     ActiveSessionsQuery,
     UserByIDQuery,
     UserBySlugQuery,
+    OAuth2AuthorizeInfoQuery,
+    OAuth2GrantsQuery,
 );
 
 #[derive(MergedObject, Default)]
@@ -71,4 +81,6 @@ pub struct AuthMutation(
     ChangeEmailMutation,
     TerminateSessionMutation,
     CancelEmailChangeMutation,
+    OAuth2AuthorizeAcceptMutation,
+    OAuth2RevokeGrantMutation,
 );

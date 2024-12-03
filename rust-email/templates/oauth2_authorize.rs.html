@@ -1,0 +1,30 @@
+@use c_core::prelude::chrono::{DateTime, Utc};
+@use std::net::IpAddr;
+@(username: &str, service_name: &str, time: &DateTime<Utc>, ip: &IpAddr, user_agent: &str)
+
+<p>Здравствуйте, @username!</p>
+
+<p>Кто-то авторизовался с помощью вашего аккаунта Bonfire в сервисе "@service_name".</p>
+
+<p>
+  Время: @time<br>
+  IP-адрес: @ip <br>
+  Браузер: @user_agent
+</p>
+
+<p>
+  Если это были не вы, вам следует как можно скорее
+  изменить пароль от вашего аккаунт, а также отозвать
+  вход в этот сервис, используя вкладку "Безопасность"
+  в настройках.
+</p>
+
+<p>
+  Если у вас остались какие-то вопросы, свяжитесь с нами
+  по адресу <a href="mailto:me@@bonfire.moe">me@@bonfire.moe</a>.
+</p>
+
+<p>
+  С уважением,<br>
+  команда Bonfire
+</p>

@@ -1,5 +1,6 @@
 use config::{Environment, File};
 use serde::Deserialize;
+use std::collections::HashSet;
 use yup_oauth2::ServiceAccountKey;
 
 #[derive(Clone, Debug, Deserialize)]
@@ -17,6 +18,7 @@ pub struct GlobalConfig {
     pub firebase: FirebaseConfig,
     pub notification: NotificationConfig,
     pub security: SecurityConfig,
+    pub auth: ExternalOAuthConfig,
 }
 impl GlobalConfig {
     pub(crate) fn load() -> anyhow::Result<Self> {
@@ -36,6 +38,7 @@ pub struct UrlsConfig {
     pub cancel_email_change_link: String,
     pub image_proxy_link: String,
     pub oauth_redirect_link: String,
+    pub oauth_authorize_frontend_link: String,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -98,4 +101,12 @@ pub struct NotificationConfig {
 #[derive(Clone, Debug, Deserialize)]
 pub struct SecurityConfig {
     pub package_names: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ExternalOAuthConfig {
+    pub openid_api_root: String,
+    pub rs256_key: String,
+    pub rs256_kid: String,
+    pub insensitive_scopes: HashSet<String>,
 }

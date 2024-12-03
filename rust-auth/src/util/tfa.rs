@@ -9,6 +9,7 @@ use c_core::services::auth::tfa::{TfaAction, TfaInfo};
 use c_core::services::auth::{AuthError, TfaType, UserContext};
 use c_core::services::email::types::EmailTemplate;
 use nanoid::nanoid;
+use serde::{Deserialize, Serialize};
 use sqlx::types::chrono::Utc;
 use sqlx::types::ipnetwork::IpNetwork;
 
@@ -113,6 +114,7 @@ impl AuthServer {
 
 const TFA_ACTION_LOGIN: i32 = 1;
 const TFA_ACTION_PASSWORD_CHANGE: i32 = 2;
+const TFA_ACTION_OAUTH_AUTHORIZE: i32 = 3;
 
 #[async_trait]
 pub trait TfaActionExt {
@@ -125,11 +127,24 @@ pub trait TfaActionExt {
         Self: Sized;
 }
 
+#[derive(Serialize, Deserialize)]
+struct OAuthAuthorizeData {
+    flow_id: i64,
+    service_name: String,
+}
+
 impl TfaActionExt for TfaAction {
     fn from_db(num: i32, data: String) -> Result<Self, ()> {
         Ok(match num {
             TFA_ACTION_LOGIN => Self::Login,
             TFA_ACTION_PASSWORD_CHANGE => Self::PasswordChange(data),
+            TFA_ACTION_OAUTH_AUTHORIZE => {
+                let data = serde_json::from_str::<OAuthAuthorizeData>(&data).map_err(|_| ())?;
+                Self::OAuthAuthorize {
+                    flow_id: data.flow_id,
+                    service_name: data.service_name,
+                }
+            }
             _ => return Err(()),
         })
     }
@@ -138,6 +153,17 @@ impl TfaActionExt for TfaAction {
         match self {
             TfaAction::Login => (TFA_ACTION_LOGIN, String::new()),
             TfaAction::PasswordChange(data) => (TFA_ACTION_PASSWORD_CHANGE, data),
+            TfaAction::OAuthAuthorize {
+                flow_id,
+                service_name,
+            } => {
+                let data = serde_json::to_string(&OAuthAuthorizeData {
+                    flow_id,
+                    service_name,
+                })
+                .expect("Failed to serialize OAuthAuthorizeData");
+                (TFA_ACTION_OAUTH_AUTHORIZE, data)
+            }
         }
     }
 }

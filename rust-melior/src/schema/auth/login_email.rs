@@ -67,7 +67,7 @@ struct LoginResultTfaRequired {
 
 /// A two-factor authentication method
 #[derive(Copy, Clone, Eq, PartialEq, Enum)]
-enum TfaType {
+pub enum TfaType {
     /// The user should input a one-time code from
     /// their authenticator app.
     Totp,

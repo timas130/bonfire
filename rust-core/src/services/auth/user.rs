@@ -28,7 +28,8 @@ pub enum PermissionLevel {
 )]
 #[repr(i32)]
 pub enum TfaMode {
-    TOTP = 1,
+    Totp = 1,
+    Email = 2,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, Eq, PartialEq)]
