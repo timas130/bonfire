@@ -54,6 +54,7 @@ object BonfireFormatter {
             this.text = visitor.outputString.toString().trimEnd()
             this.spans = visitor.outputSpans
                 .map {
+                    it.start = it.start.coerceAtMost(this.text.length)
                     it.end = it.end.coerceAtMost(this.text.length)
                     it
                 }
