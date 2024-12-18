@@ -159,11 +159,19 @@ object ControllerPublications {
     }
 
     fun report(publication: Publication) {
-        ControllerApi.reportPublication(
-                publication.id,
-                t(API_TRANSLATE.post_report_confirm),
-                t(API_TRANSLATE.post_error_gone)
-        )
+        if (publication.publicationType == API.PUBLICATION_TYPE_QUEST) {
+            ControllerApi.reportPublication(
+                    publication.id,
+                    t(API_TRANSLATE.quests_report_confirm),
+                    t(API_TRANSLATE.quests_error_gone)
+            )
+        } else {
+            ControllerApi.reportPublication(
+                    publication.id,
+                    t(API_TRANSLATE.post_report_confirm),
+                    t(API_TRANSLATE.post_error_gone)
+            )
+        }
     }
 
     fun clearReports(publication: Publication) {
