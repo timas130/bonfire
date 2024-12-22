@@ -22,7 +22,8 @@ abstract class AuthFlow(val context: Context) {
         InvalidUsername,
         EmailTaken,
         UsernameTaken,
-        WrongPasswordOrEmail,
+        WrongPassword,
+        WrongEmail,
         HardBanned,
         NotVerified,
         VerificationEmailFail,
@@ -47,7 +48,8 @@ abstract class AuthFlow(val context: Context) {
                     "InvalidUsername" -> FailureReason.InvalidUsername
                     "EmailTaken" -> FailureReason.EmailTaken
                     "UsernameTaken" -> FailureReason.UsernameTaken
-                    "WrongPasswordOrEmail" -> FailureReason.WrongPasswordOrEmail
+                    "WrongPassword" -> FailureReason.WrongPassword
+                    "WrongEmail" -> FailureReason.WrongEmail
                     "HardBanned" -> FailureReason.HardBanned
                     "NotVerified" -> FailureReason.NotVerified
                     "VerificationEmailFail" -> FailureReason.VerificationEmailFail
