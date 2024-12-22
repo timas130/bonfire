@@ -49,13 +49,11 @@ class CardStatus(
 
     private fun updateStatus() {
         val view = getView() ?: return
-        val vStatusContainer: View = view.findViewById(R.id.vStatusContainer)
         val vStatus: ViewText = view.findViewById(R.id.vStatus)
+        val vStatusChange: View = view.findViewById(R.id.vStatusChange)
         val vContainer: LayoutCorned = view.findViewById(R.id.vContainer)
 
         vContainer.setBackgroundColor(if (ControllerSettings.isProfileListStyle) ToolsResources.getColorAttr(R.attr.colorSurface) else 0x00000000)
-
-        vStatusContainer.visibility = VISIBLE
 
         val statusText = status.ifEmpty {
             if (xAccount.isCurrentAccount()) "{grey ${t(API_TRANSLATE.profile_tap_to_change_status)}}"
@@ -65,7 +63,8 @@ class CardStatus(
         ControllerLinks.linkifyShort(vStatus)
 
         if (xAccount.isCurrentAccount()) {
-            vStatusContainer.setOnClickListener {
+            vStatusChange.visibility = View.VISIBLE
+            vStatusChange.setOnClickListener {
                 if (!loaded) {
                     ToolsToast.show(t(API_TRANSLATE.profile_loading_in_profess))
                 } else {
@@ -73,7 +72,7 @@ class CardStatus(
                 }
             }
         } else {
-            vStatusContainer.setOnClickListener(null)
+            vStatusChange.visibility = View.GONE
         }
     }
 
