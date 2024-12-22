@@ -1,0 +1,41 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select id, raw_redirect_uri, code_challenge, code_challenge_method from oauth2_flows_as fl where code = $1 and client_id = $2 and authorized_at is not null and token_requested_at is null for update",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "raw_redirect_uri",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "code_challenge",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "code_challenge_method",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "4c2b8763e70a659768f6e635134f4ff424ff979b84b8d6f5fafe3e78e2a53e57"
+}

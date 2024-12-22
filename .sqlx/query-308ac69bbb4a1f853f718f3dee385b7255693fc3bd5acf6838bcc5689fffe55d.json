@@ -1,0 +1,53 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select fl.id, grant_id, session_id, client_id, user_id, scopes from oauth2_flows_as fl inner join sessions on sessions.id = fl.session_id where fl.id = $1 and access_token = $2 and grant_id is not null",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "grant_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "session_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "client_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 4,
+        "name": "user_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 5,
+        "name": "scopes",
+        "type_info": "TextArray"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "308ac69bbb4a1f853f718f3dee385b7255693fc3bd5acf6838bcc5689fffe55d"
+}

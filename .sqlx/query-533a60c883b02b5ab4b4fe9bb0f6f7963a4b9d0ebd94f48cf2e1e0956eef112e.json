@@ -1,0 +1,76 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from oauth2_clients where client_id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "client_id",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "client_secret",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "display_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "privacy_policy_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "tos_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "official",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 7,
+        "name": "allowed_scopes",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 8,
+        "name": "enforce_code_challenge",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 9,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "533a60c883b02b5ab4b4fe9bb0f6f7963a4b9d0ebd94f48cf2e1e0956eef112e"
+}
