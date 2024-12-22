@@ -18,7 +18,8 @@ fun AuthFlow.AuthException.toUiString(context: Context): String {
         FailureReason.InvalidUsername -> R.string.error_invalid_username
         FailureReason.EmailTaken -> R.string.error_email_taken
         FailureReason.UsernameTaken -> R.string.error_username_taken
-        FailureReason.WrongPasswordOrEmail -> R.string.error_wrong_password_or_email
+        FailureReason.WrongPassword -> R.string.error_wrong_password
+        FailureReason.WrongEmail -> R.string.error_wrong_email
         FailureReason.HardBanned -> R.string.error_hard_banned
         FailureReason.NotVerified -> R.string.error_not_verified
         FailureReason.VerificationEmailFail -> R.string.error_verification_email_fail

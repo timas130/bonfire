@@ -6,6 +6,10 @@ use sqlx::query;
 use std::collections::HashMap;
 
 impl AuthServer {
+    pub(crate) async fn _get_by_id(&self, user_id: i64) -> Result<Option<AuthUser>, AuthError> {
+        Ok(self._get_by_ids(&[user_id]).await?.remove(&user_id))
+    }
+
     pub(crate) async fn _get_by_ids(
         &self,
         user_ids: &[i64],

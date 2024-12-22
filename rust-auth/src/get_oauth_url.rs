@@ -74,6 +74,14 @@ impl AuthServer {
         })
     }
 
+    pub(crate) fn get_oauth_redirect_url(&self, provider: OAuthProvider) -> RedirectUrl {
+        RedirectUrl::new(format!(
+            "{}{}",
+            self.base.config.urls.oauth_redirect_link, provider
+        ))
+        .expect("invalid oauth redirect link configured")
+    }
+
     pub(crate) async fn _get_oauth_url(
         &self,
         provider: OAuthProvider,
@@ -86,14 +94,7 @@ impl AuthServer {
                 CsrfToken::new_random,
                 Nonce::new_random,
             )
-            .set_redirect_uri(Cow::Owned(
-                RedirectUrl::new(format!(
-                    "{}{}",
-                    self.base.config.urls.oauth_redirect_link,
-                    i32::from(provider)
-                ))
-                .expect("invalid oauth redirect link configured"),
-            ))
+            .set_redirect_uri(Cow::Owned(self.get_oauth_redirect_url(provider)))
             .add_scope(Scope::new("profile".to_string()))
             .add_scope(Scope::new("email".to_string()))
             .url();

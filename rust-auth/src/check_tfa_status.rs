@@ -112,6 +112,18 @@ impl AuthServer {
                 tx.commit().await?;
                 Ok(TfaStatus::Complete(TfaResult::PasswordChange))
             }
+            TfaAction::OAuthAuthorize { flow_id, .. } => {
+                let user_context = tfa_flow.user_context();
+                let redirect_uri = self
+                    .do_oauth2_authorize_accept(flow_id, user_context)
+                    .await?;
+
+                tx.commit().await?;
+
+                Ok(TfaStatus::Complete(TfaResult::OAuthRedirect {
+                    redirect_uri,
+                }))
+            }
         }
     }
 }

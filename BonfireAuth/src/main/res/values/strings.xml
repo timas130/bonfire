@@ -33,7 +33,6 @@
     <string name="error_invalid_username">This username doesn\'t meet the requirements.</string>
     <string name="error_email_taken">This email is taken by another user.</string>
     <string name="error_username_taken">This username is taken by another user.</string>
-    <string name="error_wrong_password_or_email">Wrong email or password. Check and try again.</string>
     <string name="error_hard_banned">This account is hard-banned. Logging in is prohibited.</string>
     <string name="error_not_verified">Verify your email address before doing this.</string>
     <string name="error_verification_email_fail">Failed to send verification email.</string>
@@ -119,4 +118,6 @@
     <string name="error_too_young">According to the Bonfire terms of service, you must be at least 13 years old to use
         the service.
     </string>
+    <string name="error_wrong_password">Wrong password. Please try again or reset it.</string>
+    <string name="error_wrong_email">This email does not exist. Please check your spelling.</string>
 </resources>

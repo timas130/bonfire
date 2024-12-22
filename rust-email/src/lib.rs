@@ -162,6 +162,32 @@ impl EmailServer {
                 templates::cancel_email_change_html(&mut buf_html, username, link, email)
                     .map_err(anyhow::Error::from)?;
             }
+            EmailTemplate::OAuthAuthorize {
+                username,
+                service_name,
+                time,
+                ip,
+                user_agent,
+            } => {
+                templates::oauth2_authorize_plain_html(
+                    &mut buf_plain,
+                    username,
+                    service_name,
+                    time,
+                    ip,
+                    user_agent,
+                )
+                .map_err(anyhow::Error::from)?;
+                templates::oauth2_authorize_html(
+                    &mut buf_html,
+                    username,
+                    service_name,
+                    time,
+                    ip,
+                    user_agent,
+                )
+                .map_err(anyhow::Error::from)?;
+            }
         }
         let buf_plain = String::from_utf8(buf_plain).map_err(anyhow::Error::from)?;
         let buf_html = String::from_utf8(buf_html).map_err(anyhow::Error::from)?;

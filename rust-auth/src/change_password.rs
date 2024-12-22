@@ -71,7 +71,7 @@ impl AuthServer {
             let password_matches = self.verify_password(&old_password, current_password);
 
             if !password_matches {
-                return Err(AuthError::WrongPasswordOrEmail); // just the password in this case
+                return Err(AuthError::WrongPassword);
             }
         }
 

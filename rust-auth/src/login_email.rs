@@ -189,7 +189,7 @@ impl AuthServer {
             Ok(Some(user)) => user,
             Ok(None) => {
                 sleep_until(deadline).await;
-                return Err(AuthError::WrongPasswordOrEmail);
+                return Err(AuthError::WrongEmail);
             }
             Err(err) => {
                 sleep_until(deadline).await;
@@ -203,7 +203,7 @@ impl AuthServer {
             Some(password) => password,
             None => {
                 sleep_until(deadline).await;
-                return Err(AuthError::WrongPasswordOrEmail);
+                return Err(AuthError::WrongPassword);
             }
         };
 
@@ -211,7 +211,7 @@ impl AuthServer {
 
         if !password_correct {
             sleep_until(deadline).await;
-            return Err(AuthError::WrongPasswordOrEmail);
+            return Err(AuthError::WrongPassword);
         }
 
         //// Rehash password if legacy hashing used

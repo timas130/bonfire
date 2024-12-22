@@ -27,7 +27,7 @@ impl ServiceBase {
     pub async fn load() -> anyhow::Result<Self> {
         let config = GlobalConfig::load()?;
         let pool = PgPoolOptions::new()
-            .max_connections(100)
+            .max_connections(20)
             .connect(&config.database_url)
             .await?;
 

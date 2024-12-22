@@ -12,6 +12,7 @@ use openidconnect::reqwest::async_http_client;
 use openidconnect::{AuthorizationCode, Nonce, NonceVerifier, OAuth2TokenResponse, TokenResponse};
 use serde::Deserialize;
 use sqlx::{Postgres, Transaction};
+use std::borrow::Cow;
 use std::str::FromStr;
 
 struct DummyNonceVerifier;
@@ -213,9 +214,13 @@ impl AuthServer {
             Err(_) => {
                 let token_response = client
                     .exchange_code(AuthorizationCode::new(code))
+                    .set_redirect_uri(Cow::Owned(self.get_oauth_redirect_url(provider)))
                     .request_async(async_http_client)
                     .await
-                    .map_err(|_| AuthError::InvalidToken)?;
+                    .map_err(|err| {
+                        warn!(?provider, "failed to exchange oauth code: {err:?}");
+                        AuthError::InvalidToken
+                    })?;
                 let id_token = token_response
                     .id_token()
                     .ok_or(AuthError::InvalidToken)?
