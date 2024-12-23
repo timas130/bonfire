@@ -9,7 +9,7 @@
     <string name="verify_email_text">Ми надіслали листа із підтвердженням на вашу електронну пошту. Будь ласка, відкрийте його та перейдіть за посиланням, щоб підтвердити свій акаунт. Не забудьте перевірити папку «Спам», якщо не можете знайти нашого листа.</string>
     <string name="resend_verification_later">Інший лист уже відправлено. Будь ласка, спробуйте через хвилину</string>
     <string name="error_verification_email_fail">Невдалося відправити листа із підтвердженням.</string>
-    <string name="start_email">Увійти за допомогою е-пошти</string>
+    <string name="start_email">Увійти за допомогою електронної пошти</string>
     <string name="start_privacy_policy">Політика конфіденційності</string>
     <string name="start_app_rules">Правила застосунку</string>
     <string name="error_auth_url_rejected">Не вдалося почати вхід. Перевірте з\'єднання. (B1)</string>
@@ -100,5 +100,5 @@
     <string name="error_too_young">Згідно з умовами використання Bonfire, вам має бути щонайменше 13 років, щоб використовувати сервіс.</string>
     <string name="set_birthday_text">Щоб надати вам доступ до певного контенту, нам треба запитати вашу реальну дату народження, щоб визначити ваш вік. Ця інформація не буде показана будь-кому, крім вас, і не буде передана іншим особам. Вік, зазначений у вашому профілі, залишиться недоторканим.</string>
     <string name="error_wrong_password">Неправильний пароль. Спробуйте ще раз або скиньте його.</string>
-    <string name="error_wrong_email">Цей email не існує. Перевірте своє написання.</string>
+    <string name="error_wrong_email">Ця пошта не існує. Перевірте правильність набору.</string>
 </resources>
