@@ -32,6 +32,7 @@ use educe::Educe;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::fmt::{Display, Formatter};
 use std::net::IpAddr;
 use std::ops::RangeInclusive;
 use thiserror::Error;
@@ -58,8 +59,10 @@ pub enum AuthError {
     UsernameTaken,
 
     // login_email() & change_password()
-    #[error("WrongPasswordOrEmail: Wrong password or email")]
-    WrongPasswordOrEmail,
+    #[error("WrongEmail: Wrong email or username")]
+    WrongEmail,
+    #[error("WrongPassword: Wrong password")]
+    WrongPassword,
 
     // change_password() & login_email()
     #[error("UserNoEmail: This user doesn't have an email")]
@@ -134,6 +137,52 @@ pub enum AuthError {
 
     #[error("AnotherAccountExists: Another user is already using this account")]
     AnotherAccountExists,
+
+    // oauth2_authorize_info()
+    #[error("MissingRequiredParameter: Missing required OAuth parameter {0}")]
+    MissingRequiredParameter(String),
+
+    #[error("UnsupportedResponseType: This response_type or grant_type is not supported")]
+    UnsupportedResponseType,
+
+    #[error("UnsupportedCodeChallengeMethod: Only code_challenge_method=S256 is supported")]
+    UnsupportedCodeChallengeMethod,
+
+    #[error("InvalidCodeChallenge: Invalid code_challenge (you must use base64_url and SHA256)")]
+    InvalidCodeChallenge,
+
+    #[error("OAuthClientNotFound: This OAuth client does not exist")]
+    OAuthClientNotFound,
+
+    #[error("ParameterTooLong: {0} is too long")]
+    ParameterTooLong(String),
+
+    #[error("InvalidRedirectUri: This redirect_uri is not allowed or is incorrect")]
+    InvalidRedirectUri,
+
+    #[error("UnauthorizedScope: Using this scope is not allowed for this client")]
+    UnauthorizedScope,
+
+    #[error("NoRedirectUrisDefined: No redirect_uris are registered for this client")]
+    NoRedirectUrisDefined,
+
+    // oauth2_authorize_accept()
+    #[error("FlowNotFound: This flow does not exist or belongs to another session or client")]
+    FlowNotFound,
+
+    #[error("FlowExpired: You have been waiting for too long, please try harder")]
+    FlowExpired,
+
+    // revoke_oauth2_grant()
+    #[error("GrantNotFound: This grant does not exist or belongs to another user")]
+    GrantNotFound,
+
+    // get_oauth2_tokens()
+    #[error("InvalidClientSecret: This client secret is incorrect")]
+    InvalidClientSecret,
+
+    #[error("InvalidCodeVerifier: This code_verifier is incorrect")]
+    InvalidCodeVerifier,
 
     // general
     #[error("UserNotFound: This user was not found")]
@@ -324,6 +373,12 @@ pub enum OAuthProvider {
     Google = 2,
 }
 
+impl Display for OAuthProvider {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
 /// Client information to log in with an OAuth provider
 #[derive(Debug, Deserialize, Serialize)]
 pub struct OAuthUrl {
@@ -361,6 +416,76 @@ pub struct RegisterEmailResponse {
     pub access_token: String,
     /// The session refresh token
     pub refresh_token: String,
+}
+
+/// Information about an external OAuth client
+#[derive(Debug, Deserialize, Serialize)]
+pub struct OAuthClientInfo {
+    /// Unique ID of this client
+    pub id: i64,
+    /// Name of the client to be displayed to the user
+    pub display_name: String,
+    /// Link to the privacy policy of this client
+    pub privacy_policy_url: String,
+    /// Link to this client's terms of service
+    pub tos_url: Option<String>,
+    /// Whether this client is an official Bonfire app
+    pub official: bool,
+}
+
+/// What to do when navigating to the /authorize endpoint
+#[derive(Debug, Deserialize, Serialize)]
+pub enum OAuthAuthorizeInfo {
+    /// This client has already been authorised.
+    /// Redirect with the credentials.
+    AlreadyAuthorized {
+        /// URL where the user must be redirected
+        redirect_uri: String,
+    },
+    /// Prompt the user whether they want to authorise this client
+    Prompt {
+        /// OAuth flow to reference when approving/rejecting this
+        /// authorisation request.
+        /// This value is `None` when the user is not authenticated.
+        flow_id: Option<i64>,
+        /// Information about the client
+        client: OAuthClientInfo,
+        /// What scopes the client is requesting
+        scopes: Vec<String>,
+    },
+}
+
+/// Result of approving an OAuth AS flow
+#[derive(Debug, Deserialize, Serialize)]
+pub enum OAuthAuthorizeResult {
+    /// The authorisation was successful and user can proceed to this URL
+    Redirect {
+        /// The URL to redirect the user to
+        redirect_uri: String,
+    },
+    /// Two-factor authentication is required to approve this request
+    TfaRequired {
+        /// What TFA type to use
+        tfa_type: TfaType,
+        /// Token for requesting the TFA result with `check_tfa_status`
+        tfa_wait_token: String,
+    },
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct OAuthGrant {
+    /// Unique ID for this grant (unique across {user_id, client_id})
+    pub id: i64,
+    /// User that was authorised
+    pub user_id: i64,
+    /// Information about the client authorised
+    pub client: OAuthClientInfo,
+    /// What scopes this grant has already
+    pub scope: Vec<String>,
+    /// When the grant was initially created
+    pub created_at: DateTime<Utc>,
+    /// When was the last time this grant was reauthorised
+    pub last_used_at: DateTime<Utc>,
 }
 
 /// The authentication service interface
@@ -537,6 +662,46 @@ pub trait AuthService {
     /// Use an access token to get its session ID and
     /// the [`AuthUser`] associated with it.
     async fn get_by_token(token: String) -> Result<(i64, AuthUser), AuthError>;
+
+    //// External OAuth
+
+    /// Get the `.well-known/openid-configuration` file
+    async fn get_openid_metadata() -> Result<serde_json::Value, AuthError>;
+
+    /// Get the JWK set for external OAuth
+    async fn get_jwk_set() -> Result<serde_json::Value, AuthError>;
+
+    /// Get info displayed to the user for authorising an OAuth client
+    async fn oauth2_authorize_info(
+        query: HashMap<String, String>,
+        access_token: Option<String>,
+    ) -> Result<OAuthAuthorizeInfo, AuthError>;
+
+    /// Accept the authorisation request and get the URI to redirect the client to
+    async fn oauth2_authorize_accept(
+        flow_id: i64,
+        access_token: String,
+        user_context: Option<UserContext>,
+    ) -> Result<OAuthAuthorizeResult, AuthError>;
+
+    /// Use an authorisation code to get an access token and id token
+    async fn get_oauth2_token(
+        params: HashMap<String, String>,
+        authorization: Option<(String, String)>,
+    ) -> Result<serde_json::Value, AuthError>;
+
+    /// Verifies an access token and returns claims of the associated ID token
+    async fn get_oauth2_userinfo(access_token: String) -> Result<serde_json::Value, AuthError>;
+
+    /// Get the list of all OAuth grants for a given user
+    async fn get_oauth2_grants(
+        user_id: i64,
+        offset: i64,
+        limit: i64,
+    ) -> Result<Vec<OAuthGrant>, AuthError>;
+
+    /// Revoke access from a previously authorised client using its grant ID
+    async fn revoke_oauth2_grant(user_id: i64, grant_id: i64) -> Result<(), AuthError>;
 
     //// Administrative actions
 

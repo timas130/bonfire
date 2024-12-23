@@ -3,18 +3,24 @@ mod context;
 mod data_loaders;
 mod error;
 mod models;
+mod oauth;
 mod schema;
 pub(crate) mod utils;
 
 use crate::context::{GlobalContext, ReqContext};
 use crate::data_loaders::AuthUserLoader;
 use crate::error::LogErrorsMiddlewareFactory;
+use crate::oauth::authorize::oauth2_authorize;
+use crate::oauth::jwks::oauth2_jwk_set;
+use crate::oauth::openid_configuration::openid_configuration;
+use crate::oauth::token::oauth2_token;
+use crate::oauth::userinfo::oauth2_userinfo;
 use async_graphql::http::GraphiQLSource;
 use async_graphql::{EmptySubscription, Schema};
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
 use axum::extract::ConnectInfo;
 use axum::response::IntoResponse;
-use axum::routing::get;
+use axum::routing::{get, post};
 use axum::{response, Extension, Router};
 use axum_client_ip::XForwardedFor;
 use axum_extra::headers::authorization::Bearer;
@@ -144,6 +150,14 @@ async fn main() -> anyhow::Result<()> {
 
     let app = Router::new()
         .route("/", get(graphiql).post(graphql_handler))
+        .route(
+            "/.well-known/openid-configuration",
+            get(openid_configuration),
+        )
+        .route("/openid/authorize", get(oauth2_authorize))
+        .route("/openid/jwks", get(oauth2_jwk_set))
+        .route("/openid/token", post(oauth2_token))
+        .route("/openid/userinfo", get(oauth2_userinfo).post(oauth2_userinfo))
         .layer(NewSentryLayer::new_from_top())
         .layer(SentryHttpLayer::with_transaction())
         .layer(CorsLayer::permissive())

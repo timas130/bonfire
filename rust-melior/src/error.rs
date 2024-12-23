@@ -1,6 +1,9 @@
 use async_graphql::extensions::{Extension, ExtensionContext, ExtensionFactory, NextExecute};
 use async_graphql::Response;
 use async_trait::async_trait;
+use axum::http::StatusCode;
+use axum::response::IntoResponse;
+use axum::Json;
 use c_core::prelude::anyhow;
 use c_core::prelude::anyhow::Error;
 use c_core::prelude::tarpc::client::RpcError;
@@ -10,6 +13,7 @@ use c_core::services::level::LevelError;
 use c_core::services::notification::NotificationError;
 use c_core::services::profile::ProfileError;
 use c_core::services::security::SecurityError;
+use serde_json::json;
 use std::sync::Arc;
 use thiserror::Error;
 use tracing::warn;
@@ -56,6 +60,20 @@ impl From<anyhow::Error> for RespError {
 impl From<sqlx::Error> for RespError {
     fn from(value: sqlx::Error) -> Self {
         Self::Sqlx(Arc::new(value))
+    }
+}
+
+impl IntoResponse for RespError {
+    fn into_response(self) -> axum::response::Response {
+        let mut resp = Json(json!({
+            "error": true,
+            "errorMessage": self.to_string(),
+        }))
+        .into_response();
+
+        *resp.status_mut() = StatusCode::INTERNAL_SERVER_ERROR;
+
+        resp
     }
 }
 

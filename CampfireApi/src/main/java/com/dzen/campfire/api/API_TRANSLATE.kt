@@ -2420,6 +2420,8 @@ object API_TRANSLATE {
     val quests_publish_q_absolutely = Translate("Опубликовать")
     val quests_publish_q_not_yet = Translate("Не надо")
     val quests_mod_clear_reports_q = Translate("Удалить все жалобы на этот квест?")
+    val quests_report_confirm = Translate("Пожаловаться на этот квест?")
+    val quests_error_gone = Translate("Похоже кто-то удалил этот квест")
 
     val donates_restricted = Translate("Из-за ограничений Google Play, мы не можем принимать пожертвования в приложении.")
 

@@ -1,6 +1,6 @@
 use crate::terminate_session::AccessTokenInfo;
 use crate::AuthServer;
-use c_core::prelude::anyhow;
+use c_core::prelude::anyhow::anyhow;
 use c_core::services::auth::user::AuthUser;
 use c_core::services::auth::AuthError;
 
@@ -14,10 +14,9 @@ impl AuthServer {
 
         Ok((
             session_id,
-            self._get_by_ids(&[user_id])
+            self._get_by_id(user_id)
                 .await?
-                .remove(&user_id)
-                .ok_or_else(|| anyhow::Error::msg("out of sync"))?,
+                .ok_or(anyhow!("out of sync"))?,
         ))
     }
 }

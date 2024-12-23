@@ -1,0 +1,154 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select fl.*, user_id, email, email_verified, username from oauth2_flows_as fl inner join sessions s on s.id = fl.session_id inner join users u on u.id = s.user_id where fl.id = $1 for update",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "session_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "client_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "grant_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 4,
+        "name": "redirect_uri",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "raw_redirect_uri",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "scopes",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 7,
+        "name": "state",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "nonce",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "code_challenge",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 10,
+        "name": "code_challenge_method",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 11,
+        "name": "code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 12,
+        "name": "access_token",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 13,
+        "name": "refresh_token",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 14,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 15,
+        "name": "authorized_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 16,
+        "name": "token_requested_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 17,
+        "name": "access_token_expires_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 18,
+        "name": "refresh_token_expires_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 19,
+        "name": "user_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 20,
+        "name": "email",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 21,
+        "name": "email_verified",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 22,
+        "name": "username",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "d8c2d0ca2473295beb3ce85593448bb85a25b1228dd8c29c75a62c2a2a7d19a8"
+}

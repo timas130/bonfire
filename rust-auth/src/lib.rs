@@ -11,9 +11,15 @@ mod generate_tfa_secret;
 mod get_by_id;
 mod get_by_name;
 mod get_by_token;
+mod get_jwk_set;
 mod get_meta_users;
+mod get_oauth2_client;
+mod get_oauth2_grants;
+mod get_oauth2_token;
+mod get_oauth2_userinfo;
 mod get_oauth_result;
 mod get_oauth_url;
+mod get_openid_metadata;
 mod get_security_settings;
 mod get_session;
 mod get_sessions;
@@ -23,9 +29,12 @@ mod login_email;
 mod login_internal;
 mod login_refresh;
 mod mark_online;
+mod oauth2_authorize_accept;
+mod oauth2_authorize_info;
 mod recover_password;
 mod register_email;
 mod resend_verification;
+mod revoke_oauth2_grant;
 mod send_password_recovery;
 mod set_permission_level;
 mod set_totp_tfa;
@@ -38,15 +47,16 @@ mod util;
 mod vacuum;
 mod verify_email;
 
+use c_core::prelude::anyhow::anyhow;
 use c_core::prelude::tarpc::context::Context;
 use c_core::prelude::tokio::sync::Mutex;
 use c_core::prelude::*;
 use c_core::services::auth::tfa::{TfaInfo, TfaStatus};
 use c_core::services::auth::user::{AuthUser, PermissionLevel};
 use c_core::services::auth::{
-    AuthError, AuthService, LoginEmailOptions, LoginEmailResponse, MetaUsers, OAuthProvider,
-    OAuthResult, OAuthUrl, RegisterEmailOptions, RegisterEmailResponse, SecuritySettings, Session,
-    UserContext,
+    AuthError, AuthService, LoginEmailOptions, LoginEmailResponse, MetaUsers, OAuthAuthorizeInfo,
+    OAuthAuthorizeResult, OAuthGrant, OAuthProvider, OAuthResult, OAuthUrl, RegisterEmailOptions,
+    RegisterEmailResponse, SecuritySettings, Session, UserContext,
 };
 #[cfg(not(test))]
 use c_core::services::email::Email;
@@ -54,6 +64,8 @@ use c_core::services::email::EmailServiceClient;
 use c_core::{host_tcp, ServiceBase};
 use http_cache_reqwest::{CACacheManager, Cache, CacheMode, HttpCache, HttpCacheOptions};
 use jsonwebtoken::jwk::Jwk;
+use openidconnect::core::CoreRsaPrivateSigningKey;
+use openidconnect::JsonWebKeyId;
 use reqwest::Client;
 use reqwest_middleware::{ClientBuilder, ClientWithMiddleware};
 use serde::Deserialize;
@@ -78,6 +90,8 @@ pub struct AuthServer {
 
     reqwest_client: Arc<Mutex<ClientWithMiddleware>>,
     google_jwks: Arc<Vec<Jwk>>,
+
+    rs256_signing_key: Arc<CoreRsaPrivateSigningKey>,
 }
 impl AuthServer {
     pub async fn load() -> anyhow::Result<Self> {
@@ -116,11 +130,18 @@ impl AuthServer {
             }))
             .build();
 
+        let rs256_signing_key = CoreRsaPrivateSigningKey::from_pem(
+            &base.config.auth.rs256_key,
+            Some(JsonWebKeyId::new(base.config.auth.rs256_kid.clone())),
+        )
+        .map_err(|s| anyhow!("{s}"))?;
+
         Ok(Self {
             base,
             email,
             reqwest_client: Arc::new(Mutex::new(reqwest_client)),
             google_jwks: Arc::new(google_jwks),
+            rs256_signing_key: Arc::new(rs256_signing_key),
         })
     }
 
@@ -328,7 +349,7 @@ impl AuthService for AuthServer {
     }
 
     async fn get_by_id(self, _: Context, id: i64) -> Result<Option<AuthUser>, AuthError> {
-        Ok(self._get_by_ids(&[id]).await?.remove(&id))
+        self._get_by_id(id).await
     }
 
     async fn get_by_ids(
@@ -353,6 +374,70 @@ impl AuthService for AuthServer {
 
     async fn get_by_token(self, _: Context, token: String) -> Result<(i64, AuthUser), AuthError> {
         self._get_by_token(token).await
+    }
+
+    async fn get_openid_metadata(self, _: Context) -> Result<serde_json::Value, AuthError> {
+        self._get_openid_metadata().await
+    }
+
+    async fn get_jwk_set(self, _: Context) -> Result<serde_json::Value, AuthError> {
+        self._get_jwk_set().await
+    }
+
+    async fn oauth2_authorize_info(
+        self,
+        _: Context,
+        query: HashMap<String, String>,
+        access_token: Option<String>,
+    ) -> Result<OAuthAuthorizeInfo, AuthError> {
+        self._oauth2_authorize_info(query, access_token).await
+    }
+
+    async fn oauth2_authorize_accept(
+        self,
+        _: Context,
+        flow_id: i64,
+        access_token: String,
+        user_context: Option<UserContext>,
+    ) -> Result<OAuthAuthorizeResult, AuthError> {
+        self._oauth2_authorize_accept(flow_id, access_token, user_context)
+            .await
+    }
+
+    async fn get_oauth2_token(
+        self,
+        _: Context,
+        params: HashMap<String, String>,
+        authorization: Option<(String, String)>,
+    ) -> Result<serde_json::Value, AuthError> {
+        self._get_oauth2_tokens(params, authorization).await
+    }
+
+    async fn get_oauth2_userinfo(
+        self,
+        _: Context,
+        access_token: String,
+    ) -> Result<serde_json::Value, AuthError> {
+        self._get_oauth2_userinfo(access_token).await
+    }
+
+    async fn get_oauth2_grants(
+        self,
+        _: Context,
+        user_id: i64,
+        offset: i64,
+        limit: i64,
+    ) -> Result<Vec<OAuthGrant>, AuthError> {
+        self._get_oauth2_grants(user_id, offset, limit).await
+    }
+
+    async fn revoke_oauth2_grant(
+        self,
+        _: Context,
+        user_id: i64,
+        grant_id: i64,
+    ) -> Result<(), AuthError> {
+        self._revoke_oauth2_grant(user_id, grant_id).await
     }
 
     async fn admin_get_sessions(

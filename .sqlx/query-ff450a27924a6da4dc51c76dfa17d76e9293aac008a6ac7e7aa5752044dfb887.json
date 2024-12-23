@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update oauth2_flows_as set code = $1, grant_id = $2, authorized_at = now() where id = $3 returning authorized_at",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "authorized_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      true
+    ]
+  },
+  "hash": "ff450a27924a6da4dc51c76dfa17d76e9293aac008a6ac7e7aa5752044dfb887"
+}

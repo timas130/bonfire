@@ -31,7 +31,6 @@
     <string name="error_invalid_username">Этот ник не соответствует требованиям.</string>
     <string name="error_email_taken">Этот email используется другим аккаунтом.</string>
     <string name="error_username_taken">Этот ник занят другим пользователем.</string>
-    <string name="error_wrong_password_or_email">Неправильный email или пароль. Проверьте и попробуйте ещё раз.</string>
     <string name="error_hard_banned">Этот аккаунт жёстко забанен. Вход запрещён.</string>
     <string name="error_not_verified">Подтвердите свой email перед тем, как это сделать.</string>
     <string name="error_verification_email_fail">Не удалось отправить письмо с подтверждением.</string>
@@ -117,4 +116,6 @@
     <string name="error_too_young">В соответствии с условиями использования Bonfire, вам должно быть как минимум 13 лет,
         чтобы использовать сервис.
     </string>
+    <string name="error_wrong_password">Неправильный пароль. Попробуйте ещё раз или сбросьте его.</string>
+    <string name="error_wrong_email">Этот email не существует. Проверьте своё написание.</string>
 </resources>

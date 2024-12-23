@@ -50,6 +50,12 @@ pub enum TfaResult {
     },
     /// The password has been changed
     PasswordChange,
+    /// The OAuth authorisation has been approved and the client
+    /// can be redirected
+    OAuthRedirect {
+        /// Where to redirect the client
+        redirect_uri: String,
+    },
 }
 
 /// The action that initiated the TFA flow
@@ -63,6 +69,13 @@ pub enum TfaAction {
     /// The inner [`String`] is already hashed.
     /// It should just be stored in the database.
     PasswordChange(String),
+    /// Authorize an external OAuth flow
+    OAuthAuthorize {
+        /// Unique ID for the external OAuth flow
+        flow_id: i64,
+        /// Name of the service that the user is trying to authorise
+        service_name: String,
+    },
 }
 impl TfaAction {
     /// Return a [`TfaAction`] with the same type, but without any sensitive data.
@@ -76,8 +89,18 @@ impl TfaAction {
     /// ```
     pub fn strip_data(&self) -> Self {
         match self {
-            Self::Login => self.clone(),
             Self::PasswordChange(_) => Self::PasswordChange(String::new()),
+            other => other.clone(),
+        }
+    }
+
+    // this is a bodge for c-email because of this ructe issue (ructe is not great unfortunately):
+    // https://github.com/kaj/ructe/issues/103
+    /// If this is a [`TfaAction::OAuthAuthorize`], return its `service_name`
+    pub fn service_name(&self) -> Option<&str> {
+        match self {
+            Self::OAuthAuthorize { service_name, .. } => Some(service_name),
+            _ => None,
         }
     }
 }

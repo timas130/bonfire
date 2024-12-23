@@ -1,7 +1,7 @@
-use std::collections::HashMap;
 use konst::iter::collect_const;
 use lazy_static::lazy_static;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
+use std::collections::HashMap;
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq, IntoPrimitive, TryFromPrimitive, Hash)]
 #[repr(i64)]
@@ -79,7 +79,7 @@ impl<'a> AchiDef<'a> {
         }
     }
 }
-impl<'a> PartialEq for AchiDef<'a> {
+impl PartialEq for AchiDef<'_> {
     fn eq(&self, other: &Self) -> bool {
         self.index == other.index
     }

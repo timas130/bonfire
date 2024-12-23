@@ -10,6 +10,7 @@ recovery_link = "http://localhost:5173/auth/recovery?t="
 cancel_email_change_link = "http://localhost:5173/auth/cancel-email-change?t="
 image_proxy_link = "http://localhost:5173/image/"
 oauth_redirect_link = "http://localhost:5173/oauth/redirect/"
+oauth_authorize_frontend_link = "https://localhost:5173/oauth/authorize"
 
 [ports]
 auth = 31001
@@ -61,3 +62,11 @@ threads = 5
 
 [security]
 package_names = ["sh.sit.bonfire"]
+
+[auth]
+# no trailing slash
+openid_api_root = "http://localhost:8000/openid"
+# generate this key with `openssl genrsa -traditional 2048`
+rs256_key = "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAkWt2ubeU7rD3gP+Syz7r97PplLBovklx2EXIRrxeUmlCifWC\ngfXmGy7gkFMDjeRw5Rz72/ct+U/QYjSOhzCPi0sPw1L1q2wMieJw6p+cdqlalorm\nRRA4hDBzJ6oqWVwIuAzsy5rSxGc8hgptZwF/+xzXltA3JpBhFDCYOjxH+oANtUVx\nVluxMtAOppjwyASJf8ksR7hdktMDZNBAoTmRIPsl9Sd8kMeadr1yzSvivY2Cvsau\nMfqV03IQWYb+JLlHPc5dHHO4rNYnq2UBNhLvKBgDGu8GobL33Y4LBoeeO+pwV6VC\nY5ZEkqkEitS9JEb83ShKfOPVjO688kK5PmwUXQIDAQABAoIBAAK7HKnssWqRHrjI\ns+pGtno6ofiVnoXyTaXE27e+WlwcV3BNUMPdiRJ6HSQAtxifUWJwGqe9GtsrfUuW\n1pVh21Q/lt5xbKUpPIwLWVkCodbVo9qfZacm4JTU7xiv2KdAc/Z24ayKLgqbsLaI\ntBjC3bMqzb6qjtqVzAjrx7QSRTzGSxuzMO3yw3sjlcW3gSt5/Bhj6o4SJS7PUlyU\nezQ5yBsO/34SdpclkOsE53dBTQL/OQnQlzw0CpwjvOWDhq4aR75VhTpjYuqgmL/d\nKZb0UG41Td3kRGj9GeUihp3bFbd4pZo6tuDyf+tq3mTyvZ/ai3odgyoacoSZuE7K\nwHdO7SkCgYEAxleF947IZXjszfMAVZBs07B0z6rRgyRaDmCimR+fd0yLUTgmvZ8r\nbk57912smi9k6go3QZXsaWdhuzQuUJ9pRsduYInNprwH5SNqQmPwNMxghFA6Fmfn\nwrlZNi4c4QSezCPyyuKyF36bZr+OJz2KzpSICRORT34D8nnGu+qPofkCgYEAu7GC\n0NoZePyx7CMvLBhpd29VacWTprM3c9CS/zBGkhbEr4sKEnx4vxgEOnQR3saVKrc8\nyNmRGTI38x+/FD9hMa7y7ZBI7Nx4e/LBZe1aIf3BJt6lsP3VocYnQkea0yYPQM1Y\ne6FC2GLg4gFUFzUrSizBelQH4JTs/ngOUXPP3oUCgYEAt1lbP0DfoWYKykuTiIVt\nBLe/E+XdrbRiB55vUMu510eMFjWpImtMc7jbwgz3LMUZLXzqHZfhJoLqBmszUVY7\ntLFRKK7azAJP7hMx/FN0TuqLYmTjfajpxskeXgZ8rcpenWmx3Ll5Vly0fWQgnce3\nVEZcBr/u+SQNtA28mCQ6SMkCgYEAnIW6/upyxaeNxMvOoeo1wakxxIREzoa0Hrv4\naiFbKKceHPpJSwNMOqgPlqOG544ZhUbLxP9S9n0flXuLAJqeNi2cXqqtdgGh5FOc\nHqEiQih4dC7GZGQ6TK+Pu8E1BxK9M6BLQsZHlWZX/YF4G+Z2FGRgcOA0tX/cZ5W8\n8wYuenUCgYBMmCcbFxuU4yZo+WUOc9Xlq7DGOVI/hZujx7Qar/JVS2/SVB2Ei+OW\nlJjOzAMPYNnBKFqywRTYoNAMsWEww4kpyWiEtBXxeWbVgsqkw2Yt8eXFQ8bltbPE\nEVFHWNJFbgFs1iyZFvumkKVP2r6m4rxtp86WXvyHMr8M8oadHPVGWA==\n-----END RSA PRIVATE KEY-----"
+rs256_kid = "key1"
+insensitive_scopes = ["openid", "profile", "email", "offline_access"]

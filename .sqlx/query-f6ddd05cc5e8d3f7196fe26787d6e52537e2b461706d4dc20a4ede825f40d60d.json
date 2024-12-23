@@ -1,0 +1,78 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select g.*, cl.display_name, cl.privacy_policy_url, cl.tos_url, cl.official from oauth2_grants g inner join oauth2_clients cl on g.client_id = cl.id where g.user_id = $1 order by cl.created_at limit $2 offset $3",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "client_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "user_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "scope",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 4,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 5,
+        "name": "last_used_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 6,
+        "name": "display_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "privacy_policy_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "tos_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "official",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "f6ddd05cc5e8d3f7196fe26787d6e52537e2b461706d4dc20a4ede825f40d60d"
+}

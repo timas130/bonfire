@@ -15,7 +15,8 @@
                 android:id="@+id/viIndicator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:ViewPagerIndicator_pager="@id/vPager"/>
+                app:ViewPagerIndicator_pager="@id/vPager"
+                app:ViewPagerIndicatorViews_offset_left="?attr/actionBarSize"/>
 
         </androidx.appcompat.widget.Toolbar>
 

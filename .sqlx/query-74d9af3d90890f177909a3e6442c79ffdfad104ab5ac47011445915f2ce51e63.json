@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into oauth2_grants (client_id, user_id, scope, last_used_at) values ($1, $2, $3, now()) on conflict (user_id, client_id) do update set scope = merge_arrays(oauth2_grants.scope, excluded.scope), last_used_at = now() returning id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "TextArray"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "74d9af3d90890f177909a3e6442c79ffdfad104ab5ac47011445915f2ce51e63"
+}
