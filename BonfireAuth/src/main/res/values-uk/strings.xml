@@ -72,7 +72,7 @@
     <string name="security_firebase_toast_not_linked">Чи гідний ти знати про неї?</string>
     <string name="security_email_change_title">Змінити електронну пошту</string>
     <string name="security_email_change_new">Нова адреса</string>
-    <string name="cancel">Скасування</string>
+    <string name="cancel">Скасувати</string>
     <string name="security_change_do">Змінити</string>
     <string name="security_password_change_title">Змінити пароль</string>
     <string name="security_password_change_old">Старий пароль</string>
