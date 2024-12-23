@@ -57,7 +57,7 @@
     <string name="poll_results_empty">Схоже, ніхто ще не голосував</string>
     <string name="video_alt">Відео</string>
     <string name="activity_leave">Не брати участі</string>
-    <string name="activity_join">Брати участь</string>
+    <string name="activity_join">Взяти участь</string>
     <string name="poll_limits">Обмеження:</string>
     <string name="poll_limits_duration">До %s</string>
     <string name="poll_limits_level">Рівень %.2f</string>
