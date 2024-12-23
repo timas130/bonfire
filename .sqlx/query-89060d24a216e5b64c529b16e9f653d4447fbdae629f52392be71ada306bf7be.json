@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into oauth2_flows_as (session_id, client_id, grant_id, redirect_uri, raw_redirect_uri, scopes,state, nonce, code_challenge, code_challenge_method, code, authorized_at) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, now())",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8",
+        "Text",
+        "Text",
+        "TextArray",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "89060d24a216e5b64c529b16e9f653d4447fbdae629f52392be71ada306bf7be"
+}

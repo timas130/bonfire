@@ -183,11 +183,12 @@ impl AuthServer {
 
                 sqlx::query_scalar!(
                     "insert into oauth2_flows_as \
-                     (session_id, client_id, redirect_uri, raw_redirect_uri, scopes, state, \
-                      nonce, code_challenge, code_challenge_method, code, authorized_at) \
-                     values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, now())",
+                     (session_id, client_id, grant_id, redirect_uri, raw_redirect_uri, scopes,\
+                      state, nonce, code_challenge, code_challenge_method, code, authorized_at) \
+                     values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, now())",
                     session_id,
                     client.id,
+                    grant.id,
                     redirect_uri,
                     raw_redirect_uri,
                     scopes.as_slice(),
