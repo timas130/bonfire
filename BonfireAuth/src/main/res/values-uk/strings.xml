@@ -31,7 +31,7 @@
     <string name="verify_email_title">Підтвердіть свою електронну пошту</string>
     <string name="error_try_again_later">Ви це нещодавно робили. Повторіть пізніше.</string>
     <string name="start_decline">Я відмовляюсь</string>
-    <string name="start_consent_requirement">Ви повинні прийняти політики, щоб продовжити.</string>
+    <string name="start_consent_requirement">Ви повинні прийняти умови, щоб продовжити.</string>
     <string name="start_consent_title">Натискаючи «Я приймаю» далі, ви приймаєте такі умови:</string>
     <string name="error_invalid_email">Це не схоже на електронну пошту.</string>
     <string name="error_invalid_password">Цей пароль не відповідає вимогам.</string>
