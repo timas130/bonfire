@@ -38,28 +38,13 @@ class EAccountsLogin : RAccountsLogin("", 0, 0, 0) {
         } catch (e: Exception) {
         }
 
-        val serverTranslateHash = ControllerServerTranslates.getHash(languageId)
-        val translateMap = if (serverTranslateHash == translateMapHash || translateMapHash == 0) {
-            hashMapOf()
-        } else {
-            ControllerServerTranslates.getMap(languageId)
-        }
-
-        val serverTranslateHashEng = ControllerServerTranslates.getHash(API.LANGUAGE_EN)
-        val translateMapEng = if (serverTranslateHashEng == translateMapHashEng || translateMapHashEng == 0) {
-            hashMapOf()
-        } else {
-            ControllerServerTranslates.getMap(API.LANGUAGE_EN)
-        }
-
         RustDailyTask.checkIn(apiAccount.id)
 
         return Response(
                 API.VERSION, API.SUPPORTED_VERSION,
                 arrayOf(),
                 API.PROTOADMINS, account, accountSettings, apiAccount.tag_s_1.isNotEmpty(),
-                languageId, translateMap, translateMapEng, serverTranslateHash,
-                serverTranslateHashEng
+                languageId, hashMapOf(), hashMapOf(), 0, 0
         )
     }
 

@@ -1,10 +1,8 @@
 package com.dzen.campfire.server.controllers
 
 import com.dzen.campfire.api.API
-import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.server.tables.TPublications
-import com.dzen.campfire.server.tables.TTranslates
 import com.sup.dev.java.libs.debug.info
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsDate
@@ -15,7 +13,6 @@ object ControllerGarbage {
 
     fun start() {
         //removeDeep()
-        removeLostTranslates()
         startAfterDelay()
 
        /* val publicationsIds = Database.select("xxx", SqlQuerySelect(TPublications.NAME, TPublications.id)
@@ -74,22 +71,6 @@ object ControllerGarbage {
    //     Database.remove("ControllerGarbage.clearDebugStatistic TYPE_ERROR", SqlQueryRemove(TStatistic.NAME).where(TStatistic.statistic_type, "=", ControllerStatistic.TYPE_ERROR))
    //     Database.remove("ControllerGarbage.clearDebugStatistic TYPE_QUERY", SqlQueryRemove(TStatistic.NAME).where(TStatistic.statistic_type, "=", ControllerStatistic.TYPE_QUERY))
    //     Database.remove("ControllerGarbage.clearDebugStatistic TYPE_REQUEST", SqlQueryRemove(TStatistic.NAME).where(TStatistic.statistic_type, "=", ControllerStatistic.TYPE_REQUEST))
-    }
-
-    fun removeLostTranslates(){
-        val v = Database.select("ControllerGarbage.removeLostTranslates.select", SqlQuerySelect(TTranslates.NAME, TTranslates.translate_key)
-                .setDistinct(true)
-        )
-        val list = ArrayList<String>()
-        while (v.hasNext()){
-            val key:String = v.next()
-            if(!API_TRANSLATE.map.containsKey(key)) list.add(key)
-        }
-        for(k in list){
-            Database.remove("ControllerGarbage.removeLostTranslates.remove", SqlQueryRemove(TTranslates.NAME)
-                    .whereValue(TTranslates.translate_key, "=", k)
-            )
-        }
     }
 
     fun removeAllBlockedPublications() {
