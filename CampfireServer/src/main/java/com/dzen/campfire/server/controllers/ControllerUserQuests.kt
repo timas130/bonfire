@@ -71,20 +71,21 @@ object ControllerUserQuests {
         return true
     }
 
-    private fun checkButton(button: QuestButton, allParts: Array<QuestPart>? = null): Boolean {
+    private fun checkButton(details: QuestDetails, button: QuestButton, allParts: Array<QuestPart>? = null): Boolean {
         if (button.label.isEmpty()) return false
         if (button.label.length > API.QUEST_BUTTON_LABEL_MAX_L) return false
         if (!API.QUEST_BUTTON_COLORS.contains(button.color)) return false
         if (button.jumpToId < -2) return false
+        if (button.conditionVar != 0L && details.variablesMap!![button.conditionVar] == null) return false
         allParts?.let {
             if (button.jumpToId >= 0 && ! allParts.any { it.id == button.jumpToId }) return false
         }
         return true
     }
-    private fun checkButtons(buttons: Array<QuestButton>, allParts: Array<QuestPart>? = null): Boolean {
+    private fun checkButtons(details: QuestDetails, buttons: Array<QuestButton>, allParts: Array<QuestPart>? = null): Boolean {
         if (buttons.isEmpty()) return false
         if (buttons.size > API.QUEST_TEXT_BUTTONS_MAX) return false
-        for (button in buttons) if (!checkButton(button, allParts)) return false
+        for (button in buttons) if (!checkButton(details, button, allParts)) return false
         return true
     }
 
@@ -195,7 +196,7 @@ object ControllerUserQuests {
                 if (part.title.length > API.QUEST_TEXT_TITLE_MAX_L) return false
                 if (part.text.length > API.QUEST_TEXT_TEXT_MAX_L) return false
                 if (!checkInputs(details, part.inputs)) return false
-                if (!checkButtons(part.buttons, allParts)) return false
+                if (!checkButtons(details, part.buttons, allParts)) return false
                 if (!checkEffects(part.effects)) return false
             }
             is QuestPartAction -> {

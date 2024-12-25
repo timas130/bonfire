@@ -19,6 +19,8 @@ class SplashQuestButton(
 ) : SplashField(R.layout.splash_quest_input_button) {
     private val vSelect: SettingsSelection = view.findViewById(R.id.vSelect)
     private val vDefaultValue: SettingsField = view.findViewById(R.id.vDefaultValue)
+    private val vDefaultValueBool: SettingsCheckBox = findViewById(R.id.vDefaultValueBool)
+    private val vVariable: SettingsVariableSelector = findViewById(R.id.vVariable)
     private val vPartSelector: SettingsPartSelector = findViewById(R.id.vPartSelector)
 
     init {
@@ -40,9 +42,12 @@ class SplashQuestButton(
         vPartSelector.enableNextPart = true
         vPartSelector.visibility = View.VISIBLE
 
-        findViewById<SettingsField>(R.id.vDefaultValue).visibility = View.GONE
-        findViewById<SettingsCheckBox>(R.id.vDefaultValueBool).visibility = View.GONE
-        findViewById<SettingsVariableSelector>(R.id.vVariable).visibility = View.GONE
+        vVariable.setTitle(t(API_TRANSLATE.quests_edit_text_button_variable_condition))
+        vVariable.setDetails(partContainer.getDetails())
+        vVariable.showNone = true
+
+        vDefaultValue.visibility = View.GONE
+        vDefaultValueBool.visibility = View.GONE
     }
 
     fun setOnEnter(s: String?, onEnter: (QuestButton) -> Unit): SplashQuestButton {
@@ -69,6 +74,8 @@ class SplashQuestButton(
                 return@setOnClickListener
             }
 
+            button.conditionVar = vVariable.selected?.id ?: 0L
+
             hide()
             onEnter(button)
         }
@@ -80,7 +87,7 @@ class SplashQuestButton(
         setText(input.label)
         vSelect.setCurrentIndex((input.color - 1).toInt()) // it's fine as long as the guidelines in API.kt are followed
         vPartSelector.selectedId = input.jumpToId
-        
+
         return this
     }
 }

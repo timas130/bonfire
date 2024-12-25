@@ -35,6 +35,9 @@ abstract class CardQuestPart(
         }
     }
 
+    protected fun getVarName(id: Long): String =
+        container.getDetails().variablesMap!![id]?.devName ?: "<???>"
+
     var editMode = true
 
     override fun bindView(view: View) {

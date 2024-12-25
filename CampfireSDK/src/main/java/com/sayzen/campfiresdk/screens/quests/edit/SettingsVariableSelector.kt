@@ -14,7 +14,7 @@ import com.sup.dev.android.views.settings.Settings
 import com.sup.dev.android.views.splash.SplashMenu
 import com.sup.dev.java.libs.eventBus.EventBus
 
-class SettingsVariableSelector constructor(context: Context, attrs: AttributeSet? = null) : Settings(context, attrs) {
+class SettingsVariableSelector(context: Context, attrs: AttributeSet? = null) : Settings(context, attrs) {
     private val eventBus = EventBus
         .subscribe(EventQuestChanged::class) { ev ->
             if (ev.quest.id == details.id) {
@@ -58,9 +58,16 @@ class SettingsVariableSelector constructor(context: Context, attrs: AttributeSet
     }
 
     var showLiteral = false
+    var showNone = false
 
     private fun openSelector() {
         SplashMenu().run {
+            if (showNone) {
+                add(t(API_TRANSLATE.quests_enter_null)) {
+                    selected = null
+                    onSelected(selected)
+                }
+            }
             for (variable in details.variables) {
                 add(variable.devName) {
                     selected = variable

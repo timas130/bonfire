@@ -8,11 +8,13 @@ class QuestButton : JsonParsable {
     var label = ""
     var color = API.QUEST_BUTTON_COLOR_DEFAULT
     var jumpToId = 0L // -1 => finish quest, -2 => next part
+    var conditionVar = 0L
 
     override fun json(inp: Boolean, json: Json): Json {
         label = json.m(inp, "label", label)
         color = json.m(inp, "color", color)
         jumpToId = json.m(inp, "jumpToId", jumpToId)
+        conditionVar = json.m(inp, "conditionVar", conditionVar)
         return json
     }
 }

@@ -39,7 +39,18 @@ class CardQuestPartText(
             desc.append("\n\n")
             desc.append(part.buttons.joinToString("\n") {
                 val dest = t(API_TRANSLATE.quests_edit_text_button_jump_to, jumpToIdToString(it.jumpToId, container))
-                "${t(API_TRANSLATE.quests_edit_text_button)}: ${it.label} ($dest)"
+                buildString {
+                    append(t(API_TRANSLATE.quests_edit_text_button_text))
+                    append(": ")
+                    append(it.label)
+                    append(" (")
+                    append(dest)
+                    append(")")
+                    if (it.conditionVar != 0L) {
+                        append(" ")
+                        append(t(API_TRANSLATE.quests_edit_text_button_if, getVarName(it.conditionVar)))
+                    }
+                }
             })
         }
         if (part.effects.isNotEmpty()) {
