@@ -7,7 +7,6 @@ import com.dzen.campfire.R
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.images.ImageRef
-import com.dzen.campfire.api.models.translate.Translate
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
@@ -16,8 +15,8 @@ import com.sup.dev.android.views.views.ViewButton
 
 class Hello_Info(
         private val image: ImageRef,
-        private val title: Translate,
-        private val text: Translate,
+        private val title: Long,
+        private val text: Long,
         val screen: SCampfireHello
 ) {
 

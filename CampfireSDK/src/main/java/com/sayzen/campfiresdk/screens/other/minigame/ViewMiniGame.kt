@@ -249,7 +249,7 @@ class ViewMiniGame @JvmOverloads constructor(
         val outsideHLines = getOutsideHLines()
 
         if (pointsCount == 0) {
-            setCell_X(ToolsCollections.random(arrayOf(0, 4, 4, 2, 6, 8)))
+            setCell_X(arrayOf(0, 4, 4, 2, 6, 8).random())
             if (last != lastMoveIndex) return
         }
         if (pointsCount == 2 && plr(4) == PLAYER_ROBOT) {

@@ -3,7 +3,6 @@ package com.dzen.campfire.server.controllers
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.admins.*
 import com.dzen.campfire.server.admin_votes.*
-import com.sup.dev.java.tools.ToolsCollections
 
 object ControllerAdminVote {
 
@@ -28,7 +27,9 @@ object ControllerAdminVote {
             for(m in map.values)
                 if(!m.votes.contains(accountId))
                     list.add(m)
-            if(list.isNotEmpty()) return ToolsCollections.random(list)
+            if (list.isNotEmpty()) {
+                return list.random()
+            }
         }
         return null
     }

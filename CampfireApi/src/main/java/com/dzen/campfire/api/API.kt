@@ -25,6 +25,7 @@ class API(
         const val S3_ROOT = "https://data.bonfire.moe/bonfire"
         const val MELIOR_ROOT = "https://api.bonfire.moe"
         const val SERV_ROOT = "https://cf2.bonfire.moe"
+        const val TL_ROOT = "https://tlp.bonfire.moe"
 
         const val DOMEN = "https://bonfire.moe/r/"
         const val DOMEN_DL = "bf://link/"
@@ -57,7 +58,6 @@ class API(
         val LINK_RULES_USER = Link("app-rules", true)
         val LINK_RULES_MODER = Link("app-rules-moderator", true)
         val LINK_RULES_GALLERY = Link("app-gallery", true)
-        val LINK_TRANSLATES= Link("app-translates", true)
         val LINK_CREATORS = Link("app-creators", true)
         val LINK_ABOUT = Link("app-about", true)
         val LINK_DONATE = Link("app-donate", true)
@@ -113,7 +113,6 @@ class API(
                 LINK_BOX_WITH_GOOSE,
                 LINK_BOX_WITH_CONFETTI,
                 LINK_RULES_USER,
-                LINK_TRANSLATES,
                 LINK_RULES_MODER,
                 LINK_RULES_GALLERY,
                 LINK_CREATORS,

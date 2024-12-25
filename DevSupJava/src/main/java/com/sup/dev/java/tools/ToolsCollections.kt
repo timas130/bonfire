@@ -79,14 +79,6 @@ object ToolsCollections {
         return newArray
     }
 
-    inline fun <K> random(array: ArrayList<K>): K {
-        return array[ToolsMath.randomInt(0, array.size - 1)]
-    }
-
-    inline fun <reified K> random(array: Array<K>): K {
-        return array[ToolsMath.randomInt(0, array.size - 1)]
-    }
-
     inline fun <reified K> expand(array: Array<K>, size: Int, filler: K): Array<K> {
         return Array(size) {
             if (array.size > it) array[it]

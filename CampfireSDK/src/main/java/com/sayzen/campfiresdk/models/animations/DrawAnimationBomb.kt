@@ -5,10 +5,8 @@ import com.sup.dev.android.R
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.views.draw_animations.DrawAnimation
-import com.sup.dev.java.tools.ToolsCollections
 import com.sup.dev.java.tools.ToolsColor
 import com.sup.dev.java.tools.ToolsMath
-import kotlin.collections.ArrayList
 
 class DrawAnimationBomb : DrawAnimation() {
 
@@ -93,34 +91,42 @@ class DrawAnimationBomb : DrawAnimation() {
 
     }
 
-    private inner class Particle{
+    private inner class Particle {
 
-        val color = ToolsCollections.random(colors)
-        var x = w/2f
-        var y = h/2f
+        val color = colors.random()
+        var x = w / 2f
+        var y = h / 2f
         var alpha = 255f
         var alphaAxe = 20f
         var angle = ToolsMath.randomFloat(0f, 360f)
-        var speed =  ToolsMath.randomFloat(DP*1, DP*8)
-        var xAxe = ToolsMath.getXByAngle(angle) *speed
+        var speed = ToolsMath.randomFloat(DP * 1, DP * 8)
+        var xAxe = ToolsMath.getXByAngle(angle) * speed
         var yAxe = ToolsMath.getYByAngle(angle) * speed
-        var r = ToolsMath.randomFloat(DP*4, DP*10)
+        var r = ToolsMath.randomFloat(DP * 4, DP * 10)
 
-        fun update(delta: Float):Boolean{
+        fun update(delta: Float): Boolean {
             alpha -= alphaAxe * delta
             x += xAxe * delta * 20
             y += yAxe * delta * 20
-            if(alpha < 0) alpha = 0f
+            if (alpha < 0) alpha = 0f
 
-            if(x > w) { xAxe *= -1f; x = w}
-            if(y > h){ yAxe *= -1f; y = h}
-            if(x < 0){ xAxe *= -1f; x = 0f}
-            if(y < 0){ yAxe *= -1f; y = 0f}
+            if (x > w) {
+                xAxe *= -1f; x = w
+            }
+            if (y > h) {
+                yAxe *= -1f; y = h
+            }
+            if (x < 0) {
+                xAxe *= -1f; x = 0f
+            }
+            if (y < 0) {
+                yAxe *= -1f; y = 0f
+            }
 
             return alpha > 0
         }
 
-        fun draw(canvas: Canvas){
+        fun draw(canvas: Canvas) {
             paint.color = ToolsColor.setAlpha(alpha.toInt(), color)
             canvas.drawCircle(x, y, r, paint)
         }

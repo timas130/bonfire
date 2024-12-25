@@ -31,7 +31,6 @@ import com.sayzen.campfiresdk.screens.other.rules.SRulesUser
 import com.sayzen.campfiresdk.screens.post.search.SPostsSearch
 import com.sayzen.campfiresdk.screens.post.view.SPost
 import com.sayzen.campfiresdk.screens.quests.SQuest
-import com.sayzen.campfiresdk.screens.translates.STranslates
 import com.sayzen.campfiresdk.screens.wiki.SWikiArticleView
 import com.sayzen.campfiresdk.screens.wiki.SWikiList
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
@@ -86,7 +85,6 @@ object ControllerLinks {
 
                 API.LINK_RULES_MODER.link -> Navigator.to(SRulesModerators())
                 API.LINK_RULES_USER.link -> Navigator.to(SRulesUser())
-                API.LINK_TRANSLATES.link -> Navigator.to(STranslates())
                 API.LINK_RULES_GALLERY.link -> Navigator.to(SGallery())
                 API.LINK_CREATORS.link -> Navigator.to(SAboutCreators())
                 API.LINK_BOX_WITH_FIREWORKS.link -> {
@@ -204,7 +202,6 @@ object ControllerLinks {
                 API.LINK_DONATE.link -> true
                 API.LINK_DONATE_MAKE.link -> true
                 API.LINK_RULES_USER.link -> true
-                API.LINK_TRANSLATES.link -> true
                 API.LINK_RULES_MODER.link -> true
                 API.LINK_RULES_GALLERY.link -> true
                 API.LINK_CREATORS.link -> true

@@ -43,7 +43,7 @@ class SRulesUser(
         for (i in CampfireConstants.RULES_USER.indices) addCard(i + 1, CampfireConstants.RULES_USER[i])
     }
 
-    private fun addTitle(num: Int?, text:Translate) {
+    private fun addTitle(num: Int?, text: Long) {
         val view: View = ToolsView.inflate(R.layout.view_card_rules)
         val vText: TextView = view.findViewById(R.id.vText)
         val vNum: TextView = view.findViewById(R.id.vNum)

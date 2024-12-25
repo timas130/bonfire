@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.annotation.WorkerThread
 import androidx.core.view.WindowCompat
 import com.dzen.campfire.R
-import com.dzen.campfire.api.API
+import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.requests.accounts.RAccountsAddNotificationsToken
@@ -214,9 +214,10 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
         setState(State.PROGRESS)
         val languageId = ControllerApi.getLanguageId()
         RAccountsLogin(
-            ControllerNotifications.token, languageId,
-            ControllerTranslate.getSavedHash(languageId),
-            ControllerTranslate.getSavedHash(API.LANGUAGE_EN)
+            ControllerNotifications.token,
+            languageId,
+            0,
+            0,
         ).onComplete { r ->
             ControllerABParams.set(r.ABParams)
             ControllerApi.setVersion(r.version, r.supported)
@@ -228,8 +229,6 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
                     Navigator.set(SIntroConnection())
                 }))
             } else {
-                ControllerTranslate.addMap(r.translate_language_id, r.translate_map, r.translateMapHash)
-                ControllerTranslate.addMap(API.LANGUAGE_EN, r.translate_map_eng, r.translateMapHashEng)
                 ControllerSettings.setSettings(r.account!!.id, r.settings)
                 ControllerSettings.feedCategories = feedCategories
                 ControllerApi.setServerTime(r.serverTime)
@@ -319,10 +318,16 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
             ?: arrayOf()
         val activeBackground = data.find { it.isActive() } ?: return
 
-        val title = ControllerTranslate.getMyMap()?.get(activeBackground.titleTranslation)?.text
-            ?: activeBackground.titleTranslation
-        val subtitle = ControllerTranslate.getMyMap()?.get(activeBackground.subtitleTranslation)?.text
-            ?: activeBackground.subtitleTranslation
+        val title = if (API_TRANSLATE.keyToId.containsKey(activeBackground.titleTranslation)) {
+            t(API_TRANSLATE.keyToId[activeBackground.titleTranslation]!!)
+        } else {
+            activeBackground.titleTranslation
+        }
+        val subtitle = if (API_TRANSLATE.keyToId.containsKey(activeBackground.subtitleTranslation)) {
+            t(API_TRANSLATE.keyToId[activeBackground.subtitleTranslation]!!)
+        } else {
+            activeBackground.subtitleTranslation
+        }
 
         val imageLink = ImageLoader.load(activeBackground.image)
         ImageLoader.load(

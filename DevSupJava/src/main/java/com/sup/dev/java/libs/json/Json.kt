@@ -30,6 +30,10 @@ class Json {
         this.jsonObject = jsonObject
     }
 
+    constructor(map: Map<String, Any?>) {
+        this.jsonObject = JSONObject(map)
+    }
+
     //
     //  Methods
     //
@@ -82,7 +86,7 @@ class Json {
         return toString().toByteArray()
     }
 
-    fun getKeys() = jsonObject?.keys?: emptySet<Any>()
+    fun getKeys() = jsonObject?.keys ?: emptySet<String>()
 
     //
     //  Magic

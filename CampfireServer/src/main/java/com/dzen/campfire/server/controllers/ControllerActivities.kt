@@ -212,7 +212,7 @@ object ControllerActivities {
         )
         if (v.hasNext()) {
             val array = Array(v.rowsCount) { v.next<Long>() }
-            val accountId = ToolsCollections.random(array)
+            val accountId = array.random()
             makeCurrentMember(accountId, userActivity)
             return accountId
         } else {

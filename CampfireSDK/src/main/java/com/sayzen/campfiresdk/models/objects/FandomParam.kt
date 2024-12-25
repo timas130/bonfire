@@ -1,11 +1,10 @@
 package com.sayzen.campfiresdk.models.objects
 
-import com.dzen.campfire.api.models.translate.Translate
 import com.sayzen.campfiresdk.controllers.t
 
 class FandomParam(
         val index: Long,
-        private val mame: Translate
+        private val mame: Long,
 ) {
 
     val name: String

@@ -2,15 +2,13 @@ package com.sayzen.campfiresdk.models.splashs
 
 import android.widget.TextView
 import com.dzen.campfire.api.API_TRANSLATE
-import com.dzen.campfire.api.models.translate.Translate
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
-import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.java.tools.ToolsThreads
 
-class SplashRules(titileText: Translate, rules: Array<Translate>) : Splash(R.layout.splash_rules) {
+class SplashRules(titileText: Long, rules: Array<Long>) : Splash(R.layout.splash_rules) {
 
     private val maxTime = 10
 

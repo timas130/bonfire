@@ -5,11 +5,9 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.AchievementInfo
 import com.dzen.campfire.api.models.images.ImageRef
-import com.dzen.campfire.api.models.translate.Translate
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.objects.*
-import com.sup.dev.java.tools.ToolsCollections
 import com.sup.dev.java.tools.ToolsText
 
 object CampfireConstants {
@@ -23,8 +21,8 @@ object CampfireConstants {
 
     const val CHECK_RULES_ACCEPTED = "CHECK_RULES_ACCEPTED"
 
-    private val RULES_USER_BODIES = API_TRANSLATE.getAllSame("rules_users_%s", 0)
-    private val RULES_USER_TITLES = API_TRANSLATE.getAllSame("rules_users_%s_title", RULES_USER_BODIES.size)
+    private val RULES_USER_BODIES = API_TRANSLATE.getAllSame(Regex("^rules_users_\\d+$"))
+    private val RULES_USER_TITLES = API_TRANSLATE.getAllSame(Regex("^rules_users_\\d+_title$"))
     val RULES_USER = Array(RULES_USER_TITLES.size) {
         return@Array Rule(RULES_USER_TITLES[it], RULES_USER_BODIES[it])
     }
@@ -771,14 +769,14 @@ object CampfireConstants {
         }
     }
 
-    val HELLO_TEXT = API_TRANSLATE.getAllSame("campfire_hello_", 1)
+    val HELLO_TEXT = API_TRANSLATE.getAllSame(Regex("^campfire_hello_\\d+$"))
 
     fun randomAccountText(): String {
-        return t(ToolsCollections.random(API_TRANSLATE.getAllSame("profile_subtitle_text")))
+        return t(API_TRANSLATE.getAllSame("profile_subtitle_text").random())
     }
 
     fun randomFeedText(): String {
-        return t(ToolsCollections.random(API_TRANSLATE.getAllSame("feed_loading_")))
+        return t(API_TRANSLATE.getAllSame("feed_loading_").random())
     }
 
     private val commentPlaceholders = arrayOf(
@@ -793,7 +791,7 @@ object CampfireConstants {
         API_TRANSLATE.comment_placeholder_9,
     )
 
-    fun randomCommentPlaceholder(): Translate {
-        return ToolsCollections.random(commentPlaceholders)
+    fun randomCommentPlaceholder(): Long {
+        return commentPlaceholders.random()
     }
 }
