@@ -5,8 +5,7 @@ import android.widget.Switch
 import android.widget.TextView
 import com.dzen.campfire.R
 import com.dzen.campfire.api.API_TRANSLATE
-import com.sayzen.campfiresdk.controllers.ControllerTranslate.t
-import com.sup.dev.android.tools.ToolsResources
+import com.sayzen.campfiresdk.controllers.t
 import com.sup.dev.android.views.cards.Card
 
 class CardFiltersScreen(

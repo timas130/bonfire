@@ -52,14 +52,6 @@
                 app:Settings_icon_background="@color/purple_700"
                 app:Settings_lineVisible="false"/>
 
-            <com.sup.dev.android.views.settings.Settings
-                android:id="@+id/vTranslates"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:Settings_icon="@drawable/ic_translate_white_24dp"
-                app:Settings_icon_background="@color/blue_600"
-                app:Settings_lineVisible="false"/>
-
             <com.sup.dev.android.views.settings.SettingsTitle
                 android:id="@+id/vTitleAdmins"
                 android:layout_width="match_parent"
@@ -105,14 +97,6 @@
                 app:Settings_icon="@drawable/ic_security_white_24dp"
                 app:Settings_lineVisible="false"
                 app:Settings_icon_background="@color/orange_500" />
-
-            <com.sup.dev.android.views.settings.Settings
-                android:id="@+id/vTranslatesModeration"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:Settings_icon="@drawable/ic_translate_white_24dp"
-                app:Settings_lineVisible="false"
-                app:Settings_icon_background="@color/blue_800" />
 
             <com.sup.dev.android.views.settings.SettingsTitle
                 android:id="@+id/vTitleProtoadmins"

@@ -5,7 +5,10 @@ import android.view.ViewGroup
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.controllers.*
+import com.sayzen.campfiresdk.controllers.ControllerActivities
+import com.sayzen.campfiresdk.controllers.ControllerApi
+import com.sayzen.campfiresdk.controllers.ControllerHoliday
+import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.activities.EventActivitiesAdminCountChanged
 import com.sayzen.campfiresdk.screens.activities.administration.api_errors.SAdministrationErrors
 import com.sayzen.campfiresdk.screens.activities.administration.api_query.SAdministrationQuery
@@ -20,8 +23,6 @@ import com.sayzen.campfiresdk.screens.activities.support.SDonate
 import com.sayzen.campfiresdk.screens.activities.user_activities.SRelayRacesList
 import com.sayzen.campfiresdk.screens.administation.SAdministrationDeepBlocked
 import com.sayzen.campfiresdk.screens.fandoms.rubrics.SRubricsList
-import com.sayzen.campfiresdk.screens.translates.STranslateModeration
-import com.sayzen.campfiresdk.screens.translates.STranslates
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
@@ -50,8 +51,6 @@ class SActivities : Screen(R.layout.screen_activities) {
     private val vDebug: Settings = findViewById(R.id.vDebug)
     private val vDeepBlocks: Settings = findViewById(R.id.vDeepBlocks)
     private val vQuest: Settings = findViewById(R.id.vQuest)
-    private val vTranslates: Settings = findViewById(R.id.vTranslates)
-    private val vTranslatesModeration: Settings = findViewById(R.id.vTranslatesModeration)
     private val vAdminVotes: Settings = findViewById(R.id.vAdminVotes)
 
     private val vRelayRaceChip = ViewChip.instanceMini(vRelayRace, "")
@@ -60,8 +59,6 @@ class SActivities : Screen(R.layout.screen_activities) {
     private val vUserReportsChip = ViewChip.instanceMini(vUserReports, "")
     private val vReportsChip = ViewChip.instanceMini(vReports, "")
     private val vBlockChip = ViewChip.instanceMini(vBlock, "")
-    private val vTranslatesChip = ViewChip.instanceMini(vTranslates, "")
-    private val vTranslatesModerationChip = ViewChip.instanceMini(vTranslatesModeration, "")
     private val vAdminVotesChip = ViewChip.instanceMini(vAdminVotes, "")
 
     init {
@@ -84,8 +81,6 @@ class SActivities : Screen(R.layout.screen_activities) {
         vTitleAdmins.setTitle(t(API_TRANSLATE.app_admin))
         vBlock.setTitle(t(API_TRANSLATE.app_block_title))
         vTitleProtoadmins.setTitle(t(API_TRANSLATE.app_protoadmin))
-        vTranslates.setTitle(t(API_TRANSLATE.app_translates))
-        vTranslatesModeration.setTitle(t(API_TRANSLATE.translates_title_translate_moderation))
         vAdminVotes.setTitle(t(API_TRANSLATE.translates_title_administration))
 
         vQuest.setOnClickListener { Navigator.to(SQuestsList()) }
@@ -101,8 +96,6 @@ class SActivities : Screen(R.layout.screen_activities) {
         vSupport.setOnClickListener { SDonate.instance(Navigator.TO) }
         vDebug.setOnClickListener { Navigator.to(SQuestsList()) }
         vDeepBlocks.setOnClickListener { Navigator.to(SAdministrationDeepBlocked(0)) }
-        vTranslates.setOnClickListener { Navigator.to(STranslates()) }
-        vTranslatesModeration.setOnClickListener { Navigator.to(STranslateModeration()) }
         vAdminVotes.setOnClickListener {  Navigator.to(SAdminVotes())  }
 
         if(ControllerApi.getLanguage().code != "ru" || !ControllerHoliday.isNewYear()) vQuest.visibility = View.GONE
@@ -129,8 +122,6 @@ class SActivities : Screen(R.layout.screen_activities) {
         vUserReports.setSubView(vUserReportsChip)
         vReports.setSubView(vReportsChip)
         vBlock.setSubView(vBlockChip)
-        vTranslates.setSubView(vTranslatesChip)
-        vTranslatesModeration.setSubView(vTranslatesModerationChip)
         vAdminVotes.setSubView(vAdminVotesChip)
 
         if (!ControllerApi.can(API.LVL_ADMIN_BAN)) {
@@ -172,22 +163,6 @@ class SActivities : Screen(R.layout.screen_activities) {
         } else {
             vBlockChip.visibility = View.VISIBLE
         }
-
-        if (!ControllerApi.can(API.LVL_MODERATOR_TRANSLATE) && ControllerEffects.get(API.EFFECT_INDEX_TRANSLATOR) == null) {
-            vTranslates.setSubtitle(t(API_TRANSLATE.activities_low_lvl) + ". (${t(API_TRANSLATE.app_level)} ${API.LVL_MODERATOR_TRANSLATE.lvl/100f}, ${t(API_TRANSLATE.app_karma)} ${API.LVL_MODERATOR_TRANSLATE.karmaCount/100})")
-            vTranslatesChip.visibility = View.GONE
-        } else {
-            vTranslatesChip.visibility = View.VISIBLE
-        }
-
-
-        if (!ControllerApi.can(API.LVL_ADMIN_TRANSLATE_MODERATOR)) {
-            vTranslatesModeration.isEnabled = false
-            vTranslatesModeration.setSubtitle(t(API_TRANSLATE.activities_low_lvl) + ". (${t(API_TRANSLATE.app_level)} ${API.LVL_ADMIN_TRANSLATE_MODERATOR.lvl/100f}, ${t(API_TRANSLATE.app_karma)} ${API.LVL_ADMIN_TRANSLATE_MODERATOR.karmaCount/100})")
-            vTranslatesModerationChip.visibility = View.GONE
-        } else {
-            vTranslatesModerationChip.visibility = View.VISIBLE
-        }
     }
 
     override fun onResume() {
@@ -203,8 +178,6 @@ class SActivities : Screen(R.layout.screen_activities) {
             if (vUserReportsChip.visibility == View.VISIBLE) vUserReportsChip.text = "-"
             if (vReportsChip.visibility == View.VISIBLE) vReportsChip.text = "-"
             if (vBlockChip.visibility == View.VISIBLE) vBlockChip.text = "-"
-            if (vTranslatesChip.visibility == View.VISIBLE) vTranslatesChip.text = "-"
-            if (vTranslatesModerationChip.visibility == View.VISIBLE) vTranslatesModerationChip.text = "-"
             if (vAdminVotesChip.visibility == View.VISIBLE) vAdminVotesChip.text = "-"
         } else {
             vRelayRaceChip.text = "${if(ControllerActivities.getRelayRacesCount() == 0L) "" else ControllerActivities.getRelayRacesCount()}"
@@ -213,11 +186,7 @@ class SActivities : Screen(R.layout.screen_activities) {
             if (vUserReportsChip.visibility == View.VISIBLE) vUserReportsChip.text = "${ControllerActivities.getReportsUserCount()}"
             if (vReportsChip.visibility == View.VISIBLE) vReportsChip.text = "${ControllerActivities.getReportsCount()}"
             if (vBlockChip.visibility == View.VISIBLE) vBlockChip.text = "${ControllerActivities.getBlocksCount()}"
-            if (vTranslatesChip.visibility == View.VISIBLE) vTranslatesChip.text = "${ControllerActivities.getTranslatesCount()}"
-            if (vTranslatesModerationChip.visibility == View.VISIBLE) vTranslatesModerationChip.text = "${ControllerActivities.getTranslatesModerationCount()}"
             if (vAdminVotesChip.visibility == View.VISIBLE) vAdminVotesChip.text = "${ControllerActivities.getAdminVoteCount()}"
         }
     }
-
-
 }

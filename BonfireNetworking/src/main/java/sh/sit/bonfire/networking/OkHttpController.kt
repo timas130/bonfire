@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 
 object OkHttpController {
     fun getClient(
-        @Suppress("UNUSED_PARAMETER") context: Context,
+        context: Context,
         builderHook: OkHttpClient.Builder.() -> Unit = {}
     ): OkHttpClient {
         val userAgent = buildUserAgent(context)

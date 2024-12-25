@@ -5,7 +5,6 @@ import com.dzen.campfire.R
 import com.dzen.campfire.api.API_TRANSLATE
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.t
-import com.sayzen.campfiresdk.screens.translates.STranslates
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsIntent

@@ -116,7 +116,7 @@ class SCampfireHello(
             ControllerSettings.rulesIsShowed = true
 
             ControllerSettings.helloIsShowed = true
-            val text_1 = t(ToolsCollections.random(CampfireConstants.HELLO_TEXT), "@" + ControllerApi.account.getName())
+            val text_1 = t(CampfireConstants.HELLO_TEXT.random(), "@" + ControllerApi.account.getName())
             val text_2 = "(${t(API_TRANSLATE.campfire_hello_annotation)})"
             RProjectMakeHelloPost(text_1, true, text_2, ControllerApi.getLanguageId()).send(api)
         }

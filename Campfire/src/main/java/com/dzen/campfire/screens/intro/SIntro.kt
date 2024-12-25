@@ -5,7 +5,7 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.app.App
 import com.sayzen.campfiresdk.compose.auth.AuthStartScreen
 import com.sayzen.campfiresdk.compose.auth.AuthenticatedConsentScreen
-import com.sayzen.campfiresdk.controllers.ControllerTranslate.t
+import com.sayzen.campfiresdk.controllers.t
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources

@@ -7,8 +7,6 @@ import com.sayzen.campfiresdk.controllers.ControllerNotifications
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.controllers.tCap
-import com.sayzen.campfiresdk.screens.translates.STranslates
-import com.sup.dev.android.libs.screens.navigator.Navigator
 
 public class NotificationTranslatesAcceptedParser(override val n: NotificationTranslatesAccepted) : ControllerNotifications.Parser(n) {
     override fun post(icon: Int, intent: Intent, text: String, title: String, tag: String, sound: Boolean) {
@@ -26,7 +24,6 @@ public class NotificationTranslatesAcceptedParser(override val n: NotificationTr
     override fun canShow() = ControllerSettings.notificationsOther
 
     override fun doAction() {
-        Navigator.to(STranslates())
     }
 
 }

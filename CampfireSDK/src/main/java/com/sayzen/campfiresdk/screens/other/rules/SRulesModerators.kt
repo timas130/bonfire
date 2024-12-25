@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
-import com.dzen.campfire.api.models.translate.Translate
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.controllers.t
@@ -32,7 +31,7 @@ class SRulesModerators : Screen(R.layout.screen_other_rules_moderators) {
         for (i in CampfireConstants.RULES_MODER.indices) addCard(i+1, CampfireConstants.RULES_MODER[i])
     }
 
-    private fun addCard(num:Int?, text: Translate) {
+    private fun addCard(num:Int?, text: Long) {
         val view: View = ToolsView.inflate(R.layout.view_card_rules)
         val vText: TextView = view.findViewById(R.id.vText)
         val vNum: TextView = view.findViewById(R.id.vNum)

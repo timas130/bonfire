@@ -11,10 +11,10 @@ import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.cards.CardPublication
 import com.sayzen.campfiresdk.screens.account.profile.SProfile
 import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
-import com.sayzen.campfiresdk.screens.translates.STranslates
 import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
+import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.views.ViewAvatar
 import com.sup.dev.android.views.views.ViewText
@@ -158,7 +158,7 @@ class CardPublicationEventAdmin(
                         text = tCap(API_TRANSLATE.translates_label_history_card_hint_old, tSex(xAccount.getSex(), API_TRANSLATE.he_changed, API_TRANSLATE.she_changed), e.history.oldText, e.history.newText)
                     }
                 }
-                view.setOnClickListener { Navigator.to(STranslates()) }
+                view.setOnClickListener { ToolsToast.show(t(API_TRANSLATE.app_error)) }
             }
             is ApiEventAdminPublicationRestore -> {
                 text = tCap(API_TRANSLATE.publication_event_publication_restore_admin, "{388E3C ${ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_restore), t(API_TRANSLATE.she_restore)).capitalize()}}", ControllerLinks.linkToAccount(e.targetAccountName))

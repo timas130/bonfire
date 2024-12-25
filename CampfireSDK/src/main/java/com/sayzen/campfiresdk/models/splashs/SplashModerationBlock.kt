@@ -112,18 +112,22 @@ class SplashModerationBlock(
         setBanTime(0)
 
         vTemplate.setOnClickListener {
-            ControllerTranslate.checkAndLoadLanguage(publication.fandom.languageId, { showTemplateSplashNow() })
+            ControllerTranslate.checkAndLoadLanguage(
+                languageId = publication.fandom.languageId,
+                onLoaded = ::showTemplateSplashNow,
+                onError = ::showTemplateSplashNow
+            )
         }
 
         updateFinishEnabled()
     }
 
-    private fun showTemplateSplashNow(){
+    private fun showTemplateSplashNow() {
         val w = SplashMenu()
         CampfireConstants.RULES_USER
         for (template in CampfireConstants.MOD_COMMENT_TEMPLATES) {
-            val label = ControllerTranslate.t(publication.fandom.languageId, template.first) ?: t(template.first)
-            val fullText = ControllerTranslate.t(publication.fandom.languageId, template.second) ?: t(template.second)
+            val label = ControllerTranslate.tLang(publication.fandom.languageId, template.first)
+            val fullText = ControllerTranslate.tLang(publication.fandom.languageId, template.second)
             w.add(label) {
                 vComment.setText(fullText)
             }

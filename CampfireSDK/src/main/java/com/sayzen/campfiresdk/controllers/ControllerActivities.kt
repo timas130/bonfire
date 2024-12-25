@@ -119,8 +119,6 @@ object ControllerActivities {
     fun getReportsCount() = reportsCount
     fun getReportsUserCount() = reportsUserCount
     fun getBlocksCount() = blocksCount
-    fun getTranslatesCount() = API_TRANSLATE.map.size - (ControllerTranslate.getMyMap()?.size?:0)
-    fun getTranslatesModerationCount() = translateModerationCount
     fun getAdminVoteCount() = adminVoteCount
     fun isAdministrationLoadInProgress() = administrationLoadInProgress
 

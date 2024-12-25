@@ -79,29 +79,29 @@ class DrawAnimationConfetti(
     //
 
     private inner class Particle(
-            val inflate:Boolean
+        val inflate: Boolean
     ) {
 
-        val color = ToolsCollections.random(colors)
+        val color = colors.random()
         val rotate = ToolsMath.randomFloat(0f, 360f)
         var alpha = ToolsMath.randomInt(20, 120)
-        val path = ToolsCollections.random(PATCHS)
+        val path = PATCHS.random()
 
         var r_Max = ToolsMath.randomFloat(DP * 2, DP * 4)
         var r_Min = ToolsMath.randomFloat(DP, DP * 2)
         var r = ToolsMath.randomFloat(r_Min, r_Max)
         var r_Axe = DP / 8
-        var r_Arg = ToolsCollections.random(arrayOf(-1, 1))
+        var r_Arg = arrayOf(-1, 1).random()
 
 
         var y = -r * 2
-        var y_axe = ToolsMath.randomFloat(h / 40, h / 60) * if(inflate) 10 else 1
+        var y_axe = ToolsMath.randomFloat(h / 40, h / 60) * if (inflate) 10 else 1
 
         var x = ToolsMath.randomFloat(0f, w)
-        var x_Max = x + r_Max*4
-        var x_Min = x - r_Max*4
-        var x_Axe = y_axe / 8 / if(inflate) 3 else 1
-        var x_Arg = ToolsCollections.random(arrayOf(-1, 1))
+        var x_Max = x + r_Max * 4
+        var x_Min = x - r_Max * 4
+        var x_Axe = y_axe / 8 / if (inflate) 3 else 1
+        var x_Arg = arrayOf(-1, 1).random()
 
         fun update(delta: Float) {
 

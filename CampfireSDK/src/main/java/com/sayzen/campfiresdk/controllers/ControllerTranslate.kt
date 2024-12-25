@@ -2,129 +2,160 @@ package com.sayzen.campfiresdk.controllers
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
-import com.dzen.campfire.api.models.translate.Translate
-import com.dzen.campfire.api.requests.translates.RTranslateGetMap
 import com.sayzen.campfiresdk.models.events.translate.EventTranslateChanged
-import com.sayzen.campfiresdk.support.ApiRequestsSupporter
+import com.sup.dev.android.app.SupAndroid
+import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.tools.ToolsStorage
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.libs.json.Json
-import com.sup.dev.java.libs.json.JsonArray
+import com.sup.dev.java.tools.ToolsThreads
+import okhttp3.Request
+import sh.sit.bonfire.networking.OkHttpController
+import java.util.*
 
-fun t(t: Translate, vararg args: Any) = ControllerTranslate.t(t, *args)
+private fun String.capitalize(): String =
+    this.replaceFirstChar {
+        if (it.isLowerCase()) {
+            it.titlecase(Locale.getDefault())
+        } else {
+            it.toString()
+        }
+    }
 
-fun tCap(t: Translate, vararg args: Any) = t(t, *args).capitalize()
+fun t(t: Long, vararg args: Any) = ControllerTranslate.t(t, *args)
 
-fun tSex(sex: Long, m: Translate, w: Translate) = ControllerTranslate.tSex(sex, m, w)
+fun tCap(t: Long, vararg args: Any) = t(t, *args).capitalize()
 
-fun tSex(color:String, sex: Long, m: Translate, w: Translate) = "{$color ${tSex(sex, m, w)}}"
+fun tSex(sex: Long, m: Long, w: Long) = ControllerTranslate.tSex(sex, m, w)
 
-fun tSexCap(color:String, sex: Long, m: Translate, w: Translate) = "{$color ${tSex(sex, m, w).capitalize()}}"
+fun tSex(color: String, sex: Long, m: Long, w: Long) = "{$color ${tSex(sex, m, w)}}"
 
-fun tPlural(value: Int, t: Array<Translate>) = ControllerTranslate.tPlural(value, t)
+fun tSexCap(color: String, sex: Long, m: Long, w: Long) = "{$color ${tSex(sex, m, w).capitalize()}}"
+
+fun tPlural(value: Int, t: Array<Long>) = ControllerTranslate.tPlural(value, t)
 
 object ControllerTranslate {
+    private val maps = HashMap<Long, HashMap<Long, String>>()
 
-    val maps = HashMap<Long, HashMap<String, Translate>>()
+    private val defaultMap
+        get() = maps[API.LANGUAGE_RU]
 
-    init {
-        for(l in API.LANGUAGES){
-            val json = ToolsStorage.getJsonArray("ControllerTranslate.map.${l.id}")
-            if(json != null) {
-                val map = HashMap<String, Translate>()
-                for (j in json.getJsons()) {
-                    if(j != null) {
-                        val translate = Translate()
-                        translate.json(false, j)
-                        map[translate.key] = translate
-                    }
-                }
-                maps[l.id] = map
+    fun init() {
+        // cleanup pre 4.10 storage
+        for (l in API.LANGUAGES) {
+            ToolsStorage.clear("ControllerTranslate.map.${l.id}")
+            ToolsStorage.clear("ControllerTranslate.hash.${l.id}")
+        }
+
+        val myLanguages = setOf(ControllerApi.getLanguageId(), API.LANGUAGE_RU)
+
+        for (l in myLanguages) {
+            val strings = javaClass.getResourceAsStream("/lang/${API.getLanguage(l).code}.json")!!
+            val stringsJson = strings.use { it.reader().readText() }
+
+            val map = Json(stringsJson)
+            val ret = HashMap<Long, String>()
+            for (key in map.getKeys()) {
+                val id = API_TRANSLATE.keyToId[key] ?: -1
+                ret[id] = map.getString(key as String, key)
+            }
+
+            maps[l] = ret
+        }
+    }
+
+    fun tSex(sex: Long, m: Long, w: Long) = if (sex == 1L) t(w) else t(m)
+
+    fun t(t: Long, vararg args: Any): String {
+        val s = getMyMap()?.get(t) ?: defaultMap?.get(t) ?: "ERROR T#$t"
+        return if (args.isEmpty()) {
+            s
+        } else {
+            try {
+                s.format(*args)
+            } catch (e: Exception) {
+                "FMT ERROR T#$t"
             }
         }
     }
 
-    fun tSex(sex: Long, m: Translate, w: Translate) = if (sex == 1L) t(w) else t(m)
+    fun tPlural(value: Int, t: Array<Long>): String {
+        val v10 = value % 10
+        val v100 = value % 100
 
-    fun t(t: Translate, vararg args: Any):String{
-        if(args.isEmpty()){
-            return getMyMap()?.get(t.key)?.text?:t.text
-        } else{
-            return String.format(getMyMap()?.get(t.key)?.text?:t.text, *args)
+        return if (v10 == 1 && v100 != 11) {
+            t(t[0])
+        } else if ((2..4).contains(v10) && !(12..14).contains(v100)) {
+            t(t[1])
+        } else {
+            t(t[2])
         }
     }
 
-    fun tPlural(value: Int, t: Array<Translate>):String{
-        return when(value%10){
-            1 -> t(t[0])
-            2-> t(t[1])
-            3-> t(t[1])
-            4-> t(t[1])
-            else -> t(t[2])
-        }
+    fun tLang(languageId: Long, t: Long): String {
+        return maps[languageId]?.get(t)
+            ?: getMyMap()?.get(t)
+            ?: defaultMap?.get(t)
+            ?: "ERROR TL#$t"
     }
 
-    fun t(key:String):String{
-        var t = getMyMap()?.get(key)?.text
-        if(t != null) return t
-        t = getAltMap()?.get(key)?.text
-        if(t != null) return t
-        t = API_TRANSLATE.map[key]?.text?:"null"
-        return  t
-    }
-
-    fun t(languageId: Long, t: Translate):String?{
-        return t(languageId, t.key)
-    }
-
-    fun t(languageId: Long, key:String):String?{
-        return maps[languageId]?.get(key)?.text
-    }
-
-    fun hint(languageId: Long, key:String):String?{
-        var hint = maps[languageId]?.get(key)?.hint
-        if(hint == null || hint.isEmpty()) hint = API_TRANSLATE.map[key]?.hint
-        return if(hint != null && hint.isEmpty()) null else hint
-    }
-
-    fun getAltMap():HashMap<String, Translate>?{
-        val lang = ControllerApi.getLanguage().id
-        if(lang == API.LANGUAGE_UK) return maps[API.LANGUAGE_RU]
-        else return maps[API.LANGUAGE_EN]
-    }
-
-    fun getMyMap():HashMap<String, Translate>?{
+    fun getMyMap(): HashMap<Long, String>? {
         return maps[ControllerApi.getLanguageId()]
     }
 
-    fun hasLanguage(languageId:Long) = maps.containsKey(languageId)
+    private fun hasLanguage(languageId: Long) = maps.containsKey(languageId)
 
-    fun checkAndLoadLanguage(languageId:Long, onLoaded:()->Unit, onError:()->Unit={}){
-        if(hasLanguage(languageId)) onLoaded.invoke()
-        else loadLanguage(languageId, onLoaded, onError)
-    }
+    private fun loadLanguage(languageId: Long, onLoaded: () -> Unit, onError: () -> Unit = {}) {
+        ToolsThreads.thread {
+            try {
+                val client = OkHttpController.getClient(SupAndroid.appContext!!)
 
-    fun loadLanguage(languageId: Long, onLoaded: () -> Unit, onError: () -> Unit = {}) {
-        ApiRequestsSupporter.executeProgressDialog(RTranslateGetMap(languageId).onError { onError.invoke() }){ r->
-            addMap(r.translate_language_id, r.translate_map, r.translateMapHash)
-            onLoaded.invoke()
+                val request = Request.Builder()
+                    .url("${API.TL_ROOT}/api/translations/bonfire/legacy/${API.getLanguage(languageId).code}/file/")
+                    .build()
+                val resp = client.newCall(request)
+                    .execute()
+
+                if (!resp.isSuccessful) {
+                    onError()
+                    return@thread
+                }
+
+                @Suppress("UNCHECKED_CAST")
+                val map = Json(resp.body!!.string()).toMap() as Map<String, String>
+                addMap(languageId, map, map.hashCode())
+
+                onLoaded()
+            } catch (e: Exception) {
+                onError()
+            }
         }
     }
 
-    fun addMap(languageId:Long, map:HashMap<String, Translate>, hash: Int) {
-        if (map.isEmpty()) return
-        maps[languageId] = map
-        EventBus.post(EventTranslateChanged(languageId))
-
-        val json = JsonArray()
-        for(i in map.values) json.put(i.json(true, Json()))
-        ToolsStorage.put("ControllerTranslate.map.$languageId", json)
-        ToolsStorage.put("ControllerTranslate.hash.$languageId", hash)
+    fun checkAndLoadLanguage(languageId: Long, onLoaded: () -> Unit, onError: () -> Unit = {}) {
+        if (hasLanguage(languageId)) {
+            onLoaded.invoke()
+        } else {
+            loadLanguage(languageId, onLoaded, onError)
+        }
     }
 
-    // this is only used when loading in SIntroConnection, so
-    // there is no need to store it in memory
-    fun getSavedHash(languageId: Long): Int {
-        return ToolsStorage.getInt("ControllerTranslate.hash.$languageId", 0)
+    private fun addMap(languageId: Long, map: Map<String, String>, hash: Int) {
+        if (map.isEmpty()) {
+            return
+        }
+
+        val ret = HashMap<Long, String>()
+        for (entry in map) {
+            ret[API_TRANSLATE.keyToId[entry.key] ?: -1] = entry.value
+        }
+
+        maps[languageId] = ret
+        EventBus.post(EventTranslateChanged(languageId))
+
+        val json = Json(map)
+        ToolsStorage.put("ControllerTranslate.v2.map.$languageId", json)
+        ToolsStorage.put("ControllerTranslate.v2.app_version.$languageId", ToolsAndroid.getVersionCode())
+        ToolsStorage.put("ControllerTranslate.v2.hash.$languageId", hash)
     }
 }

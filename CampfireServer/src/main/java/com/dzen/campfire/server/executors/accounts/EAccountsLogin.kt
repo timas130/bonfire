@@ -39,14 +39,14 @@ class EAccountsLogin : RAccountsLogin("", 0, 0, 0) {
         }
 
         val serverTranslateHash = ControllerServerTranslates.getHash(languageId)
-        val translateMap = if (serverTranslateHash == translateMapHash && translateMapHash != 0) {
+        val translateMap = if (serverTranslateHash == translateMapHash || translateMapHash == 0) {
             hashMapOf()
         } else {
             ControllerServerTranslates.getMap(languageId)
         }
 
         val serverTranslateHashEng = ControllerServerTranslates.getHash(API.LANGUAGE_EN)
-        val translateMapEng = if (serverTranslateHashEng == translateMapHashEng && translateMapHashEng != 0) {
+        val translateMapEng = if (serverTranslateHashEng == translateMapHashEng || translateMapHashEng == 0) {
             hashMapOf()
         } else {
             ControllerServerTranslates.getMap(API.LANGUAGE_EN)
