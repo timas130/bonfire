@@ -11,9 +11,7 @@
     <string name="error_request_rejected">Не удалось войти. Попробуйте позже. (R2)</string>
     <string name="error_invalid_credential">Этот метод входа пока не поддерживается. (R3)</string>
     <string name="error_finalize_failed">Мы не смогли проверить ваш аккаунт. Попробуйте позже. (B4)</string>
-    <string name="error_same_email_different_account">Этот email уже привязан к другому аккаунту Bonfire. Войдите в
-        этот аккаунт. (B5)
-    </string>
+    <string name="error_same_email_different_account">Этот email уже привязан к другому аккаунту Bonfire. Войдите в этот аккаунт. (B5)</string>
     <string name="label_email">Email</string>
     <string name="label_password">Пароль</string>
     <string name="login_email_title">Добро пожаловать назад!</string>
@@ -24,7 +22,7 @@
     <string name="start_terms">Условия использования</string>
     <string name="start_accept">Я принимаю</string>
     <string name="start_decline">Я отказываюсь</string>
-    <string name="start_consent_requirement">Вы должны принять политики, чтобы продолжить.</string>
+    <string name="start_consent_requirement">Вы должны принять условия, чтобы продолжить.</string>
     <string name="start_consent_title">Нажимая \"Я принимаю\" ниже, вы принимаете следующие условия:</string>
     <string name="error_invalid_email">Это не похоже на email.</string>
     <string name="error_invalid_password">Этот пароль не соответствует требованиям.</string>
