@@ -81,5 +81,7 @@
     "about_creators_operand": "@Operand",
     "achi_rates_count": "Поставте якомога більше оцінок публікаціям інших користувачів.",
     "achi_rules_moderator": "Прийміть правила модерації.",
-    "achi_rules_user": "Прийміть правила застосунку."
+    "achi_rules_user": "Прийміть правила застосунку.",
+    "chat_block_message": "%s тимчасово %s користувача %s",
+    "app_was_online": "%s онлайн %s"
 }
