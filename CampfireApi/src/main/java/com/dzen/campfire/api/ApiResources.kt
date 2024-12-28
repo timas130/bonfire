@@ -195,6 +195,7 @@ object ApiResources {
     //  Developers
     val DEVELOPER_SIT = staticImage("DEVELOPER_SIT")
     val DEVELOPER_NIKI = staticImage("DEVELOPER_NIKI")
+    val DEVELOPER_OPERAND = staticImage("DEVELOPER_OPERAND")
     val DEVELOPER_ZEON = staticImage("DEVELOPER_ZEON")
     val DEVELOPER_EGOR = staticImage("DEVELOPER_EGOR")
     val DEVELOPER_SAYNOK = staticImage("DEVELOPER_SAYNOK")

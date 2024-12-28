@@ -545,6 +545,19 @@ type Mutation {
   cancelEmailChange(token: String!): Ok!
 
   """
+  Accept the authorisation request and get the URI to redirect the client to
+
+  Might also require two-factor authentication if sensitive scopes have been
+  requested.
+  """
+  oauth2AuthorizeAccept(flowId: ID!): OAuthAuthorizationResult!
+
+  """
+  Revoke a previously authorised OAuth client
+  """
+  oauth2RevokeGrant(grantId: ID!): ID!
+
+  """
   Mark a single notification as read
   """
   readNotification(notificationId: ID!): Notification!
@@ -678,6 +691,124 @@ enum NotificationTokenType {
   Firebase Cloud Messaging
   """
   FCM
+}
+
+union OAuthAuthorizationResult = OauthAuthorizationRedirect|OauthAuthorizationTfaRequired
+
+union OAuthAuthorizeInfo = OauthAlreadyAuthorized|OauthAuthorizationPrompt
+
+"""
+Information about some OAuth client
+"""
+type OAuthClient {
+  """
+  Unique ID of this client
+  """
+  id: ID!
+
+  """
+  Name of the client to be displayed to the user
+  """
+  displayName: String!
+
+  """
+  Link to the privacy policy of this client
+  """
+  privacyPolicyUrl: String!
+
+  """
+  Link to this client's terms of service
+  """
+  tosUrl: String
+
+  """
+  Whether this client is an official Bonfire app
+  """
+  official: Boolean!
+}
+
+type OAuthGrant {
+  """
+  Unique ID for this grant
+  """
+  id: ID!
+
+  """
+  Information about the client authorised
+  """
+  client: OAuthClient!
+
+  """
+  What scopes this grant has already
+  """
+  scope: [String!]!
+
+  """
+  When the grant was initially created
+  """
+  createdAt: DateTime!
+
+  """
+  When was the last time this grant was reauthorised
+  """
+  lastUsedAt: DateTime!
+
+  user: User!
+}
+
+"""
+The client has already been authorised, it's safe to just redirect them
+"""
+type OauthAlreadyAuthorized {
+  """
+  Where to send the user
+  """
+  redirectUri: String!
+}
+
+"""
+A confirmation prompt is required to authorise this client
+"""
+type OauthAuthorizationPrompt {
+  """
+  ID for the flow created for this authorisation request
+  """
+  flowId: Int
+
+  """
+  What scopes the client is requesting
+  """
+  scopes: [String!]!
+
+  """
+  Information about the OAuth client
+  """
+  client: OAuthClient!
+}
+
+"""
+The authorisation was successful and user can proceed to this URL
+"""
+type OauthAuthorizationRedirect {
+  """
+  The URL to redirect the user to
+  """
+  redirectUri: String!
+}
+
+"""
+Two-factor authentication is required to approve this request
+"""
+type OauthAuthorizationTfaRequired {
+  """
+  What TFA type to use
+  """
+  tfaType: TfaType!
+
+  """
+  Token for requesting the TFA result with `check_tfa_status`
+  """
+  tfaWaitToken: String!
 }
 
 """
@@ -927,6 +1058,16 @@ type Query {
   of digits,
   """
   userBySlug(slug: String!): User
+
+  """
+  Get info for authorising an OAuth client
+  """
+  oauthAuthorizeInfo(query: JSONObject!): OAuthAuthorizeInfo!
+
+  """
+  Get the list of clients which were authorised by the currently authenticated user
+  """
+  oauth2Grants(offset: Int!, limit: Int!): [OAuthGrant!]!
 
   """
   List notifications received by you, newest first
@@ -1357,6 +1498,12 @@ points for query, mutation, and subscription operations.
 """
 type __Schema {
   """
+  description of __Schema for newer graphiql introspection schema
+  requirements
+  """
+  description: String!
+
+  """
   A list of all types supported by this server.
   """
   types: [__Type!]!
@@ -1467,14 +1614,30 @@ enum __TypeKind {
 }
 
 """
+Marks an element of a GraphQL schema as no longer supported.
+"""
+directive @deprecated ("A reason for why it is deprecated, formatted using Markdown syntax" reason: String = "No longer supported") on FIELD_DEFINITION|ARGUMENT_DEFINITION|INPUT_FIELD_DEFINITION|ENUM_VALUE
+
+"""
 Directs the executor to include this field or fragment only when the `if` argument is true.
 """
 directive @include ("Included when true." if: Boolean!) on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT
 
 """
+Indicates that an Input Object is a OneOf Input Object (and thus requires
+                        exactly one of its field be provided)
+"""
+directive @oneOf on INPUT_OBJECT
+
+"""
 Directs the executor to skip this field or fragment when the `if` argument is true.
 """
 directive @skip ("Skipped when true." if: Boolean!) on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT
+
+"""
+Provides a scalar specification URL for specifying the behavior of custom scalar types.
+"""
+directive @specifiedBy ("URL that specifies the behavior of this scalar." url: String!) on SCALAR
 
 schema {
   query: Query

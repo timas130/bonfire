@@ -120,4 +120,6 @@
     </string>
     <string name="error_wrong_password">Wrong password. Please try again or reset it.</string>
     <string name="error_wrong_email">This email does not exist. Please check your spelling.</string>
+    <string name="security_oauth_grants">Third-party apps</string>
+    <string name="security_oauth_grants_desc">Revoke access from apps you have logged in to</string>
 </resources>

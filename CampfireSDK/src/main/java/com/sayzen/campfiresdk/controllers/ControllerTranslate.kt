@@ -50,7 +50,7 @@ object ControllerTranslate {
         val myLanguages = setOf(ControllerApi.getLanguageId(), API.LANGUAGE_RU)
 
         for (l in myLanguages) {
-            val strings = javaClass.getResourceAsStream("/lang/${API.getLanguage(l).code}.json")!!
+            val strings = javaClass.getResourceAsStream("/lang/${API.getLanguage(l).code}.json") ?: continue
             val stringsJson = strings.use { it.reader().readText() }
 
             val map = Json(stringsJson)

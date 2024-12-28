@@ -1973,12 +1973,15 @@ object API_TRANSLATE {
     var about_creators_sit_subtitle = 0L
     var about_creators_niki = 0L
     var about_creators_niki_subtitle = 0L
+    var about_creators_operand = 0L
+    var about_creators_operand_subtitle = 0L
     var about_creators_zeon = 0L
     var about_creators_zeon_subtitle = 0L
     var about_creators_saynok = 0L
     var about_creators_saynok_subtitle = 0L
     var about_creators_egor = 0L
     var about_creators_egor_subtitle = 0L
+    var about_creators_contacts_alt = 0L
     var about_libraries = 0L
 
     var pages_count_one = 0L
@@ -2159,6 +2162,8 @@ object API_TRANSLATE {
     var quests_edit_text_content_hint = 0L
     var quests_edit_text_button = 0L
     var quests_edit_text_button_text = 0L
+    var quests_edit_text_button_variable_condition = 0L
+    var quests_edit_text_button_if = 0L
     var quests_edit_text_button_color = 0L
     var quests_edit_text_button_color_default = 0L
     var quests_edit_text_button_color_red = 0L
@@ -2234,6 +2239,7 @@ object API_TRANSLATE {
     var quests_edit_cond_true_r = 0L
     var quests_edit_cond_false_r = 0L
     var quests_enter_const = 0L
+    var quests_enter_null = 0L
     var quests_edit_action_action = 0L
     var quests_edit_action_unknown = 0L
     var quests_edit_action_jump = 0L

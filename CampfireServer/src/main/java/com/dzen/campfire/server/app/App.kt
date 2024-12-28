@@ -83,8 +83,6 @@ object App {
             ControllerDonates.start()
             System.err.println("Starting daemons [ControllerCensor]")
             ControllerCensor.start()
-            System.err.println("Starting daemons [ControllerServerTranslates]")
-            ControllerServerTranslates.start()
 
             System.err.println("Update karma category")
             ControllerOptimizer.karmaCategoryUpdateIfNeed()

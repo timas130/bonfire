@@ -88,13 +88,10 @@ fun Avatar(
     }
 
     Box(propagateMinConstraints = true) {
-        RemoteImage(
-            link = updatedAccount.getActiveImage(),
+        Avatar(
+            image = updatedAccount.getActiveImage(),
             contentDescription = updatedAccount.name,
             modifier = modifier
-                .size(48.dp)
-                .aspectRatio(1f)
-                .avatarRounding()
                 .combinedClickable(
                     onClick = {
                         SProfile.instance(account, Navigator.TO)
@@ -137,16 +134,25 @@ fun Avatar(fandom: Fandom, modifier: Modifier = Modifier) {
 
     val updatedFandom by dataSource.flow.collectAsState()
 
-    RemoteImage(
-        link = updatedFandom.image,
+    Avatar(
+        image = updatedFandom.image,
         contentDescription = updatedFandom.name,
+        modifier = modifier
+            .clickable {
+                SFandom.instance(fandom, Navigator.TO)
+            }
+    )
+}
+
+@Composable
+fun Avatar(image: ImageRef, contentDescription: String, modifier: Modifier = Modifier) {
+    RemoteImage(
+        link = image,
+        contentDescription = contentDescription,
         modifier = modifier
             .size(48.dp)
             .aspectRatio(1f)
             .avatarRounding()
-            .clickable {
-                SFandom.instance(fandom, Navigator.TO)
-            }
     )
 }
 

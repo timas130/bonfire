@@ -18,7 +18,6 @@ import com.sayzen.campfiresdk.controllers.ControllerScreenAnimations
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.animations.*
-import com.sayzen.campfiresdk.support.load
 import com.sayzen.campfiresdk.support.loadGif
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
@@ -175,6 +174,18 @@ class SQuestPlayer(
                 }
             }
         }
+
+        fun isTrueIsh(details: QuestDetails, varId: Long): Boolean {
+            val v = details.variablesMap!![varId]!!
+            return when (v.type) {
+                API.QUEST_TYPE_TEXT -> !variables[varId].isNullOrEmpty()
+                API.QUEST_TYPE_NUMBER -> variables[varId]?.toLong()?.takeIf { it != 0L } != null
+                API.QUEST_TYPE_BOOL -> variables[varId] == "1"
+                else -> {
+                    throw IllegalStateException()
+                }
+            }
+        }
     }
 
     private val part = parts.getOrNull(index) ?: parts.first()
@@ -211,7 +222,7 @@ class SQuestPlayer(
         }
 
         vTitle.text = part.title
-        
+
         var text = part.text
         for (pair in state.variables) {
             val id = pair.key
@@ -259,6 +270,14 @@ class SQuestPlayer(
         }
 
         part.buttons.forEachIndexed { idx, it ->
+            if (it.conditionVar != 0L) {
+                // check the condition for displaying the button
+                val cond = state.isTrueIsh(details, it.conditionVar)
+                if (!cond) {
+                    return@forEachIndexed
+                }
+            }
+
             val button = Button(context, null, R.style.Button)
             button.gravity = Gravity.CENTER
             button.text = it.label

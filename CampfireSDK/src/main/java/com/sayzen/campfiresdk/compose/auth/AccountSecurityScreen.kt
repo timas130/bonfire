@@ -10,7 +10,8 @@ class AccountSecurityScreen : ComposeScreen() {
     override fun Content() {
         sh.sit.bonfire.auth.screens.AccountSecurityScreen(
             onChangeEmail = { ControllerCampfireSDK.onLoginFailed() },
-            onChangeBirthday = { Navigator.to(SetBirthdayScreen()) }
+            onChangeBirthday = { Navigator.to(SetBirthdayScreen()) },
+            toOAuthGrants = { Navigator.to(OAuthGrantsScreen()) }
         )
     }
 }

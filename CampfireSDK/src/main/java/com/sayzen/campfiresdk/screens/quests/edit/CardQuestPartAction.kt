@@ -15,8 +15,6 @@ class CardQuestPartAction(
     container: QuestPartContainer,
     onLongTap: (View, Float, Float) -> Unit,
 ) : CardQuestPart(R.layout.card_quest_part_short_text, part, container, onLongTap) {
-    private fun getVarName(id: Long): String =
-        container.getDetails().variablesMap!![id]?.devName ?: "<???>"
     private fun getVarType(id: Long): Long =
         container.getDetails().variablesMap!![id]?.type ?: API.QUEST_TYPE_TEXT
 
