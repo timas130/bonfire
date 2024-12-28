@@ -102,4 +102,9 @@
     <string name="fandom_closed_tooltip">Цей фендом приховано зі стрічки (закрито)</string>
     <string name="fandom_subscribers_alt">Підписники</string>
     <string name="experiment_error_snackbar">Нам не вдалося змінити ваш статус участі в експерименті. Спробуйте пізніше.</string>
+    <string name="oauth_grants_title">Сторонні застосунки</string>
+    <string name="oauth_grants_official">Офіційний застосунок</string>
+    <string name="oauth_grant_created_at">Перший вхід: %s</string>
+    <string name="oauth_grant_last_used_at">Останнє використання: %s</string>
+    <string name="oauth_grant_revoke">Відкликати доступ</string>
 </resources>
