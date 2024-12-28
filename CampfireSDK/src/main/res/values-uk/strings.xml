@@ -81,7 +81,7 @@
     <string name="restart_title">Перезавантажити?</string>
     <string name="restart_text">Цей експеримент рекомендує до нового запуску застосунку, щоб правильно застосуватись і не спричинити баги та викиди. Перезавантажити застосунок зараз?</string>
     <string name="post_important">Важливий</string>
-    <string name="comment_sticker_alt">Стикер</string>
+    <string name="comment_sticker_alt">Наліпка</string>
     <string name="compose_comment_title">Редизайн коментарів</string>
     <string name="compose_comment_description">Продовження редизайну постів: новий зовнішній вигляд коментарів!</string>
     <string name="comment_edited">(зм.)</string>
@@ -93,7 +93,7 @@
     <string name="publication_reports_alt">Скарги</string>
     <string name="link_alert">Це посилання приведе вас на наступний сайт:</string>
     <string name="link_alert_trust">Довіряти посиланням типу %s</string>
-    <string name="link_alert_cancel">Відміна</string>
+    <string name="link_alert_cancel">Скасувати</string>
     <string name="link_alert_visit">Перейти</string>
     <string name="link_parse_error">Не вдалося розібрати це посилання</string>
     <string name="account_viceroy_list">Перелік намісника</string>
