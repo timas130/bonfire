@@ -9,7 +9,11 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import com.sup.dev.android.R
 import com.sup.dev.android.app.SupAndroid
@@ -60,6 +64,18 @@ abstract class SActivity : AppCompatActivity() {
         vActivityContainer = findViewById(R.id.vScreenActivityView)
         vActivityTouchLock = findViewById(R.id.vScreenActivityTouchLock)
         vSplashContainer = findViewById(R.id.vSplashContainer)
+
+        ViewCompat.setOnApplyWindowInsetsListener(vSplashContainer!!) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updateLayoutParams<MarginLayoutParams> {
+                leftMargin = insets.left
+                topMargin = insets.top
+                rightMargin = insets.right
+                bottomMargin = insets.bottom
+            }
+
+            WindowInsetsCompat.CONSUMED
+        }
 
         vActivityTouchLock!!.visibility = View.GONE
 

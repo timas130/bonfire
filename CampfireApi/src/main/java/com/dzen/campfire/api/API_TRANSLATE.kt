@@ -1973,12 +1973,15 @@ object API_TRANSLATE {
     var about_creators_sit_subtitle = 0L
     var about_creators_niki = 0L
     var about_creators_niki_subtitle = 0L
+    var about_creators_operand = 0L
+    var about_creators_operand_subtitle = 0L
     var about_creators_zeon = 0L
     var about_creators_zeon_subtitle = 0L
     var about_creators_saynok = 0L
     var about_creators_saynok_subtitle = 0L
     var about_creators_egor = 0L
     var about_creators_egor_subtitle = 0L
+    var about_creators_contacts_alt = 0L
     var about_libraries = 0L
 
     var pages_count_one = 0L

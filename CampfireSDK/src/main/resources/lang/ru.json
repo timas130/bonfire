@@ -1,10 +1,13 @@
 {
   "about_about": "О приложении",
   "about_creators": "Создатели",
+  "about_creators_contacts_alt": "Контакты",
   "about_creators_egor": "Егор Королёв",
   "about_creators_egor_subtitle": "Художник / Аниматор",
   "about_creators_niki": "@NikiTank",
   "about_creators_niki_subtitle": "Автор части иллюстраций",
+  "about_creators_operand": "@Operand",
+  "about_creators_operand_subtitle": "Разработчик с 2024 года",
   "about_creators_saynok": "Игорь Чернобылов",
   "about_creators_saynok_subtitle": "Разработчик Android-приложения Campfire до 2018 года",
   "about_creators_sit": "@sit",
