@@ -36,6 +36,7 @@
 }
 
 # required for reflection in API_TRANSLATE
+-keepclassmembers class com.dzen.campfire.api.API_TRANSLATE { *; }
 -keepclassmembernames class com.dzen.campfire.api.API_TRANSLATE { *; }
 
 # for sending requests and such
