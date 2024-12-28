@@ -116,4 +116,6 @@
     </string>
     <string name="error_wrong_password">Неправильный пароль. Попробуйте ещё раз или сбросьте его.</string>
     <string name="error_wrong_email">Этот email не существует. Проверьте своё написание.</string>
+    <string name="security_oauth_grants">Сторонние приложения</string>
+    <string name="security_oauth_grants_desc">Отозвать доступ у приложений, в которые вы входили</string>
 </resources>

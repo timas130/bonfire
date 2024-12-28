@@ -1,0 +1,15 @@
+query OAuthGrants($limit: Int!, $offset: Int!) {
+    oauth2Grants(limit: $limit, offset: $offset) {
+        id
+        client {
+            id
+            displayName
+            official
+            tosUrl
+            privacyPolicyUrl
+        }
+        scope
+        createdAt
+        lastUsedAt
+    }
+}

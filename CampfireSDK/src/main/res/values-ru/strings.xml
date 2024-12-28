@@ -104,4 +104,9 @@
     <string name="account_viceroy_list_empty">Этот пользователь не наместник ни в одном из фэндомов</string>
     <string name="fandom_closed_tooltip">Этот фэндом скрыт из ленты (закрыт)</string>
     <string name="fandom_subscribers_alt">Подписчики</string>
+    <string name="oauth_grants_title">Сторонние приложения</string>
+    <string name="oauth_grants_official">Официальное приложение</string>
+    <string name="oauth_grant_created_at">Первый вход: %s</string>
+    <string name="oauth_grant_last_used_at">Последнее использование: %s</string>
+    <string name="oauth_grant_revoke">Отозвать доступ</string>
 </resources>

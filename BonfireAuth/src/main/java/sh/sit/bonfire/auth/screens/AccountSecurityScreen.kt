@@ -230,6 +230,7 @@ fun PasswordChangeSheet(open: Boolean, close: () -> Unit) {
 fun AccountSecurityScreen(
     onChangeEmail: () -> Unit,
     onChangeBirthday: () -> Unit,
+    toOAuthGrants: () -> Unit,
 ) {
     DecorFitsSystemWindowEffect()
 
@@ -293,6 +294,14 @@ fun AccountSecurityScreen(
                     headlineContent = stringResource(R.string.security_password),
                     supportingContent = stringResource(R.string.security_password_button),
                     onClick = { passwordChangeOpen = true }
+                )
+            }
+            item {
+                SettingsListItem(
+                    icon = Icons.Default.Apps,
+                    headlineContent = stringResource(R.string.security_oauth_grants),
+                    supportingContent = stringResource(R.string.security_oauth_grants_desc),
+                    onClick = { toOAuthGrants() }
                 )
             }
             item {

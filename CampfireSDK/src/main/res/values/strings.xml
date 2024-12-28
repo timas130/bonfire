@@ -112,5 +112,10 @@
     <string name="account_viceroy_list_empty">This user is not a viceroy in any fandom.</string>
     <string name="fandom_closed_tooltip">This fandom is hidden from the feed (closed)</string>
     <string name="fandom_subscribers_alt">Subscribers</string>
+    <string name="oauth_grants_title">Third-party apps</string>
+    <string name="oauth_grants_official">Official app</string>
+    <string name="oauth_grant_created_at">First use: %s</string>
+    <string name="oauth_grant_last_used_at">Last used: %s</string>
+    <string name="oauth_grant_revoke">Revoke access</string>
 
 </resources>
