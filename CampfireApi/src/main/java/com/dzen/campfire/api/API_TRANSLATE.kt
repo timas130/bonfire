@@ -1987,12 +1987,12 @@ object API_TRANSLATE {
     var pages_count_one = 0L
     var pages_count_few = 0L
     var pages_count_many = 0L
-    var pages_count = arrayOf(pages_count_one, pages_count_few, pages_count_many)
+    val pages_count by lazy { arrayOf(pages_count_one, pages_count_few, pages_count_many) }
 
     var days_count_one = 0L
     var days_count_few = 0L
     var days_count_many = 0L
-    var days_count = arrayOf(days_count_one, days_count_few, days_count_many)
+    val days_count by lazy { arrayOf(days_count_one, days_count_few, days_count_many) }
 
     var protoadin_profile_blocked = 0L
     var protoadin_profile_autch = 0L
