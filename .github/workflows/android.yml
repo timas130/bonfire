@@ -27,6 +27,6 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Increase Java memory
-      run: 'echo "JAVA_OPTS=-Xmx4096M -Dkotlin.daemon.jvm.options\="-Xmx4096M" -XX:MaxPermSize=1024m" >> "$GITHUB_ENV"'
+      run: 'echo "JAVA_OPTS="-Xmx4096M -Dkotlin.daemon.jvm.options=-Xmx4096M"" >> "$GITHUB_ENV"'
     - name: Build app
       run: "./gradlew Campfire:build"
