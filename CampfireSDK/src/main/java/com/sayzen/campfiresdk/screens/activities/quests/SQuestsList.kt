@@ -25,6 +25,7 @@ class SQuestsList : Screen(R.layout.screen_quests_list) {
         vRubrics.setSubtitle("Квест от пользователей Bonfire")
         vRubrics.setOnClickListener { Navigator.to(SQuestDanTank()) }
 
+        vLogin.visibility = GONE
         vLogin.setTitle("Хз что это")
         vLogin.setSubtitle("Не нажимай, а то сломаешь приложение")
         vLogin.setOnClickListener {
