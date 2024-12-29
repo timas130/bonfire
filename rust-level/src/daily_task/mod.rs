@@ -15,7 +15,7 @@ pub const BASE_DT_LVL_REWARD: i64 = 3;
 impl LevelServer {
     fn get_new_combo_multiplier(previous_multiplier: f64, progress: f64) -> f64 {
         let progress = progress.clamp(0., 2.);
-        let change = -progress.powi(2) + 2. * progress - 0.75;
+        let change = -0.386 * progress.powi(2) + 1.643 * progress - 0.743;
         let result = previous_multiplier + change;
         result.clamp(1., 2.)
     }
