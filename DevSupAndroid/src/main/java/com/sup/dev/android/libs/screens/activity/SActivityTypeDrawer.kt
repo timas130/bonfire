@@ -36,6 +36,8 @@ class SActivityTypeDrawer(
         drawerLayout!!.setScrimColor(0)
         setNavigationLock(navigationLock)
 
+        activity.listenForWindowInsetsOnView(drawerLayout!!, left = true, top = true, right = true, bottom = true)
+
         setDrawerView(ToolsView.inflate(activity, R.layout.screen_activity_navigation_driver))
         vNavigationRowsContainer = activity.findViewById(R.id.vNavigationRowsContainer)
     }

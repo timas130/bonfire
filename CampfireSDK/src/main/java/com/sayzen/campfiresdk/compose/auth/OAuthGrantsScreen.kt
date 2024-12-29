@@ -31,7 +31,6 @@ import com.sayzen.campfiresdk.compose.util.shimmerExt
 import com.sup.dev.java.tools.ToolsDate
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import sh.sit.bonfire.auth.DecorFitsSystemWindowEffect
 import sh.sit.bonfire.auth.apollo
 
 class OAuthGrantsModel(application: Application) : AbstractGQLPaginationModel<OAuthGrantsQuery.Oauth2Grant, OAuthGrantsQuery.Data>(application) {
@@ -107,8 +106,6 @@ fun OAuthGrantsScreenC() {
                 model.clearSnackbar()
             }
     }
-
-    DecorFitsSystemWindowEffect()
 
     PaginationScreen(
         model = model,

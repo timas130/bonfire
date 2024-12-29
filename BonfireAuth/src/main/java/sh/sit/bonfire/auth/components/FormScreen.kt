@@ -9,7 +9,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import sh.sit.bonfire.auth.DecorFitsSystemWindowEffect
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -18,8 +17,6 @@ fun FormScreen(
     snackbarHostState: SnackbarHostState,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    DecorFitsSystemWindowEffect()
-
     Scaffold(
         topBar = {
             TopAppBar(

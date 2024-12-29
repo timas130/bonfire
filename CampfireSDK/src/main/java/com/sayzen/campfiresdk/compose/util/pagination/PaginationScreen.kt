@@ -23,7 +23,6 @@ import com.sayzen.campfiresdk.compose.util.InfiniteListHandler
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
-import sh.sit.bonfire.auth.DecorFitsSystemWindowEffect
 import sh.sit.bonfire.auth.components.BackButton
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,8 +52,6 @@ fun <T> PaginationScreen(
     val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.Window)
 
     val pullToRefresh = rememberPullToRefreshState()
-
-    DecorFitsSystemWindowEffect()
 
     Scaffold(
         topBar = {

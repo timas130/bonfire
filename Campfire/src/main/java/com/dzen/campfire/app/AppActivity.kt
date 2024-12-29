@@ -311,9 +311,6 @@ class AppActivity : SActivity() {
             else -> {;R.style.CampfireRootThemeBlack; }
         }
         setTheme(themeResource)
-
-        if (ControllerTheme.styleTheme == 2 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
 
     override fun onNewIntent(intent: Intent?) {

@@ -97,9 +97,6 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
         App.activity().resetStacks()
         ControllerHoliday.onAppStart()
 
-        // for some ungodly reason, DecorFitsSystemWindowEffect doesn't dispose sometimes
-        WindowCompat.setDecorFitsSystemWindows(getActivity().window, true)
-
         loadBackgroundImageData()
         sendLoginRequest()
 

@@ -23,7 +23,6 @@ import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.tools.ToolsIntent
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.splash.SplashMenu
-import sh.sit.bonfire.auth.DecorFitsSystemWindowEffect
 import sh.sit.bonfire.auth.components.BackButton
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,8 +75,6 @@ fun AboutCreators() {
             email = "georgepro036@gmail.com",
         ),
     )
-
-    DecorFitsSystemWindowEffect()
 
     Scaffold(
         topBar = {

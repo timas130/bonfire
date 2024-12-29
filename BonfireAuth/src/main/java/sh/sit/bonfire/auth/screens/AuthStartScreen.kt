@@ -20,7 +20,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import sh.sit.bonfire.auth.*
+import sh.sit.bonfire.auth.AuthController
+import sh.sit.bonfire.auth.BuildConfig
 import sh.sit.bonfire.auth.R
 import sh.sit.bonfire.auth.components.ConsentControllerState
 import sh.sit.bonfire.auth.components.LoadingButton
@@ -28,6 +29,7 @@ import sh.sit.bonfire.auth.components.NoConsentException
 import sh.sit.bonfire.auth.components.useConsentController
 import sh.sit.bonfire.auth.flows.AuthFlow
 import sh.sit.bonfire.auth.flows.GoogleAuthFlow
+import sh.sit.bonfire.auth.toUiString
 
 @Composable
 fun AuthStartScreen(
@@ -46,8 +48,6 @@ fun AuthStartScreen(
             e.printStackTrace()
         }
     }
-
-    DecorFitsSystemWindowEffect()
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()

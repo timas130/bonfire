@@ -19,7 +19,6 @@ import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
-import sh.sit.bonfire.auth.DecorFitsSystemWindowEffect
 import sh.sit.bonfire.auth.components.BackButton
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -112,8 +111,6 @@ private fun ComposeExperimentsScreen() {
     if (showRestartDialog) {
         RestartDialog()
     }
-
-    DecorFitsSystemWindowEffect()
 
     Scaffold(
         topBar = {

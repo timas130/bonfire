@@ -10,9 +10,13 @@ import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsCompat.Type.InsetsType
 import androidx.core.view.updateLayoutParams
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import com.sup.dev.android.R
@@ -65,17 +69,14 @@ abstract class SActivity : AppCompatActivity() {
         vActivityTouchLock = findViewById(R.id.vScreenActivityTouchLock)
         vSplashContainer = findViewById(R.id.vSplashContainer)
 
-        ViewCompat.setOnApplyWindowInsetsListener(vSplashContainer!!) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.updateLayoutParams<MarginLayoutParams> {
-                leftMargin = insets.left
-                topMargin = insets.top
-                rightMargin = insets.right
-                bottomMargin = insets.bottom
-            }
-
-            WindowInsetsCompat.CONSUMED
-        }
+        enableEdgeToEdge()
+        listenForWindowInsetsOnView(
+            vSplashContainer!!,
+            left = true,
+            top = true,
+            right = true,
+            bottom = true
+        )
 
         vActivityTouchLock!!.visibility = View.GONE
 
@@ -83,6 +84,36 @@ abstract class SActivity : AppCompatActivity() {
 
         ToolsThreads.main(true) {
             if (parseIntent(intent)) intent = Intent()
+        }
+    }
+
+    internal fun listenForWindowInsetsOnView(
+        v: View,
+        @InsetsType insetType: Int = WindowInsetsCompat.Type.ime() + WindowInsetsCompat.Type.systemBars(),
+        left: Boolean = false,
+        top: Boolean = false,
+        right: Boolean = false,
+        bottom: Boolean = false,
+    ) {
+        var previousInsets: Insets? = null
+
+        ViewCompat.setOnApplyWindowInsetsListener(v) { view, windowInsets ->
+            val insets = windowInsets.getInsets(insetType)
+            view.updateLayoutParams<MarginLayoutParams> {
+                previousInsets?.let { safeInsets ->
+                    if (left) leftMargin -= safeInsets.left
+                    if (top) topMargin -= safeInsets.top
+                    if (right) rightMargin -= safeInsets.right
+                    if (bottom) bottomMargin -= safeInsets.bottom
+                }
+                if (left) leftMargin += insets.left
+                if (top) topMargin += insets.top
+                if (right) rightMargin += insets.right
+                if (bottom) bottomMargin += insets.bottom
+            }
+            previousInsets = insets
+
+            WindowInsetsCompat.CONSUMED
         }
     }
 
@@ -319,24 +350,13 @@ abstract class SActivity : AppCompatActivity() {
                 if (splash.isDestroyScreenAnimation()) animation = Navigator.Animation.NONE
             }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            screenStatusBarColor = screen.statusBarColor
-            if (window.statusBarColor != screenStatusBarColor) window.statusBarColor = screenStatusBarColor
-        }
+        screenStatusBarColor = screen.statusBarColor
+        window.statusBarColor = screenStatusBarColor
+        window.navigationBarColor = screen.navigationBarColor
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!isFullScreen) {
-                screenStatusBarIsLight = if (screen.statusBarIsLight) View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR else View.SYSTEM_UI_FLAG_VISIBLE
-                if (window.decorView.systemUiVisibility != screenStatusBarIsLight) window.decorView.systemUiVisibility = screenStatusBarIsLight
-            }
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.navigationBarColor = screen.navigationBarColor
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (screen.navigationBarIsLight) screen.systemUiVisibility = screen.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-            else screen.systemUiVisibility = screen.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = screen.statusBarIsLight
+            isAppearanceLightNavigationBars = screen.navigationBarIsLight
         }
 
         ToolsView.hideKeyboard()

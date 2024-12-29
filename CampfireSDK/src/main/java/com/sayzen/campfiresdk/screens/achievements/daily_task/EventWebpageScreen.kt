@@ -20,15 +20,12 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.dzen.campfire.api.models.project.ProjectEvent
 import com.sayzen.campfiresdk.compose.ComposeScreen
 import sh.sit.bonfire.auth.AuthController
-import sh.sit.bonfire.auth.DecorFitsSystemWindowEffect
 import sh.sit.bonfire.auth.components.BackButton
 
 class EventWebpageScreen(val event: ProjectEvent) : ComposeScreen() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-        DecorFitsSystemWindowEffect()
-
         Scaffold(
             topBar = {
                 TopAppBar(

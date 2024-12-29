@@ -1,8 +1,6 @@
 package com.sup.dev.android.libs.screens
 
-import android.graphics.Color
 import android.graphics.PorterDuff
-import android.os.Build
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -37,8 +35,8 @@ open class Screen(
     var hasToolbarBackIcon = true
     var forceBackIcon = false
     var isSingleInstanceInBackStack = false
-    var statusBarColor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) ToolsResources.getColorAttr(android.R.attr.statusBarColor) else Color.BLACK
-    var navigationBarColor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) ToolsResources.getColorAttr(android.R.attr.navigationBarColor) else Color.BLACK
+    var statusBarColor = ToolsResources.getColorAttr(android.R.attr.statusBarColor)
+    var navigationBarColor = ToolsResources.getColorAttr(android.R.attr.navigationBarColor)
     var navigationBarIsLight = ToolsResources.getBooleanAttr(R.attr.themeNavigationBarIsLight)
     var statusBarIsLight = ToolsResources.getBooleanAttr(R.attr.themStatusBarIsLight)
     var useIconsFilter = ToolsResources.getBooleanAttr(R.attr.themNavigationUseIconsFilters)

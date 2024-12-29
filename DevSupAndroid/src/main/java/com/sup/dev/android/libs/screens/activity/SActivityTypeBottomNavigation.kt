@@ -9,8 +9,8 @@ import com.sup.dev.android.R
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.tools.ToolsView
-import com.sup.dev.android.views.views.layouts.LayoutFrameMeasureCallback
 import com.sup.dev.android.views.splash.SplashMenu
+import com.sup.dev.android.views.views.layouts.LayoutFrameMeasureCallback
 import com.sup.dev.java.tools.ToolsThreads
 
 open class SActivityTypeBottomNavigation(
@@ -51,6 +51,10 @@ open class SActivityTypeBottomNavigation(
 
         vContainer = activity.findViewById(R.id.vScreenActivityBottomNavigationContainer)
         vLine = activity.findViewById(R.id.vScreenActivityBottomNavigationLine)
+
+        activity.listenForWindowInsetsOnView(vContainer!!, bottom = true, left = true, right = true)
+        activity.listenForWindowInsetsOnView(vLine!!, bottom = true)
+        activity.listenForWindowInsetsOnView(activity.vActivityContainer!!, top = true)
 
         updateNavigationVisible()
         setShadow(vLine!!)

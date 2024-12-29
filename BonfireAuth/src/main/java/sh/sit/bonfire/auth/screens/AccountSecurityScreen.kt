@@ -232,8 +232,6 @@ fun AccountSecurityScreen(
     onChangeBirthday: () -> Unit,
     toOAuthGrants: () -> Unit,
 ) {
-    DecorFitsSystemWindowEffect()
-
     val dataFlow = remember { apollo.query(AccountSecurityQuery()).watch() }
     val dataState = dataFlow.collectAsState(initial = null).value
 

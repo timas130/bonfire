@@ -16,14 +16,11 @@ import com.sayzen.campfiresdk.controllers.sendSuspend
 import com.sayzen.campfiresdk.models.events.publications.EventPublicationKarmaAdd
 import com.sup.dev.java.libs.eventBus.EventBus
 import kotlinx.coroutines.launch
-import sh.sit.bonfire.auth.DecorFitsSystemWindowEffect
 import sh.sit.bonfire.auth.components.BackButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TestPostScreenC() {
-    DecorFitsSystemWindowEffect()
-
     var posts by remember { mutableStateOf<List<PublicationPost>>(emptyList()) }
 
     LaunchedEffect(Unit) {
