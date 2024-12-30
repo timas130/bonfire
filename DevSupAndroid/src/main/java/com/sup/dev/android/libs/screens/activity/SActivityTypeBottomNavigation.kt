@@ -5,13 +5,12 @@ import android.os.Build
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.sup.dev.android.R
 import com.sup.dev.android.libs.screens.navigator.Navigator
-import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.splash.SplashMenu
-import com.sup.dev.android.views.views.layouts.LayoutFrameMeasureCallback
-import com.sup.dev.java.tools.ToolsThreads
 
 open class SActivityTypeBottomNavigation(
         activity: SActivity
@@ -34,13 +33,9 @@ open class SActivityTypeBottomNavigation(
     private val iconsList = ArrayList<NavigationItem>()
     var widgetMenu: SplashMenu? = null
 
-    private var lastH_P = 0
-    private var maxH_P = 0
-    private var lastH_L = 0
-    private var maxH_L = 0
     private var skipNextNavigationAnimation = false
-    private var lastScreenOrientationPortrait = ToolsAndroid.isScreenPortrait()
 
+    private var vContentWrapper: LinearLayout? = null
     private var vContainer: LinearLayout? = null
     private var vLine: View? = null
     private var extraNavigationItem: SActivityType.NavigationItem? = null
@@ -48,34 +43,24 @@ open class SActivityTypeBottomNavigation(
     override fun getLayout() = R.layout.screen_activity_bottom_navigation
 
     override fun onCreate() {
-
+        vContentWrapper = activity.findViewById(R.id.vContentWrapper)
         vContainer = activity.findViewById(R.id.vScreenActivityBottomNavigationContainer)
         vLine = activity.findViewById(R.id.vScreenActivityBottomNavigationLine)
 
-        activity.listenForWindowInsetsOnView(vContainer!!, bottom = true, left = true, right = true)
         activity.listenForWindowInsetsOnView(vLine!!, bottom = true)
-        activity.listenForWindowInsetsOnView(activity.vActivityContainer!!, top = true)
+
+        var lastKbVisible = ViewCompat.getRootWindowInsets(activity.window.decorView)
+            ?.isVisible(WindowInsetsCompat.Type.ime()) == true
+        activity.listenForWindowInsetsOnView(vContentWrapper!!, top = true, bottom = true, left = true, right = true) {
+            val kbVisible = it.isVisible(WindowInsetsCompat.Type.ime())
+            if (lastKbVisible != kbVisible) {
+                updateNavigationVisible()
+                lastKbVisible = kbVisible
+            }
+        }
 
         updateNavigationVisible()
         setShadow(vLine!!)
-
-        (activity.vActivityRoot as LayoutFrameMeasureCallback).onMeasure = { _, h -> ToolsThreads.main(true) { recalculateBounds() } }
-    }
-
-    private fun recalculateBounds(tryCount: Int = 10) {
-        if (ToolsAndroid.getScreenH() < activity.vActivityRoot?.height ?: 0) {
-            ToolsThreads.main(100) { recalculateBounds(tryCount - 1) }
-            return
-        }
-        lastScreenOrientationPortrait = ToolsAndroid.isScreenPortrait()
-        if (ToolsAndroid.isScreenPortrait()) {
-            lastH_P = activity.vActivityRoot?.height ?: 0
-            if (maxH_P < lastH_P) maxH_P = lastH_P
-        } else {
-            lastH_L = activity.vActivityRoot?.height ?: 0
-            if (maxH_L < lastH_L) maxH_L = lastH_L
-        }
-        updateNavigationVisible()
     }
 
     override fun updateNavigationVisible() {
@@ -115,8 +100,8 @@ open class SActivityTypeBottomNavigation(
     }
 
     fun isKeyboardShown(): Boolean {
-        return if (ToolsAndroid.isScreenPortrait()) lastH_P < (maxH_P - ToolsView.dpToPx(100))
-        else lastH_L < (maxH_L - ToolsView.dpToPx(100))
+        return ViewCompat.getRootWindowInsets(activity.window.decorView)
+            ?.isVisible(WindowInsetsCompat.Type.ime()) == true
     }
 
     //

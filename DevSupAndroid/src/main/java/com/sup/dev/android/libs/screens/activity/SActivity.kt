@@ -94,6 +94,7 @@ abstract class SActivity : AppCompatActivity() {
         top: Boolean = false,
         right: Boolean = false,
         bottom: Boolean = false,
+        callback: (WindowInsetsCompat) -> Unit = {},
     ) {
         var previousInsets: Insets? = null
 
@@ -112,6 +113,8 @@ abstract class SActivity : AppCompatActivity() {
                 if (bottom) bottomMargin += insets.bottom
             }
             previousInsets = insets
+
+            callback(windowInsets)
 
             WindowInsetsCompat.CONSUMED
         }
