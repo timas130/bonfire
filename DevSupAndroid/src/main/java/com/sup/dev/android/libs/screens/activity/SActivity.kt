@@ -14,6 +14,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
+import androidx.core.view.ViewGroupCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsCompat.Type.InsetsType
@@ -68,6 +69,8 @@ abstract class SActivity : AppCompatActivity() {
         vActivityContainer = findViewById(R.id.vScreenActivityView)
         vActivityTouchLock = findViewById(R.id.vScreenActivityTouchLock)
         vSplashContainer = findViewById(R.id.vSplashContainer)
+
+        ViewGroupCompat.installCompatInsetsDispatch(vActivityRoot!!)
 
         enableEdgeToEdge()
         listenForWindowInsetsOnView(
