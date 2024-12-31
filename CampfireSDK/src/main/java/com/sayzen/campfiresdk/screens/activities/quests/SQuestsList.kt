@@ -2,7 +2,6 @@ package com.sayzen.campfiresdk.screens.activities.quests
 
 import com.dzen.campfire.api.API_TRANSLATE
 import com.sayzen.campfiresdk.R
-import com.sayzen.campfiresdk.compose.publication.post.TestPostScreen
 import com.sayzen.campfiresdk.controllers.t
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -18,18 +17,17 @@ class SQuestsList : Screen(R.layout.screen_quests_list) {
         disableShadows()
         setTitle(t(API_TRANSLATE.app_activities))
 
-        vRelayRace.setTitle("Клаcсический новогодний квест")
+        vRelayRace.setTitle("Классический новогодний квест")
         vRelayRace.setOnClickListener { Navigator.to(SQuestNewYear()) }
 
         vRubrics.setTitle("Однажды зимней ночью")
         vRubrics.setSubtitle("Квест от пользователей Bonfire")
         vRubrics.setOnClickListener { Navigator.to(SQuestDanTank()) }
 
-        vLogin.visibility = GONE
-        vLogin.setTitle("Хз что это")
-        vLogin.setSubtitle("Не нажимай, а то сломаешь приложение")
+        vLogin.setTitle("Новогодний сюрприз")
+        vLogin.setSubtitle("Квест от пользователей Bonfire (2025 новый год)")
         vLogin.setOnClickListener {
-            Navigator.to(TestPostScreen())
+            Navigator.to(SQuestWilson())
         }
     }
 }

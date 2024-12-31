@@ -29,6 +29,20 @@ object ApiResources {
     val IMAGE_NEW_YEAR_SANTA = staticImage("IMAGE_NEW_YEAR_SANTA")
     val IMAGE_NEW_YEAR_LIGHT_GIF = staticImage("IMAGE_NEW_YEAR_LIGHT_GIF")
 
+    //  New Year 2025
+    val NY25_1 = staticImage("NY25_1")
+    val NY25_2 = staticImage("NY25_2")
+    val NY25_3 = staticImage("NY25_3")
+    val NY25_4 = staticImage("NY25_4")
+    val NY25_5 = staticImage("NY25_5")
+    val NY25_6 = staticImage("NY25_6")
+    val NY25_7 = staticImage("NY25_7")
+    val NY25_8 = staticImage("NY25_8")
+    val NY25_9 = staticImage("NY25_9")
+    val NY25_10 = staticImage("NY25_10")
+    val NY25_11 = staticImage("NY25_11")
+    val NY25_65 = staticImage("NY25_65")
+
     //  Achievements
     val IMAGE_ICHI_1_1 = staticImage("IMAGE_ICHI_1_1")
     val IMAGE_ICHI_1_2 = staticImage("IMAGE_ICHI_1_2")

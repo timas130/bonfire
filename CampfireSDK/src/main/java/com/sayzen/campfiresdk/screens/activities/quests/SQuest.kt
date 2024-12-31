@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.dzen.campfire.api.models.images.ImageRef
+import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerLinks
@@ -42,7 +43,10 @@ abstract class SQuest : Screen(R.layout.screen_quest) {
 
         ToolsThreads.main(true) {
             val saveItem = ToolsStorage.getString(getSaveKey(), "") ?: ""
-            if (!toScreen(saveItem)) toFirstItem()
+            if (!toScreen(saveItem)) {
+                PostHog.capture("quest started", properties = mapOf("key" to getKey()))
+                toFirstItem()
+            }
         }
         createQuest()
         checkQuest()
