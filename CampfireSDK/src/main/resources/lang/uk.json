@@ -493,5 +493,7 @@
     "app_show_all": "Показати",
     "bookmarks_empty": "У вас поки немає нотаток",
     "bookmarks_empty_folder": "У цій папці поки немає нотаток",
-    "books_genres_17": "Інше"
+    "books_genres_17": "Інше",
+    "category_art": "Мистецтво",
+    "category_books": "Книги та комікси"
 }
