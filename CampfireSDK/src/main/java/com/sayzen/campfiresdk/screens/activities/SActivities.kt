@@ -10,9 +10,6 @@ import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerHoliday
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.activities.EventActivitiesAdminCountChanged
-import com.sayzen.campfiresdk.screens.activities.administration.api_errors.SAdministrationErrors
-import com.sayzen.campfiresdk.screens.activities.administration.api_query.SAdministrationQuery
-import com.sayzen.campfiresdk.screens.activities.administration.api_statistic.SAdministrationRequests
 import com.sayzen.campfiresdk.screens.activities.administration.block.SAdministrationBlock
 import com.sayzen.campfiresdk.screens.activities.administration.fandoms.SAdministrationFandoms
 import com.sayzen.campfiresdk.screens.activities.administration.reports.SAdministrationReports
@@ -45,9 +42,6 @@ class SActivities : Screen(R.layout.screen_activities) {
     private val vReports: Settings = findViewById(R.id.vReports)
     private val vBlock: Settings = findViewById(R.id.vBlock)
     private val vTitleProtoadmins: Settings = findViewById(R.id.vTitleProtoadmins)
-    private val vRequests: Settings = findViewById(R.id.vRequests)
-    private val vQuery: Settings = findViewById(R.id.vQuery)
-    private val vErrors: Settings = findViewById(R.id.vErrors)
     private val vDebug: Settings = findViewById(R.id.vDebug)
     private val vDeepBlocks: Settings = findViewById(R.id.vDeepBlocks)
     private val vQuest: Settings = findViewById(R.id.vQuest)
@@ -68,9 +62,6 @@ class SActivities : Screen(R.layout.screen_activities) {
 
         vFandoms.setTitle(t(API_TRANSLATE.administration_fandoms))
         vUserReports.setTitle(t(API_TRANSLATE.administration_user_reports))
-        vRequests.setTitle(t(API_TRANSLATE.administration_requests))
-        vQuery.setTitle(t(API_TRANSLATE.administration_query))
-        vErrors.setTitle(t(API_TRANSLATE.administration_errors))
         vDebug.setTitle(t(API_TRANSLATE.administration_debug))
         vDeepBlocks.setTitle(t(API_TRANSLATE.protoadin_profile_blocked))
         vSupport.setTitle(t(API_TRANSLATE.activities_support))
@@ -90,9 +81,6 @@ class SActivities : Screen(R.layout.screen_activities) {
         vUserReports.setOnClickListener { Navigator.to(SAdministrationUserReports()) }
         vReports.setOnClickListener { Navigator.to(SAdministrationReports()) }
         vBlock.setOnClickListener { Navigator.to(SAdministrationBlock()) }
-        vRequests.setOnClickListener { SAdministrationRequests.instance(Navigator.TO) }
-        vQuery.setOnClickListener { SAdministrationQuery.instance(Navigator.TO) }
-        vErrors.setOnClickListener { SAdministrationErrors.instance(Navigator.TO) }
         vSupport.setOnClickListener { SDonate.instance(Navigator.TO) }
         vDebug.setOnClickListener { Navigator.to(SQuestsList()) }
         vDeepBlocks.setOnClickListener { Navigator.to(SAdministrationDeepBlocked(0)) }
@@ -107,9 +95,6 @@ class SActivities : Screen(R.layout.screen_activities) {
         }
 
         vTitleProtoadmins.visibility = if (ControllerApi.isProtoadmin()) View.VISIBLE else View.GONE
-        vRequests.visibility = if (ControllerApi.isProtoadmin()) View.VISIBLE else View.GONE
-        vQuery.visibility = if (ControllerApi.isProtoadmin()) View.VISIBLE else View.GONE
-        vErrors.visibility = if (ControllerApi.isProtoadmin()) View.VISIBLE else View.GONE
         //vDebug.visibility = if (ControllerApi.isProtoadmin()) View.VISIBLE else View.GONE
         vDeepBlocks.visibility = if (ControllerApi.isProtoadmin()) View.VISIBLE else View.GONE
 

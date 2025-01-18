@@ -86,7 +86,7 @@ object ControllerPost {
         .condition(post.status == API.STATUS_PENDING && ControllerApi.isCurrentAccount(post.creator.id))
         .add(t(API_TRANSLATE.app_copy_link)) { copyLink(post) }.condition(ENABLED_COPY_LINK && post.isPublic)
         .add(t(API_TRANSLATE.app_report)) { ControllerPublications.report(post) }
-        .condition(ENABLED_REPORT && !ControllerApi.isCurrentAccount(post.creator.id))
+        .condition(ENABLED_REPORT && !ControllerApi.isCurrentAccount(post.creator.id) && post.isPublic)
         .spoiler(t(API_TRANSLATE.app_additional)) { w, card ->
             card.setProgress(true)
             ApiRequestsSupporter.execute(
@@ -260,18 +260,18 @@ object ControllerPost {
                 post.creator.id
             )
         )
-        .add(t(API_TRANSLATE.publication_menu_remove_media)) { removeMedia(post) }.backgroundRes(R.color.red_700)
-        .textColorRes(R.color.white)
-        .condition(ControllerApi.can(API.LVL_ADMIN_REMOVE_MEDIA) && post.fandom.languageId != -1L)
         .add(t(API_TRANSLATE.publication_menu_change_fandom)) { changeFandomAdmin(post) }
         .backgroundRes(R.color.red_700).textColorRes(R.color.white).condition(
             ENABLED_MODER_CHANGE_FANDOM && ControllerApi.can(API.LVL_ADMIN_POST_CHANGE_FANDOM) && post.fandom.languageId != -1L && !ControllerApi.isCurrentAccount(
                 post.creator.id
             )
         )
-        .groupCondition(ControllerApi.can(API.LVL_PROTOADMIN))
         .spoiler(t(API_TRANSLATE.app_protoadmin))
-        .add("Востановить") { ControllerPublications.restoreDeepBlock(post.id) }.backgroundRes(R.color.orange_700)
+        .add(t(API_TRANSLATE.publication_menu_remove_media)) { removeMedia(post) }.backgroundRes(R.color.orange_700)
+        .textColorRes(R.color.white)
+        .condition(ControllerApi.can(API.LVL_ADMIN_REMOVE_MEDIA) && post.fandom.languageId != -1L)
+        .groupCondition(ControllerApi.can(API.LVL_PROTOADMIN))
+        .add(t(API_TRANSLATE.app_restore)) { ControllerPublications.restoreDeepBlock(post.id) }.backgroundRes(R.color.orange_700)
         .textColorRes(R.color.white).condition(post.status == API.STATUS_DEEP_BLOCKED)
 
     fun close(publications: PublicationPost) {
