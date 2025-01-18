@@ -57,7 +57,7 @@ class PageDrafts(
         Navigator.to(SAccountSearch(true, true) {
             val accountId = it.id
             SplashField()
-                    .setHint("Сумма")
+                    .setHint(t(API_TRANSLATE.activities_support_sum))
                     .setOnCancel(t(API_TRANSLATE.app_cancel))
                     .setInputType(EditorInfo.TYPE_NUMBER_FLAG_SIGNED)
                     .setOnEnter(t(API_TRANSLATE.app_add)) { w, sum ->

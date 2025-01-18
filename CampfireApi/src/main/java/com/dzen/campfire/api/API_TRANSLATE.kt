@@ -1348,6 +1348,7 @@ object API_TRANSLATE {
     var publication_menu_unset_nsfw = 0L
     var publication_menu_set_nsfw_desc = 0L
     var publication_menu_unset_nsfw_desc = 0L
+    var publication_menu_restore_deep_blocked_confirm = 0L
     var publication_event_make_moderator = 0L
     var publication_event_make_moderator_admin = 0L
     var publication_event_remove_moderator = 0L
