@@ -85,11 +85,11 @@ object ControllerTheme {
     }
 
     fun setStyleTheme(theme: Int, themeColor: Int) {
-        /* 0 to 3 - without color (dark, light grey, light)
+        /* 0 to 3 - without color (dark, dark grey, light)
          * 3 to 18 - dark with color
          * 18 to 33 - light with color
          * 33 to 49 - system-dependent with and without color
-         * light grey has no color variant!!!
+         * dark grey has no color variant!!!
          * I wish I could describe this better
          */
         themeColor.takeIf { (theme == 3 || themeColor != 0) && theme != 1 }?.let {
