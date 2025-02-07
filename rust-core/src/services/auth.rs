@@ -730,6 +730,9 @@ pub trait AuthService {
     /// Update a user's name.
     async fn change_name(user_id: i64, new_name: String, loose: bool) -> Result<(), AuthError>;
 
+    /// Terminate user's sessions and delete all their data.
+    async fn delete_user(user_id: i64) -> Result<(), AuthError>;
+
     /// Clean all leftover data that is no longer needed.
     async fn vacuum() -> Result<(), AuthError>;
 }

@@ -24,6 +24,7 @@ import com.sayzen.campfiresdk.models.cards.CardPublication
 import com.sayzen.campfiresdk.models.events.account.EventAccountChanged
 import com.sayzen.campfiresdk.models.events.account.EventAccountStatusChanged
 import com.sayzen.campfiresdk.models.events.publications.EventPostPinedProfile
+import com.sayzen.campfiresdk.models.splashs.SplashAdminAccountRemove
 import com.sayzen.campfiresdk.models.splashs.SplashAdminBlock
 import com.sayzen.campfiresdk.screens.administation.SAdministrationDeepBlocked
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
@@ -297,6 +298,7 @@ class SProfile private constructor(
                 .groupCondition(ControllerApi.can(API.LVL_PROTOADMIN))
                 .add(t(API_TRANSLATE.protoadin_profile_blocked)) { Navigator.to(SAdministrationDeepBlocked(xAccount.getId())) }.backgroundRes(R.color.orange_700).textColorRes(R.color.white)
                 .add(t(API_TRANSLATE.protoadin_profile_autch)) { protoadminAutorization() }.backgroundRes(R.color.orange_700).textColorRes(R.color.white)
+                .add(t(API_TRANSLATE.app_remove)) { onProtoadminRemoveClicked() }.backgroundRes(R.color.orange_700).textColorRes(R.color.white).condition(!ControllerApi.isCurrentAccount(xAccount.getId()))
 
         w.asPopupShow(vMore)
     }
@@ -458,6 +460,10 @@ class SProfile private constructor(
                 .asSheetShow()
 
 
+    }
+
+    fun onProtoadminRemoveClicked() {
+        SplashAdminAccountRemove(xAccount.getId(), xAccount.getName()).asSheetShow()
     }
 
     private fun removeStatus() {

@@ -157,7 +157,10 @@ async fn main() -> anyhow::Result<()> {
         .route("/openid/authorize", get(oauth2_authorize))
         .route("/openid/jwks", get(oauth2_jwk_set))
         .route("/openid/token", post(oauth2_token))
-        .route("/openid/userinfo", get(oauth2_userinfo).post(oauth2_userinfo))
+        .route(
+            "/openid/userinfo",
+            get(oauth2_userinfo).post(oauth2_userinfo),
+        )
         .layer(NewSentryLayer::new_from_top())
         .layer(SentryHttpLayer::with_transaction())
         .layer(CorsLayer::permissive())
