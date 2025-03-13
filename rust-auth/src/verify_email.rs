@@ -30,8 +30,7 @@ impl AuthServer {
         let mut tx = self.base.pool.begin().await?;
 
         sqlx::query!(
-            "update users set email_verified = now(), email_verification_sent = null, \
-                              anon_id = null \
+            "update users set email_verified = now(), email_verification_sent = null \
              where id = $1",
             user.id
         )

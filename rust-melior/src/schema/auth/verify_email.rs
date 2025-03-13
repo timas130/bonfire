@@ -23,7 +23,7 @@ impl VerifyEmailResult {
 
 #[Object]
 impl VerifyEmailMutation {
-    /// Verify user's email after registration or deanonymizing
+    /// Verify user's email after registration
     async fn verify_email(
         &self,
         ctx: &Context<'_>,

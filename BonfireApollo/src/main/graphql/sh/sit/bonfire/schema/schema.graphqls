@@ -481,7 +481,7 @@ type Mutation {
   registerEmail(input: RegisterEmailInput!): RegisterEmailResult!
 
   """
-  Verify user's email after registration or deanonymizing
+  Verify user's email after registration
   """
   verifyEmail(token: String!): VerifyEmailResult!
 

@@ -44,5 +44,4 @@ pub struct AuthUser {
     pub modified_at: DateTime<Utc>,
     pub tfa_mode: Option<TfaMode>,
     pub hard_banned: bool,
-    pub anon: bool,
 }

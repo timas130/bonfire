@@ -44,7 +44,7 @@ impl AuthServer {
         }
 
         let current_user = sqlx::query!(
-            "select username, email, email_verification_sent, email_verified, anon_id from users \
+            "select username, email, email_verification_sent, email_verified from users \
              where id = $1",
             access_token.user_id,
         )
@@ -53,7 +53,6 @@ impl AuthServer {
 
         if current_user.email.is_some()
             && current_user.email_verified.is_none()
-            && current_user.anon_id.is_none()
         {
             return Err(AuthError::NotVerified);
         }

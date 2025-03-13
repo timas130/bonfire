@@ -39,7 +39,7 @@ impl AuthServer {
             .map_err(anyhow::Error::from)?;
 
         let session = sqlx::query!(
-            "select s.created_at, u.hard_banned, u.email_verified, u.anon_id from sessions s \
+            "select s.created_at, u.hard_banned, u.email_verified from sessions s \
              inner join users u on s.user_id = u.id \
              where s.id = $1 and s.user_id = $2",
             session_id,
@@ -52,7 +52,7 @@ impl AuthServer {
             None => return Err(anyhow::Error::msg("no such token").into()),
         };
 
-        if session.email_verified.is_none() && session.anon_id.is_none() {
+        if session.email_verified.is_none() {
             return Err(AuthError::NotVerified);
         }
         if session.hard_banned {

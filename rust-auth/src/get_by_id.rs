@@ -16,7 +16,7 @@ impl AuthServer {
     ) -> Result<HashMap<i64, AuthUser>, AuthError> {
         let users = query!(
             "select id, username, email, email_verified, permission_level, \
-             created_at, modified_at, tfa_mode, hard_banned, anon_id from users \
+             created_at, modified_at, tfa_mode, hard_banned from users \
              where id = any($1)",
             user_ids
         )
@@ -37,7 +37,6 @@ impl AuthServer {
                         modified_at: user.modified_at,
                         tfa_mode: user.tfa_mode.and_then(|num| TfaMode::try_from(num).ok()),
                         hard_banned: user.hard_banned,
-                        anon: user.anon_id.is_some(),
                     },
                 )
             })
