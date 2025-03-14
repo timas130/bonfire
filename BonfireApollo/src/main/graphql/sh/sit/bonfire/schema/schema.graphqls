@@ -476,6 +476,11 @@ type Mutation {
   internalChangeName(userId: ID!, newName: String!): User!
 
   """
+  Terminate user's sessions and delete all their data
+  """
+  internalDeleteUser(userId: ID!): Ok!
+
+  """
   Create a new account with email and password
   """
   registerEmail(input: RegisterEmailInput!): RegisterEmailResult!

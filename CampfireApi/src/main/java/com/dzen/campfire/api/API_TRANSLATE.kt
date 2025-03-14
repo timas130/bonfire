@@ -1348,6 +1348,7 @@ object API_TRANSLATE {
     var publication_menu_unset_nsfw = 0L
     var publication_menu_set_nsfw_desc = 0L
     var publication_menu_unset_nsfw_desc = 0L
+    var publication_menu_restore_deep_blocked_confirm = 0L
     var publication_event_make_moderator = 0L
     var publication_event_make_moderator_admin = 0L
     var publication_event_remove_moderator = 0L
@@ -2001,6 +2002,9 @@ object API_TRANSLATE {
     var protoadin_profile_move_account = 0L
     var protoadin_profile_move_account_title = 0L
     var protoadin_profile_move_account_action = 0L
+    var protoadin_profile_account_remove_title = 0L
+    var protoadin_profile_account_remove_error = 0L
+    var protoadin_profile_account_remove_publications = 0L
     var protoadin_red_button = 0L
     var protoadin_red_button_wipe = 0L
     var protoadin_red_button_wipe_confirm = 0L

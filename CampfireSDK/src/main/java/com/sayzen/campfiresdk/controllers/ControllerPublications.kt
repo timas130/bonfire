@@ -350,7 +350,7 @@ object ControllerPublications {
 
     fun restoreDeepBlock(publicationId: Long) {
         SplashField()
-                .setTitle("Востановить из глубокой блокировки?")
+                .setTitle(t(API_TRANSLATE.publication_menu_restore_deep_blocked_confirm))
                 .setHint(t(API_TRANSLATE.comments_hint))
                 .setOnCancel(t(API_TRANSLATE.app_cancel))
                 .setMin(API.MODERATION_COMMENT_MIN_L)

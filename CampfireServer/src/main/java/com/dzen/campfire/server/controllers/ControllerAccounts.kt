@@ -6,16 +6,20 @@ import com.dzen.campfire.api.models.account.AccountPunishment
 import com.dzen.campfire.api.models.account.AccountSettings
 import com.dzen.campfire.api.models.notifications.account.NotificationAdminBlock
 import com.dzen.campfire.api.models.notifications.account.NotificationPunishmentRemove
+import com.dzen.campfire.api.models.publications.chat.PublicationChatMessage
 import com.dzen.campfire.api.models.publications.events_admins.ApiEventAdminBan
 import com.dzen.campfire.api.models.publications.events_admins.ApiEventAdminPunishmentRemove
 import com.dzen.campfire.api.models.publications.events_admins.ApiEventAdminWarn
 import com.dzen.campfire.api.models.publications.events_user.ApiEventUserAdminBaned
 import com.dzen.campfire.api.models.publications.events_user.ApiEventUserAdminPunishmentRemove
 import com.dzen.campfire.api.models.publications.events_user.ApiEventUserAdminWarned
+import com.dzen.campfire.api.models.publications.post.PublicationPost
+import com.dzen.campfire.api.models.publications.stickers.PublicationSticker
 import com.dzen.campfire.api.tools.ApiAccount
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.optimizers.OptimizerEffects
 import com.dzen.campfire.server.optimizers.OptimizerSponsor
+import com.dzen.campfire.server.rust.RustAuth
 import com.dzen.campfire.server.rust.RustProfile
 import com.dzen.campfire.server.tables.*
 import com.sup.dev.java.classes.collections.AnyArray
@@ -316,6 +320,157 @@ object ControllerAccounts {
         ControllerNotifications.push(accountId, notificationBlock)
 
         return punishmentId
+    }
+
+    fun remove(
+        accountId: Long,
+        removePublications: Boolean,
+    ) {
+        val v = get(accountId, TAccounts.img_id, TAccounts.img_title_id, TAccounts.img_title_gif_id)
+        val imageId: Long = v.next()
+        val imageTitleId: Long = v.next()
+        val imageTitleGifId: Long = v.next()
+
+        RustAuth.delete(accountId)
+
+        // publications (based on EPublicationsRemove)
+        if (removePublications) {
+            val selectComments = ControllerPublications.instanceSelect(0)
+                .where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_COMMENT)
+                .where(TPublications.creator_id, "=", accountId)
+            val comments = ControllerPublications.parseSelect(Database.select("ControllerAccounts.remove.removeComments", selectComments))
+
+            val selectMessages = ControllerPublications.instanceSelect(0)
+                .where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_CHAT_MESSAGE)
+                .where(TPublications.creator_id, "=", accountId)
+            val messages = ControllerPublications.parseSelect(Database.select("ControllerAccounts.remove.removeMessages", selectMessages))
+
+            // remove all stickers' resources
+            val selectStickerPacks = ControllerPublications.instanceSelect(0)
+                .where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_STICKERS_PACK)
+                .where(TPublications.creator_id, "=", accountId)
+            val stickerPacks = ControllerPublications.parseSelect(Database.select("ControllerAccounts.remove.removeStickerPacks", selectStickerPacks))
+            for (pack in stickerPacks) {
+                val stickers = ControllerPublications.parseSelect(
+                    Database.select("ControllerAccounts.remove.removeStickerPacks select", ControllerPublications.instanceSelect(0)
+                        .where(TPublications.tag_1, "=", pack.id)
+                        .where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_STICKER))
+                )
+                for (sticker in stickers) {
+                    sticker as PublicationSticker
+                    ControllerResources.remove(sticker.imageId)
+                    ControllerResources.remove(sticker.gifId)
+                }
+            }
+
+            // remove all post pages' resources
+            val selectPosts = ControllerPublications.instanceSelect(0)
+                .where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_POST)
+                .where(TPublications.creator_id, "=", accountId)
+            val posts = ControllerPublications.parseSelect(Database.select("ControllerAccounts.remove.removePostPages", selectPosts))
+            for (post in posts) {
+                post as PublicationPost
+                for (page in post.pages) ControllerPost.removePage(page)
+            }
+
+            Database.remove("ControllerAccounts.remove.removePublications", SqlQueryRemove(TPublications.NAME)
+                .where(TPublications.creator_id, "=", accountId))
+
+            // some things need to be updated after publications have been removed
+
+            for (comment in comments) {
+                Database.update("ControllerAccounts.remove.removeComments update", SqlQueryUpdate(TPublications.NAME)
+                    .where(TPublications.id, "=", comment.parentPublicationId)
+                    .update(TPublications.subpublications_count, TPublications.subpublications_count + "-1"))
+                ControllerPublications.recountBestComment(comment.parentPublicationId, comment.id)
+            }
+
+            for (message in messages) {
+                ControllerChats.onMessagesRemoved((message as PublicationChatMessage).chatTag(), 1)
+            }
+        }
+
+        // user events
+        val selectEvents = ControllerPublications.instanceSelect(0)
+            .where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_EVENT_USER)
+            .where(TPublications.creator_id, "=", accountId)
+        val events = ControllerPublications.parseSelect(Database.select("ControllerAccounts.remove.removeEvents", selectEvents))
+        for (event in events) ControllerPublications.remove(event.id)
+
+        // rubrics
+        Database.update("ControllerAccounts.remove.removeRubricsOwner", SqlQueryUpdate(TRubrics.NAME)
+            .where(TRubrics.owner_id, "=", accountId)
+            .update(TRubrics.owner_id, 0))
+
+        // chat subscriptions
+        Database.remove("ControllerAccounts.remove.removeChatSubscriptions", SqlQueryRemove(TChatsSubscriptions.NAME)
+            .where(TChatsSubscriptions.account_id, "=", accountId))
+
+        // relay races
+        Database.remove("ControllerAccounts.remove.rejectRelayRaces", SqlQueryRemove(TActivitiesCollisions.NAME)
+            .where(TActivitiesCollisions.account_id, "=", accountId)
+            .where(TActivitiesCollisions.type, "=", API.ACTIVITIES_COLLISION_TYPE_RELAY_RACE_MEMBER))
+
+        Database.remove("ControllerAccounts.remove.removeActivitiesSubscriptions", SqlQueryRemove(TActivitiesCollisions.NAME)
+            .where(TActivitiesCollisions.account_id, "=", accountId)
+            .where(TActivitiesCollisions.type, "=", API.ACTIVITIES_COLLISION_TYPE_SUBSCRIBE))
+
+        // collisions
+        val collisions = listOf(
+            "removeAccountFollows"               to Pair(API.COLLISION_ACCOUNT_FOLLOW, TCollisions.owner_id),
+            "removeAccountFollowsNotify"         to Pair(API.COLLISION_ACCOUNT_FOLLOW_NOTIFY, TCollisions.owner_id),
+            "removeFandomSubscriptions"          to Pair(API.COLLISION_FANDOM_SUBSCRIBE, TCollisions.owner_id),
+            "removeFandomsNotifyImportant"       to Pair(API.COLLISION_FANDOM_NOTIFY_IMPORTANT, TCollisions.owner_id),
+            "removeCollisionRubricNotifications" to Pair(API.COLLISION_RUBRICS_NOTIFICATIONS, TCollisions.owner_id),
+            "unsubscribeFollowers"               to Pair(API.COLLISION_ACCOUNT_FOLLOW, TCollisions.collision_id),
+            "removeFollowersFollowNotify"        to Pair(API.COLLISION_ACCOUNT_FOLLOW_NOTIFY, TCollisions.collision_id),
+            "removeViceroy"                      to Pair(API.COLLISION_FANDOM_VICEROY, TCollisions.value_1),
+            "removeBlacklistedAccounts"          to Pair(API.COLLISION_ACCOUNT_BLACK_LIST_ACCOUNT, TCollisions.owner_id),
+            "removeBlacklistedFandoms"           to Pair(API.COLLISION_ACCOUNT_BLACK_LIST_FANDOM, TCollisions.owner_id),
+            "unblacklistAccount"                 to Pair(API.COLLISION_ACCOUNT_BLACK_LIST_ACCOUNT, TCollisions.collision_id),
+            "removeBans"                         to Pair(API.COLLISION_PUNISHMENTS_BAN, TCollisions.owner_id),
+            "removeWarns"                        to Pair(API.COLLISION_PUNISHMENTS_WARN, TCollisions.owner_id),
+            "removeBookmarks"                    to Pair(API.COLLISION_BOOKMARK, TCollisions.collision_id),
+            "stopWatchingComments"               to Pair(API.COLLISION_COMMENTS_WATCH, TCollisions.owner_id),
+            "removeNotificationTokens"           to Pair(API.COLLISION_ACCOUNT_NOTIFICATION_TOKEN, TCollisions.owner_id),
+            "removeStatus"                       to Pair(API.COLLISION_ACCOUNT_STATUS, TCollisions.owner_id),
+            "removeAge"                          to Pair(API.COLLISION_ACCOUNT_AGE, TCollisions.owner_id),
+            "removeDescription"                  to Pair(API.COLLISION_ACCOUNT_DESCRIPTION, TCollisions.owner_id),
+            "removeLinks"                        to Pair(API.COLLISION_ACCOUNT_LINKS, TCollisions.owner_id),
+            "removeNotes"                        to Pair(API.COLLISION_ACCOUNT_NOTE, TCollisions.owner_id),
+            "removeAccountNotes"                 to Pair(API.COLLISION_ACCOUNT_NOTE, TCollisions.collision_id),
+            "removeCommentsCount"                to Pair(API.COLLISION_ACCOUNT_COMMENTS_COUNT, TCollisions.owner_id),
+            "removePostsCount"                   to Pair(API.COLLISION_ACCOUNT_POSTS_COUNT, TCollisions.owner_id),
+            "removeCollisionCommentsKarma"       to Pair(API.COLLISION_ACCOUNT_COMMENTS_KARMA, TCollisions.owner_id),
+            "removeCollisionPostsKarma"          to Pair(API.COLLISION_ACCOUNT_POSTS_KARMA, TCollisions.owner_id),
+            "removeCollisionUpRates"             to Pair(API.COLLISION_ACCOUNT_UP_RATES, TCollisions.owner_id),
+            "removeCollisionUpOverDownRates"     to Pair(API.COLLISION_ACCOUNT_UP_OVER_DOWN_RATES, TCollisions.owner_id),
+            "removeKarmaCount"                   to Pair(API.COLLISION_ACCOUNT_KARMA_COUNT, TCollisions.owner_id),
+            "removeLastDailyEnterDate"           to Pair(API.COLLISION_ACCOUNT_LAST_DAILY_ENTER_DATE, TCollisions.owner_id),
+            "removeDailyEntersCount"             to Pair(API.COLLISION_ACCOUNT_DAILY_ENTERS_COUNT, TCollisions.owner_id),
+            "removeCollisionModerationKarma"     to Pair(API.COLLISION_ACCOUNT_MODERATION_KARMA, TCollisions.owner_id),
+            "removeCollisionPinnedPost"          to Pair(API.COLLISION_ACCOUNT_PINNED_POST, TCollisions.owner_id),
+            "removeCollisionStickersKarma"       to Pair(API.COLLISION_ACCOUNT_STICKERS_KARMA, TCollisions.owner_id),
+            "removeCollisionStickerPacks"        to Pair(API.COLLISION_ACCOUNT_STICKERPACKS, TCollisions.owner_id),
+            "removeCollisionStickers"            to Pair(API.COLLISION_ACCOUNT_STICKERS, TCollisions.owner_id),
+            "removeProjectInit"                  to Pair(API.COLLISION_ACCOUNT_PROJECT_INIT, TCollisions.owner_id),
+            "removeCollisionQuestsKarma"         to Pair(API.COLLISION_ACCOUNT_QUESTS_KARMA, TCollisions.owner_id),
+            "removeAchievements"                 to Pair(API.COLLISION_ACCOUNT_ACHIEVEMENTS, TCollisions.owner_id),
+        )
+
+        for ((tag, collision) in collisions) {
+            Database.remove("ControllerAccounts.remove." + tag, SqlQueryRemove(TCollisions.NAME)
+                .where(collision.second, "=", accountId)
+                .where(TCollisions.collision_type, "=", collision.first))
+        }
+
+        // profile images
+        ControllerResources.remove(imageId)
+        ControllerResources.remove(imageTitleId)
+        ControllerResources.remove(imageTitleGifId)
+
+        Database.remove("ControllerAccounts.remove", SqlQueryRemove(TAccounts.NAME)
+            .where(TAccounts.id, "=", accountId))
     }
 
     fun updateSettings(accountId: Long, accountSettings: AccountSettings) {

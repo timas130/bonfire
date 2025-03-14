@@ -3,6 +3,7 @@ package com.dzen.campfire.server.rust
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.dzen.campfire.api.tools.ApiException
+import com.dzen.campfire.server.DeleteUserMutation
 import com.dzen.campfire.server.ChangeNameMutation
 import com.dzen.campfire.server.ShortMeQuery
 import com.dzen.campfire.server.fragment.ShortUser
@@ -29,5 +30,11 @@ object RustAuth {
             .executeExt()
             .internalChangeName
             .shortUser
+    }
+
+    fun delete(userId: Long) {
+        ControllerRust.apollo
+            .mutation(DeleteUserMutation(userId.toString()))
+            .executeExt()
     }
 }

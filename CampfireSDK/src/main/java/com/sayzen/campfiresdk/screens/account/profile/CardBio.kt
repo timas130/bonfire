@@ -23,6 +23,7 @@ import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.cards.Card
 import com.sup.dev.android.views.settings.Settings
 import com.sup.dev.android.views.splash.*
+import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsText
@@ -48,7 +49,7 @@ class CardBio(
         val vSex: TextView = view.findViewById(R.id.vSex)
         val vAge: TextView = view.findViewById(R.id.vAge)
         val vDescription: ViewText = view.findViewById(R.id.vInfo)
-        val vDescriptionChange: View = view.findViewById(R.id.vDescriptionChange)
+        val vDescriptionChange: ViewIcon = view.findViewById(R.id.vDescriptionChange)
         val vLinksContainer: ViewGroup = view.findViewById(R.id.vLinksContainer)
         val vAddLink: Settings = view.findViewById(R.id.vAddLink)
 
@@ -79,6 +80,7 @@ class CardBio(
             vAddLink.visibility = View.GONE
 
             if (description.isNotEmpty() && ControllerApi.can(API.LVL_ADMIN_USER_REMOVE_DESCRIPTION)) {
+                vDescriptionChange.setImageResource(R.drawable.ic_clear_white_24dp)
                 vDescriptionChange.visibility = View.VISIBLE
                 vDescriptionChange.setOnClickListener { onAdminRemoveDescriptionClicked() }
             }

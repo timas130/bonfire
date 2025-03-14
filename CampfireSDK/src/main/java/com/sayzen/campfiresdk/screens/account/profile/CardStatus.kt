@@ -6,6 +6,7 @@ import android.view.View.VISIBLE
 import android.widget.TextView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.requests.accounts.RAccountsAdminStatusRemove
 import com.dzen.campfire.api.requests.accounts.RAccountsStatusSet
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
@@ -21,6 +22,7 @@ import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.cards.Card
 import com.sup.dev.android.views.splash.SplashField
+import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.android.views.views.layouts.LayoutCorned
 import com.sup.dev.java.libs.eventBus.EventBus
@@ -50,7 +52,7 @@ class CardStatus(
     private fun updateStatus() {
         val view = getView() ?: return
         val vStatus: ViewText = view.findViewById(R.id.vStatus)
-        val vStatusChange: View = view.findViewById(R.id.vStatusChange)
+        val vStatusChange: ViewIcon = view.findViewById(R.id.vStatusChange)
         val vContainer: LayoutCorned = view.findViewById(R.id.vContainer)
 
         vContainer.setBackgroundColor(if (ControllerSettings.isProfileListStyle) ToolsResources.getColorAttr(R.attr.colorSurface) else 0x00000000)
@@ -73,6 +75,12 @@ class CardStatus(
             }
         } else {
             vStatusChange.visibility = View.GONE
+
+            if (loaded && status.isNotEmpty() && ControllerApi.can(API.LVL_ADMIN_USER_REMOVE_STATUS)) {
+                vStatusChange.setImageResource(R.drawable.ic_clear_white_24dp)
+                vStatusChange.visibility = View.VISIBLE
+                vStatusChange.setOnClickListener { removeStatus() }
+            }
         }
     }
 
@@ -137,6 +145,22 @@ class CardStatus(
                 )
             }
             .asSheetShow()
+    }
+
+    private fun removeStatus() {
+        SplashField()
+                .setTitle(t(API_TRANSLATE.profile_remove_status))
+                .setHint(t(API_TRANSLATE.comments_hint))
+                .setOnCancel(t(API_TRANSLATE.app_cancel))
+                .setMin(API.MODERATION_COMMENT_MIN_L)
+                .setMax(API.MODERATION_COMMENT_MAX_L)
+                .setOnEnter(t(API_TRANSLATE.app_remove)) { w, comment ->
+                    ApiRequestsSupporter.executeEnabled(w, RAccountsAdminStatusRemove(xAccount.getId(), comment)) {
+                        ToolsToast.show(t(API_TRANSLATE.app_done))
+                        EventBus.post(EventAccountStatusChanged(xAccount.getId(), ""))
+                    }
+                }
+                .asSheetShow()
     }
 
     private fun onEventAccountBaned(e: EventAccountBaned) {

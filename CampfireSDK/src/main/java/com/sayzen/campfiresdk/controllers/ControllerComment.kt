@@ -88,7 +88,7 @@ object ControllerComment {
             .condition(ControllerApi.can(publication.fandom.id, publication.fandom.languageId, API.LVL_MODERATOR_BLOCK))
             .clearGroupCondition()
             .spoiler(t(API_TRANSLATE.app_protoadmin))
-            .add("Востановить") { ControllerPublications.restoreDeepBlock(publication.id) }
+            .add(t(API_TRANSLATE.app_restore)) { ControllerPublications.restoreDeepBlock(publication.id) }
             .backgroundRes(R.color.orange_700).textColorRes(R.color.white)
             .condition(ControllerApi.can(API.LVL_PROTOADMIN) && publication.status == API.STATUS_DEEP_BLOCKED)
             .asPopupShow(targetView, x, y)
