@@ -34,6 +34,7 @@ import androidx.compose.ui.zIndex
 import androidx.core.graphics.ColorUtils
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.Publication
+import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.publications.RPublicationsKarmaAdd
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
@@ -419,9 +420,13 @@ private fun KarmaCounterAmount(model: KarmaCounterModel, onLongClick: () -> Unit
             )
         }
 
-        if (model.publication.fandom.karmaCof != 100L && model.publication.fandom.karmaCof != 0L) {
+        var karmaCof = model.publication.fandom.karmaCof / 100f
+        if (model.publication.publicationType == API.PUBLICATION_TYPE_POST && (model.publication as PublicationPost).rubricKarmaCof != 0L) {
+            karmaCof *= model.publication.rubricKarmaCof / 100f
+        }
+        if (karmaCof != 1f && karmaCof != 0f) {
             Text(
-                text = "x${"%.2f".format(model.publication.fandom.karmaCof / 100f)}",
+                text = "x${"%.2f".format(karmaCof)}",
                 style = MaterialTheme.typography.labelSmall,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.alpha(0.6f)

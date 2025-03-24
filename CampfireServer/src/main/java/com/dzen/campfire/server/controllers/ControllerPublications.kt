@@ -293,15 +293,17 @@ object ControllerPublications {
 
         if (listIds.isEmpty()) return
 
-        val v = Database.select("ControllerPublications.loadRubricsForPosts", SqlQuerySelect(TRubrics.NAME, TRubrics.id, TRubrics.name).where(SqlWhere.WhereIN(TRubrics.id, listIds)))
+        val v = Database.select("ControllerPublications.loadRubricsForPosts", SqlQuerySelect(TRubrics.NAME, TRubrics.id, TRubrics.name, TRubrics.karma_cof).where(SqlWhere.WhereIN(TRubrics.id, listIds)))
 
         while (v.hasNext()) {
             val id: Long = v.next()
             val name: String = v.next()
+            val karmaCof: Long = v.next()
             for (n in list)
                 if (n.tag_6 == id) {
                     n.rubricId = id
                     n.rubricName = name
+                    n.rubricKarmaCof = karmaCof
                 }
         }
 
