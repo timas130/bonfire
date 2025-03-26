@@ -1,5 +1,6 @@
 package com.sup.dev.android.utils
 
+import android.annotation.SuppressLint
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.AudioRecord.STATE_INITIALIZED
@@ -16,6 +17,8 @@ class UtilsVoiceRecorder {
     init {
     }
 
+    // check ToolsPermission.hasMicrophonePermission()
+    // before calling this method!
     fun start() {
         recorder = SubRecorder()
     }
@@ -34,6 +37,7 @@ class UtilsVoiceRecorder {
     private inner class SubRecorder{
 
         var frames = ArrayList<ByteArray>()
+        @SuppressLint("MissingPermission")
         var recorder = AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, minBufferSize)
         var stop = false
 

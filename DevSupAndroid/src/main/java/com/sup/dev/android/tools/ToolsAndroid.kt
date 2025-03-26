@@ -115,6 +115,7 @@ object ToolsAndroid {
 
     @RequiresPermission(Manifest.permission.BLUETOOTH)
     fun getBluetoothMacAddress(): String {
+        /*
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         var bluetoothMacAddress = ""
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -134,9 +135,16 @@ object ToolsAndroid {
             }
 
         } else {
-            bluetoothMacAddress = bluetoothAdapter.address
+            try {
+                bluetoothMacAddress = bluetoothAdapter.address
+            } catch (e: SecurityException) {
+                err(e)
+            }
         }
         return bluetoothMacAddress
+        */
+
+        return ""
     }
 
     fun getProcessName(): String? {
@@ -351,7 +359,7 @@ object ToolsAndroid {
             return
 
         val pm = SupAndroid.appContext!!.getSystemService(Context.POWER_SERVICE) as PowerManager
-        val screenLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.FULL_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP, "FULL WAKE LOCK")
+        val screenLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.FULL_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP, "campfire:fullwakelock")
 
         screenLock.acquire()
         Thread {

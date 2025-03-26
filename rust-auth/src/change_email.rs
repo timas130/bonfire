@@ -51,9 +51,7 @@ impl AuthServer {
         .fetch_one(&mut *tx)
         .await?;
 
-        if current_user.email.is_some()
-            && current_user.email_verified.is_none()
-        {
+        if current_user.email.is_some() && current_user.email_verified.is_none() {
             return Err(AuthError::NotVerified);
         }
 

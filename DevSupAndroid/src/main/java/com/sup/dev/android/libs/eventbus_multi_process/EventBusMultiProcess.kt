@@ -1,9 +1,11 @@
 package com.sup.dev.android.libs.eventbus_multi_process
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.java.libs.debug.err
@@ -34,7 +36,12 @@ class EventBusMultiProcess : BroadcastReceiver() {
             if (!isRegisteredInManifest()) {
                 val filter = IntentFilter(MULTI_PROCESS_INTENT_ACTION)
                 filter.addCategory(Intent.CATEGORY_DEFAULT)
-                SupAndroid.appContext!!.registerReceiver(EventBusMultiProcess(), filter)
+                @SuppressLint("UnspecifiedRegisterReceiverFlag")
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                    SupAndroid.appContext!!.registerReceiver(EventBusMultiProcess(), filter)
+                } else {
+                    SupAndroid.appContext!!.registerReceiver(EventBusMultiProcess(), filter, Context.RECEIVER_EXPORTED)
+                }
             }
         }
 

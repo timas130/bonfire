@@ -5,6 +5,7 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/vFab"
         style="@style/Fab"/>
 
 </FrameLayout>

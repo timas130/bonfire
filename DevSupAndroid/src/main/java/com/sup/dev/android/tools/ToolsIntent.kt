@@ -245,6 +245,11 @@ object ToolsIntent {
         onError: (Exception) -> Unit = {},
         allowReEncode: Boolean = true
     ) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            onError(RuntimeException("your system is too old"))
+            return
+        }
+
         try {
             val dcimFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
             val imageFile = File.createTempFile("cam_", ".jpg", dcimFolder)

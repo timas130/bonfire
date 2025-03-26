@@ -50,7 +50,8 @@
             android:layout_gravity="center"
             android:layout_margin="16dp">
 
-            <ImageView
+            <ImageView xmlns:tools="http://schemas.android.com/tools"
+                tools:ignore="UseAppTint"
                 android:id="@+id/vIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
