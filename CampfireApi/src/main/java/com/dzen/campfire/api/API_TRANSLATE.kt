@@ -1792,6 +1792,18 @@ object API_TRANSLATE {
     var time_year = 0L
     var time_all = 0L
 
+    val postPagePollingDurations by lazy { arrayOf(
+        0L to post_page_polling_duration_infinite,
+        1000L * 60 * 60 to time_hour,
+        1000L * 60 * 60 * 8 to time_8_hour,
+        1000L * 60 * 60 * 24 to time_day,
+        1000L * 60 * 60 * 24 * 2 to time_2_day,
+        1000L * 60 * 60 * 24 * 3 to time_3_day,
+        1000L * 60 * 60 * 24 * 7 to time_week,
+        1000L * 60 * 60 * 24 * 14 to time_2_week,
+        1000L * 60 * 60 * 24 * 30 to time_month,
+    )}
+
     var notifications_follows_new_content = 0L
     var notifications_fandom_suggested = 0L
     var notifications_fandom_make_moderator = 0L

@@ -56,6 +56,7 @@
     <string name="activity_leave">Leave</string>
     <string name="poll_limits">Limits:</string>
     <string name="poll_limits_duration">Until %s</string>
+    <string name="poll_limits_duration_literal">Duration %s</string>
     <string name="poll_limits_level">Level %.2f</string>
     <string name="poll_limits_karma">Karma %d</string>
     <string name="poll_limits_age">Account age %d days</string>
