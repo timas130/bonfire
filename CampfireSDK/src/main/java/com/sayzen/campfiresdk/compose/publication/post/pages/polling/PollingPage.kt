@@ -22,12 +22,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.post.PagePolling
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.compose.BonfireTheme
 import com.sayzen.campfiresdk.compose.publication.post.pages.PagesSource
 import com.sayzen.campfiresdk.controllers.ControllerApi
+import com.sayzen.campfiresdk.controllers.t
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.java.tools.ToolsDate
 import sh.sit.bonfire.auth.components.TextLoadingButton
@@ -135,16 +137,26 @@ private fun PollLimits(page: PagePolling, source: PagesSource) {
                     .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                if (page.duration > 0) {
+                if (
+                    page.duration > 0 &&
+                    !(source.editMode && API_TRANSLATE.postPagePollingDurations.none { it.first == page.duration })
+                ) {
                     val dateCreate = source.sourceDateCreate.coerceAtLeast(page.dateCreate)
 
                     FilterChip(
-                        selected = page.duration >= (System.currentTimeMillis() - dateCreate),
+                        selected = page.duration >= (System.currentTimeMillis() - dateCreate) || source.editMode,
                         onClick = {},
                         label = {
-                            Text(stringResource(R.string.poll_limits_duration).format(
-                                ToolsDate.dateToString(dateCreate + page.duration)
-                            ))
+                            if (source.editMode) {
+                                Text(stringResource(R.string.poll_limits_duration_literal).format(
+                                    t(API_TRANSLATE.postPagePollingDurations.first { it.first == page.duration }.second)
+                                        .replaceFirstChar { it.lowercase() }
+                                ))
+                            } else {
+                                Text(stringResource(R.string.poll_limits_duration).format(
+                                    ToolsDate.dateToString(dateCreate + page.duration)
+                                ))
+                            }
                         }
                     )
                 }

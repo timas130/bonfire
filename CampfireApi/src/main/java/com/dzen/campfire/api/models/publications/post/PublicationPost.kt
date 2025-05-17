@@ -14,6 +14,7 @@ class PublicationPost : Publication, PagesContainer {
     var bestComment: PublicationComment? = null
     var rubricId = 0L
     var rubricName = ""
+    var rubricKarmaCof = 0L
     //  App Flags (No Json)
     var isPined = false
     //  User Activity
@@ -35,6 +36,7 @@ class PublicationPost : Publication, PagesContainer {
         bestComment = json.mNull(inp, "bestComment", bestComment, PublicationComment::class)
         rubricId = json.m(inp, "rubricId", rubricId)
         rubricName = json.m(inp, "rubricName", rubricName)
+        rubricKarmaCof = json.m(inp, "rubricKarmaCof", rubricKarmaCof)
         userActivity = json.mNull(inp, "userActivity", userActivity, UserActivity::class)
     }
 

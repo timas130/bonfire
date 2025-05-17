@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.WorkerThread
 import androidx.core.view.WindowCompat
 import com.dzen.campfire.R
 import com.dzen.campfire.api.API_TRANSLATE
@@ -177,7 +176,6 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
         }
     }
 
-    @WorkerThread
     private fun continueLegacyLogin() {
         val account = ControllerApi.getLastAccount()
         if (account.id == 0L) {

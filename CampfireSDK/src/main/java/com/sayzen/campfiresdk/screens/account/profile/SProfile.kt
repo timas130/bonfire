@@ -297,7 +297,6 @@ class SProfile private constructor(
                 .groupCondition(ControllerApi.can(API.LVL_PROTOADMIN))
                 .add(t(API_TRANSLATE.protoadin_profile_blocked)) { Navigator.to(SAdministrationDeepBlocked(xAccount.getId())) }.backgroundRes(R.color.orange_700).textColorRes(R.color.white)
                 .add(t(API_TRANSLATE.protoadin_profile_autch)) { protoadminAutorization() }.backgroundRes(R.color.orange_700).textColorRes(R.color.white)
-                .add("Расщепить на атомы") { }.backgroundRes(R.color.orange_700).textColorRes(R.color.white)
 
         w.asPopupShow(vMore)
     }

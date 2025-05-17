@@ -1,5 +1,6 @@
 package com.sup.dev.android.tools
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationChannelGroup
@@ -45,11 +46,11 @@ object ToolsNotifications {
     private var notificationManager: NotificationManager = SupAndroid.appContext!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     init {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            SupAndroid.appContext?.registerReceiver(broadcastReceiver, IntentFilter("NOTIF_CANCEL"),
-                Context.RECEIVER_NOT_EXPORTED)
-        } else {
+        @SuppressLint("UnspecifiedRegisterReceiverFlag")
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             SupAndroid.appContext?.registerReceiver(broadcastReceiver, IntentFilter("NOTIF_CANCEL"))
+        } else {
+            SupAndroid.appContext?.registerReceiver(broadcastReceiver, IntentFilter("NOTIF_CANCEL"), Context.RECEIVER_NOT_EXPORTED)
         }
     }
 

@@ -55,17 +55,6 @@ class SCreatePagePolling(
     private val vBlackListAdd: ViewButton = findViewById(R.id.vBlackListAdd)
 
     private val blackList: MutableList<Account> = mutableListOf()
-    private val durations = listOf(
-        API_TRANSLATE.post_page_polling_duration_infinite to 0L,
-        API_TRANSLATE.time_hour to 1000L * 60 * 60,
-        API_TRANSLATE.time_8_hour to 1000L * 60 * 60 * 8,
-        API_TRANSLATE.time_day to 1000L * 60 * 60 * 24,
-        API_TRANSLATE.time_2_day to 1000L * 60 * 60 * 24 * 2,
-        API_TRANSLATE.time_3_day to 1000L * 60 * 60 * 24 * 3,
-        API_TRANSLATE.time_week to 1000L * 60 * 60 * 24 * 7,
-        API_TRANSLATE.time_2_week to 1000L * 60 * 60 * 24 * 14,
-        API_TRANSLATE.time_month to 1000L * 60 * 60 * 24 * 30,
-    )
 
     init {
         disableShadows()
@@ -81,8 +70,8 @@ class SCreatePagePolling(
         vDays.setHint(t(API_TRANSLATE.post_page_polling_days_title))
 
         if (sourceType == API.PAGES_SOURCE_TYPE_POST) {
-            for (variant in durations) {
-                vDuration.add(t(variant.first)) { }
+            for (variant in API_TRANSLATE.postPagePollingDurations) {
+                vDuration.add(t(variant.second)) { }
             }
 
             vDuration.setTitle(t(API_TRANSLATE.post_page_polling_duration_title))
@@ -111,8 +100,8 @@ class SCreatePagePolling(
             vCreate.text = t(API_TRANSLATE.app_change)
 
             if (oldPage.duration > 0) {
-                vDuration.setCurrentIndex(durations
-                    .indexOfFirst { it.second == oldPage.duration }
+                vDuration.setCurrentIndex(API_TRANSLATE.postPagePollingDurations
+                    .indexOfFirst { it.first == oldPage.duration }
                     .takeUnless { it == -1 } ?: 0)
             }
             if (oldPage.minLevel > 0) {
@@ -270,7 +259,7 @@ class SCreatePagePolling(
         val page = PagePolling()
         page.title = vPageTitle.text.toString()
         page.options = getOptions()
-        page.duration = durations[vDuration.getCurrentIndex()].second
+        page.duration = API_TRANSLATE.postPagePollingDurations[vDuration.getCurrentIndex()].first
         page.minLevel = if (vLvl.getText().isEmpty()) 0L else (vLvl.getText().toFloat() * 100).toLong()
         page.minKarma = if (vKarma.getText().isEmpty()) 0L else vKarma.getText().toLong() * 100
         page.minDays = if (vDays.getText().isEmpty()) 0L else vDays.getText().toLong()

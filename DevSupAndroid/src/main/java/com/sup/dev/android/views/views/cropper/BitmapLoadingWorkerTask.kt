@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.AsyncTask
+import android.os.Build
 import java.lang.ref.WeakReference
 
 
@@ -30,6 +31,9 @@ internal class BitmapLoadingWorkerTask(cropImageView: ViewCropImage, val uri: Ur
 
                 if (!isCancelled) {
 
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                        return Result(uri, RuntimeException("your system is too old"))
+                    }
                     val rotateResult = BitmapUtils.rotateBitmapByExif(decodeResult.bitmap!!, mContext, uri)
 
                     return Result(

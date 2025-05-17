@@ -2,6 +2,7 @@
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
@@ -219,6 +220,7 @@ abstract class SActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, intent)
     }
 
+    @SuppressLint("MissingSuperCall")
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         ToolsPermission.onRequestPermissionsResult(requestCode, permissions, grantResults.toTypedArray())
     }
@@ -227,6 +229,7 @@ abstract class SActivity : AppCompatActivity() {
         type.onViewBackPressed()
     }
 
+    @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
         if(onBackPressedSplash()) return
         if(type.onBackPressed()) return

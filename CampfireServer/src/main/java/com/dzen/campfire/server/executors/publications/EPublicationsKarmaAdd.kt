@@ -9,6 +9,7 @@ import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
+import kotlin.math.roundToLong;
 
 
 class EPublicationsKarmaAdd : RPublicationsKarmaAdd(0, false, 0, false) {
@@ -51,15 +52,12 @@ class EPublicationsKarmaAdd : RPublicationsKarmaAdd(0, false, 0, false) {
         val doubleKarmaEnd = doubleKarmaStart + 1000L * 3600L * 24L * 4L
         val isGlobalDoubleKarma = System.currentTimeMillis() in doubleKarmaStart..doubleKarmaEnd
 
-        val rubricKarmaCof = if (publication!!.publicationType == API.PUBLICATION_TYPE_POST && publication!!.tag_6 > 0) ControllerOptimizer.getRubricKarmaCof(publication!!.tag_6) - 100 else 0
-        val fandomKarmaCof = if (publication!!.fandom.id < 1) 100 else ControllerOptimizer.getFandomKarmaCof(publication!!.fandom.id)
-        val questKarmaCof  = if (publication!!.publicationType == API.PUBLICATION_TYPE_QUEST) 50 else 0
-        val karmaCof = if (isGlobalDoubleKarma) {
-            2 * (fandomKarmaCof + rubricKarmaCof + questKarmaCof)
-        } else {
-            fandomKarmaCof + rubricKarmaCof + questKarmaCof
-        }
-        val karmaForceD = ControllerKarma.getKarmaForce(apiAccount, up) * (karmaCof / 100.0)
+        val rubricKarmaCof = if (publication!!.publicationType == API.PUBLICATION_TYPE_POST && publication!!.tag_6 > 0) ControllerOptimizer.getRubricKarmaCof(publication!!.tag_6) else 100
+        val fandomKarmaCof = if (publication!!.fandom.id > 0) ControllerOptimizer.getFandomKarmaCof(publication!!.fandom.id) else 100
+        val questKarmaCof  = if (publication!!.publicationType == API.PUBLICATION_TYPE_QUEST) 50 else 100
+        val karmaCof = ((fandomKarmaCof / 100f) * (rubricKarmaCof / 100f) * (questKarmaCof / 100f) * (if (isGlobalDoubleKarma) 2 else 1) * 100).roundToLong()
+
+        val karmaForceD = ControllerKarma.getKarmaForce(apiAccount, up) * (karmaCof / 100f)
         val karmaForce = if (karmaForceD > 0) {
             if (karmaForceD < 100) 100
             else karmaForceD.toLong()

@@ -47,7 +47,7 @@ internal class SplashNames(
             val v = ViewChip.instanceChoose(view.context, i, i)
             v.tag = 0
             v.isSelected = false
-            v.setChipBackgroundColorResource(R.drawable.selector_style_dark_chip_red)
+            v.setChipBackgroundColorResource(R.color.green_700)
             v.setOnCheckedChangeListener { _, _ -> updateFinishEnabled() }
             vFlow.addView(v)
         }

@@ -57,6 +57,7 @@
     <string name="activity_join">Участвовать</string>
     <string name="poll_limits">Ограничения:</string>
     <string name="poll_limits_duration">До %s</string>
+    <string name="poll_limits_duration_literal">Длительность %s</string>
     <string name="poll_limits_level">Уровень %.2f</string>
     <string name="poll_limits_karma">Карма %d</string>
     <string name="poll_limits_age">Возраст аккаунта %d дн.</string>

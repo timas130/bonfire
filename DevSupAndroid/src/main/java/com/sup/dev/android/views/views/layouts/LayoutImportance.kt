@@ -32,7 +32,7 @@ class LayoutImportance(context: Context, attrs: AttributeSet) : LinearLayout(con
             children[0].visibility = View.GONE
 
             lock++
-            onMeasure(widthMeasureSpec, heightMeasureSpec)
+            measure(widthMeasureSpec, heightMeasureSpec)
             lock--
         }
 
