@@ -37,7 +37,7 @@ object ControllerFandom {
     fun updateSubscribers(fandomId: Long) {
         Database.update("ControllerFandom.updateSubscribers", SqlQueryUpdate(TFandoms.NAME)
                 .where(TFandoms.id, "=", fandomId)
-                .update(TFandoms.subscribers_count, "(SELECT COUNT(*) FROM ${TCollisions.NAME} WHERE ${TCollisions.collision_id}=$fandomId AND ${TCollisions.collision_type}=${API.COLLISION_FANDOM_SUBSCRIBE} AND ${TCollisions.value_1}<>${API.PUBLICATION_IMPORTANT_NONE})"))
+                .update(TFandoms.subscribers_count, "(SELECT COUNT(DISTINCT ${TCollisions.owner_id}) FROM ${TCollisions.NAME} WHERE ${TCollisions.collision_id}=$fandomId AND ${TCollisions.collision_type}=${API.COLLISION_FANDOM_SUBSCRIBE} AND ${TCollisions.value_1}<>${API.PUBLICATION_IMPORTANT_NONE})"))
     }
 
     fun getLinks(fandomId: Long, languageId: Long): Array<FandomLink> {
