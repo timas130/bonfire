@@ -144,16 +144,16 @@ fun LinkAlert(
             }
 
             Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
-                OutlinedButton(onClick = close) {
+                OutlinedButton(onClick = close, modifier = Modifier.weight(1f)) {
                     Text(stringResource(R.string.link_alert_cancel))
                 }
 
-                Button(onClick = { onVisit(trust); close() }) {
+                Button(onClick = { onVisit(trust); close() }, modifier = Modifier.weight(1f)) {
                     Text(stringResource(R.string.link_alert_visit))
                 }
             }
