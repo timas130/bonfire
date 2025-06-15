@@ -147,7 +147,7 @@ class CardButtonsInfoOld(
 
                 append(" / ")
 
-                val warnsColor = if (profile!!.bansCount > 0) 0xFFFBC02D else 0xFF9E9E9E
+                val warnsColor = if (profile!!.warnsCount > 0) 0xFFFBC02D else 0xFF9E9E9E
                 append(
                     profile!!.warnsCount.toString(),
                     ForegroundColorSpan(warnsColor.toInt()),
