@@ -9,12 +9,14 @@
               android:paddingTop="4dp"
               android:paddingBottom="4dp">
 
-    <ImageView
+    <ImageView xmlns:tools="http://schemas.android.com/tools"
+        tools:ignore="UseAppTint"
         android:id="@+id/vLinkImage"
         android:layout_marginLeft="8dp"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:tint="?colorOnPrimaryIcons"/>
 
     <LinearLayout
         android:layout_width="match_parent"

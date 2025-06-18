@@ -1,6 +1,7 @@
 package com.sayzen.campfiresdk.compose.publication.post
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
@@ -168,10 +170,10 @@ private fun PostFandom(post: PublicationPost) {
                 )
 
                 if (fandom.languageId != ControllerApi.getLanguageId()) {
-                    val languageIcon = ControllerApi.getIconRefForLanguage(fandom.languageId)
+                    val languageDrawable = ControllerApi.getDrawableForLanguage(fandom.languageId)
 
-                    RemoteImage(
-                        link = languageIcon,
+                    Image(
+                        painter = painterResource(id = languageDrawable),
                         contentDescription = if (fandom.languageId == 0L) {
                             stringResource(R.string.multilingual_badge_alt)
                         } else {

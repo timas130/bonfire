@@ -140,7 +140,7 @@ class SFandom private constructor(
 
         ImageLoader.load(fandom.image).noLoadFromCash().intoBitmap { EventBus.post(EventFandomChanged(xFandom.getId(), xFandom.getName())) }
 
-        ControllerApi.getIconForLanguage(fandom.languageId).into(vLanguage)
+        vLanguage.setImageResource(ControllerApi.getDrawableForLanguage(fandom.languageId))
         vLanguage.setOnClickListener {
             ControllerCampfireSDK.createLanguageMenu(xFandom.getLanguageId()) { languageId ->
                 instance(xFandom.getId(), languageId, Navigator.REPLACE)
