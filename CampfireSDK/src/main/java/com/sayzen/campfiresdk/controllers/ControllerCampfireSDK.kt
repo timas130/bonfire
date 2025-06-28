@@ -90,6 +90,7 @@ object ControllerCampfireSDK {
         AuthController.init(
             openRules = { Navigator.to(SRulesUser()) }
         )
+        ControllerAppUpdate.init()
 
         SpoilerParticleSystem.init(
             colorScheme = getComposeTheme(

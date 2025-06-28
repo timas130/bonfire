@@ -118,4 +118,5 @@
     <string name="oauth_grant_created_at">First use: %s</string>
     <string name="oauth_grant_last_used_at">Last used: %s</string>
     <string name="oauth_grant_revoke">Revoke access</string>
+    <string name="app_update_failed">Failed to install the update</string>
 </resources>

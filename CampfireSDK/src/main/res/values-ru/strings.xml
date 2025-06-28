@@ -110,4 +110,5 @@
     <string name="oauth_grant_created_at">Первый вход: %s</string>
     <string name="oauth_grant_last_used_at">Последнее использование: %s</string>
     <string name="oauth_grant_revoke">Отозвать доступ</string>
+    <string name="app_update_failed">Не удалось установить обновление</string>
 </resources>

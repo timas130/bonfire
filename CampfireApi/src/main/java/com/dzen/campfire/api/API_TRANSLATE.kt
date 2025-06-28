@@ -40,7 +40,11 @@ object API_TRANSLATE {
     var app_report = 0L
     var app_reports = 0L
     var app_about = 0L
+    var app_restart = 0L
     var app_update = 0L
+    var app_update_downloading = 0L
+    var app_update_complete = 0L
+    var app_update_complete_alert = 0L
     var app_remove = 0L
     var app_duplicate = 0L
     var app_to_drafts = 0L

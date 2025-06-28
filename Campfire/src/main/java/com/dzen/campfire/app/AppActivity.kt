@@ -219,6 +219,8 @@ class AppActivity : SActivity() {
             ToolsAndroid.setLanguage(this, ControllerSettings.appLanguage)
             recreate()
         }
+
+        ControllerAppUpdate.registerForActivityResult()
     }
 
     override fun getNavigationType(): SActivityType {
