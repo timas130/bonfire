@@ -4,5 +4,4 @@ import com.sayzen.campfiresdk.controllers.ControllerAppUpdate.UpdateStatus
 
 class EventAppUpdateAvailable(
     val status: UpdateStatus,
-    val versionCode: Int
 )

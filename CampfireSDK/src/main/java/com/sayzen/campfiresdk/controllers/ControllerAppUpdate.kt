@@ -1,12 +1,19 @@
 package com.sayzen.campfiresdk.controllers
 
 import android.app.Activity
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts.StartIntentSenderForResult
 import com.dzen.campfire.api.API_TRANSLATE
-import com.google.android.play.core.appupdate.*
-import com.google.android.play.core.install.model.*
+import com.google.android.play.core.appupdate.AppUpdateInfo
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.model.ActivityResult
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.models.events.project.EventAppUpdateAvailable
 import com.sup.dev.android.app.SupAndroid
@@ -26,19 +33,22 @@ object ControllerAppUpdate {
 
     var updateStatus = UpdateStatus.UNKNOWN
     private lateinit var updateManager: AppUpdateManager
-    private lateinit var updateInfo: AppUpdateInfo
-    private lateinit var activityResultLauncher: ActivityResultLauncher<IntentSenderRequest>
+    private var updateInfo: AppUpdateInfo? = null
+    private var activityResultLauncher: ActivityResultLauncher<IntentSenderRequest>? = null
 
     fun isUpdateUnavailable() = updateStatus == UpdateStatus.UNAVAILABLE || updateStatus == UpdateStatus.UNKNOWN
     fun isUpdateAvailable() = updateStatus == UpdateStatus.AVAILABLE
     fun isUpdateDownloading() = updateStatus == UpdateStatus.DOWNLOADING
     fun isUpdateDownloaded() = updateStatus == UpdateStatus.DOWNLOADED
 
-    private fun postEvent() = EventBus.post(EventAppUpdateAvailable(updateStatus, updateInfo.availableVersionCode()))
+    private fun postEvent() {
+        EventBus.post(EventAppUpdateAvailable(updateStatus))
+    }
 
     fun init() {
         updateManager = AppUpdateManagerFactory.create(SupAndroid.appContext!!)
         updateManager.registerListener { state ->
+            Log.d("ControllerAppUpdate", "update state: $state")
             if (state.installStatus() == InstallStatus.DOWNLOADING) {
                 if (updateStatus != UpdateStatus.DOWNLOADING) {
                     updateStatus = UpdateStatus.DOWNLOADING
@@ -51,7 +61,12 @@ object ControllerAppUpdate {
             }
         }
 
+        refreshUpdateInfo()
+    }
+
+    private fun refreshUpdateInfo() {
         updateManager.appUpdateInfo.addOnSuccessListener { updateInfo ->
+            Log.d("ControllerAppUpdate", "updateInfo: $updateInfo")
             this.updateInfo = updateInfo
             if (updateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                 && updateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
@@ -80,11 +95,15 @@ object ControllerAppUpdate {
     }
 
     fun startUpdate() {
+        val updateInfo = updateInfo ?: return
+        val activityResultLauncher = activityResultLauncher ?: return
         updateManager.startUpdateFlowForResult(
             updateInfo,
             activityResultLauncher,
             AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE).build()
         )
+        this.updateInfo = null
+        refreshUpdateInfo()
     }
 
     fun completeUpdate() {
