@@ -518,5 +518,10 @@
     "feed_loading_50": "Not suitable for children over 21.",
     "feed_loading_52": "Greet the newbies in Bonfire Hello.",
     "app_subscription": "Subscription",
-    "app_subscribers": "Subscribers"
+    "app_subscribers": "Subscribers",
+    "app_restart": "Restart",
+    "app_update": "Update",
+    "app_update_downloading": "Downloading…",
+    "app_update_complete": "Complete",
+    "app_update_complete_alert": "Restart the app to complete the update?"
 }

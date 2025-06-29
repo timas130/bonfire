@@ -684,30 +684,14 @@ class CardFandomInfo(
             vLink.setOnClickListener { ControllerExternalLinks.openLink(link.url) }
 
             when (link.imageIndex) {
-                1L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_YOUTUBE_WHITE else ApiResources.ICON_YOUTUBE_BLACK)
-                    .into(vLinkImage)
-
-                2L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_DISCORD_WHITE else ApiResources.ICON_DISCORD_BLACK)
-                    .into(vLinkImage)
-
-                3L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_WIKI_WHITE else ApiResources.ICON_WIKI_BLACK)
-                    .into(vLinkImage)
-
-                4L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_TWITTER_WHITE else ApiResources.ICON_TWITTER_BLACK)
-                    .into(vLinkImage)
-
-                5L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_STEAM_WHITE else ApiResources.ICON_STEAM_BLACK)
-                    .into(vLinkImage)
-
-                6L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_GOOGLE_PLAY_WHITE else ApiResources.ICON_GOOGLE_PLAY_BLACK)
-                    .into(vLinkImage)
-
-                7L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_APPSTORE_WHITE else ApiResources.ICON_APPSTORE_BLACK)
-                    .into(vLinkImage)
-
-                8L -> ImageLoader.load(if (ControllerApp.isDarkThem()) ApiResources.ICON_CAMPFIRE else ApiResources.ICON_CAMPFIRE)
-                    .into(vLinkImage)
-
+                1L -> vLinkImage.setImageResource(R.drawable.ic_youtube_white_128px)
+                2L -> vLinkImage.setImageResource(R.drawable.ic_discord_white_128px)
+                3L -> vLinkImage.setImageResource(R.drawable.ic_wikipedia_white_128px)
+                4L -> vLinkImage.setImageResource(R.drawable.ic_x_white_128px)
+                5L -> vLinkImage.setImageResource(R.drawable.ic_steam_white_128px)
+                6L -> vLinkImage.setImageResource(R.drawable.ic_google_play_white_128px)
+                7L -> vLinkImage.setImageResource(R.drawable.ic_app_store_white_128px)
+                8L -> vLinkImage.setImageResource(R.drawable.ic_bonfire_white_128px)
                 else -> vLinkImage.setImageResource(R.drawable.ic_insert_link_white_24dp)
             }
 

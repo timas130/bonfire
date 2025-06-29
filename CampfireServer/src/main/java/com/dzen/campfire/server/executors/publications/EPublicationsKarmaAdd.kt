@@ -54,7 +54,7 @@ class EPublicationsKarmaAdd : RPublicationsKarmaAdd(0, false, 0, false) {
 
         val rubricKarmaCof = if (publication!!.publicationType == API.PUBLICATION_TYPE_POST && publication!!.tag_6 > 0) ControllerOptimizer.getRubricKarmaCof(publication!!.tag_6) else 100
         val fandomKarmaCof = if (publication!!.fandom.id > 0) ControllerOptimizer.getFandomKarmaCof(publication!!.fandom.id) else 100
-        val questKarmaCof  = if (publication!!.publicationType == API.PUBLICATION_TYPE_QUEST) 50 else 100
+        val questKarmaCof  = if (publication!!.publicationType == API.PUBLICATION_TYPE_QUEST) 150 else 100
         val karmaCof = ((fandomKarmaCof / 100f) * (rubricKarmaCof / 100f) * (questKarmaCof / 100f) * (if (isGlobalDoubleKarma) 2 else 1) * 100).roundToLong()
 
         val karmaForceD = ControllerKarma.getKarmaForce(apiAccount, up) * (karmaCof / 100f)

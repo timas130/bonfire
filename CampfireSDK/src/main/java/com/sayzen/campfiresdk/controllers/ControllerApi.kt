@@ -5,7 +5,6 @@ import android.text.Html
 import android.widget.TextView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
-import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.ApiInfo
 import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.images.ImageRef
@@ -131,21 +130,19 @@ object ControllerApi {
 
     fun getLanguage(languageId: Long) = API.getLanguage(languageId)
 
-    fun getIconRefForLanguage(languageId: Long): ImageRef {
+    fun getDrawableForLanguage(languageId: Long): Int {
         return when (languageId) {
-            API.LANGUAGE_EN -> ApiResources.FLAG_EN
-            API.LANGUAGE_RU -> ApiResources.FLAG_RU
-            API.LANGUAGE_PT -> ApiResources.FLAG_PT
-            API.LANGUAGE_UK -> ApiResources.FLAG_UK
-            API.LANGUAGE_DE -> ApiResources.FLAG_DE
-            API.LANGUAGE_IT -> ApiResources.FLAG_IT
-            API.LANGUAGE_PL -> ApiResources.FLAG_PL
-            API.LANGUAGE_FR -> ApiResources.FLAG_FR
-            else -> ApiResources.FLAG_WORLD
+            API.LANGUAGE_EN -> R.drawable.flag_en_128px
+            API.LANGUAGE_RU -> R.drawable.flag_ru_128px
+            API.LANGUAGE_PT -> R.drawable.flag_pt_128px
+            API.LANGUAGE_UK -> R.drawable.flag_uk_128px
+            API.LANGUAGE_DE -> R.drawable.flag_de_128px
+            API.LANGUAGE_IT -> R.drawable.flag_it_128px
+            API.LANGUAGE_PL -> R.drawable.flag_pl_128px
+            API.LANGUAGE_FR -> R.drawable.flag_fr_128px
+            else -> R.drawable.flag_world_128px
         }
     }
-    fun getIconForLanguage(languageId: Long): ImageLink =
-        ImageLoader.load(getIconRefForLanguage(languageId))
 
     @Suppress("DEPRECATION")
     fun makeTextHtml(vText: TextView) {

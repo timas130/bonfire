@@ -8,7 +8,8 @@
     <androidx.core.widget.NestedScrollView
         style="@style/Scroll.Splash">
 
-        <LinearLayout
+        <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+            tools:ignore="UseAppTint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -44,31 +45,40 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     style="@style/Icon"
+                    app:tint="?attr/colorOnPrimary"
                     android:src="@drawable/ic_insert_link_white_24dp" />
 
                 <com.sup.dev.android.views.views.ViewIcon
                     android:id="@+id/vIcon_1"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    style="@style/Icon" />
+                    style="@style/Icon"
+                    android:tint="?colorOnPrimaryIcons"
+                    android:src="@drawable/ic_youtube_white_128px" />
 
                 <com.sup.dev.android.views.views.ViewIcon
                     android:id="@+id/vIcon_2"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    style="@style/Icon" />
+                    style="@style/Icon"
+                    android:tint="?colorOnPrimaryIcons"
+                    android:src="@drawable/ic_discord_white_128px" />
 
                 <com.sup.dev.android.views.views.ViewIcon
                     android:id="@+id/vIcon_3"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    style="@style/Icon" />
+                    style="@style/Icon"
+                    android:tint="?colorOnPrimaryIcons"
+                    android:src="@drawable/ic_wikipedia_white_128px" />
 
                 <com.sup.dev.android.views.views.ViewIcon
                     android:id="@+id/vIcon_4"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    style="@style/Icon" />
+                    style="@style/Icon"
+                    android:tint="?colorOnPrimaryIcons"
+                    android:src="@drawable/ic_x_white_128px" />
 
             </LinearLayout>
 
@@ -81,25 +91,33 @@
                     android:id="@+id/vIcon_5"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    style="@style/Icon"/>
+                    style="@style/Icon"
+                    android:tint="?colorOnPrimaryIcons"
+                    android:src="@drawable/ic_steam_white_128px" />
 
                 <com.sup.dev.android.views.views.ViewIcon
                     android:id="@+id/vIcon_6"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    style="@style/Icon" />
+                    style="@style/Icon"
+                    android:tint="?colorOnPrimaryIcons"
+                    android:src="@drawable/ic_google_play_white_128px" />
 
                 <com.sup.dev.android.views.views.ViewIcon
                     android:id="@+id/vIcon_7"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    style="@style/Icon" />
+                    style="@style/Icon"
+                    android:tint="?colorOnPrimaryIcons"
+                    android:src="@drawable/ic_app_store_white_128px" />
 
                 <com.sup.dev.android.views.views.ViewIcon
                     android:id="@+id/vIcon_8"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    style="@style/Icon" />
+                    style="@style/Icon"
+                    android:tint="?colorOnPrimaryIcons"
+                    android:src="@drawable/ic_bonfire_white_128px" />
 
             </LinearLayout>
 

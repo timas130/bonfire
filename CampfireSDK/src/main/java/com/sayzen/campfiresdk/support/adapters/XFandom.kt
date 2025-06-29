@@ -112,9 +112,8 @@ class XFandom() {
         viewAvatar.setChipText("")
 
         if (showLanguage && fandom.languageId != 0L && fandom.languageId != ControllerApi.getLanguageId()) {
-            ControllerApi.getIconForLanguage(fandom.languageId).into(viewAvatar.vChipIcon){
-                viewAvatar.vChipIcon.visibility = View.VISIBLE
-            }
+            viewAvatar.vChipIcon.setImageResource(ControllerApi.getDrawableForLanguage(fandom.languageId))
+            viewAvatar.vChipIcon.visibility = View.VISIBLE
         }else{
             viewAvatar.vChip.setBackgroundColor(Color.TRANSPARENT)
             viewAvatar.vChipIcon.setImageDrawable(null)
