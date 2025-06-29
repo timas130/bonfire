@@ -96,6 +96,7 @@ class SChatCreate(
                 val m = ChatMember()
                 m.account = it
                 m.memberLvl = API.CHAT_MEMBER_LVL_USER
+                m.memberStatus = API.CHAT_MEMBER_STATUS_ACTIVE
                 adapter.add(adapter.size() - 2, CardChatMember(m, myLvl))
             })
         })
@@ -134,7 +135,10 @@ class SChatCreate(
         val changeAccountListLevels = ArrayList<Long>()
 
         for (c in adapter.get(CardChatMember::class)) {
-            if (c.chatMember.account.id != ControllerApi.account.getId()) {
+            if (
+                c.chatMember.account.id != ControllerApi.account.getId() &&
+                c.chatMember.memberStatus == API.CHAT_MEMBER_STATUS_ACTIVE
+            ) {
                 accountsList.add(c.chatMember.account.id)
                 val foundLvl = c.newLevel
                 var found: ChatMember? = null
