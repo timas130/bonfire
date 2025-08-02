@@ -1,6 +1,9 @@
 package com.sayzen.campfiresdk.compose
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -24,7 +27,9 @@ abstract class ComposeScreen : Screen(R.layout.screen_compose) {
                 BonfireTheme {
                     Surface(
                         color = MaterialTheme.colorScheme.background,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .consumeWindowInsets(WindowInsets.safeDrawing)
                     ) {
                         Content()
                     }

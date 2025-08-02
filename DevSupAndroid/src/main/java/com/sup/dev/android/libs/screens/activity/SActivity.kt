@@ -14,12 +14,8 @@ import android.view.ViewGroup.MarginLayoutParams
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.Insets
-import androidx.core.view.ViewCompat
-import androidx.core.view.ViewGroupCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.*
 import androidx.core.view.WindowInsetsCompat.Type.InsetsType
-import androidx.core.view.updateLayoutParams
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import com.sup.dev.android.R
 import com.sup.dev.android.app.SupAndroid
@@ -91,7 +87,7 @@ abstract class SActivity : AppCompatActivity() {
         }
     }
 
-    internal fun listenForWindowInsetsOnView(
+    fun listenForWindowInsetsOnView(
         v: View,
         @InsetsType insetType: Int = WindowInsetsCompat.Type.ime() + WindowInsetsCompat.Type.systemBars(),
         left: Boolean = false,
