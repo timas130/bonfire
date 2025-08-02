@@ -70,6 +70,8 @@ use reqwest::Client;
 use reqwest_middleware::{ClientBuilder, ClientWithMiddleware};
 use serde::Deserialize;
 use std::collections::HashMap;
+use std::path::PathBuf;
+use std::str::FromStr;
 use std::sync::Arc;
 #[cfg(test)]
 use {
@@ -125,7 +127,7 @@ impl AuthServer {
         let reqwest_client = ClientBuilder::new(Client::new())
             .with(Cache(HttpCache {
                 mode: CacheMode::Default,
-                manager: CACacheManager::default(),
+                manager: CACacheManager::new(PathBuf::from_str("http-cacache")?, true),
                 options: HttpCacheOptions::default(),
             }))
             .build();
@@ -148,8 +150,6 @@ impl AuthServer {
     host_tcp!(auth);
 }
 
-//noinspection RsTraitImplementation
-#[tarpc::server]
 impl AuthService for AuthServer {
     async fn get_oauth_url(
         self,

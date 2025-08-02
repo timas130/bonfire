@@ -1,10 +1,10 @@
-FROM gradle:8.7-jdk17 AS builder
+FROM gradle:8.11-jdk17 AS builder
 
 COPY . /app
 WORKDIR /app/
 RUN gradle CampfireServer:build --no-daemon
 
-FROM rust:1.83 AS rust-builder
+FROM rust:1.88 AS rust-builder
 
 WORKDIR /app
 COPY ./rust-auth /app/rust-auth

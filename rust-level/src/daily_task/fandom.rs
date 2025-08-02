@@ -5,7 +5,7 @@ use crate::consts::status::Status;
 use crate::LevelServer;
 use c_core::services::level::{DailyTaskFandom, LevelError};
 use chrono::{Days, NaiveDate, NaiveTime};
-use rand::distributions::WeightedIndex;
+use rand::distr::weighted::WeightedIndex;
 use rand::Rng;
 use rand_xoshiro::Xoshiro256PlusPlus;
 

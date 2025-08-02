@@ -3,56 +3,68 @@ use c_core::prelude::anyhow::anyhow;
 use c_core::prelude::tracing::warn;
 use c_core::services::auth::{AuthError, OAuthProvider, OAuthUrl};
 use openidconnect::core::{CoreClient, CoreProviderMetadata, CoreResponseType};
-use openidconnect::reqwest::Error;
 use openidconnect::{
-    AuthenticationFlow, ClientId, ClientSecret, CsrfToken, HttpRequest, HttpResponse, IssuerUrl,
-    Nonce, RedirectUrl, Scope,
+    AsyncHttpClient, AuthenticationFlow, ClientId, ClientSecret, CsrfToken, EndpointMaybeSet,
+    EndpointNotSet, EndpointSet, HttpRequest, HttpResponse, IssuerUrl, Nonce, RedirectUrl, Scope,
 };
 use std::borrow::Cow;
+use std::future::Future;
+use std::pin::Pin;
 
-impl AuthServer {
-    async fn cached_http_client(
-        &self,
-        request: HttpRequest,
-    ) -> Result<HttpResponse, Error<reqwest_middleware::Error>> {
-        let client = self.reqwest_client.lock().await;
+type Client = CoreClient<
+    EndpointSet,
+    EndpointNotSet,
+    EndpointNotSet,
+    EndpointNotSet,
+    EndpointMaybeSet,
+    EndpointMaybeSet,
+>;
 
-        let mut req = client
-            .request(request.method, request.url.as_str())
-            .body(request.body);
-        for (name, value) in &request.headers {
-            req = req.header(name.as_str(), value.as_bytes());
-        }
-        let req = req.build().map_err(From::from).map_err(Error::Reqwest)?;
+impl AsyncHttpClient<'_> for &AuthServer {
+    type Error = reqwest_middleware::Error;
+    type Future = Pin<Box<dyn Future<Output = Result<HttpResponse, Self::Error>> + Send + 'static>>;
 
-        let response = client.execute(req).await.map_err(Error::Reqwest)?;
+    fn call(&self, request: HttpRequest) -> Self::Future {
+        let reqwest_client = self.reqwest_client.clone();
+        Box::pin(async move {
+            let client = reqwest_client.lock().await;
 
-        Ok(HttpResponse {
-            status_code: response.status(),
-            headers: response.headers().to_owned(),
-            body: response
-                .bytes()
-                .await
-                .map_err(From::from)
-                .map_err(Error::Reqwest)?
-                .to_vec(),
+            let (parts, body) = request.into_parts();
+
+            let mut req = client
+                .request(parts.method, parts.uri.to_string())
+                .body(body);
+            for (name, value) in &parts.headers {
+                req = req.header(name.as_str(), value.as_bytes());
+            }
+            let req = req.build().map_err(reqwest_middleware::Error::Reqwest)?;
+
+            let response = client.execute(req).await?;
+            let status = response.status();
+            let headers = response.headers().to_owned();
+            let mut ret = HttpResponse::new(response.bytes().await?.to_vec());
+            *ret.status_mut() = status;
+            *ret.headers_mut() = headers;
+
+            Ok(ret)
         })
     }
+}
 
-    async fn make_oauth_client(&self, provider: OAuthProvider) -> Result<CoreClient, AuthError> {
+impl AuthServer {
+    async fn make_oauth_client(&self, provider: OAuthProvider) -> Result<Client, AuthError> {
         if provider == OAuthProvider::LegacyFirebase {
             return Err(AuthError::InvalidProvider);
         }
 
         let issuer_url = IssuerUrl::new("https://accounts.google.com".to_string())
             .expect("invalid constant issuer url");
-        let google_metadata =
-            CoreProviderMetadata::discover_async(issuer_url, |req| self.cached_http_client(req))
-                .await
-                .map_err(|err| {
-                    warn!("failed to discover oauth client: {err}");
-                    AuthError::InvalidProvider
-                })?;
+        let google_metadata = CoreProviderMetadata::discover_async(issuer_url, &self)
+            .await
+            .map_err(|err| {
+                warn!("failed to discover oauth client: {err}");
+                AuthError::InvalidProvider
+            })?;
         let google_client = CoreClient::from_provider_metadata(
             google_metadata,
             ClientId::new(self.base.config.google.client_id.clone()),
@@ -67,7 +79,7 @@ impl AuthServer {
     pub(crate) async fn get_oauth_client(
         &self,
         provider: OAuthProvider,
-    ) -> Result<CoreClient, AuthError> {
+    ) -> Result<Client, AuthError> {
         Ok(match provider {
             OAuthProvider::LegacyFirebase => return Err(AuthError::InvalidProvider),
             provider => self.make_oauth_client(provider).await?,

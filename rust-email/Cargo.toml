@@ -7,7 +7,7 @@ publish = false
 
 [dependencies]
 c-core = { path = "../rust-core" }
-itertools = "0.12"
+itertools = "0.14"
 nanoid = "0.4"
 crossbeam-queue = "0.3"
 tracing = "0.1"
@@ -18,4 +18,4 @@ default-features = false
 features = ["tokio1", "smtp-transport", "builder", "tokio1-rustls-tls"]
 
 [build-dependencies]
-ructe = "0.17"
+ructe = "0.18"

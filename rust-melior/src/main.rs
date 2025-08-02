@@ -18,11 +18,10 @@ use crate::oauth::userinfo::oauth2_userinfo;
 use async_graphql::http::GraphiQLSource;
 use async_graphql::{EmptySubscription, Schema};
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
-use axum::extract::ConnectInfo;
 use axum::response::IntoResponse;
 use axum::routing::{get, post};
 use axum::{response, Extension, Router};
-use axum_client_ip::XForwardedFor;
+use axum_client_ip::RightmostXForwardedFor;
 use axum_extra::headers::authorization::Bearer;
 use axum_extra::headers::{Authorization, UserAgent};
 use axum_extra::TypedHeader;
@@ -54,8 +53,7 @@ async fn graphql_handler(
     Extension(schema): Extension<BSchema>,
     Extension(global_context): Extension<GlobalContext>,
     auth_header: Option<TypedHeader<Authorization<Bearer>>>,
-    forwarded_for: XForwardedFor,
-    ConnectInfo(addr): ConnectInfo<SocketAddr>,
+    forwarded_for: RightmostXForwardedFor,
     user_agent: Option<TypedHeader<UserAgent>>,
     req: GraphQLRequest,
 ) -> GraphQLResponse {
@@ -63,7 +61,7 @@ async fn graphql_handler(
     let req_context = ReqContext::new(
         global_context,
         auth_header.map(|header| header.token().to_string()),
-        forwarded_for.0.first().cloned().unwrap_or(addr.ip()),
+        forwarded_for.0,
         user_agent,
     )
     .await;
@@ -162,7 +160,7 @@ async fn main() -> anyhow::Result<()> {
             get(oauth2_userinfo).post(oauth2_userinfo),
         )
         .layer(NewSentryLayer::new_from_top())
-        .layer(SentryHttpLayer::with_transaction())
+        .layer(SentryHttpLayer::new().enable_transaction())
         .layer(CorsLayer::permissive())
         .layer(Extension(global_context))
         .layer(Extension(schema));

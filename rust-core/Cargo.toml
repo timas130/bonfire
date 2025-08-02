@@ -6,26 +6,26 @@ license = "AGPL-3.0-or-later"
 publish = false
 
 [dependencies]
-config = "0.13"
-tarpc = { version = "0.33", features = ["full"] }
+config = "0.15"
+tarpc = { version = "0.36", features = ["full"] }
 anyhow = "1.0"
 tokio = { version = "1.24", features = ["macros", "rt-multi-thread", "signal"] }
 tokio-test = "0.4"
-sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "chrono", "ipnetwork", "rust_decimal", "bigdecimal"] }
+sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "postgres", "chrono", "ipnetwork", "rust_decimal", "bigdecimal"] }
 futures = "0.3"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 chrono = { version = "0.4", default-features = false, features = ["serde", "clock", "std"] }
-thiserror = "1.0"
+thiserror = "2.0"
 num_enum = "0.7"
-educe = { version = "0.5", features = ["Eq", "PartialEq", "Clone"] }
-opentelemetry = { version = "0.18", features = ["rt-tokio"] }
+educe = { version = "0.6", features = ["Eq", "PartialEq", "Clone"] }
+opentelemetry = { version = "0.30" }
 tracing = { version = "0.1", features = ["attributes"] }
-strum_macros = "0.26"
+strum_macros = "0.27"
 jsonwebtoken = "9.2"
 nanoid = "0.4"
 base64 = "0.22"
 stubborn-io = "0.3.2"
 serde_repr = "0.1"
 yup-oauth2 = "9.0"
-strum = "0.26"
+strum = "0.27"

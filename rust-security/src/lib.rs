@@ -1,7 +1,7 @@
 mod methods;
 
+use c_core::prelude::anyhow;
 use c_core::prelude::tarpc::context::Context;
-use c_core::prelude::{anyhow, tarpc};
 use c_core::services::security::{IntentionType, SecurityError, SecurityService};
 use c_core::{host_tcp, ServiceBase};
 use google_playintegrity1::hyper::client::HttpConnector;
@@ -46,7 +46,6 @@ impl SecurityServer {
     host_tcp!(security);
 }
 
-#[tarpc::server]
 impl SecurityService for SecurityServer {
     async fn create_intention(
         self,

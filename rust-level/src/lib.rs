@@ -2,8 +2,8 @@ mod consts;
 mod daily_task;
 mod methods;
 
+use c_core::prelude::anyhow;
 use c_core::prelude::tarpc::context::Context;
-use c_core::prelude::{anyhow, tarpc};
 use c_core::services::level::{
     DailyTaskFandom, DailyTaskInfo, LevelCategory, LevelError, LevelRecountResult, LevelService,
 };
@@ -25,7 +25,6 @@ impl LevelServer {
     host_tcp!(level);
 }
 
-#[tarpc::server]
 impl LevelService for LevelServer {
     async fn recount_level(
         self,

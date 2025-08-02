@@ -7,6 +7,6 @@ publish = false
 
 [dependencies]
 c-core = { path = "../rust-core" }
-sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "chrono", "json"] }
+sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "postgres", "chrono", "json"] }
 google-playintegrity1 = "5.0"
 nanoid = "0.4"

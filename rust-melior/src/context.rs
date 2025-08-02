@@ -163,7 +163,6 @@ pub trait ContextExt {
 
 #[async_trait]
 impl ContextExt for Context<'_> {
-    #[must_use]
     fn has_permission_level<T: Into<PermissionLevel>>(&self, level: T) -> bool {
         let req = self.data_unchecked::<ReqContext>();
 

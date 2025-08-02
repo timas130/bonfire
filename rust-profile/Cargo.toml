@@ -7,5 +7,5 @@ publish = false
 
 [dependencies]
 c-core = { path = "../rust-core" }
-sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "chrono", "json"] }
-cached = { version = "0.50", features = ["async"] }
+sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "postgres", "chrono", "json"] }
+cached = { version = "0.56", features = ["async"] }

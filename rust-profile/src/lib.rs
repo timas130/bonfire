@@ -1,7 +1,7 @@
 use c_core::page_info::Paginated;
+use c_core::prelude::anyhow;
 use c_core::prelude::chrono::{DateTime, NaiveDate, Utc};
 use c_core::prelude::tarpc::context::Context;
-use c_core::prelude::{anyhow, tarpc};
 use c_core::services::auth::{Auth, AuthServiceClient};
 use c_core::services::level::{Level, LevelServiceClient};
 use c_core::services::profile::{
@@ -34,8 +34,6 @@ impl ProfileServer {
     host_tcp!(profile);
 }
 
-//noinspection RsSortImplTraitMembers
-#[tarpc::server]
 impl ProfileService for ProfileServer {
     async fn get_account_customization(
         self,

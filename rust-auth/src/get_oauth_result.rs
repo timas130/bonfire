@@ -8,7 +8,6 @@ use itertools::Itertools;
 use jsonwebtoken::{decode, decode_header, Algorithm, DecodingKey, Validation};
 use nanoid::nanoid;
 use openidconnect::core::{CoreIdToken, CoreIdTokenClaims, CoreTokenResponse};
-use openidconnect::reqwest::async_http_client;
 use openidconnect::{AuthorizationCode, Nonce, NonceVerifier, OAuth2TokenResponse, TokenResponse};
 use serde::Deserialize;
 use sqlx::{Postgres, Transaction};
@@ -214,8 +213,15 @@ impl AuthServer {
             Err(_) => {
                 let token_response = client
                     .exchange_code(AuthorizationCode::new(code))
+                    .map_err(|err| {
+                        warn!(
+                            ?provider,
+                            "failed to exchange oauth code (configuration error): {err:?}"
+                        );
+                        AuthError::InvalidToken
+                    })?
                     .set_redirect_uri(Cow::Owned(self.get_oauth_redirect_url(provider)))
-                    .request_async(async_http_client)
+                    .request_async(&self)
                     .await
                     .map_err(|err| {
                         warn!(?provider, "failed to exchange oauth code: {err:?}");

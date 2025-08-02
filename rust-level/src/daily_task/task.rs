@@ -2,7 +2,8 @@ use crate::LevelServer;
 use c_core::models::PageType;
 use c_core::services::level::{DailyTask, DailyTaskType, LevelError};
 use chrono::NaiveDate;
-use rand::distributions::{Uniform, WeightedIndex};
+use rand::distr::weighted::WeightedIndex;
+use rand::distr::Uniform;
 use rand::{Rng, SeedableRng};
 use rand_xoshiro::Xoshiro256PlusPlus;
 
@@ -50,7 +51,7 @@ impl LevelServer {
                     } else {
                         1
                     };
-                    let amount = rng.sample(Uniform::new_inclusive(1, max_posts));
+                    let amount = rng.sample(Uniform::new_inclusive(1, max_posts).unwrap());
                     DailyTask::CreatePosts { amount }
                 }
                 DailyTaskType::EarnPostKarma => {
@@ -63,7 +64,7 @@ impl LevelServer {
                     } else {
                         30
                     };
-                    let amount = rng.sample(Uniform::new_inclusive(10, max_karma));
+                    let amount = rng.sample(Uniform::new_inclusive(10, max_karma).unwrap());
                     DailyTask::EarnPostKarma {
                         amount: amount * 100,
                     }
@@ -78,7 +79,7 @@ impl LevelServer {
                     } else {
                         3
                     };
-                    let amount = rng.sample(Uniform::new_inclusive(2, max_comments));
+                    let amount = rng.sample(Uniform::new_inclusive(2, max_comments).unwrap());
                     DailyTask::PostComments { amount }
                 }
                 DailyTaskType::EarnAnyKarma => {
@@ -91,7 +92,7 @@ impl LevelServer {
                     } else {
                         40
                     };
-                    let amount = rng.sample(Uniform::new_inclusive(10, max_karma));
+                    let amount = rng.sample(Uniform::new_inclusive(10, max_karma).unwrap());
                     DailyTask::EarnAnyKarma {
                         amount: amount * 100,
                     }
@@ -104,7 +105,7 @@ impl LevelServer {
                     } else {
                         10
                     };
-                    let amount = rng.sample(Uniform::new_inclusive(3, max_messages));
+                    let amount = rng.sample(Uniform::new_inclusive(3, max_messages).unwrap());
                     DailyTask::WriteMessages { amount }
                 }
                 DailyTaskType::RatePublications => {
@@ -117,12 +118,12 @@ impl LevelServer {
                     } else {
                         5
                     };
-                    let amount = rng.sample(Uniform::new_inclusive(3, max_rates));
+                    let amount = rng.sample(Uniform::new_inclusive(3, max_rates).unwrap());
                     DailyTask::RatePublications { amount }
                 }
                 DailyTaskType::Login => DailyTask::Login,
                 DailyTaskType::PostInFandom => {
-                    let amount = rng.sample(Uniform::new_inclusive(1, 2));
+                    let amount = rng.sample(Uniform::new_inclusive(1, 2).unwrap());
                     let fandom_id = self.determine_dt_fandom(&mut rng, user_id, date).await?;
                     let Some(fandom_id) = fandom_id else {
                         continue;
@@ -130,7 +131,7 @@ impl LevelServer {
                     DailyTask::PostInFandom { amount, fandom_id }
                 }
                 DailyTaskType::CommentInFandom => {
-                    let amount = rng.sample(Uniform::new_inclusive(2, 6));
+                    let amount = rng.sample(Uniform::new_inclusive(2, 6).unwrap());
                     let fandom_id = self.determine_dt_fandom(&mut rng, user_id, date).await?;
                     let Some(fandom_id) = fandom_id else {
                         continue;
@@ -138,14 +139,14 @@ impl LevelServer {
                     DailyTask::CommentInFandom { amount, fandom_id }
                 }
                 DailyTaskType::AnswerNewbieComment => {
-                    let amount = rng.sample(Uniform::new_inclusive(2, 6));
+                    let amount = rng.sample(Uniform::new_inclusive(2, 6).unwrap());
                     DailyTask::AnswerNewbieComment {
                         amount,
                         max_level: NEWBIE_MAX_LEVEL,
                     }
                 }
                 DailyTaskType::CommentNewbiePost => {
-                    let amount = rng.sample(Uniform::new_inclusive(1, 5));
+                    let amount = rng.sample(Uniform::new_inclusive(1, 5).unwrap());
                     DailyTask::CommentNewbiePost {
                         amount,
                         max_level: NEWBIE_MAX_LEVEL,
@@ -164,7 +165,7 @@ impl LevelServer {
                     }
                 }
                 DailyTaskType::AnswerInChat => {
-                    let amount = rng.sample(Uniform::new_inclusive(3, 10));
+                    let amount = rng.sample(Uniform::new_inclusive(3, 10).unwrap());
                     DailyTask::AnswerInChat { amount }
                 }
             };

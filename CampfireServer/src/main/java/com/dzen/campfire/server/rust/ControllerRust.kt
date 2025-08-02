@@ -126,6 +126,7 @@ object ControllerRust {
 
     val apollo = ApolloClient.Builder()
         .serverUrl(App.secretsConfig.getString("rust_address"))
+        .addHttpHeader("X-Forwarded-For", "127.0.0.1")
         .httpEngine(
             DefaultHttpEngine(
                 OkHttpClient.Builder()

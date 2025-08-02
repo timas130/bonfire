@@ -5,6 +5,7 @@ use c_core::prelude::tarpc::context;
 use c_core::services::level::LevelCategory;
 use c_core::services::profile::{AccountCustomization, NicknameColorPreset, ProfileError};
 use cached::proc_macro::cached;
+use std::time::Duration;
 
 pub trait NicknameColorPresetExt {
     fn get_level_req(&self) -> Option<LevelCategory>;

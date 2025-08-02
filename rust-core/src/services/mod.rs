@@ -16,7 +16,12 @@ macro_rules! host_tcp {
             use c_core::prelude::tarpc::tokio_serde::formats::Json;
             use c_core::prelude::*;
             use c_core::ServiceBase;
+            use std::future::Future;
             use std::net::{IpAddr, Ipv4Addr};
+
+            async fn spawn(fut: impl Future<Output = ()> + Send + 'static) {
+                tokio::spawn(fut);
+            }
 
             let server_addr = (
                 IpAddr::V4(Ipv4Addr::LOCALHOST),
@@ -29,7 +34,7 @@ macro_rules! host_tcp {
                 .map(BaseChannel::with_defaults)
                 .map(|channel| {
                     let server = self.clone();
-                    channel.execute(server.serve())
+                    channel.execute(server.serve()).for_each(spawn)
                 })
                 .buffer_unordered(100)
                 .for_each(|_| async {})

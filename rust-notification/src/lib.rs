@@ -2,9 +2,9 @@ mod methods;
 mod sender;
 
 use crate::sender::{NotificationSender, SenderQueue};
+use c_core::prelude::anyhow;
 use c_core::prelude::chrono::{DateTime, Utc};
 use c_core::prelude::tarpc::context::Context;
-use c_core::prelude::{anyhow, tarpc};
 use c_core::services::auth::{Auth, AuthServiceClient};
 use c_core::services::notification::{
     Notification, NotificationError, NotificationInput, NotificationService, NotificationTokenType,
@@ -35,7 +35,6 @@ impl NotificationServer {
     host_tcp!(notification);
 }
 
-#[tarpc::server]
 impl NotificationService for NotificationServer {
     async fn post(
         self,

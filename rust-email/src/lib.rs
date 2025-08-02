@@ -1,7 +1,7 @@
 use c_core::prelude::tarpc::context;
 use c_core::prelude::tokio::time::sleep;
 use c_core::prelude::tracing::{info, span, warn, Instrument, Level, Span};
-use c_core::prelude::{anyhow, tarpc, tokio};
+use c_core::prelude::{anyhow, tokio};
 use c_core::services::email::types::EmailTemplate;
 use c_core::services::email::{EmailError, EmailService};
 use c_core::{host_tcp, ServiceBase};
@@ -76,8 +76,6 @@ impl EmailServer {
     host_tcp!(email);
 }
 
-#[tarpc::server]
-//noinspection RsSortImplTraitMembers
 impl EmailService for EmailServer {
     async fn send(
         self,

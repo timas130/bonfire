@@ -1,7 +1,6 @@
 use crate::LevelServer;
 use c_core::services::level::LevelError;
 use chrono::{NaiveDate, NaiveTime, Utc};
-use rand::distributions::Standard;
 use rand::{Rng, SeedableRng};
 use rand_xoshiro::SplitMix64;
 
@@ -13,10 +12,10 @@ impl LevelServer {
     ) -> Result<[u8; 32], LevelError> {
         // i'm not a fucking cryptography expert
         let mut rng = SplitMix64::seed_from_u64(user_id as u64);
-        let user_bytes: [u8; 8] = rng.sample(Standard);
+        let user_bytes: [u8; 8] = rng.random();
         let mut rng =
             SplitMix64::seed_from_u64(date.and_time(NaiveTime::MIN).and_utc().timestamp() as u64);
-        let date_bytes: [u8; 8] = rng.sample(Standard);
+        let date_bytes: [u8; 8] = rng.random();
 
         let mut tx = self.base.pool.begin().await?;
 
