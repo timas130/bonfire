@@ -20,7 +20,7 @@ class ImageLoaderFile(
     override fun load(): ByteArray? {
         try {
             try {
-                if (file.extension.toLowerCase().contains("avi") || file.extension.toLowerCase().contains("mp4")) {
+                if (file.extension.lowercase().contains("avi") || file.extension.lowercase().contains("mp4")) {
                     val utilsMetadata = UtilsMetadata(file.absolutePath)
                     val bm = utilsMetadata.getPreview()
                     if (bm != null) return ToolsBitmap.toPNGBytes(bm)

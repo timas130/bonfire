@@ -30,7 +30,7 @@ public class NotificationAccountAdminVoteCanceledForAdminParser(override val n: 
         return tCap(
             API_TRANSLATE.notification_admin_vote_canceled_for_admin,
             n.cancelAdminAccount.name,
-            ToolsResources.sex(n.cancelAdminAccount.sex, t(API_TRANSLATE.he_reject).toLowerCase()/*Был косяк в строках*/, t(API_TRANSLATE.she_reject)),
+            ToolsResources.sex(n.cancelAdminAccount.sex, t(API_TRANSLATE.he_reject).lowercase()/*Был косяк в строках*/, t(API_TRANSLATE.she_reject)),
         )
     }
 

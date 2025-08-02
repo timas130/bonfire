@@ -9,7 +9,7 @@ android {
     compileSdk 35
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdk 35
         versionCode 4_11_00
         versionName "4.11.0"

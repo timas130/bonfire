@@ -5,7 +5,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'org.jetbrains.kotlin.plugin.serialization'
     id 'application'
-    id 'com.apollographql.apollo3' version '3.8.4'
+    id 'com.apollographql.apollo3' version '3.8.6'
 }
 
 dependencies {
@@ -15,13 +15,13 @@ dependencies {
     implementation project(':BonfireServerNetworking')
     implementation 'com.google.firebase:firebase-admin:9.0.0'
     implementation 'org.slf4j:slf4j-simple:2.0.7'
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3"
 
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     apolloMetadata project(':BonfireApollo')
     implementation project(':BonfireApollo')
-    implementation "com.apollographql.apollo3:apollo-runtime:3.8.4"
-    implementation "com.apollographql.apollo3:apollo-normalized-cache-incubating:3.8.4"
+    implementation "com.apollographql.apollo3:apollo-runtime:3.8.6"
+    implementation "com.apollographql.apollo3:apollo-normalized-cache-incubating:3.8.6"
     implementation "joda-time:joda-time:2.12.6"
     implementation "org.ahocorasick:ahocorasick:0.6.3"
 }

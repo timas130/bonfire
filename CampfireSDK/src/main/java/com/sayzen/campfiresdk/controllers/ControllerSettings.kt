@@ -198,7 +198,7 @@ object ControllerSettings {
     //
 
     var appLanguage: String
-        get() = if (accountSettings.appLanguage.isEmpty()) ToolsAndroid.getLanguageCode().toLowerCase() else accountSettings.appLanguage
+        get() = if (accountSettings.appLanguage.isEmpty()) ToolsAndroid.getLanguageCode().lowercase() else accountSettings.appLanguage
         set(b) {
             accountSettings.appLanguage = b
             onSettingsUpdated()

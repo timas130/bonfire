@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 android {
@@ -36,8 +37,8 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.16.0-alpha01'
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.core:core-ktx:1.16.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
 
     implementation project(':DevSupAndroid')
     implementation project(':BonfireFormattingCore')
@@ -51,7 +52,7 @@ dependencies {
     implementation "io.noties.markwon:simple-ext:$markwon_version"
     implementation "com.atlassian.commonmark:commonmark-ext-autolink:0.13.0"
 
-    def composeBom = platform('androidx.compose:compose-bom:2024.10.01')
+    def composeBom = platform('androidx.compose:compose-bom:2025.07.00')
     implementation composeBom
     androidTestImplementation composeBom
     implementation 'androidx.compose.material3:material3-android'

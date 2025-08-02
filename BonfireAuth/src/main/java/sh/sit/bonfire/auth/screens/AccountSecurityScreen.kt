@@ -403,7 +403,7 @@ private fun LazyItemScope.SessionListItem(
                 }
             }
         },
-        modifier = Modifier.animateItemPlacement()
+        modifier = Modifier.animateItem()
     )
 }
 

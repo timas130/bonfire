@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.ActivityManager
 import android.app.KeyguardManager
 import android.app.UiModeManager
-import android.bluetooth.BluetoothAdapter
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -26,7 +25,6 @@ import com.sup.dev.android.magic_box.ServiceNetworkCheck
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.tools.ToolsThreads
 import java.io.*
-import java.lang.reflect.InvocationTargetException
 import java.util.*
 
 object ToolsAndroid {
@@ -97,7 +95,7 @@ object ToolsAndroid {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             val res = context.resources
             val conf = res.configuration
-            conf.setLocale(Locale(lang.toLowerCase()))
+            conf.setLocale(Locale(lang.lowercase()))
             res.updateConfiguration(conf, res.displayMetrics)
         }
     }
@@ -106,7 +104,7 @@ object ToolsAndroid {
     fun getLanguage(context: Context): String {
         val res = context.resources
         val conf = res.configuration
-        return conf.locale.language.toLowerCase()
+        return conf.locale.language.lowercase()
 
     }
 
@@ -217,7 +215,7 @@ object ToolsAndroid {
     }
 
     fun getLanguageCode(): String {
-        return Locale.getDefault().language.toLowerCase()
+        return Locale.getDefault().language.lowercase()
     }
 
     fun isEchoCancelerAvailable() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) AcousticEchoCanceler.isAvailable() else false
@@ -226,7 +224,7 @@ object ToolsAndroid {
         return (SupAndroid.appContext!!.packageManager.hasSystemFeature("android.software.leanb‌​ack")
                 || SupAndroid.appContext!!.packageManager.hasSystemFeature("android.software.live_tv")
                 || (SupAndroid.appContext!!.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager).currentModeType == Configuration.UI_MODE_TYPE_TELEVISION
-                || Build.MODEL.toLowerCase().contains("tv box"))
+                || Build.MODEL.lowercase().contains("tv box"))
     }
 
     fun appIsVisible(): Boolean {
@@ -302,7 +300,7 @@ object ToolsAndroid {
         val am = SupAndroid.appContext!!.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
 
         for (rsi in am.getRunningServices(150))
-            if (appId == rsi.service.packageName && serviceName.toLowerCase() == rsi.service.className.toLowerCase())
+            if (appId == rsi.service.packageName && serviceName.lowercase() == rsi.service.className.lowercase())
                 return true
 
         return false

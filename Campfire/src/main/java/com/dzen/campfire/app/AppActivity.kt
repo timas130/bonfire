@@ -214,7 +214,7 @@ class AppActivity : SActivity() {
         updateNotificationsCount()
         updateAccount()
 
-        if (ToolsAndroid.getLanguage(this) != ControllerSettings.appLanguage.toLowerCase()) {
+        if (ToolsAndroid.getLanguage(this) != ControllerSettings.appLanguage.lowercase()) {
             ToolsAndroid.setLanguage(SupAndroid.appContext!!, ControllerSettings.appLanguage)
             ToolsAndroid.setLanguage(this, ControllerSettings.appLanguage)
             recreate()

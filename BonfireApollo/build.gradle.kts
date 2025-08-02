@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
-    id("com.apollographql.apollo3").version("3.8.4")
+    id("com.apollographql.apollo3").version("3.8.6")
 }
 
 group = "sh.sit.bonfire"
@@ -32,8 +32,8 @@ repositories {
 }
 
 dependencies {
-    implementation("com.apollographql.apollo3:apollo-runtime:3.8.4")
-    implementation("com.apollographql.apollo3:apollo-normalized-cache-incubating:3.8.4")
+    implementation("com.apollographql.apollo3:apollo-runtime:3.8.6")
+    implementation("com.apollographql.apollo3:apollo-normalized-cache-incubating:3.8.6")
     implementation("joda-time:joda-time:2.12.6")
 }
 

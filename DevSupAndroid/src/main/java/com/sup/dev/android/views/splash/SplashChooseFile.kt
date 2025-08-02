@@ -2,16 +2,16 @@ package com.sup.dev.android.views.splash
 
 import android.content.Context
 import android.os.Environment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.sup.dev.android.R
 import com.sup.dev.android.tools.ToolsPermission
 import com.sup.dev.android.tools.ToolsView
-import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapter
 import com.sup.dev.android.views.cards.Card
 import com.sup.dev.android.views.settings.Settings
 import com.sup.dev.android.views.splash.view.SplashViewSheet
+import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapter
 import com.sup.dev.android.views.views.ViewIcon
 import java.io.File
 
@@ -60,7 +60,7 @@ class SplashChooseFile : SplashRecycler() {
 
     private fun checkType(f: File): Boolean {
         for (type in fileTypes)
-            if (f.name.toLowerCase().endsWith(".$type")) return true
+            if (f.name.lowercase().endsWith(".$type")) return true
         return false
     }
 

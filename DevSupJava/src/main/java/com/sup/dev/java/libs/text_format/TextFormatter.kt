@@ -99,7 +99,7 @@ class TextFormatter(
 
                         val colorName = color.key + " "
                         for (c in colorName.indices) {
-                            if (text[i + c + 1].toLowerCase() != colorName[c]) {
+                            if (text[i + c + 1].lowercaseChar() != colorName[c]) {
                                 matches = false
                                 break
                             }
@@ -278,7 +278,7 @@ class TextFormatter(
     }
 
     private fun nextColorChar(i: Int): Char? {
-        if ("0123456789abcdef".contains(text[i].toLowerCase())) return text[i]
+        if ("0123456789abcdef".contains(text[i].lowercaseChar())) return text[i]
         return null
     }
 }

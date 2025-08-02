@@ -77,11 +77,11 @@ class UtilsMetadata(var retriever: MediaMetadataRetriever? = null) {
     }
 
     fun hasAudio(): Boolean {
-        return retriever!!.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_AUDIO)?.toLowerCase() == "yes"
+        return retriever!!.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_AUDIO)?.lowercase() == "yes"
     }
 
     fun hasVideo(): Boolean {
-        return retriever!!.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO)?.toLowerCase() == "yes"
+        return retriever!!.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO)?.lowercase() == "yes"
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -128,11 +128,11 @@ class UtilsMetadata(var retriever: MediaMetadataRetriever? = null) {
         }
 
         fun hasAudio(path: String): Boolean {
-            return wrap(path).extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_AUDIO)?.toLowerCase() == "yes"
+            return wrap(path).extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_AUDIO)?.lowercase() == "yes"
         }
 
         fun hasVideo(path: String): Boolean {
-            return wrap(path).extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO)?.toLowerCase() == "yes"
+            return wrap(path).extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO)?.lowercase() == "yes"
         }
 
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
