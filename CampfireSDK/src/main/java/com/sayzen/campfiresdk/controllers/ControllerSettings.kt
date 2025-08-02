@@ -533,6 +533,13 @@ object ControllerSettings {
             onSettingsUpdated()
         }
 
+    var feedClosed: Boolean
+        get() = accountSettings.feedClosed
+        set(b) {
+            accountSettings.feedClosed = b
+            onSettingsUpdated()
+        }
+
     var feedOrder: Array<Long>
         get() = if (accountSettings.feedOrder.isEmpty()) arrayOf(1L, 2L) else accountSettings.feedOrder
         set(b) {

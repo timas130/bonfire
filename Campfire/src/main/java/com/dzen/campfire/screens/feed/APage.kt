@@ -124,15 +124,16 @@ abstract class APage(
             onLoad: (Array<Publication>) -> Unit
     ): Request<out Request.Response> {
         return RPostFeedGetAll(
-                if (cards.isEmpty()) 0 else cards.get(cards.size - 1).xPublication.publication.dateCreate,
-                ControllerSettings.feedLanguages,
-                ControllerSettings.feedImportant,
-                getKarmaCategory(),
-                getNoSubscribes(),
-                getNoKarmaCategory())
-                .onComplete { r ->
-                    onLoad.invoke(r.publications)
-                }
+            if (cards.isEmpty()) 0 else cards.get(cards.size - 1).xPublication.publication.dateCreate,
+            ControllerSettings.feedLanguages,
+            ControllerSettings.feedImportant,
+            getKarmaCategory(),
+            getNoSubscribes(),
+            getNoKarmaCategory(),
+            ControllerSettings.feedClosed
+        )
+        .onComplete { r ->
+            onLoad.invoke(r.publications)
+        }
     }
-
 }

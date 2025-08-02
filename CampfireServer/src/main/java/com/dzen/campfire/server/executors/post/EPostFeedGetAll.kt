@@ -10,7 +10,7 @@ import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlWhere
 
-class EPostFeedGetAll : RPostFeedGetAll(0, emptyArray(), false, 0, false, false) {
+class EPostFeedGetAll : RPostFeedGetAll(0, emptyArray(), false, 0, false, false, false) {
 
     override fun check() {
     }
@@ -48,8 +48,10 @@ class EPostFeedGetAll : RPostFeedGetAll(0, emptyArray(), false, 0, false, false)
             }
         }
 
-        select.where(TPublications.parent_fandom_closed, "=", 0)
-        select.where(TPublications.closed, "=", 0)
+        if (!closed) {
+            select.where(TPublications.parent_fandom_closed, "=", 0)
+            select.where(TPublications.closed, "=", 0)
+        }
 
         if (!noKarmaCategory) select.where(TPublications.tag_7, "=", karmaCategory)
         if(noSubscribes)

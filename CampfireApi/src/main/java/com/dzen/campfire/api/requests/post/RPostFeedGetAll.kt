@@ -6,12 +6,13 @@ import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
 open class RPostFeedGetAll(
-        var offsetDate: Long,
-        var languagesId: Array<Long>,
-        var importantOnly: Boolean,
-        var karmaCategory: Long,
-        var noSubscribes: Boolean,
-        var noKarmaCategory: Boolean
+    var offsetDate: Long,
+    var languagesId: Array<Long>,
+    var importantOnly: Boolean,
+    var karmaCategory: Long,
+    var noSubscribes: Boolean,
+    var noKarmaCategory: Boolean,
+    var closed: Boolean,
 ) : Request<RPostFeedGetAll.Response>() {
 
     companion object {
@@ -29,6 +30,7 @@ open class RPostFeedGetAll(
         karmaCategory = json.m(inp, "karmaCategory", karmaCategory)
         noSubscribes = json.m(inp, "noSubscribes", noSubscribes)
         noKarmaCategory = json.m(inp, "noKarmaCategory", noKarmaCategory)
+        closed = json.m(inp, "closed", closed)
     }
 
     override fun instanceResponse(json: Json): Response {

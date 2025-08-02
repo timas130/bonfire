@@ -704,6 +704,7 @@ object API_TRANSLATE {
     var feed_all = 0L
     var feed_subscribed = 0L
     var feed_important = 0L
+    var feed_closed = 0L
     var feed_subscribes = 0L
     var feed_all_first = 0L
     var feed_language = 0L
