@@ -1592,7 +1592,7 @@
     "publication_event_moderation_rejected": "Администратор %s %s модераторское действие этого пользователя",
     "publication_event_moderation_rejected_admin": "%s модераторское действие пользователя %s",
     "publication_event_post_fandom_change": "Администратор %s %s пост этого пользователя из фэндома %s в %s",
-    "publication_event_post_fandom_change_admin": "%s пост пользователя %s из фэндома %s в %s",
+    "publication_event_post_fandom_change_admin": "%s пост пользователя %s из фэндома %s (%s) в %s (%s)",
     "publication_event_post_fandom_media_remove": "Администратор %s %s медиа из поста %s",
     "publication_event_post_fandom_media_remove_admin": "%s медиа из поста %s пользователя %s",
     "publication_event_publication_restore": "Администратор %s %s публикацию этого пользователя",

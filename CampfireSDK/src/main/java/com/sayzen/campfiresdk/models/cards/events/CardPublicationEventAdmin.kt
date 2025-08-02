@@ -2,6 +2,7 @@ package com.sayzen.campfiresdk.models.cards.events
 
 import android.view.View
 import android.widget.TextView
+import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.events_admins.*
 import com.dzen.campfire.api.models.translate.TranslateHistory
@@ -132,7 +133,7 @@ class CardPublicationEventAdmin(
                 view.setOnClickListener {  }
             }
             is ApiEventAdminPostChangeFandom -> {
-                text = tCap(API_TRANSLATE.publication_event_post_fandom_change_admin, ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_move), t(API_TRANSLATE.she_move)), ControllerLinks.linkToAccount(e.targetAccountName), e.oldFandomName, e.newFandomName)
+                text = tCap(API_TRANSLATE.publication_event_post_fandom_change_admin, ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_move), t(API_TRANSLATE.she_move)), ControllerLinks.linkToAccount(e.targetAccountName), e.oldFandomName, API.getLanguage(e.oldLanguageId).name, e.newFandomName, API.getLanguage(e.newLanguageId).name)
                 view.setOnClickListener { ControllerCampfireSDK.onToPostClicked(e.publicationId, 0, Navigator.TO) }
             }
             is ApiEventAdminPostRemoveMedia -> {
