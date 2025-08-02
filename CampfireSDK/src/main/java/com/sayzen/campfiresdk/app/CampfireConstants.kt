@@ -571,7 +571,8 @@ object CampfireConstants {
 
     val MOD_COMMENT_TEMPLATES = arrayOf(
         API_TRANSLATE.mod_comment_1_label to API_TRANSLATE.mod_comment_1_full,
-        API_TRANSLATE.mod_comment_2_label to API_TRANSLATE.mod_comment_2_full,
+        // Правила обновлены: мат разрешён
+        // API_TRANSLATE.mod_comment_2_label to API_TRANSLATE.mod_comment_2_full,
         API_TRANSLATE.mod_comment_3_label to API_TRANSLATE.mod_comment_3_full,
         API_TRANSLATE.mod_comment_4_label to API_TRANSLATE.mod_comment_4_full,
         API_TRANSLATE.mod_comment_5_label to API_TRANSLATE.mod_comment_5_full,
