@@ -43,6 +43,7 @@ import com.sayzen.campfiresdk.compose.util.Avatar
 import com.sayzen.campfiresdk.compose.util.avatarRounding
 import com.sayzen.campfiresdk.compose.util.mapState
 import com.sayzen.campfiresdk.controllers.ControllerSettings
+import com.sayzen.campfiresdk.models.PostList
 import com.sayzen.campfiresdk.screens.account.profile.SProfile
 import com.sayzen.campfiresdk.screens.activities.user_activities.relay_race.SRelayRaceInfo
 import com.sayzen.campfiresdk.screens.fandoms.rubrics.SRubricPosts
@@ -238,6 +239,7 @@ fun Post(
     scrollToTop: (() -> Unit)? = null,
     onClick: ((PublicationPost) -> Unit)? = null,
     showBestComment: Boolean = true,
+    isVisible: () -> Boolean = { true },
 ) {
     val onRemovedRef = rememberUpdatedState(onRemoved)
     val scrollToTopRef = rememberUpdatedState(scrollToTop)
@@ -281,8 +283,12 @@ fun Post(
         if (!expanded) return@DisposableEffect onDispose {}
 
         val listener = {
-            model.shrink()
-            true
+            if (isVisible()) {
+                model.shrink()
+                true
+            } else {
+                false
+            }
         }
         Navigator.addOnBack(listener)
 
@@ -464,6 +470,10 @@ class ComposeCardPost(
                 vRecycler?.scrollToPosition(index)
             },
             onClick = onClick,
+            isVisible = {
+                val current = Navigator.getCurrent()
+                current is PostList && current.contains(proxy)
+            },
         )
     }
 

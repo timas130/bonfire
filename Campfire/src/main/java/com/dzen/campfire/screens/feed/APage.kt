@@ -72,7 +72,7 @@ abstract class APage(
         adapterSub?.remove(screen.cardDonate)
     }
 
-    override fun contains(card: CardPostProxy) = adapterSub != null && adapterSub!!.contains(card)
+    override fun contains(card: CardPostProxy) = adapterSub != null && adapterSub!!.isVisible(card)
 
 
     override fun instanceAdapter(): RecyclerCardAdapterLoading<CardPublication, Publication> {
