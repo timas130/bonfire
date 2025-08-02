@@ -6,7 +6,10 @@ import com.dzen.campfire.server.tables.*
 import com.sup.dev.java.classes.items.Item2
 import com.sup.dev.java.tools.ToolsDate
 import com.sup.dev.java_pc.sql.*
+import okio.withLock
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.locks.ReentrantLock
 
 object ControllerOptimizer {
 
@@ -390,37 +393,39 @@ object ControllerOptimizer {
     //  MiniGame
     //
 
-    private var MiniGame_humans = -1L
-    private var MiniGame_robots = -1L
+    private var MiniGame_humans = AtomicLong(-1L)
+    private var MiniGame_robots = AtomicLong(-1L)
 
     fun getMiniGameRobots(): Long {
-        synchronized(MiniGame_robots) {
-            if (MiniGame_robots == -1L) MiniGame_robots = ControllerCollisions.getCollision(0, API.COLLISION_PROJECT_MINIGAME_ROBOTS, 0)
-            return MiniGame_robots
+        return MiniGame_humans.updateAndGet {
+            if (it == -1L) {
+                ControllerCollisions.getCollision(0, API.COLLISION_PROJECT_MINIGAME_ROBOTS, 0)
+            } else {
+                it
+            }
         }
     }
 
     fun getMiniGameHumans(): Long {
-        synchronized(MiniGame_humans) {
-            if (MiniGame_humans == -1L) MiniGame_humans = ControllerCollisions.getCollision(0, API.COLLISION_PROJECT_MINIGAME_HUMANS, 0)
-            return MiniGame_humans
+        return MiniGame_robots.updateAndGet {
+            if (it == -1L) {
+                ControllerCollisions.getCollision(0, API.COLLISION_PROJECT_MINIGAME_HUMANS, 0)
+            } else {
+                it
+            }
         }
     }
 
     fun addMiniGameRobots(count: Long) {
-        synchronized(MiniGame_robots) {
-            if (MiniGame_robots == -1L) MiniGame_robots = ControllerCollisions.getCollision(0, API.COLLISION_PROJECT_MINIGAME_ROBOTS, 0)
-            MiniGame_robots += count
-            ControllerCollisions.updateOrCreate(0, MiniGame_robots, API.COLLISION_PROJECT_MINIGAME_ROBOTS)
-        }
+        getMiniGameRobots()
+        val value = MiniGame_robots.addAndGet(count)
+        ControllerCollisions.updateOrCreate(0, value, API.COLLISION_PROJECT_MINIGAME_ROBOTS)
     }
 
     fun addMiniGameHumans(count: Long) {
-        synchronized(MiniGame_humans) {
-            if (MiniGame_humans == -1L) MiniGame_humans = ControllerCollisions.getCollision(0, API.COLLISION_PROJECT_MINIGAME_HUMANS, 0)
-            MiniGame_humans += count
-            ControllerCollisions.updateOrCreate(0, MiniGame_humans, API.COLLISION_PROJECT_MINIGAME_HUMANS)
-        }
+        getMiniGameHumans()
+        val value = MiniGame_humans.addAndGet(count)
+        ControllerCollisions.updateOrCreate(0, value, API.COLLISION_PROJECT_MINIGAME_HUMANS)
     }
 
     //
@@ -428,14 +433,14 @@ object ControllerOptimizer {
     //
 
     private var KarmaCategory_lastUpdate = 0L
-    private val KarmaCategory_time = 1000L * 60 * 60 * 24
+    private const val KarmaCategory_time = 1000L * 60 * 60 * 24
     var KarmaCategory_mid_best = 0L
     var KarmaCategory_mid_good = 0L
 
+    private val karmaCategoryUpdateLock = ReentrantLock()
 
     fun karmaCategoryUpdateIfNeed() {
-
-        synchronized(KarmaCategory_time) {
+        karmaCategoryUpdateLock.withLock {
             if (KarmaCategory_lastUpdate > System.currentTimeMillis() - KarmaCategory_time) return
             KarmaCategory_lastUpdate = ToolsDate.getStartOfDay()
             val v = Database.select("ControllerOptimizer karmaCategoryUpdateIfNeed", SqlQuerySelect(TPublications.NAME, TPublications.karma_count)
@@ -458,8 +463,6 @@ object ControllerOptimizer {
             KarmaCategory_mid_best = sumBest / (if(countBest < 1) 1 else countBest)
             KarmaCategory_mid_good = sumGood / (if(countGood < 1) 1 else countGood)
         }
-
-
     }
 
     fun karmaCategoryIsBest(karmaCount: Long): Boolean {
@@ -471,5 +474,4 @@ object ControllerOptimizer {
         karmaCategoryUpdateIfNeed()
         return karmaCount >= KarmaCategory_mid_good
     }
-
 }
