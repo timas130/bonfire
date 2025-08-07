@@ -24,6 +24,7 @@ use axum::{response, Extension, Router};
 use axum_client_ip::{ClientIp, ClientIpSource};
 use axum_extra::headers::authorization::Bearer;
 use axum_extra::headers::{Authorization, UserAgent};
+use axum_extra::typed_header::TypedHeaderRejection;
 use axum_extra::TypedHeader;
 use c_core::prelude::chrono::{TimeDelta, Utc};
 use c_core::prelude::tokio::net::TcpListener;
@@ -52,7 +53,7 @@ async fn graphiql() -> impl IntoResponse {
 async fn graphql_handler(
     Extension(schema): Extension<BSchema>,
     Extension(global_context): Extension<GlobalContext>,
-    auth_header: Option<TypedHeader<Authorization<Bearer>>>,
+    auth_header: Result<TypedHeader<Authorization<Bearer>>, TypedHeaderRejection>,
     forwarded_for: ClientIp,
     user_agent: Option<TypedHeader<UserAgent>>,
     req: GraphQLRequest,
@@ -60,7 +61,7 @@ async fn graphql_handler(
     // authenticating user and getting full req context
     let req_context = ReqContext::new(
         global_context,
-        auth_header.map(|header| header.token().to_string()),
+        auth_header.ok().map(|header| header.token().to_string()),
         forwarded_for.0,
         user_agent,
     )
