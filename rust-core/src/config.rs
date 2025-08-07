@@ -9,6 +9,7 @@ pub struct GlobalConfig {
     pub jwt_secret: String,
     pub sentry_dsn: String,
     pub internal_key: String,
+    pub behind_proxy: bool,
 
     pub urls: UrlsConfig,
     pub ports: PortsConfig,

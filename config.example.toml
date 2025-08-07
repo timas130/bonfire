@@ -2,6 +2,7 @@ database_url = "postgres://postgres:postgres@localhost/campfire_db"
 jwt_secret = "secretsecretsecret"
 sentry_dsn = ""
 internal_key = "internal_key_dont_use"
+behind_proxy = false
 
 [urls]
 verify_link = "http://localhost:5173/auth/verify?t="

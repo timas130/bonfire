@@ -21,7 +21,7 @@ use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
 use axum::response::IntoResponse;
 use axum::routing::{get, post};
 use axum::{response, Extension, Router};
-use axum_client_ip::RightmostXForwardedFor;
+use axum_client_ip::{ClientIp, ClientIpSource};
 use axum_extra::headers::authorization::Bearer;
 use axum_extra::headers::{Authorization, UserAgent};
 use axum_extra::TypedHeader;
@@ -53,7 +53,7 @@ async fn graphql_handler(
     Extension(schema): Extension<BSchema>,
     Extension(global_context): Extension<GlobalContext>,
     auth_header: Option<TypedHeader<Authorization<Bearer>>>,
-    forwarded_for: RightmostXForwardedFor,
+    forwarded_for: ClientIp,
     user_agent: Option<TypedHeader<UserAgent>>,
     req: GraphQLRequest,
 ) -> GraphQLResponse {
@@ -162,6 +162,14 @@ async fn main() -> anyhow::Result<()> {
         .layer(NewSentryLayer::new_from_top())
         .layer(SentryHttpLayer::new().enable_transaction())
         .layer(CorsLayer::permissive())
+        .layer(
+            if global_context.base.config.behind_proxy {
+                ClientIpSource::RightmostXForwardedFor
+            } else {
+                ClientIpSource::ConnectInfo
+            }
+            .into_extension(),
+        )
         .layer(Extension(global_context))
         .layer(Extension(schema));
 
