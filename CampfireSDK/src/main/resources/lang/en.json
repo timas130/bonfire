@@ -739,5 +739,7 @@
     "settings_style_default_alert": "All your settings will be lost.",
     "settings_voice_messages_auto_send": "Automatically send message after recording",
     "settings_user_activities_subscribe": "Automatically subscribe to relay races",
-    "settings_user_activities_subscribe_title": "Subscription"
+    "settings_user_activities_subscribe_title": "Subscription",
+    "chat_error_gone_remove": "Message has deleted by author.",
+    "chat_error_gone_block": "The message has been blocked by the valiant Bonfire moderators."
 }
