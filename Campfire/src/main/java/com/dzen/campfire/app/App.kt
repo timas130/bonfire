@@ -49,6 +49,11 @@ class App : Application() {
 
         FirebaseApp.initializeApp(applicationContext)
 
+        API.SERV_ROOT = BuildConfig.SERVER_ROOT
+        API.MELIOR_ROOT = BuildConfig.SERVER_MELIOR
+        API.S3_ROOT = BuildConfig.SERVER_S3
+        API.DOMEN = "https://${BuildConfig.HOST}/r/"
+
         SupAndroid.init(applicationContext, BuildConfig.APPLICATION_ID, AppActivity::class.java)
         SupAndroid.imgErrorGone = ImageLoader.load(ApiResources.IMAGE_BACKGROUND_17).noHolder()
         SupAndroid.imgErrorNetwork = ImageLoader.load(ApiResources.IMAGE_BACKGROUND_20).noHolder()
@@ -56,7 +61,7 @@ class App : Application() {
 
         PostHogAndroid.setup(this, PostHogAndroidConfig(
             apiKey = BuildConfig.POSTHOG_API_KEY,
-            host = BuildConfig.POSTHOG_HOST,
+            host = BuildConfig.SERVER_POSTHOG,
         ).apply {
             optOut = !canSendAnalytics()
         })

@@ -7,6 +7,7 @@ import com.apollographql.apollo3.cache.normalized.api.*
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.normalizedCache
 import com.apollographql.apollo3.network.http.DefaultHttpEngine
+import com.dzen.campfire.api.API
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.image_loader.ImageLoaderRef
@@ -19,7 +20,7 @@ import sh.sit.schema.pagination.Pagination
 object ApolloController {
     @OptIn(ApolloExperimental::class)
     val apolloClient: ApolloClient = ApolloClient.Builder()
-        .serverUrl("https://api.bonfire.moe")
+        .serverUrl(API.MELIOR_ROOT)
         .httpEngine(DefaultHttpEngine(
             OkHttpController.getClient(SupAndroid.appContext!!) {
                 addInterceptor(AuthInterceptor())

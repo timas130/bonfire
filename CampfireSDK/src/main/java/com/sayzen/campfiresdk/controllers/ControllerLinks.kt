@@ -263,7 +263,7 @@ object ControllerLinks {
         }
     }
 
-    fun linkToAccount(name: String) = API.LINK_PROFILE_NAME + name
+    fun linkToAccount(name: String) = API.LINK_PROFILE_NAME.asWeb() + name
     fun linkToAccount(id: Long) = API.LINK_PROFILE_ID.asWeb() + id
     fun linkToFandom(fandomId: Long) = API.LINK_FANDOM.asWeb() + fandomId
     fun linkToFandom(fandomId: Long, languageId: Long) = API.LINK_FANDOM.asWeb() + fandomId + "_" + languageId
@@ -303,7 +303,7 @@ object ControllerLinks {
     fun makeLinkable(vText: ViewText) {
         // fixme: don't do this maybe?
         vText.text = vText.text.toString()
-            .replace(API.LINK_PROFILE_NAME, "@")
+            .replace(API.LINK_PROFILE_NAME.asWeb(), "@")
             .replace(API.DOMEN, "@")
         ControllerApi.makeTextHtml(vText)
         LinkifyCompat.addLinks(vText, Linkify.WEB_URLS)
@@ -319,7 +319,7 @@ object ControllerLinks {
             API.DOMEN,
             null,
             { link, start, end -> isCorrectLink(link.subSequence(start, end)) },
-            { match, _ -> "https://bonfire.moe/r/${match.group(1)}" }
+            { match, _ -> API.DOMEN + match.group(1) }
         )
     }
 
