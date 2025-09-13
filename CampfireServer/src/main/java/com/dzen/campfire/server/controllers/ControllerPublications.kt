@@ -97,7 +97,7 @@ object ControllerPublications {
             return
         }
         if(OptimizerEffects.get(fromAccount.id, API.EFFECT_INDEX_MENTION_LOCK) != null) return
-        val textV = text.replace(API.LINK_PROFILE_NAME, API.LINK_SHORT_PROFILE)
+        val textV = text.replace(API.LINK_PROFILE_NAME.asWeb(), API.LINK_SHORT_PROFILE)
         val names = ArrayList<String>()
         val ids = ArrayList<Long>()
         var i = 0

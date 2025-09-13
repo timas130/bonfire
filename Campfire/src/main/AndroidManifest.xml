@@ -20,7 +20,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/CampfireSplash"
-        android:largeHeap="true">
+        android:largeHeap="true"
+        android:usesCleartextTraffic="${usesCleartextTraffic}">
 
         <activity
             android:name="com.dzen.campfire.app.AppActivity"
@@ -38,7 +39,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="https" />
-                <data android:host="bonfire.moe" />
+                <data android:host="${host}" />
                 <data android:pathPrefix="/r" />
             </intent-filter>
 

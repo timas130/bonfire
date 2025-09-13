@@ -22,7 +22,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.dzen.campfire.api.API
 import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.requests.publications.RPublicationsReactionAdd
@@ -55,9 +54,9 @@ fun PublicationReactions(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier,
     ) {
-        for (reactionIndex in API.REACTIONS.indices.map { it.toLong() }) {
+        for (reactionIndex in ApiResources.REACTIONS.indices.map { it.toLong() }) {
             val reactionCount = data.counts[reactionIndex] ?: 0
-            val image = API.REACTIONS.getOrNull(reactionIndex.toInt()) ?: ApiResources.EMOJI_5
+            val image = ApiResources.REACTIONS.getOrNull(reactionIndex.toInt()) ?: ApiResources.EMOJI_5
 
             val windowOffset = remember { mutableStateOf<Offset?>(null) }
 
