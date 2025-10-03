@@ -42,6 +42,14 @@
             app:Settings_icon="@drawable/ic_security_white_24dp"/>
 
         <com.sup.dev.android.views.settings.SettingsMini
+            android:id="@+id/vUsersButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:Settings_lineVisible="false"
+            app:Settings_icon_filter="?colorOnPrimaryIcons"
+            app:Settings_icon="@drawable/ic_group_white_24dp"/>
+
+        <com.sup.dev.android.views.settings.SettingsMini
             android:id="@+id/vSubscribersButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
