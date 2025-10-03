@@ -17,7 +17,7 @@ class EFandomsModerationChatCreate : RFandomsModerationChatCreate(0, 0, "", "", 
 
     @Throws(ApiException::class)
     override fun check() {
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
         name = ControllerCensor.cens(name)
         text = ControllerCensor.cens(text)
         ControllerFandom.checkCan(apiAccount, fandomId, languageId, API.LVL_MODERATOR_CHATS)

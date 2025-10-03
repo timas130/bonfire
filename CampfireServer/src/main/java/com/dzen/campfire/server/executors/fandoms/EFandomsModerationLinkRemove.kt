@@ -27,7 +27,7 @@ class EFandomsModerationLinkRemove : RFandomsModerationLinkRemove(0, "") {
         if (fandom == null) throw ApiException(API.ERROR_GONE)
         if (fandom!!.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
         if (collisionType != API.COLLISION_FANDOM_LINK) throw ApiException(E_BAD_TYPE)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {

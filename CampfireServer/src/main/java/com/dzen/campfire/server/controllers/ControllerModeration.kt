@@ -5,7 +5,9 @@ import com.dzen.campfire.api.tools.ApiException
 
 object ControllerModeration {
     fun parseComment(comment: String, userId: Long = 0L): String {
-        if (ControllerCensor.containsSwearing(comment)) {
+        val trimmed = comment.trim()
+
+        if (ControllerCensor.containsSwearing(trimmed)) {
             val account = ControllerAccounts.getAccount(userId)
             if (account != null) {
                 ControllerEffects.makeSystem(
@@ -18,9 +20,9 @@ object ControllerModeration {
             throw ApiException(API.ERROR_BAD_COMMENT)
         }
 
-        if (comment.length < API.MODERATION_COMMENT_MIN_L || comment.length > API.MODERATION_COMMENT_MAX_L) {
+        if (trimmed.length < API.MODERATION_COMMENT_MIN_L || trimmed.length > API.MODERATION_COMMENT_MAX_L) {
             throw ApiException(API.ERROR_BAD_COMMENT)
         }
-        return comment
+        return trimmed
     }
 }

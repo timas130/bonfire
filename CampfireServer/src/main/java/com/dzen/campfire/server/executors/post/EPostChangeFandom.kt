@@ -28,7 +28,7 @@ class EPostChangeFandom : RPostChangeFandom(0, 0, 0, "") {
         if(publication.status != API.STATUS_DRAFT && publication.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
 
         if(publication.creator.id != apiAccount.id){
-            ControllerModeration.parseComment(comment, apiAccount.id)
+            comment = ControllerModeration.parseComment(comment, apiAccount.id)
             ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_POST_CHANGE_FANDOM)
         }else{
             ControllerAccounts.checkAccountBanned(apiAccount.id)

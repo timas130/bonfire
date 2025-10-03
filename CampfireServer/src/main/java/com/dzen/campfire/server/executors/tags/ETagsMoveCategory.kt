@@ -20,7 +20,7 @@ class ETagsMoveCategory : RTagsMoveCategory(0, 0, "") {
 
     @Throws(ApiException::class)
     override fun check() {
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
         publication = ControllerPublications.getPublication(publicationId, apiAccount.id) as PublicationTag?
         publicationOther = ControllerPublications.getPublication(beforeCategoryId, apiAccount.id) as PublicationTag?
         if (publication == null) throw ApiException(API.ERROR_GONE)

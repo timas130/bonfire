@@ -25,7 +25,7 @@ class EPostMakeMultilingualModeratorNot : RPostMakeMultilingualModeratorNot(0, "
 
         ControllerFandom.checkCan(apiAccount, publication.fandom.id, publication.fandom.languageId, API.LVL_MODERATOR_TO_DRAFTS)
         if (!ControllerFandom.checkCanModerate(apiAccount, publication.creator.id, publication.fandom.id, publication.fandom.languageId)) throw ApiException(E_LOW_KARMA_FORCE)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
 
     }
 

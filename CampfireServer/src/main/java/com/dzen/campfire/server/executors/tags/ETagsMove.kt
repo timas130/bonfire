@@ -24,7 +24,7 @@ class ETagsMove : RTagsMove(0, 0, "") {
 
     @Throws(ApiException::class)
     override fun check() {
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
         publication = ControllerPublications.getPublication(publicationId, apiAccount.id) as PublicationTag?
         publicationOldParent = ControllerPublications.getPublication(publication!!.parentPublicationId, apiAccount.id) as PublicationTag?
         publicationNewParent = ControllerPublications.getPublication(newCategoryId, apiAccount.id) as PublicationTag?

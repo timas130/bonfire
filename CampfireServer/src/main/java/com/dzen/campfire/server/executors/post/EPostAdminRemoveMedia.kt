@@ -21,7 +21,7 @@ class EPostAdminRemoveMedia : RPostAdminRemoveMedia(0, "") {
         if(publication.fandom.languageId == -1L) throw ApiException(API.ERROR_ACCESS)
         if(publication.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
 
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
         ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_REMOVE_MEDIA)
     }
 

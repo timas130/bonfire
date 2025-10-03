@@ -15,7 +15,7 @@ class EActivitiesRemove : RActivitiesRemove(0, "") {
     private var activity = UserActivity()
 
     override fun check() {
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
 
         val activity = ControllerActivities.getActivity(activityId, apiAccount.id)
         if(activity == null) throw ApiException(API.ERROR_GONE)

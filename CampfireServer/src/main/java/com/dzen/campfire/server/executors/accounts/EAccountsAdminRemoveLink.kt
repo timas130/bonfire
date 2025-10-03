@@ -16,7 +16,7 @@ class EAccountsAdminRemoveLink : RAccountsAdminRemoveLink(0, 0, "") {
     override fun check() {
         ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_USER_REMOVE_LINK)
         ControllerFandom.checkCanModerate(apiAccount, accountId)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {
