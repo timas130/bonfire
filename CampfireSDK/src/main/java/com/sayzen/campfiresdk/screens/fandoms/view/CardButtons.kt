@@ -6,6 +6,7 @@ import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomRemoveModerator
 import com.sayzen.campfiresdk.screens.activities.user_activities.SRelayRacesList
+import com.sayzen.campfiresdk.screens.fandoms.SSubscribers
 import com.sayzen.campfiresdk.screens.fandoms.STags
 import com.sayzen.campfiresdk.screens.fandoms.chats.SFandomChatsList
 import com.sayzen.campfiresdk.screens.fandoms.moderation.moderators.SModeration
@@ -32,6 +33,7 @@ class CardButtons(
         val vChatsButton: SettingsMini = view.findViewById(R.id.vChatsButton)
         val vTagsButton: SettingsMini = view.findViewById(R.id.vTagsButton)
         val vModerationButton: SettingsMini = view.findViewById(R.id.vModerationButton)
+        val vUsersButton: SettingsMini = view.findViewById(R.id.vUsersButton)
         val vSubscribersButton: SettingsMini = view.findViewById(R.id.vSubscribersButton)
         val vWikiButton: SettingsMini = view.findViewById(R.id.vWikiButton)
         val vRubricButton: SettingsMini = view.findViewById(R.id.vRubricButton)
@@ -40,7 +42,8 @@ class CardButtons(
         vChatsButton.setTitle(t(API_TRANSLATE.app_chats))
         vTagsButton.setTitle(t(API_TRANSLATE.app_tags))
         vModerationButton.setTitle(t(API_TRANSLATE.app_moderation))
-        vSubscribersButton.setTitle(t(API_TRANSLATE.app_users))
+        vUsersButton.setTitle(t(API_TRANSLATE.app_users))
+        vSubscribersButton.setTitle(t(API_TRANSLATE.app_subscribers))
         vRubricButton.setTitle(t(API_TRANSLATE.app_rubrics))
         vWikiButton.setTitle(t(API_TRANSLATE.app_wiki))
         vRelayRaces.setTitle(t(API_TRANSLATE.app_relay_races))
@@ -49,7 +52,8 @@ class CardButtons(
         vChatsButton.setOnClickListener { Navigator.to(SFandomChatsList(xFandom.getId(), xFandom.getLanguageId())) }
         vTagsButton.setOnClickListener { STags.instance(xFandom.getId(), xFandom.getLanguageId(), Navigator.TO) }
         vModerationButton.setOnClickListener { Navigator.to(SModeration(xFandom.getId(), xFandom.getLanguageId())) }
-        vSubscribersButton.setOnClickListener { Navigator.to(SRating(xFandom.getId(), xFandom.getLanguageId())) }
+        vUsersButton.setOnClickListener { Navigator.to(SRating(xFandom.getId(), xFandom.getLanguageId())) }
+        vSubscribersButton.setOnClickListener { Navigator.to(SSubscribers(xFandom.getId(), xFandom.getLanguageId())) }
         vWikiButton.setOnClickListener { Navigator.to(SWikiList(xFandom.getId(), xFandom.getLanguageId(), 0, "")) }
         vRubricButton.setOnClickListener { Navigator.to(SRubricsList(xFandom.getId(), xFandom.getLanguageId(), 0, true)) }
         vRelayRaces.setOnClickListener { Navigator.to(SRelayRacesList(xFandom.getId(), xFandom.getLanguageId())) }
