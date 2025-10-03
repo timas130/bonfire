@@ -13,7 +13,7 @@ class EAccountsAdminPunishmentsRemove : RAccountsAdminPunishmentsRemove(0, "") {
     override fun check() {
         punishment = ControllerAccounts.getPunishment(punishmentId)
         if (punishment == null) throw ApiException(API.ERROR_GONE)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
 
         if (punishment!!.ownerId == apiAccount.id && apiAccount.id != 1L) throw ApiException(API.ERROR_ACCESS)
         if (punishment!!.fromAccountId != apiAccount.id)

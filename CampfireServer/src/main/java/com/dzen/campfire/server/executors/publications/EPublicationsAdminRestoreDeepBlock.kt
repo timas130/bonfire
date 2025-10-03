@@ -6,6 +6,7 @@ import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.models.publications.history.HistoryAdminNotDeepBlock
 import com.dzen.campfire.api.requests.publications.RPublicationsAdminRestoreDeepBlock
 import com.dzen.campfire.server.controllers.ControllerFandom
+import com.dzen.campfire.server.controllers.ControllerModeration
 import com.dzen.campfire.server.controllers.ControllerNotifications
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.controllers.ControllerPublicationsHistory
@@ -23,6 +24,7 @@ class EPublicationsAdminRestoreDeepBlock : RPublicationsAdminRestoreDeepBlock(0,
     override fun check() {
         ControllerFandom.checkCan(apiAccount, API.LVL_PROTOADMIN)
         publication = ControllerPublications.getPublication(publicationId, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {

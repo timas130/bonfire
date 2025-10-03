@@ -39,7 +39,7 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
         if (publication!!.creator.id != apiAccount.id && publication!!.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
         if (publication!!.creator.id != apiAccount.id && pendingTime > 0) throw ApiException(API.ERROR_ACCESS)
         if (publication!!.creator.id != apiAccount.id) {
-            ControllerModeration.parseComment(comment, apiAccount.id)
+            comment = ControllerModeration.parseComment(comment, apiAccount.id)
             ControllerFandom.checkCan(apiAccount, publication!!.fandom.id, publication!!.fandom.languageId, API.LVL_MODERATOR_POST_TAGS)
         }
         if (publication!!.publicationType != API.PUBLICATION_TYPE_POST) throw ApiException(E_BAD_TYPE)

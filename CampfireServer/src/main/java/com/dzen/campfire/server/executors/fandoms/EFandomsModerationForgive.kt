@@ -12,7 +12,7 @@ class EFandomsModerationForgive : RFandomsModerationForgive(0, 0, 0, "") {
 
     override fun check() {
         ControllerFandom.checkCan(apiAccount, fandomId, languageId, API.LVL_MODERATOR_BLOCK)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {

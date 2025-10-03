@@ -20,7 +20,7 @@ class EFandomsAdminViceroyRemove : RFandomsAdminViceroyRemove(0, 0, "") {
         val fandom = ControllerFandom.getFandom(fandomId)
         if (fandom == null) throw ApiException(API.ERROR_GONE)
         if (fandom.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
 
         fandom.languageId = languageId
         this.fandom = fandom

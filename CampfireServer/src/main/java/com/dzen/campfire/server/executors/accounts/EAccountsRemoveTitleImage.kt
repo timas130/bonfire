@@ -17,6 +17,7 @@ class EAccountsRemoveTitleImage : RAccountsRemoveTitleImage(0, "") {
     @Throws(ApiException::class)
     override fun check() {
         ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_USER_REMOVE_IMAGE)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {

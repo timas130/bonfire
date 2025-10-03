@@ -20,7 +20,7 @@ class EFandomsModerationGalleryAdd : RFandomsModerationGalleryAdd(0, 0, null, ""
         if(ControllerCollisions.getCollisionsCount(fandomId,languageId, API.COLLISION_FANDOM_GALLERY) >= API.FANDOM_GALLERY_MAX)  throw ApiException(E_TOO_MANY_ITEMS)
         if(image == null || image!!.size > API.FANDOM_GALLERY_MAX_WEIGHT) throw ApiException(E_BAD_IMAGE)
         if(!ToolsImage.checkImageMaxScaleUnknownType(image!!, API.FANDOM_GALLERY_MAX_SIDE, API.FANDOM_GALLERY_MAX_SIDE, true, false, true)) throw ApiException(E_BAD_IMAGE)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {

@@ -28,7 +28,7 @@ class EFandomsAdminMakeModerator : RFandomsAdminMakeModerator(0, "") {
         if (ControllerFandom.getModerators(publication.fandom.id, publication.fandom.languageId).size > 1) throw ApiException(E_FANDOM_HAVE_MODERATORS)
         if (publication.creator.lvl < API.LVL_MODERATOR_BLOCK.lvl) throw ApiException(E_LOW_LVL)
         if (publication.fandom.languageId == -1L) throw ApiException(API.ERROR_ACCESS)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {

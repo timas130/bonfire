@@ -22,7 +22,7 @@ class EFandomsAdminRemoveModerator : RFandomsAdminRemoveModerator(0, 0, 0, "") {
         ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_REMOVE_MODERATOR)
         karma30 = ControllerFandom.getKarma30(accountId, fandomId, languageId)
         if (karma30 < API.LVL_MODERATOR_BLOCK.karmaCount) throw ApiException(E_NOT_MODERATOR)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {

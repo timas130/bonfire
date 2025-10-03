@@ -12,7 +12,7 @@ import com.dzen.campfire.api.tools.ApiException
 class EPostPinFandom : RPostPinFandom(0, 0, 0, "") {
 
     override fun check() {
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
 
         if (postId > 0L) {
             val publication = ControllerPublications.getPublication(postId, apiAccount.id)

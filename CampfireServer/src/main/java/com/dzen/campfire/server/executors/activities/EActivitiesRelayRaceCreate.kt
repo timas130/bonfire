@@ -15,7 +15,7 @@ class EActivitiesRelayRaceCreate() : RActivitiesRelayRaceCreate(0,0,0,"","", "")
     override fun check() {
         name = ControllerCensor.cens(name)
         description = ControllerCensor.cens(description)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
 
         ControllerFandom.checkCan(apiAccount, fandomId, languageId, API.LVL_MODERATOR_RELAY_RACE)
 

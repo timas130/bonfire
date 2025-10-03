@@ -24,7 +24,7 @@ class EFandomsAdminClose : RFandomsAdminClose(0, false, "") {
         fandom = ControllerFandom.getFandom(fandomId)
         if (fandom == null) throw ApiException(API.ERROR_GONE)
         if (fandom!!.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {

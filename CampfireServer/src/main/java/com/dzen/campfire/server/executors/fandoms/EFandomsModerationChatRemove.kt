@@ -21,7 +21,7 @@ class EFandomsModerationChatRemove : RFandomsModerationChatRemove(0, "") {
 
     @Throws(ApiException::class)
     override fun check() {
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
 
         val v = Database.select("EFandomsModerationChatRemove select", SqlQuerySelect(TChats.NAME, TChats.fandom_id, TChats.language_id, TChats.name)
                 .where(TChats.id, "=", chatId)
