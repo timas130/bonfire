@@ -831,6 +831,7 @@ class API(
         const val HISTORY_PUBLICATION_TYPE_ADMIN_REMOVE_MEDIA = 29L
         const val HISTORY_PUBLICATION_TYPE_SET_NSFW = 30L
         const val HISTORY_PUBLICATION_TYPE_ADMIN_SET_NSFW = 31L
+        const val HISTORY_PUBLICATION_TYPE_PENDING = 32L
 
         //
         //  Post

@@ -1093,6 +1093,7 @@ object API_TRANSLATE {
     var history_admin_close_no = 0L
     var history_set_nsfw_true = 0L
     var history_set_nsfw_false = 0L
+    var history_pending = 0L
 
     var campfire_hello_annotation = 0L
     var campfire_hello_1 = 0L
