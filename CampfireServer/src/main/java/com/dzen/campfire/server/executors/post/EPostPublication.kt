@@ -5,6 +5,7 @@ import com.dzen.campfire.api.models.fandoms.Fandom
 import com.dzen.campfire.api.models.notifications.post.NotificationModerationPostTags
 import com.dzen.campfire.api.models.publications.history.HistoryAdminChangeTags
 import com.dzen.campfire.api.models.publications.history.HistoryChangeTags
+import com.dzen.campfire.api.models.publications.history.HistoryPending
 import com.dzen.campfire.api.models.publications.history.HistoryPublish
 import com.dzen.campfire.api.models.publications.moderations.posts.ModerationPostTags
 import com.dzen.campfire.api.models.publications.post.PageText
@@ -132,7 +133,17 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
             ControllerAchievements.addAchievementWithCheck(apiAccount.id, API.ACHI_FIRST_POST)
 
             ControllerPublications.watchComments(apiAccount.id, publicationId, true)
-            ControllerPublicationsHistory.put(publicationId, HistoryPublish(apiAccount.id, apiAccount.imageId, apiAccount.name))
+            if (pendingTime == 0L) {
+                ControllerPublicationsHistory.put(
+                    publicationId,
+                    HistoryPublish(apiAccount.id, apiAccount.imageId, apiAccount.name)
+                )
+            } else {
+                ControllerPublicationsHistory.put(
+                    publicationId,
+                    HistoryPending(apiAccount.id, apiAccount.imageId, apiAccount.name, pendingTime)
+                )
+            }
 
             ControllerAchievements.addAchievementWithCheck(
                 ControllerViceroy.getViceroyId(publication!!.fandom.id, publication!!.fandom.languageId),

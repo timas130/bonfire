@@ -78,6 +78,7 @@ class CardHistoryPublication(
                     vAvatar.setSubtitle(t(API_TRANSLATE.history_set_nsfw_false))
                 }
             }
+            is HistoryPending -> vAvatar.setSubtitle(t(API_TRANSLATE.history_pending, ToolsDate.dateToString(history.pendingTime)))
         }
 
         if (history.comment.isNotEmpty()) vAvatar.setSubtitle(vAvatar.getSubTitle() + "\n" + t(API_TRANSLATE.app_comment) + ": " + history.comment)

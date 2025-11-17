@@ -1,11 +1,13 @@
 package com.dzen.campfire.server.executors.post
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.publications.history.HistoryPublish
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostPendingPublish
 import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerPost
 import com.dzen.campfire.server.controllers.ControllerPublications
+import com.dzen.campfire.server.controllers.ControllerPublicationsHistory
 import com.dzen.campfire.api.tools.ApiException
 
 class EPostPendingPublish : RPostPendingPublish(0) {
@@ -28,6 +30,12 @@ class EPostPendingPublish : RPostPendingPublish(0) {
 
     override fun execute(): Response {
         ControllerPost.publish(publicationId, publication.tag_3, publication.creator.id)
+
+        ControllerPublicationsHistory.put(
+            publicationId,
+            HistoryPublish(apiAccount.id, apiAccount.imageId, apiAccount.name)
+        )
+
         return Response()
     }
 
