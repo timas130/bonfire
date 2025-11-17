@@ -160,7 +160,7 @@ class CardUserActivity(
             vTimer.setTextColor(colorGreen)
         } else {
             vUser.visibility = View.VISIBLE
-            vTimer.text = ToolsDate.dayTimeToString_Ms_HH_MM_SS(date - System.currentTimeMillis())
+            vTimer.text = ToolsDate.timeToString(date - System.currentTimeMillis())
             vTimer.setTextColor(colorWhite)
         }
     }
