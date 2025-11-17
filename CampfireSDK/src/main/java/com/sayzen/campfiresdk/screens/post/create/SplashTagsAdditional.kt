@@ -105,7 +105,7 @@ class SplashTagsAdditional(
                     .setOnEnter(t(API_TRANSLATE.app_choose)) { _, date ->
                         SplashChooseTime()
                                 .setOnEnter(t(API_TRANSLATE.app_choose)) { _, h, m ->
-                                    setPendingDate(ToolsDate.getStartOfDay_GlobalTimeZone(date) + (h * 60L * 60 * 1000) + (m * 60L * 1000))
+                                    setPendingDate(ToolsDate.getStartOfDay(date) + (h * 60L * 60 * 1000) + (m * 60L * 1000))
                                 }
                                 .asSheetShow()
                     }

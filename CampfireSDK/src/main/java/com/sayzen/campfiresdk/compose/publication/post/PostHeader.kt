@@ -131,7 +131,7 @@ internal fun PostHeader(post: PublicationPost) {
                     modifier = Modifier
                         .then(if (overflowsWidth) Modifier.weight(1f, fill = false) else Modifier)
                         .clickable {
-                            ToolsToast.show(ToolsDate.dateToString(creationTimestamp))
+                            ToolsToast.show(ToolsDate.dateToStringFull(creationTimestamp))
                         },
                 )
             }

@@ -140,7 +140,7 @@ class CardPageUserActivity(
             vPageTimer.setTextColor(colorGreen)
         } else {
             vPageUser.visibility = View.VISIBLE
-            vPageTimer.text = ToolsDate.dayTimeToString_Ms_HH_MM_SS(date - System.currentTimeMillis())
+            vPageTimer.text = ToolsDate.timeToString(date - System.currentTimeMillis())
             vPageTimer.setTextColor(colorWhite)
         }
     }

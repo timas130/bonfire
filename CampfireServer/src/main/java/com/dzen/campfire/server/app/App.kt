@@ -6,7 +6,6 @@ import com.dzen.campfire.api.tools.server.RequestFactory
 import com.dzen.campfire.server.controllers.*
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.json.Json
-import com.sup.dev.java.tools.ToolsDate
 import com.sup.dev.java.tools.ToolsFiles
 import com.sup.dev.java.tools.ToolsThreads
 import com.sup.dev.java_pc.google.GoogleNotification
@@ -42,7 +41,6 @@ object App {
 
         try {
             System.err.println("Sayzen Studio")
-            System.err.println(ToolsDate.getTimeZoneName() + " ( " + ToolsDate.getTimeZoneHours() + " )")
             System.err.println("Charset: " + Charset.defaultCharset())
             System.err.println("API Version: " + API.VERSION)
 

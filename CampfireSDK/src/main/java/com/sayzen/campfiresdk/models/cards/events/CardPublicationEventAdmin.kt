@@ -59,14 +59,14 @@ class CardPublicationEventAdmin(
         when (e) {
 
             is ApiEventAdminBan -> {
-                text = tCap(API_TRANSLATE.publication_event_blocked_app_admin, tSexCap(CampfireConstants.RED, e.ownerAccountSex, API_TRANSLATE.he_blocked, API_TRANSLATE.she_blocked), ControllerLinks.linkToAccount(e.targetAccountName), ToolsDate.dateToStringFull(e.blockDate))
+                text = tCap(API_TRANSLATE.publication_event_blocked_app_admin, tSexCap(CampfireConstants.RED, e.ownerAccountSex, API_TRANSLATE.he_blocked, API_TRANSLATE.she_blocked), ControllerLinks.linkToAccount(e.targetAccountName), ToolsDate.dateToString(e.blockDate, false))
                 view.setOnClickListener { SProfile.instance(e.targetAccountId, Navigator.TO) }
             }
             is ApiEventAdminBlockPublication -> {
                 val publicationName = ControllerPublications.getName(e.publicationType)
                 text = tCap(API_TRANSLATE.publication_event_admin_blocked_publication, tSexCap(CampfireConstants.RED, e.ownerAccountSex, API_TRANSLATE.he_blocked, API_TRANSLATE.she_blocked), publicationName, ControllerLinks.linkToAccount(e.targetAccountName))
-                if (e.blockAccountDate > 0 && e.blockedInApp && e.blockFandomId < 1) text += "\n" + t(API_TRANSLATE.publication_event_account_block_date, ToolsDate.dateToStringFull(e.blockAccountDate))
-                if (e.blockAccountDate > 0 && !e.blockedInApp && e.blockFandomId > 0) text += "\n" + t(API_TRANSLATE.publication_event_account_block_date_fandom, ToolsDate.dateToStringFull(e.blockAccountDate), "${e.blockFandomName}")
+                if (e.blockAccountDate > 0 && e.blockedInApp && e.blockFandomId < 1) text += "\n" + t(API_TRANSLATE.publication_event_account_block_date, ToolsDate.dateToString(e.blockAccountDate, false))
+                if (e.blockAccountDate > 0 && !e.blockedInApp && e.blockFandomId > 0) text += "\n" + t(API_TRANSLATE.publication_event_account_block_date_fandom, ToolsDate.dateToString(e.blockAccountDate, false), "${e.blockFandomName}")
                 if (e.warned) text += "\n${t(API_TRANSLATE.publication_event_account_block_warn)}"
                 if (e.lastPublicationsBlocked) text += "\n${t(API_TRANSLATE.publication_event_account_block_last_publications)}"
                 view.setOnClickListener { SProfile.instance(e.targetAccountId, Navigator.TO) }
