@@ -128,7 +128,7 @@ object ControllerEffects {
                 .setOnEnter(t(API_TRANSLATE.app_choose)) { _, date ->
                     SplashChooseTime()
                             .setOnEnter(t(API_TRANSLATE.app_choose)) { _, h, m ->
-                                val endDate = ToolsDate.getStartOfDay_GlobalTimeZone(date) + (h * 60L * 60 * 1000) + (m * 60L * 1000)
+                                val endDate = ToolsDate.getStartOfDay(date) + (h * 60L * 60 * 1000) + (m * 60L * 1000)
                                 if (endDate < System.currentTimeMillis()) {
                                     ToolsToast.show(t(API_TRANSLATE.effect_error_time))
                                     return@setOnEnter

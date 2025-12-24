@@ -37,7 +37,7 @@ class EFandomsModerationToDrafts : RFandomsModerationToDrafts(0, "") {
         } else if (publication is QuestDetails) {
             ControllerFandom.checkCan(apiAccount, API.LVL_QUEST_MODERATOR)
         }
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {

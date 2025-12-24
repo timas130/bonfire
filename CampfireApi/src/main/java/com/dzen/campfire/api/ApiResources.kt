@@ -471,4 +471,14 @@ object ApiResources {
         QUEST_NEW_YEAR_9,
         QUEST_NEW_YEAR_10
     )
+
+    val REACTIONS = arrayOf(
+        ApiResources.EMOJI_1,
+        ApiResources.EMOJI_2,
+        ApiResources.EMOJI_3,
+        ApiResources.EMOJI_4,
+        ApiResources.EMOJI_5,
+        ApiResources.EMOJI_6,
+        ApiResources.EMOJI_7
+    )
 }

@@ -7,6 +7,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.PublicationComment
 import com.dzen.campfire.api.requests.publications.RPublicationsReactionAdd
 import com.dzen.campfire.api.requests.publications.RPublicationsReactionRemove
@@ -95,12 +96,12 @@ object ControllerComment {
 
 
         val p = ToolsView.dpToPx(4).toInt()
-        for (i in API.REACTIONS.indices) {
+        for (i in ApiResources.REACTIONS.indices) {
             val v: ViewIcon = ToolsView.inflate(vMenuReactionsLinear, R.layout.z_icon_18)
             v.setPadding(p, p, p, p)
             v.setOnClickListener { sendReaction(publication, i.toLong()); w?.hide(); }
             vMenuReactionsLinear.addView(v)
-            ImageLoader.load(API.REACTIONS[i]).into(v)
+            ImageLoader.load(ApiResources.REACTIONS[i]).into(v)
         }
     }
 

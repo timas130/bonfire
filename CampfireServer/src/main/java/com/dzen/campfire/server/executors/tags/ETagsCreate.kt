@@ -20,7 +20,7 @@ class ETagsCreate : RTagsCreate("", "", 0, 0, 0, null) {
 
     override fun check() {
 
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
 
         if (parentId != 0L) {
             publicationParent = ControllerPublications.getPublication(parentId, apiAccount.id) as PublicationTag?

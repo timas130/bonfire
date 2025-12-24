@@ -27,7 +27,7 @@ class ETagsChange : RTagsChange(0, null, "", null, false) {
     override fun check() {
 
         if (removeImage && image != null) throw ApiException(E_BAD_PARAMS)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
 
         publication = ControllerPublications.getPublication(publicationId, apiAccount.id) as PublicationTag?
 

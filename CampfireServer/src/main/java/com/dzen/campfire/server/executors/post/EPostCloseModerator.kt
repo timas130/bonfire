@@ -17,7 +17,7 @@ class EPostCloseModerator : RPostCloseModerator(0, "") {
     var publication = PublicationPost()
 
     override fun check() {
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
         val publication = ControllerPublications.getPublication(publicationId, apiAccount.id)
         if(publication == null) throw ApiException(API.ERROR_GONE)
         if(publication.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_GONE)

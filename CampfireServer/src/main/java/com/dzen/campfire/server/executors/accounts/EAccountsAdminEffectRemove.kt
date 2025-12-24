@@ -20,7 +20,7 @@ class EAccountsAdminEffectRemove : RAccountsAdminEffectRemove(0L, "") {
     var m = MAccountEffect()
 
     override fun check() {
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
         ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_FANDOM_EFFECTS)
 
         val m = ControllerEffects.get(effectId)

@@ -19,7 +19,7 @@ class EFandomsModerationChangeImageBackground : RFandomsModerationChangeImageBac
         if (fandom == null) throw ApiException(API.ERROR_GONE)
         if (fandom!!.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
 
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
         if(image != null) {
             if (image!!.size > API.CHAT_IMG_BACKGROUND_WEIGHT) throw ApiException(E_BAD_IMG_WEIGHT, " " + image!!.size + " > " + API.ACCOUNT_IMG_WEIGHT)
             if (!ToolsImage.checkImageMaxScaleUnknownType(image!!, API.CHAT_IMG_BACKGROUND_W, API.CHAT_IMG_BACKGROUND_H, true, true, true)) throw ApiException(E_BAD_IMG_SIDES)

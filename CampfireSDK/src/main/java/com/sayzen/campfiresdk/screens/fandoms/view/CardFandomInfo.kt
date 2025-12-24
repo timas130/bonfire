@@ -216,7 +216,6 @@ class CardFandomInfo(
             .setMin_2(API.MODERATION_COMMENT_MIN_L)
             .setMax_2(API.MODERATION_COMMENT_MAX_L)
             .setHint_2(t(API_TRANSLATE.comments_hint))
-            .addChecker_2(t(API_TRANSLATE.error_use_english)) { ToolsText.isOnly(it, API.ENGLISH) }
             .setOnEnter(t(API_TRANSLATE.app_change)) { w, cof, comment ->
                 val v = (cof.toDouble() * 100).toLong()
 

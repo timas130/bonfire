@@ -8,26 +8,48 @@ apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 android {
     compileSdk 35
 
+    def localPropertiesFile = rootProject.file('local.properties')
+    def localProperties = new Properties()
+    if (localPropertiesFile.exists()) {
+        localProperties.load(localPropertiesFile.newDataInputStream())
+    }
+
+    def posthogApiKey = localProperties.getProperty("POSTHOG_API_KEY", POSTHOG_API_KEY)
+    def host = localProperties.getProperty("HOST", HOST)
+    def serverPosthog = localProperties.getProperty("SERVER_POSTHOG", SERVER_POSTHOG)
+    def serverRoot = localProperties.getProperty("SERVER_ROOT", SERVER_ROOT)
+    def serverMelior = localProperties.getProperty("SERVER_MELIOR", SERVER_MELIOR)
+    def serverS3 = localProperties.getProperty("SERVER_S3", SERVER_S3)
+    def appId = localProperties.getProperty("APP_ID", APP_ID)
+    def appName = localProperties.getProperty("APP_NAME", APP_NAME)
+
     defaultConfig {
         minSdkVersion 23
         targetSdk 35
         versionCode 4_12_01
         versionName "4.12.1"
-        applicationId "sh.sit.bonfire"
+        applicationId appId
 
-        buildConfigField "String", "POSTHOG_API_KEY", "\"$POSTHOG_API_KEY\""
-        buildConfigField "String", "POSTHOG_HOST", "\"$POSTHOG_HOST\""
+        buildConfigField "String", "POSTHOG_API_KEY", "\"$posthogApiKey\""
+
+        buildConfigField "String", "HOST", "\"$host\""
+        buildConfigField "String", "SERVER_POSTHOG", "\"$serverPosthog\""
+        buildConfigField "String", "SERVER_ROOT", "\"$serverRoot\""
+        buildConfigField "String", "SERVER_MELIOR", "\"$serverMelior\""
+        buildConfigField "String", "SERVER_S3", "\"$serverS3\""
     }
 
     buildTypes {
         release {
-            manifestPlaceholders = [crashlyticsEnabled: false]
+            resValue "string", "app_name", appName
+            manifestPlaceholders = [crashlyticsEnabled: false, usesCleartextTraffic: false, host: HOST]
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            manifestPlaceholders = [crashlyticsEnabled: false]
+            resValue "string", "app_name", appName
+            manifestPlaceholders = [crashlyticsEnabled: false, usesCleartextTraffic: true, host: HOST]
             applicationIdSuffix ".debug"
         }
     }

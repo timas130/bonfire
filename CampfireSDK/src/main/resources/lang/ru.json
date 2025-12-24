@@ -1013,6 +1013,7 @@
     "history_edit_public": "Публикация отредактирована",
     "history_multilingual": "Публикация сделана мультиязычной",
     "history_not_multilingual": "Публикация сделана не мультиязычной",
+    "history_pending": "Публикация отложена до %s",
     "history_pin_profile": "Публикация закреплена в профиле",
     "history_publish": "Публикация опубликована",
     "history_set_nsfw_false": "Публикация отмечена как NSFW",

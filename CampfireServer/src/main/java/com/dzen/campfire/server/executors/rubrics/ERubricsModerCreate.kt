@@ -20,7 +20,7 @@ class ERubricsModerCreate : RRubricsModerCreate(0, 0, "", 0, "") {
     @Throws(ApiException::class)
     override fun check() {
         name = ControllerCensor.cens(name)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
         ControllerFandom.checkCan(apiAccount, fandomId, languageId, API.LVL_MODERATOR_RUBRIC)
         val fandomX = ControllerFandom.getFandom(fandomId)
         if (fandomX == null || fandomX.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)

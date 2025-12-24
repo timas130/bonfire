@@ -19,7 +19,7 @@ class ERubricsModerRemove : RRubricsModerRemove(0, "") {
 
     @Throws(ApiException::class)
     override fun check() {
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
         val rubricX = ControllerRubrics.getRubric(rubricId)
         if (rubricX == null || rubricX.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
         rubric = rubricX

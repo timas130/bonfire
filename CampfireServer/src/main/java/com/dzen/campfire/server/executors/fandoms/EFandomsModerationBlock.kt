@@ -57,7 +57,7 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
                 )
         ) throw ApiException(E_LOW_KARMA_FORCE)
         if (blockTime > 1000L * 60 * 60 * 24 * 365) throw ApiException(API.ERROR_ACCESS)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
 
         val canBlockTag = ControllerVahter.isCanBlock(apiAccount.id)
         if(canBlockTag != -1L){

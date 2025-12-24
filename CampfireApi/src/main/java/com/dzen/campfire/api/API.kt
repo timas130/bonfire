@@ -22,12 +22,12 @@ class API(
         const val PORT_SERV_JL_V1 = 7070
         const val PORT_SERV_JL = 7071
 
-        const val S3_ROOT = "https://data.bonfire.moe/bonfire"
-        const val MELIOR_ROOT = "https://api.bonfire.moe"
-        const val SERV_ROOT = "https://cf2.bonfire.moe"
+        lateinit var SERV_ROOT: String
+        lateinit var MELIOR_ROOT: String
+        lateinit var S3_ROOT: String
         const val TL_ROOT = "https://tlp.bonfire.moe"
 
-        const val DOMEN = "https://bonfire.moe/r/"
+        lateinit var DOMEN: String
         const val DOMEN_DL = "bf://link/"
         const val VERSION = "3.1"
         const val SUPPORTED_VERSION = "2.0"
@@ -67,6 +67,7 @@ class API(
         val LINK_CONF = Link("conf")
         val LINK_FANDOM = Link("fandom")
         val LINK_PROFILE_ID = Link("profileid")
+        val LINK_PROFILE_NAME = Link("profile")
         val LINK_MODERATION = Link("moderation")
         val LINK_STICKER = Link("sticker")
         val LINK_STICKERS_PACK = Link("stickers")
@@ -125,7 +126,6 @@ class API(
         const val LINK_TAG_PROFILE_NAME = "profile"
         const val LINK_SHORT_PROFILE = "@"
         const val LINK_SHORT_PROFILE_SECOND = "#"
-        const val LINK_PROFILE_NAME = "$DOMEN$LINK_TAG_PROFILE_NAME-"
 
         const val ERROR_GONE = "ERROR_GONE"
         const val ERROR_BAD_COMMENT = "ERROR_BAD_COMMENT"
@@ -831,6 +831,7 @@ class API(
         const val HISTORY_PUBLICATION_TYPE_ADMIN_REMOVE_MEDIA = 29L
         const val HISTORY_PUBLICATION_TYPE_SET_NSFW = 30L
         const val HISTORY_PUBLICATION_TYPE_ADMIN_SET_NSFW = 31L
+        const val HISTORY_PUBLICATION_TYPE_PENDING = 32L
 
         //
         //  Post
@@ -1114,20 +1115,6 @@ class API(
         const val QUEST_PART_TYPE_CONDITION = 2L
         const val QUEST_PART_TYPE_ACTION = 3L
         const val QUEST_PART_TYPE_UNKNOWN = 100L
-
-        //
-        //  Reactions
-        //
-
-        val REACTIONS = arrayOf(
-                ApiResources.EMOJI_1,
-                ApiResources.EMOJI_2,
-                ApiResources.EMOJI_3,
-                ApiResources.EMOJI_4,
-                ApiResources.EMOJI_5,
-                ApiResources.EMOJI_6,
-                ApiResources.EMOJI_7
-        )
 
         //
         //  Language

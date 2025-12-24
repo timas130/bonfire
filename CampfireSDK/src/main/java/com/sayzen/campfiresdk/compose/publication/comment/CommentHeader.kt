@@ -1,5 +1,6 @@
 package com.sayzen.campfiresdk.compose.publication.comment
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.MaterialTheme
@@ -16,6 +17,7 @@ import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.screens.account.profile.SProfile
 import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
 import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.java.tools.ToolsDate
 
 @Composable
@@ -55,7 +57,11 @@ internal fun CommentHeader(
             style = MaterialTheme.typography.bodyLarge,
             overflow = TextOverflow.Ellipsis,
             softWrap = false,
-            modifier = Modifier.alpha(0.6f)
+            modifier = Modifier
+                .alpha(0.6f)
+                .clickable {
+                    ToolsToast.show(ToolsDate.dateToStringFull(comment.dateCreate))
+                }
         )
     }
 }

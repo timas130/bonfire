@@ -25,7 +25,7 @@ class EFandomsModerationChatChange : RFandomsModerationChatChange(0, "", "", "",
     override fun check() {
         name = ControllerCensor.cens(name)
         text = ControllerCensor.cens(text)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
 
         val v = Database.select("EFandomsModerationChatChange select", SqlQuerySelect(TChats.NAME, TChats.fandom_id, TChats.language_id, TChats.name, TChats.image_id)
                 .where(TChats.id, "=", chatId)

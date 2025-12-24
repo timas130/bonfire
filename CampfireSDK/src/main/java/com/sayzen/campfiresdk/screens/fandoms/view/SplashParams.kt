@@ -59,7 +59,6 @@ internal class SplashParams(
 
     private fun updateFinishEnabled() {
 
-        val commentCheck = ToolsText.isOnly(vComment.getText(), API.ENGLISH)
         val newArray = getSelected()
         var changes = selected.size != newArray.size
         if(!changes){
@@ -74,8 +73,7 @@ internal class SplashParams(
                 }
             }
         }
-        vComment.setError(if (commentCheck) null else t(API_TRANSLATE.error_use_english))
-        vEnter.isEnabled = commentCheck && changes && getSelected().isNotEmpty() && vComment.getText().length >= API.MODERATION_COMMENT_MIN_L && vComment.getText().length <= API.MODERATION_COMMENT_MAX_L
+        vEnter.isEnabled = changes && getSelected().isNotEmpty() && vComment.getText().length >= API.MODERATION_COMMENT_MIN_L && vComment.getText().length <= API.MODERATION_COMMENT_MAX_L
     }
 
     private fun getSelected(): Array<Long> {

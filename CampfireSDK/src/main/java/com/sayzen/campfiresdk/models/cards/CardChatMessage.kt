@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.chat.ChatTag
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessageChange
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessageRemove
@@ -694,9 +695,9 @@ open class CardChatMessage constructor(
                 );true
             }
 
-            val index = if (i.reactionIndex > -1 && i.reactionIndex < API.REACTIONS.size) i.reactionIndex.toInt() else 0
+            val index = if (i.reactionIndex > -1 && i.reactionIndex < ApiResources.REACTIONS.size) i.reactionIndex.toInt() else 0
             v.setIcon(R.color.focus)
-            ImageLoader.load(API.REACTIONS[index]).intoBitmap { v.setIcon(it) }
+            ImageLoader.load(ApiResources.REACTIONS[index]).intoBitmap { v.setIcon(it) }
         }
 
         (vReactions.layoutParams as ViewGroup.MarginLayoutParams).topMargin =
@@ -912,12 +913,12 @@ open class CardChatMessage constructor(
             .asPopupShow(targetView, x, y)
 
         val p = ToolsView.dpToPx(4).toInt()
-        for (i in API.REACTIONS.indices) {
+        for (i in ApiResources.REACTIONS.indices) {
             val v: ViewIcon = ToolsView.inflate(vMenuReactionsLinear, R.layout.z_icon_18)
             v.setPadding(p, p, p, p)
             v.setOnClickListener { sendReaction(i.toLong()); w?.hide(); }
             vMenuReactionsLinear.addView(v)
-            ImageLoader.load(API.REACTIONS[i]).into(v)
+            ImageLoader.load(ApiResources.REACTIONS[i]).into(v)
         }
     }
 
