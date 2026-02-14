@@ -92,7 +92,7 @@ internal fun PostHeader(post: PublicationPost) {
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                if (PostHog.isFeatureEnabled("post_fandom_chip")) {
+                if (PostHog.isFeatureEnabled("post_fandom_chip", true)) {
                     if (ControllerSettings.postFandomFirst) {
                         PostFandom(post)
                     } else {

@@ -122,7 +122,7 @@ fun LinksClickableText(
     val spoilerFeatureData = remember(spoilerPath) {
         if (spoilerPath == null) return@remember null
 
-        PostHog.getFeatureFlag("inline_spoilers")
+        PostHog.getFeatureFlag("inline_spoilers", true)
         PostHog.getFeatureFlagPayload(
             key = "inline_spoilers",
             defaultValue = mapOf(

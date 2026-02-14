@@ -6,13 +6,13 @@ apply plugin: 'kotlin'
 dependencies {
     implementation project(':DevSupJava')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.mysql:mysql-connector-j:8.2.0'
-    implementation 'org.postgresql:postgresql:42.7.2'
+    implementation 'com.mysql:mysql-connector-j:9.6.0'
+    implementation 'org.postgresql:postgresql:42.7.10'
 
-    implementation('software.amazon.awssdk:s3:2.25.11') {
+    implementation('software.amazon.awssdk:s3:2.41.29') {
         exclude group: 'software.amazon.awssdk', module: 'apache-client'
     }
-    implementation('software.amazon.awssdk:url-connection-client:2.25.11')
+    implementation('software.amazon.awssdk:url-connection-client:2.41.29')
 }
 
 jar {

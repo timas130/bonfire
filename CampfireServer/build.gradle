@@ -14,15 +14,15 @@ dependencies {
     implementation project(':DevSupJavaPc')
     implementation project(':BonfireServerNetworking')
     implementation 'com.google.firebase:firebase-admin:9.0.0'
-    implementation 'org.slf4j:slf4j-simple:2.0.7'
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3"
+    implementation 'org.slf4j:slf4j-simple:2.0.17'
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0"
 
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.okhttp3:okhttp:5.3.2'
     apolloMetadata project(':BonfireApollo')
     implementation project(':BonfireApollo')
     implementation "com.apollographql.apollo3:apollo-runtime:3.8.6"
     implementation "com.apollographql.apollo3:apollo-normalized-cache-incubating:3.8.6"
-    implementation "joda-time:joda-time:2.12.6"
+    implementation "joda-time:joda-time:2.14.0"
     implementation "org.ahocorasick:ahocorasick:0.6.3"
 }
 

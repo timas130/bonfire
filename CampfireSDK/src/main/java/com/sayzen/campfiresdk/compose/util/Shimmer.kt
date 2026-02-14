@@ -14,6 +14,8 @@ import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.unit.LayoutDirection
 import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 
 fun Modifier.shimmerExt(visible: Boolean, shimmer: Shimmer? = null): Modifier {
@@ -28,7 +30,7 @@ fun Modifier.shimmerExt(visible: Boolean, shimmer: Shimmer? = null): Modifier {
         val color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
         then(
             Modifier
-                .shimmer(shimmer)
+                .shimmer(shimmer ?: rememberShimmer(ShimmerBounds.View))
                 .drawWithContent {
                     val outline = lastOutline.value.takeIf {
                         size == lastSize.value && layoutDirection == lastLayoutDirection.value

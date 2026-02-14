@@ -83,7 +83,7 @@ internal fun PostChips(post: PublicationPost) {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.padding(bottom = 8.dp),
         ) {
-            if (PostHog.isFeatureEnabled("post_fandom_chip")) {
+            if (PostHog.isFeatureEnabled("post_fandom_chip", true)) {
                 item(key = "creator") {
                     PostCreatorChip(post)
                 }
@@ -385,7 +385,7 @@ fun Post(
 private fun PostBestComment(bestComment: PublicationComment) {
     HorizontalDivider(Modifier.zIndex(3f))
 
-    if (PostHog.isFeatureEnabled("compose_comment")) {
+    if (PostHog.isFeatureEnabled("compose_comment", true)) {
         Comment(
             initialComment = bestComment,
             onRemoved = {}, // should be handled by PostDataSource? probably

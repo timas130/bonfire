@@ -41,7 +41,7 @@ class PostCreator(
         val requestMovePage: (Int, Int, () -> Unit) -> Unit,
         private val sourceType: Long
 ) : PagesContainer {
-    private val composeMode = PostHog.isFeatureEnabled("compose_post")
+    private val composeMode = PostHog.isFeatureEnabled("compose_post", true)
 
     enum class ActionType {
         STOP, ADD

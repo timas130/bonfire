@@ -183,7 +183,7 @@ class SProfile private constructor(
             adapter.add(cardButtons)
             if (!ControllerApi.isCurrentAccount(xAccount.getId())) adapter.add(cardButtonsMain)
         }
-        if (PostHog.isFeatureEnabled("badges_profile")) {
+        if (PostHog.isFeatureEnabled("badges_profile", true)) {
             adapter.add(cardBadges)
         }
         adapter.add(cardBio)

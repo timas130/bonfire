@@ -21,7 +21,7 @@ class CardCommentProxy(
     onGoTo: ((Long) -> Unit)? = null,
     onCreated: (PublicationComment) -> Unit = {},
 ) : CardPublication(0, publication) {
-    private val isComposeEnabled = PostHog.isFeatureEnabled("compose_comment")
+    private val isComposeEnabled = PostHog.isFeatureEnabled("compose_comment", true)
     private val impl = if (isComposeEnabled) {
         ComposeCommentCard(
             initialComment = publication,

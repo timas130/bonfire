@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace 'sh.sit.bonfire.formatting'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         minSdk 21
@@ -52,7 +52,7 @@ dependencies {
     implementation "io.noties.markwon:simple-ext:$markwon_version"
     implementation "com.atlassian.commonmark:commonmark-ext-autolink:0.13.0"
 
-    def composeBom = platform('androidx.compose:compose-bom:2025.07.00')
+    def composeBom = platform('androidx.compose:compose-bom:2026.02.00')
     implementation composeBom
     androidTestImplementation composeBom
     implementation 'androidx.compose.material3:material3-android'
@@ -62,7 +62,7 @@ dependencies {
 
     implementation "me.saket:better-link-movement-method:2.2.0"
 
-    implementation "com.posthog:posthog-android:3.2.1"
+    implementation "com.posthog:posthog-android:3.31.0"
 
     configurations.configureEach {
         exclude group: 'org.jetbrains', module: 'annotations-java5'

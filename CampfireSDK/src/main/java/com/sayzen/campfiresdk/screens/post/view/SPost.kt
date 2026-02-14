@@ -108,7 +108,7 @@ class SPost private constructor(
     )
     private val cardInfo: CardInfo = CardInfo(xPublication, tags)
 
-    private val composeMode = PostHog.isFeatureEnabled("compose_post")
+    private val composeMode = PostHog.isFeatureEnabled("compose_post", true)
 
     init {
         setTitle(t(API_TRANSLATE.post))

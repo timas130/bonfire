@@ -240,7 +240,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vPostFandomFirst.setOnClickListener {
             ControllerSettings.postFandomFirst = vPostFandomFirst.isChecked()
         }
-        if (!PostHog.isFeatureEnabled("post_fandom_chip") || !PostHog.isFeatureEnabled("compose_post")) {
+        if (!PostHog.isFeatureEnabled("post_fandom_chip", true) || !PostHog.isFeatureEnabled("compose_post", true)) {
             vPostFandomFirst.visibility = GONE
         }
 

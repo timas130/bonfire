@@ -6,11 +6,11 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 
 android {
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         minSdkVersion 23
-        targetSdk 35
+        targetSdk 36
         versionCode 4_12_01
         versionName "4.12.1"
         applicationId "sh.sit.bonfire"
@@ -42,7 +42,7 @@ android {
 
 dependencies {
     implementation project(':CampfireSDK')
-    implementation "com.posthog:posthog-android:3.2.1"
+    implementation "com.posthog:posthog-android:3.22.0"
 
     implementation "io.coil-kt:coil-gif:2.6.0"
 }

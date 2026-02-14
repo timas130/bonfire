@@ -9,12 +9,12 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.10.1'
-        classpath 'com.google.gms:google-services:4.4.1'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0'
-        classpath 'org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:2.1.0'
+        classpath 'com.android.tools.build:gradle:8.12.3'
+        classpath 'com.google.gms:google-services:4.4.4'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.10'
+        classpath 'org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:2.3.10'
         classpath 'com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin:11.1.1'
-        classpath 'org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin:2.1.0'
+        classpath 'org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin:2.3.10'
     }
 }
 

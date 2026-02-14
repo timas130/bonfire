@@ -14,7 +14,7 @@ class CardPostProxy(
     publication: PublicationPost,
     var onClick: ((PublicationPost) -> Unit)? = null
 ) : CardPublication(0, publication) {
-    private val isComposeEnabled = PostHog.isFeatureEnabled("compose_post")
+    private val isComposeEnabled = PostHog.isFeatureEnabled("compose_post", true)
     private val impl = if (isComposeEnabled) {
         ComposeCardPost(
             proxy = this,

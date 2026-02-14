@@ -80,7 +80,7 @@ class SWikiArticleView(
     private var error = false
     private var wasSwitchedToEnglish = false
 
-    private val composeMode = PostHog.isFeatureEnabled("compose_post")
+    private val composeMode = PostHog.isFeatureEnabled("compose_post", true)
 
     init {
         disableNavigation()

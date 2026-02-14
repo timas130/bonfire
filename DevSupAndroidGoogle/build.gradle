@@ -4,10 +4,10 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdk 35
+    compileSdk 36
     defaultConfig {
         minSdk 21
-        targetSdk 35
+        targetSdk 36
     }
     buildTypes {
         release {
@@ -21,9 +21,9 @@ android {
 dependencies {
     api project(':DevSupAndroid')
     api 'com.google.firebase:firebase-core:21.1.1'
-    api 'com.google.firebase:firebase-messaging:25.0.0'
-    api 'com.google.firebase:firebase-inappmessaging-display:22.0.0'
-    api 'com.google.android.gms:play-services-auth:21.4.0'
+    api 'com.google.firebase:firebase-messaging:25.0.1'
+    api 'com.google.firebase:firebase-inappmessaging-display:22.0.2'
+    api 'com.google.android.gms:play-services-auth:21.5.0'
 }
 
 
