@@ -1,5 +1,6 @@
 package sh.sit.bonfire.auth.screens
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -30,6 +31,7 @@ import sh.sit.bonfire.auth.components.useConsentController
 import sh.sit.bonfire.auth.flows.AuthFlow
 import sh.sit.bonfire.auth.flows.GoogleAuthFlow
 import sh.sit.bonfire.auth.toUiString
+import sh.sit.bonfire.networking.NetworkTestActivity
 
 @Composable
 fun AuthStartScreen(
@@ -144,6 +146,16 @@ fun AuthStartScreen(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         Text("Сбросить согласие")
+                    }
+
+                    OutlinedButton(
+                        onClick = {
+                            val intent = Intent(context, NetworkTestActivity::class.java)
+                            context.startActivity(intent)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Text("Тест сети")
                     }
                 }
             }

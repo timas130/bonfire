@@ -22,10 +22,10 @@ class API(
         const val PORT_SERV_JL_V1 = 7070
         const val PORT_SERV_JL = 7071
 
-        const val S3_ROOT = "https://data.bonfire.moe/bonfire"
-        const val MELIOR_ROOT = "https://api.bonfire.moe"
-        const val SERV_ROOT = "https://cf2.bonfire.moe"
-        const val TL_ROOT = "https://tlp.bonfire.moe"
+        const val S3_ROOT = "https://proxy.bonfire.moe/bonfire"
+        const val MELIOR_ROOT = "https://proxy.bonfire.moe/api"
+        const val SERV_ROOT = "https://proxy.bonfire.moe/cf2"
+        const val TL_ROOT = "https://proxy.bonfire.moe"
 
         const val DOMEN = "https://bonfire.moe/r/"
         const val DOMEN_DL = "bf://link/"

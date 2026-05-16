@@ -122,7 +122,7 @@ object ControllerTranslate {
                 }
 
                 @Suppress("UNCHECKED_CAST")
-                val map = Json(resp.body!!.string()).toMap() as Map<String, String>
+                val map = Json(resp.body.string()).toMap() as Map<String, String>
                 addMap(languageId, map, map.hashCode())
 
                 onLoaded()

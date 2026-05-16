@@ -44,6 +44,14 @@
                 app:Settings_icon="@drawable/account_plus"
                 app:Settings_icon_background="@color/yellow_800"/>
 
+            <com.sup.dev.android.views.settings.Settings
+                android:id="@+id/vNetworkDebug"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:Settings_lineVisible="false"
+                app:Settings_icon="@drawable/globe_2_question_24px"
+                app:Settings_icon_background="@color/blue_800" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

@@ -2,8 +2,7 @@
 <network-security-config>
     <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="true">api.bonfire.moe</domain>
-        <domain includeSubdomains="true">data.bonfire.moe</domain>
-        <domain includeSubdomains="true">cf2.bonfire.moe</domain>
+        <domain includeSubdomains="true">proxy.bonfire.moe</domain>
     </domain-config>
     <base-config cleartextTrafficPermitted="true" />
 </network-security-config>
