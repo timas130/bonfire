@@ -44,7 +44,7 @@ class CardPunishment(
                     API_TRANSLATE.he_blocked,
                     API_TRANSLATE.she_blocked
                 ),
-                ToolsDate.dateToStringFull(punishment.banDate)
+                ToolsDate.dateToString(punishment.banDate, false)
             )
             else text = tCap(
                 API_TRANSLATE.profile_punishment_card_warn_admin,
@@ -63,7 +63,7 @@ class CardPunishment(
                     API_TRANSLATE.she_blocked
                 ),
                 "" + punishment.fandomName,
-                ToolsDate.dateToStringFull(punishment.banDate)
+                ToolsDate.dateToString(punishment.banDate, false)
             )
             else text = tCap(
                 API_TRANSLATE.profile_punishment_card_warn,

@@ -31,7 +31,7 @@ class EFandomsAdminChangeParams : RFandomsAdminChangeParams(0, 0, 0, emptyArray(
         ) throw ApiException(E_BAD_TYPE)
 
         if (paramsPosition < 1 || paramsPosition > 4) throw ApiException(E_BAD_TYPE)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {

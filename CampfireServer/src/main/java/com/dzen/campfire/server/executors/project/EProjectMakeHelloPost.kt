@@ -13,20 +13,10 @@ import com.sup.dev.java_pc.sql.Database
 
 class EProjectMakeHelloPost : RProjectMakeHelloPost("", false, "", 0) {
 
-    companion object {
-        val hash = HashMap<Long, Long>()
-        var TIME = 1000L * 60 * 60
-    }
-
     override fun check() {
     }
 
     override fun execute(): Response {
-
-        if (!hash.containsKey(languageId)) hash.put(languageId, 0)
-
-        if (hash[languageId]!! > System.currentTimeMillis() - TIME) return Response(0)
-        hash[languageId] = System.currentTimeMillis()
         ControllerAccounts.checkAccountBanned(apiAccount.id)
 
         val fandomId = API.FANDOM_CAMPFIRE_HELLO_ID

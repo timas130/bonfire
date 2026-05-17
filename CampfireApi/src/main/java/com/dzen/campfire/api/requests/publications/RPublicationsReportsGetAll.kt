@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.publications
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.publications.PublicationReport
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -42,6 +43,11 @@ open class RPublicationsReportsGetAll(
             reports = json.m(inp, "reports", reports, Array<PublicationReport>::class)
         }
 
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (report in reports) {
+                report.account.fillImageRefs(receiver)
+            }
+        }
     }
 
 }

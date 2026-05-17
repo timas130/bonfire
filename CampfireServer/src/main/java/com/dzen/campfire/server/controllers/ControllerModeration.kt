@@ -5,6 +5,8 @@ import com.dzen.campfire.api.tools.ApiException
 
 object ControllerModeration {
     fun parseComment(comment: String, userId: Long = 0L): String {
+        val comment = comment.trim()
+
         if (ControllerCensor.containsSwearing(comment)) {
             val account = ControllerAccounts.getAccount(userId)
             if (account != null) {

@@ -148,7 +148,6 @@ object ControllerFandoms {
                             .setOnCancel(t(API_TRANSLATE.app_cancel))
                             .setMin(API.MODERATION_COMMENT_MIN_L)
                             .setMax(API.MODERATION_COMMENT_MAX_L)
-                            .addChecker(t(API_TRANSLATE.error_use_english)) { ToolsText.isOnly(it, API.ENGLISH) }
                             .setOnEnter(t(API_TRANSLATE.app_change)) { w, comment ->
                                 ApiRequestsSupporter.executeEnabled(w, RFandomsAdminChangeCategory(xFandom.getId(), c.index, comment)) {
                                     EventBus.post(EventFandomCategoryChanged(xFandom.getId(), c.index))
@@ -180,7 +179,6 @@ object ControllerFandoms {
                 .setOnCancel(t(API_TRANSLATE.app_cancel))
                 .setMin(API.MODERATION_COMMENT_MIN_L)
                 .setMax(API.MODERATION_COMMENT_MAX_L)
-                .addChecker(t(API_TRANSLATE.error_use_english)) { ToolsText.isOnly(it, API.ENGLISH) }
                 .setOnEnter(t(API_TRANSLATE.app_remove)) { _, comment ->
                     ApiRequestsSupporter.executeEnabledConfirm(t(API_TRANSLATE.fandom_remove_confirm), t(API_TRANSLATE.app_remove), RFandomsAdminRemove(xFandom.getId(), comment)) {
                         EventBus.post(EventFandomRemove(xFandom.getId()))
@@ -208,7 +206,6 @@ object ControllerFandoms {
                 .setMin_2(API.MODERATION_COMMENT_MIN_L)
                 .setMax_2(API.MODERATION_COMMENT_MAX_L)
                 .setHint_2(t(API_TRANSLATE.comments_hint))
-                .addChecker_2(t(API_TRANSLATE.error_use_english)) { ToolsText.isOnly(it, API.ENGLISH) }
                 .setOnEnter(t(API_TRANSLATE.app_rename)) { _, name, comment ->
                     ApiRequestsSupporter.executeEnabledConfirm(t(API_TRANSLATE.fandoms_menu_rename_confirm), t(API_TRANSLATE.fandoms_menu_rename), RFandomsAdminChangeName(xFandom.getId(), name, comment)) {
                         EventBus.post(EventFandomChanged(xFandom.getId(), name))

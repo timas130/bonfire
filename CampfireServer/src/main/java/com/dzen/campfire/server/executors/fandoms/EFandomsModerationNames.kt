@@ -16,7 +16,7 @@ class EFandomsModerationNames : RFandomsModerationNames(0, 0, emptyArray(), "") 
             names[i] = ControllerCensor.cens(names[i])
             if (names[i].length > API.FANDOM_NAMES_MAX_L) throw ApiException(E_BAD_SIZE)
         }
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {

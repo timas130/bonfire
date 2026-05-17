@@ -13,6 +13,8 @@ import com.dzen.campfire.server.tables.TFandoms
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsCryptography
+import com.sup.dev.java_pc.sql.Database
+import com.sup.dev.java_pc.sql.SqlQuerySelect
 import com.sup.dev.java_pc.tools.ToolsImage
 import java.nio.ByteBuffer
 import kotlin.math.abs
@@ -46,10 +48,11 @@ class EChatMessageCreate(
                 0
         )
         message.chatType = tag.chatType
-        message.fandom.id = tag.targetId
-        message.fandom.languageId = tag.targetSubId
 
         if (message.chatType == API.CHAT_TYPE_FANDOM_ROOT) {
+            message.fandom.id = tag.targetId
+            message.fandom.languageId = tag.targetSubId
+
             if (!API.isLanguageExsit(tag.targetSubId)) throw ApiException(API.ERROR_GONE)
             if (ControllerFandom.get(tag.targetId, TFandoms.status).next<Long>() != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
             ControllerAccounts.checkAccountBanned(apiAccount.id, message.fandom.id, message.fandom.languageId)
@@ -60,7 +63,8 @@ class EChatMessageCreate(
 
         } else if (message.chatType == API.CHAT_TYPE_PRIVATE) {
             ControllerAccounts.checkAccountBanned(apiAccount.id)
-            val v = ControllerAccounts.get(message.fandom.id, TAccounts.name, TAccounts.img_id)
+            val v = ControllerAccounts.get(tag.targetId, TAccounts.name, TAccounts.img_id)
+            message.fandom.id = tag.targetId
             message.fandom.name = v.next()
             message.fandom.imageId = v.next()
         } else if (message.chatType == API.CHAT_TYPE_CONFERENCE) {
@@ -73,17 +77,29 @@ class EChatMessageCreate(
             }
 
             if (!ControllerChats.hasAccessToConf_Write(apiAccount.id, tag.targetId)) throw ApiException(API.ERROR_ACCESS)
-            val v = ControllerChats.getChat(message.fandom.id, TChats.name, TChats.image_id)
+            val v = ControllerChats.getChat(tag.targetId, TChats.name, TChats.image_id)
+            message.fandom.id = tag.targetId
             message.fandom.name = v.next()
             message.fandom.imageId = v.next()
         } else if (message.chatType == API.CHAT_TYPE_FANDOM_SUB) {
+            val chatSelect = Database.select("EChatMessageCreate.subChatCheck select",
+                SqlQuerySelect(
+                    TChats.NAME,
+                    TChats.fandom_id,
+                    TChats.language_id
+                )
+                .where(TChats.id, "=", tag.targetId)
+            )
+            if (chatSelect.isEmpty) throw ApiException(API.ERROR_GONE)
+            message.fandom.id = chatSelect.next()
+            message.fandom.languageId = chatSelect.next()
+
             ControllerAccounts.checkAccountBanned(apiAccount.id, message.fandom.id, message.fandom.languageId)
             val v = ControllerFandom[message.fandom.id, TFandoms.name, TFandoms.image_id, TFandoms.fandom_category]
             message.fandom.name = v.next()
             message.fandom.imageId = v.next()
             message.category = v.next()
-
-        }else {
+        } else {
             throw ApiException(E_BAD_CHAT_TYPE)
         }
 

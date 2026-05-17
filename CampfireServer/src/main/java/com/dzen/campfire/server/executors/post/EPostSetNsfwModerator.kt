@@ -17,7 +17,7 @@ class EPostSetNsfwModerator : RPostSetNsfwModerator(0, false, "") {
     var publication = PublicationPost()
 
     override fun check() {
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
         val publication = ControllerPublications.getPublication(publicationId, apiAccount.id)
             ?: throw ApiException(API.ERROR_GONE)
         if (publication.status != API.STATUS_PUBLIC) {

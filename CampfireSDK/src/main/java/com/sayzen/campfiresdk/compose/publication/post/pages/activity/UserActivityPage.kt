@@ -128,7 +128,7 @@ private fun UserActivityCountdown(stopAt: Long) {
     val remaining = stopAt - currentTime.longValue
 
     Text(
-        text = ToolsDate.dayTimeToString_Ms_HH_MM_SS(remaining),
+        text = ToolsDate.timeToString(remaining),
         style = MaterialTheme.typography.bodyMedium,
         softWrap = false,
     )

@@ -21,7 +21,7 @@ class EFandomsModerationLinkAdd : RFandomsModerationLinkAdd(0, 0, "", "", 0, "")
         if(url.length > API.FANDOM_LINKS_URL_MAX_L) throw ApiException(E_BAD_SIZE)
         if(title.length > API.FANDOM_LINKS_TITLE_MAX_L) throw ApiException(E_BAD_SIZE)
         if(ControllerCollisions.getCollisionsCount(fandomId,languageId, API.COLLISION_FANDOM_LINK) >= API.FANDOM_LINKS_MAX)  throw ApiException(E_BAD_COUNT)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {

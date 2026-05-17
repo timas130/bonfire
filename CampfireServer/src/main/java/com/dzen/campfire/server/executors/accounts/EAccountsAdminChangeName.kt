@@ -12,7 +12,7 @@ class EAccountsAdminChangeName : RAccountsAdminChangeName(0L, "", "") {
     override fun check() {
         if (!ToolsText.isValidUsername(name)) throw ApiException(E_LOGIN_CHARS)
 
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
         if (ControllerAccounts.getByName(name) != 0L) throw ApiException(E_LOGIN_NOT_ENABLED)
         ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_USER_CHANGE_NAME)
         ControllerFandom.checkCanModerate(apiAccount, accountId)

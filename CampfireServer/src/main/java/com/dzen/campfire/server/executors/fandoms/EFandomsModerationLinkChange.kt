@@ -23,7 +23,7 @@ class EFandomsModerationLinkChange : RFandomsModerationLinkChange(0, 0, 0, "", "
         if (fandom!!.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
         if (url.length > API.FANDOM_LINKS_URL_MAX_L) throw ApiException(E_BAD_SIZE)
         if (title.length > API.FANDOM_LINKS_TITLE_MAX_L) throw ApiException(E_BAD_SIZE)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {

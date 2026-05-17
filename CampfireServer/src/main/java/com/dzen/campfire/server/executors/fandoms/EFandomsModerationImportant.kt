@@ -26,7 +26,7 @@ class EFandomsModerationImportant : RFandomsModerationImportant(0, false, "") {
             API.LVL_MODERATOR_IMPORTANT
         )
         if (publication.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {

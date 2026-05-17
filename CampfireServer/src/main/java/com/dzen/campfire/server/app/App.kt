@@ -6,7 +6,6 @@ import com.dzen.campfire.api.tools.server.RequestFactory
 import com.dzen.campfire.server.controllers.*
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.json.Json
-import com.sup.dev.java.tools.ToolsDate
 import com.sup.dev.java.tools.ToolsFiles
 import com.sup.dev.java.tools.ToolsThreads
 import com.sup.dev.java_pc.google.GoogleNotification
@@ -21,6 +20,7 @@ object App {
     val secrets = Json(ToolsFiles.readString("secrets/Secrets.json"))
     val secretsBotsTokens = secrets.getStrings("bots_tokens")!!.map { it?:"" }.toTypedArray()
     val secretsConfig = secrets.getJson("config")!!
+    val secretsApi = secrets.getJson("api")!!
     val secretsKeys = secrets.getJson("keys")!!
     val secretsS3 = secrets.getJson("s3")!!
     val test = secretsConfig.getString("build_type")!="release"
@@ -41,9 +41,13 @@ object App {
 
         try {
             System.err.println("Sayzen Studio")
-            System.err.println(ToolsDate.getTimeZoneName() + " ( " + ToolsDate.getTimeZoneHours() + " )")
             System.err.println("Charset: " + Charset.defaultCharset())
             System.err.println("API Version: " + API.VERSION)
+
+            API.SERV_ROOT = secretsApi["server_root"]!!
+            API.MELIOR_ROOT = secretsApi["server_melior"]!!
+            API.S3_ROOT = secretsApi["server_s3"]!!
+            API.DOMEN = "https://${secretsApi.getString("host")!!}/r/"
 
             GoogleNotification.init(googleNotificationKey, arrayOf())
 

@@ -7,6 +7,7 @@ import com.dzen.campfire.api.models.publications.moderations.rubrics.ModerationR
 import com.dzen.campfire.api.requests.rubrics.RRubricsMoveFandom
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerFandom
+import com.dzen.campfire.server.controllers.ControllerModeration
 import com.dzen.campfire.server.controllers.ControllerNotifications
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.controllers.ControllerRubrics
@@ -33,6 +34,8 @@ class ERubricsMoveFandom : RRubricsMoveFandom(0, 0, 0, "") {
             throw ApiException(API.ERROR_GONE, "Fandom does not exist")
         if (! API.isLanguageExsit(languageId))
             throw ApiException(API.ERROR_GONE, "Language does not exist")
+
+        moderatorComment = ControllerModeration.parseComment(moderatorComment, apiAccount.id)
     }
 
     override fun execute(): Response {

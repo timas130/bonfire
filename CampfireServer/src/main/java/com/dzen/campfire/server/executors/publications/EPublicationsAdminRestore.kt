@@ -34,7 +34,7 @@ class EPublicationsAdminRestore : RPublicationsAdminRestore(0, "", true) {
         if (apiAccount.id != 1L && publicationModeration!!.creator.id == apiAccount.id) throw ApiException(E_SELF)
         publication = ControllerPublications.getPublication(((publicationModeration as PublicationModeration).moderation as ModerationBlock).publicationId, apiAccount.id)
         if (apiAccount.id != 1L && publication!!.creator.id == apiAccount.id) throw ApiException(E_SELF)
-        ControllerModeration.parseComment(comment, apiAccount.id)
+        comment = ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {

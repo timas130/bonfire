@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.notifications.comments.NotificationComment
 import com.dzen.campfire.api.models.notifications.comments.NotificationCommentAnswer
 import com.dzen.campfire.api.models.notifications.publications.NotificationMention
@@ -420,9 +421,9 @@ open class CardComment(
                 );true
             }
 
-            val index = if (i.reactionIndex > -1 && i.reactionIndex < API.REACTIONS.size) i.reactionIndex.toInt() else 0
+            val index = if (i.reactionIndex > -1 && i.reactionIndex < ApiResources.REACTIONS.size) i.reactionIndex.toInt() else 0
             v.setIcon(R.color.focus)
-            ImageLoader.load(API.REACTIONS[index]).intoBitmap { v.setIcon(it) }
+            ImageLoader.load(ApiResources.REACTIONS[index]).intoBitmap { v.setIcon(it) }
         }
 
         (vReactions.layoutParams as ViewGroup.MarginLayoutParams).topMargin =

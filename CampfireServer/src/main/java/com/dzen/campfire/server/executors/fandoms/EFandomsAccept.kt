@@ -32,6 +32,9 @@ class EFandomsAccept : RFandomsAccept(0, false, "") {
             if (fandom == null) throw ApiException(API.ERROR_GONE)
             if (fandom.status != API.STATUS_DRAFT) throw ApiException(E_BAD_STATUS)
             if (fandom.creatorId == apiAccount.id) throw ApiException(E_SELF)
+            if (!accepted) {
+                comment = ControllerModeration.parseComment(comment, apiAccount.id)
+            }
             this.fandom = fandom
         }
     }
