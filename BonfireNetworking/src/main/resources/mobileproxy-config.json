@@ -1,6 +1,9 @@
 {
   "dns": [
-    {"system": {}},
+    {"udp": {"address": "77.88.8.8"}},
+    {"udp": {"address": "77.88.8.1"}},
+    {"tls": {"name": "common.dot.dns.yandex.net"}},
+    {"https": {"name": "common.dot.dns.yandex.net"}},
 
     {"https": {"name": "2620:fe::fe"}},
     {"https": {"name": "9.9.9.9"}},
@@ -102,7 +105,9 @@
     {"udp": {"address": "[2620:119:35::35]:443"}},
     {"udp": {"address": "208.67.220.220:443"}},
     {"udp": {"address": "[2620:119:35::35]:5353"}},
-    {"udp": {"address": "208.67.220.220:5353"}}
+    {"udp": {"address": "208.67.220.220:5353"}},
+
+    {"system": {}}
   ],
 
   "tls": [
@@ -110,7 +115,7 @@
     "tlsfrag:1",
     "h2connect://bonfire:proxy@proxy.bonfire.moe:443?sni=proxy.bonfire.moe&certname=proxy.bonfire.moe",
     "h2connect://bonfire:proxy@138.124.61.87:443?sni=proxy.bonfire.moe&certname=proxy.bonfire.moe",
-    "h2connect://bonfire:proxy@90.156.214.190:443?sni=ads.x5.ru&certname=proxy.bonfire.moe",
-    "h2connect://bonfire:proxy@90.156.214.190:443?sni=max.ru&certname=proxy.bonfire.moe"
+    "h2connect://bonfire:proxy@138.124.61.87:443?sni=ads.x5.ru&certname=proxy.bonfire.moe",
+    "dnstt:?domain=dt.bonfire.moe&pubkey=6afcc0b16dd3657353672ea647c3caac64399720747fa0e66d474735f89ac355|socks5://unused:0"
   ]
 }

@@ -30,16 +30,19 @@ object MobileProxyFactory {
 
     private val client = OkHttpClient.Builder()
         .retryOnConnectionFailure(false)
+        .followRedirects(true)
         .connectTimeout(2000, TimeUnit.MILLISECONDS)
         .readTimeout(2000, TimeUnit.MILLISECONDS)
         .callTimeout(4000, TimeUnit.MILLISECONDS)
         .build()
 
     private val mobileProxyConfigUrls = listOf(
-        "https://storage.googleapis.com/bonfire-sit.appspot.com/mobileproxy-config.json",
         "https://f003.backblazeb2.com/file/bonfire-config/mobileproxy-config.json",
+        "https://translate.yandex.ru/translate?view=compact&url=https://f003.backblazeb2.com/file/bonfire-config/mobileproxy-config.json&lang=en-en",
         "https://s3.eu-central-003.backblazeb2.com/bonfire-config/mobileproxy-config.json",
-        "https://gist.githubusercontent.com/timas130/390bd0e9960a4887e7ca6970f39bbd5a/raw/mobileproxy-config.json"
+        "https://translate.yandex.ru/translate?view=compact&url=https://s3.eu-central-003.backblazeb2.com/bonfire-config/mobileproxy-config.json&lang=en-en",
+        "https://gist.githubusercontent.com/timas130/390bd0e9960a4887e7ca6970f39bbd5a/raw/mobileproxy-config.json",
+        "https://translate.yandex.ru/translate?view=compact&url=https://gist.githubusercontent.com/timas130/390bd0e9960a4887e7ca6970f39bbd5a/raw/mobileproxy-config.json&lang=en-en",
     )
 
     fun make(): Result<mobileproxy.Proxy?> {

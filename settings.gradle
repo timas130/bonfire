@@ -16,3 +16,4 @@ include ':BonfireAuth'
 include ':BonfireApollo'
 include ':BonfireFormattingCore'
 
+include ':BonfireNetworkingTester'
