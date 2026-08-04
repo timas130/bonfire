@@ -55,7 +55,7 @@ object MobileProxyFactory {
             // okhttp DOES NOT include dns in any of its timeouts,
             // so we have to do it here
             val testRequest = ToolsThreads.timeout(5000) {
-                client.newCall(Request.Builder().url("https://api.bonfire.moe/ping").build()).execute()
+                client.newCall(Request.Builder().url("https://proxy.bonfire.moe/ping").build()).execute()
             }
 
             if (testRequest.body.string() == "ok") {

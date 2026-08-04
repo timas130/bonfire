@@ -113,7 +113,7 @@
   "tls": [
     "",
     "tlsfrag:1",
-    "h2connect://bonfire:proxy@proxy.bonfire.moe:443?sni=proxy.bonfire.moe&certname=proxy.bonfire.moe",
+    "h2connect://bonfire:proxy@116.202.162.215:443?sni=proxy.bonfire.moe&certname=proxy.bonfire.moe",
     "h2connect://bonfire:proxy@138.124.61.87:443?sni=proxy.bonfire.moe&certname=proxy.bonfire.moe",
     "h2connect://bonfire:proxy@138.124.61.87:443?sni=ads.x5.ru&certname=proxy.bonfire.moe",
     "dnstt:?domain=dt.bonfire.moe&pubkey=6afcc0b16dd3657353672ea647c3caac64399720747fa0e66d474735f89ac355|socks5://unused:0"
