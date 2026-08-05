@@ -33,8 +33,12 @@ class SplashAdd(
         }.icon(R.drawable.ic_landscape_white_24dp)
         add(t(API_TRANSLATE.post_page_video)) {
             wasClicked = true
-            SplashPageVideo(requestPutPage, requestChangePage, null, null).asSheetShow()
+            SplashPageYouTube(requestPutPage, requestChangePage, null, null).asSheetShow()
         }.icon(R.drawable.ic_play_arrow_white_24dp)
+        add(t(API_TRANSLATE.post_page_video_local)) {
+            wasClicked = true
+            VideoAttach.pickAndUpload(requestPutPage, requestChangePage, null)
+        }.icon(R.drawable.ic_videocam_white_24dp)
         add(t(API_TRANSLATE.post_page_quote)) {
             wasClicked = true
             SplashPageQuote(requestPutPage, requestChangePage, null, null).asSheetShow()
@@ -73,7 +77,8 @@ class SplashAdd(
         when (c.page) {
             is PageText -> Navigator.to(SCreatePageText(requestPutPage, requestChangePage, c, c.page as PageText))
             is PageImage -> SplashPageImage.change(c.page, requestPutPage, requestChangePage, c)
-            is PageVideo -> SplashPageVideo(requestPutPage, requestChangePage, c, c.page as PageVideo).asSheetShow()
+            is PageYouTube -> SplashPageYouTube(requestPutPage, requestChangePage, c, c.page as PageYouTube).asSheetShow()
+            is PageVideo -> VideoAttach.pickAndUpload(requestPutPage, requestChangePage, c)
             is PageQuote -> SplashPageQuote(requestPutPage, requestChangePage, c, c.page as PageQuote).asSheetShow()
             is PageLink -> SplashPageLink(requestPutPage, requestChangePage, c, c.page as PageLink).asSheetShow()
             is PageLinkImage -> SplashPageLinkImage(requestPutPage, requestChangePage, c, c.page as PageLinkImage).asSheetShow()

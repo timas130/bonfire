@@ -5,6 +5,7 @@ pub mod level;
 pub mod notification;
 pub mod profile;
 pub mod security;
+pub mod video;
 
 #[macro_export]
 macro_rules! host_tcp {

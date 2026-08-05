@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update videos set publication_id = $2, updated_at = now() where video_id = $1 and (publication_id is null or publication_id = $2) returning id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "6ff1f4a13a50b2ebca8066a2b473dc3eeb1d09ad09c1a7f928fcbcab74b80525"
+}

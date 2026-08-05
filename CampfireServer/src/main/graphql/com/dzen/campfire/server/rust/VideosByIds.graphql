@@ -1,0 +1,11 @@
+query VideosByIds($ids: [ID!]!) {
+    videosByIds(ids: $ids) {
+        id
+        creatorId
+        publicationId
+        status
+        durationMs
+        width
+        height
+    }
+}

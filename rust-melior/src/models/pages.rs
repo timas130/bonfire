@@ -17,6 +17,7 @@ pub enum PageType {
     UserActivity = 13,
     LinkImage = 14,
     Code = 16,
+    VideoLocal = 17,
 }
 
 impl From<models::PageType> for PageType {
@@ -36,6 +37,7 @@ impl From<models::PageType> for PageType {
             models::PageType::UserActivity => Self::UserActivity,
             models::PageType::LinkImage => Self::LinkImage,
             models::PageType::Code => Self::Code,
+            models::PageType::VideoLocal => Self::VideoLocal,
         }
     }
 }

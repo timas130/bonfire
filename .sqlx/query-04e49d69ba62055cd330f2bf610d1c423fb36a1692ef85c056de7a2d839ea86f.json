@@ -1,0 +1,20 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select video_id from videos where status = 2",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "video_id",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "04e49d69ba62055cd330f2bf610d1c423fb36a1692ef85c056de7a2d839ea86f"
+}

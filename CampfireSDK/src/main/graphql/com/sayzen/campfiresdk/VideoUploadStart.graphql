@@ -1,0 +1,6 @@
+mutation VideoUploadStart($size: Int!) {
+    videoUploadStart(size: $size) {
+        id
+        uploadUrl
+    }
+}

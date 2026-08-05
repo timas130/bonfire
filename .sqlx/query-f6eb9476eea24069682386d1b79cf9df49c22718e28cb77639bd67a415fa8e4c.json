@@ -1,0 +1,100 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from videos where video_id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "video_id",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "user_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "publication_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 4,
+        "name": "status",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "error",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "duration_ms",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 7,
+        "name": "width",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 8,
+        "name": "height",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 9,
+        "name": "size_bytes",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 10,
+        "name": "audio_gain",
+        "type_info": "Float4"
+      },
+      {
+        "ordinal": 11,
+        "name": "encoding_version",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 12,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 13,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "f6eb9476eea24069682386d1b79cf9df49c22718e28cb77639bd67a415fa8e4c"
+}

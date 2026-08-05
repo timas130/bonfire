@@ -13,6 +13,7 @@ use c_core::services::level::LevelError;
 use c_core::services::notification::NotificationError;
 use c_core::services::profile::ProfileError;
 use c_core::services::security::SecurityError;
+use c_core::services::video::VideoError;
 use serde_json::json;
 use std::sync::Arc;
 use thiserror::Error;
@@ -37,6 +38,8 @@ pub enum RespError {
     Profile(#[from] ProfileError),
     #[error("{0}")]
     Security(#[from] SecurityError),
+    #[error("{0}")]
+    Video(#[from] VideoError),
     #[error("Rpc: An unknown error has occurred: {0}")]
     Rpc(#[from] Arc<RpcError>),
     #[error("Anyhow: An unknown error has occurred: {0}")]

@@ -9,7 +9,7 @@ object ImageRefKeyer : Keyer<ImageRef> {
         return if (data.imageId > 0) {
             "ref:id:${data.imageId}"
         } else {
-            "ref:url:${data.url}"
+            "ref:url:${data.url.substringBefore('?')}"
         }
     }
 

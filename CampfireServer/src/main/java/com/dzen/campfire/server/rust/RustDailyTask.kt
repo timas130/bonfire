@@ -37,7 +37,8 @@ object RustDailyTask {
                 PageType.QUOTE -> API.PAGE_TYPE_QUOTE
                 PageType.SPOILER -> API.PAGE_TYPE_SPOILER
                 PageType.POLLING -> API.PAGE_TYPE_POLLING
-                PageType.VIDEO -> API.PAGE_TYPE_VIDEO
+                PageType.VIDEO -> API.PAGE_TYPE_YOUTUBE
+                PageType.VIDEO_LOCAL -> API.PAGE_TYPE_VIDEO_LOCAL
                 PageType.TABLE -> API.PAGE_TYPE_TABLE
                 PageType.DOWNLOAD -> API.PAGE_TYPE_DOWNLOAD
                 PageType.CAMPFIRE_OBJECT -> API.PAGE_TYPE_CAMPFIRE_OBJECT

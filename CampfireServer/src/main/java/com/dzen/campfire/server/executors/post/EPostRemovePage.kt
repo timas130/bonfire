@@ -4,6 +4,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.history.HistoryEditPublic
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostRemovePage
+import com.dzen.campfire.server.controllers.ControllerPost
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.controllers.ControllerPublicationsHistory
 import com.dzen.campfire.server.tables.TPublications
@@ -40,6 +41,8 @@ class EPostRemovePage : RPostRemovePage(0,  emptyArray()) {
     }
 
     private fun remove(pageIndex: Int) {
+        ControllerPost.removePage(publication.pages[pageIndex])
+
         val pages = publication.pages
         publication.pages = ToolsMapper.subarray(publication.pages, 0, publication.pages.size - 1)
         var x = 0

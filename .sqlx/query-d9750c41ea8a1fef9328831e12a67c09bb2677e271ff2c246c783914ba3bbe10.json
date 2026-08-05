@@ -1,0 +1,20 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update videos set status = 6, updated_at = now() where status = 1 and created_at < now() - interval '24 hours' returning video_id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "video_id",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "d9750c41ea8a1fef9328831e12a67c09bb2677e271ff2c246c783914ba3bbe10"
+}

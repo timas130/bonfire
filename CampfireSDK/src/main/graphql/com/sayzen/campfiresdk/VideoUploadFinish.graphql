@@ -1,0 +1,5 @@
+mutation VideoUploadFinish($id: ID!) {
+    videoUploadFinish(id: $id) {
+        ...VideoState
+    }
+}

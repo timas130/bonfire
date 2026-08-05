@@ -5,7 +5,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.post.Page
-import com.dzen.campfire.api.models.publications.post.PageVideo
+import com.dzen.campfire.api.models.publications.post.PageYouTube
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerYoutube
 import com.sayzen.campfiresdk.controllers.t
@@ -19,11 +19,11 @@ import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.java.tools.ToolsText
 
-class SplashPageVideo(
+class SplashPageYouTube(
         private val requestPutPage:(page: Page, screen: Screen?, splash: Splash?, onFinish: ((CardPage)->Unit))->Unit,
         private val requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page)->Unit) -> Unit,
         val card: CardPage?,
-        val oldPage: PageVideo?
+        val oldPage: PageYouTube?
 ) : Splash(R.layout.screen_post_create_video) {
 
     private val vLink: SettingsField = findViewById(R.id.vLink)
@@ -75,7 +75,7 @@ class SplashPageVideo(
     }
 
     private fun onEnter() {
-        val page = PageVideo()
+        val page = PageYouTube()
         page.videoId = getVideoId()!!
 
         val w = ToolsView.showProgressDialog()

@@ -4,10 +4,10 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.post.Page
 import com.dzen.campfire.api.models.wiki.WikiPages
 import com.dzen.campfire.api.requests.wiki.RWikiPagePut
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerFandom
 import com.dzen.campfire.server.controllers.ControllerPost
 import com.dzen.campfire.server.controllers.ControllerWiki
-import com.dzen.campfire.api.tools.ApiException
 
 class EWikiPagePut : RWikiPagePut(0, emptyArray(), 0) {
 
@@ -33,7 +33,7 @@ class EWikiPagePut : RWikiPagePut(0, emptyArray(), 0) {
         val fandom = ControllerFandom.getFandom(wikiTitle.fandomId)
         if (fandom!!.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
 
-        for (p in pages) ControllerPost.checkPage(p, E_BAD_PAGE, false, API.PAGES_SOURCE_TYPE_WIKI)
+        for (p in pages) ControllerPost.checkPage(p, E_BAD_PAGE, false, API.PAGES_SOURCE_TYPE_WIKI, apiAccount.id, API.RESOURCES_PUBLICATION_WIKI)
     }
 
     override fun execute(): Response {

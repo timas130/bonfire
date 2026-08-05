@@ -64,13 +64,14 @@ sealed class Page : JsonPolimorf, ImageHolder {
                 API.PAGE_TYPE_QUOTE -> PageQuote()
                 API.PAGE_TYPE_SPOILER -> PageSpoiler()
                 API.PAGE_TYPE_POLLING -> PagePolling()
-                API.PAGE_TYPE_VIDEO -> PageVideo()
+                API.PAGE_TYPE_YOUTUBE -> PageYouTube()
                 API.PAGE_TYPE_TABLE -> PageTable()
                 API.PAGE_TYPE_DOWNLOAD -> PageDownload()
                 API.PAGE_TYPE_CAMPFIRE_OBJECT -> PageCampfireObject()
                 API.PAGE_TYPE_USER_ACTIVITY -> PageUserActivity()
                 API.PAGE_TYPE_LINK_IMAGE -> PageLinkImage()
                 API.PAGE_TYPE_CODE -> PageCode()
+                API.PAGE_TYPE_VIDEO_LOCAL -> PageVideo()
                 else -> PageText().apply { text = "[null]" }
             }
         }

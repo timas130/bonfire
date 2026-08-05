@@ -1,0 +1,7 @@
+query VideoUploadLimits {
+    videoUploadLimits {
+        maxSizeBytes
+        maxDurationMs
+        dailyLimit
+    }
+}

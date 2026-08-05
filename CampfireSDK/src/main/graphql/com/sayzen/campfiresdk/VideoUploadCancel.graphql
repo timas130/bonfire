@@ -1,0 +1,3 @@
+mutation VideoUploadCancel($id: ID!) {
+    videoUploadCancel(id: $id)
+}

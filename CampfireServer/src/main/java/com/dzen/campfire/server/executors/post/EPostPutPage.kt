@@ -5,13 +5,14 @@ import com.dzen.campfire.api.models.fandoms.Fandom
 import com.dzen.campfire.api.models.publications.history.HistoryCreate
 import com.dzen.campfire.api.models.publications.history.HistoryEditPublic
 import com.dzen.campfire.api.models.publications.post.Page
+import com.dzen.campfire.api.models.publications.post.PageVideo
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostPublication
 import com.dzen.campfire.api.requests.post.RPostPutPage
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.server.tables.TFandoms
 import com.dzen.campfire.server.tables.TPublications
-import com.dzen.campfire.api.tools.ApiException
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java_pc.sql.Database
 
@@ -57,7 +58,12 @@ class EPostPutPage : RPostPutPage(0, emptyArray(), 0, 0, "", "") {
             if (fandom!!.status != API.STATUS_PUBLIC) throw ApiException(RPostPublication.E_FANDOM_NOT_PUBLIC)
         }
 
-        for (p in pages) ControllerPost.checkPage(p, E_BAD_PAGE, false, API.PAGES_SOURCE_TYPE_POST)
+        // ffs why do I live in a world where I have to check this...
+        val videoIds = pages.filterIsInstance<PageVideo>().map { it.videoId } +
+                (publication?.pages?.filterIsInstance<PageVideo>()?.map { it.videoId } ?: emptyList())
+        if (videoIds.size != videoIds.distinct().size) throw ApiException(E_BAD_PAGE, "Duplicate videoId")
+
+        for (p in pages) ControllerPost.checkPage(p, E_BAD_PAGE, false, API.PAGES_SOURCE_TYPE_POST, apiAccount.id, publicationId)
     }
 
     override fun execute(): Response {

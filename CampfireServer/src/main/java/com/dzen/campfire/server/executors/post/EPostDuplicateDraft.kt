@@ -1,12 +1,15 @@
 package com.dzen.campfire.server.executors.post
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.publications.post.PageVideo
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostDuplicateDraft
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerFandom
+import com.dzen.campfire.server.controllers.ControllerPost
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.controllers.ControllerResources
+import com.dzen.campfire.server.rust.RustVideo
 import com.dzen.campfire.server.tables.TFandoms
 import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java.libs.json.Json
@@ -32,6 +35,8 @@ class EPostDuplicateDraft : RPostDuplicateDraft(0) {
 
         if (ControllerFandom[post.fandom.id, TFandoms.status].next<Long>() != API.STATUS_PUBLIC)
             throw ApiException(API.ERROR_ACCESS)
+
+        ControllerPost.checkVideosReady(post)
     }
 
     override fun execute(): Response {
@@ -52,7 +57,10 @@ class EPostDuplicateDraft : RPostDuplicateDraft(0) {
             TPublications.fandom_key, "${post.fandom.id}-${post.fandom.languageId}-0",
             TPublications.nsfw, post.nsfw)
 
-        for (p in post.pages) p.duplicateResources(ControllerResources, publication.id)
+        for (p in post.pages) {
+            if (p is PageVideo) p.videoId = RustVideo.duplicate(p.videoId, publication.id)
+            else p.duplicateResources(ControllerResources, publication.id)
+        }
 
         publication.pages = post.pages
         ControllerPublications.replaceJson(publication.id, publication)

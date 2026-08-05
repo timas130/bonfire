@@ -1,10 +1,8 @@
 use crate::error::RespError;
 use async_graphql::Context;
 use async_trait::async_trait;
-use aws_sdk_s3::config::{Credentials, Region};
 use axum_extra::headers::UserAgent;
 use axum_extra::TypedHeader;
-use c_core::config::ImagesConfig;
 use c_core::prelude::chrono::{DateTime, Utc};
 use c_core::prelude::tokio::sync::Mutex;
 use c_core::prelude::{anyhow, tarpc};
@@ -14,6 +12,7 @@ use c_core::services::level::{Level, LevelServiceClient};
 use c_core::services::notification::{NotificationServiceClient, Notifications};
 use c_core::services::profile::{ProfileServiceClient, Profiles};
 use c_core::services::security::{Security, SecurityServiceClient};
+use c_core::services::video::{VideoServiceClient, Videos};
 use c_core::ServiceBase;
 use lru::LruCache;
 use std::net::IpAddr;
@@ -29,6 +28,9 @@ pub struct GlobalContext {
     pub notification: Arc<NotificationServiceClient>,
     pub profile: Arc<ProfileServiceClient>,
     pub security: Arc<SecurityServiceClient>,
+    pub video: Arc<VideoServiceClient>,
+    // (client, bucket_name)
+    pub s3: Option<(aws_sdk_s3::Client, String)>,
 
     pub online_cache: Arc<Mutex<LruCache<i64, DateTime<Utc>>>>,
 }
@@ -42,6 +44,8 @@ impl GlobalContext {
             ),
             profile: Arc::new(Profiles::client_tcp(base.config.ports.profile).await?),
             security: Arc::new(Security::client_tcp(base.config.ports.security).await?),
+            video: Arc::new(Videos::client_tcp(base.config.ports.video).await?),
+            s3: c_core::s3::build_s3(&base.config.images),
             base: Arc::new(base),
 
             online_cache: Arc::new(Mutex::new(LruCache::new(NonZeroUsize::new(10000).unwrap()))),
@@ -57,6 +61,8 @@ pub struct ReqContext {
     pub notification: Arc<NotificationServiceClient>,
     pub profile: Arc<ProfileServiceClient>,
     pub security: Arc<SecurityServiceClient>,
+    pub video: Arc<VideoServiceClient>,
+    pub s3: Option<(aws_sdk_s3::Client, String)>,
     pub online_cache: Arc<Mutex<LruCache<i64, DateTime<Utc>>>>,
 
     pub user_context: UserContext,
@@ -110,6 +116,8 @@ impl ReqContext {
             notification: global_context.notification,
             profile: global_context.profile,
             security: global_context.security,
+            video: global_context.video,
+            s3: global_context.s3,
             online_cache: global_context.online_cache,
             user_context,
             session_id: user.as_ref().map(|(session_id, _)| *session_id),
@@ -130,27 +138,12 @@ impl ReqContext {
     }
 
     pub fn get_s3(&self) -> Result<(aws_sdk_s3::Client, &str), RespError> {
-        let ImagesConfig::S3 {
-            endpoint,
-            bucket,
-            key_id,
-            key_secret,
-            region,
-        } = &self.base.config.images
-        else {
+        let Some((client, bucket)) = &self.s3 else {
             error!("misconfiguration: images config expected s3, but it's not");
             return Err(RespError::OutOfSync);
         };
 
-        let config = aws_sdk_s3::Config::builder()
-            .endpoint_url(endpoint)
-            .credentials_provider(Credentials::new(key_id, key_secret, None, None, "Melior"))
-            .region(Some(Region::new(region.clone())))
-            .force_path_style(true)
-            .build();
-        let client = aws_sdk_s3::Client::from_conf(config);
-
-        Ok((client, bucket))
+        Ok((client.clone(), bucket))
     }
 }
 

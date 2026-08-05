@@ -8,6 +8,7 @@ pub mod config;
 pub mod models;
 pub mod page_info;
 pub mod prelude;
+pub mod s3;
 pub mod services;
 pub mod util;
 

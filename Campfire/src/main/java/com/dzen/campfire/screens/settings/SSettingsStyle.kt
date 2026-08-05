@@ -6,11 +6,7 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.account.AccountSettings
 import com.dzen.campfire.api.models.images.ImageRef
 import com.posthog.PostHog
-import com.sayzen.campfiresdk.controllers.ControllerHoliday
-import com.sayzen.campfiresdk.controllers.ControllerScreenAnimations
-import com.sayzen.campfiresdk.controllers.ControllerSettings
-import com.sayzen.campfiresdk.controllers.ControllerTheme
-import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.animations.DrawAnimationSnow
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomBackgroundImageChangedModeration
 import com.sup.dev.android.app.SupAndroid
@@ -34,6 +30,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
     private val vChatBackground: SettingsSwitcher = findViewById(R.id.vChatBackground)
     private val vRoundingChat: SettingsSeek = findViewById(R.id.vRoundingChat)
     private val vPostFontSize: SettingsSeek = findViewById(R.id.vPostFontSize)
+    private val vVideoAutoplay: SettingsSwitcher = findViewById(R.id.vVideoAutoplay)
     private val vDefault: Settings = findViewById(R.id.vDefault)
     private val vTheme: SettingsSelection = findViewById(R.id.vTheme)
     private val vThemeColor: SettingsSelection = findViewById(R.id.vThemeColor)
@@ -68,6 +65,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vNicknameColors.setSubtitle(t(API_TRANSLATE.settings_style_nickname_colors_desc))
         vChatBackground.setTitle(t(API_TRANSLATE.settings_fandom_background))
         vPostFontSize.setTitle(t(API_TRANSLATE.settings_style_post_font_size))
+        vVideoAutoplay.setTitle(R.string.settings_video_autoplay)
         vHolidayTitle.setTitle(t(API_TRANSLATE.settings_style_holidays))
         vNewYearAvatars.setTitle(t(API_TRANSLATE.settings_style_new_year_avatars))
         vNewYearSnow.setTitle(t(API_TRANSLATE.settings_style_new_year_snow))
@@ -151,6 +149,10 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vPostFontSize.setMinProgress(12)
         vPostFontSize.setOnProgressChanged {
             ControllerSettings.postFontSize = vPostFontSize.progress
+        }
+
+        vVideoAutoplay.setOnClickListener {
+            ControllerVideos.autoplayEnabled = vVideoAutoplay.isChecked()
         }
 
         vDefault.setOnClickListener {
@@ -260,6 +262,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vChatBackground.setChecked(ControllerSettings.fandomBackground)
         vRoundingChat.progress = ControllerSettings.styleChatRounding
         vPostFontSize.progress = ControllerSettings.postFontSize
+        vVideoAutoplay.setChecked(ControllerVideos.autoplayEnabled)
         vTheme.setCurrentIndex(ControllerTheme.getThemeRaw())
         vThemeColor.setCurrentIndex(ControllerTheme.getThemeColor())
         vThemeColor.isEnabled = ControllerTheme.getThemeHasColor()

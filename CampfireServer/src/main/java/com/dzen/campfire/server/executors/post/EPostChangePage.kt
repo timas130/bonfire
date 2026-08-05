@@ -3,9 +3,11 @@ package com.dzen.campfire.server.executors.post
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.history.HistoryEditPublic
 import com.dzen.campfire.api.models.publications.post.Page
+import com.dzen.campfire.api.models.publications.post.PageVideo
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostChangePage
 import com.dzen.campfire.server.controllers.*
+import com.dzen.campfire.server.rust.RustVideo
 import com.dzen.campfire.server.tables.TPublications
 import com.dzen.campfire.api.tools.ApiException
 import com.sup.dev.java.libs.json.Json
@@ -24,6 +26,7 @@ class EPostChangePage : RPostChangePage(0, null, 0) {
         val creatorId:Long = v.next()
         val publicationType:Long = v.next()
         publication = PublicationPost(Json(v.next<Object>().toString()))
+        publication!!.id = publicationId
         publication!!.status = v.next()
 
         if (status != API.STATUS_DRAFT && status != API.STATUS_PUBLIC&& status != API.STATUS_PENDING) throw ApiException(E_BAD_STATUS)
@@ -38,15 +41,25 @@ class EPostChangePage : RPostChangePage(0, null, 0) {
 
         val resultPage: Page
 
+        val oldVideoId = (publication!!.pages[pageIndex] as? PageVideo)?.videoId
+
         if (publication!!.pages[pageIndex].isRemoveOnChange()) {
             page!!.copyChangeData(publication!!.pages[pageIndex])
-            ControllerPost.checkPage(page, E_BAD_PAGE, true, API.PAGES_SOURCE_TYPE_POST)
+            ControllerPost.checkPage(page, E_BAD_PAGE, true, API.PAGES_SOURCE_TYPE_POST, apiAccount.id, publicationId)
             ControllerPost.removePage(publication!!.pages[pageIndex])
             resultPage = page!!
         } else {
             publication!!.pages[pageIndex].prepareForServer(page!!)
-            ControllerPost.checkPage(publication!!.pages[pageIndex], E_BAD_PAGE, true, API.PAGES_SOURCE_TYPE_POST)
+            ControllerPost.checkPage(publication!!.pages[pageIndex], E_BAD_PAGE, true, API.PAGES_SOURCE_TYPE_POST, apiAccount.id, publicationId)
             resultPage = publication!!.pages[pageIndex]
+        }
+
+        // the same video can't be attached to two pages of one post
+        if (resultPage is PageVideo) {
+            for (i in publication!!.pages.indices) {
+                val p = publication!!.pages[i]
+                if (i != pageIndex && p is PageVideo && p.videoId == resultPage.videoId) throw ApiException(E_BAD_PAGE, "Duplicate videoId")
+            }
         }
 
         if(publication!!.status == API.STATUS_PUBLIC) {
@@ -58,6 +71,10 @@ class EPostChangePage : RPostChangePage(0, null, 0) {
         ControllerPost.insertPage(resultPage, publication!!.id)
         publication!!.pages[pageIndex] = resultPage
         ControllerPublications.replaceJson(publicationId, publication!!)
+
+        // release the old video only after the new one is claimed and the page is persisted
+        val newVideoId = (resultPage as? PageVideo)?.videoId
+        if (oldVideoId != null && oldVideoId != newVideoId) RustVideo.release(oldVideoId)
 
         return Response(resultPage)
 

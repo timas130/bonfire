@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select pg_advisory_xact_lock(hashtextextended('video_upload:' || ($1::bigint)::text, 0))",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "pg_advisory_xact_lock",
+        "type_info": "Void"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "9c8b06e6bc7e65d5442acd98b6cf6ebc079f19c1645c32cb8031b54e32352d3b"
+}

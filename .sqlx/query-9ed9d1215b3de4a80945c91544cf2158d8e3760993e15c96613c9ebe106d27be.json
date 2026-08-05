@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update videos set status = 5, error = $2, updated_at = now() where video_id = $1 and status = 3",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "9ed9d1215b3de4a80945c91544cf2158d8e3760993e15c96613c9ebe106d27be"
+}

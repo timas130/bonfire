@@ -138,6 +138,9 @@ class API(
         const val ERROR_RELAY_NEXT_REJECTED = "ERROR_RELAY_NEXT_REJECTED"
         const val ERROR_RELAY_NEXT_NOT_ALLOWED = "ERROR_RELAY_NEXT_NOT_ALLOWED"
 
+        const val ERROR_VIDEO_NOT_READY = "ERROR_VIDEO_NOT_READY"
+        const val ERROR_VIDEO_SERVICE_UNAVAILABLE = "ERROR_VIDEO_SERVICE_UNAVAILABLE"
+
         val ENGLISH =
             ToolsText.LATIS_S + ToolsText.LATIS_S.uppercase(Locale.ENGLISH) + ToolsText.NUMBERS_S + ToolsText.TEXT_CHARS_s + ToolsText.SPEC
 
@@ -525,7 +528,7 @@ class API(
         const val PAGE_TYPE_QUOTE = 5L
         const val PAGE_TYPE_SPOILER = 6L
         const val PAGE_TYPE_POLLING = 7L
-        const val PAGE_TYPE_VIDEO = 9L
+        const val PAGE_TYPE_YOUTUBE = 9L
         const val PAGE_TYPE_TABLE = 10L
         const val PAGE_TYPE_DOWNLOAD = 11L
         const val PAGE_TYPE_CAMPFIRE_OBJECT = 12L
@@ -533,6 +536,7 @@ class API(
         const val PAGE_TYPE_LINK_IMAGE = 14L
         const val PAGE_TYPE_UNKNOWN = 15L
         const val PAGE_TYPE_CODE = 16L
+        const val PAGE_TYPE_VIDEO_LOCAL = 17L
 
         const val MODERATION_TYPE_BLOCK = 1L
         const val MODERATION_TYPE_TAG_CREATE = 2L
@@ -843,8 +847,8 @@ class API(
         const val PAGE_IMAGE_SIDE_GIF = 400
         const val PAGE_IMAGE_WEIGHT = 1024 * 768
         const val PAGE_IMAGE_GIF_WEIGHT = 1024 * 1024 * 6
-        const val PAGE_VIDEO_IMAGE_SIDE = 1000
-        const val PAGE_VIDEO_IMAGE_WEIGHT = 1024 * 128
+        const val PAGE_YOUTUBE_IMAGE_SIDE = 1000
+        const val PAGE_YOUTUBE_IMAGE_WEIGHT = 1024 * 128
         const val PAGE_QUOTE_AUTHOR_MAX_L = 50
         const val PAGE_QUOTE_TEXT_MAX_L = 1000
         const val PAGE_LINK_NAME_MAX_L = 100
@@ -880,6 +884,10 @@ class API(
         const val PAGE_LINK_IMAGE_W = 1200
         const val PAGE_LINK_IMAGE_H = 600
         const val PAGE_LINK_IMAGE_WEIGHT = 1024 * 256
+
+        // default values for client fallback
+        const val PAGE_VIDEO_LOCAL_MAX_DURATION_MS = 32_000L
+        const val PAGE_VIDEO_LOCAL_MAX_SIZE_BYTES = 100L * 1024 * 1024
 
         const val PAGES_SOURCE_TYPE_POST = 1L
         const val PAGES_SOURCE_TYPE_WIKI = 2L

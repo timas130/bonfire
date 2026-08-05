@@ -20,6 +20,8 @@ pub struct GlobalConfig {
     pub notification: NotificationConfig,
     pub security: SecurityConfig,
     pub auth: ExternalOAuthConfig,
+    #[serde(default)]
+    pub video: VideoConfig,
 }
 impl GlobalConfig {
     pub(crate) fn load() -> anyhow::Result<Self> {
@@ -51,6 +53,7 @@ pub struct PortsConfig {
     pub notification: u16,
     pub profile: u16,
     pub security: u16,
+    pub video: u16,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -102,6 +105,29 @@ pub struct NotificationConfig {
 #[derive(Clone, Debug, Deserialize)]
 pub struct SecurityConfig {
     pub package_names: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(default)]
+pub struct VideoConfig {
+    pub threads: u32,
+    pub max_size_bytes: i64,
+    pub max_duration_ms: i64,
+    pub daily_limit: i64,
+    pub work_dir: String,
+    pub upload_url_expiry_secs: u64,
+}
+impl Default for VideoConfig {
+    fn default() -> Self {
+        Self {
+            threads: 1,
+            max_size_bytes: 50 * 1024 * 1024,
+            max_duration_ms: 32_000,
+            daily_limit: 10,
+            work_dir: String::from("/tmp/bonfire-video"),
+            upload_url_expiry_secs: 3600,
+        }
+    }
 }
 
 #[derive(Clone, Debug, Deserialize)]

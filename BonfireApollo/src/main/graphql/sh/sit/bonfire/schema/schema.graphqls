@@ -476,6 +476,21 @@ type Mutation {
   internalChangeName(userId: ID!, newName: String!): User!
 
   """
+  Attach a video to a publication
+  """
+  internalVideoSetPublication(id: ID!, publicationId: ID!): Ok!
+
+  """
+  Detach a video and mark it for deletion. Idempotent
+  """
+  internalVideoRelease(id: ID!): Ok!
+
+  """
+  Copy a READY video into a new record for a new publication
+  """
+  internalVideoDuplicate(id: ID!, publicationId: ID!): Video!
+
+  """
   Create a new account with email and password
   """
   registerEmail(input: RegisterEmailInput!): RegisterEmailResult!
@@ -612,6 +627,21 @@ type Mutation {
   request hash (or equivalent)
   """
   createSecurityIntention(intentionType: IntentionType!): String!
+
+  """
+  Start a video upload: create the video record and presign an S3 PUT
+  """
+  videoUploadStart(size: Int!): VideoUploadTicket!
+
+  """
+  Verify an uploaded video source landed in S3 and queue it for encoding
+  """
+  videoUploadFinish(id: ID!): Video!
+
+  """
+  Cancel a video upload that has not been finished yet
+  """
+  videoUploadCancel(id: ID!): Ok!
 }
 
 """
@@ -671,9 +701,6 @@ union NotificationPayload = LegacyNotification
 Different types of notifications
 """
 input NotificationPayloadInput {
-  """
-  Different types of notifications
-  """
   legacy: LegacyNotificationInput
 }
 
@@ -951,6 +978,8 @@ enum PageType {
   LINK_IMAGE
 
   CODE
+
+  VIDEO_LOCAL
 }
 
 """
@@ -1085,6 +1114,21 @@ type Query {
   Get a single Badge by its ID
   """
   badge(id: ID!): Badge
+
+  """
+  Get a natively-hosted video by its ID
+  """
+  videoById(id: ID!): Video
+
+  """
+  Batch-get natively-hosted videos by their IDs (at most 100)
+  """
+  videosByIds(ids: [ID!]!): [Video!]!
+
+  """
+  Get the server-configured video upload constraints
+  """
+  videoUploadLimits: VideoUploadLimits!
 }
 
 """
@@ -1315,6 +1359,81 @@ type VerifyEmailResult {
 }
 
 """
+A natively-hosted video
+"""
+type Video {
+  id: ID!
+
+  status: VideoStatus!
+
+  creatorId: ID!
+
+  width: Int
+
+  height: Int
+
+  durationMs: Int
+
+  """
+  Presigned URL of the encoded MP4
+  """
+  url: String
+
+  """
+  Thumbnail for this video (generally the first frame)
+  """
+  thumbnail: ImageLink
+
+  """
+  The publication that claimed this video, if any
+  """
+  publicationId: ID
+}
+
+"""
+Processing state of a natively-hosted video
+"""
+enum VideoStatus {
+  AWAITING_UPLOAD
+
+  UPLOADED
+
+  PROCESSING
+
+  READY
+
+  FAILED
+
+  DELETED
+}
+
+"""
+Server-configured upload constraints, for client-side prechecks
+"""
+type VideoUploadLimits {
+  maxSizeBytes: Int!
+
+  maxDurationMs: Int!
+
+  dailyLimit: Int!
+}
+
+"""
+Everything a client needs to upload a video source file
+"""
+type VideoUploadTicket {
+  """
+  The new video's ID
+  """
+  id: ID!
+
+  """
+  Presigned S3 PUT URL for the source file
+  """
+  uploadUrl: String!
+}
+
+"""
 Write this amount of messages in a public chat
 """
 type WriteMessagesTask implements DailyTask {
@@ -1337,7 +1456,7 @@ type __Directive {
 
   locations: [__DirectiveLocation!]!
 
-  args: [__InputValue!]!
+  args(includeDeprecated: Boolean! = false): [__InputValue!]!
 
   isRepeatable: Boolean!
 }
@@ -1467,7 +1586,7 @@ type __Field {
 
   description: String
 
-  args: [__InputValue!]!
+  args(includeDeprecated: Boolean! = false): [__InputValue!]!
 
   type: __Type!
 
@@ -1489,6 +1608,10 @@ type __InputValue {
   type: __Type!
 
   defaultValue: String
+
+  isDeprecated: Boolean!
+
+  deprecationReason: String
 }
 
 """
@@ -1557,7 +1680,7 @@ type __Type {
 
   enumValues(includeDeprecated: Boolean! = false): [__EnumValue!]
 
-  inputFields: [__InputValue!]
+  inputFields(includeDeprecated: Boolean! = false): [__InputValue!]
 
   ofType: __Type
 
@@ -1624,8 +1747,7 @@ Directs the executor to include this field or fragment only when the `if` argume
 directive @include ("Included when true." if: Boolean!) on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT
 
 """
-Indicates that an Input Object is a OneOf Input Object (and thus requires
-                        exactly one of its field be provided)
+Indicates that an Input Object is a OneOf Input Object (and thus requires exactly one of its field be provided)
 """
 directive @oneOf on INPUT_OBJECT
 

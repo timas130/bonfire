@@ -9,6 +9,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,7 +18,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.PagesContainer
@@ -28,6 +33,9 @@ import com.sayzen.campfiresdk.compose.publication.post.pages.activity.PageUserAc
 import com.sayzen.campfiresdk.compose.publication.post.pages.polling.PagePollingRenderer
 import com.sayzen.campfiresdk.compose.util.mapState
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
+import com.sayzen.campfiresdk.video.inline.LocalVideoAutoplayCoordinator
+import com.sayzen.campfiresdk.video.inline.VideoAutoplayCoordinator
+import com.sup.dev.android.libs.screens.navigator.Navigator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -106,6 +114,7 @@ fun PostPage(
         is PageQuote -> PageQuoteRenderer(page = page)
         is PageSpoiler -> PageSpoilerRenderer(page = page, model = model, source = source)
         is PagePolling -> PagePollingRenderer(page = page, source = source)
+        is PageYouTube -> PageYouTubeRenderer(page = page)
         is PageVideo -> PageVideoRenderer(page = page)
         is PageTable -> PageTableRenderer(page = page)
         is PageDownload -> PageUnsupportedRenderer(page = page)
@@ -208,24 +217,58 @@ class ComposePostPages(
 ) : ComposeCard() {
     @Composable
     override fun Content() {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            PostPages(
-                pages = pages,
-                source = pagesContainer?.let {
-                    PagesSource(
-                        sourceType = it.getSourceType(),
-                        sourceId = it.getSourceId(),
-                        sourceSubId = it.getSourceIdSub(),
-                        sourceDateCreate = it.getSourceDateCreate()
-                    )
-                } ?: PagesSource.Unknown,
-                model = viewModel(),
-            )
+        // ... this is so ass
+        val autoplayCoordinator = remember { VideoAutoplayCoordinator() }
+        val lifecycle = LocalLifecycleOwner.current.lifecycle
+        val ownerScreen = remember { Navigator.getCurrent() }
+        DisposableEffect(autoplayCoordinator, lifecycle, ownerScreen) {
+            // pause when closing the app
+            val observer = object : DefaultLifecycleObserver {
+                override fun onPause(owner: LifecycleOwner) {
+                    autoplayCoordinator.pause()
+                }
+
+                override fun onResume(owner: LifecycleOwner) {
+                    autoplayCoordinator.resume()
+                }
+            }
+            lifecycle.addObserver(observer)
+
+            // pause when navigating away from current screen
+            val onScreenChanged = {
+                if (Navigator.getCurrent() === ownerScreen) autoplayCoordinator.resume()
+                else autoplayCoordinator.pause()
+                false
+            }
+            if (ownerScreen != null) Navigator.addOnScreenChanged(onScreenChanged)
+
+            onDispose {
+                lifecycle.removeObserver(observer)
+                if (ownerScreen != null) Navigator.removeOnScreenChanged(onScreenChanged)
+                autoplayCoordinator.release()
+            }
+        }
+
+        CompositionLocalProvider(LocalVideoAutoplayCoordinator provides autoplayCoordinator) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                PostPages(
+                    pages = pages,
+                    source = pagesContainer?.let {
+                        PagesSource(
+                            sourceType = it.getSourceType(),
+                            sourceId = it.getSourceId(),
+                            sourceSubId = it.getSourceIdSub(),
+                            sourceDateCreate = it.getSourceDateCreate()
+                        )
+                    } ?: PagesSource.Unknown,
+                    model = viewModel(),
+                )
+            }
         }
     }
 

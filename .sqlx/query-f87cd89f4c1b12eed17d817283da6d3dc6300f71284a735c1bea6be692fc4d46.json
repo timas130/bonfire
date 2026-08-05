@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update videos set status = 6, updated_at = now() where video_id = $1 and user_id = $2 and status = 1 returning id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "f87cd89f4c1b12eed17d817283da6d3dc6300f71284a735c1bea6be692fc4d46"
+}

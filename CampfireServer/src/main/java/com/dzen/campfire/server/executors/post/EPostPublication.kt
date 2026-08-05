@@ -24,6 +24,7 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
     private var fandom: Fandom? = null
     private var publication: PublicationPost? = null
     private val tagsIds = ArrayList<Long>()
+    private var publishImmediately = false
 
     override fun check() {
         if(userActivityNextUserId == apiAccount.id) userActivityNextUserId = 0
@@ -72,7 +73,10 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
 
         }
 
-
+        publishImmediately = !(pendingTime > 0 && pendingTime > System.currentTimeMillis())
+        if (publication!!.status == API.STATUS_DRAFT && publishImmediately) {
+            ControllerPost.checkVideosReady(publication!!)
+        }
     }
 
     override fun execute(): Response {
@@ -117,7 +121,7 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
 
         if (publication!!.status == API.STATUS_DRAFT) {
             Database.update("EPostPublication", SqlQueryUpdate(TPublications.NAME)
-                    .update(TPublications.status, if (pendingTime > 0 && pendingTime > System.currentTimeMillis()) API.STATUS_PENDING else API.STATUS_PUBLIC)
+                    .update(TPublications.status, if (publishImmediately) API.STATUS_PUBLIC else API.STATUS_PENDING)
                     .update(TPublications.date_create, System.currentTimeMillis())
                     .update(TPublications.tag_4, pendingTime)
                     .update(TPublications.tag_6, rubricId)

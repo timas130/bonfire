@@ -1,4 +1,5 @@
 pub use anyhow;
+pub use aws_sdk_s3;
 pub use chrono;
 pub use futures;
 pub use opentelemetry;

@@ -9,6 +9,7 @@ publish = false
 config = "0.15"
 tarpc = { version = "0.36", features = ["full"] }
 anyhow = "1.0"
+aws-sdk-s3 = { version = "1.25", features = ["behavior-version-latest"] }
 tokio = { version = "1.24", features = ["macros", "rt-multi-thread", "signal"] }
 tokio-test = "0.4"
 sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "postgres", "chrono", "ipnetwork", "rust_decimal", "bigdecimal"] }

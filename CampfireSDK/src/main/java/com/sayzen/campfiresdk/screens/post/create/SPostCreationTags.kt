@@ -29,6 +29,7 @@ import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.activity.SActivityTypeBottomNavigation
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.settings.Settings
 import com.sup.dev.android.views.splash.SplashField
@@ -78,6 +79,8 @@ class SPostCreationTags private constructor(
                     onCreate.invoke()
                     ControllerStoryQuest.incrQuest(API.QUEST_STORY_POST)
                     ControllerActivities.reloadActivities()
+                }.onApiError(API.ERROR_VIDEO_NOT_READY) {
+                    ToolsToast.show(R.string.post_error_videos_processing)
                 }
             }
         }
@@ -187,6 +190,8 @@ class SPostCreationTags private constructor(
                             EventBus.post(EventPostStatusChange(publicationId, API.STATUS_PUBLIC))
                             EventBus.post(EventPostTagsChanged(publicationId, selectedTagsWithCategories.toTypedArray()))
                             SPost.instance(publicationId, 0, NavigationAction.replace())
+                        }.onApiError(API.ERROR_VIDEO_NOT_READY) {
+                            ToolsToast.show(R.string.post_error_videos_processing)
                         }
                     }.asSheetShow()
         }

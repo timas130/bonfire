@@ -21,6 +21,7 @@ level = 31004
 notification = 31005
 profile = 31006
 security = 31007
+video = 31008
 
 [email]
 host = "unused"
@@ -60,6 +61,14 @@ universe_domain = ""
 
 [notification]
 threads = 5
+
+[video]
+threads = 1
+max_size_bytes = 104857600 # 100 * 1024 * 1024
+max_duration_ms = 32000
+daily_limit = 10
+work_dir = "/tmp/bonfire-video"
+upload_url_expiry_secs = 3600
 
 [security]
 package_names = ["sh.sit.bonfire"]

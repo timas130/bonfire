@@ -5,10 +5,13 @@ import com.dzen.campfire.api.models.notifications.account.NotificationAdminPostR
 import com.dzen.campfire.api.models.publications.events_admins.ApiEventAdminPostRemoveMedia
 import com.dzen.campfire.api.models.publications.events_user.ApiEventUserAdminPostRemoveMedia
 import com.dzen.campfire.api.models.publications.history.HistoryAdminRemoveMedia
+import com.dzen.campfire.api.models.publications.post.PageVideo
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostAdminRemoveMedia
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
+import com.dzen.campfire.server.rust.RustVideo
+import com.sup.dev.java.libs.debug.err
 
 class EPostAdminRemoveMedia : RPostAdminRemoveMedia(0, "") {
 
@@ -28,8 +31,17 @@ class EPostAdminRemoveMedia : RPostAdminRemoveMedia(0, "") {
     override fun execute(): Response {
 
         val resourcesList = publication.getResourcesList()
-        for (n in 0 until resourcesList.size)
+        for (n in resourcesList.indices)
             ControllerResources.remove(resourcesList[n])
+
+        for (page in publication.pages) {
+            if (page !is PageVideo) continue
+            try {
+                RustVideo.release(page.videoId)
+            } catch (e: Exception) {
+                err(e)
+            }
+        }
 
         ControllerNotifications.push(publication.creator.id, NotificationAdminPostRemoveMedia(publication.id, ControllerPublications.getMaskText(publication), apiAccount.name, apiAccount.sex, apiAccount.imageId, comment))
         ControllerPublications.event(ApiEventAdminPostRemoveMedia(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, publication.creator.id, publication.creator.name, publication.creator.imageId, publication.creator.sex, comment, publication.id), apiAccount.id)

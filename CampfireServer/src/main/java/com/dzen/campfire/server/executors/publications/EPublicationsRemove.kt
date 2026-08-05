@@ -5,11 +5,15 @@ import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessageRe
 import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.models.publications.PublicationComment
 import com.dzen.campfire.api.models.publications.chat.PublicationChatMessage
+import com.dzen.campfire.api.models.publications.post.PageVideo
+import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.models.publications.stickers.PublicationSticker
 import com.dzen.campfire.api.requests.publications.RPublicationsRemove
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
+import com.dzen.campfire.server.rust.RustVideo
 import com.dzen.campfire.server.tables.TPublications
+import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
 
@@ -46,6 +50,17 @@ class EPublicationsRemove : RPublicationsRemove(0) {
     override fun execute(): Response {
 
         ControllerPublications.remove(publicationId)
+
+        val post = publication
+        if (post is PublicationPost) {
+            for (page in post.pages.filterIsInstance<PageVideo>()) {
+                try {
+                    RustVideo.release(page.videoId)
+                } catch (e: ApiException) {
+                    err(e)
+                }
+            }
+        }
 
         if (publication.publicationType == API.PUBLICATION_TYPE_CHAT_MESSAGE) {
 

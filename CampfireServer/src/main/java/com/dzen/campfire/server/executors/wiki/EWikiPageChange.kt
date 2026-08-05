@@ -4,8 +4,10 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.post.Page
 import com.dzen.campfire.api.models.wiki.WikiPages
 import com.dzen.campfire.api.requests.wiki.RWikiPageChange
-import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.api.tools.ApiException
+import com.dzen.campfire.server.controllers.ControllerFandom
+import com.dzen.campfire.server.controllers.ControllerPost
+import com.dzen.campfire.server.controllers.ControllerWiki
 
 class EWikiPageChange : RWikiPageChange(0, 0, null, 0) {
 
@@ -38,12 +40,15 @@ class EWikiPageChange : RWikiPageChange(0, 0, null, 0) {
         val resultPage: Page
 
         if (wikiPagesOld.pages[pageIndex].isRemoveOnChange()) {
-            ControllerPost.checkPage(page, E_BAD_PAGE, true, API.PAGES_SOURCE_TYPE_WIKI)
+            ControllerPost.checkPage(page, E_BAD_PAGE, true, API.PAGES_SOURCE_TYPE_WIKI, apiAccount.id, API.RESOURCES_PUBLICATION_WIKI)
             ControllerPost.removePage(wikiPagesOld.pages[pageIndex])
             resultPage = page!!
         } else {
+            // note that swapping the video of a page does NOT release the old one:
+            // every past revision is kept and restorable, so it still references it.
+            // this will become a problem, won't it?..
             wikiPagesOld.pages[pageIndex].prepareForServer(page!!)
-            ControllerPost.checkPage(wikiPagesOld.pages[pageIndex], E_BAD_PAGE, true, API.PAGES_SOURCE_TYPE_WIKI)
+            ControllerPost.checkPage(wikiPagesOld.pages[pageIndex], E_BAD_PAGE, true, API.PAGES_SOURCE_TYPE_WIKI, apiAccount.id, API.RESOURCES_PUBLICATION_WIKI)
             resultPage = wikiPagesOld.pages[pageIndex]
         }
 

@@ -1,0 +1,18 @@
+fragment VideoState on Video {
+    id
+    status
+    url
+    thumbnail {
+        u
+        i
+    }
+    width
+    height
+    durationMs
+}
+
+query VideoById($id: ID!) {
+    videoById(id: $id) {
+        ...VideoState
+    }
+}

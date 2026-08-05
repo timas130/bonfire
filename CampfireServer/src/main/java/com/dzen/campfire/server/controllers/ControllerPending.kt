@@ -43,27 +43,29 @@ object ControllerPending {
             val creatorId:Long = v.next()
 
             try {
-                val pub = ControllerPublications.getPublication(id, 0)!! as PublicationPost
-
-                for (page in pub.pages) {
-                    if (page !is PageText) continue
-                    ControllerPublications.parseMentions(
-                        text = page.text,
-                        publicationId = pub.id,
-                        publicationType = pub.publicationType,
-                        tag1 = 0,
-                        tag2 = 0,
-                        tag3 = 0,
-                        fromAccount = ApiAccount(pub.creator),
-                        exclude = emptyArray()
-                    )
-                }
-            } catch (_: Exception) {}
-
-            try {
                 ControllerAccounts.checkAccountBanned(creatorId, fandomId, languageId)
                 ControllerPost.publish(id, willNotify, creatorId)
+
+                try {
+                    val pub = ControllerPublications.getPublication(id, 0)!! as PublicationPost
+
+                    for (page in pub.pages) {
+                        if (page !is PageText) continue
+                        ControllerPublications.parseMentions(
+                            text = page.text,
+                            publicationId = pub.id,
+                            publicationType = pub.publicationType,
+                            tag1 = 0,
+                            tag2 = 0,
+                            tag3 = 0,
+                            fromAccount = ApiAccount(pub.creator),
+                            exclude = emptyArray()
+                        )
+                    }
+                } catch (_: Exception) {}
             } catch (e: ApiException) {
+                if (e.code == API.ERROR_VIDEO_SERVICE_UNAVAILABLE) continue
+
                 Database.update("ControllerPending.posts update_2", SqlQueryUpdate(TPublications.NAME)
                         .where(TPublications.id, "=", id)
                         .update(TPublications.status, API.STATUS_DRAFT)

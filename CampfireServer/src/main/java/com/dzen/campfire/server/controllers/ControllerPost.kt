@@ -5,6 +5,7 @@ import com.dzen.campfire.api.models.account.AccountSettings
 import com.dzen.campfire.api.models.publications.post.*
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.rust.RustProfile
+import com.dzen.campfire.server.rust.RustVideo
 import com.dzen.campfire.server.tables.TCollisions
 import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java.tools.ToolsBytes
@@ -15,9 +16,14 @@ import com.sup.dev.java_pc.sql.SqlQueryRemove
 import com.sup.dev.java_pc.sql.SqlQuerySelect
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
 import com.sup.dev.java_pc.tools.ToolsImage
+import sh.sit.schema.type.VideoStatus
 
 
 object ControllerPost {
+
+    /** Bounds for the client-supplied placeholder metadata of a not-yet-encoded video. */
+    private const val PAGE_VIDEO_MAX_HINT_SIDE = 8192
+    private const val PAGE_VIDEO_MAX_HINT_DURATION_MS = 24L * 60 * 60 * 1000
 
     fun setMultilingual(publication: PublicationPost, multilingual: Boolean) {
         if (multilingual) {
@@ -46,6 +52,9 @@ object ControllerPost {
 
 
     fun publish(publicationId: Long, willNotify: Long, creatorId: Long) {
+        val publication = ControllerPublications.getPublication(publicationId, 0)
+        if (publication is PublicationPost) checkVideosReady(publication)
+
         Database.update("EPostPendingPublish", SqlQueryUpdate(TPublications.NAME)
                 .where(TPublications.id, "=", publicationId)
                 .update(TPublications.status, API.STATUS_PUBLIC)
@@ -65,7 +74,14 @@ object ControllerPost {
     }
 
     @Throws(ApiException::class)
-    fun checkPage(page: Page?, eBadPage: String, isChange: Boolean, sourceType: Long) {
+    fun checkPage(
+        page: Page?,
+        eBadPage: String,
+        isChange: Boolean,
+        sourceType: Long,
+        accountId: Long = 0,
+        publicationId: Long = 0,
+    ) {
 
         if (page == null) throw ApiException(eBadPage, "Page is null")
 
@@ -94,12 +110,24 @@ object ControllerPost {
                 }
                 if (page.link.length > API.PAGE_LINK_WEB_MAX_L) throw ApiException(eBadPage, "PageLinkImage. Too big link.")
             }
-            is PageVideo -> {
-                if (page.insertBytes == null || page.insertBytes!!.size > API.PAGE_VIDEO_IMAGE_WEIGHT) throw ApiException(eBadPage, "PageVideo. Bad insertBytes")
+            is PageYouTube -> {
+                if (page.insertBytes == null || page.insertBytes!!.size > API.PAGE_YOUTUBE_IMAGE_WEIGHT) throw ApiException(eBadPage, "PageYouTube. Bad insertBytes")
                 val scale = ToolsImage.getImgScaleUnknownType(page.insertBytes!!, true, false, true)
                 page.w = scale[0]
                 page.h = scale[1]
-                if (page.w > API.PAGE_VIDEO_IMAGE_SIDE || page.h > API.PAGE_VIDEO_IMAGE_SIDE) throw ApiException(eBadPage, "PageVideo. Bad sides " + page.w + " " + page.h)
+                if (page.w > API.PAGE_YOUTUBE_IMAGE_SIDE || page.h > API.PAGE_YOUTUBE_IMAGE_SIDE) throw ApiException(eBadPage, "PageYouTube. Bad sides " + page.w + " " + page.h)
+            }
+            is PageVideo -> {
+                if (!page.videoId.matches(RustVideo.VIDEO_ID_REGEX)) throw ApiException(eBadPage, "PageVideo. Bad videoId")
+                val video = RustVideo.getById(page.videoId) ?: throw ApiException(eBadPage, "PageVideo. Video not found")
+                if (video.userId != accountId) throw ApiException(eBadPage, "PageVideo. Not the video owner")
+                if (video.status == VideoStatus.DELETED) throw ApiException(eBadPage, "PageVideo. Video is deleted")
+                if (video.publicationId != null && video.publicationId != publicationId) throw ApiException(eBadPage, "PageVideo. Video is claimed by another publication")
+
+                page.w = video.width ?: page.w.coerceIn(0, PAGE_VIDEO_MAX_HINT_SIDE)
+                page.h = video.height ?: page.h.coerceIn(0, PAGE_VIDEO_MAX_HINT_SIDE)
+                page.durationMs = video.durationMs
+                    ?: page.durationMs.coerceIn(0L, PAGE_VIDEO_MAX_HINT_DURATION_MS)
             }
             is PageLink -> {
                 page.name = ControllerCensor.cens(page.name)
@@ -227,9 +255,12 @@ object ControllerPost {
                     page.insertBytes = null
                 }
             }
-            is PageVideo -> {
+            is PageYouTube -> {
                 page.imageId = ControllerResources.put(page.insertBytes!!, publicationId)
                 page.insertBytes = null
+            }
+            is PageVideo -> {
+                RustVideo.setPublication(page.videoId, publicationId)
             }
             is PagePolling -> {
                 page.pollingId = System.nanoTime()
@@ -304,6 +335,12 @@ object ControllerPost {
             is PageLinkImage -> {
                 ControllerResources.remove(page.imageId)
             }
+            is PageYouTube -> {
+                ControllerResources.remove(page.imageId)
+            }
+            is PageVideo -> {
+                RustVideo.release(page.videoId)
+            }
             is PagePolling -> {
                 if (page.pollingId != 0L) {
                     val remove = SqlQueryRemove(TCollisions.NAME)
@@ -325,6 +362,20 @@ object ControllerPost {
                 ControllerResources.remove(page.resourceId)
             }
             else -> {}
+        }
+    }
+
+    @Throws(ApiException::class)
+    fun checkVideosReady(publication: PublicationPost) {
+        val videoIds = publication.pages.filterIsInstance<PageVideo>().map { it.videoId }
+        if (videoIds.isEmpty()) return
+        if (videoIds.size != videoIds.distinct().size) throw ApiException(API.ERROR_VIDEO_NOT_READY, "Duplicate videoId in publication [${publication.id}]")
+
+        val videos = RustVideo.getByIds(videoIds).associateBy { it.id }
+        for (videoId in videoIds) {
+            val video = videos[videoId] ?: throw ApiException(API.ERROR_VIDEO_NOT_READY, "Video not found [$videoId]")
+            if (video.publicationId != publication.id) throw ApiException(API.ERROR_VIDEO_NOT_READY, "Video is not claimed by this publication [$videoId]")
+            if (video.status != VideoStatus.READY) throw ApiException(API.ERROR_VIDEO_NOT_READY, "Video is not ready [$videoId][${video.status}]")
         }
     }
 

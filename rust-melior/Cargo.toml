@@ -13,6 +13,7 @@ b-level = { path = "../rust-level" }
 b-notification = { path = "../rust-notification" }
 b-profile = { path = "../rust-profile" }
 b-security = { path = "../rust-security" }
+b-video = { path = "../rust-video" }
 tracing = { version = "0.1", features = ["attributes"] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 axum = { version = "0.8", features = ["http2", "macros"] }

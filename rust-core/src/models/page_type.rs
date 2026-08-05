@@ -30,4 +30,5 @@ pub enum PageType {
     UserActivity = 13,
     LinkImage = 14,
     Code = 16,
+    VideoLocal = 17,
 }

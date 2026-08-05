@@ -93,7 +93,7 @@ impl LevelServer {
         .try_collect::<HashSet<i64>>()
         .await?;
 
-        achievements_collisions.map(|(index, collision)| {
+        let _ = achievements_collisions.map(|(index, collision)| {
             hm.insert(index, i64::from(collisions.contains(&collision)));
         });
 

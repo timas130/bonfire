@@ -1,0 +1,3 @@
+mutation InternalVideoSetPublication($id: ID!, $publicationId: ID!) {
+    internalVideoSetPublication(id: $id, publicationId: $publicationId)
+}

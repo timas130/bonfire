@@ -1,0 +1,17 @@
+[package]
+name = "b-video"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+publish = false
+
+[dependencies]
+c-core = { path = "../rust-core" }
+sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "postgres", "chrono"] }
+chrono = { version = "0.4", default-features = false, features = ["serde", "clock", "std"] }
+tracing = { version = "0.1", features = ["attributes"] }
+deadqueue = "0.2"
+nanoid = "0.4"
+gstreamer = "0.25"
+gstreamer-app = "0.25"
+gstreamer-pbutils = "0.25"

@@ -6,6 +6,9 @@ RUN gradle CampfireServer:build --no-daemon
 
 FROM rust:1.88 AS rust-builder
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    pkg-config libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+
 WORKDIR /app
 COPY ./rust-auth /app/rust-auth
 COPY ./rust-core /app/rust-core
@@ -15,6 +18,7 @@ COPY ./rust-notification /app/rust-notification
 COPY ./rust-melior /app/rust-melior
 COPY ./rust-profile /app/rust-profile
 COPY ./rust-security /app/rust-security
+COPY ./rust-video /app/rust-video
 COPY ./.sqlx /app/.sqlx
 COPY ./migrations /app/migrations
 COPY ./Cargo.toml ./Cargo.lock /app/
@@ -26,6 +30,9 @@ WORKDIR /app/
 RUN mkdir -p /app/CampfireServer/res /app/lib
 
 RUN apt-get update && apt-get install -y tar openssl bash findutils curl
+RUN apt-get install -y --no-install-recommends \
+    libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav
 RUN curl -o /app/bcprov.jar https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk18on/1.79/bcprov-jdk18on-1.79.jar
 
 RUN curl -o /app/libssl11.deb http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb

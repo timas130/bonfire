@@ -20,14 +20,21 @@ pub struct ImageLink {
 }
 
 impl ImageLink {
-    pub async fn by_id(ctx: &Context<'_>, id: i64) -> Result<ImageLink, RespError> {
+    /// Presign an arbitrary S3 object as an image link, valid for an hour
+    pub async fn by_key(
+        ctx: &Context<'_>,
+        key: &str,
+        id: i64,
+        w: Option<i64>,
+        h: Option<i64>,
+    ) -> Result<ImageLink, RespError> {
         let req = ctx.data_unchecked::<ReqContext>();
         let (s3, bucket) = req.get_s3()?;
 
         let presigned = s3
             .get_object()
             .bucket(bucket)
-            .key(format!("res/{id}"))
+            .key(key)
             .presigned(
                 PresigningConfig::builder()
                     .expires_in(Duration::from_secs(3600))
@@ -42,9 +49,14 @@ impl ImageLink {
 
         Ok(ImageLink {
             u: presigned.uri().to_string(),
-            w: None,
-            h: None,
+            w,
+            h,
             i: id,
         })
+    }
+
+    /// Presign the `res/{id}` object of a regular uploaded image
+    pub async fn by_id(ctx: &Context<'_>, id: i64) -> Result<ImageLink, RespError> {
+        Self::by_key(ctx, &format!("res/{id}"), id, None, None).await
     }
 }

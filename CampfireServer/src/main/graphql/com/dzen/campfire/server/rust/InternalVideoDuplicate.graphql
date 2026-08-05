@@ -1,0 +1,11 @@
+mutation InternalVideoDuplicate($id: ID!, $publicationId: ID!) {
+    internalVideoDuplicate(id: $id, publicationId: $publicationId) {
+        id
+        creatorId
+        publicationId
+        status
+        durationMs
+        width
+        height
+    }
+}

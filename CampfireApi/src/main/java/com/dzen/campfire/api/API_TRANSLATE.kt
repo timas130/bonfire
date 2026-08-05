@@ -1152,6 +1152,7 @@ object API_TRANSLATE {
     var post_page_text_new_formatting_on = 0L
     var post_page_image = 0L
     var post_page_video = 0L
+    var post_page_video_local = 0L
     var post_page_images = 0L
     var post_page_quote = 0L
     var post_page_link = 0L
@@ -1225,7 +1226,8 @@ object API_TRANSLATE {
         API.PAGE_TYPE_QUOTE to post_page_quote,
         API.PAGE_TYPE_SPOILER to post_page_spoiler,
         API.PAGE_TYPE_POLLING to post_page_polling,
-        API.PAGE_TYPE_VIDEO to post_page_video,
+        API.PAGE_TYPE_YOUTUBE to post_page_video,
+        API.PAGE_TYPE_VIDEO_LOCAL to post_page_video_local,
         API.PAGE_TYPE_TABLE to post_page_table,
         API.PAGE_TYPE_DOWNLOAD to post_page_download,
         API.PAGE_TYPE_CAMPFIRE_OBJECT to post_page_campfire_object,

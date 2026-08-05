@@ -2,7 +2,11 @@ package com.dzen.campfire.server.controllers
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.Publication
+import com.dzen.campfire.api.models.publications.post.PageVideo
+import com.dzen.campfire.api.models.publications.post.PublicationPost
+import com.dzen.campfire.server.rust.RustVideo
 import com.dzen.campfire.server.tables.TPublications
+import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.debug.info
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsDate
@@ -84,6 +88,7 @@ object ControllerGarbage {
             for (n in 0 until resourcesList.size) {
                 ControllerResources.remove(resourcesList[n])
             }
+            releaseVideos(publications[i])
         }
 
         val remove = SqlQueryRemove(TPublications.NAME)
@@ -104,6 +109,7 @@ object ControllerGarbage {
             for (n in 0 until resourcesList.size) {
                 ControllerResources.remove(resourcesList[n])
             }
+            releaseVideos(publications[i])
         }
 
         val remove = SqlQueryRemove(TPublications.NAME)
@@ -158,6 +164,18 @@ object ControllerGarbage {
     //
     //  Support
     //
+
+    private fun releaseVideos(publication: Publication) {
+        if (publication !is PublicationPost) return
+        for (page in publication.pages) {
+            if (page !is PageVideo) continue
+            try {
+                RustVideo.release(page.videoId)
+            } catch (e: Exception) {
+                err(e)
+            }
+        }
+    }
 
     private fun instancePublicationSelect(): SqlQuerySelect {
         return SqlQuerySelect(TPublications.NAME, TPublications.publication_type, TPublications.publication_json)

@@ -13,7 +13,8 @@ apollo {
         generateApolloMetadata.set(true)
         generateFragmentImplementations.set(true)
         alwaysGenerateTypesMatching.set(listOf(
-            "LoginResultSuccess", "Query", "Mutation", "User", "Ok", "Badge"
+            "LoginResultSuccess", "Query", "Mutation", "User", "Ok", "Badge",
+            "VideoStatus", "Video"
         ))
 
         introspection {
