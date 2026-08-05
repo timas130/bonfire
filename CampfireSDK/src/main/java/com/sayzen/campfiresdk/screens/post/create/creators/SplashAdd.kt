@@ -31,10 +31,6 @@ class SplashAdd(
             wasClicked = true
             SplashPageImage(requestPutPage, requestChangePage).asSheetShow()
         }.icon(R.drawable.ic_landscape_white_24dp)
-        add(t(API_TRANSLATE.post_page_video)) {
-            wasClicked = true
-            SplashPageYouTube(requestPutPage, requestChangePage, null, null).asSheetShow()
-        }.icon(R.drawable.ic_play_arrow_white_24dp)
         add(t(API_TRANSLATE.post_page_video_local)) {
             wasClicked = true
             VideoAttach.pickAndUpload(requestPutPage, requestChangePage, null)
@@ -63,6 +59,10 @@ class SplashAdd(
             wasClicked = true
             Navigator.to(SCreatePageTable(requestPutPage, requestChangePage, null, null))
         }.icon(R.drawable.ic_border_all_white_24dp)
+        add(t(API_TRANSLATE.post_page_video)) {
+            wasClicked = true
+            SplashPageYouTube(requestPutPage, requestChangePage, null, null).asSheetShow()
+        }.icon(R.drawable.ic_play_arrow_white_24dp)
         add(t(API_TRANSLATE.post_page_code)) {
             wasClicked = true
             Navigator.to(SCreatePageCode(requestPutPage, requestChangePage, null, null))
