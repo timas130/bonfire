@@ -1,10 +1,10 @@
-FROM gradle:8.13-jdk17 AS builder
+FROM gradle:8.13-jdk21 AS builder
 
 COPY . /app
 WORKDIR /app/
 RUN gradle CampfireServer:build --no-daemon
 
-FROM rust:1.88 AS rust-builder
+FROM rust:1.96-bookworm AS rust-builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     pkg-config libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
@@ -24,7 +24,7 @@ COPY ./migrations /app/migrations
 COPY ./Cargo.toml ./Cargo.lock /app/
 RUN cargo build --release
 
-FROM azul/zulu-openjdk-debian:17-jre AS runner
+FROM azul/zulu-openjdk-debian:21-jre-headless AS runner
 
 WORKDIR /app/
 RUN mkdir -p /app/CampfireServer/res /app/lib
