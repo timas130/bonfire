@@ -186,9 +186,11 @@ private fun BoxScope.VideoReadyContent(page: PageVideo, video: VideoState) {
     // </autoplay handling>
 
     val thumbnail = video.thumbnail
+    val autoplaying = player != null && firstFrameRendered
     VideoReadyOverlay(
         thumbnail = remember(thumbnail) { thumbnail?.let { ImageRef(it.i.toLong(), it.u) } },
-        showThumbnail = player == null || !firstFrameRendered,
+        showThumbnail = !autoplaying,
+        autoplaying = autoplaying,
         durationMs = video.durationMs?.toLong() ?: page.durationMs,
         onClick = {
             Navigator.to(SVideoPlayer(page.videoId))
@@ -219,6 +221,7 @@ private fun PageVideoFrame(
 private fun BoxScope.VideoReadyOverlay(
     thumbnail: ImageRef?,
     showThumbnail: Boolean,
+    autoplaying: Boolean,
     durationMs: Long,
     onClick: () -> Unit,
 ) {
@@ -239,16 +242,19 @@ private fun BoxScope.VideoReadyOverlay(
             .clickable(onClick = onClick)
     )
 
+    // once it is actually playing the frame speaks for itself, so the button
+    // shrinks out of the way and pairs up with the duration badge
     Icon(
         imageVector = Icons.Default.PlayArrow,
         contentDescription = stringResource(R.string.video_play),
         tint = Color.White,
         modifier = Modifier
-            .align(Alignment.Center)
+            .align(if (autoplaying) Alignment.BottomStart else Alignment.Center)
+            .padding(if (autoplaying) 8.dp else 0.dp)
             .clip(CircleShape)
             .background(Color.Black.copy(alpha = 0.5f))
-            .padding(8.dp)
-            .size(48.dp)
+            .padding(if (autoplaying) 4.dp else 8.dp)
+            .size(if (autoplaying) 20.dp else 48.dp)
     )
 
     if (durationMs > 0) {
