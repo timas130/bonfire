@@ -128,6 +128,7 @@
     <string name="player_play">Play</string>
     <string name="player_pause">Pause</string>
     <string name="player_speed">Playback speed</string>
+    <string name="player_replay">Play again</string>
     <string name="player_download">Download the video</string>
     <string name="player_skip_seconds">%1$ds</string>
     <string name="video_download_failed">Failed to download the video</string>

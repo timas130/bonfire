@@ -41,6 +41,8 @@ class VideoPlayerModel(
         private set
     var isBuffering by mutableStateOf(true)
         private set
+    var hasEnded by mutableStateOf(false)
+        private set
 
     var released by mutableStateOf(false)
         private set
@@ -67,8 +69,12 @@ class VideoPlayerModel(
 
         override fun onPlaybackStateChanged(state: Int) {
             isBuffering = state == Player.STATE_BUFFERING
+            hasEnded = state == Player.STATE_ENDED
             val d = player?.duration ?: 0
             if (d > 0) duration = d
+            // the position ticker stops with playback, so it would otherwise
+            // freeze a few frames short of the end
+            if (hasEnded && duration > 0) position = duration
         }
 
         override fun onPlayerError(playbackError: PlaybackException) {
@@ -89,6 +95,7 @@ class VideoPlayerModel(
         loadJob?.cancel()
         loadJob = scope.launch {
             error = false
+            hasEnded = false
             val video = try {
                 VideoRepository.getVideo(videoId)
             } catch (e: Exception) {
@@ -130,8 +137,21 @@ class VideoPlayerModel(
         player?.playWhenReady = false
     }
 
+    /**
+     * A finished player still reports `playWhenReady = true`, so plain [play]
+     * would leave it parked on the last frame. Rewind first.
+     */
+    fun restart() {
+        seekTo(0)
+        play()
+    }
+
     fun togglePlayPause() {
-        if (player?.isPlaying == true) pause() else play()
+        when {
+            hasEnded -> restart()
+            player?.isPlaying == true -> pause()
+            else -> play()
+        }
     }
 
     fun selectPlaybackSpeed(speed: Float) {

@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -47,6 +48,7 @@ private val PLAYBACK_SPEEDS = listOf(0.5f, 0.75f, 1f, 1.25f, 1.5f, 1.75f, 2f)
 internal fun PlayerControls(
     isPlaying: Boolean,
     isBuffering: Boolean,
+    hasEnded: Boolean,
     position: () -> Long,
     duration: Long,
     scrubbing: Boolean,
@@ -86,10 +88,17 @@ internal fun PlayerControls(
                             .size(64.dp)
                     ) {
                         Icon(
-                            if (isPlaying) Icons.Default.Pause
-                            else Icons.Default.PlayArrow,
+                            when {
+                                hasEnded -> Icons.Default.Replay
+                                isPlaying -> Icons.Default.Pause
+                                else -> Icons.Default.PlayArrow
+                            },
                             contentDescription = stringResource(
-                                if (isPlaying) R.string.player_pause else R.string.player_play
+                                when {
+                                    hasEnded -> R.string.player_replay
+                                    isPlaying -> R.string.player_pause
+                                    else -> R.string.player_play
+                                }
                             ),
                             tint = Color.White,
                             modifier = Modifier.size(36.dp)
@@ -280,6 +289,7 @@ private fun PlayerControlsPreview() {
         PlayerControls(
             isPlaying = true,
             isBuffering = false,
+            hasEnded = false,
             position = { 12_000 },
             duration = 32_000,
             scrubbing = false,

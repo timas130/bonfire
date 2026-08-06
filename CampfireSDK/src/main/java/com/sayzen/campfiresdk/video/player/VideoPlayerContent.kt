@@ -77,6 +77,11 @@ internal fun VideoPlayerContent(holder: VideoPlayerModel) {
         }
     }
 
+    // a restart button nobody can see is not a restart button
+    LaunchedEffect(holder.hasEnded) {
+        if (holder.hasEnded) controlsVisible = true
+    }
+
     // destroy skip ripple
     var skipFeedback by remember { mutableStateOf<SkipFeedback?>(null) }
     LaunchedEffect(skipFeedback) {
@@ -257,6 +262,7 @@ internal fun VideoPlayerContent(holder: VideoPlayerModel) {
             PlayerControls(
                 isPlaying = holder.isPlaying,
                 isBuffering = holder.isBuffering,
+                hasEnded = holder.hasEnded,
                 position = { holder.position },
                 duration = holder.duration,
                 scrubbing = scrubbing,
