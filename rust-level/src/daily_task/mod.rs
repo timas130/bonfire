@@ -15,18 +15,18 @@ pub const BASE_DT_LVL_REWARD: i64 = 3;
 impl LevelServer {
     fn get_new_combo_multiplier(previous_multiplier: f64, progress: f64) -> f64 {
         let progress = progress.clamp(0., 2.);
-        let change = -0.386 * progress.powi(2) + 1.643 * progress - 0.743;
+        let change = -0.25 + 0.25 * progress + 0.5 * progress.powi(2);
         let result = previous_multiplier + change;
         result.clamp(1., 2.)
     }
 
     fn get_level_multiplier(level: i64) -> f64 {
         // note that this multiplier is added, not multiplied
-        if level >= 500 {
+        if level >= 700 {
             0.
-        } else if level >= 400 {
+        } else if level >= 500 {
             0.5
-        } else if level >= 300 {
+        } else if level >= 400 {
             1.
         } else {
             1.5
