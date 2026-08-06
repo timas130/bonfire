@@ -67,81 +67,88 @@ internal fun PlayerControls(
             .fillMaxSize()
             .background(Color.Black.copy(alpha = 0.35f))
     ) {
+        // the scrim stays full-bleed, only the controls dodge the cutout
         Box(
-            Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            Modifier
+                .fillMaxSize()
+                .padding(rememberDisplayCutoutPadding())
         ) {
-            if (!isBuffering) {
-                IconButton(
-                    onClick = onPlayPause,
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .background(Color.Black.copy(alpha = 0.45f))
-                        .size(64.dp)
-                ) {
-                    Icon(
-                        if (isPlaying) Icons.Default.Pause
-                        else Icons.Default.PlayArrow,
-                        contentDescription = stringResource(
-                            if (isPlaying) R.string.player_pause else R.string.player_play
-                        ),
-                        tint = Color.White,
-                        modifier = Modifier.size(36.dp)
-                    )
-                }
-            }
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopStart)
-                .padding(horizontal = 8.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            PlayerBackButton(onBack)
-            Spacer(Modifier.weight(1f))
-            Box {
-                SpeedButton(
-                    playbackSpeed = playbackSpeed,
-                    onClick = { onSpeedMenuOpenChange(true) },
-                )
-                DropdownMenu(
-                    expanded = speedMenuOpen,
-                    onDismissRequest = { onSpeedMenuOpenChange(false) }
-                ) {
-                    PLAYBACK_SPEEDS.forEach { speed ->
-                        DropdownMenuItem(
-                            text = { Text(formatSpeed(speed)) },
-                            trailingIcon = {
-                                if (speed == playbackSpeed) {
-                                    Icon(
-                                        Icons.Default.Check,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                            },
-                            onClick = { onSpeedSelected(speed) }
+            Box(
+                Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                if (!isBuffering) {
+                    IconButton(
+                        onClick = onPlayPause,
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .background(Color.Black.copy(alpha = 0.45f))
+                            .size(64.dp)
+                    ) {
+                        Icon(
+                            if (isPlaying) Icons.Default.Pause
+                            else Icons.Default.PlayArrow,
+                            contentDescription = stringResource(
+                                if (isPlaying) R.string.player_pause else R.string.player_play
+                            ),
+                            tint = Color.White,
+                            modifier = Modifier.size(36.dp)
                         )
                     }
                 }
             }
-            DownloadButton(downloading = downloading, onClick = onDownload)
-        }
 
-        PlayerSeekBar(
-            position = position,
-            duration = duration,
-            scrubbing = scrubbing,
-            scrubValue = scrubValue,
-            onScrub = onScrub,
-            onScrubFinished = onScrubFinished,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomStart)
-                .padding(start = 12.dp, end = 12.dp, top = 6.dp, bottom = 16.dp),
-        )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.TopStart)
+                    .padding(horizontal = 8.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                PlayerBackButton(onBack)
+                Spacer(Modifier.weight(1f))
+                Box {
+                    SpeedButton(
+                        playbackSpeed = playbackSpeed,
+                        onClick = { onSpeedMenuOpenChange(true) },
+                    )
+                    DropdownMenu(
+                        expanded = speedMenuOpen,
+                        onDismissRequest = { onSpeedMenuOpenChange(false) }
+                    ) {
+                        PLAYBACK_SPEEDS.forEach { speed ->
+                            DropdownMenuItem(
+                                text = { Text(formatSpeed(speed)) },
+                                trailingIcon = {
+                                    if (speed == playbackSpeed) {
+                                        Icon(
+                                            Icons.Default.Check,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    }
+                                },
+                                onClick = { onSpeedSelected(speed) }
+                            )
+                        }
+                    }
+                }
+                DownloadButton(downloading = downloading, onClick = onDownload)
+            }
+
+            PlayerSeekBar(
+                position = position,
+                duration = duration,
+                scrubbing = scrubbing,
+                scrubValue = scrubValue,
+                onScrub = onScrub,
+                onScrubFinished = onScrubFinished,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomStart)
+                    .padding(start = 12.dp, end = 12.dp, top = 6.dp, bottom = 16.dp),
+            )
+        }
     }
 }
 

@@ -142,7 +142,9 @@ internal fun VideoPlayerContent(holder: VideoPlayerModel) {
             }
             PlayerBackButton(
                 onBack = { Navigator.back() },
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
+                modifier = Modifier
+                    .padding(rememberDisplayCutoutPadding())
+                    .padding(horizontal = 8.dp, vertical = 6.dp),
             )
             return
         }
@@ -153,7 +155,9 @@ internal fun VideoPlayerContent(holder: VideoPlayerModel) {
             }
             PlayerBackButton(
                 onBack = { Navigator.back() },
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
+                modifier = Modifier
+                    .padding(rememberDisplayCutoutPadding())
+                    .padding(horizontal = 8.dp, vertical = 6.dp),
             )
             return
         }
