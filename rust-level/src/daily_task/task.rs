@@ -7,7 +7,7 @@ use rand::distr::Uniform;
 use rand::{Rng, SeedableRng};
 use rand_xoshiro::Xoshiro256PlusPlus;
 
-const NEWBIE_MAX_LEVEL: i64 = 400;
+const NEWBIE_MAX_LEVEL: i64 = 600;
 const TASK_CHANCES: &[(DailyTaskType, i32)] = &[
     (DailyTaskType::CreatePosts, 13),
     (DailyTaskType::EarnPostKarma, 18),
