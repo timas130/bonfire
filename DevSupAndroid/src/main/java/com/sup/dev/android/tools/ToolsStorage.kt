@@ -17,6 +17,7 @@ import com.sup.dev.java.libs.json.JsonParsable
 import com.sup.dev.java.tools.ToolsThreads
 import java.io.File
 import java.io.FileOutputStream
+import java.io.OutputStream
 import kotlin.reflect.KClass
 
 
@@ -245,5 +246,54 @@ object ToolsStorage {
             ?: throw RuntimeException("Can't open output stream")
         outputStream.write(bytes)
         outputStream.close()
+    }
+
+    /**
+     * Streams into the shared Movies collection instead of taking a ByteArray:
+     * a video is far too big to hold in memory the way [saveToPictures] does.
+     *
+     * On Q and up the entry stays IS_PENDING while it is written, so a failed
+     * download never shows up in the gallery. Older versions have no scoped
+     * storage, so the file is written directly and registered afterwards —
+     * the caller must hold WRITE_EXTERNAL_STORAGE there.
+     */
+    @Suppress("DEPRECATION")
+    fun saveToMovies(mime: String, extension: String, write: (OutputStream) -> Unit) {
+        val name = externalFileNamePrefix + "_" + System.currentTimeMillis()
+        val resolver = SupAndroid.appContext!!.contentResolver
+        val contentValues = ContentValues()
+        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, mime)
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)
+            dir.mkdirs()
+            val file = File(dir, "$name.$extension")
+            try {
+                FileOutputStream(file).use(write)
+            } catch (e: Exception) {
+                file.delete()
+                throw e
+            }
+            contentValues.put(MediaStore.MediaColumns.DATA, file.absolutePath)
+            resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues)
+            return
+        }
+
+        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_MOVIES)
+        contentValues.put(MediaStore.MediaColumns.IS_PENDING, 1)
+        val uri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues)
+            ?: throw RuntimeException("Can't create uri")
+        try {
+            val outputStream = resolver.openOutputStream(uri)
+                ?: throw RuntimeException("Can't open output stream")
+            outputStream.use(write)
+        } catch (e: Exception) {
+            resolver.delete(uri, null, null)
+            throw e
+        }
+        contentValues.clear()
+        contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
+        resolver.update(uri, contentValues, null, null)
     }
 }

@@ -17,9 +17,11 @@ import androidx.compose.foundation.systemGestureExclusion
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Speed
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -51,8 +53,10 @@ internal fun PlayerControls(
     scrubValue: Float,
     playbackSpeed: Float,
     speedMenuOpen: Boolean,
+    downloading: Boolean,
     onPlayPause: () -> Unit,
     onBack: () -> Unit,
+    onDownload: () -> Unit,
     onSpeedMenuOpenChange: (Boolean) -> Unit,
     onSpeedSelected: (Float) -> Unit,
     onScrub: (Float) -> Unit,
@@ -123,6 +127,7 @@ internal fun PlayerControls(
                     }
                 }
             }
+            DownloadButton(downloading = downloading, onClick = onDownload)
         }
 
         PlayerSeekBar(
@@ -148,6 +153,25 @@ internal fun PlayerBackButton(onBack: () -> Unit, modifier: Modifier = Modifier)
             contentDescription = stringResource(R.string.player_back),
             tint = Color.White
         )
+    }
+}
+
+@Composable
+private fun DownloadButton(downloading: Boolean, onClick: () -> Unit) {
+    IconButton(onClick = onClick, enabled = !downloading) {
+        if (downloading) {
+            CircularProgressIndicator(
+                color = Color.White,
+                strokeWidth = 2.dp,
+                modifier = Modifier.size(20.dp),
+            )
+        } else {
+            Icon(
+                Icons.Default.Download,
+                contentDescription = stringResource(R.string.player_download),
+                tint = Color.White,
+            )
+        }
     }
 }
 
@@ -255,8 +279,10 @@ private fun PlayerControlsPreview() {
             scrubValue = 0f,
             playbackSpeed = 1f,
             speedMenuOpen = false,
+            downloading = false,
             onPlayPause = {},
             onBack = {},
+            onDownload = {},
             onSpeedMenuOpenChange = {},
             onSpeedSelected = {},
             onScrub = {},

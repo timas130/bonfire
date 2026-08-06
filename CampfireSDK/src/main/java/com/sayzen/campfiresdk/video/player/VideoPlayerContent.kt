@@ -259,11 +259,16 @@ internal fun VideoPlayerContent(holder: VideoPlayerModel) {
                 scrubValue = scrubValue,
                 playbackSpeed = holder.playbackSpeed,
                 speedMenuOpen = speedMenuOpen,
+                downloading = holder.downloading,
                 onPlayPause = {
                     holder.togglePlayPause()
                     controlsVisible = true
                 },
                 onBack = { Navigator.back() },
+                onDownload = {
+                    holder.download()
+                    controlsVisible = true
+                },
                 onSpeedMenuOpenChange = { open ->
                     speedMenuOpen = open
                     if (open) controlsVisible = true

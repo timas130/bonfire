@@ -111,7 +111,9 @@
     <string name="player_play">Відтворити</string>
     <string name="player_pause">Пауза</string>
     <string name="player_speed">Швидкість відтворення</string>
+    <string name="player_download">Завантажити відео</string>
     <string name="player_skip_seconds">%1$dс</string>
+    <string name="video_download_failed">Не вдалося завантажити відео</string>
     <string name="video_upload_title">Завантаження відео</string>
     <string name="video_upload_preparing">Перевірка відео…</string>
     <string name="video_upload_uploading">Завантаження…</string>

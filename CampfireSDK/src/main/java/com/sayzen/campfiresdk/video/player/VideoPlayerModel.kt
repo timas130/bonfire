@@ -10,8 +10,17 @@ import androidx.media3.datasource.HttpDataSource
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
+import com.dzen.campfire.api.API_TRANSLATE
+import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerVideos
+import com.sayzen.campfiresdk.controllers.t
+import com.sayzen.campfiresdk.video.VideoDownloader
 import com.sayzen.campfiresdk.video.VideoRepository
+import com.sup.dev.android.app.SupAndroid
+import com.sup.dev.android.tools.ToolsResources
+import com.sup.dev.android.tools.ToolsToast
+import com.sup.dev.java.libs.debug.err
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -39,6 +48,9 @@ class VideoPlayerModel(
     var playbackSpeed by mutableFloatStateOf(1f)
         private set
 
+    var downloading by mutableStateOf(false)
+        private set
+
     var position by mutableLongStateOf(0L)
     var duration by mutableLongStateOf(0L)
 
@@ -46,6 +58,7 @@ class VideoPlayerModel(
 
     private var reresolvedOnExpiry = false
     private var loadJob: Job? = null
+    private var downloadJob: Job? = null
 
     private val listener = object : Player.Listener {
         override fun onIsPlayingChanged(playing: Boolean) {
@@ -154,10 +167,33 @@ class VideoPlayerModel(
         if (d > 0 && d != duration) duration = d
     }
 
+    fun download() {
+        if (downloadJob?.isActive == true) return
+        downloadJob = scope.launch {
+            downloading = true
+            ToolsToast.show(t(API_TRANSLATE.app_downloading))
+            try {
+                VideoDownloader.download(videoId)
+                ToolsToast.show(t(API_TRANSLATE.app_downloaded))
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                err(e)
+                ToolsToast.show(
+                    if (e is VideoDownloader.PermissionException) SupAndroid.TEXT_ERROR_PERMISSION_FILES
+                    else ToolsResources.s(R.string.video_download_failed)
+                )
+            } finally {
+                downloading = false
+            }
+        }
+    }
+
     fun release() {
         if (released) return
         released = true
         loadJob?.cancel()
+        downloadJob?.cancel()
         player?.removeListener(listener)
         player?.release()
         player = null

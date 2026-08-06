@@ -120,7 +120,9 @@
     <string name="player_play">Воспроизвести</string>
     <string name="player_pause">Пауза</string>
     <string name="player_speed">Скорость воспроизведения</string>
+    <string name="player_download">Скачать видео</string>
     <string name="player_skip_seconds">%1$dс</string>
+    <string name="video_download_failed">Не удалось скачать видео</string>
     <string name="video_upload_title">Загрузка видео</string>
     <string name="video_upload_preparing">Проверка видео…</string>
     <string name="video_upload_uploading">Загрузка…</string>
