@@ -16,9 +16,11 @@ pub struct Thumbnail {
 /// Grab a thumbnail from the encoded output
 pub fn thumbnail(encoded: &Path, duration_ms: i64) -> anyhow::Result<Thumbnail> {
     let src = quoted(encoded)?;
+    // we have to videoconvert the color twice so the colors get shown properly.
     let pipeline_str = format!(
         "filesrc location={src} ! decodebin3 ! videoconvert ! videoscale ! \
-         video/x-raw,format=I420,pixel-aspect-ratio=1/1 ! \
+         video/x-raw,format=RGB,pixel-aspect-ratio=1/1 ! videoconvert ! \
+         video/x-raw,format=I420,colorimetry=(string)1:4:7:1 ! \
          jpegenc quality=85 snapshot=true ! appsink name=sink"
     );
 
