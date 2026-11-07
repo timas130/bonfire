@@ -18,6 +18,7 @@ import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsBitmap
+import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.screens.SCrop
 import com.sup.dev.android.views.settings.SettingsField
 import com.sup.dev.android.views.splash.SplashChooseImage
@@ -85,6 +86,8 @@ class SStickersPackCreate(
                 Navigator.to(SStickersView(r.stickersPack, 0))
                 Navigator.remove(this)
                 EventBus.post(EventStickersPackCreate(r.stickersPack))
+            }.onApiError(RStickersPackCreate.E_TOO_MANY) {
+                ToolsToast.show(t(API_TRANSLATE.stickers_message_too_many_paskc))
             }
         }else{
             ApiRequestsSupporter.executeProgressDialog(RStickersPackChange(publication.id, name, image)) { r ->
