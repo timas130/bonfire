@@ -23,7 +23,6 @@ import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.PostList
 import com.sayzen.campfiresdk.models.cards.CardPublication
 import com.sayzen.campfiresdk.models.events.account.EventAccountChanged
-import com.sayzen.campfiresdk.models.events.account.EventAccountStatusChanged
 import com.sayzen.campfiresdk.models.events.publications.EventPostPinedProfile
 import com.sayzen.campfiresdk.models.splashs.SplashAdminBlock
 import com.sayzen.campfiresdk.screens.administation.SAdministrationDeepBlocked
@@ -422,7 +421,6 @@ class SProfile private constructor(
                 .setOnEnter(t(API_TRANSLATE.app_remove)) { w, comment ->
                     ApiRequestsSupporter.executeEnabled(w, RAccountsRemoveName(xAccount.getId(), comment)) {
                         ToolsToast.show(t(API_TRANSLATE.app_done))
-                        EventBus.post(EventAccountChanged(xAccount.getId(), "User#" + xAccount.getId(), xAccount.getImage()))
                     }
                 }
                 .asSheetShow()
@@ -443,7 +441,6 @@ class SProfile private constructor(
                 .setOnEnter(t(API_TRANSLATE.app_change)) { dialog, name, comment ->
                     ApiRequestsSupporter.executeEnabled(dialog, RAccountsAdminChangeName(xAccount.getId(), name, comment)) {
                         ToolsToast.show(t(API_TRANSLATE.app_done))
-                        EventBus.post(EventAccountChanged(xAccount.getId(), name))
                     }.onApiError(RAccountsAdminChangeName.E_LOGIN_NOT_ENABLED) {
                         ToolsToast.show(t(API_TRANSLATE.error_login_taken))
                     }
@@ -483,7 +480,6 @@ class SProfile private constructor(
                 .setOnEnter(t(API_TRANSLATE.app_remove)) { w, comment ->
                     ApiRequestsSupporter.executeEnabled(w, RAccountsAdminStatusRemove(xAccount.getId(), comment)) {
                         ToolsToast.show(t(API_TRANSLATE.app_done))
-                        EventBus.post(EventAccountStatusChanged(xAccount.getId(), ""))
                     }
                 }
                 .asSheetShow()

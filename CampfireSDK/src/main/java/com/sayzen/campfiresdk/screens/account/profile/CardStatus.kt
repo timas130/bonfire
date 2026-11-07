@@ -157,7 +157,6 @@ class CardStatus(
                 .setOnEnter(t(API_TRANSLATE.app_remove)) { w, comment ->
                     ApiRequestsSupporter.executeEnabled(w, RAccountsAdminStatusRemove(xAccount.getId(), comment)) {
                         ToolsToast.show(t(API_TRANSLATE.app_done))
-                        EventBus.post(EventAccountStatusChanged(xAccount.getId(), ""))
                     }
                 }
                 .asSheetShow()
