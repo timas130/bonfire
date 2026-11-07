@@ -82,6 +82,13 @@ fun VerifyEmailScreen(
         isResendingVerification = false
     }
 
+    var emailChangeOpen by remember { mutableStateOf(false) }
+    EmailChangeSheet(
+        open = emailChangeOpen,
+        close = { emailChangeOpen = false },
+        onChange = {},
+    )
+
     FormScreen(
         title = stringResource(R.string.verify_email_title),
         snackbarHostState = snackbarHostState,
@@ -121,6 +128,9 @@ fun VerifyEmailScreen(
             isLoading = isResendingVerification
         ) {
             Text(stringResource(R.string.resend_verification_button))
+        }
+        TextButton(onClick = { emailChangeOpen = true }) {
+            Text(stringResource(R.string.security_email_change_title))
         }
         TextButton(onClick = {
             scope.launch {

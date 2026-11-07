@@ -1,5 +1,6 @@
 use crate::AuthServer;
 use c_core::prelude::anyhow;
+use c_core::prelude::chrono::{Duration, Utc};
 use c_core::prelude::tarpc::context;
 use c_core::services::auth::jwt::TokenClaims;
 use c_core::services::auth::AuthError;
@@ -22,7 +23,7 @@ impl AuthServer {
         access_token: String,
         new_email: String,
     ) -> Result<(), AuthError> {
-        let access_token = self.get_access_token_info_secure(access_token).await?;
+        let access_token = self.get_access_token_info_unverified(access_token).await?;
 
         if !Self::is_email_valid(&new_email) {
             return Err(AuthError::InvalidEmail);
@@ -51,14 +52,25 @@ impl AuthServer {
         .fetch_one(&mut *tx)
         .await?;
 
-        if current_user.email.is_some() && current_user.email_verified.is_none() {
-            return Err(AuthError::NotVerified);
+        if current_user.email_verified.is_none() {
+            if let Some(sent) = current_user.email_verification_sent {
+                let time_passed = Utc::now() - sent;
+                if time_passed < Duration::seconds(60) {
+                    tx.rollback().await?;
+                    return Err(AuthError::TryAgainLater(
+                        (Duration::seconds(60) - time_passed)
+                            .num_seconds()
+                            .try_into()
+                            .map_err(anyhow::Error::from)?,
+                    ));
+                }
+            }
         }
 
         self.send_verification_email(new_email.clone(), current_user.username.clone())
             .await?;
 
-        if let Some(email) = current_user.email {
+        if let (Some(email), Some(_)) = (current_user.email, current_user.email_verified) {
             let cancel_email_change_token =
                 self.gen_cancel_email_change_token(access_token.user_id, &email)?;
             let prefix = &self.base.config.urls.cancel_email_change_link;

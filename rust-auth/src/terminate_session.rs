@@ -17,6 +17,22 @@ impl AuthServer {
         &self,
         access_token: String,
     ) -> Result<AccessTokenInfo, AuthError> {
+        self.get_access_token_info(access_token, true).await
+    }
+
+    /// Same as [`Self::get_access_token_info_secure`], but also accepts an unverified email
+    pub(crate) async fn get_access_token_info_unverified(
+        &self,
+        access_token: String,
+    ) -> Result<AccessTokenInfo, AuthError> {
+        self.get_access_token_info(access_token, false).await
+    }
+
+    async fn get_access_token_info(
+        &self,
+        access_token: String,
+        require_verified: bool,
+    ) -> Result<AccessTokenInfo, AuthError> {
         let access_token = jsonwebtoken::decode::<TokenClaims>(
             &access_token,
             &self.base.jwt_decoding_key,
@@ -52,7 +68,7 @@ impl AuthServer {
             None => return Err(AuthError::InvalidToken),
         };
 
-        if session.email_verified.is_none() {
+        if require_verified && session.email_verified.is_none() {
             return Err(AuthError::NotVerified);
         }
         if session.hard_banned {
