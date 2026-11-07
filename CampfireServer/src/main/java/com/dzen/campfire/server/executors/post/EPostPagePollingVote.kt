@@ -42,6 +42,7 @@ class EPostPagePollingVote : RPostPagePollingVote(0, 0, 0, 0, 0) {
         val (polling, dateCreate) = getPolling(sourceType, sourceId, sourceIdSub, pollingId, rejectDrafts = true)
             ?: throw ApiException(API.ERROR_GONE)
 
+        if (itemId < 0 || itemId >= polling.options.size) throw ApiException(API.ERROR_GONE)
         if (polling.minLevel > apiAccount.accessTag) throw ApiException(E_LOW_LEVEL)
         if (polling.minKarma > apiAccount.accessTagSub) throw ApiException(E_LOW_KARMA)
         val days = (System.currentTimeMillis() - apiAccount.dateCreate) / (3600000L * 24) + 1

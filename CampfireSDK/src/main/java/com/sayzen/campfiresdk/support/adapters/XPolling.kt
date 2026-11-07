@@ -92,7 +92,7 @@ class XPolling(
                 override fun classOfCard(): KClass<CardAccount> = CardAccount::class
                 override fun map(item: RPostPagePollingGetVotes.PollingResultsItem): CardAccount {
                     val card = CardAccount(item.account)
-                    card.setSubtitle(page.options[item.itemId.toInt()])
+                    card.setSubtitle(page.options.getOrNull(item.itemId.toInt()).orEmpty())
                     return card
                 }
             }

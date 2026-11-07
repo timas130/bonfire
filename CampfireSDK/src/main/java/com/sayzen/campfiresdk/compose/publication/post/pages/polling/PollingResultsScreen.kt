@@ -156,7 +156,7 @@ private fun PollingResultsScreenC(
                 },
                 supportingContent = {
                     Text(
-                        item?.itemId?.let { page.options[it.toInt()] } ?: "...........",
+                        item?.itemId?.let { page.options.getOrNull(it.toInt()).orEmpty() } ?: "...........",
                         Modifier.shimmerExt(item == null, shimmer),
                     )
                 },

@@ -94,7 +94,9 @@ class PollingModel(val page: PagePolling, val source: PagesSource) {
     }
 
     val totalVotes: StateFlow<Long>
-        get() = data.mapState { pollData -> pollData?.results?.sumOf { it.count } ?: 0L }
+        get() = data.mapState { pollData ->
+            pollData?.results?.filter { it.itemId >= 0 && it.itemId < page.options.size }?.sumOf { it.count } ?: 0L
+        }
 
     fun getCanVote(account: Account = ControllerApi.account.getAccount()): Boolean {
         return account.lvl >= page.minLevel &&
