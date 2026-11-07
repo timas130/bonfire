@@ -69,7 +69,7 @@ class CardPageDownload(
                             return@intoBytes
                         }
 
-                        ToolsPermission.requestWritePermission {
+                        ToolsPermission.requestWritePermission({
                             val dProgress2 = ToolsView.showProgressDialog(t(API_TRANSLATE.app_downloading))
                             ToolsThreads.thread {
                                 val unpacked = try {
@@ -85,7 +85,9 @@ class CardPageDownload(
                                     ToolsToast.show(t(if (unpacked) API_TRANSLATE.app_done else API_TRANSLATE.error_unknown))
                                 }
                             }
-                        }
+                        }, {
+                            ToolsToast.show(t(API_TRANSLATE.error_permission_files))
+                        })
                     }
                 }
                 .asSheetShow()
