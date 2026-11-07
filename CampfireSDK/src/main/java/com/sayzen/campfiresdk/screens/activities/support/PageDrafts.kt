@@ -60,6 +60,7 @@ class PageDrafts(
                     .setHint(t(API_TRANSLATE.activities_support_sum))
                     .setOnCancel(t(API_TRANSLATE.app_cancel))
                     .setInputType(EditorInfo.TYPE_NUMBER_FLAG_SIGNED)
+                    .addChecker { it.toDoubleOrNull() != null }
                     .setOnEnter(t(API_TRANSLATE.app_add)) { w, sum ->
                         ApiRequestsSupporter.executeEnabled(w, RProjectSupportAdd(accountId, (sum.toDouble() * 100).toLong())) {
                             ToolsToast.show(t(API_TRANSLATE.app_done))
