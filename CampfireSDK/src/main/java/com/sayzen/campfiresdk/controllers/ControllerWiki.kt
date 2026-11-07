@@ -60,6 +60,7 @@ object ControllerWiki {
                     wikiTitle.itemId,
                     it.itemId,
             )) { _ ->
+                wikiTitle.parentItemId = it.itemId
                 // fixme: only refresh necessary SWikiLists
                 EventBus.post(EventWikiListChanged(null))
             }
