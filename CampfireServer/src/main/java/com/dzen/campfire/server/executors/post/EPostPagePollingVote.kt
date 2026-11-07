@@ -10,13 +10,14 @@ import com.dzen.campfire.server.controllers.*
 
 class EPostPagePollingVote : RPostPagePollingVote(0, 0, 0, 0, 0) {
     companion object {
-        fun getPolling(sourceType: Long, sourceId: Long, sourceIdSub: Long, pollingId: Long): Pair<PagePolling, Long>? {
+        fun getPolling(sourceType: Long, sourceId: Long, sourceIdSub: Long, pollingId: Long, rejectDrafts: Boolean = false): Pair<PagePolling, Long>? {
             var pages: Array<Page> = emptyArray()
             var dateCreate = 0L
 
             if (sourceType == API.PAGES_SOURCE_TYPE_POST || sourceType == 0L /*Обратная совместимость*/) {
                 val publication = ControllerPublications.getPublication(sourceId, 0)
                 if (publication == null || publication !is PublicationPost) throw ApiException(API.ERROR_GONE)
+                if (rejectDrafts && publication.isDraft) throw ApiException(API.ERROR_GONE)
                 pages = publication.pages
                 dateCreate = publication.dateCreate
             }
@@ -38,7 +39,7 @@ class EPostPagePollingVote : RPostPagePollingVote(0, 0, 0, 0, 0) {
     @Throws(ApiException::class)
     override fun check() {
         ControllerAccounts.checkAccountBanned(apiAccount.id)
-        val (polling, dateCreate) = getPolling(sourceType, sourceId, sourceIdSub, pollingId)
+        val (polling, dateCreate) = getPolling(sourceType, sourceId, sourceIdSub, pollingId, rejectDrafts = true)
             ?: throw ApiException(API.ERROR_GONE)
 
         if (polling.minLevel > apiAccount.accessTag) throw ApiException(E_LOW_LEVEL)

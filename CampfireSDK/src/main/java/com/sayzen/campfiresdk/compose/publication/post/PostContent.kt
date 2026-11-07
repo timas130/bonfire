@@ -134,11 +134,12 @@ internal fun PostContent(
         PostPagesModel(onExpand = onExpand)
     }
 
-    val pagesSource = remember(post.id) {
+    val pagesSource = remember(post.id, post.isDraft) {
         PagesSource(
             sourceType = API.PAGES_SOURCE_TYPE_POST,
             sourceId = post.id,
             sourceDateCreate = post.dateCreate,
+            editMode = post.isDraft,
         )
     }
 
