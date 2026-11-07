@@ -345,7 +345,7 @@ class FieldLogic(
 
     private fun sendLink(text: String, parentId: Long, send: Boolean) {
         val dialog = ToolsView.showProgressDialog()
-        ToolsNetwork.getBytesFromURL(text, 10) { bytes ->
+        ToolsNetwork.getBytesFromURL(text, 12) { bytes ->
             if (bytes == null || !ToolsBytes.isImage(bytes)) {
                 dialog.hide()
                 if (send) sendText(text, parentId)

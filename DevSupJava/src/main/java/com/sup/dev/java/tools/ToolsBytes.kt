@@ -4,7 +4,11 @@ import java.util.*
 object ToolsBytes {
 
     fun isImage(bytes: ByteArray): Boolean {
-        return isGif(bytes) || isJpg(bytes) || isPng(bytes)
+        return isGif(bytes) || isJpg(bytes) || isPng(bytes) || isWebp(bytes)
+    }
+
+    fun isWebp(bytes: ByteArray?): Boolean {
+        return if (bytes == null || bytes.size < 12) false else bytes[0].toInt() == 82 && bytes[1].toInt() == 73 && bytes[2].toInt() == 70 && bytes[3].toInt() == 70 && bytes[8].toInt() == 87 && bytes[9].toInt() == 69 && bytes[10].toInt() == 66 && bytes[11].toInt() == 80
     }
 
     fun isGif(bytes: ByteArray?): Boolean {
