@@ -70,6 +70,7 @@ class FieldLogic(
     private var quoteText = ""
     private var quoteId = 0L
     private var voiceBytes: ByteArray? = null
+    private var sendingImage = false
 
     private var newFormatting = true
 
@@ -360,17 +361,21 @@ class FieldLogic(
     }
 
     private fun sendImage(text: String, parentId: Long) {
+        if (sendingImage) return
+        sendingImage = true
         ToolsThreads.thread {
             val bytes = attach.getBytes()
             val gif = if (bytes.size == 1 && ToolsBytes.isGif(bytes[0])) bytes[0] else null
             if (gif != null) {
                 val bt = ToolsBitmap.decode(bytes[0])
                 if (bt == null) {
+                    ToolsThreads.main { sendingImage = false }
                     ToolsToast.show(t(API_TRANSLATE.error_cant_load_image))
                     return@thread
                 }
                 val byt = ToolsBitmap.toBytes(bt, API.CHAT_MESSAGE_IMAGE_WEIGHT)
                 if (byt == null) {
+                    ToolsThreads.main { sendingImage = false }
                     ToolsToast.show(t(API_TRANSLATE.error_cant_load_image))
                     return@thread
                 }
@@ -381,6 +386,7 @@ class FieldLogic(
             if(parentId > 0 && publicationAnswer != null) if(getText().trim() == publicationAnswer!!.creator.name+",") textV = ""
 
             ToolsThreads.main {
+                sendingImage = false
                 val quoteIdV = quoteId
                 beforeSend()
                 screen.addCard(CardSending(screen, RChatMessageCreate(screen.chat.tag, textV, bytes, gif, null, parentId, quoteIdV, 0, newFormatting)))
