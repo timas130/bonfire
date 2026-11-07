@@ -45,7 +45,7 @@ fun EmailLoginScreen(
         scope.launch {
             try {
                 isLoading = true
-                EmailAuthFlow(context, email, password).start()
+                EmailAuthFlow(context, email.trim(), password).start()
                 onLogin()
             } catch (e: AuthFlow.AuthException) {
                 e.printStackTrace()

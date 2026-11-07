@@ -45,7 +45,7 @@ fun EmailRegisterScreen(onRegister: () -> Unit) {
 
             try {
                 isLoading = true
-                RegisterEmailFlow(context, email, password).start()
+                RegisterEmailFlow(context, email.trim(), password).start()
                 onRegister()
             } catch (e: AuthFlow.AuthException) {
                 e.printStackTrace()

@@ -76,7 +76,8 @@ fun EmailChangeSheet(open: Boolean, close: () -> Unit, onChange: () -> Unit) {
     val submit = suspend {
         try {
             isLoading = true
-            val resp = apollo.mutation(ChangeEmailMutation(newEmail)).execute()
+            val email = newEmail.trim()
+            val resp = apollo.mutation(ChangeEmailMutation(email)).execute()
             if (resp.hasErrors()) {
                 val error = AuthFlow.AuthException.fromError(resp.errors!!.first())
                 ToolsToast.show(error.toUiString(context))
@@ -87,7 +88,7 @@ fun EmailChangeSheet(open: Boolean, close: () -> Unit, onChange: () -> Unit) {
                 val currentAuthState = AuthController.authState.first() ?: AuthController.NoneAuthState
                 AuthController.saveAuthState(
                     when (currentAuthState) {
-                        is AuthController.AuthenticatedAuthState -> currentAuthState.copy(email = newEmail)
+                        is AuthController.AuthenticatedAuthState -> currentAuthState.copy(email = email)
                         else -> currentAuthState
                     }
                 )

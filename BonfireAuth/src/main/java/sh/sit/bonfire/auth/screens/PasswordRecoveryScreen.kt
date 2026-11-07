@@ -35,7 +35,7 @@ fun PasswordRecoveryScreen(
     val submit = suspend {
         try {
             isLoading = true
-            SendPasswordRecoveryFlow(context, email).start()
+            SendPasswordRecoveryFlow(context, email.trim()).start()
             onSubmit()
         } catch (e: AuthFlow.AuthException) {
             e.printStackTrace()
