@@ -30,7 +30,8 @@ class EChatTyping : RChatTyping(ChatTag()) {
             if (ControllerCollisions.checkCollisionExist(tag.getAnotherId(), apiAccount.id, API.COLLISION_ACCOUNT_BLACK_LIST_ACCOUNT)) return Response()
             ControllerNotifications.push(tag.getAnotherId(), n)
         } else  {
-            ControllerNotifications.push(ControllerChats.getChatSubscribersIdsWithTokensNotDeleted(tag, apiAccount.id), n)
+            val blacklistedBy = ControllerCollisions.getCollisionsOwnerIds(apiAccount.id, API.COLLISION_ACCOUNT_BLACK_LIST_ACCOUNT).toLongArray()
+            ControllerNotifications.push(ControllerChats.getChatSubscribersIdsWithTokensNotDeleted(tag, apiAccount.id, *blacklistedBy), n)
         }
 
         return Response()
