@@ -131,17 +131,23 @@ open class Settings @JvmOverloads constructor(
     fun addSubSettings(settings: Settings) {
         if (subSettings == null) subSettings = ArrayList()
         subSettings!!.add(settings)
-        settings.isEnabled = isSubSettingsEnabled && isEnabled
+        settings.isEnabled = isSubSettingEnabledNow()
     }
 
     fun setReversSubSettingsEnabled(reversSubSettingsEnabled: Boolean) {
         this.reversSubSettingsEnabled = reversSubSettingsEnabled
-        setEnabledSubSettings(isEnabled)
+        updateSubSettings()
     }
 
     fun setEnabledSubSettings(enabled: Boolean) {
         isSubSettingsEnabled = enabled
-        if (subSettings != null) for (settings in subSettings!!) settings.isEnabled = if (reversSubSettingsEnabled) !(isSubSettingsEnabled && isEnabled) else (isSubSettingsEnabled && isEnabled)
+        updateSubSettings()
+    }
+
+    private fun isSubSettingEnabledNow() = isEnabled && (if (reversSubSettingsEnabled) !isSubSettingsEnabled else isSubSettingsEnabled)
+
+    private fun updateSubSettings() {
+        if (subSettings != null) for (settings in subSettings!!) settings.isEnabled = isSubSettingEnabledNow()
     }
 
     fun setLineVisible(b: Boolean) {
@@ -158,8 +164,7 @@ open class Settings @JvmOverloads constructor(
         view.isEnabled = enabled
         vTitle?.isEnabled = enabled
         vSubtitle?.isEnabled = enabled
-        setEnabledSubSettings(enabled)
-        if (subSettings != null) for (settings in subSettings!!) settings.isEnabled = isSubSettingsEnabled && isEnabled
+        updateSubSettings()
     }
 
     override fun setOnClickListener(l: OnClickListener?) {
