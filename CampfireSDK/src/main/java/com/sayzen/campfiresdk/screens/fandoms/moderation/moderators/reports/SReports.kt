@@ -35,7 +35,7 @@ class SReports(
         adapter.setBottomLoader { onLoad, cards ->
             RPublicationsReportedGetAll(fandomId, arrayOf(languageId), cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.publications) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }
