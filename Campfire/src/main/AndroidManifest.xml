@@ -25,7 +25,7 @@
         <activity
             android:name="com.dzen.campfire.app.AppActivity"
             android:launchMode="singleInstance"
-            android:configChanges="orientation|screenSize|uiMode"
+            android:configChanges="orientation|screenSize|uiMode|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation|density|fontScale"
             android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:enableOnBackInvokedCallback="false">
