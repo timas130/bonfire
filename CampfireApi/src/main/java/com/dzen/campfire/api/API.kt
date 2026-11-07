@@ -382,7 +382,7 @@ class API(
         val ACHI_LANGUAGE = AchievementInfo(40, 3 * 5, 1)
         val ACHI_TITLE_IMAGE = AchievementInfo(41, 3 * 5, 1)
         val ACHI_CREATE_TAG = AchievementInfo(42, 3 * 5, 1)
-        val ACHI_QUESTS = AchievementInfo(43, 1, *IntArray(2000) { it + 1 })
+        val ACHI_QUESTS = AchievementInfo(43, 1, *IntArray(10000) { it + 1 })
         val ACHI_FANDOMS = AchievementInfo(44, 5, 1, 5, 10, 20)
         val ACHI_RULES_USER = AchievementInfo(45, 4 * 5, 1)
         val ACHI_RULES_MODERATOR = AchievementInfo(46, 2 * 5, 1)
