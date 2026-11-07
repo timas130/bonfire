@@ -102,7 +102,10 @@ open class CardComment(
     @SuppressLint("SetTextI18n")
     override fun bindView(view: View) {
         if (updateBlacklisted(view)) {
-            view.findViewById<ViewSwipe?>(R.id.vSwipe)?.swipeEnabled = false
+            val vSwipe = view.findViewById<ViewSwipe?>(R.id.vSwipe)
+            vSwipe?.swipeEnabled = false
+            vSwipe?.onClick = {}
+            vSwipe?.onLongClick = {}
             return
         } else {
             view.findViewById<ViewSwipe?>(R.id.vSwipe)?.swipeEnabled = true

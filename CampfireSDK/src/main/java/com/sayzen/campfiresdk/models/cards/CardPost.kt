@@ -229,7 +229,10 @@ class CardPost(
     }
 
     override fun bindView(view: View) {
-        if (updateBlacklisted(view)) return
+        if (updateBlacklisted(view)) {
+            view.setOnClickListener(null)
+            return
+        }
 
         super.bindView(view)
         val publication = xPublication.publication as PublicationPost

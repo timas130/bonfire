@@ -137,7 +137,10 @@ open class CardChatMessage constructor(
     //
 
     override fun bindView(view: View) {
-        if (updateBlacklisted(view)) return
+        if (updateBlacklisted(view)) {
+            clearRecycledState(view)
+            return
+        }
 
         super.bindView(view)
 
@@ -174,6 +177,20 @@ open class CardChatMessage constructor(
         updateImages()
         updateVoice()
         updateSticker()
+    }
+
+    private fun clearRecycledState(view: View) {
+        val vSwipe: ViewSwipe = view.findViewById(R.id.vSwipe) ?: return
+        vSwipe.onClick = {}
+        vSwipe.onLongClick = {}
+        vSwipe.onSwipe = {}
+        vSwipe.swipeEnabled = false
+
+        val vAlertContainer: View? = vSwipe.findViewById(R.id.vAlertContainer)
+        if (vAlertContainer != null) {
+            vSwipe.removeView(vAlertContainer)
+            putViewToCash("alert", vAlertContainer)
+        }
     }
 
     fun updateAlert() {
