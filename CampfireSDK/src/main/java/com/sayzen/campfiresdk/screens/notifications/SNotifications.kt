@@ -117,7 +117,7 @@ class SNotifications private constructor() : SLoadingRecycler<CardNotification, 
     }
 
     private fun onNotification(e: EventNotification) {
-        if (!e.notification.isShadow() && ControllerNotifications.canShowByFilter(e.notification)) {
+        if (!e.notification.isShadow() && ControllerNotifications.notificationsFilterEnabled(e.notification.getType())) {
             adapter.addWithHashTop(map(e.notification))
         }
     }
