@@ -30,7 +30,7 @@ class EPublicationsReportedGetAll : RPublicationsReportedGetAll(0, emptyArray(),
 
         if (fandomId > 0 && languagesIds.size == 1) {
             select.where(TPublications.fandom_id, "=", fandomId)
-            select.where(TPublications.language_id, "=", languagesIds.get(0))
+            select.where(SqlWhere.WhereString("(${TPublications.language_id}=${languagesIds.get(0)} OR (${TPublications.language_id}=-1 AND ${TPublications.publication_type}=${API.PUBLICATION_TYPE_POST}))"))
         }else if(languagesIds.isNotEmpty()){
             select.where(SqlWhere.WhereIN(TPublications.language_id, ToolsCollections.add(0, ToolsCollections.add(-1, languagesIds))))
         }
