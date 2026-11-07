@@ -26,6 +26,7 @@ const MAX_ERROR_LEN: usize = 300;
 const CLAIM_RETRY_DELAY: Duration = Duration::from_secs(10);
 const FINISH_ATTEMPTS: u32 = 6;
 const FINISH_RETRY_DELAY: Duration = Duration::from_secs(10);
+const ENCODED_DURATION_TOLERANCE_MS: i64 = 500;
 
 // just in case?
 // I don't think the lib cleans up for us.
@@ -240,7 +241,7 @@ impl VideoServer {
         let thumb_source = encoded.clone();
         let final_info = spawn_blocking(move || probe(&thumb_source)).await??;
         // re-check the length gate against what will actually be served
-        if final_info.duration_ms > config.max_duration_ms {
+        if final_info.duration_ms > config.max_duration_ms + ENCODED_DURATION_TOLERANCE_MS {
             bail!(
                 "the encoded video is too long: {} ms (max {} ms)",
                 final_info.duration_ms,
