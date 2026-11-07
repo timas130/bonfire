@@ -44,7 +44,7 @@ class EPostRatesGetAll : RPostRatesGetAll(0, 0) {
                         TAccounts.sex,
                         TAccounts.karma_count_30))
                 .offset_count(offset, COUNT)
-                .sort(TPublicationsKarmaTransactions.NAME + "." + TPublicationsKarmaTransactions.karma_count, false))
+                .sort(TPublicationsKarmaTransactions.NAME + "." + TPublicationsKarmaTransactions.karma_count, false, TPublicationsKarmaTransactions.NAME + "." + TPublicationsKarmaTransactions.id))
 
         val array = Array(v.rowsCount) {
             val r = Rate()
