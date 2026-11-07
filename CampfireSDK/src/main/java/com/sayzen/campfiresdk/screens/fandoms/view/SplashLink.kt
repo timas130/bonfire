@@ -82,10 +82,13 @@ internal class SplashLink(
 
         textCheck = textCheck && vLink.getText().length <= API.FANDOM_LINKS_URL_MAX_L
 
+        val titleCheck = vLinkTitle.getText().length <= API.FANDOM_LINKS_TITLE_MAX_L
+        vLinkTitle.setError(if (titleCheck) null else t(API_TRANSLATE.error_too_long_text))
+
         vEnter.isEnabled = textCheck
                 && vComment.getText().length >= API.MODERATION_COMMENT_MIN_L && vComment.getText().length <= API.MODERATION_COMMENT_MAX_L
                 && vLinkTitle.getText().isNotEmpty()
-                && vLinkTitle.getText().length < API.FANDOM_LINKS_TITLE_MAX_L
+                && titleCheck
 
         if (!force) {
             when {
