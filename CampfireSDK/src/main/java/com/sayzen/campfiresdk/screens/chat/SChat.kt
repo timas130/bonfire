@@ -350,7 +350,7 @@ class SChat constructor(
         }
         if (!found) {
             scrollToMessageId = messageId
-            if (messageId > cards.get(cards.size - 1).xPublication.publication.id) {
+            if (cards.isEmpty() || messageId > cards.get(cards.size - 1).xPublication.publication.id) {
                 adapter.loadBottom()
             } else {
                 adapter.loadTop()
