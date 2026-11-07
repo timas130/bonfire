@@ -128,7 +128,8 @@ internal fun VideoPlayerContent(holder: VideoPlayerModel) {
             }
             AndroidView(
                 factory = { playerView },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                update = { it.keepScreenOn = holder.isPlaying || holder.isBuffering }
             )
         }
 
