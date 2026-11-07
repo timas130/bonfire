@@ -13,6 +13,7 @@ class EQuestsGetDrafts : RQuestsGetDrafts(0) {
             .where(TPublications.creator_id, "=", apiAccount.id)
             .where(TPublications.status, "=", API.STATUS_DRAFT)
             .where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_QUEST)
+            .sort(TPublications.date_create, false, TPublications.id)
             .offset_count(offset, COUNT)
         val v = ControllerPublications.parseSelect(
             Database.select("EQuestsGetDrafts", select)

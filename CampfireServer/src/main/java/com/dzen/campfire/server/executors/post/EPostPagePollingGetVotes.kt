@@ -29,6 +29,7 @@ class EPostPagePollingGetVotes : RPostPagePollingGetVotes(0, 0, 0, 0, 0) {
         )
             .where(TCollisions.collision_type, "=", API.COLLISION_PAGE_POLLING_VOTE)
             .where(TCollisions.collision_id, "=", pollingId)
+            .sort(TCollisions.id, true)
             .count(30)
             .offset(offset.toLong()))
 

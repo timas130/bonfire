@@ -24,6 +24,7 @@ class EFandomsSubscribersGetAll : RFandomsSubscribersGetAll(0, 0, 0) {
                 .where(TCollisions.value_1, "<>", API.PUBLICATION_IMPORTANT_NONE)
                 .where(TAccounts.NAME +"." + TAccounts.id, "=", TCollisions.owner_id)
                 .join(ControllerAccounts.instanceSelect())
+                .sort(TCollisions.NAME + "." + TCollisions.id, true)
                 .offset_count(offset, COUNT))
 
        return Response(ControllerAccounts.parseSelect(v))

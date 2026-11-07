@@ -107,7 +107,7 @@ object ControllerAccounts {
         val selectIds = SqlQuerySelect(TCollisions.NAME, TCollisions.collision_id)
             .where(TCollisions.owner_id, "=", accountId)
             .where(TCollisions.collision_type, "=", API.COLLISION_ACCOUNT_FOLLOW)
-        if (count > 0) selectIds.offset_count(offset, count)
+        if (count > 0) selectIds.sort(TCollisions.id, true).offset_count(offset, count)
 
         val vIds = Database.select("ControllerAccounts getFollowsIds", selectIds)
         return Array(vIds.rowsCount) { vIds.next<Long>() }
@@ -117,7 +117,7 @@ object ControllerAccounts {
         val selectIds = SqlQuerySelect(TCollisions.NAME, TCollisions.owner_id)
             .where(TCollisions.collision_id, "=", accountId)
             .where(TCollisions.collision_type, "=", API.COLLISION_ACCOUNT_FOLLOW)
-        if (count > 0) selectIds.offset_count(offset, count)
+        if (count > 0) selectIds.sort(TCollisions.id, true).offset_count(offset, count)
 
         val vIds = Database.select("ControllerAccounts getFollowersIds", selectIds)
         return Array(vIds.rowsCount) { vIds.next<Long>() }

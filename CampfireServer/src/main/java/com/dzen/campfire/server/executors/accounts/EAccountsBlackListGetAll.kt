@@ -19,6 +19,7 @@ class EAccountsBlackListGetAll : RAccountsBlackListGetAll(0, 0) {
         val selectIds = SqlQuerySelect(TCollisions.NAME, TCollisions.collision_id)
                 .where(TCollisions.collision_type, "=", API.COLLISION_ACCOUNT_BLACK_LIST_ACCOUNT)
                 .where(TCollisions.owner_id, "=", accountId)
+                .sort(TCollisions.id, true)
                 .offset_count(offset, COUNT)
 
         val vIds = Database.select("EAccountsBlackListGetAll select_1", selectIds)

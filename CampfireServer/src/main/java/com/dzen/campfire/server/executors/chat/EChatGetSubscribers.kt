@@ -24,6 +24,7 @@ class EChatGetSubscribers : RChatGetSubscribers(0, 0, 0) {
                 .where(TChatsSubscriptions.target_sub_id, "=", languageId)
                 .where(TChatsSubscriptions.subscribed, "=", 1)
                 .where(TChatsSubscriptions.read_date,  ">", System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 2)
+                .sort(TChatsSubscriptions.id, true)
                 .offset_count(offset, COUNT)
         )
 
