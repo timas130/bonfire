@@ -2,6 +2,8 @@ package com.sayzen.campfiresdk.video.player
 
 import android.content.Context
 import androidx.compose.runtime.*
+import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
@@ -67,6 +69,10 @@ class VideoPlayerModel(
             isPlaying = playing
         }
 
+        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+            this@VideoPlayerModel.playWhenReady = playWhenReady
+        }
+
         override fun onPlaybackStateChanged(state: Int) {
             isBuffering = state == Player.STATE_BUFFERING
             hasEnded = state == Player.STATE_ENDED
@@ -112,6 +118,14 @@ class VideoPlayerModel(
                 .setMediaSourceFactory(
                     DefaultMediaSourceFactory(OkHttpDataSource.Factory(ControllerVideos.client))
                 )
+                .setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setUsage(C.USAGE_MEDIA)
+                        .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
+                        .build(),
+                    true
+                )
+                .setHandleAudioBecomingNoisy(true)
                 .build()
                 .apply { addListener(listener) }
                 .also { player = it }
