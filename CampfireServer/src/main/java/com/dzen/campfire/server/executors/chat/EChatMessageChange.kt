@@ -19,6 +19,7 @@ class EChatMessageChange : RChatMessageChange(0, 0, "", false) {
         val publication = ControllerPublications.getPublication(publicationId, apiAccount.id) as PublicationChatMessage?
         if (publication == null) throw ApiException(API.ERROR_GONE)
         if (publication.creator.id != apiAccount.id) throw ApiException(API.ERROR_ACCESS) // see git blame
+        if (publication.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_GONE)
         this.publication = publication
         if (text.length < API.CHAT_MESSAGE_TEXT_MIN_L || text.length > API.CHAT_MESSAGE_TEXT_MAX_L) throw ApiException(E_BAD_TEXT_SIZE)
 

@@ -16,6 +16,7 @@ class ECommentsChange : RCommentsChange(0, "", 0, false) {
         publication = ControllerPublications.getPublication(commentId, apiAccount.id) as PublicationComment?
         if (publication == null) throw ApiException(API.ERROR_GONE)
         if (publication!!.creator.id != apiAccount.id) throw ApiException(API.ERROR_ACCESS) // see git blame
+        if (publication!!.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_GONE)
 
         text = text.trim { it <= ' ' }
         text = ControllerCensor.cens(text)
