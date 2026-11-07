@@ -127,8 +127,8 @@ disableNavigation()
             }
 
             imageLoader.intoBytes { bytes ->
-                if (bytes != null) {
-                    if (ToolsBytes.isGif(bytes)) DrawableGif(bytes, vImage) { vImage.setImageDrawable(it) }
+                if (bytes != null && getView() === view) {
+                    if (ToolsBytes.isGif(bytes)) DrawableGif(bytes, vImage) { if (getView() === view) vImage.setImageDrawable(it) }
                     else vImage.setImageBitmap(ToolsBitmap.decode(bytes))
                 }
             }
