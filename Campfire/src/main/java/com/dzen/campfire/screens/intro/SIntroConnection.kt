@@ -226,7 +226,7 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
                 }))
             } else {
                 ControllerSettings.setSettingsFromLogin(r.account!!.id, r.settings, settingsRevision)
-                ControllerSettings.feedCategories = feedCategories
+                if (feedCategories.isNotEmpty()) ControllerSettings.feedCategories = feedCategories
                 ControllerApi.setServerTime(r.serverTime)
                 ToolsThreads.main(1000) { loadInfo() }
                 if (!background) {
