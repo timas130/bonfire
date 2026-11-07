@@ -1,5 +1,7 @@
 package com.sayzen.campfiresdk.compose.publication.post.pages
 
+import android.text.Spanned
+import android.text.style.URLSpan
 import android.text.util.Linkify
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
@@ -100,6 +102,8 @@ fun LegacyFormattedText(
 
         val spannable = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT)
             .toSpannable()
+        val namedLinks = spannable.getSpans(0, spannable.length, URLSpan::class.java)
+            .map { Triple(it, spannable.getSpanStart(it), spannable.getSpanEnd(it)) }
         LinkifyCompat.addLinks(spannable, Linkify.WEB_URLS)
         LinkifyCompat.addLinks(
             spannable,
@@ -109,6 +113,13 @@ fun LegacyFormattedText(
             { link, start, end -> isCorrectLink(link.subSequence(start, end)) },
             { match, _ -> "https://bonfire.moe/r/${match.group(1)}" }
         )
+        for ((span, start, end) in namedLinks) {
+            spannable.getSpans(start, end, URLSpan::class.java).forEach { spannable.removeSpan(it) }
+            val url = span.url.let {
+                if (it.startsWith("https://@")) API.DOMEN + it.removePrefix("https://@") else it
+            }
+            spannable.setSpan(URLSpan(url), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
 
         val linkStyle = SpanStyle(color = colors.primary, textDecoration = TextDecoration.Underline)
         val focusLinkStyle = linkStyle.copy(background = colors.primaryContainer)
