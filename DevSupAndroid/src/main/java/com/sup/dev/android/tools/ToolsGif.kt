@@ -118,6 +118,10 @@ object ToolsGif {
                 }
             } catch (e: OutOfMemoryError) {
                 SupAndroid.onLowMemory()
+            } finally {
+                ToolsThreads.main {
+                    if (lastBitmap == null && isBound(vImage, key)) onStart.invoke()
+                }
             }
         }
     }
