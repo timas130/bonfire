@@ -69,19 +69,18 @@ async fn graphql_handler(
 
     // marking user as online
     if let Some(ref access_token) = req_context.access_token {
-        if let Some(ref user) = req_context.user {
+        if let (Some(user), Some(session_id)) = (&req_context.user, req_context.session_id) {
             // don't mark service accounts as online
             if user.permission_level < PermissionLevel::System {
                 let auth = req_context.auth.clone();
                 let access_token = access_token.clone();
-                let user_id = user.id;
                 let online_cache = req_context.online_cache.clone();
 
                 tokio::spawn(async move {
                     let mut online_cache = online_cache.lock().await;
 
                     // ratelimit updates at 3 minutes (online period is 5 minutes)
-                    let last_online = online_cache.get(&user_id);
+                    let last_online = online_cache.get(&session_id);
                     if let Some(last_online) = last_online {
                         if Utc::now().signed_duration_since(last_online) < TimeDelta::minutes(3) {
                             return;
@@ -89,7 +88,7 @@ async fn graphql_handler(
                     }
 
                     // record update time
-                    online_cache.put(user_id, Utc::now());
+                    online_cache.put(session_id, Utc::now());
 
                     // unlock mutex
                     drop(online_cache);
