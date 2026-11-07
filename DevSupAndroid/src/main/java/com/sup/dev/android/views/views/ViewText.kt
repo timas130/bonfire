@@ -96,7 +96,19 @@ class ViewText constructor(context: Context, attrs: AttributeSet) : androidx.app
     private val spoilerPaint = Paint()
 
     override fun onDraw(canvas: Canvas) {
+        if (spoilerPathDirty) buildSpoilerPath()
+
+        val hideSpoilerText = !spoilerPath.isEmpty && !spoilerRevealed
+        if (hideSpoilerText) {
+            canvas.save()
+            canvas.translate(totalPaddingLeft.toFloat(), totalPaddingTop.toFloat())
+            canvas.clipPath(spoilerPath, Region.Op.DIFFERENCE)
+            canvas.translate(-totalPaddingLeft.toFloat(), -totalPaddingTop.toFloat())
+        }
+
         super.onDraw(canvas)
+
+        if (hideSpoilerText) canvas.restore()
 
         if (spoilerPathDirty) buildSpoilerPath()
         if (spoilerPath.isEmpty || spoilerRevealed) return
