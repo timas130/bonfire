@@ -47,18 +47,21 @@ class EventWebpageScreen(val event: ProjectEvent) : ComposeScreen() {
 
                     webView.webViewClient = object : WebViewClient() {
                         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-                            if (request.url.path!! == "/internal/redirWithToken") {
+                            if (request.url.path == "/internal/redirWithToken") {
                                 val state = request.url.getQueryParameter("state")
 
-                                val redirectUri = Uri.parse(request.url.getQueryParameter("redirect_uri"))
+                                val target = request.url.getQueryParameter("redirect_uri")?.let { uri -> Uri.parse(uri) }
+                                val host = target?.host
+                                if (target == null || target.scheme != "https" || host == null ||
+                                    (host != "bonfire.moe" && !host.endsWith(".bonfire.moe"))) {
+                                    return false
+                                }
+
+                                val redirectUri = target
                                     .buildUpon()
                                     .appendQueryParameter("state", state)
                                     .appendQueryParameter("code", AuthController.getAccessToken())
                                     .build()
-
-                                if (!redirectUri.host!!.endsWith("bonfire.moe")) {
-                                    return false
-                                }
 
                                 Log.d("EventWebpageScreen", "redirecting authentication")
                                 view.loadUrl(redirectUri.toString())
