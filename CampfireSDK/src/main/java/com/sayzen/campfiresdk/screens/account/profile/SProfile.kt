@@ -338,7 +338,7 @@ class SProfile private constructor(
                         ToolsThreads.main {
 
 
-                            val isGif = ControllerApi.can(API.LVL_CAN_CHANGE_AVATAR_GIF) && ToolsBytes.isGif(bytes)
+                            val isGif = ControllerApi.can(API.LVL_CAN_CHANGE_PROFILE_IMAGE_GIF) && ToolsBytes.isGif(bytes)
                             val cropSizeW = if (isGif) API.ACCOUNT_TITLE_IMG_GIF_W else API.ACCOUNT_TITLE_IMG_W
                             val cropSizeH = if (isGif) API.ACCOUNT_TITLE_IMG_GIF_H else API.ACCOUNT_TITLE_IMG_H
 
