@@ -8,6 +8,7 @@ import android.text.style.UnderlineSpan
 import android.widget.EditText
 import android.widget.TextView
 import com.posthog.PostHog
+import com.sup.dev.java.libs.debug.err
 import io.noties.markwon.Markwon
 import io.noties.markwon.SoftBreakAddsNewLinePlugin
 import io.noties.markwon.editor.MarkwonEditor
@@ -127,8 +128,9 @@ object BonfireMarkdown {
                             }
                         }
                     }
+                } catch (e: StackOverflowError) {
                 } catch (t: Throwable) {
-                    view.post { throw RuntimeException(t) }
+                    err(t)
                 }
             })
         }
