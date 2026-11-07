@@ -351,6 +351,7 @@ class SFandomSuggest(
                 || imageMini != null
                 || changeFandom!!.name != vName.getText()
                 || changeFandom.closed != vFandomIsClosed.isChecked()
+                || changeFandom.category != getSelectedCategory()
                 || isParamsChanged(params1, paramGet(1))
                 || isParamsChanged(params2, paramGet(3))
                 || isParamsChanged(params3, paramGet(5))
