@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.notifications.publications.NotificationFollowsPublication
+import com.dzen.campfire.api.models.notifications.publications.NotificationMention
 import com.dzen.campfire.api.models.notifications.publications.NotificationPublicationImportant
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.models.publications.tags.PublicationTag
@@ -136,6 +137,7 @@ class SPost private constructor(
 
         ControllerNotifications.removeNotificationFromNew(NotificationFollowsPublication::class, publication.id)
         ControllerNotifications.removeNotificationFromNew(NotificationPublicationImportant::class, publication.id)
+        ControllerNotifications.removeNotificationFromNew(NotificationMention::class, publication.id)
 
         if (publication.fandom.closed) ToolsThreads.main(true) { ControllerFandoms.showAlertIfNeed(this, publication.fandom.id, true) }
     }
