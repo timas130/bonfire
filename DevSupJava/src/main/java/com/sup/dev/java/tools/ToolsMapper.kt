@@ -151,7 +151,7 @@ object ToolsMapper {
 
     fun isIntCastable(a: Any): Boolean {
         return try {
-            a.toString().toLong()
+            a.toString().toInt()
             true
         } catch (e: Exception) {
             false

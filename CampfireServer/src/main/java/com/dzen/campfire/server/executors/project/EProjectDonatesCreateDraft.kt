@@ -20,6 +20,7 @@ class EProjectDonatesCreateDraft : RProjectDonatesCreateDraft("", 0) {
     override fun check() {
         comment = ControllerCensor.cens(comment)
         if(comment.length > API.DONATE_COMMENT_MAX_L) throw ApiException(API.ERROR_ACCESS)
+        if(sum <= 0) throw ApiException(API.ERROR_ACCESS)
     }
 
     override fun execute(): Response {

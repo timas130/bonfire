@@ -101,13 +101,13 @@ class SDonateMake : Screen(R.layout.screen_donate_make){
     }
 
     private fun updateEnabled() {
-        vButton.isEnabled = ToolsMapper.isIntCastable(vSum.text.toString()) && vComment.text.length <= API.DONATE_COMMENT_MAX_L
+        vButton.isEnabled = ToolsMapper.isIntCastable(vSum.text.toString()) && vSum.text.toString().toInt() > 0 && vComment.text.length <= API.DONATE_COMMENT_MAX_L
     }
 
 
     private fun donate() {
         val sum = vSum.text.toString().toInt()
-        ApiRequestsSupporter.executeProgressDialog(RProjectDonatesCreateDraft(vComment.text.toString(), (sum * 100).toLong())) { r ->
+        ApiRequestsSupporter.executeProgressDialog(RProjectDonatesCreateDraft(vComment.text.toString(), sum * 100L)) { r ->
             donateNow(r.donateId, sum)
         }
     }
