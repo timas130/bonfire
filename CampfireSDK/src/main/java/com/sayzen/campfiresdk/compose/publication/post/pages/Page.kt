@@ -154,7 +154,9 @@ fun PostPages(
     model: PostPagesModel = viewModel(),
 ) {
     val nested = remember(pages) {
-        spoilersNest(pages).first
+        // the activity page XPublication appends never counts towards a spoiler, same as ControllerPost.updateSpoilers
+        val (activityPages, contentPages) = pages.partition { it is PageUserActivity }
+        spoilersNest(contentPages).first + activityPages
     }
 
     nested.forEachIndexed { index, page ->
