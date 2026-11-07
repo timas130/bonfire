@@ -42,7 +42,7 @@ object ToolsIntent {
     //
 
     private val cashRoot: String
-        get() = SupAndroid.appContext!!.externalCacheDir!!.absolutePath + SHARE_FOLDER
+        get() = File(SupAndroid.appContext!!.externalCacheDir!!, SHARE_FOLDER).absolutePath
 
     fun startIntentForResult(intent: Intent, onResult: (Int, Intent?) -> Unit) {
         if (codeCounter == 65000)
@@ -168,10 +168,8 @@ object ToolsIntent {
 
         File(cashRoot).mkdirs()
 
-        val patch = cashRoot + System.currentTimeMillis() + "_x_share_i.png"
-
         val out: OutputStream
-        val file = File(patch)
+        val file = File(cashRoot, System.currentTimeMillis().toString() + "_x_share_i.png")
         try {
             out = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
