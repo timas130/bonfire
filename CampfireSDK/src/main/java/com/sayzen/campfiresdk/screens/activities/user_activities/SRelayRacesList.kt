@@ -106,7 +106,7 @@ class SRelayRacesList constructor(
 
     private fun getMyCount(): Long {
         var count = 0L
-        for (c in adapter.get(CardUserActivity::class)) if (ControllerApi.isCurrentAccount(c.userActivity.currentAccount.id) && !c.tag1IsReset) count++
+        for (c in adapter.get(CardUserActivity::class)) if (ControllerApi.isCurrentAccount(c.userActivity.currentAccount.id)) count++
         return count
     }
 
