@@ -15,7 +15,8 @@ class EWikiGet : RWikiGet(0) {
     override fun execute(): Response {
         val v = Database.select("EWikiGet", ControllerWiki.instanceSelectTitles()
                 .where(TWikiTitles.item_id, "=", itemId)
-                .where(TWikiTitles.ITEM_STATUS, "=", API.STATUS_PUBLIC))
+                .where(TWikiTitles.ITEM_STATUS, "=", API.STATUS_PUBLIC)
+                .where(TWikiTitles.wiki_status, "=", API.STATUS_PUBLIC))
 
         return Response(ControllerWiki.parseSelectTitles(v)[0])
     }
