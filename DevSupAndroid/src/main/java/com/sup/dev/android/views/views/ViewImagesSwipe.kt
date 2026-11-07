@@ -57,7 +57,7 @@ class ViewImagesSwipe constructor(
         (vBack.layoutParams as LayoutParams).leftMargin = ToolsView.dpToPx(8).toInt()
 
         vNext.setOnClickListener {
-            if (lastItem() < adapter.size() - 1) {
+            if (lastItem() != -1 && lastItem() < adapter.size() - 1) {
                 if (adapter.get(lastItem()) is CardSpace) vRecycler.smoothScrollToPosition(lastItem() + 1)
                 else vRecycler.smoothScrollToPosition(lastItem() + 2)
             }
