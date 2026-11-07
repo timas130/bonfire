@@ -234,7 +234,7 @@ class SStickersView(
     }
 
     private fun onEventStickersPackChanged(e: EventStickersPackChanged) {
-        if (e.stickersPack.id == stickerId) {
+        if (e.stickersPack.id == stickersPack.id) {
             stickersPack.name = e.stickersPack.name
             stickersPack.image = e.stickersPack.image
             updateTitle()
