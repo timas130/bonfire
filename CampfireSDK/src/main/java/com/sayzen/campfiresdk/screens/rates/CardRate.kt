@@ -73,7 +73,10 @@ class CardRate(
         setSubtitle(ToolsDate.dateToString(rate.date))
         setDividerVisible(true)
 
-        setOnCLickAvatar { SFandom.instance(rate.fandom.id, rate.fandom.languageId, Navigator.TO) }
+        setOnCLickAvatar {
+            if (rate.fandom.id > 0L) SFandom.instance(rate.fandom.id, rate.fandom.languageId, Navigator.TO)
+            else onClick.invoke()
+        }
     }
 
     override fun bindView(view: View) {
