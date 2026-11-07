@@ -528,6 +528,7 @@ open class CardComment(
             publication.text = e.text
             publication.quoteId = e.quoteId
             publication.quoteText = e.quoteText
+            publication.newFormatting = e.newFormatting
             publication.changed = true
             update()
         }

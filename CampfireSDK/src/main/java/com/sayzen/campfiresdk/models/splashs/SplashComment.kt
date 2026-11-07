@@ -106,7 +106,7 @@ class SplashComment(
         vText.addTextChangedListener(TextWatcherChanged { updateSendEnabled() })
 
         vSend.setOnClickListener {
-            newFormatting = true
+            newFormatting = changeComment?.newFormatting ?: true
             onSendClicked()
         }
         vSend.setOnLongClickListener {
@@ -277,7 +277,7 @@ class SplashComment(
                 RCommentsChange(changeComment!!.id, text, quoteId, newFormatting)
             ) {
                 ToolsToast.show(t(API_TRANSLATE.app_changed))
-                EventBus.post(EventCommentChange(changeComment.id, text, quoteId, quoteText))
+                EventBus.post(EventCommentChange(changeComment.id, text, quoteId, quoteText, newFormatting))
             }
         }
     }

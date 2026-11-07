@@ -4,5 +4,6 @@ class EventCommentChange(
         val publicationId: Long,
         val text: String,
         val quoteId: Long,
-        val quoteText: String
+        val quoteText: String,
+        val newFormatting: Boolean
 )

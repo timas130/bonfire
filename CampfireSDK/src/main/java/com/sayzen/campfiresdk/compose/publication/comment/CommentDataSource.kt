@@ -22,6 +22,7 @@ class CommentDataSource(
                     text = it.text
                     quoteId = it.quoteId
                     quoteText = it.quoteText
+                    newFormatting = it.newFormatting
                     changed = true
                 }
             }
