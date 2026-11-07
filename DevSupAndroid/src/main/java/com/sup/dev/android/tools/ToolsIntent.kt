@@ -259,11 +259,13 @@ object ToolsIntent {
         }
 
         try {
+            var usedFallbackFolder = false
             val imageFile = try {
                 val dcimFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
                 File.createTempFile("cam_", ".jpg", dcimFolder)
             } catch (_: IOException) {
                 // shared storage isn't writable without a permission on some Android versions
+                usedFallbackFolder = true
                 val fallbackFolder = SupAndroid.appContext!!.getExternalFilesDir(Environment.DIRECTORY_DCIM)
                 File.createTempFile("cam_", ".jpg", fallbackFolder)
             }
@@ -291,6 +293,8 @@ object ToolsIntent {
                     } catch (e: Throwable) {
                         ToolsThreads.main { onError(e as? Exception ?: RuntimeException(e)) }
                         return@thread
+                    } finally {
+                        if (usedFallbackFolder) imageFile.delete()
                     }
 
                     ToolsThreads.main {
