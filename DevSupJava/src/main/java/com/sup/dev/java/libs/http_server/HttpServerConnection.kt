@@ -50,7 +50,7 @@ class HttpServerConnection(
     }
 
     fun sendOK() {
-        writeString("HTTP/1.1 200 OK\r\n")
+        writeString("HTTP/1.1 200 OK\r\nContent-Length: 0\r\nConnection: close\r\n\r\n")
     }
 
     fun sendResponse(code: Int) {
