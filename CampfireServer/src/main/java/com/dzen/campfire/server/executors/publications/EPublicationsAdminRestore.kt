@@ -31,6 +31,8 @@ class EPublicationsAdminRestore : RPublicationsAdminRestore(0, "", true) {
         publicationModeration = ControllerPublications.getPublication(moderationId, apiAccount.id)
         if (publicationModeration == null) throw ApiException(API.ERROR_GONE)
         if (publicationModeration !is PublicationModeration || (publicationModeration as PublicationModeration).moderation !is ModerationBlock) throw ApiException(E_BAD_MODERATION_TYPE)
+        // Another admin has already decided
+        if (publicationModeration!!.tag_2 != 0L) throw ApiException(API.ERROR_GONE)
         if (apiAccount.id != 1L && publicationModeration!!.creator.id == apiAccount.id) throw ApiException(E_SELF)
         publication = ControllerPublications.getPublication(((publicationModeration as PublicationModeration).moderation as ModerationBlock).publicationId, apiAccount.id)
         if (apiAccount.id != 1L && publication!!.creator.id == apiAccount.id) throw ApiException(E_SELF)

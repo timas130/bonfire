@@ -77,6 +77,11 @@ class CardPublicationBlock(
                         ApiRequestsSupporter.executeEnabled(w, RPublicationsAdminRestore(publication.moderationId, comment, vahter)) {
                             ToolsToast.show(t(API_TRANSLATE.app_done))
                             EventBus.post(EventPublicationBlockedRemove(publication.moderationId, publication.publication.id))
+                        }.onApiError(API.ERROR_GONE) {
+                            // Another admin has already decided on this one
+                            ToolsToast.show(t(API_TRANSLATE.error_gone))
+                            w.hide()
+                            EventBus.post(EventPublicationBlockedRemove(publication.moderationId, publication.publication.id))
                         }
                     }
                     .asSheetShow()
