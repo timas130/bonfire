@@ -467,7 +467,9 @@ private fun BindGoogleListItem(
             isBindingGoogle = true
             BindGoogleFlow(context).start()
         } catch (e: AuthFlow.AuthException) {
-            scope.launch { snackbarHostState.showSnackbar(e.toUiString(context)) }
+            if (e.reason != AuthFlow.FailureReason.Cancelled) {
+                scope.launch { snackbarHostState.showSnackbar(e.toUiString(context)) }
+            }
         } finally {
             isBindingGoogle = false
         }

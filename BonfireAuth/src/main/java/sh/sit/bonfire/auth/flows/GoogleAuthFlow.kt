@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.Gravity
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes
 import com.google.android.gms.common.api.GoogleApiClient
 import com.posthog.PostHog
 import com.sup.dev.android.tools.ToolsIntent
@@ -67,12 +68,16 @@ class GoogleAuthFlow(context: Context) : AuthFlow(context) {
         val idToken = suspendCoroutine {
             ToolsIntent.startIntentForResult(Auth.GoogleSignInApi.getSignInIntent(client)) { _, intent ->
                 if (intent == null) {
-                    it.resumeWithException(AuthException(FailureReason.InvalidCredential))
+                    it.resumeWithException(AuthException(FailureReason.Cancelled))
                     return@startIntentForResult
                 }
                 val result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent)
 
-                if (result == null || result.signInAccount?.idToken == null) {
+                if (result?.status?.statusCode == GoogleSignInStatusCodes.SIGN_IN_CANCELLED) {
+                    it.resumeWithException(AuthException(FailureReason.Cancelled))
+                } else if (result != null && !result.isSuccess) {
+                    it.resumeWithException(AuthException(FailureReason.RequestRejected, result.status.statusMessage))
+                } else if (result == null || result.signInAccount?.idToken == null) {
                     it.resumeWithException(AuthException(FailureReason.InvalidCredential))
                 } else {
                     it.resume(result.signInAccount!!.idToken!!)
