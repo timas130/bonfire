@@ -31,6 +31,7 @@ class SplashChooseTimeRange : Splash(R.layout.splash_choose_time_range) {
 
         vStart.setOnClickListener {
             SplashChooseTime()
+                .setTime(h1, m1)
                 .setOnCancel(SupAndroid.TEXT_APP_CANCEL)
                 .setOnEnter(SupAndroid.TEXT_APP_CHOOSE) { _, h, m -> setTimeStart(h, m) }
                 .asSheetShow()
@@ -38,6 +39,7 @@ class SplashChooseTimeRange : Splash(R.layout.splash_choose_time_range) {
 
         vEnd.setOnClickListener {
             SplashChooseTime()
+                .setTime(h2 % 24, m2)
                 .setOnCancel(SupAndroid.TEXT_APP_CANCEL)
                 .setOnEnter(SupAndroid.TEXT_APP_CHOOSE) { _, h, m -> setTimeEnd(h, m) }
                 .asSheetShow()
