@@ -36,7 +36,7 @@ class EPostRemovePage : RPostRemovePage(0,  emptyArray()) {
     }
 
     override fun execute(): Response {
-        for (index in pageIndexes) remove(index)
+        for (index in pageIndexes.distinct().sortedDescending()) remove(index)
 
         return Response()
     }
