@@ -62,6 +62,11 @@ class ViewVoiceRecord @JvmOverloads constructor(context: Context, attrs: Attribu
         }
     }
 
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        if (isRecordingMode) stopRecording()
+    }
+
     private fun startRecording() {
         if (ToolsPermission.hasMicrophonePermission()) {
             recordingStartTime = System.currentTimeMillis()
