@@ -250,7 +250,8 @@ object ToolsIntent {
     fun getCameraImage(
         onResult: (ByteArray) -> Unit,
         onError: (Exception) -> Unit = {},
-        allowReEncode: Boolean = true
+        allowReEncode: Boolean = true,
+        onCaptured: () -> Unit = {}
     ) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             onError(RuntimeException("your system is too old"))
@@ -281,6 +282,8 @@ object ToolsIntent {
                     onError(IllegalAccessException("activity result not ok: code $code"))
                     return@startIntentForResult
                 }
+
+                onCaptured()
 
                 ToolsThreads.thread {
                     val bytes = try {

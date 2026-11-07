@@ -189,13 +189,18 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
     }
 
     private fun openCamera() {
+        var progress: Splash? = null
         ToolsIntent.getCameraImage({ bytes ->
+            progress?.hide()
             deliverSingleImage(bytes)
         },{
+            progress?.hide()
             if (it !is IllegalAccessException) {
                 err(it)
                 ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
             }
+        }, onCaptured = {
+            progress = ToolsView.showProgressDialog()
         })
     }
 
