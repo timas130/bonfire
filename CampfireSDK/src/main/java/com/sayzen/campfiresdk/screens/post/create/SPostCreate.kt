@@ -241,6 +241,10 @@ class SPostCreate(
         }
     }
 
+    override fun attacheTextAndImage(text: String, image: Uri, postAfterAdd: Boolean) {
+        xPostCreator.addText(text) { attacheImage(image, postAfterAdd) }
+    }
+
     override fun attacheAgentIsActive() = Navigator.getCurrent() == this
 
     class PostParams {

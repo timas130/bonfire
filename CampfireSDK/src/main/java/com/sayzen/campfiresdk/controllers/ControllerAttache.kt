@@ -59,7 +59,10 @@ object ControllerAttache {
     }
 
     fun parseAttache(text: String?, image: Uri?, screen: AttacheAgent, postAfterAdd: Boolean) {
-        if (text != null) {
+        if (image != null) {
+            if (text.isNullOrBlank()) screen.attacheImage(image, postAfterAdd)
+            else screen.attacheTextAndImage(text, image, postAfterAdd)
+        } else if (text != null) {
             if (ToolsText.isWebLink(text)) {
                 val dialog = ToolsView.showProgressDialog()
                 ToolsThreads.thread {
@@ -74,7 +77,7 @@ object ControllerAttache {
             } else {
                 screen.attacheText(text, postAfterAdd)
             }
-        } else if (image != null) screen.attacheImage(image, postAfterAdd)
+        }
     }
 
 

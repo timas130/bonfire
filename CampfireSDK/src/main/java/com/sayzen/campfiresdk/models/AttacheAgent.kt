@@ -11,6 +11,11 @@ interface AttacheAgent {
 
     fun attacheImage(image: Bitmap, postAfterAdd: Boolean = false)
 
+    fun attacheTextAndImage(text: String, image: Uri, postAfterAdd: Boolean = false) {
+        attacheText(text, false)
+        attacheImage(image, postAfterAdd)
+    }
+
     fun attacheAgentIsActive():Boolean
 
 }
