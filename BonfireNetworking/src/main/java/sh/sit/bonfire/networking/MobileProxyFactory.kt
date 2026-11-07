@@ -50,6 +50,8 @@ object MobileProxyFactory {
 
         _status.value = ProxyFactoryStatus.TestingConnection
 
+        client.connectionPool.evictAll()
+
         log("trying without obfuscation")
         try {
             // okhttp DOES NOT include dns in any of its timeouts,
@@ -146,7 +148,7 @@ object MobileProxyFactory {
 
     private fun log(line: String) {
         Log.d("BonfireNetworking", line)
-        _logs.update { logs -> "$logs$line\n" }
+        _logs.update { logs -> "$logs$line\n".takeLast(64 * 1024) }
     }
 
     private object MobileProxyLogWriter : LogWriter {

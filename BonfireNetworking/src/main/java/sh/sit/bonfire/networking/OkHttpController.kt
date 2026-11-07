@@ -29,7 +29,7 @@ object OkHttpController {
                     .addHeader("User-Agent", userAgent)
                     .build())
             })
-            .proxySelector(OkHttpProxySelector())
+            .proxySelector(OkHttpProxySelector(context.applicationContext))
             .connectTimeout(3000, TimeUnit.MILLISECONDS)
             .readTimeout(6000, TimeUnit.MILLISECONDS)
             .build()
