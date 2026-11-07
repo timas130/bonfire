@@ -6,7 +6,6 @@ import android.widget.TextView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.chat.ChatParamsFandomSub
-import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatAnswer
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessage
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessageChange
@@ -166,14 +165,14 @@ class CardChat(
     }
 
     private fun showMenu(vSwipe: View, x: Float, y: Float) {
-        if (chat.chatMessage.chatType == API.CHAT_TYPE_CONFERENCE) {
+        if (chat.tag.chatType == API.CHAT_TYPE_CONFERENCE) {
             ApiRequestsSupporter.executeProgressDialog(RChatGet(chat.tag, 0)) { r ->
                 ControllerChats.instanceChatPopup(chat.tag, chat.params, chat.customImage, r.chat.memberStatus).asPopupShow(vSwipe, x, y)
             }.onError {
                 ControllerChats.instanceChatPopup(chat.tag, chat.params, chat.customImage, API.CHAT_MEMBER_STATUS_DELETE_AND_LEAVE).asPopupShow(vSwipe, x, y)
             }
         } else {
-            ControllerChats.instanceChatPopup(chat.tag, Json(), ImageRef(), null, chat.fandomId, chat.languageId).asPopupShow(vSwipe, x, y)
+            ControllerChats.instanceChatPopup(chat.tag, chat.params, chat.customImage, null, chat.fandomId, chat.languageId).asPopupShow(vSwipe, x, y)
         }
     }
 
