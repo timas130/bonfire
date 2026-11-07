@@ -86,7 +86,10 @@ class BadgeShelfModel(
     private suspend fun onEdit(replaceIdx: Int, newId: String?) {
         trackInteraction("edit")
 
-        val newShelf = shelf.first()!!
+        // the shelf can be hidden while the badge list is open
+        val currentShelf = shelf.first() ?: return
+
+        val newShelf = currentShelf
             .mapIndexed { idx, badge ->
                 if (idx == replaceIdx) newId
                 else badge?.id
@@ -109,7 +112,7 @@ class BadgeShelfModel(
             SetBadgeShelfMutation.Data(
                 setBadgeShelf = SetBadgeShelfMutation.SetBadgeShelf(
                     userId = userId,
-                    badgeShelf = shelf.first()!!
+                    badgeShelf = currentShelf
                         .mapIndexed { idx, badge ->
                             if (idx == replaceIdx) {
                                 SetBadgeShelfMutation.BadgeShelf(

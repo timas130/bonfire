@@ -68,7 +68,7 @@ fun RowScope.BadgeIcon(
             }
         }
 
-        if (allowEditing) {
+        if (allowEditing && shimmer == null) {
             FilledTonalIconButton(
                 onClick = { model.onEditBadge(index) },
                 modifier = Modifier
