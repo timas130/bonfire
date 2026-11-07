@@ -535,7 +535,8 @@ object ControllerAccounts {
 
         if (fandomId == 0L || languageId == 0L) return
 
-        accountBanDate = getAccountBanDate(accountId, fandomId, languageId)
+        accountBanDate = if (languageId == -1L) getAccountBanDateInAnyLanguage(accountId, fandomId)
+        else getAccountBanDate(accountId, fandomId, languageId)
         if (accountBanDate > System.currentTimeMillis()) throw ApiException.instance(
             API.ERROR_ACCOUNT_IS_BANED,
             "",
@@ -605,6 +606,16 @@ object ControllerAccounts {
                 .sort(TCollisions.value_1, false)
         )
         return if (v.isEmpty) 0 else v.next()
+    }
+
+    private fun getAccountBanDateInAnyLanguage(accountId: Long, fandomId: Long): Long {
+        val v = Database.select(
+            "ControllerAccounts.getAccountBanDateInAnyLanguage", SqlQuerySelect(TCollisions.NAME, Sql.MAX(TCollisions.value_1))
+                .where(TCollisions.owner_id, "=", accountId)
+                .where(TCollisions.collision_type, "=", API.COLLISION_PUNISHMENTS_BAN)
+                .where(TCollisions.collision_id, "=", fandomId)
+        )
+        return if (v.isEmpty) 0L else v.nextMayNull<Long>() ?: 0L
     }
 
     fun isOnline(accountId: Long): Boolean {
