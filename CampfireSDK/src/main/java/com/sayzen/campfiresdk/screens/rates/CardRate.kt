@@ -12,6 +12,7 @@ import com.sayzen.campfiresdk.screens.account.stickers.SStickersView
 import com.sayzen.campfiresdk.screens.fandoms.moderation.view.SModerationView
 import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
 import com.sayzen.campfiresdk.screens.post.view.SPost
+import com.sayzen.campfiresdk.screens.quests.SQuest
 import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -55,6 +56,11 @@ class CardRate(
                 textR = t(API_TRANSLATE.profile_rate_stikers_pack)
                 link = ControllerLinks.linkToStickersPack(rate.publicationId)
                 setOnClick { SStickersView.instance(rate.publicationId, Navigator.TO) }
+            }
+            API.PUBLICATION_TYPE_QUEST -> {
+                textR = t(API_TRANSLATE.profile_rate_quest)
+                link = ControllerLinks.linkToQuest(rate.publicationId)
+                setOnClick { SQuest.instance(rate.publicationId, Navigator.TO) }
             }
             else -> {
                 textR = t(API_TRANSLATE.error_unknown)

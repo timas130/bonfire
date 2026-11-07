@@ -529,5 +529,6 @@
     "post_page_remove_last": "You can't remove the only page of a published post",
     "stickers_message_too_many_favorites": "You have too many favorite stickers",
     "quests_error_not_number": "The \"%s\" field must contain a number",
-    "quests_edit_error_too_many_parts": "This quest has too many parts"
+    "quests_edit_error_too_many_parts": "This quest has too many parts",
+    "profile_rate_quest": "%s quest %s"
 }

@@ -1616,6 +1616,7 @@ object API_TRANSLATE {
     var profile_rate_review = 0L
     var profile_rate_stikers_pack = 0L
     var profile_rate_sticker = 0L
+    var profile_rate_quest = 0L
     var profile_anonymous_text = 0L
     var profile_karma_text = 0L
     var profile_blacklist_text = 0L
