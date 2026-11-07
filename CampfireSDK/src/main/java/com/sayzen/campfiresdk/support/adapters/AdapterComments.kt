@@ -39,11 +39,14 @@ class AdapterComments(
 
     private var needScrollToBottom = false
     private var scrollToCommentWasLoaded = false
+    private var bottomCursor = 0L
 
     init {
         setBottomLoader { onLoad, cards ->
-            RCommentsGetAll(publicationId, if (cards.isEmpty()) 0 else cards.get(cards.size - 1).xPublication.publication.dateCreate, false, startFromBottom)
+            if (cards.isEmpty()) bottomCursor = 0L
+            RCommentsGetAll(publicationId, bottomCursor, false, startFromBottom)
                     .onComplete { r ->
+                        r.publications.lastOrNull()?.let { bottomCursor = it.dateCreate }
                         remove(CardSpace::class)
                         onLoad.invoke(r.publications)
                         add(CardSpace(124))
