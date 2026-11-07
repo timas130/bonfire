@@ -13,7 +13,7 @@ import com.sup.dev.java.tools.ToolsText
 public class NotificationFandomRemoveCancelParser(override val n: NotificationFandomRemoveCancel) : ControllerNotifications.Parser(n) {
 
     override fun post(icon: Int, intent: Intent, text: String, title: String, tag: String, sound: Boolean) {
-        (if (sound) ControllerNotifications.chanelOther else ControllerNotifications.chanelOther_salient).post(icon, title, text, intent, tag)
+        (if (sound) ControllerNotifications.chanelOther else ControllerNotifications.chanelOther_salient).post(icon, getTitle(), text, intent, tag)
     }
 
 
