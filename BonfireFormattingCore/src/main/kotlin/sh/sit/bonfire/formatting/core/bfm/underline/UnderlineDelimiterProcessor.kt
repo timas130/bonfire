@@ -22,7 +22,7 @@ class UnderlineDelimiterProcessor : SubscriptDelimiterProcessor() {
     }
 
     override fun getDelimiterUse(opener: DelimiterRun, closer: DelimiterRun): Int {
-        return if (opener.length() == 2 && closer.length() == 2) {
+        return if (opener.length() >= 2 && closer.length() >= 2) {
             2
         } else {
             0
