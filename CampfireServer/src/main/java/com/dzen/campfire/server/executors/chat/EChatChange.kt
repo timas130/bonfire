@@ -131,6 +131,7 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
         }
 
         if (newAccounts.isNotEmpty()) {
+            val enterDate = if (chatParams.isPublic) 1L else System.currentTimeMillis()
             for (i in newAccounts) {
                 var chatMember: ChatMember? = null
                 var memberName = ""
@@ -139,7 +140,7 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
 
                 if (chatMember == null) {
                     memberName = ControllerAccounts.get(i, TAccounts.name).next()
-                    ControllerChats.createSubscriptionIfNotExist(i, tag, API.CHAT_MEMBER_STATUS_ACTIVE, API.CHAT_MEMBER_LVL_USER, apiAccount.id, System.currentTimeMillis())
+                    ControllerChats.createSubscriptionIfNotExist(i, tag, API.CHAT_MEMBER_STATUS_ACTIVE, API.CHAT_MEMBER_LVL_USER, apiAccount.id, enterDate)
                 } else {
                     if (chatMember.memberStatus == API.CHAT_MEMBER_STATUS_ACTIVE) continue
                     if (chatMember.memberStatus == API.CHAT_MEMBER_STATUS_LEAVE) continue
@@ -157,7 +158,7 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
                         update.update(TChatsSubscriptions.member_status, API.CHAT_MEMBER_STATUS_LEAVE)
                     } else {
                         update.update(TChatsSubscriptions.member_status, API.CHAT_MEMBER_STATUS_ACTIVE)
-                        update.update(TChatsSubscriptions.enter_date, System.currentTimeMillis())
+                        update.update(TChatsSubscriptions.enter_date, enterDate)
                         update.update(TChatsSubscriptions.exit_date, 0)
                     }
 
