@@ -195,6 +195,8 @@ class CardBio(
         SplashField()
                 .setTitle(t(API_TRANSLATE.profile_remove_description))
                 .setHint(t(API_TRANSLATE.moderation_widget_comment))
+                .setMin(API.MODERATION_COMMENT_MIN_L)
+                .setMax(API.MODERATION_COMMENT_MAX_L)
                 .setOnCancel(t(API_TRANSLATE.app_cancel))
                 .setOnEnter(t(API_TRANSLATE.app_remove)) { w, comment -> adminRemoveDescription(w, comment) }
                 .asSheetShow()
@@ -204,6 +206,8 @@ class CardBio(
         SplashField()
                 .setTitle(t(API_TRANSLATE.app_remove_link))
                 .setHint(t(API_TRANSLATE.moderation_widget_comment))
+                .setMin(API.MODERATION_COMMENT_MIN_L)
+                .setMax(API.MODERATION_COMMENT_MAX_L)
                 .setOnCancel(t(API_TRANSLATE.app_cancel))
                 .setOnEnter(t(API_TRANSLATE.app_remove)) { w, comment -> adminRemoveLink(w, index, comment) }
                 .asSheetShow()
