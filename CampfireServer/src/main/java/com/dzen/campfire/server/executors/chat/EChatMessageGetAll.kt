@@ -52,6 +52,7 @@ class EChatMessageGetAll : RChatMessageGetAll(ChatTag(), 0, false, 0) {
                 .where(TPublications.tag_1, "=", tag.chatType)
                 .where(TPublications.fandom_id, "=", tag.targetId)
                 .where(TPublications.language_id, "=", tag.targetSubId)
+                .where(ControllerPublications.whereNotShadowBanned(apiAccount.id))
 
         if (tag.chatType != API.CHAT_TYPE_FANDOM_ROOT) {
             select.where(TPublications.date_create, ">=", getEnterDate())

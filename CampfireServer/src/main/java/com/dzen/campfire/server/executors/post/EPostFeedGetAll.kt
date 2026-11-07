@@ -24,6 +24,7 @@ class EPostFeedGetAll : RPostFeedGetAll(0, emptyArray(), false, 0, false, false,
                 .where(SqlWhere.WhereIN(TPublications.language_id, arrayOf(*languagesId, -1L)))
                 .where(TPublications.status, "=", API.STATUS_PUBLIC)
                 .where(TPublications.date_create, "<", if (offsetDate == 0L) Long.MAX_VALUE else offsetDate)
+                .where(ControllerPublications.whereNotShadowBanned(apiAccount.id))
                 .filterNsfw(apiAccount.id, requestApiVersion)
                 .count(COUNT)
                 .sort(TPublications.date_create, false)

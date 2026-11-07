@@ -23,6 +23,7 @@ class ECommentsGetAll : RCommentsGetAll(0, 0, false, false) {
                 .where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_COMMENT)
                 .where(TPublications.status, "=", API.STATUS_PUBLIC)
                 .where(TPublications.parent_publication_id, "=", publicationId)
+                .where(ControllerPublications.whereNotShadowBanned(apiAccount.id))
 
         if (offsetDate == 0L) {
             select.where(TPublications.date_create, "<", java.lang.Long.MAX_VALUE)

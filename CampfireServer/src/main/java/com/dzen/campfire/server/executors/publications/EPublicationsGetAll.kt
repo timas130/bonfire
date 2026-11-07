@@ -21,6 +21,7 @@ class EPublicationsGetAll : RPublicationsGetAll() {
         val select = ControllerPublications.instanceSelect(apiAccount.id)
 
         select.filterNsfw(apiAccount.id, requestApiVersion)
+        select.where(ControllerPublications.whereNotShadowBanned(apiAccount.id))
         if (onlyWithFandom) select.where(TPublications.fandom_id, ">", 0)
         if (accountId != 0L) select.where(TPublications.creator_id, "=", accountId)
         if (publicationsTypes != null) select.where(SqlWhere.WhereIN(TPublications.publication_type, publicationsTypes!!))

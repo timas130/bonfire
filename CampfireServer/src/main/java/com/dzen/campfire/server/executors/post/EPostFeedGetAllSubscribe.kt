@@ -20,6 +20,7 @@ class EPostFeedGetAllSubscribe : RPostFeedGetAllSubscribe(0) {
                 .where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_POST)
                 .where(TPublications.status, "=", API.STATUS_PUBLIC)
                 .where(TPublications.date_create, "<", if (offsetDate == 0L) Long.MAX_VALUE else offsetDate)
+                .where(ControllerPublications.whereNotShadowBanned(apiAccount.id))
                 .filterNsfw(apiAccount.id, requestApiVersion)
                 .count(COUNT)
                 .sort(TPublications.date_create, false)

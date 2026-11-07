@@ -243,6 +243,10 @@ object ControllerPublications {
         }
     }
 
+    fun whereNotShadowBanned(accountId: Long) = SqlWhere.WhereString(
+        "(${TPublications.creator_id}=$accountId OR ${TPublications.creator_id} NOT IN (SELECT ${TShadowBans.account_id} FROM ${TShadowBans.NAME}))"
+    )
+
     fun loadShadowBans(accountId: Long, pubs: Array<Publication>): Array<Publication> {
         val v = Database.select(
             "ControllerPublications.loadShadowBans",

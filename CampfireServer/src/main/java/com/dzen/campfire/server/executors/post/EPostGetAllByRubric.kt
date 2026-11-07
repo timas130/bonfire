@@ -22,6 +22,7 @@ class EPostGetAllByRubric : RPostGetAllByRubric(0, 0) {
                 .where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_POST)
                 .where(TPublications.tag_6, "=", rubricId)
                 .where(TPublications.status, "=", API.STATUS_PUBLIC)
+                .where(ControllerPublications.whereNotShadowBanned(apiAccount.id))
                 .filterNsfw(apiAccount.id, requestApiVersion)
                 .sort(TPublications.date_create, false)
                 .offset_count(offset, COUNT)
