@@ -233,14 +233,25 @@ object AuthController : TokenProvider {
 
     suspend fun logout() {
         withContext(Dispatchers.IO) {
-            try {
-                apollo.mutation(LogoutMutation()).execute()
-            } catch (e: Exception) {
-                Log.d("AuthController", "failed to logout from remote:")
-                e.printStackTrace()
+            tryRefreshTokens()
+            val session = authState.first() as? AuthenticatedAuthState
+
+            if (session != null) {
+                try {
+                    apollo.mutation(LogoutMutation())
+                        .addHttpHeader("Authorization", "Bearer ${session.accessToken}")
+                        .execute()
+                } catch (e: Exception) {
+                    Log.d("AuthController", "failed to logout from remote:")
+                    e.printStackTrace()
+                }
             }
-            saveAuthState(NoneAuthState)
-            setConsent(false)
+
+            val current = authState.first() as? AuthenticatedAuthState
+            if (current?.refreshToken == session?.refreshToken) {
+                saveAuthState(NoneAuthState)
+                setConsent(false)
+            }
         }
     }
 
