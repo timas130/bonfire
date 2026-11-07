@@ -24,9 +24,18 @@ class EBookmarksGetAll : RBookmarksGetAll(0, "", 0, 0, 0, emptyArray()) {
 
     override fun execute(): Response {
 
+        if (offset == 0L) {
+            Database.remove("EPublicationsBookmarksGetAll remove", SqlQueryRemove(TCollisions.NAME)
+                    .where(TCollisions.collision_type, "=", API.COLLISION_BOOKMARK)
+                    .where(TCollisions.collision_id, "=", apiAccount.id)
+                    .where(SqlWhere.WhereString("NOT EXISTS (SELECT 1 FROM ${TPublications.NAME} WHERE ${TPublications.id}=${TCollisions.owner_id} AND ${TPublications.publication_type}=${API.PUBLICATION_TYPE_POST})"))
+            )
+        }
+
         val collisionsSelect = SqlQuerySelect(TCollisions.NAME, TCollisions.owner_id, TCollisions.collision_date_create)
                 .where(TCollisions.collision_type, "=", API.COLLISION_BOOKMARK)
                 .where(TCollisions.collision_id, "=", apiAccount.id)
+                .where(SqlWhere.WhereString("EXISTS (SELECT 1 FROM ${TPublications.NAME} WHERE ${TPublications.id}=${TCollisions.owner_id} AND ${TPublications.publication_type}=${API.PUBLICATION_TYPE_POST} AND ${TPublications.status}=${API.STATUS_PUBLIC})"))
                 .sort(TCollisions.collision_date_create, false)
                 .offset_count(offset, COUNT)
 
@@ -54,24 +63,6 @@ class EBookmarksGetAll : RBookmarksGetAll(0, "", 0, 0, 0, emptyArray()) {
         val list = ArrayList<Publication>()
         for (i in publications) {
             list.add(i)
-        }
-
-        val wasNotFoundIds = ArrayList<Long>()
-        for (id in ids) {
-            var found = false
-            for (p in publications) if (p.id == id) {
-                found = true
-                break
-            }
-            if (!found) wasNotFoundIds.add(id)
-        }
-
-        if (wasNotFoundIds.isNotEmpty()) {
-            Database.remove("EPublicationsBookmarksGetAll remove", SqlQueryRemove(TCollisions.NAME)
-                    .where(TCollisions.collision_type, "=", API.COLLISION_BOOKMARK)
-                    .where(TCollisions.collision_id, "=", apiAccount.id)
-                    .where(SqlWhere.WhereIN(TCollisions.owner_id, wasNotFoundIds))
-            )
         }
 
         list.sortWith(Comparator { u1, u2 ->
