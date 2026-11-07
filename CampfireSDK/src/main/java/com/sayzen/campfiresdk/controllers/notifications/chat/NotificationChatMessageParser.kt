@@ -48,6 +48,7 @@ class MessageReplyReceiver : BroadcastReceiver() {
         val reply = RemoteInput.getResultsFromIntent(intent)?.getCharSequence(KEY_TEXT_REPLY) ?: return
         val chatTagS = intent.getStringExtra(CHAT_TAG) ?: return
         val chatTag = ChatTag(chatTagS)
+        val pendingResult = goAsync()
 
         ApiRequestsSupporter.apply {
             init(api)
@@ -59,15 +60,28 @@ class MessageReplyReceiver : BroadcastReceiver() {
                 ControllerChats.incrementMessages(chatTag, response.message, true)
 
                 ToolsThreads.thread {
-                    NotificationChatMessageParser.sendNotification(
-                        chatTag, ControllerNotifications.canSoundBySettings(NotificationChatMessage(
-                            // canSoundBySettings doesn't actually care, but still
-                            response.message, chatTag, true
-                        ))
-                    )
+                    try {
+                        NotificationChatMessageParser.sendNotification(
+                            chatTag, ControllerNotifications.canSoundBySettings(NotificationChatMessage(
+                                // canSoundBySettings doesn't actually care, but still
+                                response.message, chatTag, true
+                            ))
+                        )
+                    } finally {
+                        pendingResult.finish()
+                    }
                 }
             }.onApiError {
                 ToolsToast.show(t(API_TRANSLATE.error_unknown))
+            }.onError {
+                // The reply spinner only goes away once the notification is posted again
+                ToolsThreads.thread {
+                    try {
+                        NotificationChatMessageParser.sendNotification(chatTag, false, reply)
+                    } finally {
+                        pendingResult.finish()
+                    }
+                }
             }
         }
     }
@@ -114,7 +128,7 @@ private fun PublicationChatMessage.notificationText(): String = when {
 }
 
 @WorkerThread
-fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound: Boolean = true) {
+fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound: Boolean = true, failedReply: CharSequence? = null) {
     val chatMessages = ControllerChats.getMessages(tag)
     if (chatMessages.isEmpty() || chatMessages.messages.isEmpty()) {
         clearNotification(tag)
@@ -179,6 +193,9 @@ fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound
                         })
                         .build()
                 ))
+            }
+            if (failedReply != null) {
+                it.addMessage("${t(API_TRANSLATE.app_error)}: $failedReply", System.currentTimeMillis(), me)
             }
         })
 
