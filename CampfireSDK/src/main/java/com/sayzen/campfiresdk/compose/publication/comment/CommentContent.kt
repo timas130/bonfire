@@ -45,6 +45,7 @@ internal fun CommentQuote(
     val borderWidth = with(LocalDensity.current) { 2.dp.toPx() }
 
     val quotedComment = PublicationComment().apply {
+        skipInstanceEvent = true
         id = comment.quoteId
         parentPublicationId = comment.parentPublicationId
         parentPublicationType = comment.parentPublicationType

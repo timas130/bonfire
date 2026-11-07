@@ -54,6 +54,8 @@ abstract class Publication : JsonPolimorf, ImageHolder {
     var nsfw = false
     var hotness = 0.0
 
+    var skipInstanceEvent = false
+
     //
     //  Getters
     //
@@ -72,7 +74,7 @@ abstract class Publication : JsonPolimorf, ImageHolder {
 
     init {
         publicationType = getPublicationTypeConst()
-        ToolsThreads.main(100) { EventBus.post(EventPublicationInstance(this)) }
+        ToolsThreads.main(100) { if (!skipInstanceEvent) EventBus.post(EventPublicationInstance(this)) }
     }
 
     abstract fun getPublicationTypeConst(): Long
