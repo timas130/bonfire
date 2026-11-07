@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,9 @@ import com.sup.dev.java.tools.ToolsDate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import sh.sit.bonfire.formatting.compose.LinksClickableText
+import sh.sit.bonfire.formatting.compose.buildInlineAnnotatedString
+import sh.sit.bonfire.formatting.core.BonfireFormatter
 
 typealias PollResult = RPostPagePollingGetVotes.PollingResultsItem
 
@@ -79,6 +83,26 @@ class PollingResultsModel(
         .results
         .toList()
     }
+}
+
+@Composable
+private fun PollOptionText(
+    option: String,
+    modifier: Modifier = Modifier,
+    maxLines: Int = Int.MAX_VALUE,
+) {
+    val colors = MaterialTheme.colorScheme
+    val formattedOption = remember(option, colors) {
+        BonfireFormatter
+            .parse(option, inlineOnly = true)
+            .buildInlineAnnotatedString(colors)
+    }
+
+    LinksClickableText(
+        text = formattedOption,
+        modifier = modifier,
+        maxLines = maxLines,
+    )
 }
 
 @Composable
@@ -134,7 +158,7 @@ private fun PollingResultsScreenC(
                             }
                         },
                         label = {
-                            Text(option, maxLines = 1)
+                            PollOptionText(option, maxLines = 1)
                         }
                     )
                 }
@@ -155,7 +179,7 @@ private fun PollingResultsScreenC(
                     )
                 },
                 supportingContent = {
-                    Text(
+                    PollOptionText(
                         item?.itemId?.let { page.options.getOrNull(it.toInt()).orEmpty() } ?: "...........",
                         Modifier.shimmerExt(item == null, shimmer),
                     )
