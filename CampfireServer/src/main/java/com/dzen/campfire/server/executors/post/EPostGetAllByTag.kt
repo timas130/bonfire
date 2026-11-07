@@ -5,7 +5,7 @@ import com.dzen.campfire.api.requests.post.RPostGetAllByTag
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerAchievements
 import com.dzen.campfire.server.controllers.ControllerOptimizer
-import com.dzen.campfire.server.controllers.ControllerPost.filterNsfw
+import com.dzen.campfire.server.controllers.ControllerPost
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.tables.TCollisions
 import com.dzen.campfire.server.tables.TPublications
@@ -22,12 +22,18 @@ class EPostGetAllByTag : RPostGetAllByTag(0, 0) {
 
     override fun execute(): Response {
 
-        val v = Database.select("EPostGetAllByTag select_1",SqlQuerySelect(TCollisions.NAME, TCollisions.owner_id)
+        val selectCollisions = SqlQuerySelect(TCollisions.NAME, TCollisions.owner_id)
                 .where(TCollisions.collision_type, "=", API.COLLISION_TAG)
                 .where(TCollisions.collision_id, "=", tagId)
                 .where(SqlWhere.WhereString("${API.STATUS_PUBLIC}=(SELECT ${TPublications.status} FROM ${TPublications.NAME} WHERE ${TPublications.id}=${TCollisions.owner_id})"))
                 .offset_count(offset, COUNT)
-                .sort(TCollisions.collision_date_create, false))
+                .sort(TCollisions.collision_date_create, false)
+
+        if (!ControllerPost.canSeeNsfwPosts(apiAccount.id, requestApiVersion)) {
+            selectCollisions.where(SqlWhere.WhereString("false=(SELECT ${TPublications.nsfw} FROM ${TPublications.NAME} WHERE ${TPublications.id}=${TCollisions.owner_id})"))
+        }
+
+        val v = Database.select("EPostGetAllByTag select_1", selectCollisions)
 
         if (v.rowsCount == 0) return Response(emptyArray())
 
@@ -35,7 +41,6 @@ class EPostGetAllByTag : RPostGetAllByTag(0, 0) {
         for (i in ids.indices) ids[i] = v.next<Long>()
 
         val selectPublications = ControllerPublications.instanceSelect(apiAccount.id)
-            .filterNsfw(apiAccount.id, requestApiVersion)
             .sort(TPublications.date_create, false)
         selectPublications.where(SqlWhere.WhereIN(TPublications.id, ids))
 
