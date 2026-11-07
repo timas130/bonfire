@@ -8,9 +8,12 @@ import sh.sit.bonfire.networking.OkHttpController
 open class ImageLoaderUrl(
     protected val url: String
 ) : ImageLink() {
+    private companion object {
+        val client by lazy { OkHttpController.getClient(SupAndroid.appContext!!) }
+    }
+
     override fun load(): ByteArray? {
         if (url.isEmpty()) return null
-        val client = OkHttpController.getClient(SupAndroid.appContext!!)
         val request = Request.Builder()
             .url(url)
             .build()
