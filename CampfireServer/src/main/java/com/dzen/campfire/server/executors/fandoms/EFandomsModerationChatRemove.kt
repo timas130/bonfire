@@ -23,15 +23,18 @@ class EFandomsModerationChatRemove : RFandomsModerationChatRemove(0, "") {
     override fun check() {
         ControllerModeration.parseComment(comment, apiAccount.id)
 
-        val v = Database.select("EFandomsModerationChatRemove select", SqlQuerySelect(TChats.NAME, TChats.fandom_id, TChats.language_id, TChats.name)
+        val v = Database.select("EFandomsModerationChatRemove select", SqlQuerySelect(TChats.NAME, TChats.type, TChats.fandom_id, TChats.language_id, TChats.name)
                 .where(TChats.id, "=", chatId)
         )
 
         if(v.isEmpty) throw ApiException(API.ERROR_GONE)
 
+        val type: Long = v.next()
         fandomId = v.next()
         languageId = v.next()
         name = v.next()
+
+        if (type != API.CHAT_TYPE_FANDOM_SUB) throw ApiException(E_BAD_TYPE)
 
         ControllerFandom.checkCan(apiAccount, fandomId, languageId, API.LVL_MODERATOR_CHATS)
 
