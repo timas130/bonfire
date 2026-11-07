@@ -176,6 +176,8 @@ class ComposeCardPage(pagesContainer: PagesContainer?, page: Page) : CardPage(R.
 
         val vCompose: ComposeView = view.findViewById(R.id.vCompose)
 
+        val pollsInert = editMode || postIsDraft
+
         // https://issuetracker.google.com/240449681 <- FFS
         vCompose.getChildAt(0)?.requestLayout()
         vCompose.setContent {
@@ -196,9 +198,9 @@ class ComposeCardPage(pagesContainer: PagesContainer?, page: Page) : CardPage(R.
                                     sourceId = it.getSourceId(),
                                     sourceSubId = it.getSourceIdSub(),
                                     sourceDateCreate = it.getSourceDateCreate(),
-                                    editMode = this@ComposeCardPage.editMode
+                                    editMode = pollsInert
                                 )
-                            } ?: PagesSource.Unknown.copy(editMode = this@ComposeCardPage.editMode),
+                            } ?: PagesSource.Unknown.copy(editMode = pollsInert),
                             model = model,
                         )
                     }
