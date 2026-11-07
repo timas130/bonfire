@@ -456,9 +456,10 @@ class CardPost(
             vNsfwOverlay.visibility = View.VISIBLE
 
             if (currentUser?.birthday == null) {
+                vNsfwButton1.visibility = View.VISIBLE
                 vNsfwButton1.text = view.context.getString(R.string.nsfw_verify_age)
                 vNsfwButton1.setOnClickListener {
-                    Navigator.to(SetBirthdayScreen())
+                    Navigator.to(SetBirthdayScreen(onBirthdaySet = { updateNsfwOverlay() }))
                 }
 
                 vNsfwButton2.visibility = View.VISIBLE
@@ -468,12 +469,16 @@ class CardPost(
                     ToolsToast.show(R.string.hide_nsfw_posts_desc)
                 }
             } else if (currentUser.nsfwAllowed == true) {
+                vNsfwButton1.visibility = View.VISIBLE
                 vNsfwButton1.text = view.context.getString(R.string.nsfw_open)
                 vNsfwButton1.setOnClickListener {
                     vNsfwOverlay.visibility = View.GONE
                     nsfwOverlayActive = false
                 }
 
+                vNsfwButton2.visibility = View.GONE
+            } else {
+                vNsfwButton1.visibility = View.GONE
                 vNsfwButton2.visibility = View.GONE
             }
         } else {
