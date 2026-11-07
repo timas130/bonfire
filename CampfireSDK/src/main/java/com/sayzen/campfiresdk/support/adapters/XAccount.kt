@@ -319,7 +319,8 @@ class XAccount {
 
         if (!ControllerSettings.useNicknameColors) return "388E3C"
         if (!isOnline()) return "757575"
-        return Integer.toHexString(account.customization.nicknameColor ?: 0xFFFFFFFF.toInt())
+        val defaultColor = if (ControllerTheme.isLightTheme()) 0xFF000000.toInt() else 0xFFFFFFFF.toInt()
+        return Integer.toHexString(account.customization.nicknameColor ?: defaultColor)
             // this surely will not cause problems in the future
             .drop(2)
     }
