@@ -33,6 +33,7 @@ class SplashPageImage(
 ) : SplashChooseImage() {
 
     private var imagesCreator = ImagesListCreator(requestPutPageTracked)
+    @Volatile
     private var createAsList = false
 
     init {
@@ -49,7 +50,7 @@ class SplashPageImage(
                                 .setText(t(API_TRANSLATE.post_page_image_create_as_list_text))
                                 .setOnCancel(t(API_TRANSLATE.app_no))
                                 .setOnEnter(t(API_TRANSLATE.app_yes)) { ww -> createAsList = true }
-                                .setOnHide { waiting.a = false }
+                                .setOnHide { ToolsThreads.main(true) { waiting.a = false } }
                                 .setCancelable(false)
                                 .asSheetShow()
                     }
