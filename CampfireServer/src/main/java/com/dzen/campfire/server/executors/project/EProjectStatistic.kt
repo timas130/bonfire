@@ -9,19 +9,21 @@ import com.dzen.campfire.server.tables.TPublicationsKarmaTransactions
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.Sql
 import com.sup.dev.java_pc.sql.SqlQuerySelect
+import java.util.concurrent.locks.ReentrantLock
 
 class EProjectStatistic : RProjectStatistic() {
 
 
     companion object{
 
-        var lastUpdate = 0L
+        @Volatile var lastUpdate = 0L
         var last_accounts = ArrayList<Long>()
         var last_posts = ArrayList<Long>()
         var last_comments = ArrayList<Long>()
         var last_messages = ArrayList<Long>()
         var last_enters = ArrayList<Long>()
         var last_rates = ArrayList<Long>()
+        private val lock = ReentrantLock()
 
     }
 
@@ -30,12 +32,25 @@ class EProjectStatistic : RProjectStatistic() {
     }
 
     override fun execute(): Response {
+        if (lastUpdate == 0L) lock.lock()
+        else if (!lock.tryLock()) return getCached()
+
+        try {
+            return getCachedOrRecount()
+        } finally {
+            lock.unlock()
+        }
+    }
+
+    private fun getCached(): Response {
+        return Response(last_accounts.toTypedArray(), last_posts.toTypedArray(), last_comments.toTypedArray(), last_messages.toTypedArray(), last_enters.toTypedArray(), last_rates.toTypedArray())
+    }
+
+    private fun getCachedOrRecount(): Response {
 
         if(lastUpdate > System.currentTimeMillis() - 1000L * 60 * 60 * 6){
-            return Response(last_accounts.toTypedArray(), last_posts.toTypedArray(), last_comments.toTypedArray(), last_messages.toTypedArray(), last_enters.toTypedArray(), last_rates.toTypedArray())
+            return getCached()
         }
-
-        lastUpdate = System.currentTimeMillis()
 
         val dates = arrayOf(7L, 30L, 90L, 180L)
 
@@ -70,6 +85,7 @@ class EProjectStatistic : RProjectStatistic() {
         last_messages = messages
         last_enters = enters
         last_rates = rates
+        lastUpdate = System.currentTimeMillis()
 
         return Response(accounts.toTypedArray(), posts.toTypedArray(), comments.toTypedArray(), messages.toTypedArray(), enters.toTypedArray(), rates.toTypedArray())
     }
