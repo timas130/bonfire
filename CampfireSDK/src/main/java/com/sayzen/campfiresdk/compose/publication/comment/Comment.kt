@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,6 +13,7 @@ import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -22,12 +24,16 @@ import com.dzen.campfire.api.models.notifications.comments.NotificationCommentAn
 import com.dzen.campfire.api.models.notifications.publications.NotificationMention
 import com.dzen.campfire.api.models.notifications.publications.NotificationPublicationReaction
 import com.dzen.campfire.api.models.publications.PublicationComment
+import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.compose.publication.PublicationReactions
 import com.sayzen.campfiresdk.compose.util.Avatar
 import com.sayzen.campfiresdk.compose.util.IconButtonWithOffset
 import com.sayzen.campfiresdk.compose.util.relativeToView
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.splashs.SplashComment
+import sh.sit.bonfire.formatting.compose.LinksClickableText
+import sh.sit.bonfire.formatting.compose.buildInlineAnnotatedString
+import sh.sit.bonfire.formatting.core.BonfireFormatter
 
 class CommentModel(comment: PublicationComment, onRemoved: State<() -> Unit>) : ViewModel() {
     val dataSource = CommentDataSource(comment, onRemoved)
@@ -90,6 +96,30 @@ fun Comment(
     }
 
     val comment by model.dataSource.flow.collectAsState()
+
+    if (comment.blacklisted) {
+        if (ControllerSettings.hideBlacklistedPubs) return
+
+        val hiddenString = stringResource(R.string.pub_hidden)
+        val colors = MaterialTheme.colorScheme
+
+        Surface(
+            color = colors.surfaceContainerLow,
+            modifier = modifier.fillMaxWidth(),
+        ) {
+            LinksClickableText(
+                text = remember(comment.creator.name) {
+                    BonfireFormatter.parse(
+                        hiddenString.format(comment.creator.name),
+                        inlineOnly = true
+                    ).buildInlineAnnotatedString(colors)
+                },
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp),
+            )
+        }
+        return
+    }
 
     val onReply: (showToast: Boolean) -> Unit = { showToast ->
         SplashComment(
