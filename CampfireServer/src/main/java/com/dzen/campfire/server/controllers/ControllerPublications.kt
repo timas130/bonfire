@@ -312,7 +312,7 @@ object ControllerPublications {
 
         if (listIds.isEmpty()) return
 
-        val v = Database.select("ControllerPublications.loadRubricsForPosts", SqlQuerySelect(TRubrics.NAME, TRubrics.id, TRubrics.name, TRubrics.karma_cof).where(SqlWhere.WhereIN(TRubrics.id, listIds)))
+        val v = Database.select("ControllerPublications.loadRubricsForPosts", SqlQuerySelect(TRubrics.NAME, TRubrics.id, TRubrics.name, TRubrics.karma_cof).where(SqlWhere.WhereIN(TRubrics.id, listIds)).where(TRubrics.status, "=", API.STATUS_PUBLIC))
 
         while (v.hasNext()) {
             val id: Long = v.next()

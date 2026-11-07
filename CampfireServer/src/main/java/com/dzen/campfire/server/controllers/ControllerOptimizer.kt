@@ -376,9 +376,16 @@ object ControllerOptimizer {
 
     fun getRubricKarmaCof(rubricId: Long): Long {
         if (!rubricKarmaCofCash.containsKey(rubricId)) {
-            rubricKarmaCofCash[rubricId] = ControllerRubrics[rubricId, TRubrics.karma_cof].next()
+            val v = ControllerRubrics[rubricId, TRubrics.karma_cof, TRubrics.status]
+            val cof: Long = v.next()
+            val status: Long = v.next()
+            rubricKarmaCofCash[rubricId] = if (status == API.STATUS_PUBLIC) cof else 100L
         }
         return rubricKarmaCofCash[rubricId] ?: 100
+    }
+
+    fun clearRubricKarmaCof(rubricId: Long) {
+        rubricKarmaCofCash.remove(rubricId)
     }
 
     fun setRubricKarmaCof(rubricId: Long, cof: Long) {

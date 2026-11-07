@@ -35,6 +35,7 @@ class ERubricsModerRemove : RRubricsModerRemove(0, "") {
                 .where(TRubrics.id, "=", rubric.id)
                 .updateValue(TRubrics.status, API.STATUS_REMOVED)
         )
+        ControllerOptimizer.clearRubricKarmaCof(rubric.id)
 
         val moderationId = ControllerPublications.moderation(ModerationRubricRemove(comment, rubric.id, rubric.name), apiAccount.id, rubric.fandom.id, rubric.fandom.languageId, 0)
         ControllerNotifications.push(rubric.owner.id, NotificationRubricsRemove(moderationId, rubric.id, rubric.name, comment, apiAccount.id, apiAccount.name, apiAccount.sex, fandom.imageId, rubric.fandom.id, rubric.fandom.languageId))
