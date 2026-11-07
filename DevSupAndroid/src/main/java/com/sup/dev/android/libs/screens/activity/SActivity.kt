@@ -279,13 +279,17 @@ abstract class SActivity : AppCompatActivity() {
             }
             ToolsView.toAlpha(splashView.getView(), splashView.animationMs.toInt()) {
                 vSplashContainer!!.removeView(splashView.getView())
-                if (!splashView.splash.isCompanion) {
-                    if (vSplashContainer!!.childCount == 0) vActivityContainer!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
-                    else getToSplash()?.getView()?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
-                }
+                if (!hasNonCompanionSplash()) vActivityContainer!!.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+                if (!splashView.splash.isCompanion) getToSplash()?.getView()?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
             }
             splashView.onHide()
         }
+    }
+
+    private fun hasNonCompanionSplash(): Boolean {
+        for (i in 0 until vSplashContainer!!.childCount)
+            if (!(vSplashContainer!!.getChildAt(i).tag as SplashView<out Any>).splash.isCompanion) return true
+        return false
     }
 
     fun hideAllSplash(){
