@@ -26,11 +26,14 @@ impl ProfileServer {
         .execute(&self.base.pool)
         .await;
 
-        if let Some(err) = result.err().and_then(|err| err.into_database_error()) {
-            if err.is_unique_violation() {
+        if let Err(err) = result {
+            if err
+                .as_database_error()
+                .is_some_and(|err| err.is_unique_violation())
+            {
                 return Err(ProfileError::BirthdayAlreadySet);
             }
-            return Err(sqlx::Error::Database(err).into());
+            return Err(err.into());
         }
 
         Ok(())
