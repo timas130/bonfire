@@ -59,13 +59,13 @@ object ControllerAlive {
                         "ControllerAlive_1"
                     )
                 else
-                    ToolsThreads.main(10000) { checkServerMedia(tryCount - 1) }
+                    ToolsThreads.main(10000) { checkServer(tryCount - 1) }
             }
             .send(api)
     }
 
     private fun checkServerMedia(tryCount: Int = 10) {
-        ImageLoader.load(ApiResources.AVATAR_1).intoBytes {
+        ImageLoader.load(ApiResources.AVATAR_1).noLoadFromCash().intoBytes {
             if (it == null) {
                 info("ControllerAlive", "Media server check: failed")
                 if (tryCount <= 0) {
