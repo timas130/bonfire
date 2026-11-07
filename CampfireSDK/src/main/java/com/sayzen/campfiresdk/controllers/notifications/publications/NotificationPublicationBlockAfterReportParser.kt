@@ -9,6 +9,7 @@ import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.controllers.tCap
 import com.sayzen.campfiresdk.screens.fandoms.moderation.view.SModerationView
+import com.sayzen.campfiresdk.screens.notifications.SNotifications
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.java.tools.ToolsDate
@@ -36,7 +37,8 @@ public class NotificationPublicationBlockAfterReportParser(override val n: Notif
     override fun canShow() = ControllerSettings.notificationsOther
 
     override fun doAction() {
-        SModerationView.instance(n.moderationId, Navigator.TO)
+        if (n.moderationId > 0) SModerationView.instance(n.moderationId, Navigator.TO)
+        else if (Navigator.getCurrent() !is SNotifications) SNotifications.instance(Navigator.TO)
     }
 
 }
