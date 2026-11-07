@@ -301,6 +301,7 @@ class TextFormatter(
 
             var nextSpace = findNext(' ', nextClose - i)
             if (nextSpace == -1) nextSpace = text.length
+            nextSpace = (nextClose + 1 until nextSpace).firstOrNull { text[it].isWhitespace() } ?: nextSpace
 
             if (ToolsText.TEXT_CHARS_s.contains(text[nextSpace - 1])) nextSpace--
             val name = text.substring(i + 1, nextClose)
