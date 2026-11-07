@@ -23,7 +23,7 @@ class EAdminVoteCancel : RAdminVoteCancel(0, "") {
         if(mVote == null) return Response()
         if(ControllerAdminVote.isOwnVote(mVote, apiAccount.id)) throw ApiException(API.ERROR_ACCESS)
 
-        ControllerAdminVote.voteCancel(apiAccount.id, voteId)
+        ControllerAdminVote.voteCancel(apiAccount.id, voteId, comment)
 
         val myAccount = ControllerAccounts.getAccount(apiAccount.id)!!
         val targetAdmin = ControllerAccounts.getAccount(mVote.adminAccount.id)!!

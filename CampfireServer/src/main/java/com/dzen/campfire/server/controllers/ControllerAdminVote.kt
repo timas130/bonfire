@@ -57,14 +57,14 @@ object ControllerAdminVote {
         if(mForParse != null) parseAccept(mForParse!!)
     }
 
-    fun voteCancel(cancelAdminAccountId:Long, id:Long){
+    fun voteCancel(cancelAdminAccountId:Long, id:Long, comment:String){
         var mForParse:MAdminVote?
         synchronized(map){
             val m = map[id] ?: return
             map.remove(id)
             mForParse = m  //  Чтобы выйти из synchronized
         }
-        if(mForParse != null) parseCancel(mForParse!!, cancelAdminAccountId)
+        if(mForParse != null) parseCancel(mForParse!!, cancelAdminAccountId, comment)
     }
 
     fun addAction(m:MAdminVote){
@@ -91,8 +91,8 @@ object ControllerAdminVote {
         if(m is MAdminVoteFandomRemove) PAdminVoteFandomRemove().accept(m)
     }
 
-    fun parseCancel(m:MAdminVote, cancelAdminAccountId:Long){
-        if(m is MAdminVoteAccountPunish) PAdminVoteAccountPunish().cancel(m, cancelAdminAccountId)
+    fun parseCancel(m:MAdminVote, cancelAdminAccountId:Long, comment:String){
+        if(m is MAdminVoteAccountPunish) PAdminVoteAccountPunish().cancel(m, cancelAdminAccountId, comment)
     }
 
 

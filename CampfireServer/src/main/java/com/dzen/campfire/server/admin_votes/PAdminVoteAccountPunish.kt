@@ -6,8 +6,8 @@ import com.dzen.campfire.server.controllers.ControllerAccounts
 
 class PAdminVoteAccountPunish {
 
-    fun cancel(m: MAdminVoteAccountPunish, cancelAdminAccountId:Long){
-        ControllerAccounts.removePunishment(ControllerAccounts.getAccount(cancelAdminAccountId)!!, m.comment, m.punishId)
+    fun cancel(m: MAdminVoteAccountPunish, cancelAdminAccountId:Long, comment:String){
+        ControllerAccounts.removePunishment(ControllerAccounts.getAccount(cancelAdminAccountId)!!, comment, m.punishId)
     }
 
 
