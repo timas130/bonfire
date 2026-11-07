@@ -13,12 +13,15 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.quests.*
 import com.dzen.campfire.api.requests.quests.RQuestsSaveState
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.controllers.ControllerEffects
+import com.sayzen.campfiresdk.controllers.ControllerHoliday
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.ControllerScreenAnimations
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.animations.*
 import com.sayzen.campfiresdk.support.loadGif
+import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.Navigator
@@ -30,6 +33,7 @@ import com.sup.dev.android.views.settings.SettingsCheckBox
 import com.sup.dev.android.views.settings.SettingsField
 import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.android.views.views.ViewIcon
+import com.sup.dev.android.views.views.draw_animations.DrawAnimation
 import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.android.views.views.layouts.LayoutCorned
 import com.sup.dev.java.libs.json.Json
@@ -46,6 +50,8 @@ class SQuestPlayer(
         val variables: HashMap<Long, String> = hashMapOf(),
         val dev: Boolean = false,
         var savedAge: Int = 0,
+        var boxEffectsStarted: Boolean = false,
+        val endlessBoxes: HashMap<String, DrawAnimation> = hashMapOf(),
     ) {
         // Behold, the Campfire64 architecture!
 
@@ -203,6 +209,7 @@ class SQuestPlayer(
     private var vibrateRemaining = 0
     private var vibrateRunnable: Runnable? = null
     private var vibrationEnabled = true
+    private var replacedByQuestScreen = false
 
     init {
         disableNavigation()
@@ -318,7 +325,7 @@ class SQuestPlayer(
 
         if (state.dev) vDebugButton.setImageResource(R.drawable.baseline_bug_report_24)
         vDebugButton.setOnClickListener {
-            Navigator.replace(SQuestDebug(details, state, parts, index))
+            replaceWithQuestScreen(SQuestDebug(details, state, parts, index))
         }
     }
 
@@ -334,25 +341,34 @@ class SQuestPlayer(
                     vibrateHandler.postDelayed(vibrateRunnable!!, effect.delayStart.toLong())
                 }
                 is QuestEffectBox -> {
+                    state.boxEffectsStarted = true
                     when (effect.box.link) {
                         API.LINK_BOX_WITH_FIREWORKS.link -> ControllerScreenAnimations.fireworks(clear = false)
-                        API.LINK_BOX_WITH_SUMMER.link -> ControllerScreenAnimations.addAnimation(DrawAnimationSummer())
-                        API.LINK_BOX_WITH_AUTUMN.link -> ControllerScreenAnimations.addAnimation(DrawAnimationAutumn())
-                        API.LINK_BOX_WITH_WINTER.link -> ControllerScreenAnimations.addAnimation(DrawAnimationWinter())
+                        API.LINK_BOX_WITH_SUMMER.link -> addEndlessAnimation(effect.box.link, DrawAnimationSummer())
+                        API.LINK_BOX_WITH_AUTUMN.link -> addEndlessAnimation(effect.box.link, DrawAnimationAutumn())
+                        API.LINK_BOX_WITH_WINTER.link -> addEndlessAnimation(effect.box.link, DrawAnimationWinter())
                         API.LINK_BOX_WITH_BOMB.link -> ControllerScreenAnimations.addAnimation(DrawAnimationBomb())
-                        API.LINK_BOX_WITH_SNOW.link -> ControllerScreenAnimations.addAnimation(DrawAnimationSnow(100))
-                        API.LINK_BOX_WITH_MAGIC_X2.link -> ControllerScreenAnimations.addAnimation(DrawAnimationMagic(2f))
-                        API.LINK_BOX_WITH_MAGIC.link -> ControllerScreenAnimations.addAnimation(DrawAnimationMagic())
-                        API.LINK_BOX_WITH_GOOSE.link -> ControllerScreenAnimations.addAnimation(DrawAnimationGoose())
-                        API.LINK_BOX_WITH_CONFETTI.link -> ControllerScreenAnimations.addAnimation(DrawAnimationConfetti())
+                        API.LINK_BOX_WITH_SNOW.link -> addEndlessAnimation(effect.box.link, DrawAnimationSnow(100))
+                        API.LINK_BOX_WITH_MAGIC_X2.link -> addEndlessAnimation(effect.box.link, DrawAnimationMagic(2f))
+                        API.LINK_BOX_WITH_MAGIC.link -> addEndlessAnimation(effect.box.link, DrawAnimationMagic())
+                        API.LINK_BOX_WITH_GOOSE.link -> addEndlessAnimation(effect.box.link, DrawAnimationGoose())
+                        API.LINK_BOX_WITH_CONFETTI.link -> addEndlessAnimation(effect.box.link, DrawAnimationConfetti())
                         API.LINK_BOX_WITH_BOX.link -> ControllerScreenAnimations.box(1, clear = false)
                     }
                 }
                 is QuestEffectBoxReset -> {
+                    state.boxEffectsStarted = true
                     ControllerScreenAnimations.clearAnimation()
                 }
             }
         }
+    }
+
+    private fun addEndlessAnimation(link: String, animation: DrawAnimation) {
+        val running = state.endlessBoxes[link]
+        if (running != null && SupAndroid.activity?.vActivityDrawAnimations?.getAnimations()?.any { it === running } == true) return
+        state.endlessBoxes[link] = animation
+        ControllerScreenAnimations.addAnimation(animation)
     }
 
     private fun getVibrationRunnable(effect: QuestEffectVibrate) = Runnable {
@@ -362,8 +378,19 @@ class SQuestPlayer(
         }
     }
 
+    private fun replaceWithQuestScreen(screen: Screen) {
+        replacedByQuestScreen = true
+        Navigator.replace(screen)
+    }
+
     override fun onDestroy() {
         vibrateRunnable?.let { vibrateHandler.removeCallbacks(it) }
+        if (!replacedByQuestScreen && state.boxEffectsStarted) {
+            state.boxEffectsStarted = false
+            ControllerScreenAnimations.clearAnimation()
+            ControllerHoliday.onAppStart()
+            ControllerEffects.update()
+        }
         super.onDestroy()
     }
 
@@ -383,11 +410,11 @@ class SQuestPlayer(
             .setText(t(API_TRANSLATE.quests_end_d))
             .setOnEnter(t(API_TRANSLATE.quests_play_again)) {
                 it.hide()
-                Navigator.replace(SQuestPlayer(
+                replaceWithQuestScreen(SQuestPlayer(
                     details,
                     parts,
                     index = 0,
-                    QuestState(dev = state.dev),
+                    QuestState(dev = state.dev, boxEffectsStarted = state.boxEffectsStarted, endlessBoxes = state.endlessBoxes),
                 ))
             }
             .setOnCancel(t(API_TRANSLATE.app_back)) {
@@ -501,7 +528,7 @@ class SQuestPlayer(
                     partIdx,
                     state
                 )
-                Navigator.replace(player)
+                replaceWithQuestScreen(player)
             }
             is QuestPartCondition -> {
                 val fulfilled = try {
