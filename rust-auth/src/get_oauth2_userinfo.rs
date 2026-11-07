@@ -39,7 +39,8 @@ impl AuthServer {
             "select fl.id, grant_id, session_id, client_id, user_id, scopes \
              from oauth2_flows_as fl \
              inner join sessions on sessions.id = fl.session_id \
-             where fl.id = $1 and access_token = $2 and grant_id is not null",
+             where fl.id = $1 and access_token = $2 and grant_id is not null \
+                   and access_token_expires_at > now()",
             flow_id,
             access_token,
         )

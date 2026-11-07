@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select fl.id, grant_id, session_id, client_id, user_id, scopes from oauth2_flows_as fl inner join sessions on sessions.id = fl.session_id where fl.id = $1 and access_token = $2 and grant_id is not null",
+  "query": "select fl.id, grant_id, session_id, client_id, user_id, scopes from oauth2_flows_as fl inner join sessions on sessions.id = fl.session_id where fl.id = $1 and access_token = $2 and grant_id is not null and access_token_expires_at > now()",
   "describe": {
     "columns": [
       {
@@ -49,5 +49,5 @@
       false
     ]
   },
-  "hash": "308ac69bbb4a1f853f718f3dee385b7255693fc3bd5acf6838bcc5689fffe55d"
+  "hash": "942a3c5218245b555bd062bfcdac7a24cfdec707e80d30801dab789e1722eb2e"
 }
