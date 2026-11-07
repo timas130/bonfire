@@ -401,10 +401,10 @@ object ToolsBitmap {
         return transformBitmap(bitmap, matrix)
     }
 
-    fun applyExifOrientation(bytes: ByteArray): ByteArray {
+    fun applyExifOrientation(bytes: ByteArray, w: Int = 0, h: Int = 0, resizeByMinSide: Boolean = false): ByteArray {
         val matrix = readExifMatrix(ByteArrayInputStream(bytes)) ?: return bytes
         return try {
-            val bitmap = decode(bytes) ?: return bytes
+            val bitmap = decode(bytes, w, h, null, resizeByMinSide = resizeByMinSide) ?: return bytes
             toBytes(transformBitmap(bitmap, matrix)) ?: bytes
         } catch (e: OutOfMemoryError) {
             err(e)

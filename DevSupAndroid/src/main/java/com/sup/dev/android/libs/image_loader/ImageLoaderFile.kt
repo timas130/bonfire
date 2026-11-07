@@ -15,7 +15,7 @@ class ImageLoaderFile(
        return file.absolutePath == (imageLoader as ImageLoaderFile).file.absolutePath
     }
 
-    override fun getKeyOfImage() = "file_${file.absolutePath}"
+    override fun getKeyOfImage() = "file_upright_${file.absolutePath}"
 
     override fun load(): ByteArray? {
         try {
@@ -28,7 +28,8 @@ class ImageLoaderFile(
             } catch (e: IOException) {
                 err(e)
             }
-            return ToolsFiles.readFile(file)
+            val side = maxOf(getW(), getH())
+            return ToolsBitmap.applyExifOrientation(ToolsFiles.readFile(file), side, side, resizeByMinSide)
         } catch (e: IOException) {
             err(e)
             return null
