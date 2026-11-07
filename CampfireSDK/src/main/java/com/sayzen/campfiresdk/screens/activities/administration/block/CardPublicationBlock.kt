@@ -30,6 +30,8 @@ class CardPublicationBlock(
         val publication: PublicationBlocked
 ) : Card(R.layout.screen_administration_block_card) {
 
+    private var accepting = false
+
     override fun bindView(view: View) {
         super.bindView(view)
 
@@ -61,13 +63,22 @@ class CardPublicationBlock(
         vCancel.text = t(API_TRANSLATE.app_reject)
         vAccept.text = t(API_TRANSLATE.app_confirm)
 
-        vAccept.isEnabled = !ControllerApi.isCurrentAccount(xAccount.getId()) || ControllerApi.protoadmins.contains(xAccount.getId())
-        vCancel.isEnabled = !ControllerApi.isCurrentAccount(xAccount.getId()) || ControllerApi.protoadmins.contains(xAccount.getId())
+        vAccept.isEnabled = !accepting && (!ControllerApi.isCurrentAccount(xAccount.getId()) || ControllerApi.protoadmins.contains(xAccount.getId()))
+        vCancel.isEnabled = !accepting && (!ControllerApi.isCurrentAccount(xAccount.getId()) || ControllerApi.protoadmins.contains(xAccount.getId()))
 
         vAccept.setOnClickListener {
-            EventBus.post(EventPublicationBlockedRemove(publication.moderationId, publication.publication.id))
-            ToolsToast.show(t(API_TRANSLATE.app_done))
+            accepting = true
+            update()
             ApiRequestsSupporter.execute(RPublicationsAdminRemove(publication.moderationId)) {
+                ToolsToast.show(t(API_TRANSLATE.app_done))
+                EventBus.post(EventPublicationBlockedRemove(publication.moderationId, publication.publication.id))
+            }.onApiError(API.ERROR_GONE) {
+                // Another admin has already decided on this one
+                ToolsToast.show(t(API_TRANSLATE.error_gone))
+                EventBus.post(EventPublicationBlockedRemove(publication.moderationId, publication.publication.id))
+            }.onFinish {
+                accepting = false
+                update()
             }
         }
 
