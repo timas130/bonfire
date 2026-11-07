@@ -75,9 +75,17 @@ class ViewText constructor(context: Context, attrs: AttributeSet) : androidx.app
 
     private var spoilerRevealed = false
 
+    private var revealedText: String? = null
+
     fun revealSpoiler() {
         spoilerRevealed = true
+        revealedText = text.toString()
         invalidate()
+    }
+
+    override fun onTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, lengthAfter: Int) {
+        super.onTextChanged(text, start, lengthBefore, lengthAfter)
+        if (spoilerRevealed && text?.toString() != revealedText) spoilerRevealed = false
     }
 
     private val tempPath = Path()
