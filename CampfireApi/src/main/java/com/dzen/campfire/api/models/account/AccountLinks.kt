@@ -4,7 +4,6 @@ import com.dzen.campfire.api.API
 import com.sup.dev.java.classes.items.Item2
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonParsable
-import com.sup.dev.java.tools.ToolsCollections
 
 class AccountLinks : JsonParsable {
 
@@ -40,7 +39,7 @@ class AccountLinks : JsonParsable {
 
     fun set(index: Int, title: String, url: String) {
         if(links.size != API.ACCOUNT_LINK_MAX){
-            links = ToolsCollections.expand(links, API.ACCOUNT_LINK_MAX, Item2("", ""))
+            links = Array(API.ACCOUNT_LINK_MAX) { if (it < links.size) links[it] else Item2("", "") }
         }
         links[index].a1 = title
         links[index].a2 = url
