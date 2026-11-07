@@ -69,7 +69,7 @@ class SplashQuestEffect(
         //#region vibration
         vVibrateTimes.setTitle(t(
             API_TRANSLATE.quests_edit_text_effect_vibrate_times,
-            (effect as? QuestEffectVibrate)?.times ?: 2
+            ((effect as? QuestEffectVibrate)?.times ?: 2).let { if (it == 0) "∞" else it.toString() }
         ))
         vVibrateTimes.setMinProgress(1)
         vVibrateTimes.setMaxProgress(API.QUEST_EFFECT_VIBRATE_COUNT_MAX.toInt() + 1)
