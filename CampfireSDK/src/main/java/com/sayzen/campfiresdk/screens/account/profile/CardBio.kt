@@ -277,6 +277,7 @@ class CardBio(
 
     private fun onEventAccountBioChangedSex(e: EventAccountBioChangedSex) {
         if (e.accountId == xAccount.getId()) {
+            xAccount.setSex(e.sex)
             update()
         }
     }

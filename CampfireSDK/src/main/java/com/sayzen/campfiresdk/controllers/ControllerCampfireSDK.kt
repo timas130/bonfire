@@ -188,6 +188,8 @@ object ControllerCampfireSDK {
 
     fun setSex(sex: Long, onComplete: () -> Unit) {
         ApiRequestsSupporter.executeProgressDialog(RAccountsBioSetSex(sex)) { r ->
+            ControllerApi.account.setSex(sex)
+            ControllerApi.saveCurrentAccount()
             EventBus.post(EventAccountBioChangedSex(ControllerApi.account.getId(), sex))
             onComplete.invoke()
         }
