@@ -101,7 +101,7 @@ object ControllerPost {
         when (page) {
             is PageText -> {
                 page.text = ControllerCensor.cens(page.text)
-                if (page.size == PageText.SIZE_0 && page.text.length > API.PAGE_TEXT_MAX_L || page.size == PageText.SIZE_1 && page.text.length > API.PAGE_TEXT_TITLE_MAX_L)
+                if (page.text.length > (if (page.size == PageText.SIZE_0) API.PAGE_TEXT_MAX_L else API.PAGE_TEXT_TITLE_MAX_L))
                     throw ApiException(eBadPage, "PageText. Bad text size [${page.text.length}]")
             }
             is PageImage -> {

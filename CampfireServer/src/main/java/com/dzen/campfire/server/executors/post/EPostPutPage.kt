@@ -55,6 +55,7 @@ class EPostPutPage : RPostPutPage(0, emptyArray(), 0, 0, "", "") {
             if (pages.isEmpty() && publication!!.pages.size >= API.POST_MAX_PAGES_COUNT) throw ApiException(E_BAD_PAGES_COUNT)
             if (pages.isNotEmpty() && publication!!.pages.size + pages.size > API.POST_MAX_PAGES_COUNT) throw ApiException(E_BAD_PAGES_COUNT)
         } else {
+            if (pages.size > API.POST_MAX_PAGES_COUNT) throw ApiException(E_BAD_PAGES_COUNT)
             fandom = ControllerFandom.getFandom(fandomId)
             if (fandom!!.status != API.STATUS_PUBLIC) throw ApiException(RPostPublication.E_FANDOM_NOT_PUBLIC)
         }
