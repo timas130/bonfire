@@ -72,7 +72,7 @@ class SplashAlert : Splash(R.layout.splash_alert) {
     override fun setEnabled(enabled: Boolean): SplashAlert {
         super.setEnabled(enabled)
         vCheck.isEnabled = enabled
-        vEnter.isEnabled = enabled
+        vEnter.isEnabled = enabled && (!lockUntilAccept || vCheck.isChecked)
         vCancel.isEnabled = enabled
         vText.isEnabled = enabled
         vTopContainer.isEnabled = enabled
@@ -93,6 +93,7 @@ class SplashAlert : Splash(R.layout.splash_alert) {
 
     fun setLockUntilAccept(lockUntilAccept: Boolean): SplashAlert {
         this.lockUntilAccept = lockUntilAccept
+        updateLock(vEnter, vCheck)
         return this
     }
 
