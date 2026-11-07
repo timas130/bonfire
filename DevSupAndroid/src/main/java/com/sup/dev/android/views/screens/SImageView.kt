@@ -144,6 +144,7 @@ disableNavigation()
             val dialog = ToolsView.showProgressDialog(SupAndroid.TEXT_APP_DOWNLOADING)
             ToolsThreads.thread {
                 imageLoader.intoBytes { bytes ->
+                    dialog.hide()
                     if (bytes == null) {
                         ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
                         return@intoBytes
@@ -154,7 +155,6 @@ disableNavigation()
                         saveToPictures(bytes)
                     }
                 }
-                dialog.hide()
             }
 
         }
