@@ -20,7 +20,7 @@ class EPostMovePage : RPostMovePage(0, 0, 0) {
 
     @Throws(ApiException::class)
     override fun check() {
-        val v = ControllerPublications[publicationId, TPublications.status, TPublications.creator_id, TPublications.publication_type, TPublications.publication_json]
+        val v = ControllerPublications[publicationId, TPublications.status, TPublications.creator_id, TPublications.publication_type, TPublications.publication_json, TPublications.fandom_id, TPublications.language_id]
 
         if (v.isEmpty()) throw ApiException(API.ERROR_GONE)
 
@@ -28,6 +28,8 @@ class EPostMovePage : RPostMovePage(0, 0, 0) {
         val creatorId = v.next<Long>()
         val publicationType = v.next<Long>()
         publication = PublicationPost(Json(v.next<Object>().toString()))
+        val fandomId = v.next<Long>()
+        val languageId = v.next<Long>()
 
         if (status != API.STATUS_DRAFT && status != API.STATUS_PUBLIC && status != API.STATUS_PENDING) throw ApiException(E_BAD_STATUS)
         if (creatorId != apiAccount.id) throw ApiException(API.ERROR_ACCESS)
@@ -35,7 +37,7 @@ class EPostMovePage : RPostMovePage(0, 0, 0) {
         if (pageIndex < 0 || publication!!.pages.size <= pageIndex) throw ApiException(E_BAD_PAGE_INDEX, "index [" + pageIndex + "] size[" + publication!!.pages.size + "]")
         if (targetIndex < 0 || publication!!.pages.size <= targetIndex) throw ApiException(E_BAD_PAGE_INDEX, "index [" + targetIndex + "] size[" + publication!!.pages.size + "]")
 
-        if (status == API.STATUS_PUBLIC) ControllerAccounts.checkAccountBanned(apiAccount.id, publication!!.fandom.id, publication!!.fandom.languageId)
+        if (status == API.STATUS_PUBLIC) ControllerAccounts.checkAccountBanned(apiAccount.id, fandomId, languageId)
     }
 
     override fun execute(): Response {

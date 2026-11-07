@@ -19,7 +19,7 @@ class EPostChangePage : RPostChangePage(0, null, 0) {
 
     @Throws(ApiException::class)
     override fun check() {
-        val v = ControllerPublications[publicationId, TPublications.status, TPublications.creator_id, TPublications.publication_type, TPublications.publication_json, TPublications.status]
+        val v = ControllerPublications[publicationId, TPublications.status, TPublications.creator_id, TPublications.publication_type, TPublications.publication_json, TPublications.status, TPublications.fandom_id, TPublications.language_id]
 
         if (v.isEmpty()) throw ApiException(API.ERROR_GONE)
 
@@ -29,13 +29,15 @@ class EPostChangePage : RPostChangePage(0, null, 0) {
         publication = PublicationPost(Json(v.next<Object>().toString()))
         publication!!.id = publicationId
         publication!!.status = v.next()
+        val fandomId:Long = v.next()
+        val languageId:Long = v.next()
 
         if (status != API.STATUS_DRAFT && status != API.STATUS_PUBLIC&& status != API.STATUS_PENDING) throw ApiException(E_BAD_STATUS)
         if (creatorId != apiAccount.id) throw ApiException(API.ERROR_ACCESS)
         if (publicationType != API.PUBLICATION_TYPE_POST) throw ApiException(E_BAD_TYPE)
         if (pageIndex < 0 || publication!!.pages.size <= pageIndex) throw ApiException(E_BAD_PAGE_INDEX, "index [" + pageIndex + "] size[" + publication!!.pages.size + "]")
 
-        if (status == API.STATUS_PUBLIC) ControllerAccounts.checkAccountBanned(apiAccount.id, publication!!.fandom.id, publication!!.fandom.languageId)
+        if (status == API.STATUS_PUBLIC) ControllerAccounts.checkAccountBanned(apiAccount.id, fandomId, languageId)
     }
 
     override fun execute(): Response {
