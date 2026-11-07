@@ -309,7 +309,7 @@ object ControllerPost {
                 page.dateCreate = System.currentTimeMillis()
             }
             is PageImages -> {
-                if (page.replacePageIndex != -1) {
+                if (page.replacePageIndex != -1 && publicationId != API.RESOURCES_PUBLICATION_WIKI) {
                     ControllerResources.remove(page.imagesIds[page.replacePageIndex])
                     ControllerResources.remove(page.imagesMiniIds[page.replacePageIndex])
                 }
@@ -335,8 +335,10 @@ object ControllerPost {
                     page.imagesMiniIds = ToolsCollections.remove(page.removePageIndex, page.imagesMiniIds)
                     if (page.removePageIndex in page.imagesMiniSizesW.indices) page.imagesMiniSizesW = ToolsCollections.remove(page.removePageIndex, page.imagesMiniSizesW)
                     if (page.removePageIndex in page.imagesMiniSizesH.indices) page.imagesMiniSizesH = ToolsCollections.remove(page.removePageIndex, page.imagesMiniSizesH)
-                    ControllerResources.remove(removedImageId)
-                    ControllerResources.remove(removedImageMiniId)
+                    if (publicationId != API.RESOURCES_PUBLICATION_WIKI) {
+                        ControllerResources.remove(removedImageId)
+                        ControllerResources.remove(removedImageMiniId)
+                    }
                 }
                 page.removePageIndex = -1
                 page.replacePageIndex = -1
@@ -354,7 +356,7 @@ object ControllerPost {
                 for (c in page.cells) {
                     c.image = ImageRef()
                     if (c.insertImage != null) {
-                        if (c.imageId > 0) ControllerResources.remove(c.imageId)
+                        if (c.imageId > 0 && publicationId != API.RESOURCES_PUBLICATION_WIKI) ControllerResources.remove(c.imageId)
 
                         c.imageId = ControllerResources.put(c.insertImage!!, publicationId)
                         c.insertImage = null
