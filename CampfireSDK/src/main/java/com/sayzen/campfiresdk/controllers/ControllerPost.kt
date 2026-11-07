@@ -19,6 +19,7 @@ import com.sayzen.campfiresdk.models.cards.post_pages.CardPageSpoiler
 import com.sayzen.campfiresdk.models.events.publications.*
 import com.sayzen.campfiresdk.screens.account.profile.SProfile
 import com.sayzen.campfiresdk.screens.fandoms.rubrics.SRubricsList
+import com.sayzen.campfiresdk.screens.fandoms.view.SFandom
 import com.sayzen.campfiresdk.screens.post.create.SPostCreationTags
 import com.sayzen.campfiresdk.screens.post.history.SPublicationHistory
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
@@ -214,7 +215,7 @@ object ControllerPost {
         .textColorRes(R.color.white).condition(
             ENABLED_PIN_FANDOM && ControllerApi.can(
                 post.fandom.id,
-                post.fandom.languageId,
+                pinLanguageId(post),
                 API.LVL_MODERATOR_PIN_POST
             ) && post.isPined && Navigator.getCurrent() !is SProfile
         )
@@ -441,7 +442,13 @@ object ControllerPost {
                 .asSheetShow()
     }
 
+    private fun pinLanguageId(post: PublicationPost): Long {
+        if (post.fandom.languageId != -1L) return post.fandom.languageId
+        return (Navigator.getCurrent() as? SFandom)?.getLanguageId() ?: ControllerApi.getLanguageId()
+    }
+
     fun unpinInFandom(publications: PublicationPost) {
+        val languageId = pinLanguageId(publications)
         SplashField()
                 .setTitle(t(API_TRANSLATE.publication_menu_unpin_in_fandom))
                 .setHint(t(API_TRANSLATE.comments_hint))
@@ -449,8 +456,8 @@ object ControllerPost {
                 .setMin(API.MODERATION_COMMENT_MIN_L)
                 .setMax(API.MODERATION_COMMENT_MAX_L)
                 .setOnEnter(t(API_TRANSLATE.app_unpin)) { w, comment ->
-                    ApiRequestsSupporter.executeEnabled(w, RPostPinFandom(0, publications.fandom.id, publications.fandom.languageId, comment)) {
-                        EventBus.post(EventPostPinedFandom(publications.fandom.id, publications.fandom.languageId, null))
+                    ApiRequestsSupporter.executeEnabled(w, RPostPinFandom(0, publications.fandom.id, languageId, comment)) {
+                        EventBus.post(EventPostPinedFandom(publications.fandom.id, languageId, null))
                         ToolsToast.show(t(API_TRANSLATE.app_done))
                     }
                 }

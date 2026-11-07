@@ -189,6 +189,8 @@ class SFandom private constructor(
 
     override fun contains(card: CardPostProxy) = adapter.contains(card)
 
+    fun getLanguageId(): Long = xFandom.getLanguageId()
+
 
     private fun updateBackground() {
         shownImageTitle = xFandom.getImageTitle()
