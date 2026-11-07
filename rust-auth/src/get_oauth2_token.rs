@@ -219,7 +219,12 @@ impl AuthServer {
         };
 
         // check that code_verifier and redirect_uri are specified if necessary
-        if client.enforce_code_challenge && code_verifier.is_none() {
+        // (code_challenge is stored as an empty string when the client didn't send one)
+        let has_code_challenge = flow
+            .code_challenge
+            .as_deref()
+            .is_some_and(|challenge| !challenge.is_empty());
+        if (client.enforce_code_challenge || has_code_challenge) && code_verifier.is_none() {
             tx.rollback().await?;
             return Err(AuthError::MissingRequiredParameter(
                 "code_verifier".to_string(),
