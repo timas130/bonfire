@@ -230,7 +230,7 @@ class SplashComment(
                 )
             )
             if (attach.isHasContent()) sendImage(text, parentId)
-            else if (ToolsText.isWebLink(text)) sendLink(text, parentId, true)
+            else if (ToolsText.isFetchableLink(text)) sendLink(text, parentId, true)
             else sendText(text, parentId)
         } else {
             PostHog.capture("change_comment", properties = mapOf("change" to true))
@@ -297,9 +297,8 @@ class SplashComment(
                 } else {
                     attach.attachUrl(text, dialog, onAttached = {
                         if (send) {
-                            val caption = if (text.any { it.isWhitespace() }) text else ""
-                            vText.setText(caption)
-                            sendImage(caption, parentId)
+                            vText.setText("")
+                            sendImage("", parentId)
                         }
                     }) {
                         if (send) sendText(text, parentId)

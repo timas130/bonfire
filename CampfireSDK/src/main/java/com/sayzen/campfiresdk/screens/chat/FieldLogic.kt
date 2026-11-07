@@ -251,18 +251,13 @@ class FieldLogic(
         if (publicationChange == null) {
             capture("image" to attach.isHasContent(), "length" to text.length)
             if (attach.isHasContent()) sendImage(text, parentId)
-            else if (isFetchableLink(text)) sendLink(text, parentId, true)
+            else if (ToolsText.isFetchableLink(text)) sendLink(text, parentId, true)
             else sendText(text, parentId)
         } else {
             PostHog.capture("change_chat_message")
             sendChange(text)
         }
     }
-
-    private fun isFetchableLink(text: String) =
-        (text.startsWith("http://", true) || text.startsWith("https://", true)) &&
-                text.none { it.isWhitespace() } &&
-                ToolsText.isWebLink(text)
 
     private fun capture(vararg props: Pair<String, Any>) {
         PostHog.capture(

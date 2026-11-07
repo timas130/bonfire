@@ -282,6 +282,11 @@ object ToolsText {
         return true
     }
 
+    fun isFetchableLink(s: String) =
+        (s.startsWith("http://", true) || s.startsWith("https://", true)) &&
+                s.none { it.isWhitespace() } &&
+                isWebLink(s)
+
     fun exceptionToString(ex: Exception): String {
         val sw = StringWriter()
         val pw = PrintWriter(sw)
