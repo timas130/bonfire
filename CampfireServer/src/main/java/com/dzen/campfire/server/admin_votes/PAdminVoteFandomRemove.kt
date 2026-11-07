@@ -11,6 +11,7 @@ import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryRemove
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
+import com.sup.dev.java_pc.sql.SqlWhere
 
 class PAdminVoteFandomRemove {
 
@@ -23,6 +24,7 @@ class PAdminVoteFandomRemove {
         Database.update("EFandomsAdminRemove.blockPublications", SqlQueryUpdate(TPublications.NAME)
             .where(TPublications.fandom_id, "=", m.targetFandom.id)
             .where(TPublications.status, "<>", API.STATUS_DEEP_BLOCKED)
+            .where(SqlWhere.WhereString("(${TPublications.publication_type}<>${API.PUBLICATION_TYPE_CHAT_MESSAGE} OR ${TPublications.tag_1}=${API.CHAT_TYPE_FANDOM_ROOT})"))
             .update(TPublications.status, API.STATUS_BLOCKED))
 
         Database.remove("EFandomsAdminRemove", SqlQueryRemove(TCollisions.NAME)
