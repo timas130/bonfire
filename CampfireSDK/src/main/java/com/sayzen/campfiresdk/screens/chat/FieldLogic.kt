@@ -397,7 +397,8 @@ class FieldLogic(
     private fun sendSticker(sticker: PublicationSticker) {
         val quoteIdV = quoteId
         val parentId = getParentId()
-        beforeSend()
+        setQuote("")
+        if (publicationAnswer != null && getText() == publicationAnswer!!.creator.name + ",") setText("")
         capture("sticker" to true)
         screen.addCard(CardSending(screen, RChatMessageCreate(screen.chat.tag, "", null, null, null, parentId, quoteIdV, sticker.id, newFormatting)))
     }
