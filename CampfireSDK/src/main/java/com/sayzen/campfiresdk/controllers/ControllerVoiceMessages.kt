@@ -31,7 +31,7 @@ object ControllerVoiceMessages {
     //
 
     fun play(ref: ImageRef) {
-        if (currentVoice.ref == ref) {
+        if (currentVoice.ref == ref && currentVoice.getState() != State.NONE) {
             if (isPause(currentVoice.ref)) currentVoice.resume()
             return
         }
