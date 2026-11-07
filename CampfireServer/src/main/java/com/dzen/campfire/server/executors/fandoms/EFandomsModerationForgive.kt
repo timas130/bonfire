@@ -6,7 +6,10 @@ import com.dzen.campfire.api.models.publications.moderations.publications.Modera
 import com.dzen.campfire.api.requests.fandoms.RFandomsModerationForgive
 import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.server.tables.TAccounts
+import com.dzen.campfire.server.tables.TCollisions
 import com.dzen.campfire.server.tables.TFandoms
+import com.sup.dev.java_pc.sql.Database
+import com.sup.dev.java_pc.sql.SqlQueryRemove
 
 class EFandomsModerationForgive : RFandomsModerationForgive(0, 0, 0, "") {
 
@@ -17,7 +20,12 @@ class EFandomsModerationForgive : RFandomsModerationForgive(0, 0, 0, "") {
 
     override fun execute(): Response {
 
-        ControllerCollisions.removeCollisions(accountId, fandomId, languageId, API.COLLISION_PUNISHMENTS_BAN)
+        Database.remove("EFandomsModerationForgive", SqlQueryRemove(TCollisions.NAME)
+                .where(TCollisions.owner_id, "=", accountId)
+                .where(TCollisions.collision_id, "=", fandomId)
+                .where(TCollisions.collision_sub_id, "=", languageId)
+                .where(TCollisions.collision_type, "=", API.COLLISION_PUNISHMENTS_BAN)
+                .where(TCollisions.value_1, ">", System.currentTimeMillis()))
 
         val v = ControllerAccounts.get(accountId, TAccounts.name, TAccounts.img_id)
         val accountName:String = v.next()
