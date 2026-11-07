@@ -80,7 +80,7 @@ object ControllerCampfireObjects {
 
     private fun loadChat(link: LinkParsed) {
         val targetId = link.getLongParamOrZero(0)
-        val targetSubId = link.getLongParamOrZero(1)
+        val targetSubId = link.getLongParamOrZero(1).takeIf { it != 0L } ?: ControllerApi.getLanguageId()
 
         if (!API.isLanguageExsit(targetSubId)) {
             onError(link)
