@@ -28,6 +28,7 @@ class SplashQuestInput(
 
         setLinesCount(1)
         setMax(API.QUEST_INPUT_HINT_MAX_L)
+        setMin(1)
         setHint(t(API_TRANSLATE.quests_edit_text_input_hint))
 
         vSelect.setTitle(t(API_TRANSLATE.quests_edit_text_input_type))
