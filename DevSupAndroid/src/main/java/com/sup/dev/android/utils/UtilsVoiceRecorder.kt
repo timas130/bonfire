@@ -5,6 +5,7 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.AudioRecord.STATE_INITIALIZED
 import android.media.MediaRecorder
+import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.tools.ToolsCollections
 import com.sup.dev.java.tools.ToolsThreads
 
@@ -19,8 +20,14 @@ class UtilsVoiceRecorder {
 
     // check ToolsPermission.hasMicrophonePermission()
     // before calling this method!
-    fun start() {
-        recorder = SubRecorder()
+    fun start(): Boolean {
+        try {
+            recorder = SubRecorder()
+            return true
+        } catch (e: RuntimeException) {
+            err(e)
+            return false
+        }
     }
 
     fun stop() {
@@ -42,14 +49,21 @@ class UtilsVoiceRecorder {
         var stop = false
 
         init{
-            recorder.startRecording()
+            try {
+                recorder.startRecording()
+                if (recorder.recordingState != AudioRecord.RECORDSTATE_RECORDING) throw IllegalStateException("AudioRecord did not start")
+            } catch (e: IllegalStateException) {
+                recorder.release()
+                throw e
+            }
 
             ToolsThreads.thread {
                 while (!stop) {
                     val buffer = ByteArray(minBufferSize)
-                    recorder.read(buffer, 0, buffer.size)
-                    synchronized(frames){
-                        frames.add(buffer)
+                    val count = recorder.read(buffer, 0, buffer.size)
+                    if (count < 0) break
+                    if (count > 0) synchronized(frames){
+                        frames.add(if (count == buffer.size) buffer else buffer.copyOf(count))
                     }
                 }
                 if (recorder.state == STATE_INITIALIZED)

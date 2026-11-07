@@ -69,6 +69,10 @@ class ViewVoiceRecord @JvmOverloads constructor(context: Context, attrs: Attribu
 
     private fun startRecording() {
         if (ToolsPermission.hasMicrophonePermission()) {
+            if (!voiceRecorder.start()) {
+                ToolsToast.show(SupAndroid.TEXT_ERROR_PERMISSION_MIC)
+                return
+            }
             recordingStartTime = System.currentTimeMillis()
             isRecordingMode = true
             vIconContainer.visibility = View.VISIBLE
@@ -77,7 +81,6 @@ class ViewVoiceRecord @JvmOverloads constructor(context: Context, attrs: Attribu
             vIconBig.setImageResource(R.drawable.ic_mic_white_24dp)
             currentSelectedIcon = vIconBig
             isLocked = false
-            voiceRecorder.start()
             onRecordingStart.invoke()
             updateTimer()
             invalidate()
@@ -103,7 +106,7 @@ class ViewVoiceRecord @JvmOverloads constructor(context: Context, attrs: Attribu
         val array = voiceRecorder.getAsArray()
         stopRecording()
         isLocked = false
-        onRecordingStop.invoke(array)
+        if (array.isNotEmpty()) onRecordingStop.invoke(array)
     }
 
     fun lock() {
