@@ -2,6 +2,7 @@ package com.sayzen.campfiresdk.compose.util.pagination
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,6 +23,7 @@ abstract class AbstractLegacyPaginationModel<T> : PaginationModel<T>, ViewModel(
     override val hasMore: StateFlow<Boolean?> = _hasMore.asStateFlow()
 
     final override fun reload() {
+        loadJob?.cancel()
         if (_items.value != null) {
             _items.value = null
         }
@@ -29,16 +31,16 @@ abstract class AbstractLegacyPaginationModel<T> : PaginationModel<T>, ViewModel(
         loadNextPage()
     }
 
-    private var loadingMore: Boolean = false
+    private var loadJob: Job? = null
 
     override fun loadNextPage() {
-        viewModelScope.launch {
-            if (loadingMore) return@launch
-            loadingMore = true
+        if (loadJob?.isActive == true) return
 
+        loadJob = viewModelScope.launch {
             try {
                 do {
                     val moreItems = load(_items.value ?: emptyList())
+                    if (!isActive) return@launch
                     _items.getAndUpdate {
                         (it ?: emptyList()) + moreItems
                     }
@@ -47,10 +49,9 @@ abstract class AbstractLegacyPaginationModel<T> : PaginationModel<T>, ViewModel(
                 } while (isActive && moreItems.isNotEmpty() && shouldLoadMore(moreItems))
             } catch (e: Exception) {
                 e.printStackTrace()
-                _isError.emit(true)
+                if (isActive) _isError.emit(true)
             } finally {
-                _isLoading.emit(false)
-                loadingMore = false
+                if (isActive) _isLoading.emit(false)
             }
         }
     }
