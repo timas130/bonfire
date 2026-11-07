@@ -53,6 +53,7 @@ class EFandomsModerationToDrafts : RFandomsModerationToDrafts(0, "") {
             update.update(TPublications.fandom_key, "'${publication!!.fandom.id}-${publication!!.tag_5}-${publication!!.important}'")
         }
         Database.update("EFandomsModerationToDrafts", update)
+        if (publication is PublicationPost) ControllerAccounts.updatePostsCount(publication!!.creator.id, -1)
         if (publication is QuestDetails) {
             Database.remove("EFandomsModerationToDrafts quest clean", SqlQueryRemove(TQuestStates.NAME)
                 .where(TQuestStates.unit_id, "=", publicationId))
