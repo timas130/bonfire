@@ -39,7 +39,7 @@ class EPostMakeMultilingualModeratorNot : RPostMakeMultilingualModeratorNot(0, "
 
         val moderationId = ControllerPublications.moderation(
                 ModerationMultilingualNot(comment, publicationId, publication.publicationType, publication.creator.id, creatorName, creatorImageId),
-                apiAccount.id, publication.fandom.id, publication.fandom.languageId, publication.id)
+                apiAccount.id, publication.fandom.id, if (publication.fandom.languageId < 1) publication.tag_5 else publication.fandom.languageId, publication.id)
 
 
         ControllerNotifications.push(publication.creator.id, NotificationModerationMultilingualNot(comment, publication.fandom.imageId, moderationId, apiAccount.sex, apiAccount.name))
