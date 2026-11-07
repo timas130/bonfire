@@ -35,6 +35,7 @@ class SQuestPartConditionCreate(
     private val vTitleJump: SettingsTitle = findViewById(R.id.vTitleJump)
     private val vTrueJump: SettingsPartSelector = findViewById(R.id.vTrueJump)
     private val vFalseJump: SettingsPartSelector = findViewById(R.id.vFalseJump)
+    private var selectedCond = part.cond
 
     init {
         disableShadows()
@@ -107,12 +108,13 @@ class SQuestPartConditionCreate(
                 vCondition.add(t(API_TRANSLATE.quests_edit_cond_eq))
                 vCondition.add(t(API_TRANSLATE.quests_edit_cond_neq))
                 vCondition.onSelected {
-                    when (it) {
+                    selectedCond = when (it) {
                         0 -> API.QUEST_CONDITION_EQ
                         1 -> API.QUEST_CONDITION_NEQ
+                        else -> throw IllegalStateException()
                     }
                 }
-                vCondition.setCurrentIndex(when (part.cond) {
+                vCondition.setCurrentIndex(when (selectedCond) {
                     API.QUEST_CONDITION_EQ -> 0
                     API.QUEST_CONDITION_NEQ -> 1
                     else -> 0
@@ -131,16 +133,17 @@ class SQuestPartConditionCreate(
                 vCondition.add(t(API_TRANSLATE.quests_edit_cond_geq))
                 vCondition.add(t(API_TRANSLATE.quests_edit_cond_greater))
                 vCondition.onSelected {
-                    when (it) {
+                    selectedCond = when (it) {
                         0 -> API.QUEST_CONDITION_LESS
                         1 -> API.QUEST_CONDITION_LEQ
                         2 -> API.QUEST_CONDITION_EQ
                         3 -> API.QUEST_CONDITION_NEQ
                         4 -> API.QUEST_CONDITION_GEQ
                         5 -> API.QUEST_CONDITION_GREATER
+                        else -> throw IllegalStateException()
                     }
                 }
-                vCondition.setCurrentIndex(when (part.cond) {
+                vCondition.setCurrentIndex(when (selectedCond) {
                     API.QUEST_CONDITION_LESS -> 0
                     API.QUEST_CONDITION_LEQ -> 1
                     API.QUEST_CONDITION_EQ -> 2
@@ -164,7 +167,7 @@ class SQuestPartConditionCreate(
                         vRightVariable.visibility = GONE
                         vRightVariable.selected = null
                     } else vRightVariable.visibility = VISIBLE
-                    part.cond = API.QUEST_CONDITION_EQ
+                    selectedCond = API.QUEST_CONDITION_EQ
                 }
                 vCondition.setCurrentIndex(when (part.rightValue.type == API.QUEST_CONDITION_VALUE_VAR || vRightVariable.selected != null) {
                     true -> 1
