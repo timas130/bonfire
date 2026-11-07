@@ -7,7 +7,9 @@ import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.models.cards.CardPost
 import com.sayzen.campfiresdk.models.cards.CardPublication
+import com.sayzen.campfiresdk.models.events.publications.EventPublicationRemove
 import com.sup.dev.android.views.support.adapters.CardAdapter
+import com.sup.dev.java.libs.eventBus.EventBus
 
 class CardPostProxy(
     vRecycler: RecyclerView?,
@@ -34,6 +36,11 @@ class CardPostProxy(
     init {
         xPublication.eventBus.unsubscribe()
     }
+
+    private val removeSubscriber = EventBus
+        .subscribe(EventPublicationRemove::class) {
+            if (it.publicationId == publication.id) impl.adapter.remove(this)
+        }
 
     override fun canCacheView(): Boolean {
         return impl.canCacheView()
