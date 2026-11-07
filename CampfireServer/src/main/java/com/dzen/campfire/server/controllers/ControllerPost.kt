@@ -51,19 +51,22 @@ object ControllerPost {
     }
 
 
-    fun publish(publicationId: Long, willNotify: Long, creatorId: Long) {
+    fun publish(publicationId: Long, willNotify: Long, creatorId: Long): Boolean {
         val publication = ControllerPublications.getPublication(publicationId, 0)
         if (publication is PublicationPost) checkVideosReady(publication)
 
-        Database.update("EPostPendingPublish", SqlQueryUpdate(TPublications.NAME)
+        val updated = Database.update("EPostPendingPublish", SqlQueryUpdate(TPublications.NAME)
                 .where(TPublications.id, "=", publicationId)
+                .where(TPublications.status, "=", API.STATUS_PENDING)
                 .update(TPublications.status, API.STATUS_PUBLIC)
                 .update(TPublications.date_create, System.currentTimeMillis())
         )
+        if (updated == 0) return false
 
         if (willNotify == 2L) {
             ControllerPublications.notifyFollowers(creatorId, publicationId)
         }
+        return true
     }
 
     fun remove(publication: PublicationPost) {

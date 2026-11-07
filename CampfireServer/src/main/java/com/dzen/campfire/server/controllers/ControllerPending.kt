@@ -6,6 +6,7 @@ import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.tools.ApiAccount
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.tables.TPublications
+import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.tools.ToolsThreads
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQuerySelect
@@ -22,10 +23,13 @@ object ControllerPending {
     }
 
     private fun update() {
-        startAfterDelay()
-        posts()
-        ControllerActivities.checkForTimeouts()
-        ControllerAlive.sendIfNeed()
+        try {
+            posts()
+            ControllerActivities.checkForTimeouts()
+            ControllerAlive.sendIfNeed()
+        } finally {
+            startAfterDelay()
+        }
     }
 
     private fun posts(){
@@ -44,7 +48,7 @@ object ControllerPending {
 
             try {
                 ControllerAccounts.checkAccountBanned(creatorId, fandomId, languageId)
-                ControllerPost.publish(id, willNotify, creatorId)
+                if (!ControllerPost.publish(id, willNotify, creatorId)) continue
 
                 try {
                     val pub = ControllerPublications.getPublication(id, 0)!! as PublicationPost
@@ -73,6 +77,8 @@ object ControllerPending {
                         .update(TPublications.tag_3, 0)
                         .update(TPublications.tag_4, 0)
                 )
+            } catch (e: Exception) {
+                err(e)
             }
         }
     }
