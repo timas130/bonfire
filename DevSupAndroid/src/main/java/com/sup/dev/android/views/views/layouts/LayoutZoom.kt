@@ -106,12 +106,12 @@ class LayoutZoom constructor(context: Context, attrs: AttributeSet?) : FrameLayo
         onTouchEventPassed = true
 
         if (event.pointerCount == 1 && event.action == MotionEvent.ACTION_DOWN) {
-            click(event.x, event.y)
+            clickDown(event.x, event.y)
             doubleTouch(event.x, event.y)
         }
 
         if (event.pointerCount == 1 && event.action == MotionEvent.ACTION_UP) {
-            click(event.x, event.y)
+            clickUp(event.x, event.y)
         }
 
         if (event.pointerCount > 1){
@@ -148,7 +148,15 @@ class LayoutZoom constructor(context: Context, attrs: AttributeSet?) : FrameLayo
         }
     }
 
-    private fun click(x: Float, y: Float) {
+    private fun clickDown(x: Float, y: Float) {
+
+        if (onClick == null) return
+
+        click.set(x, y)
+        lastDownTime = System.currentTimeMillis()
+    }
+
+    private fun clickUp(x: Float, y: Float) {
 
         if (onClick == null) return
 
@@ -162,8 +170,7 @@ class LayoutZoom constructor(context: Context, attrs: AttributeSet?) : FrameLayo
                 }
             }
         } else {
-            click.set(x, y)
-            lastDownTime = System.currentTimeMillis()
+            clickClear()
         }
     }
 
