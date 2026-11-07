@@ -107,10 +107,14 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
         if (blockLastPublications) blockLastPublications(ids)
         if (publication!!.publicationType == API.PUBLICATION_TYPE_COMMENT) {
             ControllerPublications.recountBestComment(publication!!.parentPublicationId, publication!!.id)
-            ControllerAccounts.updateCommentsCount(apiAccount.id, if (blockLastPublications) 0 else -1)
+            if (!blockLastPublications) ControllerAccounts.updateCommentsCount(publication!!.creator.id, -1)
         }
         if (publication!!.publicationType == API.PUBLICATION_TYPE_CHAT_MESSAGE) ControllerChats.onMessagesRemoved((publication!! as PublicationChatMessage).chatTag(), 1)
-        if (publication!!.publicationType == API.PUBLICATION_TYPE_POST) ControllerAccounts.updatePostsCount(apiAccount.id, if (blockLastPublications) 0 else -1)
+        if (publication!!.publicationType == API.PUBLICATION_TYPE_POST && !blockLastPublications) ControllerAccounts.updatePostsCount(publication!!.creator.id, -1)
+        if (blockLastPublications) {
+            ControllerAccounts.updateCommentsCount(publication!!.creator.id, 0)
+            ControllerAccounts.updatePostsCount(publication!!.creator.id, 0)
+        }
 
         if (publication!!.publicationType == API.PUBLICATION_TYPE_STICKERS_PACK) ControllerStickers.removeCollisionsStickersPack(publication!!.id)
         if (publication!!.publicationType == API.PUBLICATION_TYPE_STICKER) ControllerStickers.removeCollisionsSticker(publication!!.id)
