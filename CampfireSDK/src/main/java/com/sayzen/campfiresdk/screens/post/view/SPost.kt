@@ -51,7 +51,7 @@ class SPost private constructor(
             ApiRequestsSupporter.executeInterstitial(action, RPostGet(publicationId)) { r ->
                 if (r.publication.nsfw && !skipNsfw) {
                     SAlertNsfw(onProceed = {
-                        Navigator.action(action, SPost(r.publication, r.tags, commentId))
+                        Navigator.to(SPost(r.publication, r.tags, commentId))
                     })
                 } else {
                     SPost(r.publication, r.tags, commentId)
