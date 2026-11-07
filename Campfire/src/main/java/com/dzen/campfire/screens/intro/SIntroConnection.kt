@@ -250,13 +250,22 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
 
     private fun toFeed() {
         ToolsThreads.main(true) {
-            if (!App.activity().parseStartAction()) {
-                SCampfireHello.showIfNeed {
-                    feedCategories = ControllerSettings.feedCategories
-                    App.activity().toMainScreen()
-                }
-            }
+            if (App.activity().parseStartAction()) showFeedIfLinkStaysHere()
+            else showFeed()
         }
+    }
+
+    private fun showFeed() {
+        SCampfireHello.showIfNeed {
+            feedCategories = ControllerSettings.feedCategories
+            App.activity().toMainScreen()
+        }
+    }
+
+    private fun showFeedIfLinkStaysHere() {
+        if (Navigator.getCurrent() !== this) return
+        if (App.activity().getToSplash() != null) ToolsThreads.main(200) { showFeedIfLinkStaysHere() }
+        else showFeed()
     }
 
     private fun setState(state: State) {
