@@ -49,6 +49,7 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
         if (rubricId != 0L) {
             val rubric = ControllerRubrics.getRubric(rubricId)
             if (rubric == null || rubric.owner.id != apiAccount.id || rubric.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
+            if (rubric.fandom.id != publication!!.fandom.id) throw ApiException(API.ERROR_ACCESS)
         }
 
         for (tagId in tags) {

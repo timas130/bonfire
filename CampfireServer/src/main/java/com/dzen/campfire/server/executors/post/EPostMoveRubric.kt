@@ -26,6 +26,7 @@ class EPostMoveRubric : RPostMoveRubric(0, 0) {
         rubric = ControllerRubrics.getRubric(rubricId) ?: throw ApiException(API.ERROR_GONE)
         if (rubric.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_GONE)
         if (rubric.owner.id != apiAccount.id) throw ApiException(API.ERROR_ACCESS)
+        if (rubric.fandom.id != post.fandom.id) throw ApiException(API.ERROR_ACCESS)
     }
 
     override fun execute(): Response {
