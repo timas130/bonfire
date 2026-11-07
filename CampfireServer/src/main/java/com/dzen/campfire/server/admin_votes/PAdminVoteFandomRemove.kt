@@ -5,6 +5,7 @@ import com.dzen.campfire.api.models.admins.MAdminVoteFandomRemove
 import com.dzen.campfire.api.models.publications.events_admins.ApiEventAdminFandomRemove
 import com.dzen.campfire.api.models.publications.events_fandoms.ApiEventFandomRemove
 import com.dzen.campfire.server.controllers.ControllerPublications
+import com.dzen.campfire.server.tables.TActivities
 import com.dzen.campfire.server.tables.TCollisions
 import com.dzen.campfire.server.tables.TFandoms
 import com.dzen.campfire.server.tables.TPublications
@@ -30,6 +31,9 @@ class PAdminVoteFandomRemove {
         Database.remove("EFandomsAdminRemove", SqlQueryRemove(TCollisions.NAME)
             .where(TCollisions.collision_type, "=", API.COLLISION_KARMA_30)
             .where(TCollisions.collision_id, "=", m.targetFandom.id))
+
+        Database.remove("EFandomsAdminRemove.activities", SqlQueryRemove(TActivities.NAME)
+            .where(TActivities.fandom_id, "=", m.targetFandom.id))
 
 
         ControllerPublications.event(ApiEventAdminFandomRemove(m.adminAccount.id, m.adminAccount.name, m.adminAccount.imageId, m.adminAccount.sex, m.comment, m.targetFandom.name), m.adminAccount.id)
