@@ -46,6 +46,10 @@ class EChatMessageChange : RChatMessageChange(0, 0, "", false) {
         publication.quoteId = 0
         publication.quoteText = ""
         publication.quoteImagesIds = emptyArray()
+        publication.quoteImagesPwd = emptyArray()
+        publication.quoteCreatorName = ""
+        publication.quoteStickerId = 0
+        publication.quoteStickerImageId = 0
         publication.newFormatting = newFormatting
 
         if (quoteMessageId != 0L) {
@@ -53,8 +57,13 @@ class EChatMessageChange : RChatMessageChange(0, 0, "", false) {
             if (quoteUnit != null && quoteUnit is PublicationChatMessage && quoteUnit.chatTag() == publication.chatTag()) {
                 publication.quoteId = quoteUnit.id
                 publication.quoteText = quoteUnit.creator.name + ": " + quoteUnit.text
+                publication.quoteCreatorName = quoteUnit.creator.name
                 publication.quoteImagesIds = if (quoteUnit.resourceId > 0) Array(1) { quoteUnit.resourceId } else quoteUnit.imageIdArray
                 publication.quoteImagesPwd = if (quoteUnit.resourceId > 0) arrayOf(quoteUnit.imagePwd) else quoteUnit.imagePwdArray
+                if (quoteUnit.stickerId > 0) {
+                    publication.quoteStickerId = quoteUnit.stickerId
+                    publication.quoteStickerImageId = quoteUnit.stickerImageId
+                }
             }
         }
 

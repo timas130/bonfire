@@ -333,7 +333,7 @@ class FieldLogic(
         ApiRequestsSupporter.executeProgressDialog(RChatMessageChange(publicationChangeId, quoteIdV, text, newFormatting)) { r ->
             beforeSend()
             ToolsToast.show(t(API_TRANSLATE.app_changed))
-            EventBus.post(EventChatMessageChanged(publicationChangeId, r.message.text, quoteIdV, quoteTextV))
+            EventBus.post(EventChatMessageChanged(publicationChangeId, r.message.text, quoteIdV, quoteTextV, r.message))
         }.onApiError(API.ERROR_ACCESS) {
             ToolsToast.show(t(API_TRANSLATE.error_chat_access))
         }

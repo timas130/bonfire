@@ -1040,12 +1040,24 @@ open class CardChatMessage constructor(
         }
     }
 
+    private fun copyEditedFields(publication: PublicationChatMessage, message: PublicationChatMessage) {
+        publication.text = message.text
+        publication.newFormatting = message.newFormatting
+        publication.quoteId = message.quoteId
+        publication.quoteText = message.quoteText
+        publication.quoteCreatorName = message.quoteCreatorName
+        publication.quoteImages = message.quoteImages
+        publication.quoteImagesIds = message.quoteImagesIds
+        publication.quoteImagesPwd = message.quoteImagesPwd
+        publication.quoteStickerId = message.quoteStickerId
+        publication.quoteStickerImage = message.quoteStickerImage
+        publication.quoteStickerImageId = message.quoteStickerImageId
+    }
+
     private fun onEventChanged(e: EventChatMessageChanged) {
         val publication = xPublication.publication as PublicationChatMessage
         if (e.publicationId == publication.id) {
-            publication.text = e.text
-            publication.quoteId = e.quoteId
-            publication.quoteText = e.quoteText
+            copyEditedFields(publication, e.message)
             publication.changed = true
             flash()
             update()
