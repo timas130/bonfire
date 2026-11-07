@@ -101,12 +101,14 @@ class SplashTagCreate private constructor(
             vImageIcon.visibility = View.VISIBLE
             vImage.setImageBitmap(null)
         } else {
-            removeImage = false
             hide()
+            var reShowHandled = false
             SplashChooseImage()
                     .setOnSelectedBitmap { _, b ->
+                        reShowHandled = true
                         Navigator.to(SCrop(b, API.TAG_IMAGE_SIDE, API.TAG_IMAGE_SIDE) { screen, b2, _, _, _, _ ->
                             this.image = ToolsBitmap.toBytes(ToolsBitmap.resize(b2, API.TAG_IMAGE_SIDE), API.TAG_IMAGE_WEIGHT)
+                            removeImage = false
                             vImage.setImageBitmap(b2)
                             vImageIcon.visibility = View.GONE
                             screen.back()
@@ -114,6 +116,12 @@ class SplashTagCreate private constructor(
                                 .setAutoBackOnCrop(false)
                                 .setOnHide { ToolsThreads.main(100) { asSheetShow() }}
                         )
+                    }
+                    .setOnHide {
+                        if (!reShowHandled) {
+                            reShowHandled = true
+                            ToolsThreads.main(100) { asSheetShow() }
+                        }
                     }
                     .asSheetShow()
         }
