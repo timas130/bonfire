@@ -181,6 +181,8 @@ class SFandomSuggest(
         vFandomSuggestionNotes.setText(notes)
         if (changeFandom != null) {
             vFandomSuggestionNotes.isEnabled = false
+        } else {
+            vFandomSuggestionNotes.vField.addTextChangedListener(TextWatcherChanged { updateFinishEnabled() })
         }
     }
 
@@ -228,8 +230,10 @@ class SFandomSuggest(
             textCheck = vName.getText().length <= API.FANDOM_NAME_MAX
             vName.setError(if (textCheck) null else t(API_TRANSLATE.error_too_long_text))
         }
+        val notesCheck = changeFandom != null || vFandomSuggestionNotes.getText().length <= API.FANDOM_DESCRIPTION_MAX_L
+        vFandomSuggestionNotes.setError(if (notesCheck) null else t(API_TRANSLATE.error_too_long_text))
         val cateryId = getSelectedCategory()
-        var check = textCheck && vName.getText().isNotEmpty()
+        var check = textCheck && notesCheck && vName.getText().isNotEmpty()
                 && (cateryId == 0L || CampfireConstants.getParamTitle(cateryId, 1) == null || paramGet(1).isNotEmpty())
                 && (cateryId == 0L || CampfireConstants.getParamTitle(cateryId, 2) == null || paramGet(3).isNotEmpty())
                 && (cateryId == 0L || CampfireConstants.getParamTitle(cateryId, 3) == null || paramGet(5).isNotEmpty())
