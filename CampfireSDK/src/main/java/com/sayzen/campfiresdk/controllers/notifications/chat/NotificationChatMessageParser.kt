@@ -133,7 +133,7 @@ fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound
         builder.setAutoCancel(true)
         builder.setOnlyAlertOnce(true)
         builder.setContentIntent(PendingIntent.getActivity(
-            SupAndroid.appContext!!, 2,
+            SupAndroid.appContext!!, tag.hashCode(),
             Intent(SupAndroid.appContext!!, SupAndroid.activityClass!!).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 putExtra("ToolsNotification.notificationId", tag.hashCode())
