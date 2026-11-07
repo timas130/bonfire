@@ -2,6 +2,7 @@ package com.sup.dev.java.libs.http_server
 
 import com.sup.dev.java.libs.debug.err
 import java.io.BufferedReader
+import java.io.EOFException
 import java.io.InputStreamReader
 import java.net.Socket
 
@@ -37,6 +38,7 @@ class HttpServerConnection(
         val buf = CharArray(1024)
         while (data.message.length < messageLen) {
             val c = br.read(buf)
+            if (c == -1) throw EOFException("Connection closed before the full body was read")
             for (i in 0 until c) data.message += buf[i]
         }
 

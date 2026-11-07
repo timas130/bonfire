@@ -24,6 +24,12 @@ class HttpServer(
                         onConnection.invoke(HttpServerConnection(s))
                     }catch (e:Throwable){
                         err(e)
+                    }finally {
+                        try {
+                            s.close()
+                        }catch (e:Exception){
+                            err(e)
+                        }
                     }
                 }
             }catch (e:Exception){
