@@ -6,7 +6,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.lang.Exception
-import java.util.*
 
 object ToolsCash {
 
@@ -53,8 +52,7 @@ object ToolsCash {
             var cashSize = getDirSize(cacheDir)
             if (cashSize > overClearSize + maxCashSize) {
 
-                val listFiles = cacheDir.listFiles()
-                Arrays.sort(listFiles) { i1, i2 -> (i1.lastModified() - i2.lastModified()).toInt() }
+                val listFiles = cacheDir.listFiles()!!.map { it to it.lastModified() }.sortedBy { it.second }.map { it.first }
                 var index = 0
 
                 while (cashSize > maxCashSize && index < listFiles.size) {
