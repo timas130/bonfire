@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ScrollView
 import android.widget.TextView
 import com.dzen.campfire.api.models.images.ImageRef
 import com.posthog.PostHog
@@ -156,6 +157,7 @@ abstract class SQuest : Screen(R.layout.screen_quest) {
 
         vText.text = parseText(item.text)
         ControllerLinks.makeLinkable(vText)
+        (vText.parent as ScrollView).scrollTo(0, 0)
 
         vLabel.visibility = if (vLabel.text.isEmpty()) View.GONE else View.VISIBLE
 
