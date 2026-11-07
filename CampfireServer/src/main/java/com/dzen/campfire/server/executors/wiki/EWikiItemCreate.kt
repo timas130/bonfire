@@ -60,6 +60,7 @@ class EWikiItemCreate : RWikiItemCreate(0, 0, WikiTitle(), null, null) {
         if(parentItemId > 0) {
             val parentItem = ControllerWiki.getTitlesByItemId(parentItemId)
             if(parentItem == null)  throw ApiException(API.ERROR_GONE)
+            if(parentItem.fandomId != fandomId) throw ApiException(API.ERROR_ACCESS)
             if(parentItem.wikiStatus != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
             if(parentItem.itemType != API.WIKI_TYPE_SECION) throw ApiException(API.ERROR_ACCESS)
             newItem.parentItemId = parentItemId

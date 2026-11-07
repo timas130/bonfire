@@ -98,6 +98,7 @@ class EWikiItemChange : RWikiItemChange(WikiTitle(), 0, null, null) {
         if(parentItemId > 0 && oldItem.parentItemId != parentItemId) {
             val parentItem = ControllerWiki.getTitlesByItemId(parentItemId)
             if(parentItem == null)  throw ApiException(API.ERROR_GONE)
+            if(parentItem.fandomId != oldItem.fandomId) throw ApiException(API.ERROR_ACCESS)
             if(parentItem.wikiStatus != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
             if(parentItem.itemType != API.WIKI_TYPE_SECION) throw ApiException(API.ERROR_ACCESS)
             newItem.parentItemId = parentItemId
