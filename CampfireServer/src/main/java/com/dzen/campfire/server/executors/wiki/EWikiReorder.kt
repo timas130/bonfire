@@ -37,7 +37,7 @@ class EWikiReorder : RWikiReorder(0, 0) {
         val select = SqlQuerySelect(TWikiTitles.NAME, TWikiTitles.item_id)
                 .where(TWikiTitles.ITEM_STATUS, "=", API.STATUS_PUBLIC)
                 .where(TWikiTitles.wiki_status, "=", API.STATUS_PUBLIC)
-                .sort(TWikiTitles.priority, true)
+                .sort(TWikiTitles.priority, true, TWikiTitles.item_id)
 
         if (wikiTitle.parentItemId > 0) {
             select.where(TWikiTitles.parent_item_id, "=", wikiTitle.parentItemId)
