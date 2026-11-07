@@ -194,7 +194,7 @@ impl LevelServer {
             .unwrap_or(0),
 
             DailyTask::CreatePostWithPageType { page_type } => sqlx::query_scalar!(
-                "select count(*)
+                "select count(distinct u.id)
                  from units u
                  /* what the fuck */
                  cross join lateral json_array_elements(u.unit_json::json->'J_PAGES') as pages
