@@ -173,7 +173,7 @@ object ControllerCampfireSDK {
 
     fun changeLoginNow(name: String, achievementNotificationEnabled: Boolean, onComplete: () -> Unit) {
         ApiRequestsSupporter.executeProgressDialog(RAccountsChangeName(name, achievementNotificationEnabled)) { r ->
-            EventBus.post(EventAccountChanged(ControllerApi.account.getId(), ControllerApi.account.getName()))
+            EventBus.post(EventAccountChanged(ControllerApi.account.getId(), name))
             onComplete.invoke()
         }.onApiError(RAccountsChangeName.E_LOGIN_NOT_ENABLED) {
             ToolsToast.show(t(API_TRANSLATE.error_login_taken))
