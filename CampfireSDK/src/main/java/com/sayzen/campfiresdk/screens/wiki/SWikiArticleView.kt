@@ -93,6 +93,7 @@ class SWikiArticleView(
         ImageLoader.load(wikiTitle.imageBig).into(vImageTitle)
 
         vAction.text = t(API_TRANSLATE.app_retry)
+        vAction.setOnClickListener { reload() }
         vRecycler.layoutManager = LinearLayoutManager(context)
         vRecycler.adapter = adapter
 
