@@ -59,7 +59,15 @@ class SPostCreate(
                     changePost = r.publication,
                     postParams = PostParams()
                         .setTags(Array(r.tags.size) { r.tags[it].id })
-                        .setNsfw(r.publication.nsfw),
+                        .setNsfw(r.publication.nsfw)
+                        .apply {
+                            if (r.publication.rubricId != 0L) {
+                                rubric = Rubric().also {
+                                    it.id = r.publication.rubricId
+                                    it.name = r.publication.rubricName
+                                }
+                            }
+                        },
                     showMenu = true
                 )
                 onOpen.invoke(screen)
