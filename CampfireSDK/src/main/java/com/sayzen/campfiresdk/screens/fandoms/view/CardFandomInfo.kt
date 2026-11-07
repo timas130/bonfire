@@ -526,7 +526,7 @@ class CardFandomInfo(
         vAdd.visibility = if (ControllerApi.can(
                 xFandom.getId(),
                 xFandom.getLanguageId(),
-                API.LVL_MODERATOR_FANDOM_IMAGE
+                API.LVL_MODERATOR_GALLERY
             )
         ) View.VISIBLE else View.INVISIBLE
         vAdd.setOnClickListener { addGallery() }
