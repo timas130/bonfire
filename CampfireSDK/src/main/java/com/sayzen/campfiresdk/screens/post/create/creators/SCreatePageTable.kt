@@ -56,6 +56,7 @@ class SCreatePageTable(
                 checkAndConfirmRemoveColumn(0) {
                     sendChangesMove(-1, 0)
                     vTable.setColumnsCount(vTable.getColumnsCount() - 1, false)
+                    update()
                 }
             else {
                 sendChangesMove(1, 0)
@@ -68,6 +69,7 @@ class SCreatePageTable(
                 checkAndConfirmRemoveColumn(vTable.getColumnsCount() - 1) {
                     sendChangesMove(0, 0)
                     vTable.setColumnsCount(vTable.getColumnsCount() - 1, true)
+                    update()
                 }
             else {
                 sendChangesMove(0, 0)
@@ -80,6 +82,7 @@ class SCreatePageTable(
             if (removeMode) checkAndConfirmRemoveRow(0) {
                 sendChangesMove(0, -1)
                 vTable.removeRow(0)
+                update()
             }
             else {
                 sendChangesMove(0, 1)
@@ -91,6 +94,7 @@ class SCreatePageTable(
             if (removeMode) checkAndConfirmRemoveRow(vTable.getRowsCount() - 1) {
                 sendChangesMove(0, 0)
                 vTable.removeRow(vTable.getRowsCount() - 1)
+                update()
             }
             else {
                 sendChangesMove(0, 0)
@@ -217,6 +221,7 @@ class SCreatePageTable(
     }
 
     private fun checkAndConfirmRemoveRow(index: Int, onConfirm: () -> Unit) {
+        if (vTable.getRowsCount() <= 1) return
         val row = vTable.getRow(index)
         if (row != null) {
             for (c in row.getCells()) {
@@ -234,6 +239,7 @@ class SCreatePageTable(
     }
 
     private fun checkAndConfirmRemoveColumn(index: Int, onConfirm: () -> Unit) {
+        if (vTable.getColumnsCount() <= 1) return
         for (c in vTable.getColumnCells(index)) {
             if (c.hasContent()) {
                 SplashAlert()
