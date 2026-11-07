@@ -22,7 +22,6 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import com.apollographql.apollo3.cache.normalized.watch
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.java.tools.ToolsDate
@@ -233,7 +232,8 @@ fun AccountSecurityScreen(
     onChangeBirthday: () -> Unit,
     toOAuthGrants: () -> Unit,
 ) {
-    val dataFlow = remember { apollo.query(AccountSecurityQuery()).watch() }
+    val context = LocalContext.current
+    val dataFlow = remember { apollo.query(AccountSecurityQuery()).watchExt(context) }
     val dataState = dataFlow.collectAsState(initial = null).value
 
     if (dataState == null) {
