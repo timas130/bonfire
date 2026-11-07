@@ -147,7 +147,10 @@ class AppActivity : SActivity() {
                     if (Navigator.getStackSize() == 0 || Navigator.getCurrent() is SIntro) Navigator.set(SFeed())
                 }
         }, onLongClick = {
-            SplashFilters { Navigator.replace(SFeed()) }.asSheetShow()
+            SplashFilters {
+                setFeedStack()
+                Navigator.set(SFeed())
+            }.asSheetShow()
         }).makeDefaultTargetItem()
         vNotifications = type.addNavigationItem(R.drawable.ic_notifications_white_24dp, t(API_TRANSLATE.app_notifications), false, true,
                 onClick = {

@@ -36,6 +36,7 @@ class SplashFiltersScreens : SplashMenu() {
         val array = Array(list.size) { list[it] }
         ControllerSettings.feedOrder = array
         if (Navigator.getCurrent() is SFeed) Navigator.replace(SFeed())
+        hide()
     }
 
 }
