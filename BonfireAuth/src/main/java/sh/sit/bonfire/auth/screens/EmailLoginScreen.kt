@@ -25,8 +25,14 @@ import sh.sit.bonfire.auth.flows.AuthFlow
 import sh.sit.bonfire.auth.flows.EmailAuthFlow
 import sh.sit.bonfire.auth.toUiString
 
+class EmailLoginForm {
+    val email = mutableStateOf("")
+    val password = mutableStateOf("")
+}
+
 @Composable
 fun EmailLoginScreen(
+    form: EmailLoginForm,
     toForgotPassword: () -> Unit,
     toRegister: () -> Unit,
     onLogin: () -> Unit,
@@ -36,8 +42,8 @@ fun EmailLoginScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email by form.email
+    var password by form.password
 
     var isLoading by remember { mutableStateOf(false) }
 
