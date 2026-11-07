@@ -764,13 +764,17 @@ class SQuestNewYear : SQuest() {
     }
 
     fun makeThunder() {
-        animationSnow.inflate(2000)
+        inflateSnow(2000)
         ToolsVibration.vibrate(200)
     }
 
     fun makeThunderBig() {
-        animationSnow.inflate(4000)
+        inflateSnow(4000)
         ToolsVibration.vibrate(600)
+    }
+
+    private fun inflateSnow(time: Long) {
+        (ControllerScreenAnimations.getAnimation() as? DrawAnimationSnow)?.inflate(time)
     }
 
     fun stopThunder() {
