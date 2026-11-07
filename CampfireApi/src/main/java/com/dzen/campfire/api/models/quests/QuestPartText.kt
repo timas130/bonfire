@@ -68,6 +68,9 @@ class QuestPartText : QuestPart() {
             assert(errors, button.jumpToId < 0 || parts.any { it.id == button.jumpToId }) {
                 QuestException(API_TRANSLATE.quests_edit_error_2, button.label)
             }
+            assert(errors, button.conditionVar == 0L || details.variablesMap!![button.conditionVar] != null) {
+                QuestException(API_TRANSLATE.quests_edit_error_7)
+            }
         }
     }
 }
