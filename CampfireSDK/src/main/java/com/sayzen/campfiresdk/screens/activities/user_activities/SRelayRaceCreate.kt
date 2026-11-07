@@ -110,7 +110,11 @@ class SRelayRaceCreate constructor(
 
 
         if (changeUserActivity == null) {
-            ControllerApi.moderation(t(API_TRANSLATE.activities_relay_race_creation), t(API_TRANSLATE.app_create), { RActivitiesRelayRaceCreate(accountId, fandomId, languageId, name, description, it) },
+            ControllerApi.moderation(t(API_TRANSLATE.activities_relay_race_creation), t(API_TRANSLATE.app_create), {
+                RActivitiesRelayRaceCreate(accountId, fandomId, languageId, name, description, it)
+                        .onApiError(API.ERROR_RELAY_NEXT_BANED) { ToolsToast.show(t(API_TRANSLATE.activities_relay_race_error_banned)) }
+                        .onApiError(API.ERROR_RELAY_NEXT_NOT_ALLOWED) { ToolsToast.show(t(API_TRANSLATE.activities_relay_race_error_not_allowed)) }
+            },
                     { r ->
                         EventBus.post(EventActivitiesCreate(r.userActivity))
                         Navigator.remove(this)

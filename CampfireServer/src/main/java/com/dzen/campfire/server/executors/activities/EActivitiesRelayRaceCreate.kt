@@ -28,6 +28,8 @@ class EActivitiesRelayRaceCreate() : RActivitiesRelayRaceCreate(0,0,0,"","", "")
 
         val account = ControllerAccounts.getAccount(accountId)
         if(account == null)  throw ApiException(API.ERROR_ACCESS)
+
+        if(accountId != apiAccount.id) ControllerActivities.checkRelayNextAccount(apiAccount.id, 0, accountId, fandomId, languageId)
     }
 
     override fun execute(): Response {
