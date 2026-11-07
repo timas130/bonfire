@@ -46,6 +46,8 @@ import java.util.regex.Pattern
 import kotlin.system.exitProcess
 
 object ControllerLinks {
+    private val generatedNameRegex = Regex("(User|Bot)#[0-9]+")
+
     private fun getRawLink(link: CharSequence): String {
         return stripLinkPrefix(link).replace('_', '-').removeSuffix("-")
     }
@@ -64,12 +66,15 @@ object ControllerLinks {
 
     private fun getUsername(link: CharSequence, rawLink: String): String? {
         val name = stripLinkPrefix(link)
+        if (generatedNameRegex.matches(name)) return name
         if (ToolsText.isValidUsername(name.replace('_', 'a'))) return name
         return if (ToolsText.isValidUsername(rawLink)) rawLink else null
     }
 
     private fun stripUrlExtras(path: String): String {
-        return path.substringBefore('?').substringBefore('#').removeSuffix("/")
+        val noQuery = path.substringBefore('?')
+        if (generatedNameRegex.matches(noQuery.removePrefix("${API.LINK_TAG_PROFILE_NAME}-"))) return noQuery
+        return noQuery.substringBefore('#').removeSuffix("/")
     }
 
     fun parseLink(link: String): Boolean {
