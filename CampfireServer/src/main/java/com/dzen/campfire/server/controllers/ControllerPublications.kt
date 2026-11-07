@@ -126,8 +126,8 @@ object ControllerPublications {
                 }
                 if (ss.length > 2) {
                     if (!names.contains(ss)) {
-                        val id = Database.select("ControllerPublications.parseMentions", SqlQuerySelect(TAccounts.NAME, TAccounts.id).whereValue(TAccounts.name, "=", ss)).nextLongOrZero()
-                        if (id > 0 && id != fromAccount.id && !exclude.contains(id)) {
+                        val id = ControllerAccounts.getByName(ss)
+                        if (id > 0 && id != fromAccount.id && !exclude.contains(id) && !ids.contains(id)) {
                             if (! ControllerCollisions.checkCollisionExist(id, fromAccount.id, API.COLLISION_ACCOUNT_BLACK_LIST_ACCOUNT)) {
                                 names.add(ss)
                                 ids.add(id)
