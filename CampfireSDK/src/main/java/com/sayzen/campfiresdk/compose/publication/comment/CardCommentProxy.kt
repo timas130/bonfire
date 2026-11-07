@@ -113,6 +113,10 @@ class CardCommentProxy(
         impl.setCardAdapter(adapter)
     }
 
+    fun disposeComposition() {
+        if (impl is ComposeCommentCard) impl.disposeComposition()
+    }
+
     override fun instanceView(vParent: ViewGroup): View {
         val view = impl.instanceView(vParent)
         impl.setViewOverride(view)

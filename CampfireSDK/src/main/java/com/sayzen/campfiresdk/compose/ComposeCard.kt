@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.view.doOnDetach
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
@@ -49,18 +50,23 @@ abstract class ComposeCard : Card(0) {
         }
     }
 
+    fun disposeComposition() {
+        if (view.isInitialized()) {
+            view.value.doOnDetach { view.value.disposeComposition() }
+        }
+    }
+
     override fun onDetachView() {
         super.onDetachView()
         if (!PostHog.isFeatureEnabled("remember_compositions", true)) {
-            if (view.isInitialized()) {
-                view.value.disposeComposition()
-            }
+            disposeComposition()
         }
     }
 
     override fun setCardAdapter(adapter: CardAdapter?) {
         super.setCardAdapter(adapter)
         if (adapter == null) {
+            disposeComposition()
             viewModelStoreOwner.viewModelStore.clear()
         }
     }

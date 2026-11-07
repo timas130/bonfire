@@ -1,6 +1,7 @@
 package com.sayzen.campfiresdk.screens.post.view
 
 import android.view.View
+import androidx.core.view.doOnDetach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dzen.campfire.api.API
@@ -14,6 +15,8 @@ import com.dzen.campfire.api.tools.client.ApiClient
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.ComposeCard
+import com.sayzen.campfiresdk.compose.publication.comment.CardCommentProxy
 import com.sayzen.campfiresdk.compose.publication.post.pages.ComposePostPages
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
@@ -133,6 +136,14 @@ class SPost private constructor(
         ControllerNotifications.removeNotificationFromNew(NotificationPublicationImportant::class, publication.id)
 
         if (publication.fandom.closed) ToolsThreads.main(true) { ControllerFandoms.showAlertIfNeed(this, publication.fandom.id, true) }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        doOnDetach {
+            for (card in adapter.get(ComposeCard::class)) card.disposeComposition()
+            for (card in adapter.get(CardCommentProxy::class)) card.disposeComposition()
+        }
     }
 
 

@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.doOnDetach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dzen.campfire.api.API
@@ -19,6 +20,7 @@ import com.dzen.campfire.api.requests.wiki.RWikiItemHistoryCancel
 import com.dzen.campfire.api.requests.wiki.RWikiItemHistoryRestore
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.ComposeCard
 import com.sayzen.campfiresdk.compose.publication.post.pages.ComposePostPages
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
@@ -133,6 +135,15 @@ class SWikiArticleView(
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        doOnDetach { disposeCompositions() }
+    }
+
+    private fun disposeCompositions() {
+        for (card in adapter.get(ComposeCard::class)) card.disposeComposition()
+    }
+
     private fun cancel() {
         SplashAlert()
                 .setText(t(API_TRANSLATE.wiki_cancel_alert))
@@ -168,6 +179,7 @@ class SWikiArticleView(
     private fun reload() {
         isLoading = true
         error = false
+        disposeCompositions()
         adapter.clear()
         updateMessage()
         vLanguage.text = ControllerApi.getLanguage(languageId).name
@@ -183,6 +195,7 @@ class SWikiArticleView(
                         wasSwitchedToEnglish = true
                         loadedPages = it.wikiPages
                         pages = it.wikiPages?.pages ?: emptyArray()
+                        disposeCompositions()
                         adapter.clear()
                         if (composeMode) {
                             adapter.add(ComposePostPages(pages.toList(), this))
