@@ -78,16 +78,22 @@ class CardCreateTitle(
                 true
             }
         }
-        vName.setText(changeName)
+        vName.setText(text)
         vNameTitle.setText(changeName)
 
         vName.setMaxLength(API.CHAT_NAME_MAX)
-        vName.addOnTextChanged {
-            text = it
-            updateFinish.invoke()
+        if (vName.tag !== this) {
+            vName.tag = this
+            vName.addOnTextChanged {
+                text = it
+                updateFinish.invoke()
+            }
         }
 
-        if (changeImage.isNotEmpty()) {
+        if (image != null) {
+            vImage.setImageBitmap(ToolsBitmap.decode(image))
+            vImageIcon.visibility = View.GONE
+        } else if (changeImage.isNotEmpty()) {
             ImageLoader.load(changeImage).into(vImage)
             vImageIcon.visibility = View.GONE
         }
