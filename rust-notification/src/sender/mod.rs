@@ -13,10 +13,15 @@ use google_fcm1::FirebaseCloudMessaging;
 use std::sync::Arc;
 use std::time::Duration;
 
+const MAX_SEND_ATTEMPTS: u32 = 10;
+const MAX_SEND_ATTEMPTS_EPHEMERAL: u32 = 5;
+const FIRST_RETRY_DELAY: Duration = Duration::from_secs(3);
+
 struct QueueItem {
     notification: Notification,
     session_id: i64,
     online_only: bool,
+    failed_attempts: u32,
 }
 
 #[derive(Clone)]
@@ -30,6 +35,7 @@ impl SenderQueue {
             notification,
             session_id,
             online_only,
+            failed_attempts: 0,
         });
     }
 }
@@ -88,7 +94,7 @@ impl NotificationSender {
         }
     }
 
-    async fn process_one(&self, queued: QueueItem) {
+    async fn process_one(&self, mut queued: QueueItem) {
         let item = &queued.notification;
         let session_id = queued.session_id;
 
@@ -146,15 +152,32 @@ impl NotificationSender {
         };
 
         // try again if failed
-        if result.is_err() {
-            let queue = self.queue.clone();
+        if let Err(error) = result {
+            let max_attempts = if item.id == 0 {
+                MAX_SEND_ATTEMPTS_EPHEMERAL
+            } else {
+                MAX_SEND_ATTEMPTS
+            };
+            if queued.failed_attempts + 1 >= max_attempts {
+                warn!(
+                    user_id = item.user_id,
+                    ?error,
+                    "sending failed {max_attempts} times, giving up"
+                );
+                return;
+            }
+
+            let delay = FIRST_RETRY_DELAY * 2u32.pow(queued.failed_attempts);
             warn!(
                 user_id = item.user_id,
-                error = ?result.unwrap_err(),
-                "sending failed, retrying in 3 seconds"
+                ?error,
+                "sending failed, retrying in {delay:?}"
             );
+            queued.failed_attempts += 1;
+
+            let queue = self.queue.clone();
             tokio::spawn(async move {
-                sleep(Duration::from_secs(3)).await;
+                sleep(delay).await;
                 queue.push(queued);
             });
         }

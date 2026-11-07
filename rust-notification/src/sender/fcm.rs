@@ -19,12 +19,28 @@ struct FcmErrorResponse {
 #[derive(Deserialize)]
 struct FcmError {
     status: FcmErrorStatus,
+    #[serde(default)]
+    details: Vec<FcmErrorDetail>,
+}
+impl FcmError {
+    fn specific_status(self) -> FcmErrorStatus {
+        self.details
+            .into_iter()
+            .find_map(|detail| detail.error_code)
+            .unwrap_or(self.status)
+    }
+}
+#[derive(Deserialize)]
+struct FcmErrorDetail {
+    #[serde(rename = "errorCode")]
+    error_code: Option<FcmErrorStatus>,
 }
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 enum FcmErrorStatus {
     InvalidArgument,
     NotFound,
+    Unregistered,
     SenderIdMismatch,
     QuotaExceeded,
     Unavailable,
@@ -118,13 +134,17 @@ impl NotificationSender {
                     Error::BadRequest(value) => {
                         serde_json::from_value::<FcmErrorResponse>(value.clone())
                             .ok()
-                            .map(|resp| resp.error.status)
+                            .map(|resp| resp.error.specific_status())
                     }
                     _ => None,
                 };
 
                 return match err {
-                    Some(FcmErrorStatus::NotFound) => {
+                    Some(
+                        FcmErrorStatus::NotFound
+                        | FcmErrorStatus::Unregistered
+                        | FcmErrorStatus::SenderIdMismatch,
+                    ) => {
                         self.remove_fcm_token(token).await?;
                         // the caller doesn't have to know
                         Ok(())
