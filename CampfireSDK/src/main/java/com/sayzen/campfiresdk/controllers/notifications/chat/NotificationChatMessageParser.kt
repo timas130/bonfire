@@ -197,7 +197,7 @@ fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound
             R.drawable.ic_mode_comment_white_24dp,
             t(API_TRANSLATE.chat_read_passive),
             PendingIntent.getBroadcast(
-                SupAndroid.appContext!!, 0,
+                SupAndroid.appContext!!, tag.hashCode(),
                 Intent(SupAndroid.appContext!!, MessageReadReceiver::class.java).also {
                     it.putExtra(MessageReplyReceiver.CHAT_TAG, tag.asTag())
                 },
