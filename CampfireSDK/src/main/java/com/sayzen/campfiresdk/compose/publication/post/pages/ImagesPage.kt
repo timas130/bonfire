@@ -37,15 +37,24 @@ private val imagesColumnCounts = mapOf(
 
 @Composable
 internal fun PageImagesRenderer(page: PageImages) {
-    if (page.mode == PageImages.MODE_GRID) {
-        FixedGridPageImagesVariant(
-            images = page.images,
-            imagesMini = page.imagesMini,
-            modifier = Modifier
-                .padding(horizontal = 12.dp)
-        )
-    } else {
-        ScrollablePageImagesVariant(page)
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        if (page.title.isNotEmpty()) {
+            LegacyFormattedText(
+                text = page.title,
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
+        }
+
+        if (page.mode == PageImages.MODE_GRID) {
+            FixedGridPageImagesVariant(
+                images = page.images,
+                imagesMini = page.imagesMini,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
+            )
+        } else {
+            ScrollablePageImagesVariant(page)
+        }
     }
 }
 
