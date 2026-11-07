@@ -65,6 +65,7 @@ class CardChat(
             .subscribe(EventChatReadDateChanged::class) { this.onEventChatReadDateChanged(it) }
             .subscribe(EventFandomChatRemove::class) { this.onEventFandomChatRemove(it) }
             .subscribe(EventFandomChatChanged::class) { this.onEventFandomChatChanged(it) }
+            .subscribe(EventChatChanged::class) { this.onEventChatChanged(it) }
             .subscribe(EventChatMessageChanged::class) { onEventChanged(it) }
             .subscribe(EventFandomBackgroundImageChanged::class) { if(chat.tag == it.chatTag) chat.backgroundImage = it.image }
 
@@ -197,6 +198,14 @@ class CardChat(
             chat.customName = e.name
             if (e.image.isNotEmpty()) chat.customImage = e.image
             chat.params = ChatParamsFandomSub(e.text).json(true, Json())
+            update()
+        }
+    }
+
+    private fun onEventChatChanged(e: EventChatChanged) {
+        if (e.chatId == chat.tag.targetId && chat.tag.chatType == API.CHAT_TYPE_CONFERENCE) {
+            if (e.name.isNotEmpty()) chat.customName = e.name
+            chat.customImage = e.image
             update()
         }
     }
