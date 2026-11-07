@@ -69,14 +69,16 @@ class EFandomsModerationChatChange : RFandomsModerationChatChange(0, "", "", "",
             update.updateValue(TChats.chat_params, ChatParamsFandomSub(text).json(true, Json()))
         }
 
+        var newImageId = 0L
         if(image != null){
-            update.update(TChats.image_id, ControllerResources.removeAndPut(imageId, image!!, API.RESOURCES_PUBLICATION_DATABASE_LINKED))
+            newImageId = ControllerResources.removeAndPut(imageId, image!!, API.RESOURCES_PUBLICATION_DATABASE_LINKED)
+            update.update(TChats.image_id, newImageId)
         }
 
         Database.update("EFandomsModerationChatChange update", update)
         ControllerPublications.moderation(ModerationChatChange(comment, chatId, name), apiAccount.id, fandomId, languageId, 0)
 
-        return Response()
+        return Response(newImageId)
     }
 
 }

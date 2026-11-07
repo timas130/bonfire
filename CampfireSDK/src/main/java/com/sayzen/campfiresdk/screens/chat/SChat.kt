@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
+import com.dzen.campfire.api.models.chat.ChatParamsFandomSub
 import com.dzen.campfire.api.models.chat.ChatTag
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatAnswer
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessage
@@ -26,6 +27,7 @@ import com.sayzen.campfiresdk.models.events.account.EventAccountRemoveFromBlackL
 import com.sayzen.campfiresdk.models.events.chat.*
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomBackgroundImageChanged
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomBackgroundImageChangedModeration
+import com.sayzen.campfiresdk.models.events.fandom.EventFandomChatChanged
 import com.sayzen.campfiresdk.models.events.notifications.EventNotification
 import com.sayzen.campfiresdk.models.objects.MChatMessagesPool
 import com.sayzen.campfiresdk.screens.chat.create.SChatCreate
@@ -51,6 +53,7 @@ import com.sup.dev.android.views.views.ViewAvatarTitle
 import com.sup.dev.android.views.views.ViewChip
 import com.sup.dev.android.views.views.ViewIcon
 import com.sup.dev.java.libs.eventBus.EventBus
+import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsCollections
 import com.sup.dev.java.tools.ToolsColor
 import com.sup.dev.java.tools.ToolsDate
@@ -116,6 +119,7 @@ class SChat constructor(
             .subscribe(EventFandomBackgroundImageChangedModeration::class) { this.onEventFandomBackgroundImageChangedModeration(it) }
             .subscribe(EventFandomBackgroundImageChanged::class) { this.onEventFandomBackgroundImageChanged(it) }
             .subscribe(EventChatChanged::class) { this.onEventChatChanged(it) }
+            .subscribe(EventFandomChatChanged::class) { this.onEventFandomChatChanged(it) }
             .subscribe(EventChatMemberStatusChanged::class) { this.onEventChatMemberStatusChanged(it) }
             .subscribe(EventAccountRemoveFromBlackList::class) { if (chat.tag.chatType == API.CHAT_TYPE_PRIVATE && it.accountId == chat.tag.getAnotherId()) updateChatInfo() }
 
@@ -629,6 +633,15 @@ class SChat constructor(
             chat.customName = e.name
             chat.customImage = e.image
             chat.membersCount = e.accountCount.toLong()
+            update()
+        }
+    }
+
+    private fun onEventFandomChatChanged(e: EventFandomChatChanged) {
+        if (chat.tag.chatType == API.CHAT_TYPE_FANDOM_SUB && e.chatId == chat.tag.targetId) {
+            chat.customName = e.name
+            if (e.image.isNotEmpty()) chat.customImage = e.image
+            chat.params = ChatParamsFandomSub(e.text).json(true, Json())
             update()
         }
     }

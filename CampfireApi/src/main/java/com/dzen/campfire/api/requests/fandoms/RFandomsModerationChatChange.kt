@@ -1,5 +1,7 @@
 package com.dzen.campfire.api.requests.fandoms
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -40,15 +42,22 @@ open class RFandomsModerationChatChange(
 
     class Response : Request.Response {
 
+        var newImage = ImageRef()
 
         constructor(json: Json) {
             json(false, json)
         }
 
-        constructor() {
+        constructor(newImage: Long) {
+            this.newImage = ImageRef(newImage)
         }
 
         override fun json(inp: Boolean, json: Json) {
+            newImage = json.m(inp, "newImage", newImage)
+        }
+
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            receiver.add(newImage)
         }
 
     }

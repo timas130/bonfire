@@ -195,6 +195,7 @@ class CardChat(
     private fun onEventFandomChatChanged(e: EventFandomChatChanged) {
         if (e.chatId == chat.tag.targetId && chat.tag.chatType == API.CHAT_TYPE_FANDOM_SUB) {
             chat.customName = e.name
+            if (e.image.isNotEmpty()) chat.customImage = e.image
             chat.params = ChatParamsFandomSub(e.text).json(true, Json())
             update()
         }

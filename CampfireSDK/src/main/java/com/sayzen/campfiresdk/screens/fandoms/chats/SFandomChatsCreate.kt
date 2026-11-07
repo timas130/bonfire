@@ -124,11 +124,11 @@ class SFandomChatsCreate(
                             SChat.instance(ChatTag(API.CHAT_TYPE_FANDOM_SUB, r.chatTag.targetId, 0), 0, false, Navigator.TO)
                         }
                     } else {
-                        ApiRequestsSupporter.executeProgressDialog(RFandomsModerationChatChange(chatId, name, vField.text.toString(), comment, image)) { _ ->
+                        ApiRequestsSupporter.executeProgressDialog(RFandomsModerationChatChange(chatId, name, vField.text.toString(), comment, image)) { r ->
                             ToolsToast.show(t(API_TRANSLATE.app_done))
                             ImageLoader.clear(imageRef)
                             Navigator.remove(this)
-                            EventBus.post(EventFandomChatChanged(chatId, name, vField.text.toString()))
+                            EventBus.post(EventFandomChatChanged(chatId, name, vField.text.toString(), r.newImage))
                         }
                     }
                 }
