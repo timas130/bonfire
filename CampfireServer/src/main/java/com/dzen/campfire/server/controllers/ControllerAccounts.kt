@@ -602,7 +602,7 @@ object ControllerAccounts {
                 .where(TCollisions.collision_id, "=", fandomId)
                 .where(TCollisions.collision_sub_id, "=", languageId)
                 .offset_count(0, 1)
-                .sort(TCollisions.collision_date_create, false)
+                .sort(TCollisions.value_1, false)
         )
         return if (v.isEmpty) 0 else v.next()
     }
