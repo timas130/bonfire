@@ -8,6 +8,7 @@ import com.dzen.campfire.api.models.publications.history.HistoryAdminChangeFando
 import com.dzen.campfire.api.models.publications.history.HistoryChangeFandom
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostChangeFandom
+import com.dzen.campfire.api.requests.post.RPostPublication
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.server.tables.TFandoms
@@ -31,12 +32,14 @@ class EPostChangeFandom : RPostChangeFandom(0, 0, 0, "") {
             ControllerModeration.parseComment(comment, apiAccount.id)
             ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_POST_CHANGE_FANDOM)
         }else{
-            ControllerAccounts.checkAccountBanned(apiAccount.id)
+            ControllerAccounts.checkAccountBanned(apiAccount.id, fandomId, languageId)
         }
 
         if(publication.fandom.id == fandomId && publication.fandom.languageId == languageId) throw ApiException(E_SAME_FANDOM)
 
-        if (!ControllerFandom.checkExist(fandomId)) throw ApiException(API.ERROR_GONE)
+        val fandom = ControllerFandom.getFandom(fandomId) ?: throw ApiException(API.ERROR_GONE)
+        if (fandom.status != API.STATUS_PUBLIC) throw ApiException(RPostPublication.E_FANDOM_NOT_PUBLIC)
+        if (!API.isLanguageExsit(languageId)) throw ApiException(API.ERROR_GONE)
     }
 
     override fun execute(): Response {
