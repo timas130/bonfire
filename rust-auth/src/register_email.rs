@@ -70,8 +70,7 @@ impl AuthServer {
             &self.base.jwt_decoding_key,
             &TokenClaims::get_verify_validation(Validation::new(Algorithm::HS256)),
         )
-        .map_err(anyhow::Error::from)
-        .map_err(AuthError::from)
+        .map_err(|_| AuthError::InvalidToken)
         .map(|token| token.claims.sub)
     }
 

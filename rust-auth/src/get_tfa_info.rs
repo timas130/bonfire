@@ -18,7 +18,7 @@ impl AuthServer {
             &self.base.jwt_decoding_key,
             &TokenClaims::get_tfa_validation(Validation::new(Algorithm::HS256)),
         )
-        .map_err(anyhow::Error::from)?;
+        .map_err(|_| AuthError::TfaExpired)?;
 
         let token_id = tfa_token.claims.jti;
         let user_id = tfa_token

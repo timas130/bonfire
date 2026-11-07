@@ -12,7 +12,7 @@ impl AuthServer {
             &self.base.jwt_decoding_key,
             &TokenClaims::get_cancel_email_change_validation(Validation::new(Algorithm::HS256)),
         )
-        .map_err(anyhow::Error::from)?
+        .map_err(|_| AuthError::InvalidToken)?
         .claims;
 
         let (user_id, old_email) = claims.sub.split_once(':').ok_or(anyhow!("invalid token"))?;
