@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
-import android.provider.MediaStore
 import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
@@ -368,6 +367,9 @@ object ToolsBitmap {
                 } catch (ex: Exception) {
                     err(ex)
                     null
+                } catch (ex: OutOfMemoryError) {
+                    err(ex)
+                    null
                 }
                 callbackResult.invoke(bitmap)
             }, onPermissionPermissionRestriction)
@@ -385,20 +387,17 @@ object ToolsBitmap {
         } catch (ex: Exception) {
             err(ex)
             null
+        } catch (ex: OutOfMemoryError) {
+            err(ex)
+            null
         }
         callbackResult.invoke(bitmap)
     }
 
     private fun readUriBitmap(uri: Uri): Bitmap? {
-        val resolver = SupAndroid.activity!!.contentResolver
-        val bitmap = MediaStore.Images.Media.getBitmap(resolver, uri) ?: return null
-        val exifStream = try {
-            resolver.openInputStream(uri)
-        } catch (ex: Exception) {
-            err(ex)
-            null
-        }
-        val matrix = readExifMatrix(exifStream) ?: return bitmap
+        val bytes = SupAndroid.activity!!.contentResolver.openInputStream(uri)?.use { it.readBytes() } ?: return null
+        val bitmap = decode(bytes) ?: return null
+        val matrix = readExifMatrix(ByteArrayInputStream(bytes)) ?: return bitmap
         return transformBitmap(bitmap, matrix)
     }
 
