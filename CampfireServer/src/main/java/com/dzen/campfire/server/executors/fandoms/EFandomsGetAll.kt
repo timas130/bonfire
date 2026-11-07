@@ -36,7 +36,6 @@ class EFandomsGetAll : RFandomsGetAll(0, 0, 0, 0, "", emptyArray(), emptyArray()
         return ControllerFandom.instanceSelect()
                 .where(TFandoms.status, "=", API.STATUS_PUBLIC)
                 .sort(TFandoms.subscribers_count, false, TFandoms.date_create)
-                .offset_count(offset, COUNT)
     }
 
     private fun select(select: SqlQuerySelect, infoArray: Array<Item2<Long, Long>>): Array<Fandom> {
@@ -71,6 +70,8 @@ class EFandomsGetAll : RFandomsGetAll(0, 0, 0, 0, "", emptyArray(), emptyArray()
 
         }
 
+        if (subscribedStatus == SUBSCRIBE_YES) return fandomsResult.drop(offset.toInt()).take(COUNT).toTypedArray()
+
         return Array(fandomsResult.size) { fandomsResult[it] }
     }
 
@@ -91,6 +92,8 @@ class EFandomsGetAll : RFandomsGetAll(0, 0, 0, 0, "", emptyArray(), emptyArray()
 
         val select = instanceSelect()
 
+        if (subscribedStatus != SUBSCRIBE_YES) select.offset_count(offset, COUNT)
+
         if (subscribedStatus != SUBSCRIBE_NONE)
             if (!ids.isEmpty()) select.where(SqlWhere.WhereIN(TFandoms.id, subscribedStatus != SUBSCRIBE_YES, ids))
 
@@ -102,7 +105,7 @@ class EFandomsGetAll : RFandomsGetAll(0, 0, 0, 0, "", emptyArray(), emptyArray()
     //
 
     private fun loadSearch(): Array<Fandom>{
-        val select = instanceSelect()
+        val select = instanceSelect().offset_count(offset, COUNT)
 
         if (name.isNotEmpty()) {
 

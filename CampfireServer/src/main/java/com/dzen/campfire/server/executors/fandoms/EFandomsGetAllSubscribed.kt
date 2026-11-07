@@ -35,8 +35,6 @@ class EFandomsGetAllSubscribed : RFandomsGetAllSubscribed(0, 0) {
                 .where(TFandoms.status, "=", API.STATUS_PUBLIC)
                 .where(SqlWhere.WhereIN(TFandoms.id, ids))
                 .sort(TFandoms.subscribers_count, false, TFandoms.date_create)
-                .offset_count(offset, COUNT)
-
 
         val v = Database.select("EFandomsGetAllSubscribed.execute 2", select)
 
@@ -60,7 +58,7 @@ class EFandomsGetAllSubscribed : RFandomsGetAllSubscribed(0, 0) {
                 }
         }
 
-        return Response(Array(fandomsResult.size) { fandomsResult[it] })
+        return Response(fandomsResult.drop(offset.toInt()).take(COUNT).toTypedArray())
     }
 
 }
