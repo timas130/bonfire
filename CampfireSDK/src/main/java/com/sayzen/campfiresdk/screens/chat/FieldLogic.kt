@@ -329,11 +329,10 @@ class FieldLogic(
         val quoteIdV = quoteId
         val quoteTextV = quoteText
         val publicationChangeId = publicationChange!!.id
-        beforeSend()
-        ToolsToast.show(t(API_TRANSLATE.app_changed))
-        EventBus.post(EventChatMessageChanged(publicationChangeId, text, quoteIdV, quoteTextV))
-        ApiRequestsSupporter.execute(RChatMessageChange(publicationChangeId, quoteIdV, text, newFormatting)) {
-            EventBus.post(EventChatMessageChanged(publicationChangeId, it.message.text, quoteIdV, quoteTextV))
+        ApiRequestsSupporter.executeProgressDialog(RChatMessageChange(publicationChangeId, quoteIdV, text, newFormatting)) { r ->
+            beforeSend()
+            ToolsToast.show(t(API_TRANSLATE.app_changed))
+            EventBus.post(EventChatMessageChanged(publicationChangeId, r.message.text, quoteIdV, quoteTextV))
         }.onApiError(API.ERROR_ACCESS) {
             ToolsToast.show(t(API_TRANSLATE.error_chat_access))
         }
