@@ -3,7 +3,10 @@ package com.dzen.campfire.server.executors.publications
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.PublicationReport
 import com.dzen.campfire.api.requests.publications.RPublicationsReportsGetAll
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerAccounts
+import com.dzen.campfire.server.controllers.ControllerFandom
+import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.tables.TAccounts
 import com.dzen.campfire.server.tables.TCollisions
 import com.sup.dev.java_pc.sql.Database
@@ -12,6 +15,10 @@ import com.sup.dev.java_pc.sql.SqlQuerySelect
 class EPublicationsReportsGetAll : RPublicationsReportsGetAll(0, 0) {
 
     override fun check() {
+        val publication = ControllerPublications.getPublication(publicationId, apiAccount.id)
+                ?: throw ApiException(API.ERROR_GONE)
+        if (publication.publicationType == API.PUBLICATION_TYPE_QUEST && ControllerFandom.can(apiAccount, API.LVL_QUEST_MODERATOR)) return
+        ControllerFandom.checkCan(apiAccount, publication.fandom.id, publication.fandom.languageId, API.LVL_MODERATOR_BLOCK)
     }
 
     override fun execute(): Response {
