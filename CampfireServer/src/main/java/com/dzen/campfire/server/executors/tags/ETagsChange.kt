@@ -1,6 +1,7 @@
 package com.dzen.campfire.server.executors.tags
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.publications.moderations.tags.ModerationTagChange
 import com.dzen.campfire.api.models.publications.tags.PublicationTag
 import com.dzen.campfire.api.requests.tags.RTagsChange
@@ -55,13 +56,16 @@ class ETagsChange : RTagsChange(0, null, "", null, false) {
         }
         if (removeImage) {
             ControllerResources.remove(publication!!.imageId)
+            publication!!.imageId = 0
+            publication!!.image = ImageRef()
         }
 
         Database.update("ETagsChange", SqlQueryUpdate(TPublications.NAME)
                 .where(TPublications.id, "=", publicationId)
                 .updateValue(TPublications.publication_json, publication!!.jsonDB(true, Json())))
 
-        ControllerPublications.moderation(ModerationTagChange(comment, publication!!.id, publication!!.parentPublicationId, publication!!.name, oldName!!, publication!!.imageId, oldImageId, if (publicationParent != null) publicationParent!!.name else "", if (publicationParent != null) publicationParent!!.imageId else 0),
+        val loggedImageId = if (removeImage) oldImageId else publication!!.imageId
+        ControllerPublications.moderation(ModerationTagChange(comment, publication!!.id, publication!!.parentPublicationId, publication!!.name, oldName!!, loggedImageId, oldImageId, if (publicationParent != null) publicationParent!!.name else "", if (publicationParent != null) publicationParent!!.imageId else 0),
                 apiAccount.id, publication!!.fandom.id,  publication!!.fandom.languageId, publication!!.id)
 
         return Response()
