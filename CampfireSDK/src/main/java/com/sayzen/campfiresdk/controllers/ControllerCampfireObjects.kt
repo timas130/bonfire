@@ -97,7 +97,7 @@ object ControllerCampfireObjects {
         val fandomId = link.getLongParamOrZero(0)
         val languageId = link.getLongParamOrZero(1)
 
-        RFandomsGet(fandomId, languageId, ControllerApi.getLanguageId())
+        RFandomsGet(fandomId, languageId, languageId)
             .onComplete { onComplete(link, it.fandom.name, t(API_TRANSLATE.app_fandom), it.fandom.image) }
             .onError { onError(link) }
             .send(api)
