@@ -257,7 +257,8 @@ class SProfile private constructor(
             post.isPined = true
             cardPinnedPost = CardPostProxy(vRecycler, post)
             cardPinnedPost?.showFandom = true
-            if (ControllerSettings.getProfileFilters().contains(API.PUBLICATION_TYPE_POST)) {
+            if (ControllerSettings.getProfileFilters().contains(API.PUBLICATION_TYPE_POST)
+                && (cardFilters.fandomId == 0L || post.fandom.id == cardFilters.fandomId)) {
                 adapter.add(adapter.indexOf(cardFilters) + 1, cardPinnedPost!!)
             }
         }
