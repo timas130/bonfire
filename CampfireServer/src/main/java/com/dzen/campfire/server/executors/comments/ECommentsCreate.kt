@@ -108,7 +108,7 @@ class ECommentsCreate : RCommentsCreate(0, "", null, null, 0, false, 0, 0, false
 
         if (quoteId != 0L) {
             val quotePublication = ControllerPublications.getPublication(quoteId, apiAccount.id)
-            if (quotePublication != null && quotePublication is PublicationComment) {
+            if (quotePublication != null && quotePublication is PublicationComment && quotePublication.status == API.STATUS_PUBLIC && quotePublication.parentPublicationId == publicationId) {
                 comment.quoteId = quotePublication.id
                 comment.quoteText = quotePublication.creator.name + ": " + quotePublication.text
                 comment.quoteCreatorName = quotePublication.creator.name

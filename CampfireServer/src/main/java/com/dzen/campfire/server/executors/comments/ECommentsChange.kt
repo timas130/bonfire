@@ -39,7 +39,7 @@ class ECommentsChange : RCommentsChange(0, "", 0, false) {
 
         if (quoteId != 0L) {
             val quoteUnit = ControllerPublications.getPublication(quoteId, apiAccount.id)
-            if (quoteUnit != null && quoteUnit is PublicationComment) {
+            if (quoteUnit != null && quoteUnit is PublicationComment && quoteUnit.status == API.STATUS_PUBLIC && quoteUnit.parentPublicationId == publication!!.parentPublicationId) {
                 publication!!.quoteId = quoteUnit.id
                 publication!!.quoteText = quoteUnit.creator.name + ": " + quoteUnit.text
                 publication!!.quoteImageIds = if (quoteUnit.imageId > 0) Array(1) { quoteUnit.imageId } else emptyArray()
