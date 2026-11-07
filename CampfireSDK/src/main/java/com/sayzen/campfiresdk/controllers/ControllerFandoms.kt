@@ -233,9 +233,9 @@ object ControllerFandoms {
                                     ToolsThreads.thread {
                                         val image = ToolsBitmap.toBytes(ToolsBitmap.resize(b, API.FANDOM_IMG_SIDE, API.FANDOM_IMG_SIDE), API.FANDOM_IMG_WEIGHT)
                                         ToolsThreads.main {
-                                            ApiRequestsSupporter.executeProgressDialog(dialog, RFandomsAdminChangeImage(xFandom.getId(), image, comment)) { _ ->
+                                            ApiRequestsSupporter.executeProgressDialog(dialog, RFandomsAdminChangeImage(xFandom.getId(), image, comment)) { r ->
                                                 ImageLoader.load(xFandom.getImage()).clear()
-                                                EventBus.post(EventFandomChanged(xFandom.getId(), xFandom.getName()))
+                                                EventBus.post(EventFandomChanged(xFandom.getId(), xFandom.getName(), r.image))
                                                 ToolsToast.show(t(API_TRANSLATE.app_done))
                                             }
                                         }

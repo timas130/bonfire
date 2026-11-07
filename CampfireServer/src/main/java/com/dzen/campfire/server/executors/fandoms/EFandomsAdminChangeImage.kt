@@ -28,14 +28,16 @@ class EFandomsAdminChangeImage : RFandomsAdminChangeImage(0, ByteArray(0), "") {
 
     override fun execute(): Response {
 
+        val imageId = ControllerResources.removeAndPut(fandom!!.imageId, image!!, API.RESOURCES_PUBLICATION_DATABASE_LINKED)
+
         Database.update("EFandomsAdminChangeImage 1", SqlQueryUpdate(TFandoms.NAME)
             .where(TFandoms.id, "=", fandomId)
-            .update(TFandoms.image_id, ControllerResources.removeAndPut(fandom!!.imageId, image!!, API.RESOURCES_PUBLICATION_DATABASE_LINKED)))
+            .update(TFandoms.image_id, imageId))
 
         ControllerPublications.event(ApiEventAdminFandomChangeAvatar(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, fandomId, fandom!!.name, fandom!!.imageId), apiAccount.id)
         ControllerPublications.event(ApiEventFandomChangeAvatar(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, fandomId, fandom!!.name, fandom!!.imageId, comment), apiAccount.id, fandom!!.id, 0)
 
-        return Response()
+        return Response(imageId)
     }
 
 }

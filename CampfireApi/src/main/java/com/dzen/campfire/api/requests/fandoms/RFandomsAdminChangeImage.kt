@@ -1,5 +1,7 @@
 package com.dzen.campfire.api.requests.fandoms
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -28,17 +30,25 @@ open class RFandomsAdminChangeImage(
 
     class Response : Request.Response {
 
-
+        var image = ImageRef()
+        @Deprecated("use ImageRefs")
+        var imageId = 0L
 
         constructor(json:Json){
             json(false, json)
         }
 
-        constructor(){
-
+        constructor(imageId: Long){
+            this.imageId = imageId
         }
 
         override fun json(inp: Boolean, json: Json) {
+            image = json.m(inp, "image", image)
+            imageId = json.m(inp, "imageId", imageId)
+        }
+
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            receiver.add(image, imageId)
         }
 
     }
