@@ -118,7 +118,8 @@ object ControllerPublications {
         val ids = ArrayList<Long>()
         var i = 0
         while (i < textV.length) {
-            if (textV[i] == API.LINK_SHORT_PROFILE[0]) {
+            val midWord = i > 0 && (textV[i - 1].isLetterOrDigit() || (textV[i - 1] == '_' && i > 1 && textV[i - 2].isLetterOrDigit()))
+            if (textV[i] == API.LINK_SHORT_PROFILE[0] && !midWord) {
                 var ss = ""
                 i++
                 while (i < textV.length && ToolsText.isValidUsernameChar(textV[i])) {
