@@ -98,7 +98,7 @@ class EChatMessageCreate(
             val parentMessageX = ControllerPublications.getPublication(parentMessageId, apiAccount.id) as? PublicationChatMessage
             if(parentMessageX != null && parentMessageX.status == API.STATUS_PUBLIC && parentMessageX.chatTag() == tag) parentMessage = parentMessageX
         }
-        if (stickerId <= 0 && voice == null && ((imageArray == null && text.length < API.CHAT_MESSAGE_TEXT_MIN_L) || text.length > API.CHAT_MESSAGE_TEXT_MAX_L)) throw ApiException(E_BAD_TEXT)
+        if (text.length > API.CHAT_MESSAGE_TEXT_MAX_L || (stickerId <= 0 && voice == null && imageArray == null && text.length < API.CHAT_MESSAGE_TEXT_MIN_L)) throw ApiException(E_BAD_TEXT)
         if ((imageArray != null || text.isNotEmpty() || gif != null) && voice != null) throw ApiException(E_BAD_DATA)
 
         if (imageArray != null) {
