@@ -96,6 +96,16 @@ class EPublicationsKarmaAdd : RPublicationsKarmaAdd(0, false, 0, false) {
                     Database.update("EPublicationsKarmaAdd", SqlQueryUpdate(TPublications.NAME).where(TPublications.id, "=", publicationParent.id).update(TPublications.tag_2, publication!!.karmaCount))
                 }
             }
+            if (!up && publication!!.publicationType == API.PUBLICATION_TYPE_COMMENT && publication!!.parentPublicationType == API.PUBLICATION_TYPE_POST) {
+                if (publication!!.karmaCount > 0) {
+                    Database.update("EPublicationsKarmaAdd", SqlQueryUpdate(TPublications.NAME)
+                            .where(TPublications.id, "=", publication!!.parentPublicationId)
+                            .where(TPublications.tag_1, "=", publication!!.id)
+                            .update(TPublications.tag_2, publication!!.karmaCount))
+                } else {
+                    ControllerPublications.recountBestComment(publication!!.parentPublicationId, publication!!.id)
+                }
+            }
         }
 
         return Response(karmaForce)
