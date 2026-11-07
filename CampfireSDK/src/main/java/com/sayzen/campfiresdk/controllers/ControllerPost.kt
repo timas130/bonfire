@@ -207,7 +207,7 @@ object ControllerPost {
                 post.fandom.id,
                 post.fandom.languageId,
                 API.LVL_MODERATOR_PIN_POST
-            ) && post.isPublic && !post.isPined && Navigator.getCurrent() !is SProfile
+            ) && post.isPublic && !post.isPined && post.fandom.languageId != -1L && Navigator.getCurrent() !is SProfile
         )
         .add(t(API_TRANSLATE.publication_menu_unpin_in_fandom)) { unpinInFandom(post) }.backgroundRes(R.color.blue_700)
         .textColorRes(R.color.white).condition(
