@@ -43,7 +43,7 @@ class BadgeShelfModel(
     val isEditingAllowed = _currentUser.mapState { userId == it?.id }
 
     val isShowButtonVisible = _query.combineStates(_currentUser) { query, user ->
-        userId == user?.id && query != null && query.data?.userById?.profile?.badgeShelf == null
+        userId == user?.id && query != null && !query.hasErrors() && query.data?.userById?.profile?.badgeShelf == null
     }
 
     init {

@@ -119,34 +119,36 @@ fun BadgeShelfWrapper(userId: String) {
     val isVisible by model.isVisible.collectAsState()
     val isShowButtonVisible by model.isShowButtonVisible.collectAsState()
 
-    AnimatedVisibility(visible = isVisible) {
-        BadgeShelf(model, shelf.getOrNull())
-    }
-    AnimatedVisibility(visible = isShowButtonVisible) {
-        val isLoadingShow by model.isLoadingShow.collectAsState()
-        val context = LocalContext.current
-
-        CompatProfileCard {
-            ListItem(
-                headlineContent = {
-                    Text(stringResource(R.string.badge_shelf_show))
-                },
-                trailingContent = {
-                    AnimatedVisibility(visible = isLoadingShow) {
-                        CircularProgressIndicator(Modifier.size(24.dp))
-                    }
-                },
-                colors = ListItemDefaults.colors(
-                    containerColor = Color(remember { ToolsResources.getColorAttr(context, R.attr.colorSurface) }),
-                ),
-                modifier = Modifier.clickable {
-                    model.show()
-                }
-            )
+    Column {
+        AnimatedVisibility(visible = isVisible) {
+            BadgeShelf(model, shelf.getOrNull())
         }
-    }
-    AnimatedVisibility(visible = isError) {
-        ErrorCard(text = stringResource(R.string.badge_shelf_error))
+        AnimatedVisibility(visible = isShowButtonVisible) {
+            val isLoadingShow by model.isLoadingShow.collectAsState()
+            val context = LocalContext.current
+
+            CompatProfileCard {
+                ListItem(
+                    headlineContent = {
+                        Text(stringResource(R.string.badge_shelf_show))
+                    },
+                    trailingContent = {
+                        AnimatedVisibility(visible = isLoadingShow) {
+                            CircularProgressIndicator(Modifier.size(24.dp))
+                        }
+                    },
+                    colors = ListItemDefaults.colors(
+                        containerColor = Color(remember { ToolsResources.getColorAttr(context, R.attr.colorSurface) }),
+                    ),
+                    modifier = Modifier.clickable {
+                        model.show()
+                    }
+                )
+            }
+        }
+        AnimatedVisibility(visible = isError) {
+            ErrorCard(text = stringResource(R.string.badge_shelf_error))
+        }
     }
 }
 
