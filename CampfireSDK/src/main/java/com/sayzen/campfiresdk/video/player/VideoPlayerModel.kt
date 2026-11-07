@@ -210,6 +210,7 @@ class VideoPlayerModel(
                 VideoDownloader.download(videoId)
                 ToolsToast.show(t(API_TRANSLATE.app_downloaded))
             } catch (e: CancellationException) {
+                ToolsToast.show(ToolsResources.s(R.string.video_download_failed))
                 throw e
             } catch (e: Exception) {
                 err(e)
