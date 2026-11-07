@@ -13,10 +13,6 @@ open class RAccountsReport(
         val E_EXIST = "E_EXIST"
     }
 
-    init {
-        tokenRequired = false
-    }
-
     override fun jsonSub(inp: Boolean, json: Json) {
         accountId = json.m(inp, "accountId", accountId)
         comment = json.m(inp, "comment", comment)
