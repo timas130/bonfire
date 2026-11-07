@@ -81,6 +81,8 @@ class SPostCreationTags private constructor(
                     ControllerActivities.reloadActivities()
                 }.onApiError(API.ERROR_VIDEO_NOT_READY) {
                     ToolsToast.show(R.string.post_error_videos_processing)
+                }.onApiError(RPostPublication.E_BAD_TAGS) {
+                    ToolsToast.show(t(API_TRANSLATE.error_unknown))
                 }
             }
         }
@@ -192,6 +194,8 @@ class SPostCreationTags private constructor(
                             SPost.instance(publicationId, 0, NavigationAction.replace())
                         }.onApiError(API.ERROR_VIDEO_NOT_READY) {
                             ToolsToast.show(R.string.post_error_videos_processing)
+                        }.onApiError(RPostPublication.E_BAD_TAGS) {
+                            ToolsToast.show(t(API_TRANSLATE.error_unknown))
                         }
                     }.asSheetShow()
         }

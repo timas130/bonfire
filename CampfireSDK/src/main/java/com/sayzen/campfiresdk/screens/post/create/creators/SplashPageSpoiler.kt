@@ -55,10 +55,12 @@ class SplashPageSpoiler(
         vEnter.setText(enterText)
         vEnter.setOnClickListener { onEnter() }
         vCancel.setOnClickListener { onCancel() }
+        update()
     }
 
     private fun update() {
-        vEnter.isEnabled = !vName.getText().isEmpty() && vName.getText().length <= API.PAGE_LINK_SPOILER_NAME_MAX_L
+        val name = vName.getText().trim { it <= ' ' }
+        vEnter.isEnabled = name.isNotEmpty() && name.length <= API.PAGE_LINK_SPOILER_NAME_MAX_L
     }
 
     private fun onEnter() {

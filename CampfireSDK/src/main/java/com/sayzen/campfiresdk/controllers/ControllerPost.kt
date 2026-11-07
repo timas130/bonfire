@@ -388,6 +388,8 @@ object ControllerPost {
         ) {
             EventBus.post(EventPostStatusChange(publications.id, API.STATUS_PUBLIC))
             ToolsToast.show(t(API_TRANSLATE.app_done))
+        }.onApiError(API.ERROR_VIDEO_NOT_READY) {
+            ToolsToast.show(R.string.post_error_videos_processing)
         }
     }
 
@@ -736,6 +738,8 @@ object ControllerPost {
             postId = publication.id,
         )) { resp ->
             EventBus.post(EventPostDraftCreated(resp.unitId))
+        }.onApiError(API.ERROR_VIDEO_NOT_READY) {
+            ToolsToast.show(R.string.post_error_videos_processing)
         }
     }
 

@@ -169,6 +169,8 @@ class SPostCreate(
             ControllerStoryQuest.incrQuest(API.QUEST_STORY_DRAFT)
         }.onFinish {
             onFinish.invoke()
+        }.onApiError(RPostPutPage.E_BAD_PAGE) {
+            ToolsToast.show(t(API_TRANSLATE.error_unknown))
         }
     }
 
@@ -187,6 +189,8 @@ class SPostCreate(
         ApiRequestsSupporter.executeEnabled(widget, RPostChangePage(publicationId, page, index)) { r ->
             onFinish.invoke(r.page!!)
             EventBus.post(EventPostChanged(publicationId, xPostCreator.pages))
+        }.onApiError(RPostChangePage.E_BAD_PAGE) {
+            ToolsToast.show(t(API_TRANSLATE.error_unknown))
         }
     }
 
