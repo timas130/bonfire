@@ -12,6 +12,7 @@ class EFandomsModerationGalleryRemove : RFandomsModerationGalleryRemove(0, 0, 0,
     var fandom: Fandom? = null
 
     override fun check() {
+        if (!API.isLanguageExsit(languageId)) throw ApiException(API.ERROR_ACCESS)
         ControllerFandom.checkCan(apiAccount, fandomId, languageId, API.LVL_MODERATOR_GALLERY)
         fandom = ControllerFandom.getFandom(fandomId)
         if (fandom == null) throw ApiException(API.ERROR_GONE)

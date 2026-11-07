@@ -245,10 +245,11 @@ object ControllerFandom {
         if (ControllerOptimizer.isProtoadmin(account.id)) return true
         if (ControllerAccounts.isAccountBaned(account.id, fandomId, languageId)) return false
         if (OptimizerEffects.get(account.id, API.EFFECT_INDEX_ADMIN_BAN) != null) return false
-        if (account.id == getViceroyId(fandomId, languageId)) return true
+        val languageExists = API.isLanguageExsit(languageId)
+        if (languageExists && account.id == getViceroyId(fandomId, languageId)) return true
         if (account.accessTag < moderateInfo.lvl || ControllerAccounts.isBot(account)) return false
         if (can(account, API.LVL_ADMIN_MODER)) return true
-        if (fandomId == 0L) return false
+        if (fandomId == 0L || !languageExists) return false
         return moderateInfo.karmaCount <= 0 || getKarma30(account.id, fandomId, languageId) >= moderateInfo.karmaCount
     }
 
