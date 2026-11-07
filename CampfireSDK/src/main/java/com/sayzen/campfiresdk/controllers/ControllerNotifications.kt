@@ -22,6 +22,7 @@ import com.dzen.campfire.api.models.notifications.publications.*
 import com.dzen.campfire.api.models.notifications.rubrics.*
 import com.dzen.campfire.api.models.notifications.translates.NotificationTranslatesAccepted
 import com.dzen.campfire.api.models.notifications.translates.NotificationTranslatesRejected
+import com.dzen.campfire.api.requests.accounts.RAccountsAddNotificationsToken
 import com.dzen.campfire.api.requests.accounts.RAccountsNotificationsView
 import com.dzen.campfire.api.requests.chat.RChatMessageGet
 import com.google.firebase.messaging.RemoteMessage
@@ -391,7 +392,14 @@ object ControllerNotifications {
     //
 
     private fun onToken(token: String?) {
-        ControllerNotifications.token = token ?: ""
+        val newToken = token ?: ""
+        ControllerNotifications.token = newToken
+
+        if (newToken.isEmpty() || ControllerApi.getLastAccount().id == 0L) return
+        if (newToken == ToolsStorage.getString("ControllerNotifications.sentToken", null)) return
+        RAccountsAddNotificationsToken(newToken)
+            .onComplete { ToolsStorage.put("ControllerNotifications.sentToken", newToken) }
+            .send(api)
     }
 
     //
