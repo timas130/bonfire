@@ -124,6 +124,7 @@ class SplashPageLink(
         vLink.isEnabled = enabled
         vEnter.isEnabled = enabled
         vCancel.isEnabled = enabled
+        if (enabled) update()
         return this
     }
 }

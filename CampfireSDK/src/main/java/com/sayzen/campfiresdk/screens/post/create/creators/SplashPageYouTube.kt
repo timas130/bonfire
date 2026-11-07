@@ -75,8 +75,9 @@ class SplashPageYouTube(
     }
 
     private fun onEnter() {
+        val videoId = getVideoId() ?: return
         val page = PageYouTube()
-        page.videoId = getVideoId()!!
+        page.videoId = videoId
 
         val w = ToolsView.showProgressDialog()
         ControllerYoutube.getImage(page.videoId){ bytes->
@@ -136,6 +137,7 @@ class SplashPageYouTube(
         vLink.isEnabled = enabled
         vEnter.isEnabled = enabled
         vCancel.isEnabled = enabled
+        if (enabled) update()
         return this
     }
 }

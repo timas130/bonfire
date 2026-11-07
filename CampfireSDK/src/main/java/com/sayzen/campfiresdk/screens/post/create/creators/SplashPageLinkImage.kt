@@ -149,6 +149,7 @@ class SplashPageLinkImage(
         vEnter.isEnabled = enabled
         vCancel.isEnabled = enabled
         vImage.isEnabled = enabled
+        if (enabled) update()
         return this
     }
 }
