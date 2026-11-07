@@ -36,6 +36,12 @@ abstract class CardButtonsInfo(
             }
             updateFollowersCount()
         }
+        if (xAccount.getId() == e.accountId) {
+            if (profile != null) {
+                profile!!.followersCount += if (e.isFollow) 1 else -1
+            }
+            updateFollowersCount()
+        }
     }
 
     private fun onEventAccountPunishmentRemove(e: EventAccountPunishmentRemove) {
