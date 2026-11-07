@@ -9,8 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FastForward
-import androidx.compose.material.icons.filled.Forward10
-import androidx.compose.material.icons.filled.Replay10
+import androidx.compose.material.icons.filled.FastRewind
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -240,8 +239,8 @@ internal fun VideoPlayerContent(holder: VideoPlayerModel) {
                 Box(Modifier.padding(horizontal = 48.dp)) {
                     PlayerChip {
                         Icon(
-                            if (fb.isForward) Icons.Default.Forward10
-                            else Icons.Default.Replay10,
+                            if (fb.isForward) Icons.Default.FastForward
+                            else Icons.Default.FastRewind,
                             contentDescription = null,
                             tint = Color.White
                         )
