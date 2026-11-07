@@ -1742,6 +1742,7 @@
     "quests_edit_error_description": "Слишком длинное описание",
     "quests_edit_error_name": "Слишком длинное или короткое название",
     "quests_edit_error_not_draft": "Этот квест уже опубликован",
+    "quests_edit_error_too_many_parts": "В квесте слишком много частей",
     "quests_edit_error_upload": "Что-то не так с этой частью квеста.",
     "quests_edit_errors": "Ошибки",
     "quests_edit_text_button": "Кнопка",

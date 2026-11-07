@@ -299,6 +299,8 @@ class SQuestEditor(
                 Navigator.back()
             }.onApiError(RQuestsAddPart.BAD_PART) {
                 ToolsToast.show(t(API_TRANSLATE.quests_edit_error_upload))
+            }.onApiError(RQuestsAddPart.TOO_MANY_PARTS) {
+                ToolsToast.show(t(API_TRANSLATE.quests_edit_error_too_many_parts))
             }
         }
 

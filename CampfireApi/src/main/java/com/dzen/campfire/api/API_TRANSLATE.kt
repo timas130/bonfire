@@ -2167,6 +2167,7 @@ object API_TRANSLATE {
     var quests_effect_vibrate_s = 0L
     var quests_placeholder_error = 0L
     var quests_edit_error_upload = 0L
+    var quests_edit_error_too_many_parts = 0L
     var quests_edit_dev_name = 0L
     var quests_edit_text_title = 0L
     var quests_edit_text_content = 0L
