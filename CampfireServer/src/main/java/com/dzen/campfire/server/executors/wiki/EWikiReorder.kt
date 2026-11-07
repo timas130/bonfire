@@ -21,8 +21,9 @@ class EWikiReorder : RWikiReorder(0, 0) {
         wikiTitle = ControllerWiki.getTitlesByItemId(itemId) ?: throw ApiException(API.ERROR_GONE)
         if (wikiTitle.wikiStatus != API.STATUS_PUBLIC) throw ApiException(E_BAD_STATUS)
 
-        wikiTitleBefore = ControllerWiki.getTitlesByItemId(itemId) ?: throw ApiException(API.ERROR_GONE)
+        wikiTitleBefore = ControllerWiki.getTitlesByItemId(beforeId) ?: throw ApiException(API.ERROR_GONE)
         if (wikiTitleBefore.wikiStatus != API.STATUS_PUBLIC) throw ApiException(E_BAD_STATUS)
+        if (ControllerWiki.getItem(beforeId)?.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_GONE)
 
         if (
                 wikiTitle.fandomId != wikiTitleBefore.fandomId ||
