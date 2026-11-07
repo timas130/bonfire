@@ -37,6 +37,7 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
     private var onSelected: (SplashChooseImage, ByteArray, Int) -> Unit = { _, _, _ -> }
     private var onSendAllFinished: () -> Unit = {}
     private var imagesLoaded: Boolean = false
+    private var wasShown = false
     private var spanCount = 3
     private var maxSelectCount = 1
     private var selectedList = ArrayList<File>()
@@ -56,9 +57,9 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
         setAdapter<SplashRecycler>(myAdapter)
 
         ToolsThreads.timerMain(4000) {
-            if (!imagesLoaded) return@timerMain
+            if (!wasShown) return@timerMain
             if (isHided()) it.unsubscribe()
-            else loadImagesNow()
+            else if (imagesLoaded) loadImagesNow()
         }
 
         addFab(R.drawable.ic_done_white_24dp) { sendAll() }
@@ -107,6 +108,7 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
 
     override fun onShow() {
         super.onShow()
+        wasShown = true
         loadImages()
 
         (vRecycler.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
@@ -143,15 +145,17 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
                 projection, null, null,
                 MediaStore.Images.ImageColumns.DATE_MODIFIED + " DESC")
 
-        while (cursor != null && cursor.moveToNext()) {
-            val file = File(cursor.getString(0))
-            val hash = file.hashCode()
+        cursor?.use {
+            while (it.moveToNext()) {
+                val file = File(it.getString(0))
+                val hash = file.hashCode()
 
-            if (addedHash.get(hash) != null) break
+                if (addedHash.get(hash) != null) break
 
-            addCount++
-            addedHash.put(hash, true)
-            myAdapter.add(myAdapter.size() - offset, CardImage(file))
+                addCount++
+                addedHash.put(hash, true)
+                myAdapter.add(myAdapter.size() - offset, CardImage(file))
+            }
         }
 
         if (addCount > 0 && offset > 0) {
