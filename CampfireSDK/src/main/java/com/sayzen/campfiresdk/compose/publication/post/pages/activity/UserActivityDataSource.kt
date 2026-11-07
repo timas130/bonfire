@@ -24,7 +24,7 @@ open class UserActivityDataSource(data: UserActivity) : BonfireDataSource<UserAc
                 edit(it.userActivity) {
                     myMemberStatus = it.memberStatus
                     if (it.myIsCurrentMember) {
-                        tag_2 = System.currentTimeMillis()
+                        tag_2 = ControllerApi.currentTime()
                         currentAccount = ControllerApi.account.getAccount()
                     }
                 }

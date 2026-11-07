@@ -26,6 +26,7 @@ import com.sayzen.campfiresdk.screens.post.create.SPostCreate
 import com.sayzen.campfiresdk.screens.post.create.SplashTagsRelayRaceNextUser
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.java.tools.ToolsDate
+import kotlinx.coroutines.delay
 
 internal val UserActivity.deadline: Long
     get() = tag_2 + API.ACTIVITIES_RELAY_RACE_TIME
@@ -37,6 +38,13 @@ internal val UserActivity.hasUser: Boolean
 internal fun PageUserActivityRenderer(page: PageUserActivity) {
     val dataSource = remember(page.userActivity.id) { UserActivityDataSource(page.userActivity) }
     val userActivity by dataSource.flow.collectAsState()
+
+    val deadline = userActivity.deadline
+    var hasUser by remember(deadline) { mutableStateOf(userActivity.hasUser) }
+    LaunchedEffect(deadline) {
+        while (deadline > ControllerApi.currentTime()) delay(1000)
+        hasUser = false
+    }
 
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -59,17 +67,17 @@ internal fun PageUserActivityRenderer(page: PageUserActivity) {
                 modifier = Modifier.padding(bottom = 8.dp),
             )
 
-            UserActivityUser(userActivity)
+            UserActivityUser(userActivity, hasUser)
 
-            UserActivityButtons(userActivity)
+            UserActivityButtons(userActivity, hasUser)
         }
     }
 }
 
 @Composable
-private fun UserActivityUser(userActivity: UserActivity) {
+private fun UserActivityUser(userActivity: UserActivity, hasUser: Boolean) {
     AnimatedContent(
-        targetState = Pair(userActivity.currentAccount, userActivity.hasUser),
+        targetState = Pair(userActivity.currentAccount, hasUser),
         contentKey = { Pair(it.first.id, it.second) },
         label = "UserActivityUser",
     ) {
@@ -106,14 +114,14 @@ private fun UserActivityUser(userActivity: UserActivity) {
 @Composable
 private fun UserActivityCountdown(stopAt: Long) {
     val currentTime = remember {
-        mutableLongStateOf(System.currentTimeMillis())
+        mutableLongStateOf(ControllerApi.currentTime())
     }
 
     DisposableEffect(Unit) {
         val handler = Handler(Looper.getMainLooper())
         val runnable = object : Runnable {
             override fun run() {
-                currentTime.longValue = System.currentTimeMillis()
+                currentTime.longValue = ControllerApi.currentTime()
                 handler.postDelayed(this, 1000)
             }
         }
@@ -125,7 +133,7 @@ private fun UserActivityCountdown(stopAt: Long) {
         }
     }
 
-    val remaining = stopAt - currentTime.longValue
+    val remaining = (stopAt - currentTime.longValue).coerceAtLeast(0)
 
     Text(
         text = ToolsDate.dayTimeToString_Ms_HH_MM_SS(remaining),
@@ -136,8 +144,8 @@ private fun UserActivityCountdown(stopAt: Long) {
 
 @Suppress("LocalVariableName")
 @Composable
-private fun UserActivityButtons(userActivity: UserActivity) {
-    val _isCurrentUser = userActivity.hasUser && userActivity.currentAccount.id == ControllerApi.account.getId()
+private fun UserActivityButtons(userActivity: UserActivity, hasUser: Boolean) {
+    val _isCurrentUser = hasUser && userActivity.currentAccount.id == ControllerApi.account.getId()
     val _isParticipant = userActivity.myMemberStatus == 1L
     val _canParticipate = userActivity.myPostId == 0L
 
