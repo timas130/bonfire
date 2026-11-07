@@ -77,8 +77,13 @@ class EChatMessageCreate(
             message.fandom.name = v.next()
             message.fandom.imageId = v.next()
         } else if (message.chatType == API.CHAT_TYPE_FANDOM_SUB) {
-            ControllerAccounts.checkAccountBanned(apiAccount.id, message.fandom.id, message.fandom.languageId)
-            val v = ControllerFandom[message.fandom.id, TFandoms.name, TFandoms.image_id, TFandoms.fandom_category]
+            val chat = ControllerChats.getChat(tag.targetId, TChats.type, TChats.fandom_id, TChats.language_id)
+            if (chat.isEmpty() || chat.next<Long>() != API.CHAT_TYPE_FANDOM_SUB) throw ApiException(API.ERROR_GONE)
+            val fandomId: Long = chat.next()
+            val languageId: Long = chat.next()
+            ControllerAccounts.checkAccountBanned(apiAccount.id, fandomId, languageId)
+            val v = ControllerFandom[fandomId, TFandoms.name, TFandoms.image_id, TFandoms.fandom_category]
+            if (v.isEmpty()) throw ApiException(API.ERROR_GONE)
             message.fandom.name = v.next()
             message.fandom.imageId = v.next()
             message.category = v.next()

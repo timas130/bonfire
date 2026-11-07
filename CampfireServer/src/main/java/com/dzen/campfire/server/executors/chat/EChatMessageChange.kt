@@ -7,6 +7,7 @@ import com.dzen.campfire.api.models.publications.history.HistoryEditPublic
 import com.dzen.campfire.api.requests.chat.RChatMessageChange
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
+import com.dzen.campfire.server.tables.TChats
 import com.sup.dev.java.libs.json.Json
 
 class EChatMessageChange : RChatMessageChange(0, 0, "", false) {
@@ -20,9 +21,18 @@ class EChatMessageChange : RChatMessageChange(0, 0, "", false) {
         if (publication.creator.id != apiAccount.id) throw ApiException(API.ERROR_ACCESS) // see git blame
         this.publication = publication
         if (text.length < API.CHAT_MESSAGE_TEXT_MIN_L || text.length > API.CHAT_MESSAGE_TEXT_MAX_L) throw ApiException(E_BAD_TEXT_SIZE)
-        ControllerAccounts.checkAccountBanned(apiAccount.id, publication.fandom.id, publication.fandom.languageId)
 
         val tag = publication.chatTag()
+        if (tag.chatType == API.CHAT_TYPE_FANDOM_SUB) {
+            val chat = ControllerChats.getChat(tag.targetId, TChats.fandom_id, TChats.language_id)
+            if (chat.isEmpty()) throw ApiException(API.ERROR_GONE)
+            val fandomId: Long = chat.next()
+            val languageId: Long = chat.next()
+            ControllerAccounts.checkAccountBanned(apiAccount.id, fandomId, languageId)
+        } else {
+            ControllerAccounts.checkAccountBanned(apiAccount.id, publication.fandom.id, publication.fandom.languageId)
+        }
+
         if (tag.chatType == API.CHAT_TYPE_CONFERENCE) {
             if(!ControllerChats.hasAccessToConf_Write(apiAccount.id, tag.targetId)) throw ApiException(API.ERROR_ACCESS)
         }
