@@ -22,6 +22,7 @@ import com.dzen.campfire.api.tools.client.ApiClient
 import com.dzen.campfire.api.tools.client.Request
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.publication.post.pages.polling.clearPollCache
 import com.sayzen.campfiresdk.models.events.account.EventAccountCurrentChanged
 import com.sayzen.campfiresdk.models.events.account.EventAccountReportsCleared
 import com.sayzen.campfiresdk.models.events.project.EventApiVersionChanged
@@ -194,6 +195,7 @@ object ControllerApi {
         ToolsStorage.put("protoadmins", jProtoadmins)
 
         ControllerPolling.clear()
+        clearPollCache()
         EventBus.post(EventAccountCurrentChanged())
     }
 

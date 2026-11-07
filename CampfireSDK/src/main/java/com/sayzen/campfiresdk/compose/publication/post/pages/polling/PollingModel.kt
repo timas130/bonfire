@@ -31,6 +31,10 @@ class PollingData(var results: Array<PagePolling.Result> = arrayOf()) : JsonPars
 
 private val pollCache = Cache<Long, PollingData>(50)
 
+fun clearPollCache() {
+    pollCache.clear()
+}
+
 val Account.ageDays: Long
     get() = (ControllerApi.currentTime() - dateCreate) / 3600000 / 24 + 1
 
