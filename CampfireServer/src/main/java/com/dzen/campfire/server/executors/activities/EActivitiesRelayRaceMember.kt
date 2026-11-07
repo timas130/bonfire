@@ -23,7 +23,8 @@ class EActivitiesRelayRaceMember : RActivitiesRelayRaceMember(0, false) {
         var myIsCurrentMember = false
         if (member) {
             ControllerActivities.addMember(apiAccount.id, activityId)
-            if (activity!!.currentAccount.id < 1 || System.currentTimeMillis() > activity!!.tag_2 + API.ACTIVITIES_RELAY_RACE_TIME) {
+            if ((activity!!.currentAccount.id < 1 || System.currentTimeMillis() > activity!!.tag_2 + API.ACTIVITIES_RELAY_RACE_TIME)
+                    && !ControllerAccounts.isAccountBaned(apiAccount.id, activity!!.fandom.id, activity!!.fandom.languageId)) {
                 ControllerActivities.makeCurrentMember(apiAccount.id, activity!!)
                 myIsCurrentMember = true
             }
