@@ -53,6 +53,7 @@ import com.sayzen.campfiresdk.screens.post.view.SPost
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import sh.sit.bonfire.auth.AuthController
@@ -210,6 +211,7 @@ class PostModel(
         viewModelScope.launch {
             dataSource.flow
                 .map { it.nsfw }
+                .distinctUntilChanged()
                 .collect { _nsfwOverlayActive.value = it }
         }
     }
