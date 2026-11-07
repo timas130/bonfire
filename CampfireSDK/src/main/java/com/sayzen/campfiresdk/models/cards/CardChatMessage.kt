@@ -70,6 +70,7 @@ open class CardChatMessage constructor(
 
         init {
             SupAndroid.addOnLowMemory { viewCash.clear() }
+            SupAndroid.addOnActivityDestroy { viewCash.clear() }
         }
 
         fun putViewToCash(key: String, view: View) {

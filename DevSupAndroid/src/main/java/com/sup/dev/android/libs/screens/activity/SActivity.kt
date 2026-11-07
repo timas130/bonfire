@@ -165,6 +165,7 @@ abstract class SActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         SupAndroid.activityIsDestroy = true
+        SupAndroid.onActivityDestroyCallbacks.invoke()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

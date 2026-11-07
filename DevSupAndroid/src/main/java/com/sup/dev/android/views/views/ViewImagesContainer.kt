@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.sup.dev.android.R
+import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.image_loader.ImageLink
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.tools.ToolsView
@@ -19,6 +20,10 @@ class ViewImagesContainer @JvmOverloads constructor(
     companion object {
 
         private val cash = ArrayList<ViewCircleImage>()
+
+        init {
+            SupAndroid.addOnActivityDestroy { cash.clear() }
+        }
 
         private fun putToCash(v: ViewCircleImage) {
             cash.add(v)

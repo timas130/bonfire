@@ -21,6 +21,7 @@ import com.sup.dev.java.tools.ToolsThreads
 object SupAndroid {
 
     val onLowMemotyCallbacks = CallbacksList()
+    val onActivityDestroyCallbacks = CallbacksList()
 
     var SERVICE_FOREGROUND = 4000
     var SERVICE_NETWORK_CHECK = 4001
@@ -65,6 +66,10 @@ object SupAndroid {
 
     fun addOnLowMemory(onLowMemory: () -> Unit) {
         onLowMemotyCallbacks.add(onLowMemory)
+    }
+
+    fun addOnActivityDestroy(onActivityDestroy: () -> Unit) {
+        onActivityDestroyCallbacks.add(onActivityDestroy)
     }
 
     fun initEditMode(view: View) {

@@ -64,6 +64,9 @@ class CardPost(
             SupAndroid.addOnLowMemory {
                 pagesCash.clear()
             }
+            SupAndroid.addOnActivityDestroy {
+                pagesCash.clear()
+            }
         }
 
         private fun getList(card: CardPage): ArrayList<View> {
