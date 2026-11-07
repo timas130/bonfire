@@ -103,8 +103,9 @@ object ControllerVoiceMessages {
             ImageLoader.load(ref).intoBytes {
                 if (it != null) {
                     startPlay(it)
-                } else {
+                } else if (currentVoice == this) {
                     stop()
+                    currentVoice = Voice(ImageRef())
                     ToolsToast.show(t(API_TRANSLATE.error_unknown))
                 }
             }

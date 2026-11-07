@@ -87,7 +87,7 @@ class SDonateMake : Screen(R.layout.screen_donate_make){
         setSelected(vIcon_card)
 
         ImageLoader.load(ApiResources.IMAGE_BACKGROUND_25).noHolder().into(vImage_2)
-        ImageLoader.load(ApiResources.IMAGE_BACKGROUND_25).noHolder().intoBitmap { vImage_1.setImageBitmap(ToolsBitmap.mirror(it!!)) }
+        ImageLoader.load(ApiResources.IMAGE_BACKGROUND_25).noHolder().intoBitmap { if (it != null) vImage_1.setImageBitmap(ToolsBitmap.mirror(it)) }
     }
 
 

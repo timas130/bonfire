@@ -36,6 +36,7 @@ fun ImageLoader.loadGif(
         val load = load(image)
         onInit.invoke(load)
         load.into(vImage) {
+            if (it == null) return@into
             val loadGif = load(gif)
             onInit.invoke(loadGif)
             loadGif.holder(vImage.drawable).into(vImage, vGifProgressBar)

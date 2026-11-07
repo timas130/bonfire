@@ -328,13 +328,15 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
         ImageLoader.load(
             link = imageLink,
             vImage = vBackground,
-            onLoadedBitmap = {
-                vBackgroundInfo.visibility = View.VISIBLE
-                vTitle.text = title
-                vSubtitle.text = subtitle
-                vEmptyImage.visibility = View.GONE
-                vProgress.visibility = View.GONE
-                loadedBackground = true
+            onLoadedBytes = {
+                if (it != null) {
+                    vBackgroundInfo.visibility = View.VISIBLE
+                    vTitle.text = title
+                    vSubtitle.text = subtitle
+                    vEmptyImage.visibility = View.GONE
+                    vProgress.visibility = View.GONE
+                    loadedBackground = true
+                }
             }
         )
     }

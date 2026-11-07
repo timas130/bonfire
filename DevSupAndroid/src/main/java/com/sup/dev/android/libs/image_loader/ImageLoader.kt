@@ -122,6 +122,7 @@ object ImageLoader {
                 loadNow(loader)
             } catch (ex: Throwable) {
                 err(ex)
+                onLoadFailed(loader)
             }
             synchronized(processing) { processing.remove(loader) }
         }
@@ -220,6 +221,7 @@ object ImageLoader {
                 loader.tryCount--
                 loadStart(loader)
             }
+            else onLoadFailed(loader)
             return
         }
         var bytes = loadedBytes
@@ -232,6 +234,16 @@ object ImageLoader {
 
         ToolsThreads.main { putImage(loader, bitmap, true, bytes) }
 
+    }
+
+    private fun onLoadFailed(loader: Loader) {
+        ToolsThreads.main {
+            if (loader.vProgressBar != null && (loader.vImage == null || loader == loader.vImage.tag)) loader.vProgressBar.visibility = View.INVISIBLE
+            loader.link.onLoadedBytes.invoke(null)
+            loader.link.onLoadedBitmap.invoke(null)
+            loader.onLoadedBytes?.invoke(null)
+            loader.onLoadedBitmap?.invoke(null)
+        }
     }
 
     private fun parseImage(loader: Loader, bytes: ByteArray): Bitmap? {

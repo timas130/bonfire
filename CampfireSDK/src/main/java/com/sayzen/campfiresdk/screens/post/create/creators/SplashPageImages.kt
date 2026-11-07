@@ -236,7 +236,12 @@ class SplashPageImages(
                 crop(bytes!!, dialog)
             } else {
                 ImageLoader.load(image).intoBytes { bytes ->
-                    crop(bytes!!, dialog)
+                    if (bytes == null) {
+                        dialog.hide()
+                        ToolsToast.show(t(API_TRANSLATE.error_cant_load_image))
+                        return@intoBytes
+                    }
+                    crop(bytes, dialog)
                 }
             }
         }
