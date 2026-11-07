@@ -1,9 +1,11 @@
 package com.dzen.campfire.server.executors.publications
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.publications.chat.PublicationChatMessage
 import com.dzen.campfire.api.requests.publications.RPublicationsReport
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerAccounts
+import com.dzen.campfire.server.controllers.ControllerChats
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.tables.TCollisions
 import com.dzen.campfire.server.tables.TPublications
@@ -31,6 +33,11 @@ class EPublicationsReport : RPublicationsReport(0, "") {
                 && publicationType != API.PUBLICATION_TYPE_STICKERS_PACK
                 && publicationType != API.PUBLICATION_TYPE_QUEST
         ) throw ApiException(E_BAD_TYPE)
+
+        if (publicationType == API.PUBLICATION_TYPE_CHAT_MESSAGE) {
+            val message = ControllerPublications.getPublication(publicationId, apiAccount.id) as? PublicationChatMessage ?: throw ApiException(API.ERROR_GONE)
+            if (!ControllerChats.hasAccessToMessage(apiAccount.id, message)) throw ApiException(API.ERROR_ACCESS)
+        }
 
         ControllerAccounts.checkAccountBanned(apiAccount.id)
     }
