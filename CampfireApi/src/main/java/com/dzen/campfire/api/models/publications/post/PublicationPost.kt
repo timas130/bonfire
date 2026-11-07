@@ -15,8 +15,9 @@ class PublicationPost : Publication, PagesContainer {
     var rubricId = 0L
     var rubricName = ""
     var rubricKarmaCof = 0L
-    //  App Flags (No Json)
+    // app flag (yes json)
     var isPined = false
+    //  App Flags (No Json)
     //  User Activity
     var userActivity: UserActivity? = null
 
@@ -38,6 +39,7 @@ class PublicationPost : Publication, PagesContainer {
         rubricName = json.m(inp, "rubricName", rubricName)
         rubricKarmaCof = json.m(inp, "rubricKarmaCof", rubricKarmaCof)
         userActivity = json.mNull(inp, "userActivity", userActivity, UserActivity::class)
+        isPined = json.m(inp, "isPined", isPined)
     }
 
     override fun jsonDBLocal(inp: Boolean, json: Json): Json {
