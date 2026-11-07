@@ -64,13 +64,13 @@ class EProjectStatistic : RProjectStatistic() {
         accounts.add(Database.select("EProjectStatistic select_1",SqlQuerySelect(TAccounts.NAME, Sql.COUNT)).next())
         for(d in dates) load(accounts, d, TAccounts.NAME, TAccounts.date_create)
 
-        posts.add(Database.select("EProjectStatistic select_2",SqlQuerySelect(TPublications.NAME, Sql.COUNT).where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_POST)).next())
+        posts.add(Database.select("EProjectStatistic select_2",SqlQuerySelect(TPublications.NAME, Sql.COUNT).where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_POST).where(TPublications.status, "=", API.STATUS_PUBLIC)).next())
         for(d in dates) loadUnit(posts, d, API.PUBLICATION_TYPE_POST)
 
-        comments.add(Database.select("EProjectStatistic select_3",SqlQuerySelect(TPublications.NAME, Sql.COUNT).where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_COMMENT)).next())
+        comments.add(Database.select("EProjectStatistic select_3",SqlQuerySelect(TPublications.NAME, Sql.COUNT).where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_COMMENT).where(TPublications.status, "=", API.STATUS_PUBLIC)).next())
         for(d in dates) loadUnit(comments, d, API.PUBLICATION_TYPE_COMMENT)
 
-        messages.add(Database.select("EProjectStatistic select_4",SqlQuerySelect(TPublications.NAME, Sql.COUNT).where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_CHAT_MESSAGE)).next())
+        messages.add(Database.select("EProjectStatistic select_4",SqlQuerySelect(TPublications.NAME, Sql.COUNT).where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_CHAT_MESSAGE).where(TPublications.status, "=", API.STATUS_PUBLIC)).next())
         for(d in dates) loadUnit(messages, d, API.PUBLICATION_TYPE_CHAT_MESSAGE)
 
         enters.add(Database.select("EProjectStatistic select_5",SqlQuerySelect(TAccountsEnters.NAME, Sql.COUNT)).next())
@@ -102,8 +102,8 @@ class EProjectStatistic : RProjectStatistic() {
     private fun loadUnit(list:ArrayList<Long>, d:Long, type:Long){
         val d1 = System.currentTimeMillis() - 1000 * 60 * 60 * 24 * d
         val d2 = System.currentTimeMillis() - 1000 * 60 * 60 * 24 * (d*2)
-        list.add(Database.select("EProjectStatistic loadUnit_1",SqlQuerySelect(TPublications.NAME, Sql.COUNT).where(TPublications.publication_type, "=", type).where(TPublications.date_create, ">=", d1)).next())
-        list.add(Database.select("EProjectStatistic loadUnit_2",SqlQuerySelect(TPublications.NAME, Sql.COUNT).where(TPublications.publication_type, "=", type).where(TPublications.date_create, "<", d1).where(TPublications.date_create, ">=", d2)).next())
+        list.add(Database.select("EProjectStatistic loadUnit_1",SqlQuerySelect(TPublications.NAME, Sql.COUNT).where(TPublications.publication_type, "=", type).where(TPublications.status, "=", API.STATUS_PUBLIC).where(TPublications.date_create, ">=", d1)).next())
+        list.add(Database.select("EProjectStatistic loadUnit_2",SqlQuerySelect(TPublications.NAME, Sql.COUNT).where(TPublications.publication_type, "=", type).where(TPublications.status, "=", API.STATUS_PUBLIC).where(TPublications.date_create, "<", d1).where(TPublications.date_create, ">=", d2)).next())
 
 
     }
