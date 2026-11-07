@@ -273,7 +273,7 @@ impl AuthServer {
 
             if code_challenge != expected_hash.as_slice() {
                 tx.rollback().await?;
-                return Err(AuthError::InvalidRedirectUri);
+                return Err(AuthError::InvalidCodeVerifier);
             }
         }
 
