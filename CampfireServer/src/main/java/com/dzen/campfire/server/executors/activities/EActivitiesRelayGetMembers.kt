@@ -18,11 +18,14 @@ class EActivitiesRelayGetMembers : RActivitiesRelayGetMembers(0, 0) {
                 .where(TActivitiesCollisions.type, "=", API.ACTIVITIES_COLLISION_TYPE_RELAY_RACE_MEMBER)
                 .where(TActivitiesCollisions.activity_id, "=", userActivityId)
                 .sort(TActivitiesCollisions.date_create, false)
+                .offset_count(offset, COUNT)
         )
 
         if(v.isEmpty) return Response(emptyArray())
 
-        return Response(ControllerAccounts.getAccounts(Array(v.rowsCount){v.next<Long>()}))
+        val ids = Array(v.rowsCount){v.next<Long>()}
+
+        return Response(ControllerAccounts.getAccounts(ids).sortedBy { ids.indexOf(it.id) }.toTypedArray())
     }
 
 
