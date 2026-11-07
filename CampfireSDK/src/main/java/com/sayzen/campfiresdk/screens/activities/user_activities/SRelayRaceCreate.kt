@@ -91,7 +91,7 @@ class SRelayRaceCreate constructor(
 
     private fun updateFinishEnabled() {
         val name = vName.text.toString()
-        val description = vName.text.toString()
+        val description = vDescription.text.toString()
         vFinish.isEnabled = name.length >= API.ACTIVITIES_NAME_MIN && name.length <= API.ACTIVITIES_NAME_MAX &&
                 description.length >= API.ACTIVITIES_DESC_MIN && description.length <= API.ACTIVITIES_DESC_MAX &&
                 (changeUserActivity != null || (accountId > 0 && fandomId > 0 && languageId > 0))
