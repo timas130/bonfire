@@ -2,6 +2,8 @@ package com.sayzen.campfiresdk.compose
 
 import android.util.Log
 import androidx.annotation.CallSuper
+import com.dzen.campfire.api.models.publications.Publication
+import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.sayzen.campfiresdk.models.events.notifications.EventNotification
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.libs.json.Json
@@ -34,6 +36,9 @@ abstract class BonfireDataSource<T : JsonParsable>(protected var data: T) {
 
         val copy = data.javaClass.getConstructor().newInstance()
         copy.json(false, json)
+
+        if (copy is Publication) copy.skipInstanceEvent = true
+        if (copy is PublicationPost) copy.bestComment?.skipInstanceEvent = true
 
         data = copy
         _flow.tryEmit(copy)
