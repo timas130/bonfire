@@ -70,7 +70,9 @@ internal class SplashNames(
                 }
             }
         }
-        vAdd.isEnabled = newNames.size < API.FANDOM_NAMES_MAX && vNewText.getText().isNotEmpty()
+        val textCheck = vNewText.getText().length <= API.FANDOM_NAMES_MAX_L
+        vNewText.setError(if (textCheck) null else t(API_TRANSLATE.error_too_long_text))
+        vAdd.isEnabled = newNames.size < API.FANDOM_NAMES_MAX && vNewText.getText().isNotEmpty() && textCheck
         vNewText.isEnabled = newNames.size < API.FANDOM_NAMES_MAX
         vEnter.isEnabled = newNames.size <= API.FANDOM_NAMES_MAX && changes
     }
