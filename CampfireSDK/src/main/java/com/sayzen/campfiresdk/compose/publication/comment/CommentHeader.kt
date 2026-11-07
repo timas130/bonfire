@@ -33,7 +33,7 @@ internal fun CommentHeader(
             },
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
-            modifier = if (showFandom) {
+            modifier = if (showFandom && comment.fandom.id != 0L) {
                 Modifier.nestedClickable {
                     SFandom.instance(comment.fandom, Navigator.TO)
                 }
