@@ -47,10 +47,11 @@ fun EmailLoginScreen(
 
     var isLoading by remember { mutableStateOf(false) }
 
-    val submit = {
+    val submit = submit@{
+        if (isLoading) return@submit
+        isLoading = true
         scope.launch {
             try {
-                isLoading = true
                 EmailAuthFlow(context, email.trim(), password).start()
                 onLogin()
             } catch (e: AuthFlow.AuthException) {
