@@ -446,6 +446,7 @@ object ControllerApi {
             API.PUBLICATION_TYPE_COMMENT -> clearReportsPublication(publicationId, t(API_TRANSLATE.comment_clear_reports_confirm), t(API_TRANSLATE.comment_error_gone))
             API.PUBLICATION_TYPE_STICKERS_PACK -> clearReportsPublication(publicationId, t(API_TRANSLATE.stickers_packs_clear_reports_confirm), t(API_TRANSLATE.stickers_packs_error_gone))
             API.PUBLICATION_TYPE_QUEST -> clearReportsPublication(publicationId, t(API_TRANSLATE.quests_mod_clear_reports_q), t(API_TRANSLATE.error_gone))
+            API.PUBLICATION_TYPE_STICKER -> clearReportsPublication(publicationId, t(API_TRANSLATE.app_clear_reports_confirm), t(API_TRANSLATE.sticker_error_gone))
         }
     }
 
