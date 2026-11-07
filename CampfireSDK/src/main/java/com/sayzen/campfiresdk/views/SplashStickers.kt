@@ -36,6 +36,7 @@ open class SplashStickers : SplashRecycler(R.layout.splash_stickers) {
     private var onSelected: (PublicationSticker) -> Unit = { }
     private var spanCount = 4
     private var isPackMode = false
+    private var loadToken = 0
 
     init {
         vEmptyContainer.visibility = View.GONE
@@ -54,6 +55,7 @@ open class SplashStickers : SplashRecycler(R.layout.splash_stickers) {
     }
 
     private fun loadPacks() {
+        val token = ++loadToken
         isPackMode = true
         myAdapter.clear()
         vProgress.visibility = View.VISIBLE
@@ -64,6 +66,7 @@ open class SplashStickers : SplashRecycler(R.layout.splash_stickers) {
 
         ControllerStickers.getPacks(
                 { packs ->
+                    if (token != loadToken) return@getPacks
                     myAdapter.add(cardFavorites)
                     for (i in packs) {
                         val card = CardStickersPack(i, false, false, false)
@@ -81,6 +84,7 @@ open class SplashStickers : SplashRecycler(R.layout.splash_stickers) {
                     }
                 },
                 {
+                    if (token != loadToken) return@getPacks
                     vProgress.visibility = View.GONE
                     vEmptyContainer.visibility = View.VISIBLE
                     vMessage.setText(t(API_TRANSLATE.error_network))
@@ -90,6 +94,7 @@ open class SplashStickers : SplashRecycler(R.layout.splash_stickers) {
     }
 
     private fun loadStickers(packsId: Long) {
+        val token = ++loadToken
         isPackMode = false
         myAdapter.clear()
         vProgress.visibility = View.VISIBLE
@@ -98,6 +103,7 @@ open class SplashStickers : SplashRecycler(R.layout.splash_stickers) {
 
         ControllerStickers.getStickers(packsId,
                 { stickers ->
+                    if (token != loadToken) return@getStickers
                     for (i in stickers) {
                         val card = CardSticker(i)
                         card.onClick = {
@@ -117,6 +123,7 @@ open class SplashStickers : SplashRecycler(R.layout.splash_stickers) {
                     }
                 },
                 {
+                    if (token != loadToken) return@getStickers
                     vProgress.visibility = View.GONE
                     vEmptyContainer.visibility = View.VISIBLE
                     vMessage.setText(t(API_TRANSLATE.error_network))
@@ -126,6 +133,7 @@ open class SplashStickers : SplashRecycler(R.layout.splash_stickers) {
     }
 
     private fun loadFavorite() {
+        val token = ++loadToken
         isPackMode = false
         myAdapter.clear()
         vProgress.visibility = View.VISIBLE
@@ -134,6 +142,7 @@ open class SplashStickers : SplashRecycler(R.layout.splash_stickers) {
 
         ControllerStickers.getStickersFavorite(
                 { stickers ->
+                    if (token != loadToken) return@getStickersFavorite
                     for (i in stickers) {
                         val card = CardSticker(i)
                         card.onClick = {
@@ -153,6 +162,7 @@ open class SplashStickers : SplashRecycler(R.layout.splash_stickers) {
                     }
                 },
                 {
+                    if (token != loadToken) return@getStickersFavorite
                     vProgress.visibility = View.GONE
                     vEmptyContainer.visibility = View.VISIBLE
                     vMessage.setText(t(API_TRANSLATE.error_network))
