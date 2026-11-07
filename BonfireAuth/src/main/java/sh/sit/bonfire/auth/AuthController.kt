@@ -188,39 +188,35 @@ object AuthController : TokenProvider {
             if (isRefreshing.compareAndSet(expect = false, update = true)) break
         }
 
-        val state = authState.first()
-        if (state !is AuthenticatedAuthState) {
-            isRefreshing.emit(false)
-            return
-        }
-
-        // checking expiry
-        val shouldRefresh = if (force) {
-            true
-        } else {
-            val expiresAt = getTokenExpiry(state.accessToken)
-            expiresAt - 3600 < System.currentTimeMillis() / 1000
-        }
-
-        if (!shouldRefresh) {
-            isRefreshing.emit(false)
-            return
-        }
-
-        // refreshing
         try {
-            val result = apollo.mutation(LoginRefreshMutation(state.refreshToken))
-                // this bypasses the recursive call to here
-                .addHttpHeader("Authorization", "")
-                .execute()
-                .dataAssertNoErrors
-            saveAuthState(AuthenticatedAuthState(
-                accessToken = result.loginRefresh.accessToken,
-                refreshToken = result.loginRefresh.refreshToken,
-                email = state.email,
-            ))
-        } catch (e: Exception) {
-            e.printStackTrace()
+            val state = authState.first()
+            if (state !is AuthenticatedAuthState) return
+
+            // checking expiry
+            val shouldRefresh = if (force) {
+                true
+            } else {
+                val expiresAt = getTokenExpiry(state.accessToken)
+                expiresAt - 3600 < System.currentTimeMillis() / 1000
+            }
+
+            if (!shouldRefresh) return
+
+            // refreshing
+            try {
+                val result = apollo.mutation(LoginRefreshMutation(state.refreshToken))
+                    // this bypasses the recursive call to here
+                    .addHttpHeader("Authorization", "")
+                    .execute()
+                    .dataAssertNoErrors
+                saveAuthState(AuthenticatedAuthState(
+                    accessToken = result.loginRefresh.accessToken,
+                    refreshToken = result.loginRefresh.refreshToken,
+                    email = state.email,
+                ))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         } finally {
             isRefreshing.emit(false)
         }
