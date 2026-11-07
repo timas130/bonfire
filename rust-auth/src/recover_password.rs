@@ -37,13 +37,9 @@ impl AuthServer {
         .execute(&mut *tx)
         .await?;
 
-        sqlx::query!(
-            "update sessions set expires = now() \
-             where user_id = $1 and (expires > now() or expires is null)",
-            user_id,
-        )
-        .execute(&mut *tx)
-        .await?;
+        sqlx::query!("delete from sessions where user_id = $1", user_id)
+            .execute(&mut *tx)
+            .await?;
 
         self.do_change_password(user_id, hash).await?;
 

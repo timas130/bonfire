@@ -49,7 +49,7 @@ impl AuthServer {
         .await?;
         let session = match session {
             Some(session) => session,
-            None => return Err(anyhow::Error::msg("no such token").into()),
+            None => return Err(AuthError::InvalidToken),
         };
 
         if session.email_verified.is_none() {
