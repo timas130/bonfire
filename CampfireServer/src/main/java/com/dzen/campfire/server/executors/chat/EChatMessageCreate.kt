@@ -228,7 +228,7 @@ class EChatMessageCreate(
         val maxLines = 30
 
         if (tag.chatType == API.CHAT_TYPE_PRIVATE) {
-            val accountSettings = ControllerAccounts.getSettings(tag.targetId)
+            val accountSettings = ControllerAccounts.getSettings(tag.getAnotherId())
             if (accountSettings.voiceMessagesIgnore) throw ApiException(E_IS_IGNORE_VOICE_MESSAGES)
         }
 
