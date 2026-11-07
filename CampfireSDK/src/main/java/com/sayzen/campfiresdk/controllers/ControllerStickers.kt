@@ -10,6 +10,7 @@ import com.dzen.campfire.api.requests.stickers.*
 import com.dzen.campfire.api.requests.publications.RPublicationsRemove
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.models.events.account.EventAccountChanged
+import com.sayzen.campfiresdk.models.events.account.EventAccountCurrentChanged
 import com.sayzen.campfiresdk.models.events.publications.EventPublicationRemove
 import com.sayzen.campfiresdk.models.events.stickers.*
 import com.sayzen.campfiresdk.screens.account.stickers.SStickersPackCreate
@@ -29,6 +30,7 @@ object ControllerStickers {
 
     private val eventBus = EventBus
             .subscribe(EventAccountChanged::class) { clearCash() }
+            .subscribe(EventAccountCurrentChanged::class) { clearCash() }
             .subscribe(EventStickerCollectionChanged::class) { clearCash() }
             .subscribe(EventStickersPackCollectionChanged::class) { clearCash() }
             .subscribe(EventStickerCreate::class) { clearCash() }
