@@ -31,7 +31,7 @@ class PollingData(var results: Array<PagePolling.Result> = arrayOf()) : JsonPars
     }
 }
 
-private val pollCache = Cache<Long, PollingData>(50)
+private val pollCache = Cache<Long, MutableStateFlow<PollingData?>>(50)
 private const val POLL_CACHE_TTL = 1000L * 30
 
 fun clearPollCache() {
@@ -42,7 +42,8 @@ val Account.ageDays: Long
     get() = (ControllerApi.currentTime() - dateCreate) / 3600000 / 24 + 1
 
 class PollingModel(val page: PagePolling, val source: PagesSource) {
-    private val _data = MutableStateFlow<PollingData?>(null)
+    private val _data = pollCache[page.pollingId]
+        ?: MutableStateFlow<PollingData?>(null).also { pollCache[page.pollingId] = it }
     val data = _data.asStateFlow()
 
     private val _votingFor = MutableStateFlow<Int?>(null)
@@ -55,9 +56,8 @@ class PollingModel(val page: PagePolling, val source: PagesSource) {
     private var isSendingVote = false
 
     init {
-        val cached = pollCache[page.pollingId]
+        val cached = _data.value
         if (cached != null) {
-            _data.tryEmit(cached)
             if (System.currentTimeMillis() - cached.loadedAt > POLL_CACHE_TTL) reload()
         } else {
             reload()
@@ -78,7 +78,6 @@ class PollingModel(val page: PagePolling, val source: PagesSource) {
         ) { resp ->
             val data = PollingData(resp.results)
             _data.tryEmit(data)
-            pollCache[page.pollingId] = data
 
             _isTryingToLoad.tryEmit(false)
         }.onApiError {
