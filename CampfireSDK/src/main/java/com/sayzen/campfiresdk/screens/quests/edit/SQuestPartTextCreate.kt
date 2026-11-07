@@ -181,7 +181,7 @@ class SQuestPartTextCreate(
             vEffectsContainer.addView(root)
         }
         vAddEffect.setOnClickListener {
-            if (part.effects.size > API.QUEST_EFFECT_MAX_L) {
+            if (part.effects.size >= API.QUEST_EFFECT_MAX_L) {
                 ToolsToast.show(t(API_TRANSLATE.quests_edit_text_effect_error_3))
                 return@setOnClickListener
             }
