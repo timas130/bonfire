@@ -198,10 +198,11 @@ object ControllerAccounts {
     ): Long {
 
         val blockAccountDate = System.currentTimeMillis() + banTime
+        val effectiveBanDate = maxOf(blockAccountDate, getAccountBanDate(accountId))
 
         Database.update(
             "EAccountsAdminBan.ban update", SqlQueryUpdate(TAccounts.NAME)
-                .update(TAccounts.ban_date, blockAccountDate)
+                .update(TAccounts.ban_date, effectiveBanDate)
                 .update(TAccounts.reports_count, 0)
                 .where(TAccounts.id, "=", accountId)
         )
@@ -238,7 +239,7 @@ object ControllerAccounts {
                     targetAccountImageId,
                     targetAccountSex,
                     comment,
-                    blockAccountDate
+                    effectiveBanDate
                 ), adminId
             )
             ControllerPublications.event(
@@ -252,10 +253,10 @@ object ControllerAccounts {
                     adminImageId,
                     adminSex,
                     comment,
-                    blockAccountDate
+                    effectiveBanDate
                 ), accountId
             )
-            ControllerNotifications.push(accountId, NotificationAdminBlock(blockAccountDate, comment))
+            ControllerNotifications.push(accountId, NotificationAdminBlock(effectiveBanDate, comment))
         }
 
         ControllerActivities.dropActivities(accountId)
