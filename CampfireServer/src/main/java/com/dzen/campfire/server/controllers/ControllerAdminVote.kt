@@ -44,6 +44,7 @@ object ControllerAdminVote {
         var mForParse:MAdminVote? = null
         synchronized(map){
             val m = map[id] ?: return
+            if(m.votes.contains(accountId)) return
             m.votes.add(accountId)
             if(API.PROTOADMINS.contains(accountId) || m.votes.size >= NEED_VOTES){
                 map.remove(id)
