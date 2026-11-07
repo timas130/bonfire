@@ -55,6 +55,7 @@ class SCreatePagePolling(
     private val vBlackListAdd: ViewButton = findViewById(R.id.vBlackListAdd)
 
     private val blackList: MutableList<Account> = mutableListOf()
+    private var initialLimits: List<Any> = emptyList()
 
     init {
         disableShadows()
@@ -179,6 +180,7 @@ class SCreatePagePolling(
 
         vAdd.setOnClickListener { addItem("") }
         vCreate.setOnClickListener { onEnter() }
+        initialLimits = getLimits()
         update()
     }
 
@@ -283,6 +285,8 @@ class SCreatePagePolling(
     private fun notChanged(): Boolean {
         val options = getOptions()
 
+        if (getLimits() != initialLimits) return false
+
         return if (oldPage == null) {
             options.size == 2 && options[0].isEmpty() && options[1].isEmpty() &&
                     vPageTitle.text.isEmpty() && blackList.isEmpty()
@@ -301,5 +305,7 @@ class SCreatePagePolling(
     private fun getOptions() = Array(vContainer.childCount) {
         vContainer.getChildAt(it).findViewById<EditText>(R.id.vText).text.toString()
     }
+
+    private fun getLimits(): List<Any> = listOf(vDuration.getCurrentIndex(), vLvl.getText(), vKarma.getText(), vDays.getText())
 
 }
