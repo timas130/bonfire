@@ -25,6 +25,8 @@ class EFandomsAdminChangeCategory : RFandomsAdminChangeCategory(0, 0, "") {
 
     override fun execute(): Response {
 
+        if (fandom!!.category == categoryId) return Response()
+
         ControllerCollisions.removeCollisions(fandomId, API.COLLISION_FANDOM_PARAMS_1)
         ControllerCollisions.removeCollisions(fandomId, API.COLLISION_FANDOM_PARAMS_2)
         ControllerCollisions.removeCollisions(fandomId, API.COLLISION_FANDOM_PARAMS_3)
