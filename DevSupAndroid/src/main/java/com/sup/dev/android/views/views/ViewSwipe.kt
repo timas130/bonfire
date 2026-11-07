@@ -121,10 +121,12 @@ open class ViewSwipe constructor(context: Context, attrs: AttributeSet? = null) 
                 vContainer.setBackgroundColor(ToolsColor.add(colorDefault, colorFocus))
             })
 
+            val downX = e.x
+            val downY = e.y
             subscriptionLongClick = ToolsThreads.main(longClickTime) {
                 if(subscriptionLongClick != null && subscriptionLongClick!!.isSubscribed()) {
                     clear()
-                    onLongClick.invoke(ClickEvent(this, e.x, e.y))
+                    onLongClick.invoke(ClickEvent(downX, downY))
                 }
             }
             return true
@@ -135,7 +137,7 @@ open class ViewSwipe constructor(context: Context, attrs: AttributeSet? = null) 
             if (!swipeStarted && firstX > e.x - ToolsView.dpToPx(12) && firstX < e.x + ToolsView.dpToPx(12) && firstY > e.y - ToolsView.dpToPx(12) && firstY < e.y + ToolsView.dpToPx(12)) {
                 if (firstClickTime < System.currentTimeMillis() - longClickTime) {
                     clear()
-                    onLongClick.invoke(ClickEvent(this, e.x, e.y))
+                    onLongClick.invoke(ClickEvent(e.x, e.y))
                     return true
                 }
                 lastX = e.x
@@ -164,7 +166,7 @@ open class ViewSwipe constructor(context: Context, attrs: AttributeSet? = null) 
             return true
         }
         if (e.action == MotionEvent.ACTION_UP && firstClickTime != -1L && !swipeStarted && firstX > e.x - ToolsView.dpToPx(12) && firstX < e.x + ToolsView.dpToPx(12) && firstY > e.y - ToolsView.dpToPx(12) && firstY < e.y + ToolsView.dpToPx(12)) {
-            onClick.invoke(ClickEvent(this, e.x, e.y))
+            onClick.invoke(ClickEvent(e.x, e.y))
             clear()
             return true
         }
@@ -224,24 +226,7 @@ open class ViewSwipe constructor(context: Context, attrs: AttributeSet? = null) 
         })
     }
 
-    class ClickEvent{
-
-        val x:Float
-        val y:Float
-
-        constructor(view:View, x:Float, y:Float)  {
-            val location = IntArray(2)
-            view.getLocationOnScreen(location)
-            if(location[0] < x && location[1] < y) {
-                this.x = x - location[0]
-                this.y = y - location[1]
-            } else {
-                this.x = x
-                this.y = y
-            }
-        }
-
-    }
+    class ClickEvent(val x:Float, val y:Float)
 
 
 
