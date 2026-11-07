@@ -1,6 +1,8 @@
 package com.dzen.campfire.server.executors.quests
 
+import com.dzen.campfire.api.API
 import com.dzen.campfire.api.requests.quests.RQuestsReorderPart
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.tables.TQuestParts
 import com.sup.dev.java_pc.sql.Database
@@ -11,6 +13,11 @@ class EQuestsReorderPart : RQuestsReorderPart(0, 0, 0) {
     override fun check() {
         checkQuestEditable(questId, apiAccount)
         ControllerAccounts.checkAccountBanned(apiAccount.id)
+
+        val part = Database.select("EQuestsReorderPart_check", SqlQuerySelect(TQuestParts.NAME, TQuestParts.id)
+            .where(TQuestParts.unit_id, "=", questId)
+            .where(TQuestParts.id, "=", partId))
+        if (part.isEmpty) throw ApiException(API.ERROR_GONE)
     }
 
     override fun execute(): Response {
@@ -42,6 +49,7 @@ class EQuestsReorderPart : RQuestsReorderPart(0, 0, 0) {
 
         println("moving $partId from x to $tgtOrder")
         Database.update("EQuestsReorderPart_finish", SqlQueryUpdate(TQuestParts.NAME)
+            .where(TQuestParts.unit_id, "=", questId)
             .where(TQuestParts.id, "=", partId)
             .update(TQuestParts.part_order, tgtOrder))
         return Response()
