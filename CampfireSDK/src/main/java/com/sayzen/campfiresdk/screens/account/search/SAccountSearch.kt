@@ -107,7 +107,7 @@ class SAccountSearch(
             if (closeScreenAfterSelect) Navigator.remove(this)
             onSelected.invoke(item)
         }.setOnLongClick { cardAvatar, view, x, y ->
-            if(isSearchResult) return@setOnLongClick
+            if(isSearchResult || !isSubscriptionsOnly) return@setOnLongClick
             SplashMenu()
                     .add(t(API_TRANSLATE.app_unsubscribe)){
                         ApiRequestsSupporter.executeEnabledConfirm(t(API_TRANSLATE.profile_follows_remove_confirm), t(API_TRANSLATE.app_unfollow), RAccountsFollowsChange(item.id, false)) { eventBus.post(EventAccountsFollowsChange(item.id, false)) }
