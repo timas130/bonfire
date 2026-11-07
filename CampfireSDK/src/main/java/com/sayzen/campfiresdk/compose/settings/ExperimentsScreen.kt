@@ -29,6 +29,7 @@ private data class Experiment(
     val name: Int,
     val description: Int,
     val restartRequired: Boolean = true,
+    val defaultValue: Boolean = true,
 )
 
 private val activeExperiments = listOf(
@@ -78,7 +79,7 @@ private fun ComposeExperimentsScreen() {
                 val featureEnabled = withTimeout(5000) {
                     suspendCoroutine { continuation ->
                         PostHog.reloadFeatureFlags {
-                            continuation.resume(PostHog.isFeatureEnabled(experiment.id))
+                            continuation.resume(PostHog.isFeatureEnabled(experiment.id, experiment.defaultValue))
                         }
                     }
                 }
@@ -139,7 +140,7 @@ private fun ComposeExperimentsScreen() {
                 }
             }
             items(activeExperiments) { experiment ->
-                val enabled = PostHog.isFeatureEnabled(experiment.id)
+                val enabled = PostHog.isFeatureEnabled(experiment.id, experiment.defaultValue)
 
                 ListItem(
                     headlineContent = {
