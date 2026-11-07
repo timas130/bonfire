@@ -12,8 +12,10 @@ object ControllerVahter {
 
     fun addAdminRejected(accountId: Long) {
         synchronized(this) {
-            if(isCanBlock(accountId) == -1L){
-                ControllerEffects.makeSystem(ControllerAccounts.getAccount(accountId)!!, API.EFFECT_INDEX_VAHTER, System.currentTimeMillis() + 1000L * 60 * 60 * 24, API.EFFECT_COMMENT_TAG_REJECTED)
+            val now = System.currentTimeMillis()
+            val active = OptimizerEffects.get(accountId).filter { it.effectIndex == API.EFFECT_INDEX_VAHTER && it.dateEnd > now }
+            if(active.all { it.commentTag == API.EFFECT_COMMENT_TAG_TOO_MANY }){
+                ControllerEffects.makeSystem(ControllerAccounts.getAccount(accountId)!!, API.EFFECT_INDEX_VAHTER, now + 1000L * 60 * 60 * 24, API.EFFECT_COMMENT_TAG_REJECTED)
             }
         }
     }
