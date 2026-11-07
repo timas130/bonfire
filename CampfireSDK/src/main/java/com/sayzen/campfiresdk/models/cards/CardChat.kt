@@ -124,7 +124,7 @@ class CardChat(
             else -> {
                 ImageLoader.load(chat.customImage).into(vAvatar.vAvatar.vImageView)
                 vAvatar.setTitle(chat.customName)
-                vAvatar.vAvatar.setOnClickListener { SChatCreate.instance(chat.tag.targetId, Navigator.TO) }
+                if (chat.tag.chatType == API.CHAT_TYPE_CONFERENCE) vAvatar.vAvatar.setOnClickListener { SChatCreate.instance(chat.tag.targetId, Navigator.TO) }
                 vAvatar.vAvatar.vChip.visibility = View.GONE
                 vAvatar.setTitle(chat.customName)
             }
