@@ -41,8 +41,16 @@ fun BonfireMarkdownContent(
     val allBlocks = remember(text) {
         text.spans.filter { it.isBlockSpan() }
     }
-    val blocks = remember(text) {
-        allBlocks.filterNonOverlapping()
+    val blocks = remember(text, maxLines) {
+        val nonOverlapping = allBlocks.filterNonOverlapping()
+        if (maxLines != Int.MAX_VALUE && nonOverlapping.isNotEmpty() && nonOverlapping.all { it is ParagraphBlock }) {
+            listOf(ParagraphBlock().also {
+                it.start = nonOverlapping.first().start
+                it.end = nonOverlapping.last().end
+            })
+        } else {
+            nonOverlapping
+        }
     }
     val lists = remember(text) {
         text.spans.filterIsInstance<ListBlock>()
