@@ -29,6 +29,7 @@ abstract class Notification : JsonPolimorf, ImageHolder {
     companion object {
 
         private val J_N_TYPE = "J_N_TYPE"
+        private const val PUSH_TEXT_MAX_L = 300
 
         @JvmStatic
         fun instance(json: Json): Notification {
@@ -114,6 +115,7 @@ abstract class Notification : JsonPolimorf, ImageHolder {
     @Deprecated("use ImageRefs")
     var imageId = 0L
     var randomCode = 0L
+    var shortened = false
 
     constructor() {
 
@@ -132,6 +134,7 @@ abstract class Notification : JsonPolimorf, ImageHolder {
         image = json.m(inp, "image", image)
         imageId = json.m(inp, "J_N_IMAGE_ID", imageId)
         randomCode = json.m(inp, "randomCode", randomCode)
+        shortened = json.m(inp, "shortened", shortened)
 
         if (inp) json.put(J_N_TYPE, getType())
 
@@ -147,4 +150,13 @@ abstract class Notification : JsonPolimorf, ImageHolder {
     abstract fun isShadow(): Boolean
 
     abstract fun isNeedForcePush(): Boolean
+
+    open fun shortenForPush() = false
+
+    protected fun shortenedForPush(text: String): String? {
+        if (text.length <= PUSH_TEXT_MAX_L) return null
+        shortened = true
+        val end = if (text[PUSH_TEXT_MAX_L - 1].isHighSurrogate()) PUSH_TEXT_MAX_L - 1 else PUSH_TEXT_MAX_L
+        return text.substring(0, end) + "..."
+    }
 }

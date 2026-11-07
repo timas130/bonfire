@@ -1,6 +1,7 @@
 package com.dzen.campfire.api.models.notifications.chat
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.chat.ChatTag
 import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.notifications.Notification
@@ -11,6 +12,7 @@ import com.sup.dev.java.libs.json.Json
 class NotificationChatMessageChange : Notification {
 
     var publicationId: Long = 0
+    var tag = ChatTag()
     var text: String = ""
     var newFormatting = false
     var quoteId = 0L
@@ -39,6 +41,7 @@ class NotificationChatMessageChange : Notification {
 
     fun setMessage(message: PublicationChatMessage) {
         publicationId = message.id
+        tag = message.chatTag()
         text = message.text
         newFormatting = message.newFormatting
         quoteId = message.quoteId
@@ -69,6 +72,7 @@ class NotificationChatMessageChange : Notification {
 
     override fun json(inp: Boolean, json: Json): Json {
         publicationId = json.m(inp, "J_UNIT_ID", publicationId)
+        tag = json.m(inp, "tag", tag, ChatTag::class)
         text = json.m(inp, "J_TEXT", text)
         newFormatting = json.m(inp, "newFormatting", newFormatting)
         quoteId = json.m(inp, "quoteId", quoteId)
@@ -81,6 +85,11 @@ class NotificationChatMessageChange : Notification {
         quoteStickerImage = json.m(inp, "quoteStickerImage", quoteStickerImage)
         quoteStickerImageId = json.m(inp, "quoteStickerImageId", quoteStickerImageId)
         return super.json(inp, json)
+    }
+
+    override fun shortenForPush(): Boolean {
+        text = shortenedForPush(text) ?: return false
+        return true
     }
 
     override fun fillImageRefs(receiver: ImageHolderReceiver) {

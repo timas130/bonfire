@@ -37,6 +37,11 @@ class NotificationChatMessage : Notification {
         return super.json(inp, json)
     }
 
+    override fun shortenForPush(): Boolean {
+        publicationChatMessage.text = shortenedForPush(publicationChatMessage.text) ?: return false
+        return true
+    }
+
     override fun fillResourcesList(list: ArrayList<Long>) {
 
     }

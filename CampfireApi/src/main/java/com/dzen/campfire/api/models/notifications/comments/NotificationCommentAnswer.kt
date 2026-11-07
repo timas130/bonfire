@@ -60,6 +60,11 @@ class NotificationCommentAnswer : Notification {
         this.maskPageType = maskPageType
     }
 
+    override fun shortenForPush(): Boolean {
+        commentText = shortenedForPush(commentText) ?: return false
+        return true
+    }
+
     override fun json(inp: Boolean, json: Json): Json {
         publicationId = json.m(inp, "J_UNIT_ID", publicationId)
         commentId = json.m(inp, "J_COMMENT_ID", commentId)

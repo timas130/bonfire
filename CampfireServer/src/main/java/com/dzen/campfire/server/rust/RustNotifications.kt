@@ -10,6 +10,8 @@ import sh.sit.schema.type.*
 import kotlin.random.Random
 
 object RustNotifications {
+    private const val PUSH_PAYLOAD_MAX_BYTES = 3900
+
     internal fun post(userId: Long, notification: Notification) {
         post(listOf(userId), notification)
     }
@@ -24,13 +26,20 @@ object RustNotifications {
             recipients = userIds
                 .map { NotificationRecipient(user = Optional.present(UserRecipient(it.toInt()))) },
             payload = NotificationPayloadInput(
-                legacy = Optional.present(
-                    LegacyNotificationInput(notification.json(true, Json()).toString())
-                ),
+                legacy = Optional.present(LegacyNotificationInput(pushPayload(notification))),
             ),
             ephemeral = notification.isShadow(),
             onlineOnly = !notification.isNeedForcePush(),
         ))
+    }
+
+    private fun pushPayload(notification: Notification): String {
+        val payload = notification.json(true, Json()).toString()
+        if (payload.toByteArray().size <= PUSH_PAYLOAD_MAX_BYTES) return payload
+
+        val copy = Notification.instance(Json(payload))
+        if (!copy.shortenForPush()) return payload
+        return copy.json(true, Json()).toString()
     }
 
     fun post(input: NotificationInput) {

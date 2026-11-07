@@ -37,6 +37,11 @@ class NotificationChatAnswer : Notification {
         return API.NOTIF_CHAT_MESSAGE_ANSWER
     }
 
+    override fun shortenForPush(): Boolean {
+        publicationChatMessage.text = shortenedForPush(publicationChatMessage.text) ?: return false
+        return true
+    }
+
     override fun fillResourcesList(list: ArrayList<Long>) {
 
     }

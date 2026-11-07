@@ -47,6 +47,11 @@ class NotificationMention : Notification {
         this.text = text
     }
 
+    override fun shortenForPush(): Boolean {
+        text = shortenedForPush(text) ?: return false
+        return true
+    }
+
     override fun json(inp: Boolean, json: Json): Json {
         publicationId = json.m(inp, "unitId", publicationId)
         publicationType = json.m(inp, "unitType", publicationType)

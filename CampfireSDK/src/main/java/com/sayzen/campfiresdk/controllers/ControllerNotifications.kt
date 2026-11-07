@@ -23,6 +23,7 @@ import com.dzen.campfire.api.models.notifications.rubrics.*
 import com.dzen.campfire.api.models.notifications.translates.NotificationTranslatesAccepted
 import com.dzen.campfire.api.models.notifications.translates.NotificationTranslatesRejected
 import com.dzen.campfire.api.requests.accounts.RAccountsNotificationsView
+import com.dzen.campfire.api.requests.chat.RChatMessageGet
 import com.google.firebase.messaging.RemoteMessage
 import com.sayzen.campfiresdk.controllers.notifications.account.*
 import com.sayzen.campfiresdk.controllers.notifications.activities.NotificationActivitiesRelayRaceLostParser
@@ -49,6 +50,7 @@ import com.sayzen.devsupandroidgoogle.GoogleNotifications
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.tools.ToolsNotifications
 import com.sup.dev.android.tools.ToolsStorage
+import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.debug.info
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.libs.json.Json
@@ -143,6 +145,35 @@ object ControllerNotifications {
         if (isNotificationKeyExist(notification.randomCode)) return
         putNotificationKey(notification.randomCode)
 
+        if (notification.shortened) {
+            loadFullMessage(notification)
+        } else {
+            showMessage(notification)
+        }
+    }
+
+    private fun loadFullMessage(notification: Notification) {
+        val (tag, messageId) = when (notification) {
+            is NotificationChatMessage -> notification.tag to notification.publicationChatMessage.id
+            is NotificationChatAnswer -> notification.tag to notification.publicationChatMessage.id
+            is NotificationChatMessageChange -> notification.tag to notification.publicationId
+            else -> return showMessage(notification)
+        }
+
+        RChatMessageGet(tag, messageId)
+            .onComplete { r ->
+                when (notification) {
+                    is NotificationChatMessage -> notification.publicationChatMessage = r.publication
+                    is NotificationChatAnswer -> notification.publicationChatMessage = r.publication
+                    is NotificationChatMessageChange -> notification.setMessage(r.publication)
+                }
+                ToolsThreads.thread { showMessage(notification) }
+            }
+            .onError { err("ControllerNotifications couldn't load the shortened message $messageId: $it") }
+            .send(api)
+    }
+
+    private fun showMessage(notification: Notification) {
         ToolsThreads.main {
             EventBus.post(
                 EventNotification(
