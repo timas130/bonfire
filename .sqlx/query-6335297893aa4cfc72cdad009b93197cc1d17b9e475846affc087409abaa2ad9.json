@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "update videos set status = 4, error = null, duration_ms = $2, width = $3, height = $4, audio_gain = $5, updated_at = now() where video_id = $1 and status = 3 returning id",
+  "query": "update videos set status = 4, error = null, duration_ms = $2, width = $3, height = $4, audio_gain = $5, updated_at = now() where video_id = $1 and status in (3, 4) returning id",
   "describe": {
     "columns": [
       {
@@ -22,5 +22,5 @@
       false
     ]
   },
-  "hash": "cba5d4bdd43d29a824602e9920550129db0250cee6101b274f447ee9c5d3dad2"
+  "hash": "6335297893aa4cfc72cdad009b93197cc1d17b9e475846affc087409abaa2ad9"
 }

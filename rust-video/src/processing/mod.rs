@@ -16,6 +16,7 @@ use gstreamer as gst;
 use gstreamer::prelude::*;
 pub use loudness::{analyze_gain, clamp_gain, AudioGain};
 pub use probe::{probe, MediaInfo};
+use std::future::Future;
 use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
 pub use thumbnail::{thumbnail, Thumbnail};
@@ -23,6 +24,8 @@ use tracing::{error, info, warn};
 
 const MAX_ERROR_LEN: usize = 300;
 const CLAIM_RETRY_DELAY: Duration = Duration::from_secs(10);
+const FINISH_ATTEMPTS: u32 = 6;
+const FINISH_RETRY_DELAY: Duration = Duration::from_secs(10);
 
 // just in case?
 // I don't think the lib cleans up for us.
@@ -111,6 +114,23 @@ struct JobOutput {
     width: i32,
     height: i32,
     gain_db: Option<f32>,
+}
+
+async fn retry_finish<T, F>(mut update: impl FnMut() -> F) -> Result<T, sqlx::Error>
+where
+    F: Future<Output = Result<T, sqlx::Error>>,
+{
+    let mut attempt = 1;
+    loop {
+        match update().await {
+            Err(err) if attempt < FINISH_ATTEMPTS => {
+                warn!("failed to finish video processing, retrying: {err:?}");
+                attempt += 1;
+                tokio::time::sleep(FINISH_RETRY_DELAY).await;
+            }
+            result => return result,
+        }
+    }
 }
 
 impl VideoServer {
@@ -258,19 +278,21 @@ impl VideoServer {
     }
 
     async fn succeed(&self, s3: &Client, bucket: &str, video_id: &str, output: JobOutput) {
-        let updated = sqlx::query_scalar!(
-            "update videos \
-             set status = 4, error = null, duration_ms = $2, width = $3, height = $4, \
-                 audio_gain = $5, updated_at = now() \
-             where video_id = $1 and status = 3 \
-             returning id",
-            video_id,
-            output.duration_ms,
-            output.width,
-            output.height,
-            output.gain_db,
-        )
-        .fetch_optional(&self.base.pool)
+        let updated = retry_finish(|| {
+            sqlx::query_scalar!(
+                "update videos \
+                 set status = 4, error = null, duration_ms = $2, width = $3, height = $4, \
+                     audio_gain = $5, updated_at = now() \
+                 where video_id = $1 and status in (3, 4) \
+                 returning id",
+                video_id,
+                output.duration_ms,
+                output.width,
+                output.height,
+                output.gain_db,
+            )
+            .fetch_optional(&self.base.pool)
+        })
         .await;
 
         match updated {
@@ -295,13 +317,15 @@ impl VideoServer {
 
     async fn fail(&self, s3: &Client, bucket: &str, video_id: &str, error: &str) {
         let error = error.chars().take(MAX_ERROR_LEN).collect::<String>();
-        let result = sqlx::query!(
-            "update videos set status = 5, error = $2, updated_at = now() \
-             where video_id = $1 and status = 3",
-            video_id,
-            error,
-        )
-        .execute(&self.base.pool)
+        let result = retry_finish(|| {
+            sqlx::query!(
+                "update videos set status = 5, error = $2, updated_at = now() \
+                 where video_id = $1 and status = 3",
+                video_id,
+                error,
+            )
+            .execute(&self.base.pool)
+        })
         .await;
         if let Err(err) = result {
             error!("failed to mark video as failed: {err:?}");
