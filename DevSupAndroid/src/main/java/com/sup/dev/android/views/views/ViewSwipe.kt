@@ -163,7 +163,7 @@ open class ViewSwipe constructor(context: Context, attrs: AttributeSet? = null) 
             lastY = e.y
             return true
         }
-        if (e.action == MotionEvent.ACTION_UP && firstX > e.x - ToolsView.dpToPx(12) && firstX < e.x + ToolsView.dpToPx(12) && firstY > e.y - ToolsView.dpToPx(12) && firstY < e.y + ToolsView.dpToPx(12)) {
+        if (e.action == MotionEvent.ACTION_UP && !swipeStarted && firstX > e.x - ToolsView.dpToPx(12) && firstX < e.x + ToolsView.dpToPx(12) && firstY > e.y - ToolsView.dpToPx(12) && firstY < e.y + ToolsView.dpToPx(12)) {
             onClick.invoke(ClickEvent(this, e.x, e.y))
             clear()
             return true
