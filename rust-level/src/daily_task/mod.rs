@@ -99,13 +99,14 @@ impl LevelServer {
             };
             let level_multiplier = Self::get_level_multiplier(level);
 
-            sqlx::query!(
+            let inserted = sqlx::query!(
                 "insert into daily_tasks (
                      account_id, date, json_db, progress,
                      combo_multiplier, level_multiplier
                  ) values (
                      $1, $2, $3, $4, $5, $6
-                 )",
+                 )
+                 on conflict do nothing",
                 user_id,
                 today,
                 serde_json::to_value(&task).map_err(|err| sqlx::Error::Decode(Box::new(err)))?,
@@ -114,14 +115,18 @@ impl LevelServer {
                 level_multiplier,
             )
             .execute(&self.base.pool)
-            .await?;
+            .await?
+            .rows_affected()
+                > 0;
 
-            task_history.push(Task {
-                date: today,
-                task,
-                progress: 0.,
-                combo_multiplier,
-            });
+            if inserted {
+                task_history.push(Task {
+                    date: today,
+                    task,
+                    progress: 0.,
+                    combo_multiplier,
+                });
+            }
         }
 
         let mut changed_progress = Vec::new();
