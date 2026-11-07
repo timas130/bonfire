@@ -55,6 +55,7 @@ import com.sup.dev.java.tools.ToolsThreads
 import kotlinx.coroutines.runBlocking
 import sh.sit.bonfire.auth.AuthController
 import sh.sit.bonfire.networking.OkHttpNetworkingProvider
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -67,6 +68,7 @@ val api: API = API(
         SupAndroid.appContext!!,
         API.SERV_ROOT,
     )
+    onUnauthorized = { ControllerApi.onUnauthorized() }
 }
 
 suspend fun <T : Request.Response> Request<T>.sendSuspend(api: ApiClient): T {
@@ -233,6 +235,19 @@ object ControllerApi {
 
     fun setFandomsViceroy(fandomsIds: Array<Long>, languagesIds: Array<Long>) {
         fandomsViceroy = Array(fandomsIds.size) { Item2(fandomsIds[it], languagesIds[it]) }
+    }
+
+    private val checkingSession = AtomicBoolean(false)
+
+    internal fun onUnauthorized() {
+        if (account.getId() == 0L || !checkingSession.compareAndSet(false, true)) return
+        ToolsThreads.thread {
+            val canLogin = runCatching { runBlocking { AuthController.getCanLogin() } }.getOrNull()
+            checkingSession.set(false)
+            if (canLogin == AuthController.CanLoginResult.InvalidLogin) ToolsThreads.main {
+                if (account.getId() != 0L) logout(false) { ControllerCampfireSDK.onLoginFailed() }
+            }
+        }
     }
 
     fun logout(announceLogout: Boolean = true, onComplete: () -> Unit) {

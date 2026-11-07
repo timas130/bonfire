@@ -49,6 +49,8 @@ abstract class ApiClient(
 
     lateinit var networkingProvider: NetworkingProvider
 
+    var onUnauthorized: () -> Unit = {}
+
     abstract fun getApiVersion(): String
 
     //
@@ -149,6 +151,7 @@ abstract class ApiClient(
             } else {
                 val ex = ApiException(responseJson.getJson(J_RESPONSE)!!)
 
+                if (ex.code == ERROR_UNAUTHORIZED) onUnauthorized()
                 callbackError(ex)
             }
         }
