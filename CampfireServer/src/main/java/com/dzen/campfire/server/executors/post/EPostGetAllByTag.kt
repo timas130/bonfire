@@ -9,6 +9,7 @@ import com.dzen.campfire.server.controllers.ControllerPost
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.tables.TCollisions
 import com.dzen.campfire.server.tables.TPublications
+import com.dzen.campfire.server.tables.TShadowBans
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQuerySelect
 import com.sup.dev.java_pc.sql.SqlWhere
@@ -32,6 +33,9 @@ class EPostGetAllByTag : RPostGetAllByTag(0, 0) {
         if (!ControllerPost.canSeeNsfwPosts(apiAccount.id, requestApiVersion)) {
             selectCollisions.where(SqlWhere.WhereString("false=(SELECT ${TPublications.nsfw} FROM ${TPublications.NAME} WHERE ${TPublications.id}=${TCollisions.owner_id})"))
         }
+
+        val creatorId = "(SELECT ${TPublications.creator_id} FROM ${TPublications.NAME} WHERE ${TPublications.id}=${TCollisions.owner_id})"
+        selectCollisions.where(SqlWhere.WhereString("($creatorId=${apiAccount.id} OR $creatorId NOT IN (SELECT ${TShadowBans.account_id} FROM ${TShadowBans.NAME}))"))
 
         val v = Database.select("EPostGetAllByTag select_1", selectCollisions)
 
