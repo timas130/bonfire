@@ -51,7 +51,7 @@ pub enum AuthError {
     InvalidPassword(RangeInclusive<usize>),
 
     // register_email()
-    #[error("InvalidUsername: Invalid username (only numbers, underscores and Latin letters are allowed)")]
+    #[error("InvalidUsername: Invalid username (only numbers and Latin letters are allowed)")]
     InvalidUsername,
     #[error("EmailTaken: The email is already taken by another account")]
     EmailTaken,
