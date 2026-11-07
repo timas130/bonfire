@@ -9,6 +9,7 @@ import com.dzen.campfire.api.requests.chat.RChatMessageCreate
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerStoryQuest
+import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.chat.EventChatMemberStatusChanged
 import com.sayzen.campfiresdk.models.events.chat.EventChatNewBottomMessage
@@ -26,6 +27,7 @@ class CardSending(
     private var sending = false
     private var sendingDone = false
     private var hided = true
+    private var callbacksAdded = false
 
     init {
         send()
@@ -37,6 +39,11 @@ class CardSending(
 
     private fun send() {
         sending = true
+        if (callbacksAdded) {
+            request.send(api)
+            return
+        }
+        callbacksAdded = true
         ApiRequestsSupporter.execute(request) { r ->
             sendingDone = true
             afterSend(r.message)
