@@ -5,6 +5,7 @@ import com.dzen.campfire.api.models.publications.history.HistoryCreate
 import com.dzen.campfire.api.models.publications.post.PageText
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.project.RProjectMakeHelloPost
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.server.tables.TFandoms
 import com.dzen.campfire.server.tables.TPublications
@@ -19,15 +20,11 @@ class EProjectMakeHelloPost : RProjectMakeHelloPost("", false, "", 0) {
     }
 
     override fun check() {
+        ControllerAccounts.checkAccountBanned(apiAccount.id, API.FANDOM_CAMPFIRE_HELLO_ID, languageId)
+        if (!API.isLanguageExsit(languageId)) throw ApiException(API.ERROR_ACCESS)
     }
 
     override fun execute(): Response {
-
-        if (!hash.containsKey(languageId)) hash.put(languageId, 0)
-
-        if (hash[languageId]!! > System.currentTimeMillis() - TIME) return Response(0)
-        hash[languageId] = System.currentTimeMillis()
-        ControllerAccounts.checkAccountBanned(apiAccount.id)
 
         val fandomId = API.FANDOM_CAMPFIRE_HELLO_ID
 
@@ -37,6 +34,16 @@ class EProjectMakeHelloPost : RProjectMakeHelloPost("", false, "", 0) {
 
         val page_2 = PageText()
         page_2.text = text_2
+
+        ControllerPost.checkPage(page_1, API.ERROR_ACCESS, false, API.PAGES_SOURCE_TYPE_POST, apiAccount.id)
+        ControllerPost.checkPage(page_2, API.ERROR_ACCESS, false, API.PAGES_SOURCE_TYPE_POST, apiAccount.id)
+
+        synchronized(hash) {
+            if (!hash.containsKey(languageId)) hash.put(languageId, 0)
+
+            if (hash[languageId]!! > System.currentTimeMillis() - TIME) return Response(0)
+            hash[languageId] = System.currentTimeMillis()
+        }
 
         ControllerPost.insertPage(page_1, API.RESOURCES_PUBLICATION_ERROR)
         ControllerPost.insertPage(page_2, API.RESOURCES_PUBLICATION_ERROR)
