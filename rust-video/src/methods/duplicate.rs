@@ -44,8 +44,8 @@ impl VideoServer {
             RawVideo,
             "insert into videos \
                  (video_id, user_id, publication_id, status, duration_ms, width, height, \
-                  size_bytes, audio_gain, encoding_version) \
-             values ($1, $2, $3, 4, $4, $5, $6, $7, $8, $9) \
+                  audio_gain, encoding_version) \
+             values ($1, $2, $3, 4, $4, $5, $6, $7, $8) \
              returning *",
             new_id,
             source.user_id,
@@ -53,7 +53,6 @@ impl VideoServer {
             source.duration_ms,
             source.width,
             source.height,
-            source.size_bytes,
             source.audio_gain,
             source.encoding_version,
         )

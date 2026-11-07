@@ -46,7 +46,8 @@ impl VideoServer {
         // canceled and failed uploads intentionally count
         let uploaded_today = sqlx::query_scalar!(
             "select count(*) as \"count!\" from videos \
-             where user_id = $1 and created_at > now() - interval '24 hours'",
+             where user_id = $1 and created_at > now() - interval '24 hours' \
+               and size_bytes is not null",
             user_id,
         )
         .fetch_one(&mut *tx)

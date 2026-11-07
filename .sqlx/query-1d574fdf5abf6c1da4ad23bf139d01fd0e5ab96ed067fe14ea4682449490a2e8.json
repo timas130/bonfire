@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select count(*) as \"count!\" from videos where user_id = $1 and created_at > now() - interval '24 hours'",
+  "query": "select count(*) as \"count!\" from videos where user_id = $1 and created_at > now() - interval '24 hours' and size_bytes is not null",
   "describe": {
     "columns": [
       {
@@ -18,5 +18,5 @@
       null
     ]
   },
-  "hash": "3cd499b66d7fb1c34ea7f3c0eb0746ac6541cac801cbb838e955e7320940b360"
+  "hash": "1d574fdf5abf6c1da4ad23bf139d01fd0e5ab96ed067fe14ea4682449490a2e8"
 }

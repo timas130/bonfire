@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "insert into videos (video_id, user_id, publication_id, status, duration_ms, width, height, size_bytes, audio_gain, encoding_version) values ($1, $2, $3, 4, $4, $5, $6, $7, $8, $9) returning *",
+  "query": "insert into videos (video_id, user_id, publication_id, status, duration_ms, width, height, audio_gain, encoding_version) values ($1, $2, $3, 4, $4, $5, $6, $7, $8) returning *",
   "describe": {
     "columns": [
       {
@@ -82,7 +82,6 @@
         "Int8",
         "Int4",
         "Int4",
-        "Int8",
         "Float4",
         "Int4"
       ]
@@ -104,5 +103,5 @@
       false
     ]
   },
-  "hash": "abb72c35f1ff226e84cc1022158c2cd3bf68955d086e8361d4f855a678ebe096"
+  "hash": "a28ba43fe373806cf2b2f2581bfa0d304c5a827b8f0ea99ac936dcbb7b0eb94f"
 }

@@ -125,6 +125,7 @@ pub struct Video {
     /// Height of the encoded video in pixels
     pub height: Option<i32>,
     /// Declared size of the source file in bytes
+    /// (`None` for a copy made by `duplicate`, which has no source file)
     pub size_bytes: Option<i64>,
     /// Loudness-normalization gain (baked into the encode)
     pub audio_gain: Option<f32>,
