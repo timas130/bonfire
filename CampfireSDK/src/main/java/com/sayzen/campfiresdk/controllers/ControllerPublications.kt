@@ -278,8 +278,8 @@ object ControllerPublications {
 
         val resultTags = ArrayList(map.values).toTypedArray()
 
-        resultTags.sortWith(Comparator { o1, o2 -> (o2.tag.tag_1 - o1.tag.tag_1).toInt() })
-        for (n in resultTags) n.tags.sortWith(Comparator { o1, o2 -> (o2.tag_1 - o1.tag_1).toInt() })
+        resultTags.sortByDescending { it.tag.tag_1 }
+        for (n in resultTags) n.tags.sortByDescending { it.tag_1 }
 
         return resultTags
     }
