@@ -140,8 +140,8 @@ fun BadgeFlyout(
                 ) {
                     AnimatedVisibility(visible = fullBadge == null || fullBadge.link != null) {
                         Button(
-                            onClick = { ControllerExternalLinks.openLink(fullBadge?.link!!) },
-                            enabled = fullBadge != null,
+                            onClick = { fullBadge?.link?.let { ControllerExternalLinks.openLink(it) } },
+                            enabled = fullBadge?.link != null,
                         ) {
                             Text(stringResource(R.string.badge_more))
                         }
@@ -152,7 +152,7 @@ fun BadgeFlyout(
                             onClick = {
                                 SFandom.instance(fullBadge?.fandomId?.toLong() ?: 0, Navigator.TO)
                             },
-                            enabled = fullBadge != null,
+                            enabled = fullBadge?.fandomId != null,
                         ) {
                             Text(stringResource(R.string.badge_fandom))
                         }
