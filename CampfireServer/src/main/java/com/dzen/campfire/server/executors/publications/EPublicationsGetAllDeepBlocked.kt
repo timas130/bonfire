@@ -22,8 +22,8 @@ class EPublicationsGetAllDeepBlocked : RPublicationsGetAllDeepBlocked(0, 0) {
 
         if(accountId > 0) select.where(TPublications.creator_id, "=", accountId)
 
-        var publications = ControllerPublications.parseSelect(Database.select("EPublicationsGetAllDeepBlocked", select))
-        publications = ControllerPublications.loadSpecDataForPosts(apiAccount.id, publications)
+        val publications = ControllerPublications.parseSelect(Database.select("EPublicationsGetAllDeepBlocked", select))
+        ControllerPublications.loadSpecDataForPosts(apiAccount.id, publications)
 
         return Response(publications)
     }
