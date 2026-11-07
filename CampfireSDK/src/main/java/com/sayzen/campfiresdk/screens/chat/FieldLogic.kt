@@ -204,8 +204,9 @@ class FieldLogic(
     }
 
     private fun updateAction() {
-        vSend.visibility = if (vText.text.toString().isNotEmpty() || attach.isHasContent() || quoteId != 0L || publicationChange != null || voiceBytes != null) View.VISIBLE else View.GONE
-        vVoiceRecorder.visibility = if (vText.text.toString().isNotEmpty() || attach.isHasContent() || quoteId != 0L || publicationChange != null || voiceBytes != null) View.GONE else View.VISIBLE
+        val showSend = !isRecording && (vText.text.toString().isNotEmpty() || attach.isHasContent() || quoteId != 0L || publicationChange != null || voiceBytes != null)
+        vSend.visibility = if (showSend) View.VISIBLE else View.GONE
+        vVoiceRecorder.visibility = if (showSend) View.GONE else View.VISIBLE
 
         if (isRecording || voiceBytes != null) vFieldContainer.visibility = View.GONE
         else vFieldContainer.visibility = View.VISIBLE
