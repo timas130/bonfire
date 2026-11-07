@@ -9,7 +9,7 @@ import org.commonmark.parser.PostProcessor
 class MentionPostProcessor : PostProcessor {
     companion object {
         private const val DELIM = "[\\s\$'\"()\\\\^`{}|~./:;<=>+,*%&!?]"
-        private val MENTION_REGEX = Regex("(?:^|$DELIM)([@#]([a-zA-Z0-9-_#]+))(?:$|$DELIM)")
+        private val MENTION_REGEX = Regex("(?:(?<=$DELIM)|^)([@#]([a-zA-Z0-9-_#]+))(?=$|$DELIM)")
         private const val DESTINATION_PREFIX = "https://bonfire.moe/r/"
     }
 
