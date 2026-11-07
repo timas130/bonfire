@@ -326,11 +326,14 @@ class AppActivity : SActivity() {
     }
 
     fun parseStartAction(): Boolean {
-        if (parseIntent_X(intent)) {
+        if (intent != null && (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0) {
             intent = Intent()
-            return true
+            return false
         }
-        return false
+        val isShare = intent?.action == Intent.ACTION_SEND
+        val parsed = parseIntent_X(intent)
+        if (parsed || isShare) intent = Intent()
+        return parsed
     }
 
     private fun parseIntent_X(intent: Intent?): Boolean {
