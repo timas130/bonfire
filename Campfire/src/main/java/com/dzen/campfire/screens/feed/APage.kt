@@ -53,7 +53,7 @@ abstract class APage(
         when {
             ControllerApi.isOldVersion() -> setBackgroundImage(null)
             CampfireConstants.getStoryQuest(ControllerSettings.storyQuestIndex) != null -> setBackgroundImage(null)
-            screen.cardDonate.isVisible() -> setBackgroundImage(null)
+            !screen.cardDonate.isVisible() -> setBackgroundImage(null)
             else -> setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_3))
         }
     }
