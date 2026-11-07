@@ -4,6 +4,7 @@ import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.doOnDetach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dzen.campfire.api.API
@@ -204,6 +205,11 @@ class SProfile private constructor(
         if (xAccount.getId() == 0L) {
             Navigator.replace(instaneAnonimys())
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        doOnDetach { cardBadges.setCardAdapter(null) }
     }
 
     private fun load() {
