@@ -124,8 +124,8 @@ class SQuestPartConditionCreate(
                 })
             }
             API.QUEST_TYPE_NUMBER -> {
-                vLeftLiteral.setInputType(InputType.TYPE_CLASS_NUMBER)
-                vRightLiteral.setInputType(InputType.TYPE_CLASS_NUMBER)
+                vLeftLiteral.setInputType(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED)
+                vRightLiteral.setInputType(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED)
                 if (vLeftLiteral.getText().toLongOrNull() == null) vLeftLiteral.setText("")
                 if (vRightLiteral.getText().toLongOrNull() == null) vRightLiteral.setText("")
                 vCondition.clear()

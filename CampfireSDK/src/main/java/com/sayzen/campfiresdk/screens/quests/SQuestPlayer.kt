@@ -256,7 +256,7 @@ class SQuestPlayer(
                 field.setInputType(
                     when (it.type) {
                         API.QUEST_TYPE_TEXT -> InputType.TYPE_CLASS_TEXT
-                        API.QUEST_TYPE_NUMBER -> InputType.TYPE_CLASS_NUMBER
+                        API.QUEST_TYPE_NUMBER -> InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
                         else -> InputType.TYPE_CLASS_TEXT
                     } or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_AUTO_CORRECT
                 )
