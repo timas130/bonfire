@@ -112,6 +112,7 @@ fun OAuthGrantsScreenC() {
         title = {
             Text(stringResource(R.string.oauth_grants_title))
         },
+        snackbarHostState = snackbarHost,
         item = { item, shimmer ->
             ListItem(
                 headlineContent = {
