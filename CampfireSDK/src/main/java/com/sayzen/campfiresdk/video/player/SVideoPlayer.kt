@@ -37,7 +37,7 @@ class SVideoPlayer(videoId: String) : ComposeScreen() {
 
     override fun onPause() {
         super.onPause()
-        resumePlaybackOnReturn = holder.wantsToPlay
+        resumePlaybackOnReturn = resumePlaybackOnReturn || holder.wantsToPlay
         holder.pause()
         setFullscreen(false)
     }
