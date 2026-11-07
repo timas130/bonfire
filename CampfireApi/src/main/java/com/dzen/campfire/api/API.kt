@@ -1171,12 +1171,12 @@ class API(
 
         fun getLanguage(code: String): Language {
             for (i in LANGUAGES) if (i.code == code.lowercase(Locale.getDefault())) return i
-            return LANGUAGES[0]
+            return LANGUAGES.first { it.id == LANGUAGE_EN }
         }
 
         fun getLanguage(languageId: Long): Language {
             for (l in LANGUAGES) if (l.id == languageId) return l
-            return LANGUAGES[0]
+            return LANGUAGES.first { it.id == LANGUAGE_EN }
         }
 
         fun isLanguageExsit(languageId: Long): Boolean {
