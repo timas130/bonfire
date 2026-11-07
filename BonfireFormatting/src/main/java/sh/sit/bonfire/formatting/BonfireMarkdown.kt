@@ -17,7 +17,10 @@ import io.noties.markwon.html.HtmlPlugin
 import io.noties.markwon.simple.ext.SimpleExtPlugin
 import me.saket.bettermovementmethod.BetterLinkMovementMethod
 import sh.sit.bonfire.formatting.core.BonfireFormatter
-import java.util.concurrent.Executors
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 object BonfireMarkdown {
     private fun createMarkwon(context: Context, inlineOnly: Boolean = false): Markwon {
@@ -83,17 +86,23 @@ object BonfireMarkdown {
         }
     }
 
+    private fun createEditorExecutor(): ExecutorService {
+        return ThreadPoolExecutor(1, 1, 60L, TimeUnit.SECONDS, LinkedBlockingQueue<Runnable>()).apply {
+            allowCoreThreadTimeOut(true)
+        }
+    }
+
     fun getEditorTextChangedListener(view: EditText): TextWatcher {
-        val editor = createEditor(view.context, markwon)
+        val editor = createEditor(view.context, createMarkwon(view.context))
         return MarkwonEditorTextWatcher.withPreRender(
-            editor, Executors.newCachedThreadPool(), view
+            editor, createEditorExecutor(), view
         )
     }
 
     fun getInlineEditorTextChangedListener(view: EditText): TextWatcher {
-        val editor = createEditor(view.context, markwonInline)
+        val editor = createEditor(view.context, createMarkwon(view.context, inlineOnly = true))
         return MarkwonEditorTextWatcher.withPreRender(
-            editor, Executors.newCachedThreadPool(), view
+            editor, createEditorExecutor(), view
         )
     }
 }
