@@ -9,6 +9,7 @@ import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.PagesContainer
 import com.dzen.campfire.api.models.publications.post.Page
 import com.dzen.campfire.api.models.publications.post.PageImage
+import com.dzen.campfire.api.models.publications.post.PageSpoiler
 import com.dzen.campfire.api.models.publications.post.PageText
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.posthog.PostHog
@@ -178,6 +179,7 @@ class PostCreator(
         if (screen != null) Navigator.remove(screen)
         card.page = page
         card.update()
+        if (page is PageSpoiler) ControllerPost.openAllSpoilers(adapter)
     }
 
 

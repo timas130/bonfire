@@ -504,6 +504,8 @@ object ControllerPost {
             if (card is CardPageSpoiler) {
                 (card.page as PageSpoiler).isOpen = true
                 card.setHidedX(false)
+            } else if (card.hided) {
+                card.setHidedX(false)
             }
         updateSpoilers(list)
     }
