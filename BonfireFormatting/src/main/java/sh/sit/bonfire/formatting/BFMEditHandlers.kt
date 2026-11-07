@@ -2,9 +2,12 @@ package sh.sit.bonfire.formatting
 
 import android.text.Editable
 import android.text.Spanned
+import android.text.TextPaint
+import android.text.style.CharacterStyle
 import android.text.style.ForegroundColorSpan
 import android.text.style.StrikethroughSpan
 import android.text.style.UnderlineSpan
+import android.text.style.UpdateAppearance
 import io.noties.markwon.Markwon
 import io.noties.markwon.core.MarkwonTheme
 import io.noties.markwon.core.spans.BlockQuoteSpan
@@ -183,7 +186,9 @@ class BlockQuoteEditHandler : AbstractEditHandler<BlockQuoteSpan>() {
 }
 
 class ColorEditHandler : AbstractEditHandler<ForegroundColorSpan>() {
-    override fun configurePersistedSpans(builder: PersistedSpans.Builder) {}
+    override fun configurePersistedSpans(builder: PersistedSpans.Builder) {
+        builder.persistSpan(EditColorSpan::class.java) { EditColorSpan(0) }
+    }
 
     override fun handleMarkdownSpan(
         persistedSpans: PersistedSpans,
@@ -197,7 +202,7 @@ class ColorEditHandler : AbstractEditHandler<ForegroundColorSpan>() {
         val contentEnd = input.indexOf('}', contentStart)
         if (contentStart == -1 || contentEnd == -1) return
         editable.setSpan(
-            span,
+            EditColorSpan(span.foregroundColor),
             contentStart,
             contentEnd,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
@@ -206,6 +211,12 @@ class ColorEditHandler : AbstractEditHandler<ForegroundColorSpan>() {
 
     override fun markdownSpanType(): Class<ForegroundColorSpan> {
         return ForegroundColorSpan::class.java
+    }
+
+    private class EditColorSpan(private val color: Int) : CharacterStyle(), UpdateAppearance {
+        override fun updateDrawState(tp: TextPaint) {
+            tp.color = color
+        }
     }
 }
 
