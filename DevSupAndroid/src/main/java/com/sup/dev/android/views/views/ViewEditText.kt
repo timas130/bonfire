@@ -29,6 +29,8 @@ open class ViewEditText constructor(
             EditorInfoCompat.setContentMimeTypes(editorInfo, arrayOf("image/*"))
 
             return InputConnectionCompat.createWrapper(ic!!, editorInfo) { inputContentInfo, flags, _ ->
+                val link = inputContentInfo.linkUri ?: return@createWrapper false
+
                 if (BuildCompat.isAtLeastNMR1() && (flags and InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION) != 0) {
                     try {
                         inputContentInfo.requestPermission()
@@ -39,7 +41,7 @@ open class ViewEditText constructor(
                 }
 
                 try {
-                    if (callback != null) callback!!.invoke(inputContentInfo.linkUri.toString())
+                    if (callback != null) callback!!.invoke(link.toString())
                     return@createWrapper true
                 } catch (e: Exception) {
                     err(e)
