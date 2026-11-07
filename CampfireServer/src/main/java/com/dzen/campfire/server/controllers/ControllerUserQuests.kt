@@ -168,7 +168,7 @@ object ControllerUserQuests {
         }
 
         val leftType = condToType(part.leftValue)
-        val rightType = condToType(part.leftValue)
+        val rightType = condToType(part.rightValue)
         when (part.cond) {
             API.QUEST_CONDITION_EQ, API.QUEST_CONDITION_NEQ -> {
                 if (leftType != rightType) return false
