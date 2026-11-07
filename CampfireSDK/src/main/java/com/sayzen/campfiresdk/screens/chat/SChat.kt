@@ -213,7 +213,7 @@ class SChat constructor(
                                 onLoad.invoke(r.publications)
                                 adapter.add(carSpace)
                                 if (r.publications.isNotEmpty()) EventBus.post(EventChatNewBottomMessage(r.publications[r.publications.size - 1]))
-                                if (r.publications.isEmpty() || r.publications.size < RChatMessageGetAll.COUNT) {
+                                if (r.publications.isEmpty() || (cards.isEmpty() && r.publications.size < RChatMessageGetAll.COUNT)) {
                                     loaded = true
                                     adapter.setShowLoadingCardBottom(false)
                                     EventBus.post(EventChatRead(chat.tag))
