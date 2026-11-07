@@ -17,6 +17,7 @@ import com.sayzen.campfiresdk.models.events.account.EventAccountCurrentChanged
 import com.sayzen.campfiresdk.models.events.account.EventAccountEffectAdd
 import com.sayzen.campfiresdk.models.events.account.EventAccountEffectRemove
 import com.sayzen.campfiresdk.models.events.notifications.EventNotification
+import com.sup.dev.android.tools.ToolsResources
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.splash.SplashChooseDate
 import com.sup.dev.android.views.splash.SplashChooseTime
@@ -232,7 +233,7 @@ object ControllerEffects {
 
         for (i in account.accountEffects) {
             if (i.effectIndex == API.EFFECT_INDEX_PIG && i.dateEnd > System.currentTimeMillis()) {
-                return R.color.blue_500
+                return ToolsResources.getColor(R.color.blue_500)
             }
         }
 
