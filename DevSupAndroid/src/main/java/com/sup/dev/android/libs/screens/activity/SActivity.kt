@@ -244,7 +244,7 @@ abstract class SActivity : AppCompatActivity() {
     open fun onBackPressedSplash():Boolean{
         if ((vSplashContainer?.childCount ?: 0) > 0) {
             val splash = vSplashContainer!!.getChildAt(vSplashContainer!!.childCount-1).tag as SplashView<out Any>
-            return splash.onBackPressed()
+            return splash.onBackPressed() || !splash.splash.isCompanion
         }
         return false
     }
