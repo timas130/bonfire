@@ -293,7 +293,8 @@ class FieldLogic(
     }
 
     fun setChange(publicationChange: PublicationChatMessage?) {
-        if (this.publicationChange != null && publicationChange == null) vText.setText(null)
+        val cancelled = this.publicationChange != null && publicationChange == null
+        if (cancelled) vText.setText(null)
         this.publicationChange = publicationChange
 
         updateMedieEditText()
@@ -305,6 +306,8 @@ class FieldLogic(
             vText.setSelection(vText.text!!.length)
             ToolsThreads.main(true) { ToolsView.showKeyboard(vText) }
             setQuote(publicationChange.quoteText, publicationChange.quoteId)
+        } else if (cancelled) {
+            setQuote("", 0)
         }
     }
 
