@@ -30,7 +30,9 @@ object ControllerAchievements {
 
         val report = RustAchievements.getForUser(accountId)
         for ((_, achievement) in report.achievements()) {
-            val previousLvl = previousReport?.achievements()?.get(achievement.id)?.target?.let { it + 1 }
+            val previousLvl = previousReport?.achievements()?.get(achievement.id)?.let { previous ->
+                previous.target?.let { it + 1 } ?: 0L
+            }
             val achievementTarget = achievement.target?.let { it + 1 } ?: -1
 
             if (previousLvl != null && previousLvl < achievementTarget) {
