@@ -109,7 +109,8 @@ fun LinksClickableText(
     val spoilerPath = remember(layoutResult.value) {
         val layout = layoutResult.value ?: return@remember null
 
-        val spoilerSpans = text.getStringAnnotations(SpoilerSpanTag, 0, text.length)
+        val layoutText = layout.layoutInput.text
+        val spoilerSpans = layoutText.getStringAnnotations(SpoilerSpanTag, 0, layoutText.length)
         if (spoilerSpans.isEmpty()) {
             return@remember null
         }
