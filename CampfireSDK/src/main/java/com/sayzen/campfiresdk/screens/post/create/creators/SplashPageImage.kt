@@ -129,7 +129,7 @@ class SplashPageImage(
                             }
                             createNow(bytesScaled, d, requestPutPage, requestChangePage, card) {}
                         }
-                    })
+                    }.setRotationEnabled(!ToolsBytes.isGif(bytes)))
                 }
             }
         }

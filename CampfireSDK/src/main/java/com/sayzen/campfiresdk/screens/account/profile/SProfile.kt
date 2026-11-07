@@ -369,7 +369,7 @@ class SProfile private constructor(
                                         else changeTitleImageNow(d, it, null)
                                     }
                                 }
-                            })
+                            }.setRotationEnabled(!isGif))
                         }
                     }
                 }

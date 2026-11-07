@@ -196,7 +196,7 @@ class SFandomChatsCreate(
                                         else ToolsThreads.main { afterSelectImage(it, b2) }
                                     }
                                 }
-                            })
+                            }.setRotationEnabled(!isGif))
                         }
                     }
                 }

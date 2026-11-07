@@ -262,7 +262,7 @@ class SplashPageImages(
                                 }
                             }
                         }
-                    }.setOnHide { onSupportScreenHide() })
+                    }.setRotationEnabled(!ToolsBytes.isGif(bytes)).setOnHide { onSupportScreenHide() })
                 }
             }
         }

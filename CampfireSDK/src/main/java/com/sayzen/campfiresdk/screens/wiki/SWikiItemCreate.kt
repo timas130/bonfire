@@ -303,7 +303,7 @@ class SWikiItemCreate(
                                         }
                                     }
                                 }
-                            })
+                            }.setRotationEnabled(!isGif))
                         }
                     }
                 }
@@ -355,7 +355,7 @@ class SWikiItemCreate(
                                         }
                                     }
                                 }
-                            })
+                            }.setRotationEnabled(!isGif))
 
                         }
 

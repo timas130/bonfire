@@ -67,10 +67,10 @@ class SCrop(
                 else
                     setLock(false)
 
-                val cropPoints = vCropImageView.cropPoints
+                val cropRect = vCropImageView.cropRect
                 val croppedImage = vCropImageView.croppedImage
-                if (croppedImage != null)
-                    onCrop.invoke(this, croppedImage, cropPoints[0].toInt(), cropPoints[1].toInt(), (cropPoints[2] - cropPoints[0]).toInt(), (cropPoints[5] - cropPoints[1]).toInt())
+                if (croppedImage != null && cropRect != null)
+                    onCrop.invoke(this, croppedImage, cropRect.left, cropRect.top, cropRect.width(), cropRect.height())
             }
         }
 
@@ -118,6 +118,12 @@ class SCrop(
 
     fun setAutoBackOnCrop(autoBackOnCrop: Boolean): SCrop {
         this.autoBackOnCrop = autoBackOnCrop
+        return this
+    }
+
+    // ToolsGif can't rotate frames, gif crops must turn this off
+    fun setRotationEnabled(enabled: Boolean): SCrop {
+        vRotate.visibility = if (enabled) View.VISIBLE else View.GONE
         return this
     }
 

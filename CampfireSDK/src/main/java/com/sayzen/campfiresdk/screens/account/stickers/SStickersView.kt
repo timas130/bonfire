@@ -204,7 +204,7 @@ class SStickersView(
                                         else changeAvatarNow(d, it, null)
                                     }
                                 }
-                            })
+                            }.setRotationEnabled(!isGif))
 
                         }
 

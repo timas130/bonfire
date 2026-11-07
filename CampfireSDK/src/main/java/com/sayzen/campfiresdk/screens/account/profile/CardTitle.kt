@@ -85,7 +85,7 @@ abstract class CardTitle(
                                         else changeAvatarNow(d, it)
                                     }
                                 }
-                            })
+                            }.setRotationEnabled(!isGif))
 
                         }
 

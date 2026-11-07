@@ -114,7 +114,7 @@ object ControllerFandoms {
                                         else changeTitleImageNow(xFandom, d, it, null)
                                     }
                                 }
-                            })
+                            }.setRotationEnabled(!isGif))
                         }
                     }
                 }
