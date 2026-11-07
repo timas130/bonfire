@@ -57,7 +57,7 @@ class MessageReplyReceiver : BroadcastReceiver() {
                 voice = null, parentMessageId = 0, quoteMessageId = 0, stickerId = 0,
                 newFormatting = true
             )) { response ->
-                ControllerChats.incrementMessages(chatTag, response.message, true)
+                ControllerChats.addInlineReply(chatTag, response.message)
 
                 ToolsThreads.thread {
                     try {

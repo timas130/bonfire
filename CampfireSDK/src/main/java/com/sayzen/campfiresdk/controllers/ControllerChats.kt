@@ -236,7 +236,7 @@ object ControllerChats {
     fun getMessagesCount_forNavigation():Int{
         val list = loadMessages()
         var count = 0
-        for (i in list) if (i.showInNavigation) count++
+        for (i in list) if (i.showInNavigation && i.count > 0) count++
         return count
     }
 
@@ -247,6 +247,14 @@ object ControllerChats {
             messages.showInNavigation = showInNavigation
             setMessages(messages)
         }
+    }
+
+    fun addInlineReply(chatTag: ChatTag, message: PublicationChatMessage) {
+        val messages = getMessages(chatTag)
+        if (messages.messages.find { it.id == message.id } == null) messages.add(message)
+        messages.count = 0
+        messages.showInNavigation = false
+        setMessages(messages)
     }
 
     fun clearMessages(chatTag: ChatTag) {

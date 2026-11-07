@@ -60,6 +60,6 @@ class MChatMessagesPool(
     }
 
     fun count() = count
-    fun isEmpty() = count == 0
-    fun isNotEmpty() = count > 0
+    fun isEmpty() = count == 0 && messages.isEmpty()
+    fun isNotEmpty() = !isEmpty()
 }
