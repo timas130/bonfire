@@ -32,9 +32,7 @@ class CardPostProxy(
     }
 
     init {
-        if (isComposeEnabled) {
-            xPublication.eventBus.unsubscribe()
-        }
+        xPublication.eventBus.unsubscribe()
     }
 
     override fun canCacheView(): Boolean {
