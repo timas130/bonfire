@@ -200,7 +200,14 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
 
     private fun openGallery() {
         ToolsBitmap.getFromGallery({ bytes ->
-            deliverSingleImage(bytes)
+            val progress = ToolsView.showProgressDialog()
+            ToolsThreads.thread {
+                val upright = ToolsBitmap.applyExifOrientation(bytes)
+                ToolsThreads.main {
+                    progress.hide()
+                    deliverSingleImage(upright)
+                }
+            }
         }, {
             if(it !is IllegalAccessException) ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
         })
@@ -228,7 +235,7 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
                 if (d is SplashProgressWithTitle) ToolsThreads.main { d.setTitle(SupAndroid.TEXT_APP_LOADING + " ${selectedList.indexOf(f) + 1} / " + selectedList.size) }
                 try {
 
-                    val bytes = ToolsFiles.readFile(f)
+                    val bytes = ToolsBitmap.applyExifOrientation(ToolsFiles.readFile(f))
 
                     if (callbackInWorkerThread) {
                         onSelected.invoke(this, bytes, selectedList.indexOf(f))
@@ -262,7 +269,7 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
         ToolsThreads.thread {
             val f = selectedList.get(0)
             try {
-                val startBytes = ToolsFiles.readFile(f)
+                val startBytes = ToolsBitmap.applyExifOrientation(ToolsFiles.readFile(f))
                 val startBitmap = ToolsBitmap.decode(startBytes)!!
                 ToolsThreads.main {
                     Navigator.to(SCrop(startBitmap) { screen, bitmap, x, y, w, h ->

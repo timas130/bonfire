@@ -5,6 +5,7 @@ import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -24,9 +25,11 @@ import com.sup.dev.java.tools.ToolsColor
 import com.sup.dev.java.tools.ToolsFiles
 import com.sup.dev.java.tools.ToolsMath
 import com.sup.dev.java.tools.ToolsThreads
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -357,7 +360,7 @@ object ToolsBitmap {
     }
 
     fun getFromUri(uri: Uri, callbackResult: (Bitmap?) -> Unit, onPermissionPermissionRestriction: (String) -> Unit) {
-        val read = { MediaStore.Images.Media.getBitmap(SupAndroid.activity!!.contentResolver, uri) }
+        val read = { readUriBitmap(uri) }
         val readWithPermission = {
             ToolsPermission.requestReadPermission({
                 val bitmap = try {
@@ -384,6 +387,74 @@ object ToolsBitmap {
             null
         }
         callbackResult.invoke(bitmap)
+    }
+
+    private fun readUriBitmap(uri: Uri): Bitmap? {
+        val resolver = SupAndroid.activity!!.contentResolver
+        val bitmap = MediaStore.Images.Media.getBitmap(resolver, uri) ?: return null
+        val exifStream = try {
+            resolver.openInputStream(uri)
+        } catch (ex: Exception) {
+            err(ex)
+            null
+        }
+        val matrix = readExifMatrix(exifStream) ?: return bitmap
+        return transformBitmap(bitmap, matrix)
+    }
+
+    fun applyExifOrientation(bytes: ByteArray): ByteArray {
+        val matrix = readExifMatrix(ByteArrayInputStream(bytes)) ?: return bytes
+        return try {
+            val bitmap = decode(bytes) ?: return bytes
+            toBytes(transformBitmap(bitmap, matrix)) ?: bytes
+        } catch (e: OutOfMemoryError) {
+            err(e)
+            bytes
+        }
+    }
+
+    private fun readExifMatrix(stream: InputStream?): Matrix? {
+        stream?.use {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) return null
+            try {
+                return exifOrientationMatrix(ExifInterface(it).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL))
+            } catch (ex: Exception) {
+                err(ex)
+            }
+        }
+        return null
+    }
+
+    private fun exifOrientationMatrix(orientation: Int): Matrix? {
+        val matrix = Matrix()
+        when (orientation) {
+            ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> matrix.setScale(-1f, 1f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> matrix.setRotate(180f)
+            ExifInterface.ORIENTATION_FLIP_VERTICAL -> matrix.setScale(1f, -1f)
+            ExifInterface.ORIENTATION_TRANSPOSE -> {
+                matrix.setRotate(90f)
+                matrix.postScale(-1f, 1f)
+            }
+            ExifInterface.ORIENTATION_ROTATE_90 -> matrix.setRotate(90f)
+            ExifInterface.ORIENTATION_TRANSVERSE -> {
+                matrix.setRotate(-90f)
+                matrix.postScale(-1f, 1f)
+            }
+            ExifInterface.ORIENTATION_ROTATE_270 -> matrix.setRotate(270f)
+            else -> return null
+        }
+        return matrix
+    }
+
+    private fun transformBitmap(bitmap: Bitmap, matrix: Matrix): Bitmap {
+        return try {
+            val result = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+            if (result !== bitmap) bitmap.recycle()
+            result
+        } catch (e: OutOfMemoryError) {
+            SupAndroid.onLowMemory()
+            bitmap
+        }
     }
 
     fun getFromFile(file: File, onComplete: (Bitmap?) -> Unit) {
