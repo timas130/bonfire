@@ -175,8 +175,10 @@ object ControllerPost {
             is PageImages -> {
                 page.title = ControllerCensor.cens(page.title)
                 if (page.title.length > API.PAGE_IMAGES_TITLE_MAX) throw ApiException(eBadPage, "PageImages. Bad title")
-                if (page.imagesIds.size + page.insertImages.size > API.PAGE_IMAGES_MAX_COUNT) throw ApiException(eBadPage, "PageImages. Bad insertImages count")
-                if (page.imagesMiniIds.size + page.insertImagesMini.size > API.PAGE_IMAGES_MAX_COUNT) throw ApiException(eBadPage, "PageImages. Bad insertImagesMini count")
+                val addedImages = if (page.replacePageIndex == -1) page.insertImages.size else 0
+                val addedImagesMini = if (page.replacePageIndex == -1) page.insertImagesMini.size else 0
+                if (page.imagesIds.size + addedImages > API.PAGE_IMAGES_MAX_COUNT) throw ApiException(eBadPage, "PageImages. Bad insertImages count")
+                if (page.imagesMiniIds.size + addedImagesMini > API.PAGE_IMAGES_MAX_COUNT) throw ApiException(eBadPage, "PageImages. Bad insertImagesMini count")
                 if (page.insertImages.size != page.insertImagesMini.size) throw ApiException(eBadPage, "PageImages. Arrays has not equals size")
                 if (page.replacePageIndex != -1 && page.insertImages.size != 1) throw ApiException(eBadPage, "PageImages. Can't replace Image. Insert array size must bedf 1.")
 
