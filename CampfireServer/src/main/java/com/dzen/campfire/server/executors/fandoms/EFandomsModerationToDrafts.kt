@@ -75,7 +75,7 @@ class EFandomsModerationToDrafts : RFandomsModerationToDrafts(0, "") {
                 ),
                 apiAccount.id,
                 publication!!.fandom.id,
-                publication!!.fandom.languageId,
+                if (publication!!.fandom.languageId < 1) publication!!.tag_5 else publication!!.fandom.languageId,
                 publication!!.id
             )
         } else {
