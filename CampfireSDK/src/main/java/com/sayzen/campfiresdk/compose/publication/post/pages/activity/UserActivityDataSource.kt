@@ -8,11 +8,20 @@ import com.sayzen.campfiresdk.models.events.activities.EventActivitiesChanged
 import com.sayzen.campfiresdk.models.events.activities.EventActivitiesRelayRaceMemberStatusChanged
 import com.sayzen.campfiresdk.models.events.activities.EventActivitiesRelayRaceRejected
 import com.sayzen.campfiresdk.models.events.activities.EventActivitiesRelayRaceReloaded
+import com.sayzen.campfiresdk.models.events.activities.EventActivitiesRemove
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter.sendSuspendExt
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 open class UserActivityDataSource(data: UserActivity) : BonfireDataSource<UserActivity>(data) {
+    private val _removed = MutableStateFlow(false)
+    val removed = _removed.asStateFlow()
+
     init {
         subscriber
+            .subscribe(EventActivitiesRemove::class) {
+                if (it.userActivityId == this.data.id) _removed.value = true
+            }
             .subscribe(EventActivitiesRelayRaceRejected::class) {
                 edit(it.userActivityId) {
                     tag_2 = it.currentOwnerTime

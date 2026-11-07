@@ -38,6 +38,9 @@ internal val UserActivity.hasUser: Boolean
 internal fun PageUserActivityRenderer(page: PageUserActivity) {
     val dataSource = remember(page.userActivity.id) { UserActivityDataSource(page.userActivity) }
     val userActivity by dataSource.flow.collectAsState()
+    val removed by dataSource.removed.collectAsState()
+
+    if (removed) return
 
     val deadline = userActivity.deadline
     var hasUser by remember(deadline) { mutableStateOf(userActivity.hasUser) }
