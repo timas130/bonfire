@@ -19,7 +19,7 @@ class EChatSubscribe : RChatSubscribe(ChatTag(), false) {
     override fun execute(): Response {
 
         ControllerChats.subscribe(apiAccount.id, tag, subscribed)
-        if(tag.chatType != API.CHAT_TYPE_CONFERENCE) ControllerChats.updateReadOrSubscribe(apiAccount.id, tag, 0L, API.CHAT_MEMBER_LVL_USER, 0, System.currentTimeMillis())
+        if(tag.chatType != API.CHAT_TYPE_CONFERENCE) ControllerChats.updateReadOrSubscribe(apiAccount.id, tag, if (subscribed) 1L else 0L, API.CHAT_MEMBER_LVL_USER, 0, System.currentTimeMillis())
 
         if (subscribed) {
             ControllerOptimizer.putCollisionWithCheck(apiAccount.id, API.COLLISION_ACHIEVEMENT_CHAT_SUBSCRIBE)
