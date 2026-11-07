@@ -1644,6 +1644,8 @@ object API_TRANSLATE {
     var fandoms_suggest_accept_text = 0L
     var fandoms_suggest_accept_error_self = 0L
     var fandoms_suggest_reject_text = 0L
+    var fandoms_suggest_reject_error_self = 0L
+    var fandoms_suggest_error_already_reviewed = 0L
     var fandoms_suggest_tamplate_not_exist = 0L
     var fandoms_suggest_tamplate_not_game = 0L
     var fandoms_suggest_tamplate_already = 0L

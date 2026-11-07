@@ -347,6 +347,7 @@ class SFandomSuggest(
                 Navigator.back()
             }
                     .onApiError(RFandomsAccept.E_SELF){ToolsToast.show(t(API_TRANSLATE.fandoms_suggest_accept_error_self))}
+                    .onApiError(RFandomsAccept.E_BAD_STATUS){ToolsToast.show(t(API_TRANSLATE.fandoms_suggest_error_already_reviewed))}
         }
     }
 
@@ -383,6 +384,8 @@ class SFandomSuggest(
                 EventBus.post(EventFandomAccepted(changeFandom.id, false))
                 Navigator.back()
             }
+                    .onApiError(RFandomsAccept.E_SELF){ToolsToast.show(t(API_TRANSLATE.fandoms_suggest_reject_error_self))}
+                    .onApiError(RFandomsAccept.E_BAD_STATUS){ToolsToast.show(t(API_TRANSLATE.fandoms_suggest_error_already_reviewed))}
         }.asSheetShow()
     }
 
