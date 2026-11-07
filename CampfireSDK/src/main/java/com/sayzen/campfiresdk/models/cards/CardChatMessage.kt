@@ -474,8 +474,12 @@ open class CardChatMessage constructor(
     }
 
     private fun getQuoteText(publication: PublicationChatMessage): String {
-        val quoteText = if (publication.type == PublicationChatMessage.TYPE_VOICE) {
-            t(API_TRANSLATE.app_voice_message)
+        val quoteText = if (
+            publication.quoteText == "${publication.quoteCreatorName}: " &&
+            publication.quoteImagesIds.isEmpty() &&
+            publication.quoteStickerId == 0L
+        ) {
+            publication.quoteText + t(API_TRANSLATE.app_voice_message)
         } else {
             publication.quoteText
         }

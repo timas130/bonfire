@@ -167,6 +167,7 @@ class FieldLogic(
         if (publication.text.isNotEmpty()) text += publication.text
         else if (publication.resource.isNotEmpty() || publication.images.isNotEmpty()) text += t(API_TRANSLATE.app_image)
         else if (publication.stickerId != 0L) text += t(API_TRANSLATE.app_sticker)
+        else if (publication.voiceResourceId != 0L) text += t(API_TRANSLATE.app_voice_message)
         setQuote(text, publication.id)
     }
 
