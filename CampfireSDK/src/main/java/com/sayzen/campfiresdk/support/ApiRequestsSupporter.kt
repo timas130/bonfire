@@ -62,7 +62,9 @@ object ApiRequestsSupporter {
         request.onComplete { r -> onComplete.invoke(r) }
                 .onNetworkError { ToolsToast.show(SupAndroid.TEXT_ERROR_NETWORK) }
                 .onApiError(ApiClient.ERROR_ACCOUNT_IS_BANED) { ex -> ToolsToast.show(String.format(SupAndroid.TEXT_ERROR_ACCOUNT_BANED!!, ToolsDate.dateToStringFull(java.lang.Long.parseLong(ex.params[0])))) }
-                .onApiError(ApiClient.ERROR_GONE) { ToolsToast.show(SupAndroid.TEXT_ERROR_GONE) }
+        if (!request.onApiErrors.containsKey(ApiClient.ERROR_GONE)) {
+            request.onApiError(ApiClient.ERROR_GONE) { ToolsToast.show(SupAndroid.TEXT_ERROR_GONE) }
+        }
 
         if(sendNow)request.sendNow(api!!)
         else request.send(api!!)
