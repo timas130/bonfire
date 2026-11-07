@@ -149,6 +149,7 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
                             .where(TChatsSubscriptions.target_id, "=", tag.targetId)
                             .where(TChatsSubscriptions.target_sub_id, "=", tag.targetSubId)
                             .update(TChatsSubscriptions.member_owner, apiAccount.id)
+                            .update(TChatsSubscriptions.member_level, API.CHAT_MEMBER_LVL_USER)
 
                     if (chatMember.memberStatus == API.CHAT_MEMBER_STATUS_DELETE_AND_LEAVE) {
                         update.update(TChatsSubscriptions.member_status, API.CHAT_MEMBER_STATUS_LEAVE)
