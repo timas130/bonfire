@@ -13,7 +13,10 @@ import sh.sit.bonfire.formatting.core.bfm.subscript.SubscriptExtension
 import sh.sit.bonfire.formatting.core.bfm.superscript.SuperscriptExtension
 import sh.sit.bonfire.formatting.core.bfm.underline.UnderlineExtension
 import sh.sit.bonfire.formatting.core.model.FormattedText
+import sh.sit.bonfire.formatting.core.model.spans.ListBlock
+import sh.sit.bonfire.formatting.core.model.spans.ListItemBlock
 import sh.sit.bonfire.formatting.core.model.spans.ParagraphBlock
+import sh.sit.bonfire.formatting.core.model.spans.QuoteBlock
 
 object BonfireFormatter {
     private fun getParser(inlineOnly: Boolean = false): Parser {
@@ -67,6 +70,7 @@ object BonfireFormatter {
                     it.end = it.end.coerceAtMost(this.text.length)
                     it
                 }
+                .filterNot { (it is QuoteBlock || it is ListBlock || it is ListItemBlock) && it.start == it.end }
                 .toTypedArray()
         }
     }
