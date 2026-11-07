@@ -142,7 +142,7 @@ object ControllerFandoms {
     private fun changeCategory(xFandom: XFandom) {
         val wMenu = SplashMenu()
         for (c in CampfireConstants.CATEGORIES) {
-            if (c.index != xFandom.getFandom().creatorId) {
+            if (c.index != xFandom.getFandom().category) {
                 wMenu.add(c.name).onClick {
                     SplashField().setHint(t(API_TRANSLATE.moderation_widget_comment))
                             .setOnCancel(t(API_TRANSLATE.app_cancel))
@@ -151,6 +151,7 @@ object ControllerFandoms {
                             .addChecker(t(API_TRANSLATE.error_use_english)) { ToolsText.isOnly(it, API.ENGLISH) }
                             .setOnEnter(t(API_TRANSLATE.app_change)) { w, comment ->
                                 ApiRequestsSupporter.executeEnabled(w, RFandomsAdminChangeCategory(xFandom.getId(), c.index, comment)) {
+                                    xFandom.getFandom().category = c.index
                                     EventBus.post(EventFandomCategoryChanged(xFandom.getId(), c.index))
                                     ToolsToast.show(t(API_TRANSLATE.app_done))
                                 }
