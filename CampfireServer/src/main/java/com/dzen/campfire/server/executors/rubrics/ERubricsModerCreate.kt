@@ -56,7 +56,7 @@ class ERubricsModerCreate : RRubricsModerCreate(0, 0, "", 0, "") {
                 TRubrics.status_change_date, rubric.statusChangeDate
         )
 
-        val moderationId = ControllerPublications.moderation(ModerationRubricCreate(comment, rubric.id, rubric.name, rubric.owner.id, rubric.owner.name), apiAccount.id, fandom.id, fandom.languageId, 0)
+        val moderationId = ControllerPublications.moderation(ModerationRubricCreate(comment, rubric.id, rubric.name, rubric.owner.id, rubric.owner.name), apiAccount.id, fandom.id, rubric.fandom.languageId, 0)
         ControllerNotifications.push(rubric.owner.id, NotificationRubricsMakeOwner(moderationId, rubric.id, rubric.name, comment, apiAccount.id, apiAccount.name, apiAccount.sex, fandom.imageId, rubric.fandom.id, rubric.fandom.languageId))
 
         return Response(rubric)
