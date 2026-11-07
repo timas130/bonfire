@@ -132,7 +132,7 @@ type Color {
   int: Int!
 
   """
-  As a CSS hex or rgba: `#RRGGBB` or `rgba(r g b, a)`
+  As a CSS hex or rgba: `#RRGGBB` or `rgba(r, g, b, a)`
   """
   css: String!
 }
