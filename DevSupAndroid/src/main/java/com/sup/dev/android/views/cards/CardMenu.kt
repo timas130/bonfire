@@ -1,7 +1,9 @@
 package com.sup.dev.android.views.cards
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.util.TypedValue
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import android.view.View
@@ -79,8 +81,9 @@ open class CardMenu(
         if(vText != null) {
             vText.text = text
             vText.isEnabled = enabled
-            if (customColor) vText.setTextColor(textColor)
-            if (textSize != null) vText.textSize = textSize!!
+            val defaults = vText.tag as? TextDefaults ?: TextDefaults(vText.textColors, vText.textSize).also { vText.tag = it }
+            if (customColor) vText.setTextColor(textColor) else vText.setTextColor(defaults.color)
+            if (textSize != null) vText.textSize = textSize!! else vText.setTextSize(TypedValue.COMPLEX_UNIT_PX, defaults.size)
         }
 
         view.setBackgroundColor(background)
@@ -194,6 +197,8 @@ open class CardMenu(
         update()
         return this
     }
+
+    private class TextDefaults(val color: ColorStateList, val size: Float)
 
     //
     //  ClickEvent
