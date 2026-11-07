@@ -135,6 +135,11 @@ class ViewVoiceRecord @JvmOverloads constructor(context: Context, attrs: Attribu
 
         if (isRecordingMode) updateCircles(event.x, event.y)
 
+        if (event.action == MotionEvent.ACTION_CANCEL) {
+            dropNextAction = false
+            if (isRecordingMode && !isLocked) onStopClicked()
+        }
+
         if (event.action == MotionEvent.ACTION_UP) {
             if(dropNextAction){
                 dropNextAction = false
