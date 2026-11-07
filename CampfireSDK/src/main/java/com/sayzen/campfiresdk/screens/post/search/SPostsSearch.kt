@@ -48,7 +48,7 @@ class SPostsSearch(val tag: PublicationTag) : SLoadingRecycler<CardPublication, 
         vFab.setImageResource(R.drawable.ic_add_white_24dp)
         vFab.setOnClickListener {
             PostHog.capture("create_draft", properties = mapOf("from" to "tag"))
-            SPostCreate.instance(tag.fandom.id, tag.fandom.languageId, tag.fandom.name, tag.fandom.image, SPostCreate.PostParams().setTags(arrayOf(tag.id)), Navigator.TO)
+            SPostCreate.instance(tag.fandom.id, tag.fandom.languageId, tag.fandom.name, tag.fandom.image, SPostCreate.PostParams().setTags(if (tag.parentPublicationId != 0L) arrayOf(tag.id) else emptyArray()), Navigator.TO)
         }
 
         adapter.setBottomLoader { onLoad, cards ->

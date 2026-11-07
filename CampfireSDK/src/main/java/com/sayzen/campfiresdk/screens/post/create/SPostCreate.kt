@@ -58,7 +58,7 @@ class SPostCreate(
                     fandomImage = r.publication.fandom.image,
                     changePost = r.publication,
                     postParams = PostParams()
-                        .setTags(Array(r.tags.size) { r.tags[it].id })
+                        .setTags(r.tags.filter { it.parentPublicationId != 0L }.map { it.id }.toTypedArray())
                         .setNsfw(r.publication.nsfw)
                         .apply {
                             if (r.publication.rubricId != 0L) {
@@ -121,6 +121,7 @@ class SPostCreate(
             else Navigator.back()
         }
         vFinish.setOnLongClickListener {
+            if (changePost != null && !changePost.isDraft) return@setOnLongClickListener false
             SPostCreationTags.create(publicationId, postParams) {
                 SPost.instance(publicationId, 0, NavigationAction.replace())
                 EventBus.post(EventPostStatusChange(publicationId, API.STATUS_PUBLIC))
