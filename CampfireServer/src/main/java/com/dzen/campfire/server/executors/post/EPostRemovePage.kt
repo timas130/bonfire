@@ -4,6 +4,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.history.HistoryEditPublic
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostRemovePage
+import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerPost
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.server.controllers.ControllerPublicationsHistory
@@ -18,7 +19,7 @@ class EPostRemovePage : RPostRemovePage(0,  emptyArray()) {
 
     @Throws(ApiException::class)
     override fun check() {
-        val v = ControllerPublications[publicationId, TPublications.status, TPublications.creator_id, TPublications.publication_json, TPublications.publication_type]
+        val v = ControllerPublications[publicationId, TPublications.status, TPublications.creator_id, TPublications.publication_json, TPublications.publication_type, TPublications.fandom_id, TPublications.language_id]
 
         if (v.isEmpty()) throw ApiException(API.ERROR_GONE)
 
@@ -27,12 +28,16 @@ class EPostRemovePage : RPostRemovePage(0,  emptyArray()) {
         publication = PublicationPost(Json(v.next<Object>().toString()))
         publication.status = status
         val publicationType = v.next<Long>()
+        val fandomId = v.next<Long>()
+        val languageId = v.next<Long>()
 
         if (status != API.STATUS_DRAFT && status != API.STATUS_PUBLIC && status != API.STATUS_PENDING) throw ApiException(E_BAD_STATUS)
         if (creatorId != apiAccount.id) throw ApiException(API.ERROR_ACCESS)
         if (publicationType != API.PUBLICATION_TYPE_POST) throw ApiException(E_BAD_TYPE)
         for (index in pageIndexes) if (index < 0 || publication.pages.size <= index) throw ApiException(E_BAD_PAGE_INDEX, "index [" + index + "] size[" + publication.pages.size + "]")
         if (status == API.STATUS_PUBLIC && publication.pages.size == 1) throw ApiException(E_CANT_REMOVE_LAST)
+
+        if (status == API.STATUS_PUBLIC) ControllerAccounts.checkAccountBanned(apiAccount.id, fandomId, languageId)
     }
 
     override fun execute(): Response {
