@@ -44,6 +44,8 @@ class EQuestsPublish : RQuestsPublish(0) {
             .update(TPublications.date_create, System.currentTimeMillis())
             .where(TPublications.id, "=", questId))
 
+        ControllerPublications.watchComments(apiAccount.id, questId, true)
+
         return Response()
     }
 }

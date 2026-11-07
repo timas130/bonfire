@@ -13,6 +13,7 @@ class ECommentsWatchChange : RCommentsWatchChange(0) {
         if (publicationType != API.PUBLICATION_TYPE_POST
                 && publicationType != API.PUBLICATION_TYPE_MODERATION
                 && publicationType != API.PUBLICATION_TYPE_STICKERS_PACK
+                && publicationType != API.PUBLICATION_TYPE_QUEST
         )
             throw ApiException(E_BAD_PUBLICATION_TYPE)
     }

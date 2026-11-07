@@ -98,6 +98,8 @@ class SQuest(
                     ToolsToast.show(t(API_TRANSLATE.app_copied))
                 }
                     .condition(details.isPublic)
+                .add(t(API_TRANSLATE.publication_menu_comments_watch)) { ControllerPublications.changeWatchComments(details.id) }
+                    .condition(details.isPublic)
 
                 .groupCondition(details.isPublic)
                 .spoiler(t(API_TRANSLATE.app_moderator))
