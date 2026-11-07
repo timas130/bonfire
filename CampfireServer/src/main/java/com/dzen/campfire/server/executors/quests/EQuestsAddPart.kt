@@ -2,6 +2,7 @@ package com.dzen.campfire.server.executors.quests
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.quests.QuestDetails
+import com.dzen.campfire.api.models.quests.QuestPartText
 import com.dzen.campfire.api.requests.quests.RQuestsAddPart
 import com.dzen.campfire.api.tools.ApiAccount
 import com.dzen.campfire.api.tools.ApiException
@@ -54,6 +55,7 @@ class EQuestsAddPart : RQuestsAddPart(0, emptyArray()) {
         ).nextMayNullOrNull<Int>()?.toLong() ?: 0
 
         for (part in parts) {
+            (part as? QuestPartText)?.imageId = 0
             part.id = ControllerUserQuests.insertPart(++order, questId, part)
         }
 

@@ -3,6 +3,7 @@ package com.dzen.campfire.server.executors.quests
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.quests.QuestDetails
 import com.dzen.campfire.api.models.quests.QuestPart
+import com.dzen.campfire.api.models.quests.QuestPartText
 import com.dzen.campfire.api.models.quests.QuestPartUnknown
 import com.dzen.campfire.api.requests.quests.RQuestsAddPart
 import com.dzen.campfire.api.requests.quests.RQuestsChangePart
@@ -40,6 +41,9 @@ class EQuestsChangePart : RQuestsChangePart(0, QuestPartUnknown()) {
             .where(TQuestParts.id, "=", partId))
             .next<String>()
         val oldPart = QuestPart.instance(Json(oldPartText))
+        val oldImageId = (oldPart as? QuestPartText)?.imageId ?: 0L
+        val newTextPart = part as? QuestPartText
+        if (newTextPart != null && newTextPart.imageId != oldImageId) newTextPart.imageId = 0
         ControllerUserQuests.partClean(oldPart, part)
 
         ControllerUserQuests.censorAndUploadPart(questId, part)
