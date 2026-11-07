@@ -27,13 +27,17 @@ class PageDonates(
                         if(it.donates.isNotEmpty()) vMessage.visibility = View.GONE
                         onloaded.invoke(it.donates)
                     }
-                    .onError { onloaded.invoke(null) }
+                    .onError {
+                        vMessage.setText(t(API_TRANSLATE.error_network))
+                        onloaded.invoke(null)
+                    }
                     .send(api)
         }.setShowLoadingCard(false)
         adapterX.loadBottom()
     }
 
     override fun onReloadClicked() {
+        vMessage.setText(t(API_TRANSLATE.app_loading))
         adapterX.reloadBottom()
         screen.reload()
     }

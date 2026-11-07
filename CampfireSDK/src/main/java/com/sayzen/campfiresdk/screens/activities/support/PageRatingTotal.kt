@@ -31,7 +31,10 @@ class PageRatingTotal(
                         onLoaded.invoke(it.donates)
                         scrollTo()
                     }
-                    .onError { onLoaded.invoke(null) }
+                    .onError {
+                        vMessage.setText(t(API_TRANSLATE.error_network))
+                        onLoaded.invoke(null)
+                    }
                     .send(api)
         }.setShowLoadingCard(false)
         adapterX.loadBottom()
@@ -53,6 +56,7 @@ class PageRatingTotal(
     }
 
     override fun onReloadClicked() {
+        vMessage.setText(t(API_TRANSLATE.app_loading))
         adapterX.reloadBottom()
         screen.reload()
     }
