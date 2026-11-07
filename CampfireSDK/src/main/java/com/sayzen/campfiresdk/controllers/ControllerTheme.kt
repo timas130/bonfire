@@ -100,6 +100,7 @@ object ControllerTheme {
                 styleThemeRaw = themeColor - 1 + 18
                 styleTheme = styleThemeRaw
             } else if (theme == 3) {
+                isSystemNightMode = getSystemNightMode()
                 styleThemeRaw = themeColor + 33
                 styleThemeRaw.let {
                     if (it == 33) {
