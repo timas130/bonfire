@@ -71,7 +71,7 @@ class PageImages : Page() {
     override fun restoreInsertData(request: Request<*>, offset: Int): Int {
         insertImages = Array(imagesCount) { request.dataOutput[it + offset] }
         insertImagesMini = Array(imagesCount) { request.dataOutput[it + offset + imagesCount] }
-        return imagesCount / 2
+        return imagesCount * 2
     }
 
     override fun json(inp: Boolean, json: Json): Json {
