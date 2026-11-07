@@ -16,6 +16,9 @@ import org.eclipse.jetty.util.ssl.SslContextFactory
 import java.io.DataInputStream
 import java.util.concurrent.TimeUnit
 
+// 10 images of up to 1 MB + 128 KB + room for json
+private const val MAX_REQUEST_SIZE = 12L * 1024 * 1024
+
 private fun JettyConfig.createHttp2Server(jksPath: String, jksPassword: String, portV1: Int, portV2: Int) {
     val alpn = ALPNServerConnectionFactory().apply {
         defaultProtocol = "h2"
@@ -54,7 +57,7 @@ fun ApiServer.startJavalin(jksPath: String, jksPassword: String, portV1: Int, po
     Javalin
         .create { config ->
             config.registerPlugin(RateLimitPlugin())
-            config.http.maxRequestSize = 10 * 1024 * 1024
+            config.http.maxRequestSize = MAX_REQUEST_SIZE
             config.routes.post("/") { ctx ->
                 handleCf2Request(ctx)
             }
@@ -72,13 +75,24 @@ private fun ApiServer.handleCf2Request(ctx: Context) {
         val jsonBytes = ctx.bodyAsBytes()
         Json(jsonBytes)
     } else {
+        val contentLength = ctx.contentLength()
+        if (contentLength < 0 || contentLength > MAX_REQUEST_SIZE) {
+            throw HttpResponseException(HttpStatus.CONTENT_TOO_LARGE, "Content-Length is missing or too large")
+        }
         val jsonSize = input.readInt()
-        if (jsonSize > ctx.contentLength()) {
+        if (jsonSize < 0 || jsonSize > contentLength) {
             throw HttpResponseException(HttpStatus.CONTENT_TOO_LARGE, "Content-Length doesn't match")
         }
         val jsonBytes = ByteArray(jsonSize)
         input.readFully(jsonBytes, 0, jsonSize)
-        Json(jsonBytes)
+        val parsedJson = Json(jsonBytes)
+
+        val dataOutputSizes = parsedJson.getInts("dataOutput").orEmpty()
+        val dataOutputSize = dataOutputSizes.sumOf { if (it == -1) 0L else it.toLong() }
+        if (dataOutputSizes.any { it < -1 } || 4L + jsonSize + dataOutputSize > contentLength) {
+            throw HttpResponseException(HttpStatus.BAD_REQUEST, "dataOutput doesn't match Content-Length")
+        }
+        parsedJson
     }
 
     // supposed to be json only, but contains dataOutput
