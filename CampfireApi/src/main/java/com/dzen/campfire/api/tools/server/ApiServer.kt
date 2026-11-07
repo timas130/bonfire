@@ -84,12 +84,14 @@ class ApiServer(
                 throw TooManyRequestsException()
             }
 
-            accountRateLimiter.compute(ip) { _, list ->
-                if (list == null) {
-                    mutableSetOf(request.apiAccount.id)
-                } else {
-                    list.add(request.apiAccount.id)
-                    list
+            if (request.apiAccount.id != 0L) {
+                accountRateLimiter.compute(ip) { _, list ->
+                    if (list == null) {
+                        mutableSetOf(request.apiAccount.id)
+                    } else {
+                        list.add(request.apiAccount.id)
+                        list
+                    }
                 }
             }
         }
