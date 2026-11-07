@@ -100,7 +100,7 @@ class BadgeShelfModel(
             ApolloController.apolloClient.apolloStore
                 .readFragment(
                     BadgeShelfIconImpl(),
-                    CacheKey(newId!!),
+                    CacheKey("Badge", listOf(newId!!)),
                     ApolloController.apolloClient.customScalarAdapters
                 )
         } catch (e: CacheMissException) {
