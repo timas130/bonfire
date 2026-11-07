@@ -87,6 +87,7 @@ class SplashQuestButton(
         setText(input.label)
         vSelect.setCurrentIndex((input.color - 1).toInt()) // it's fine as long as the guidelines in API.kt are followed
         vPartSelector.selectedId = input.jumpToId
+        vVariable.selected = partContainer.getDetails().variablesMap!![input.conditionVar]
 
         return this
     }
