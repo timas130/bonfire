@@ -147,16 +147,16 @@ class CardPublicationEventAdmin(
             is ApiEventAdminTranslate -> {
                 if(e.history.oldText.isEmpty()){
                     if(e.history.type == TranslateHistory.TYPE_TEXT){
-                        text = tCap(API_TRANSLATE.translates_label_history_card_translate, tSex(xAccount.getSex(), API_TRANSLATE.he_added, API_TRANSLATE.she_added), e.history.newText)
+                        text = tCap(API_TRANSLATE.translates_label_history_card_translate, tSex(e.ownerAccountSex,API_TRANSLATE.he_added, API_TRANSLATE.she_added), e.history.newText)
                     }else{
-                        text = tCap(API_TRANSLATE.translates_label_history_card_hint, tSex(xAccount.getSex(), API_TRANSLATE.he_added, API_TRANSLATE.she_added), e.history.newText)
+                        text = tCap(API_TRANSLATE.translates_label_history_card_hint, tSex(e.ownerAccountSex,API_TRANSLATE.he_added, API_TRANSLATE.she_added), e.history.newText)
                     }
 
                 }else{
                     if(e.history.type == TranslateHistory.TYPE_TEXT){
-                        text = tCap(API_TRANSLATE.translates_label_history_card_translate_old, tSex(xAccount.getSex(), API_TRANSLATE.he_changed, API_TRANSLATE.she_changed), e.history.oldText, e.history.newText)
+                        text = tCap(API_TRANSLATE.translates_label_history_card_translate_old, tSex(e.ownerAccountSex,API_TRANSLATE.he_changed, API_TRANSLATE.she_changed), e.history.oldText, e.history.newText)
                     }else{
-                        text = tCap(API_TRANSLATE.translates_label_history_card_hint_old, tSex(xAccount.getSex(), API_TRANSLATE.he_changed, API_TRANSLATE.she_changed), e.history.oldText, e.history.newText)
+                        text = tCap(API_TRANSLATE.translates_label_history_card_hint_old, tSex(e.ownerAccountSex,API_TRANSLATE.he_changed, API_TRANSLATE.she_changed), e.history.oldText, e.history.newText)
                     }
                 }
                 view.setOnClickListener { ToolsToast.show(t(API_TRANSLATE.app_error)) }

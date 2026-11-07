@@ -87,7 +87,7 @@ class CardPublicationEventUser(
                 view.setOnClickListener { ControllerCampfireSDK.onToAchievementClicked(publication.creator.id, publication.creator.name, API.ACHI_QUESTS.index, false, Navigator.TO) }
             }
             is ApiEventUserAdminBaned -> {
-                text = tCap(API_TRANSLATE.publication_event_block_app, "{D32F2F ${ToolsResources.sex(e.adminAccountSex, t(API_TRANSLATE.he_baned), t(API_TRANSLATE.she_baned)).capitalize()}}", ToolsDate.dateToStringFull(e.blockDate), ControllerLinks.linkToAccount(e.adminAccountName))
+                text = tCap(API_TRANSLATE.publication_event_block_app, "{D32F2F ${ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_baned), t(API_TRANSLATE.she_baned)).capitalize()}}", ToolsDate.dateToStringFull(e.blockDate), ControllerLinks.linkToAccount(e.adminAccountName))
                 view.setOnClickListener { SProfile.instance(e.ownerAccountId, Navigator.TO) }
             }
             is ApiEventUserAdminPublicationBlocked -> {
@@ -107,15 +107,15 @@ class CardPublicationEventUser(
                 view.setOnClickListener { ControllerCampfireSDK.onToModerationClicked(e.moderationId, 0, Navigator.TO) }
             }
             is ApiEventUserAdminNameChanged -> {
-                text = tCap(API_TRANSLATE.publication_event_change_name, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_changed), t(API_TRANSLATE.she_changed)), e.oldName, e.ownerAccountName)
+                text = tCap(API_TRANSLATE.publication_event_change_name, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.adminAccountSex, t(API_TRANSLATE.he_changed), t(API_TRANSLATE.she_changed)), e.oldName, e.ownerAccountName)
                 view.setOnClickListener { SProfile.instance(e.ownerAccountId, Navigator.TO) }
             }
             is ApiEventUserAdminPunishmentRemove -> {
-                text = tCap(API_TRANSLATE.publication_event_remove_punishment, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_remove), t(API_TRANSLATE.she_remove)))
+                text = tCap(API_TRANSLATE.publication_event_remove_punishment, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.adminAccountSex, t(API_TRANSLATE.he_remove), t(API_TRANSLATE.she_remove)))
                 view.setOnClickListener { SProfile.instance(e.ownerAccountId, Navigator.TO) }
             }
             is ApiEventUserAdminVoteCanceledForAdmin -> {
-                text = tCap(API_TRANSLATE.publication_event_admin_vote_cancel_for_admin, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_reject), t(API_TRANSLATE.she_reject)), ControllerAdminVote.getActionText(e.mAdminVote))
+                text = tCap(API_TRANSLATE.publication_event_admin_vote_cancel_for_admin, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.adminAccountSex, t(API_TRANSLATE.he_reject), t(API_TRANSLATE.she_reject)), ControllerAdminVote.getActionText(e.mAdminVote))
                 view.setOnClickListener { SProfile.instance(e.ownerAccountId, Navigator.TO) }
             }
             is ApiEventUserAdminVoteCanceledForUser -> {
@@ -123,27 +123,27 @@ class CardPublicationEventUser(
                 view.setOnClickListener { SProfile.instance(e.ownerAccountId, Navigator.TO) }
             }
             is ApiEventUserAdminRemoveDescription -> {
-                text = tCap(API_TRANSLATE.publication_event_remove_description, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_remove), t(API_TRANSLATE.she_remove)))
+                text = tCap(API_TRANSLATE.publication_event_remove_description, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.adminAccountSex, t(API_TRANSLATE.he_remove), t(API_TRANSLATE.she_remove)))
                 view.setOnClickListener { SProfile.instance(e.ownerAccountId, Navigator.TO) }
             }
             is ApiEventUserAdminRemoveImage -> {
-                text = tCap(API_TRANSLATE.publication_event_remove_image, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_remove), t(API_TRANSLATE.she_remove)))
+                text = tCap(API_TRANSLATE.publication_event_remove_image, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.adminAccountSex, t(API_TRANSLATE.he_remove), t(API_TRANSLATE.she_remove)))
                 view.setOnClickListener { SProfile.instance(e.ownerAccountId, Navigator.TO) }
             }
             is ApiEventUserAdminRemoveLink -> {
-                text = tCap(API_TRANSLATE.publication_event_remove_link, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_remove), t(API_TRANSLATE.she_remove)))
+                text = tCap(API_TRANSLATE.publication_event_remove_link, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.adminAccountSex, t(API_TRANSLATE.he_remove), t(API_TRANSLATE.she_remove)))
                 view.setOnClickListener { SProfile.instance(e.ownerAccountId, Navigator.TO) }
             }
             is ApiEventUserAdminRemoveName -> {
-                text = tCap(API_TRANSLATE.publication_event_remove_name, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_remove), t(API_TRANSLATE.she_remove)))
+                text = tCap(API_TRANSLATE.publication_event_remove_name, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.adminAccountSex, t(API_TRANSLATE.he_remove), t(API_TRANSLATE.she_remove)))
                 view.setOnClickListener { SProfile.instance(e.ownerAccountId, Navigator.TO) }
             }
             is ApiEventUserAdminRemoveStatus -> {
-                text = tCap(API_TRANSLATE.publication_event_remove_status, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_remove), t(API_TRANSLATE.she_remove)))
+                text = tCap(API_TRANSLATE.publication_event_remove_status, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.adminAccountSex, t(API_TRANSLATE.he_remove), t(API_TRANSLATE.she_remove)))
                 view.setOnClickListener { SProfile.instance(e.ownerAccountId, Navigator.TO) }
             }
             is ApiEventUserAdminRemoveTitleImage -> {
-                text = tCap(API_TRANSLATE.publication_event_remove_titile_image, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_remove), t(API_TRANSLATE.she_remove)))
+                text = tCap(API_TRANSLATE.publication_event_remove_titile_image, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.adminAccountSex, t(API_TRANSLATE.he_remove), t(API_TRANSLATE.she_remove)))
                 view.setOnClickListener { SProfile.instance(e.ownerAccountId, Navigator.TO) }
             }
             is ApiEventUserAdminPublicationRestored -> {
@@ -155,11 +155,11 @@ class CardPublicationEventUser(
                 view.setOnClickListener { SProfile.instance(e.ownerAccountId, Navigator.TO) }
             }
             is ApiEventUserFandomMakeModerator -> {
-                text = tCap(API_TRANSLATE.publication_event_make_moderator, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_make), t(API_TRANSLATE.she_make)), e.fandomName)
+                text = tCap(API_TRANSLATE.publication_event_make_moderator, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.adminAccountSex, t(API_TRANSLATE.he_make), t(API_TRANSLATE.she_make)), e.fandomName)
                 view.setOnClickListener { SProfile.instance(e.ownerAccountId, Navigator.TO) }
             }
             is ApiEventUserFandomRemoveModerator -> {
-                text = tCap(API_TRANSLATE.publication_event_remove_moderator, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.ownerAccountSex, t(API_TRANSLATE.he_deprived), t(API_TRANSLATE.she_deprived)), e.fandomName)
+                text = tCap(API_TRANSLATE.publication_event_remove_moderator, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.adminAccountSex, t(API_TRANSLATE.he_deprived), t(API_TRANSLATE.she_deprived)), e.fandomName)
                 view.setOnClickListener { SProfile.instance(e.ownerAccountId, Navigator.TO) }
             }
             is ApiEventUserFandomSuggest -> {
