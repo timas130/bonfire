@@ -68,7 +68,7 @@ object ControllerPending {
                     }
                 } catch (_: Exception) {}
             } catch (e: ApiException) {
-                if (e.code == API.ERROR_VIDEO_SERVICE_UNAVAILABLE) continue
+                if (e.code == API.ERROR_VIDEO_SERVICE_UNAVAILABLE || e.code.startsWith("G_")) continue
 
                 Database.update("ControllerPending.posts update_2", SqlQueryUpdate(TPublications.NAME)
                         .where(TPublications.id, "=", id)

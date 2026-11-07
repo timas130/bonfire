@@ -8,6 +8,7 @@ import com.dzen.campfire.server.rust.RustProfile
 import com.dzen.campfire.server.rust.RustVideo
 import com.dzen.campfire.server.tables.TCollisions
 import com.dzen.campfire.server.tables.TPublications
+import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsCollections
 import com.sup.dev.java.tools.ToolsText
@@ -64,7 +65,15 @@ object ControllerPost {
         if (updated == 0) return false
 
         if (willNotify == 2L) {
-            ControllerPublications.notifyFollowers(creatorId, publicationId)
+            try {
+                ControllerPublications.notifyFollowers(creatorId, publicationId)
+            } catch (e: Exception) {
+                err(e)
+                Database.update("ControllerPost.publish notify failed", SqlQueryUpdate(TPublications.NAME)
+                        .where(TPublications.id, "=", publicationId)
+                        .update(TPublications.tag_3, 0)
+                )
+            }
         }
         return true
     }
