@@ -37,7 +37,7 @@ class SAccountSearch(
 ) : SLoadingRecycler<CardAccount, Account>(R.layout.screen_account_search) {
 
     private val eventBus = EventBus
-            .subscribe(EventAccountsFollowsChange::class) { if (!it.isFollow && !isSearchResult) for (c in adapter.get(CardAccount::class)) if (c.account.id == it.accountId) adapter.remove(c) }
+            .subscribe(EventAccountsFollowsChange::class) { if (!it.isFollow && !isSearchResult && isSubscriptionsOnly) for (c in adapter.get(CardAccount::class)) if (c.account.id == it.accountId) adapter.remove(c) }
 
     private val vField: SettingsField = findViewById(R.id.vField)
     private val vSearch: ViewIcon = findViewById(R.id.vSearch)
