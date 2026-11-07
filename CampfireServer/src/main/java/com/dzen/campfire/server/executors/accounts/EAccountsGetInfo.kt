@@ -38,12 +38,15 @@ class EAccountsGetInfo : RAccountsGetInfo(0) {
 
         val settings = ControllerAccounts.getSettings(apiAccount.id)
 
-        notifications = EAccountsNotificationsGetAll().apply {
-            this.offsetDate = 0
-            this.filters = settings.getNotificationFilters()
-            this.otherEnabled = settings.notificationsFilterOther
-            accessToken = this@EAccountsGetInfo.accessToken!!
-        }.execute().notifications.filter { it.status == 0L }.toTypedArray()
+        val notificationFilters = settings.getNotificationFilters()
+        if (notificationFilters.isNotEmpty() || settings.notificationsFilterOther) {
+            notifications = EAccountsNotificationsGetAll().apply {
+                this.offsetDate = 0
+                this.filters = notificationFilters
+                this.otherEnabled = settings.notificationsFilterOther
+                accessToken = this@EAccountsGetInfo.accessToken!!
+            }.execute().notifications.filter { it.status == 0L }.toTypedArray()
+        }
 
         val chatMessagesCountTags = ControllerChats.getNewMessagesTags(apiAccount.id)
 
