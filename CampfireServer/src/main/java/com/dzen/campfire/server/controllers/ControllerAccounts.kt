@@ -76,7 +76,8 @@ object ControllerAccounts {
                     .where(TAccounts.last_online_time, ">", System.currentTimeMillis() - 1000 * 60 * 15)
                     .where(TAccounts.last_online_time, ">", offsetDate)
                     .sort(TAccounts.last_online_time, false)
-                    .offset_count(0, count)
+                    // no fucking idea
+                    .offset_count(if (offsetDate < 1000L * 60 * 60 * 24 * 365) offsetDate else 0L, count)
             )
         )
     }
