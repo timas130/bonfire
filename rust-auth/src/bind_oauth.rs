@@ -51,7 +51,7 @@ impl AuthServer {
 
         if let Some(email) = email {
             let updated = sqlx::query!(
-                "update users set email = $1 where id = $2 and (select id from users where email = $1) is null",
+                "update users set email = $1 where id = $2 and email is null and not exists (select 1 from users where lower(email) = lower($1))",
                 email.as_str(),
                 user_id,
             ).execute(&mut *tx).await?.rows_affected();

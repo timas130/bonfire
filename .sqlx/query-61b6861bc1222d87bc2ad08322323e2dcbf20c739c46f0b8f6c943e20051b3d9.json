@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update users set email = $1 where id = $2 and email is null and not exists (select 1 from users where lower(email) = lower($1))",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "61b6861bc1222d87bc2ad08322323e2dcbf20c739c46f0b8f6c943e20051b3d9"
+}
