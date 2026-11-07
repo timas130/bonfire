@@ -10,6 +10,7 @@ import com.dzen.campfire.api.requests.achievements.RAchievementsPack
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.screens.achievements.CardInfo
 import com.sayzen.campfiresdk.app.CampfireConstants
+import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.notifications.EventNotification
@@ -133,12 +134,14 @@ class PageAchievements(
     //
 
     private fun onNotification(e: EventNotification) {
+        if (!ControllerApi.isCurrentAccount(accountId)) return
         if (e.notification is NotificationAchievement) {
             val n = e.notification
             val l = adapterSub.get(CardAchievement::class)
             for (card in l)
                 if (n.achiIndex == card.achievement.index) {
                     cardInfo.count = cardInfo.count + card.achievement.force * (n.achiLvl - card.getLvl())
+                    cardInfo.update()
                     card.setForcedLvl(n.achiLvl)
                 }
         }
