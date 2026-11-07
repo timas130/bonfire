@@ -119,7 +119,9 @@ class ViewText constructor(context: Context, attrs: AttributeSet) : androidx.app
 
         canvas.apply {
             save()
+            translate(totalPaddingLeft.toFloat(), totalPaddingTop.toFloat())
             clipPath(spoilerPath)
+            translate(-totalPaddingLeft.toFloat(), -totalPaddingTop.toFloat())
 
             colorPaint.color = (findBackgroundInTree() as? ColorDrawable)?.color ?: 0
             drawRect(0F, 0F, width.toFloat(), height.toFloat(), colorPaint)
