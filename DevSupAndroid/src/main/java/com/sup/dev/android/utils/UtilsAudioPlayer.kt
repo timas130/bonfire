@@ -63,6 +63,7 @@ class UtilsAudioPlayer {
     fun isPlaying() = subPlayer != null && !subPlayer!!.stop
 
     fun pause() {
+        subPlayer?.paused = true
         if (subPlayer?.audioTrack?.state == AudioTrack.STATE_INITIALIZED) {
             subPlayer?.audioTrack?.pause()
         }
@@ -70,6 +71,7 @@ class UtilsAudioPlayer {
     }
 
     fun resume() {
+        subPlayer?.paused = false
         if (subPlayer?.audioTrack?.state == AudioTrack.STATE_INITIALIZED) {
             subPlayer?.audioTrack?.play()
         }
@@ -86,13 +88,16 @@ class UtilsAudioPlayer {
         var stop = false
         var audioTrack: AudioTrack? = null
         var playbackOffset = 0
+        var paused = false
+        var currentStreamType = STREAM_MUSIC
 
         init {
             startPlay(STREAM_MUSIC)
             if (useProximity) {
                 utilsProximity = UtilsProximity {
                     if (useProximity) {
-                        startPlay(if (it) STREAM_VOICE_CALL else STREAM_MUSIC)
+                        val streamType = if (it) STREAM_VOICE_CALL else STREAM_MUSIC
+                        if (stop || streamType != currentStreamType) startPlay(streamType)
                     }
                 }
             }
@@ -116,6 +121,7 @@ class UtilsAudioPlayer {
             if (this.audioTrack != null) {
                 playbackOffset += this.audioTrack!!.playbackHeadPosition
             }
+            currentStreamType = streamType
             SupAndroid.activity!!.volumeControlStream = streamType
             val audioTrack = AudioTrack(
                     streamType,
@@ -128,9 +134,10 @@ class UtilsAudioPlayer {
             this.audioTrack = audioTrack
             ToolsThreads.thread {
 
-                ToolsAndroid.requestAudioFocus()
+                val startPaused = paused
+                if (!startPaused) ToolsAndroid.requestAudioFocus()
                 try {
-                    audioTrack.play()
+                    if (!startPaused) audioTrack.play()
                     while (!stop && this.audioTrack == audioTrack) {
                         if (audioTrack.playState == AudioTrack.PLAYSTATE_PLAYING) {
                             val byteArray = stream.invoke()
