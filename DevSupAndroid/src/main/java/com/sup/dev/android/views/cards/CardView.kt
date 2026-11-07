@@ -13,7 +13,7 @@ class CardView(
         super.bindView(view)
         view as ViewGroup
         view.removeAllViews()
-        view.addView(viewForCard)
+        view.addView(ToolsView.removeFromParent(viewForCard))
     }
 
 }
