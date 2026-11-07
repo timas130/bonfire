@@ -61,6 +61,9 @@ class EFandomsGetAll : RFandomsGetAll(0, 0, 0, 0, "", emptyArray(), emptyArray()
                         f.status = fandom.status
                         f.subscribesCount = fandom.subscribesCount
                         f.karmaCof = fandom.karmaCof
+                        f.closed = fandom.closed
+                        f.category = fandom.category
+                        f.creatorId = fandom.creatorId
                         f.languageId = anInfoArray.a2
                         fandomsResult.add(f)
                     }
