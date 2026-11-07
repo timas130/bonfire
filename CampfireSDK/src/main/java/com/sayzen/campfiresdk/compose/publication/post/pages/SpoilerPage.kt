@@ -85,7 +85,7 @@ internal fun PageSpoilerRenderer(
                 Spacer(Modifier.height(2.dp))
                 page.children.forEachIndexed { index, child ->
                     PageMoveDestination(idx = index, source = source)
-                    PostPage(page = child, model = model)
+                    PostPage(page = child, source = source, model = model)
                 }
                 HorizontalDivider()
             }
