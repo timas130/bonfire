@@ -408,18 +408,20 @@ class SplashComment(
 
     override fun attacheImage(image: Uri, postAfterAdd: Boolean) {
         val dialog = ToolsView.showProgressDialog()
-        ToolsBitmap.getFromUri(image, {
-            if (it == null) {
+        ToolsThreads.thread {
+            ToolsBitmap.getFromUri(image, {
+                if (it == null) {
+                    dialog.hide()
+                    ToolsToast.show(t(API_TRANSLATE.error_cant_load_image))
+                    return@getFromUri
+                }
+
+                attach.setImageBitmapNow(it, dialog)
+            }, {
                 dialog.hide()
                 ToolsToast.show(t(API_TRANSLATE.error_cant_load_image))
-                return@getFromUri
-            }
-
-            attach.setImageBitmapNow(it, dialog)
-        }, {
-            dialog.hide()
-            ToolsToast.show(t(API_TRANSLATE.error_cant_load_image))
-        })
+            })
+        }
     }
 
     override fun attacheImage(image: Bitmap, postAfterAdd: Boolean) {

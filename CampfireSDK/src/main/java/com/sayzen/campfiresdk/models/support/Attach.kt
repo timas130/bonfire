@@ -217,13 +217,19 @@ class Attach(
                 }
                 ToolsThreads.main {
                     Navigator.to(SCrop(decoded) { _, bitmap, _, _, _, _ ->
-                        val bytesScaled = ToolsBitmap.toBytes(ToolsBitmap.keepMaxSides(bitmap, API.CHAT_MESSAGE_IMAGE_SIDE), API.CHAT_MESSAGE_IMAGE_WEIGHT)
-                        if (bytesScaled == null) {
-                            ToolsToast.show(t(API_TRANSLATE.error_cant_load_image))
-                            return@SCrop
+                        val cropDialog = ToolsView.showProgressDialog()
+                        ToolsThreads.thread {
+                            val bytesScaled = ToolsBitmap.toBytes(ToolsBitmap.keepMaxSides(bitmap, API.CHAT_MESSAGE_IMAGE_SIDE), API.CHAT_MESSAGE_IMAGE_WEIGHT)
+                            ToolsThreads.main {
+                                cropDialog.hide()
+                                if (bytesScaled == null) {
+                                    ToolsToast.show(t(API_TRANSLATE.error_cant_load_image))
+                                } else {
+                                    this.bytes = bytesScaled
+                                    setImage(vImage)
+                                }
+                            }
                         }
-                        this.bytes = bytesScaled
-                        setImage(vImage)
 
                     }.setOnHide(onSupportScreenHide))
                 }

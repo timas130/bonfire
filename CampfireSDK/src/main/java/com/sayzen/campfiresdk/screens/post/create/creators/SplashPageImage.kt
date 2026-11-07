@@ -75,7 +75,10 @@ class SplashPageImage(
                 }
             } else {
                 ToolsThreads.main {
-                    createNow(bytes, ToolsView.showProgressDialog(), requestPutPage, requestChangePage, null) {
+                    val dialog = ToolsView.showProgressDialog()
+                    ToolsThreads.thread {
+                        createNow(bytes, dialog, requestPutPage, requestChangePage, null) {
+                        }
                     }
                 }
             }
