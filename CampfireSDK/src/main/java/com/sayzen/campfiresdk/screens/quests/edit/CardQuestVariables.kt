@@ -92,7 +92,7 @@ class CardQuestVariables(
 
     private fun editVariable(v: QuestVariable) {
         SplashQuestVariable()
-            .setOnEnter(t(API_TRANSLATE.app_add)) { _, name, type ->
+            .setOnEnter(t(API_TRANSLATE.app_change)) { _, name, type ->
                 editQuestDetails(details) { newDetails ->
                     val idx = newDetails.variables.indexOfFirst { it.id == v.id }
                     newDetails.variables[idx].devName = name
@@ -101,6 +101,7 @@ class CardQuestVariables(
             }
             .setVariableType(v.type)
             .setText(v.devName)
+            .setTitle(t(API_TRANSLATE.quests_variable))
             .asSheetShow()
     }
 }
