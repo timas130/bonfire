@@ -1,5 +1,5 @@
 use crate::context::GlobalContext;
-use crate::error::RespError;
+use crate::error::OAuthUserinfoError;
 use axum::response::IntoResponse;
 use axum::{Extension, Json};
 use axum_extra::headers::authorization::Bearer;
@@ -10,7 +10,7 @@ use c_core::prelude::tarpc::context;
 pub async fn oauth2_userinfo(
     Extension(context): Extension<GlobalContext>,
     TypedHeader(Authorization(auth)): TypedHeader<Authorization<Bearer>>,
-) -> Result<impl IntoResponse, RespError> {
+) -> Result<impl IntoResponse, OAuthUserinfoError> {
     let resp = context
         .auth
         .get_oauth2_userinfo(context::current(), auth.token().to_string())
