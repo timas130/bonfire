@@ -104,7 +104,7 @@ internal fun PageVideoRenderer(page: PageVideo) {
 private fun BoxScope.VideoReadyContent(page: PageVideo, video: VideoState) {
     val context = LocalContext.current
     val coordinator = LocalVideoAutoplayCoordinator.current
-    val autoplayEnabled = remember { ControllerVideos.autoplayEnabled }
+    val autoplayEnabled = ControllerVideos.autoplayEnabled
     val url = video.url
 
     var player by remember { mutableStateOf<ExoPlayer?>(null) }
