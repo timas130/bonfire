@@ -323,8 +323,8 @@ object ControllerPost {
                 page.imagesMiniIds = Array(page.imagesMiniIds.size + if (page.replacePageIndex == -1) page.insertImages.size else 0) {
                     if (it >= page.imagesMiniIds.size || it == page.replacePageIndex) {
                         val scales = ToolsImage.getImgScaleUnknownType(page.insertImagesMini[x]!!, true, true, true)
-                        page.imagesMiniSizesW = ToolsCollections.add(scales[0], page.imagesMiniSizesW)
-                        page.imagesMiniSizesH = ToolsCollections.add(scales[1], page.imagesMiniSizesH)
+                        page.imagesMiniSizesW = withMiniSize(page.imagesMiniSizesW, it, scales[0])
+                        page.imagesMiniSizesH = withMiniSize(page.imagesMiniSizesH, it, scales[1])
                         ControllerResources.put(page.insertImagesMini[x++], publicationId)
                     } else page.imagesMiniIds[it]
                 }
@@ -371,6 +371,9 @@ object ControllerPost {
 
     private fun isInTable(page: PageTable, cell: PageTable.Cell) =
         cell.rowIndex in 0 until page.rowsCount && cell.columnIndex in 0 until page.columnsCount
+
+    private fun withMiniSize(sizes: Array<Int>, index: Int, size: Int) =
+        Array(maxOf(sizes.size, index + 1)) { if (it == index) size else sizes.getOrNull(it) ?: 500 }
 
     fun removePage(page: Page) {
         when (page) {
