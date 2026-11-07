@@ -16,7 +16,7 @@ class EFandomsSuggestedGet : RFandomsSuggestedGet(0) {
 
     @Throws(ApiException::class)
     override fun check() {
-
+        ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_FANDOMS_ACCEPT)
     }
 
     @Throws(ApiException::class)
