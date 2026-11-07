@@ -5,6 +5,6 @@ import org.commonmark.parser.Parser.ParserExtension
 
 class SubscriptExtension : ParserExtension {
     override fun extend(parserBuilder: Parser.Builder) {
-        parserBuilder.customDelimiterProcessor(SubscriptDelimiterProcessor())
+        parserBuilder.customDelimiterProcessor(SubscriptDelimiterProcessor(strictContent = true))
     }
 }
