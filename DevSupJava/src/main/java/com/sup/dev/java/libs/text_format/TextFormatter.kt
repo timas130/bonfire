@@ -23,6 +23,8 @@ class TextFormatter(
         )
 
         private val colored_unit = Regex("&amp;|&#60;|.", RegexOption.DOT_MATCHES_ALL)
+
+        private const val char_typed_lt = '\uE000'
     }
 
     private var result: StringBuilder = StringBuilder()
@@ -37,7 +39,9 @@ class TextFormatter(
     }
 
     fun parseNoTags(): String {
-        return parseHtml().replace(Regex("<[^>]*>"), "")
+        return TextFormatter(text.replace('<', char_typed_lt)).parseHtml()
+                .replace(Regex("<[^>]*>"), "")
+                .replace(char_typed_lt, '<')
     }
 
     private fun parseText() {
