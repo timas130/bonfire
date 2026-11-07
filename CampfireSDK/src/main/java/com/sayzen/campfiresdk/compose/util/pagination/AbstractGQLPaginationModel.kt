@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.ApolloResponse
 import com.apollographql.apollo3.api.Query
+import com.apollographql.apollo3.exception.ApolloException
 import com.sayzen.campfiresdk.compose.util.combineStates
 import com.sayzen.campfiresdk.compose.util.mapState
 import kotlinx.coroutines.Dispatchers
@@ -65,6 +66,8 @@ abstract class AbstractGQLPaginationModel<T, D : Query.Data>(application: Applic
                     ApolloController.apolloClient
                         .query(createQuery(items.value ?: emptyList()))
                         .execute()
+                } catch (e: ApolloException) {
+                    e.printStackTrace()
                 } finally {
                     loadingMore = false
                 }
