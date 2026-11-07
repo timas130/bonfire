@@ -3,6 +3,7 @@ package com.dzen.campfire.server.executors.fandoms
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.account.AccountPunishment
 import com.dzen.campfire.api.models.chat.ChatTag
+import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessageRemove
 import com.dzen.campfire.api.models.notifications.publications.NotificationPublicationBlock
 import com.dzen.campfire.api.models.notifications.publications.NotificationPublicationBlockAfterReport
 import com.dzen.campfire.api.models.publications.Publication
@@ -35,6 +36,7 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
     private var fandomName = ""
     private var isSubChatMessage = false
     private var publicationChatMessage: PublicationChatMessage? = null
+    private val removedChatMessages = ArrayList<Pair<Long, ChatTag>>()
 
     override fun check() {
         publication = ControllerPublications.getPublication(publicationId, apiAccount.id)
@@ -110,7 +112,11 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
             ControllerPublications.recountBestComment(publication!!.parentPublicationId, publication!!.id)
             if (!blockLastPublications) ControllerAccounts.updateCommentsCount(publication!!.creator.id, -1)
         }
-        if (publication!!.publicationType == API.PUBLICATION_TYPE_CHAT_MESSAGE) ControllerChats.onMessagesRemoved((publication!! as PublicationChatMessage).chatTag(), 1)
+        if (publication!!.publicationType == API.PUBLICATION_TYPE_CHAT_MESSAGE) {
+            val tag = (publication!! as PublicationChatMessage).chatTag()
+            ControllerChats.onMessagesRemoved(tag, 1)
+            removedChatMessages.add(publicationId to tag)
+        }
         if (publication!!.publicationType == API.PUBLICATION_TYPE_POST && !blockLastPublications) ControllerAccounts.updatePostsCount(publication!!.creator.id, -1)
         if (blockLastPublications) {
             ControllerAccounts.updateCommentsCount(publication!!.creator.id, 0)
@@ -142,6 +148,9 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
 
         ControllerNotifications.push(publication!!.creator.id, NotificationPublicationBlock(blockLastPublications, blockAccountDate, comment, moderationId, publication!!.publicationType, publication!!.tag_s_1))
         notificationByReports(moderationId)
+        for ((messageId, tag) in removedChatMessages) {
+            ControllerNotifications.push(ControllerChats.getChatSubscribersIdsWithTokensNotDeleted(tag, apiAccount.id), NotificationChatMessageRemove(messageId))
+        }
 
         return Response(ToolsMapper.asArray(ids), publicationChatMessage)
     }
@@ -214,7 +223,9 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
                     ControllerPublications.recountBestComment(parentPublicationId, id)
                 }
                 if (type == API.PUBLICATION_TYPE_CHAT_MESSAGE) {
-                    ControllerChats.onMessagesRemoved(ChatTag(tag1, targetId, targetSubId), 1)
+                    val tag = ChatTag(tag1, targetId, targetSubId)
+                    ControllerChats.onMessagesRemoved(tag, 1)
+                    removedChatMessages.add(id to tag)
                 }
             }
         }
