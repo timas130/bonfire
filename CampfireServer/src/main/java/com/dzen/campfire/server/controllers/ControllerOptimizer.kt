@@ -397,7 +397,7 @@ object ControllerOptimizer {
     private var MiniGame_robots = AtomicLong(-1L)
 
     fun getMiniGameRobots(): Long {
-        return MiniGame_humans.updateAndGet {
+        return MiniGame_robots.updateAndGet {
             if (it == -1L) {
                 ControllerCollisions.getCollision(0, API.COLLISION_PROJECT_MINIGAME_ROBOTS, 0)
             } else {
@@ -407,7 +407,7 @@ object ControllerOptimizer {
     }
 
     fun getMiniGameHumans(): Long {
-        return MiniGame_robots.updateAndGet {
+        return MiniGame_humans.updateAndGet {
             if (it == -1L) {
                 ControllerCollisions.getCollision(0, API.COLLISION_PROJECT_MINIGAME_HUMANS, 0)
             } else {
