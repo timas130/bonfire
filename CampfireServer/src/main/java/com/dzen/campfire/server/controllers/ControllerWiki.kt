@@ -127,6 +127,13 @@ object ControllerWiki {
                 .where(TWikiPages.id, "=", newId)
                 .update(TWikiPages.wiki_status, API.STATUS_PUBLIC)
         )
+        Database.update("ControllerWiki.cancelPages update", SqlQueryUpdate(TWikiPages.NAME)
+                .where(TWikiPages.item_id, "=", pages.itemId)
+                .where(TWikiPages.language_id, "=", pages.languageId)
+                .where(TWikiPages.id, "<>", newId)
+                .where(TWikiPages.wiki_status, "=", API.STATUS_PUBLIC)
+                .update(TWikiPages.wiki_status, API.STATUS_ARCHIVE)
+        )
 
         return newId
     }

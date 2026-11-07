@@ -28,6 +28,8 @@ class EWikiArticleChangeLanguage : RWikiArticleChangeLanguage(0, 0, 0) {
         val pages = wikiPagesFrom.pages
 
         wikiPagesFrom.eventType = API.WIKI_PAGES_EVENT_TYPE_PUT
+        wikiPagesFrom.changeDate = System.currentTimeMillis()
+        wikiPagesFrom.creatorId = apiAccount.id
 
         wikiPagesFrom.languageId = fromLanguageId
         wikiPagesFrom.pages = emptyArray()
