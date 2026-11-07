@@ -50,6 +50,7 @@ class EQuestsSaveState : RQuestsSaveState(0, Json(), 0) {
 
         if (existingId > 0) {
             Database.update("EQuestsSaveState update", SqlQueryUpdate(TQuestStates.NAME)
+                .where(TQuestStates.id, "=", existingId)
                 .updateValue(TQuestStates.json_db, json.toString()))
         } else {
             Database.insert(
