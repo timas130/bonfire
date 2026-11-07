@@ -94,7 +94,7 @@ impl NotificationSender {
         }
     }
 
-    async fn process_one(&self, mut queued: QueueItem) {
+    async fn process_one(&self, queued: QueueItem) {
         let item = &queued.notification;
         let session_id = queued.session_id;
 
@@ -109,7 +109,7 @@ impl NotificationSender {
                     "error getting notification when sending {:?}",
                     read.unwrap_err()
                 );
-                self.queue.push(queued);
+                self.retry_later(queued);
                 return;
             };
             read.unwrap_or(false)
@@ -129,7 +129,7 @@ impl NotificationSender {
         .await;
         let Ok(token) = token else {
             error!("error getting notification token: {:?}", token.unwrap_err());
-            self.queue.push(queued);
+            self.retry_later(queued);
             return;
         };
         let Some(token) = token else {
@@ -153,33 +153,38 @@ impl NotificationSender {
 
         // try again if failed
         if let Err(error) = result {
-            let max_attempts = if item.id == 0 {
-                MAX_SEND_ATTEMPTS_EPHEMERAL
-            } else {
-                MAX_SEND_ATTEMPTS
-            };
-            if queued.failed_attempts + 1 >= max_attempts {
-                warn!(
-                    user_id = item.user_id,
-                    ?error,
-                    "sending failed {max_attempts} times, giving up"
-                );
-                return;
-            }
+            warn!(user_id = item.user_id, ?error, "error sending notification");
+            self.retry_later(queued);
+        }
+    }
 
-            let delay = FIRST_RETRY_DELAY * 2u32.pow(queued.failed_attempts);
+    /// Requeue a notification after a delay, unless it has failed too many times
+    fn retry_later(&self, mut queued: QueueItem) {
+        let item = &queued.notification;
+        let max_attempts = if item.id == 0 {
+            MAX_SEND_ATTEMPTS_EPHEMERAL
+        } else {
+            MAX_SEND_ATTEMPTS
+        };
+        if queued.failed_attempts + 1 >= max_attempts {
             warn!(
                 user_id = item.user_id,
-                ?error,
-                "sending failed, retrying in {delay:?}"
+                "sending failed {max_attempts} times, giving up"
             );
-            queued.failed_attempts += 1;
-
-            let queue = self.queue.clone();
-            tokio::spawn(async move {
-                sleep(delay).await;
-                queue.push(queued);
-            });
+            return;
         }
+
+        let delay = FIRST_RETRY_DELAY * 2u32.pow(queued.failed_attempts);
+        warn!(
+            user_id = item.user_id,
+            "sending failed, retrying in {delay:?}"
+        );
+        queued.failed_attempts += 1;
+
+        let queue = self.queue.clone();
+        tokio::spawn(async move {
+            sleep(delay).await;
+            queue.push(queued);
+        });
     }
 }
