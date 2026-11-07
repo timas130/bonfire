@@ -71,7 +71,6 @@ fun LinkAlert(
             } else {
                 if (uri.host != null) {
                     append("//")
-                    uri.userInfo?.let { append(it + '@') }
                     val needBrackets = ((uri.host!!.indexOf(':') >= 0) &&
                         !uri.host!!.startsWith("[") &&
                         !uri.host!!.endsWith("]"));
@@ -86,7 +85,7 @@ fun LinkAlert(
                     uri.port.takeIf { it != -1 }?.let { append(':' + it.toString()) }
                 } else if (uri.authority != null) {
                     append("//")
-                    append(uri.authority!!)
+                    append(uri.rawAuthority!!.substringAfterLast('@'))
                 }
                 uri.path?.let { append(it) }
                 uri.query?.let { append('?' + it) }
@@ -113,9 +112,8 @@ fun LinkAlert(
                 Text(
                     text = spanLink,
                     style = MaterialTheme.typography.bodyLarge,
-                    softWrap = false,
                     overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
+                    maxLines = 5,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp)

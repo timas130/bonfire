@@ -9,6 +9,7 @@ import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.libs.json.JsonParsable
+import com.sup.dev.java.tools.ToolsText
 import java.net.URI
 
 object ControllerExternalLinks {
@@ -41,7 +42,8 @@ object ControllerExternalLinks {
         if (ControllerLinks.parseLink(link)) return
 
         try {
-            val uri = URI(link)
+            val webLink = ToolsText.castToWebLink(link)
+            val uri = URI(webLink)
 
             if (uri.host?.let { checkTrustedDomain(it) } == true) {
                 ToolsIntent.openLink(link)
@@ -49,7 +51,7 @@ object ControllerExternalLinks {
             }
 
             LinkAlertSplash(
-                link = link,
+                link = webLink,
                 onVisit = fun(trust) {
                     uri.host.takeIf { trust }?.let { addTrustedDomain(it) }
                     ToolsIntent.openLink(link)
