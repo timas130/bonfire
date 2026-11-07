@@ -75,6 +75,13 @@ object ControllerLinks {
         return if (ToolsText.isValidUsername(rawLink)) rawLink else null
     }
 
+    private fun getParamKeyword(linkV: String, params: List<String>): String? = when {
+        params.isEmpty() -> null
+        linkV == API.LINK_TAG_PROFILE_NAME || linkV == API.LINK_EVENT.link -> linkV
+        params.all { it.toLongOrNull() != null } -> linkV
+        else -> null
+    }
+
     private fun stripUrlExtras(path: String): String {
         val noQuery = path.substringBefore('?')
         if (generatedNameRegex.matches(noQuery.removePrefix("${API.LINK_TAG_PROFILE_NAME}-"))) return noQuery
@@ -147,7 +154,7 @@ object ControllerLinks {
                 return true
             }
 
-            when (linkV.takeIf { params.isNotEmpty() }) {
+            when (getParamKeyword(linkV, params)) {
                 API.LINK_STICKER.link -> SStickersView.instanceBySticker(params[0].toLong(), Navigator.TO)
                 API.LINK_STICKERS_PACK.link -> {
                     if (params.size == 1) SStickersView.instance(params[0].toLong(), Navigator.TO)
@@ -255,7 +262,7 @@ object ControllerLinks {
                 return true
             }
 
-            return when (linkV.takeIf { params.isNotEmpty() }) {
+            return when (getParamKeyword(linkV, params)) {
                 API.LINK_STICKER.link -> true
                 API.LINK_PROFILE_ID.link -> true
                 API.LINK_TAG_PROFILE_NAME -> true
