@@ -351,7 +351,12 @@ class FieldLogic(
                 if (send) sendText(text, parentId)
                 else vText.setText(text)
             } else {
-                attach.attachUrl(text, dialog) {
+                attach.attachUrl(text, dialog, onAttached = {
+                    if (send) {
+                        vText.setText("")
+                        sendImage("", parentId)
+                    }
+                }) {
                     if (send) sendText(text, parentId)
                     else vText.setText(text)
                 }
