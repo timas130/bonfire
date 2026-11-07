@@ -146,7 +146,7 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
 
         Database.update("EFandomsModerationBlock update_3", SqlQueryUpdate(TPublications.NAME).where(TPublications.id, "=", moderationId).update(TPublications.tag_3, punishmentId))
 
-        ControllerNotifications.push(publication!!.creator.id, NotificationPublicationBlock(blockLastPublications, blockAccountDate, comment, moderationId, publication!!.publicationType, publication!!.tag_s_1))
+        ControllerNotifications.push(publication!!.creator.id, NotificationPublicationBlock(blockLastPublications, moderationBlockDate(), comment, moderationId, publication!!.publicationType, publication!!.tag_s_1))
         notificationByReports(moderationId)
         for ((messageId, tag) in removedChatMessages) {
             ControllerNotifications.push(ControllerChats.getChatSubscribersIdsWithTokensNotDeleted(tag, apiAccount.id), NotificationChatMessageRemove(messageId))
@@ -231,6 +231,8 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
         }
     }
 
+    private fun moderationBlockDate() = if (blockTime == -1L) -1L else blockAccountDate
+
     private fun createModerationAndEvents(): Long {
 
         var moderationId = 0L
@@ -243,7 +245,7 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
         if (publication!!.publicationType == API.PUBLICATION_TYPE_POST
                 || publication!!.publicationType == API.PUBLICATION_TYPE_COMMENT
                 || publication!!.publicationType == API.PUBLICATION_TYPE_CHAT_MESSAGE) {
-            moderationId = ControllerPublications.moderation(ModerationBlock(comment, publicationId, publication!!.getPublicationTypeConst(), publication!!.creator.id, publication!!.creator.name, publication!!.creator.imageId, blockAccountDate, blockLastPublications), apiAccount.id, fandomId, languageId, publication!!.id)
+            moderationId = ControllerPublications.moderation(ModerationBlock(comment, publicationId, publication!!.getPublicationTypeConst(), publication!!.creator.id, publication!!.creator.name, publication!!.creator.imageId, moderationBlockDate(), blockLastPublications), apiAccount.id, fandomId, languageId, publication!!.id)
             ControllerPublications.event(ApiEventUserAdminPublicationBlocked(publication!!.creator.id, publication!!.creator.name, publication!!.creator.imageId, publication!!.creator.sex, apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, publication!!.getPublicationTypeConst(), moderationId, blockAccountDate, blockLastPublications, blockTime == -1L, blockInApp || fandomId == 0L, fandomName, fandomId, if (isSubChatMessage) languageId else publication!!.fandom.languageId), publication!!.creator.id)
         }
 

@@ -377,6 +377,7 @@ object ControllerPublications {
                 val publicationType = if (m.publicationType == API.PUBLICATION_TYPE_POST) tCap(API_TRANSLATE.moderation_publication_post) else if (m.publicationType == API.PUBLICATION_TYPE_COMMENT) tCap(API_TRANSLATE.moderation_publication_comment) else if (m.publicationType == API.PUBLICATION_TYPE_CHAT_MESSAGE) t(API_TRANSLATE.moderation_publication_message) else "null"
                 text = tCap(API_TRANSLATE.moderation_card_block_text_main, tSexCap(CampfireConstants.RED, publication.creator.sex, API_TRANSLATE.he_blocked, API_TRANSLATE.she_blocked), publicationType, ControllerLinks.linkToAccount(m.accountName))
                 if (m.accountBlockDate > 0) text += "\n" + tCap(API_TRANSLATE.moderation_card_block_text_ban, ToolsDate.dateToString(m.accountBlockDate))
+                if (m.accountBlockDate == -1L) text += "\n" + t(API_TRANSLATE.publication_event_account_block_warn)
                 if (m.lastPublicationsBlocked) text += "\n" + tCap(API_TRANSLATE.moderation_card_block_text_block_last)
             }
             is ModerationTagCreate -> {

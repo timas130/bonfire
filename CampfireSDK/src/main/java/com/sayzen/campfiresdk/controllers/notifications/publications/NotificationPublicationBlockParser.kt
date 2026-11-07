@@ -35,6 +35,7 @@ public class NotificationPublicationBlockParser(override val n: NotificationPubl
                 + (if (n.blockAccountDate > 0) " " + t(API_TRANSLATE.moderation_notification_account_is_blocked,
                 ToolsDate.dateToString(n.blockAccountDate)
         ) else "")
+                + (if (n.blockAccountDate == -1L) " " + t(API_TRANSLATE.moderation_notification_warned) else "")
                 + if (ToolsText.empty(n.comment)) "" else " " + t(API_TRANSLATE.moderation_notification_moderator_comment) + " " + comment)
     }
 
