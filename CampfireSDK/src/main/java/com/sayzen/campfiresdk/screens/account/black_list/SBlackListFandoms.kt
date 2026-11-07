@@ -40,6 +40,8 @@ class SBlackListFandoms(
 
     var loaded = false
 
+    private var initialIds: Array<Long>? = feedIgnoreFandoms
+
     init {
         disableShadows()
         disableNavigation()
@@ -53,14 +55,28 @@ class SBlackListFandoms(
                 return@setBottomLoader
             }
 
-            subscription = RFandomsGetAllById(feedIgnoreFandoms)
-                    .onComplete { r ->
-                        loaded = true
-                        onLoad.invoke(r.fandoms)
-                    }
+            val ids = initialIds
+            if (ids != null) {
+                loadFandoms(ids, onLoad)
+                return@setBottomLoader
+            }
+
+            subscription = RAccountsGetIgnoredFandoms(accountId)
+                    .onComplete { r -> loadFandoms(r.fandomsIds, onLoad) }
                     .onNetworkError { onLoad.invoke(null) }
                     .send(api)
         }
+    }
+
+    private fun loadFandoms(ids: Array<Long>, onLoad: (Array<Fandom>?) -> Unit) {
+        subscription = RFandomsGetAllById(ids)
+                .onComplete { r ->
+                    initialIds = null
+                    loaded = true
+                    onLoad.invoke(r.fandoms)
+                }
+                .onNetworkError { onLoad.invoke(null) }
+                .send(api)
     }
 
     override fun classOfCard() = CardFandom::class
