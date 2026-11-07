@@ -55,7 +55,10 @@ class SCrop(
         if (aw > 0 && ah > 0) vCropImageView.setAspectRatio(aw, ah)
         vCropImageView.setImageBitmap(bitmap)
 
-        vAll.setOnClickListener { vCropImageView.cropRect = Rect(0, 0, bitmap.width, bitmap.height) }
+        vAll.setOnClickListener {
+            val swap = vCropImageView.rotatedDegrees % 180 != 0
+            vCropImageView.cropRect = Rect(0, 0, if (swap) bitmap.height else bitmap.width, if (swap) bitmap.width else bitmap.height)
+        }
 
         vRotate.setOnClickListener { vCropImageView.rotatedDegrees = (vCropImageView.rotatedDegrees + 90) % 360 }
 
