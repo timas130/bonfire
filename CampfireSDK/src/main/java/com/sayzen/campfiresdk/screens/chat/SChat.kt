@@ -594,7 +594,7 @@ class SChat constructor(
     private fun onEventChatSubscriptionChanged(e: EventChatSubscriptionChanged) {
         if (e.tag == chat.tag) {
             chat.subscribed = e.subscribed
-            chat.membersCount += if (e.subscribed) 1 else -1
+            if (chat.tag.chatType == API.CHAT_TYPE_FANDOM_ROOT) chat.membersCount += if (e.subscribed) 1 else -1
             update()
             updateSubscribed()
         }
