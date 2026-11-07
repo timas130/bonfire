@@ -50,12 +50,16 @@ object ControllerLinks {
         return (if (link.startsWith("@") || link.startsWith("#")) {
             link.substring(1)
         } else if (link.startsWith(API.DOMEN)) {
-            link.substring(API.DOMEN.length)
+            stripUrlExtras(link.substring(API.DOMEN.length))
         } else if (link.startsWith(API.DOMEN_DL)) {
-            link.substring(API.DOMEN_DL.length)
+            stripUrlExtras(link.substring(API.DOMEN_DL.length))
         } else {
             link.toString()
         }).replace('_', '-').removeSuffix("-")
+    }
+
+    private fun stripUrlExtras(path: String): String {
+        return path.substringBefore('?').substringBefore('#').removeSuffix("/")
     }
 
     fun parseLink(link: String): Boolean {

@@ -339,7 +339,9 @@ class AppActivity : SActivity() {
             }
             val data = intent.data
             if (data != null) {
-                return ControllerLinks.parseLink(data.toString())
+                val parsed = ControllerLinks.parseLink(data.toString())
+                if (!parsed) ToolsToast.show(R.string.link_parse_error)
+                return parsed
             }
             if (ToolsNotifications.parseNotification(intent)) {
                 return true

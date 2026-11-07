@@ -40,7 +40,7 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="https" />
                 <data android:host="bonfire.moe" />
-                <data android:pathPrefix="/r" />
+                <data android:pathPrefix="/r/" />
             </intent-filter>
 
             <intent-filter>
