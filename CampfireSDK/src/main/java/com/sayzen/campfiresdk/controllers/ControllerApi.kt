@@ -126,7 +126,7 @@ object ControllerApi {
 
     fun getLanguage() = getLanguage(getLanguageCode())
 
-    fun getLanguageCode() = getLanguage(ToolsAndroid.getLanguageCode().lowercase()).code
+    fun getLanguageCode() = getLanguage(ControllerSettings.appLanguage).code
 
     fun getLanguage(code: String) = API.getLanguage(code)
 
