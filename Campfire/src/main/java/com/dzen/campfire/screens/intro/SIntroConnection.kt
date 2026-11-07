@@ -178,7 +178,7 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
 
     private fun continueLegacyLogin() {
         val account = ControllerApi.getLastAccount()
-        if (account.id == 0L) {
+        if (account.id == 0L || account.id.toString() != AuthController.currentUserId) {
             ControllerChats.clearMessagesCount()
             loadingState.value = LoadingState.Login(LoadingState.LoginStatus.LoadingAccount)
             sendLoginRequestNow(false)

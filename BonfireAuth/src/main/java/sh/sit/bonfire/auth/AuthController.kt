@@ -84,6 +84,9 @@ object AuthController : TokenProvider {
     private val _currentUserState = MutableStateFlow<Me?>(null)
     val currentUserState = _currentUserState.asStateFlow()
 
+    val currentUserId: String?
+        get() = _currentUserState.value?.id
+
     fun setCurrentUser(user: Me) {
         _currentUserState.value = user
     }
@@ -161,6 +164,7 @@ object AuthController : TokenProvider {
         }
 
         if (!me.hasErrors()) {
+            getAccessTokenSuspend()
             return CanLoginResult.Success
         }
 
