@@ -15,6 +15,7 @@ import com.sup.dev.android.views.splash.view.SplashViewSheet
 class SplashAdd(
         private val requestPutPage: (Page, Screen?, Splash?, ((CardPage) -> Unit)) -> Unit,
         private val requestChangePage: (Page, CardPage, Screen?, Splash?, (Page) -> Unit) -> Unit,
+        private val requestPutPageTracked: (Page, Splash?, () -> Unit) -> Unit,
         private val onBackEmptyAndNewerAdd: () -> Unit,
         private val sourceType: Long
 ) : SplashMenu() {
@@ -29,7 +30,7 @@ class SplashAdd(
         }.icon(R.drawable.ic_text_fields_white_24dp)
         add(t(API_TRANSLATE.post_page_image)) {
             wasClicked = true
-            SplashPageImage(requestPutPage, requestChangePage).asSheetShow()
+            SplashPageImage(requestPutPage, requestChangePage, requestPutPageTracked).asSheetShow()
         }.icon(R.drawable.ic_landscape_white_24dp)
         add(t(API_TRANSLATE.post_page_video_local)) {
             wasClicked = true

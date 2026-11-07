@@ -65,6 +65,7 @@ class PostCreator(
         widgetAdd = SplashAdd(
             requestPutPage = ::putPage,
             requestChangePage = ::changePage,
+            requestPutPageTracked = ::putPageTracked,
             onBackEmptyAndNewerAdd = onBackEmptyAndNewerAdd,
             sourceType = getSourceType()
         )
@@ -194,6 +195,11 @@ class PostCreator(
         }, {
             screen?.isEnabled = true
         })
+    }
+
+    private fun putPageTracked(page: Page, splash: Splash?, onDone: () -> Unit) {
+        newerAdd = false
+        requestPutPage.invoke(splash, arrayOf(page), { pages -> onPageAdd(null, pages) }, onDone)
     }
 
     private fun removePage(c: CardPage) {

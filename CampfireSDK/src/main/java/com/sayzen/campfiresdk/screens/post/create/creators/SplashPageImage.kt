@@ -28,10 +28,11 @@ import com.sup.dev.java.tools.ToolsThreads
 
 class SplashPageImage(
         private val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, onFinish: ((CardPage) -> Unit)) -> Unit,
-        private val requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page) -> Unit) -> Unit
+        private val requestChangePage: (page: Page, card: CardPage, screen: Screen?, splash: Splash?, (Page) -> Unit) -> Unit,
+        private val requestPutPageTracked: (page: Page, splash: Splash?, onDone: () -> Unit) -> Unit
 ) : SplashChooseImage() {
 
-    private var imagesCreator = ImagesListCreator(requestPutPage)
+    private var imagesCreator = ImagesListCreator(requestPutPageTracked)
     private var createAsList = false
 
     init {
@@ -56,15 +57,18 @@ class SplashPageImage(
                 }
 
                 if(createAsList){
-                    imagesCreator.addImage(ToolsBitmap.decode(bytes)!!, bytes)
-                    if(index == w.getSelectedCount() - 1){
-                        val sent = Item(false)
-                        imagesCreator.send{sent.a = true}
-                        while (!sent.a) ToolsThreads.sleep(20)
+                    try {
+                        imagesCreator.addImage(ToolsBitmap.decode(bytes)!!, bytes)
+                    } finally {
+                        if(index == w.getSelectedCount() - 1){
+                            val sent = Item(false)
+                            imagesCreator.send{sent.a = true}
+                            while (!sent.a) ToolsThreads.sleep(20)
+                        }
                     }
                 }else{
                     val sent = Item(false)
-                    createNow(bytes, null, requestPutPage, requestChangePage, null) {
+                    createNow(bytes, null, { p, _, s, _ -> requestPutPageTracked(p, s) { sent.a = true } }, requestChangePage, null) {
                         sent.a = true
                     }
                     while (!sent.a) ToolsThreads.sleep(20)
@@ -142,6 +146,7 @@ class SplashPageImage(
             if (ToolsBytes.isGif(bytes) && bytes.size > API.PAGE_IMAGE_GIF_WEIGHT) {
                 d?.hide()
                 ToolsToast.show(t(API_TRANSLATE.error_too_long_file))
+                onCreateFinish.invoke()
                 return
             }
 
@@ -155,6 +160,7 @@ class SplashPageImage(
             if (decode == null) {
                 d?.hide()
                 ToolsToast.show(t(API_TRANSLATE.error_cant_load_image))
+                onCreateFinish.invoke()
                 return
             }
 
@@ -172,7 +178,7 @@ class SplashPageImage(
         }
 
         private class ImagesListCreator(
-                val requestPutPage: (page: Page, screen: Screen?, splash: Splash?, onFinish: ((CardPage) -> Unit)) -> Unit
+                val requestPutPageTracked: (page: Page, splash: Splash?, onDone: () -> Unit) -> Unit
         ) {
 
             private val page = PageImages()
@@ -206,7 +212,8 @@ class SplashPageImage(
                     onFinish.invoke()
                     return
                 }
-                requestPutPage.invoke(page, null, null) { onFinish.invoke() }
+                //  On main so that the request's finish callback is attached before it can run
+                ToolsThreads.main { requestPutPageTracked.invoke(page, null, onFinish) }
             }
         }
 
