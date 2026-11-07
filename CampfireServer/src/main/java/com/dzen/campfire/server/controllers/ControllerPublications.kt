@@ -321,7 +321,7 @@ object ControllerPublications {
 
         if (listIds.isEmpty()) return
 
-        val publications = parseSelect(Database.select("ControllerPublications.loadSpecDataForPosts", instanceSelect(accountId).where(SqlWhere.WhereIN(TPublications.id, listIds))))
+        val publications = parseSelect(Database.select("ControllerPublications.loadSpecDataForPosts", instanceSelect(accountId).where(SqlWhere.WhereIN(TPublications.id, listIds)).where(TPublications.status, "=", API.STATUS_PUBLIC)))
 
         for (i in publications) for (n in list) if (n.tag_1 == i.id) n.bestComment = i as PublicationComment?
     }

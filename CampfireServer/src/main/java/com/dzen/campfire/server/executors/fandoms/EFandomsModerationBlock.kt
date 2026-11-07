@@ -189,6 +189,7 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
                                     parentPublicationId
                             ).update(TPublications.subpublications_count, TPublications.subpublications_count + "-1")
                     )
+                    ControllerPublications.recountBestComment(parentPublicationId, id)
                 }
                 if (type == API.PUBLICATION_TYPE_CHAT_MESSAGE) {
                     ControllerChats.onMessagesRemoved(ChatTag(tag1, tag2, tag3), 1)
