@@ -63,7 +63,8 @@ class EProjectMakeHelloPost : RProjectMakeHelloPost("", false, "", 0) {
                 TPublications.tag_s_1, API.PROJECT_KEY_CAMPFIRE,
                 TPublications.tag_s_2, "",
                 TPublications.publication_category, ControllerFandom.getCategory(fandomId),
-                TPublications.status, API.STATUS_PUBLIC)
+                TPublications.status, API.STATUS_PUBLIC,
+                TPublications.fandom_key, "$fandomId-$languageId-0")
 
         ControllerPublicationsHistory.put(publication.id, HistoryCreate(apiAccount.id, apiAccount.imageId, apiAccount.name))
         ControllerPublications.watchComments(apiAccount.id, publication.id, true)
