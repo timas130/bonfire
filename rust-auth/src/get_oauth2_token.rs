@@ -210,6 +210,7 @@ impl AuthServer {
              from oauth2_flows_as fl \
              where code = $1 and client_id = $2 and authorized_at is not null \
                    and token_requested_at is null \
+                   and authorized_at > now() - interval '10 minutes' \
              for update",
             code,
             client.id,
