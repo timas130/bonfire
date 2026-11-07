@@ -283,8 +283,10 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
             ImageLoader.load(ApiResources.IMAGE_BACKGROUND_20).noHolder().into(vEmptyImage)
         }
 
-        if (state == State.PROGRESS && !loadedBackground) {
-            vProgress.visibility = View.GONE
+        if (state == State.PROGRESS) ToolsThreads.main {
+            vProgress.visibility = if (loadedBackground) View.GONE else View.VISIBLE
+            vEmptyImage.visibility = if (loadedBackground) View.GONE else View.VISIBLE
+            ImageLoader.load(R.drawable.logo_alpha).into(vEmptyImage)
         }
     }
 
