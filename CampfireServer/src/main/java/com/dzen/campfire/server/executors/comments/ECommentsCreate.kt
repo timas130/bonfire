@@ -51,11 +51,10 @@ class ECommentsCreate : RCommentsCreate(0, "", null, null, 0, false, 0, 0, false
 
         if (parentCommentId != 0L) {
             val parentCommentX = ControllerPublications.getPublication(parentCommentId, apiAccount.id) as PublicationComment?
-            if (parentCommentX != null) {
-                parentComment = parentCommentX
-                if (parentCommentX.publicationType != API.PUBLICATION_TYPE_COMMENT) throw ApiException(E_BAD_PARENT_COMMENT_TYPE)
-                if (parentCommentX.parentPublicationId != publicationId) throw ApiException(E_BAD_PARENT_COMMENT_TARGET_PUBLICATION_ID)
-            }
+            if (parentCommentX == null) throw ApiException(E_PARENT_COMMENT_DONT_EXIST)
+            parentComment = parentCommentX
+            if (parentCommentX.publicationType != API.PUBLICATION_TYPE_COMMENT) throw ApiException(E_BAD_PARENT_COMMENT_TYPE)
+            if (parentCommentX.parentPublicationId != publicationId) throw ApiException(E_BAD_PARENT_COMMENT_TARGET_PUBLICATION_ID)
         }
         if (imageArray != null) {
             if (imageArray!!.size > 1) {
