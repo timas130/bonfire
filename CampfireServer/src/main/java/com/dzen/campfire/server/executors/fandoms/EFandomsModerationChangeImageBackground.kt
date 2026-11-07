@@ -37,7 +37,7 @@ class EFandomsModerationChangeImageBackground : RFandomsModerationChangeImageBac
 
         for (i in oldCollisions) ControllerResources.remove(i)
 
-        ControllerPublications.moderation(ModerationBackgroundImage(comment, fandom!!.imageTitleId), apiAccount.id, fandomId, languageId, 0)
+        ControllerPublications.moderation(ModerationBackgroundImage(comment, imageId), apiAccount.id, fandomId, languageId, 0)
 
         return Response(imageId)
     }
