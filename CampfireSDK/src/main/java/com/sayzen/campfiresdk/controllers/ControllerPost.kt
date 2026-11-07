@@ -126,13 +126,14 @@ object ControllerPost {
                     )
                     .add(t(API_TRANSLATE.publication_menu_pin_in_profile)) { pinInProfile(post) }
                     .backgroundRes(R.color.focus).condition(
-                        ENABLED_PIN_PROFILE && ControllerApi.can(API.LVL_CAN_PIN_POST) && post.isPublic && !post.isPined && ControllerApi.isCurrentAccount(
+                        // isPined on the fandom screen means pinned in the fandom, not in the profile
+                        ENABLED_PIN_PROFILE && ControllerApi.can(API.LVL_CAN_PIN_POST) && post.isPublic && !(post.isPined && Navigator.getCurrent() is SProfile) && ControllerApi.isCurrentAccount(
                             post.creator.id
                         )
                     )
                     .add(t(API_TRANSLATE.publication_menu_unpin_in_profile)) { unpinInProfile(post) }
                     .backgroundRes(R.color.focus)
-                    .condition(ENABLED_PIN_PROFILE && post.isPined && ControllerApi.isCurrentAccount(post.creator.id))
+                    .condition(ENABLED_PIN_PROFILE && post.isPined && Navigator.getCurrent() is SProfile && ControllerApi.isCurrentAccount(post.creator.id))
                     .add(t(API_TRANSLATE.publication_menu_multilingual)) { multilingual(post) }
                     .backgroundRes(R.color.focus).condition(
                         ENABLED_MAKE_MULTILINGUAL && post.fandom.languageId != -1L && post.status == API.STATUS_PUBLIC && ControllerApi.isCurrentAccount(
