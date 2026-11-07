@@ -15,6 +15,7 @@ class EAdminVoteCancel : RAdminVoteCancel(0, "") {
 
     override fun check() {
         ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_BAN)
+        ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
     override fun execute(): Response {
