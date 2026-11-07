@@ -1,5 +1,6 @@
 use crate::sender::NotificationSender;
 use c_core::prelude::anyhow;
+use c_core::prelude::tokio::time::timeout;
 use c_core::prelude::tracing::{error, info, span, warn, Instrument, Level};
 use c_core::services::notification::{
     Notification, NotificationError, NotificationPayload, NotificationTokenType,
@@ -8,9 +9,12 @@ use google_fcm1::api::{AndroidConfig, Message, SendMessageRequest};
 use google_fcm1::{chrono, Error};
 use serde::Deserialize;
 use std::collections::HashMap;
+use std::time::Duration;
 
 /// How long FCM keeps online-only notifications for a device that is offline
 const ONLINE_ONLY_TTL_SECS: i64 = 30;
+/// How long a send may take so a stalled connection can't occupy a sender worker forever
+const SEND_TIMEOUT: Duration = Duration::from_secs(15);
 
 #[derive(Deserialize)]
 struct FcmErrorResponse {
@@ -112,19 +116,29 @@ impl NotificationSender {
         );
 
         // sending
-        let result = self
-            .fcm_hub
-            .projects()
-            .messages_send(
-                SendMessageRequest {
-                    message: Some(message),
-                    ..Default::default()
-                },
-                &parent,
-            )
-            .doit()
-            .instrument(span!(Level::INFO, "sending fcm"))
-            .await;
+        let result = timeout(
+            SEND_TIMEOUT,
+            self.fcm_hub
+                .projects()
+                .messages_send(
+                    SendMessageRequest {
+                        message: Some(message),
+                        ..Default::default()
+                    },
+                    &parent,
+                )
+                .doit(),
+        )
+        .instrument(span!(Level::INFO, "sending fcm"))
+        .await;
+        let Ok(result) = result else {
+            warn!(
+                notification_id = notification.id,
+                user_id = notification.user_id,
+                "fcm request timed out"
+            );
+            return Err(NotificationError::UpstreamError);
+        };
 
         // handing error
         let (_, resp) = match result {
