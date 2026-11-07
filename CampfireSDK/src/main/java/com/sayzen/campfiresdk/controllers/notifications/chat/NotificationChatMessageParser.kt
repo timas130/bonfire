@@ -16,6 +16,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.chat.ChatTag
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessage
+import com.dzen.campfire.api.models.publications.chat.PublicationChatMessage
 import com.dzen.campfire.api.requests.chat.RChatMessageCreate
 import com.dzen.campfire.api.requests.chat.RChatRead
 import com.sayzen.campfiresdk.R
@@ -104,6 +105,14 @@ fun Bitmap.getRounded(): Bitmap {
     return output
 }
 
+private fun PublicationChatMessage.notificationText(): String = when {
+    text.isNotEmpty() -> text
+    resourceId != 0L || imageIdArray.isNotEmpty() -> t(API_TRANSLATE.app_image)
+    voiceResourceId != 0L -> t(API_TRANSLATE.app_voice_message)
+    stickerId != 0L -> t(API_TRANSLATE.app_sticker)
+    else -> ""
+}
+
 @WorkerThread
 fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound: Boolean = true) {
     val chatMessages = ControllerChats.getMessages(tag)
@@ -153,7 +162,7 @@ fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound
             it.conversationTitle = chat.customName
             for (message in chatMessages.messages) {
                 it.addMessage(NotificationCompat.MessagingStyle.Message(
-                    TextFormatter(message.text).parseNoTags(),
+                    TextFormatter(message.notificationText()).parseNoTags(),
                     message.dateCreate,
                     Person.Builder()
                         .setKey(message.creator.id.toString())
@@ -231,13 +240,9 @@ class NotificationChatMessageParser(override val n: NotificationChatMessage) : C
 
     override fun asString(html: Boolean): String {
         return if (n.tag.chatType == API.CHAT_TYPE_FANDOM_ROOT) {
-            if (n.publicationChatMessage.resourceId != 0L && n.publicationChatMessage.text.isEmpty()) n.publicationChatMessage.creator.name + ": " + t(API_TRANSLATE.app_image)
-            else if (n.publicationChatMessage.stickerId != 0L && n.publicationChatMessage.text.isEmpty()) n.publicationChatMessage.creator.name + ": " + t(API_TRANSLATE.app_sticker)
-            else n.publicationChatMessage.creator.name + ": " + n.publicationChatMessage.text
+            n.publicationChatMessage.creator.name + ": " + n.publicationChatMessage.notificationText()
         } else {
-            if (n.publicationChatMessage.resourceId != 0L && n.publicationChatMessage.text.isEmpty()) t(API_TRANSLATE.app_image)
-            else if (n.publicationChatMessage.stickerId != 0L && n.publicationChatMessage.text.isEmpty()) t(API_TRANSLATE.app_sticker)
-            else n.publicationChatMessage.text
+            n.publicationChatMessage.notificationText()
         }
     }
 
