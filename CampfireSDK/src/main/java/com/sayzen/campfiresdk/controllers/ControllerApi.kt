@@ -149,7 +149,7 @@ object ControllerApi {
 
     @Suppress("DEPRECATION")
     fun makeTextHtml(vText: TextView) {
-        val text = vText.text.toString().replace("<", "&#60;")
+        val text = vText.text.toString().replace("&", "&amp;").replace("<", "&#60;")
         val s_1 = TextFormatter(text).parseHtml()
         val s_2 = s_1.replace("\n", "<br />")
         vText.text = Html.fromHtml(s_2)

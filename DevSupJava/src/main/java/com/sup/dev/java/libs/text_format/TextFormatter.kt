@@ -21,6 +21,8 @@ class TextFormatter(
             "brown" to "5D4037", "grey" to "616161", "campfire" to "FF6D00", "rainbow" to "-",
             "gay" to "-", "xmas" to "-", "christmas" to "-", "bonfire" to "FF6D00",
         )
+
+        private val colored_unit = Regex("&amp;|&#60;|.", RegexOption.DOT_MATCHES_ALL)
     }
 
     private var result: StringBuilder = StringBuilder()
@@ -203,15 +205,15 @@ class TextFormatter(
                 if (name == "rainbow") {
                     val t = text.substring(i + name.length + 2, next)
                     var x = -1
-                    for (i in t) result.append(rainbow("$i", x++))
+                    for (unit in colored_unit.findAll(t)) result.append(rainbow(unit.value, x++))
                 } else if (name == "gay") {
                     val t = text.substring(i + name.length + 2, next)
                     var x = -1
-                    for (i in t) result.append(gay("$i", x++))
+                    for (unit in colored_unit.findAll(t)) result.append(gay(unit.value, x++))
                 } else if (name == "xmas" || name == "christmas") {
                     val t = text.substring(i + name.length + 2, next)
                     var x = -1
-                    for (i in t) result.append(xmas("$i", x++))
+                    for (unit in colored_unit.findAll(t)) result.append(xmas(unit.value, x++))
                 } else {
                     val t = TextFormatter(text.substring(i + name.length + 2, next)).parseHtml()
                     result.append("<font color=\"#$hash\">$t</font>")

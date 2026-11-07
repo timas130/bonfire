@@ -96,7 +96,7 @@ fun LegacyFormattedText(
 ) {
     val colors = MaterialTheme.colorScheme
     val annotatedString = remember(text) {
-        val filtered = text.replace("<", "&#60;")
+        val filtered = text.replace("&", "&amp;").replace("<", "&#60;")
         val html = TextFormatter(filtered).parseHtml()
             .replace("\n", "<br />")
 
