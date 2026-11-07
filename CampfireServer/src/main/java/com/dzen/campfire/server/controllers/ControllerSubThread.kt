@@ -19,7 +19,7 @@ object ControllerSubThread {
             callback.invoke()
             return
         }
-        threadPool.submit(object : SubThreadRunnable() {
+        threadPool.execute(object : SubThreadRunnable() {
             override val userId: Long? = user
 
             override fun run() {
