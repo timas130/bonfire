@@ -1193,8 +1193,8 @@ class SQuestDanTank : SQuest()  {
 
         addQuest(
             QuestItem("«Не, Игнатий, у меня дела»")
-                .addTextJump(effect_bad("Проклятие свиньи"))
                 .text("...")
+                .addTextJump(effect_bad("Проклятие свиньи"))
                 .addButton("Оу", "«Прощайте, Игнатий»")
         )
 
