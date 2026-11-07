@@ -21,14 +21,13 @@ class Cache<K : Any, V : Any>(val length: Int) {
         map.clear()
     }
 
-    @Suppress("NewApi")
     fun put(key: K, value: V?) {
         if (value != null) map[key] = value
         else map.remove(key)
-        val newIdx = listIdx.getAndUpdate {
-            if (it >= length) return@getAndUpdate 0
-            else it + 1
-        }
+        var newIdx: Int
+        do {
+            newIdx = listIdx.get()
+        } while (!listIdx.compareAndSet(newIdx, if (newIdx >= length) 0 else newIdx + 1))
         val oldKey: K? = list.get(newIdx)
         list[newIdx] = key
         if (oldKey != null) map.remove(oldKey)
