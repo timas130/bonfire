@@ -63,12 +63,10 @@ use c_core::services::email::Email;
 use c_core::services::email::EmailServiceClient;
 use c_core::{host_tcp, ServiceBase};
 use http_cache_reqwest::{CACacheManager, Cache, CacheMode, HttpCache, HttpCacheOptions};
-use jsonwebtoken::jwk::Jwk;
 use openidconnect::core::CoreRsaPrivateSigningKey;
 use openidconnect::JsonWebKeyId;
 use reqwest::Client;
 use reqwest_middleware::{ClientBuilder, ClientWithMiddleware};
-use serde::Deserialize;
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::str::FromStr;
@@ -94,7 +92,6 @@ pub struct AuthServer {
     email: EmailServiceClient,
 
     reqwest_client: Arc<Mutex<ClientWithMiddleware>>,
-    google_jwks: Arc<Vec<Jwk>>,
 
     rs256_signing_key: Arc<CoreRsaPrivateSigningKey>,
 
@@ -118,17 +115,6 @@ impl AuthServer {
             EmailServiceClient::new(client::Config::default(), client).spawn()
         };
 
-        #[derive(Deserialize)]
-        struct GoogleJwksResponse {
-            keys: Vec<Jwk>,
-        }
-
-        let google_jwks = reqwest::get(GOOGLE_JWKS_URL)
-            .await?
-            .json::<GoogleJwksResponse>()
-            .await?
-            .keys;
-
         let reqwest_client = ClientBuilder::new(Client::new())
             .with(Cache(HttpCache {
                 mode: CacheMode::Default,
@@ -147,7 +133,6 @@ impl AuthServer {
             base,
             email,
             reqwest_client: Arc::new(Mutex::new(reqwest_client)),
-            google_jwks: Arc::new(google_jwks),
             rs256_signing_key: Arc::new(rs256_signing_key),
             scrypt_permits: Arc::new(Semaphore::new(MAX_CONCURRENT_SCRYPT)),
         })

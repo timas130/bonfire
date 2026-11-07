@@ -5,6 +5,7 @@ use c_core::prelude::chrono::Utc;
 use c_core::prelude::tracing::warn;
 use c_core::services::auth::{AuthError, OAuthProvider, OAuthResult, UserContext};
 use itertools::Itertools;
+use jsonwebtoken::jwk::Jwk;
 use jsonwebtoken::{decode, decode_header, Algorithm, DecodingKey, Validation};
 use nanoid::nanoid;
 use openidconnect::core::{CoreIdToken, CoreIdTokenClaims, CoreTokenResponse};
@@ -13,6 +14,9 @@ use serde::Deserialize;
 use sqlx::{Postgres, Transaction};
 use std::borrow::Cow;
 use std::str::FromStr;
+
+const GOOGLE_JWKS_URL: &str =
+    "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com";
 
 struct DummyNonceVerifier;
 
@@ -27,7 +31,28 @@ struct FirebaseToken {
     sub: String,
 }
 
+#[derive(Deserialize)]
+struct GoogleJwksResponse {
+    keys: Vec<Jwk>,
+}
+
 impl AuthServer {
+    // Goes through the HTTP cache on every call, so rotated keys show up when the response expires
+    async fn get_google_jwks(&self) -> Result<Vec<Jwk>, AuthError> {
+        let client = self.reqwest_client.lock().await;
+
+        let jwks = client
+            .get(GOOGLE_JWKS_URL)
+            .send()
+            .await
+            .map_err(anyhow::Error::from)?
+            .json::<GoogleJwksResponse>()
+            .await
+            .map_err(anyhow::Error::from)?;
+
+        Ok(jwks.keys)
+    }
+
     pub(crate) async fn get_firebase_result(
         &self,
         id_token: String,
@@ -49,8 +74,8 @@ impl AuthServer {
             .map_err(|_| AuthError::InvalidToken)
             .and_then(|hdr| hdr.kid.ok_or(AuthError::InvalidToken))?;
 
-        let jwk = self
-            .google_jwks
+        let jwks = self.get_google_jwks().await?;
+        let jwk = jwks
             .iter()
             .find(|jwk| {
                 jwk.common
