@@ -14,6 +14,7 @@ import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashAlert
 import com.sup.dev.java.libs.eventBus.EventBus
@@ -74,7 +75,7 @@ class SWikiArticleEdit(
             EventBus.post(EventWikiPagesChanged(wikiItemId, languageId, xPostCreator.pages))
         }.onFinish {
             onFinish.invoke()
-        }
+        }.onApiError(RWikiPagePut.E_BAD_PAGE) { ToolsToast.show(t(API_TRANSLATE.error_unknown)) }
     }
 
     private fun requestRemovePage(): (Array<Int>, () -> Unit) -> Unit = { pages, onFinish->
@@ -88,7 +89,7 @@ class SWikiArticleEdit(
         ApiRequestsSupporter.executeEnabled(widget, RWikiPageChange(wikiItemId, languageId, page, index)) { r ->
             onFinish.invoke(r.page!!)
             EventBus.post(EventWikiPagesChanged(wikiItemId, languageId, xPostCreator.pages))
-        }
+        }.onApiError(RWikiPageChange.E_BAD_PAGE) { ToolsToast.show(t(API_TRANSLATE.error_unknown)) }
     }
 
     private fun requestMovePage(): (Int,Int,() -> Unit) -> Unit = { currentIndex, targetIndex, onFinish->

@@ -240,7 +240,7 @@ class SCreatePagePolling(
     }
 
     private fun update() {
-        vAdd.isEnabled = vContainer.childCount <= API.PAGE_POLLING_OPTION_MAX_COUNT
+        vAdd.isEnabled = vContainer.childCount < API.PAGE_POLLING_OPTION_MAX_COUNT
 
         val options = getOptions()
 
@@ -265,13 +265,12 @@ class SCreatePagePolling(
         page.minDays = if (vDays.getText().isEmpty()) 0L else vDays.getText().toLong()
         page.blacklist = blackList.toTypedArray()
 
-        Navigator.back()
         val w = ToolsView.showProgressDialog()
 
         if (card == null)
             requestPutPage.invoke(page, this, w) {}
         else
-            requestChangePage.invoke(page, card, null, w) {}
+            requestChangePage.invoke(page, card, this, w) {}
     }
 
     private fun onCancel() {
