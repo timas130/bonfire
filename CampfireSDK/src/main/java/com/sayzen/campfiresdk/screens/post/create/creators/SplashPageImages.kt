@@ -133,6 +133,7 @@ class SplashPageImages(
     private fun sendImage(bitmap: Bitmap?, bytes: ByteArray?, dialog: Splash?, replaceIndex: Int = -1) {
         if (bitmap == null || bytes == null) {
             ToolsToast.show(t(API_TRANSLATE.error_cant_load_image))
+            dialog?.hide()
             return
         }
         val img = if (ToolsBytes.isGif(bytes)) ToolsGif.resize(bytes, API.PAGE_IMAGES_SIDE_GIF, API.PAGE_IMAGES_SIDE_GIF, null, null, null, null, true)
@@ -143,6 +144,7 @@ class SplashPageImages(
 
         if (img == null || imgMini == null) {
             ToolsToast.show(t(API_TRANSLATE.error_cant_load_image))
+            dialog?.hide()
             return
         }
 
