@@ -59,6 +59,7 @@ abstract class AbstractGQLPaginationModel<T, D : Query.Data>(application: Applic
 
     final override fun loadNextPage() {
         viewModelScope.launch {
+            if (_query.value == null || hasMore.value == false) return@launch
             if (loadingMore) return@launch
             loadingMore = true
             withContext(Dispatchers.IO) {
