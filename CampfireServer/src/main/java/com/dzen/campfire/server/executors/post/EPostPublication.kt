@@ -118,9 +118,9 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
         ControllerPublications.removeCollisions(publicationId, API.COLLISION_TAG)
         ControllerPublications.putCollisions(publicationId, ToolsMapper.asArray(tagsIds), API.COLLISION_TAG)
 
-        ControllerAccounts.updatePostsCount(apiAccount.id, 1)
-
         if (publication!!.status == API.STATUS_DRAFT) {
+            ControllerAccounts.updatePostsCount(apiAccount.id, 1)
+
             Database.update("EPostPublication", SqlQueryUpdate(TPublications.NAME)
                     .update(TPublications.status, if (publishImmediately) API.STATUS_PUBLIC else API.STATUS_PENDING)
                     .update(TPublications.date_create, System.currentTimeMillis())
