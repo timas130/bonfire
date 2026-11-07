@@ -31,7 +31,7 @@ class EPostRemovePage : RPostRemovePage(0,  emptyArray()) {
         if (creatorId != apiAccount.id) throw ApiException(API.ERROR_ACCESS)
         if (publicationType != API.PUBLICATION_TYPE_POST) throw ApiException(E_BAD_TYPE)
         for (index in pageIndexes) if (index < 0 || publication.pages.size <= index) throw ApiException(E_BAD_PAGE_INDEX, "index [" + index + "] size[" + publication.pages.size + "]")
-        if (publication.status == API.STATUS_PUBLIC && publication.pages.size == 1) throw ApiException(E_CANT_REMOVE_LAST)
+        if (status == API.STATUS_PUBLIC && publication.pages.size == 1) throw ApiException(E_CANT_REMOVE_LAST)
     }
 
     override fun execute(): Response {

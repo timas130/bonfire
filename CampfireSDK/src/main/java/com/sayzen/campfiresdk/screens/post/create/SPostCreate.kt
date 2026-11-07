@@ -29,6 +29,7 @@ import com.sayzen.campfiresdk.support.adapters.XFandom
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.android.views.splash.SplashAlert
@@ -179,7 +180,7 @@ class SPostCreate(
                 EventBus.post(EventPublicationRemove(publicationId))
                 publicationId = 0
             }
-        }
+        }.onApiError(RPostRemovePage.E_CANT_REMOVE_LAST) { ToolsToast.show(t(API_TRANSLATE.post_page_remove_last)) }
     }
 
     private fun requestChangePage(): (Splash?, Page, Int, (Page) -> Unit) -> Unit = { widget, page, index, onFinish ->

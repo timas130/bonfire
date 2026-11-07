@@ -1185,6 +1185,7 @@ object API_TRANSLATE {
     var post_page_tale_remove_confirm = 0L
     var post_page_polling_remove_confirm = 0L
     var post_page_remove_confirm = 0L
+    var post_page_remove_last = 0L
     var post_rates_empty = 0L
     var post_page_download = 0L
     var post_page_download_alert = 0L

@@ -1379,6 +1379,7 @@
     "post_page_polling_results_full": "Результаты опроса",
     "post_page_quote": "Цитата",
     "post_page_remove_confirm": "Удалить эту страницу?",
+    "post_page_remove_last": "Нельзя удалить единственную страницу опубликованного поста",
     "post_page_spoiler": "Спойлер",
     "post_page_table": "Таблица",
     "post_page_tale_clear_confirm": "Очистить эту ячейку?",
