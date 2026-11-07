@@ -46,7 +46,7 @@ object ApiRequestsSupporter {
         request.onNetworkError {
             if (tryCount > 0) {
                 tryCount--
-                execute(request, false, onComplete)
+                request.send(api!!)
             } else {
                 onFailure()
             }
