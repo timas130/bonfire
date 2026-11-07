@@ -113,7 +113,7 @@ class SQuestPlayer(
                             variables[action.varId] = if (variables[action.varId]!! != "1") "1" else "0"
                         }
                         API.QUEST_TYPE_TEXT -> {
-                            variables[action.varId] += action.sArg
+                            variables[action.varId] = (variables[action.varId] ?: "") + action.sArg
                         }
                         API.QUEST_TYPE_NUMBER -> {
                             variables[action.varId] = (
@@ -126,7 +126,7 @@ class SQuestPlayer(
                 API.QUEST_ACTION_ADD_ANOTHER -> {
                     when (details.variablesMap!![action.varId]!!.type) {
                         API.QUEST_TYPE_TEXT -> {
-                            variables[action.varId] += variables[action.lArg1]!!
+                            variables[action.varId] = (variables[action.varId] ?: "") + variables[action.lArg1]!!
                         }
                         API.QUEST_TYPE_NUMBER -> {
                             variables[action.varId] = (
