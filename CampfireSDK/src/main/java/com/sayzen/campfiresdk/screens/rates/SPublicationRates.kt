@@ -78,6 +78,7 @@ class SPublicationRates(
             }
             updateKarma()
         }
+        xKarma.anon = anon
 
         if (xKarma.myKarma == 0L && !ControllerApi.isCurrentAccount(creatorId)) {
             xKarma.setView(vKarma)
