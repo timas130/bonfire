@@ -44,6 +44,7 @@ class CardUserActivity(
             .subscribe(EventActivitiesRelayRaceRejected::class) {
                 if (it.userActivityId == userActivity.id) {
                     userActivity.tag_2 = it.currentOwnerTime
+                    userActivity.myMemberStatus = 0
                     userActivity.currentAccount = it.currentAccount
                     recreateXAccount()
                     update()
