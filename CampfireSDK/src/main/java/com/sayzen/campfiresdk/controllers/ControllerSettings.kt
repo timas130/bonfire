@@ -31,6 +31,8 @@ object ControllerSettings {
 
     fun init() {
         accountSettings.json(false, ToolsStorage.getJson("ControllerSettings_accountSettings") ?: Json())
+        ViewCircleImage.SQUARE_GLOBAL_MODE = styleAvatarsSquare
+        ViewCircleImage.SQUARE_GLOBAL_CORNED = ToolsView.dpToPx(styleAvatarsRounding)
     }
 
     fun clear() {
