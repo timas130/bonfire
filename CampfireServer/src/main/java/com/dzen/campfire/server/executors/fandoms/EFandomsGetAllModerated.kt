@@ -3,7 +3,9 @@ package com.dzen.campfire.server.executors.fandoms
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.requests.fandoms.RFandomsGetAllModerated
+import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerFandom
+import com.dzen.campfire.server.tables.TAccounts
 import com.dzen.campfire.server.tables.TCollisions
 import com.dzen.campfire.server.tables.TFandoms
 import com.dzen.campfire.api.tools.ApiException
@@ -18,6 +20,9 @@ class EFandomsGetAllModerated : RFandomsGetAllModerated(0, 0) {
     }
 
     override fun execute(): Response {
+        val account = ControllerAccounts.get(accountId, TAccounts.lvl)
+        if (account.isEmpty() || account.next<Long>() < API.LVL_MODERATOR_BLOCK.lvl) return Response(emptyArray())
+
         val select = SqlQuerySelect(TCollisions.NAME, TCollisions.collision_sub_id)
                 .join(ControllerFandom.instanceSelect())
                 .where(TFandoms.NAME + "." + TFandoms.id, "=", TCollisions.collision_id)
