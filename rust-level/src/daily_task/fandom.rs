@@ -31,7 +31,7 @@ impl LevelServer {
         // craziest query in bonfire yet
         let fandoms = sqlx::query_as!(
             DailyTaskFandom,
-            "select
+            "select distinct
                  f.id,
                  coalesce(
                      ((vc.value_1 is not null and vc.value_1 = $3)::int * 2 + 1) *
