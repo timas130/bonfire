@@ -33,7 +33,7 @@ impl AuthServer {
 
     pub(crate) async fn _resend_verification(&self, email: String) -> Result<(), AuthError> {
         let user = sqlx::query!(
-            "select username, email_verification_sent, email_verified from users \
+            "select username, email as \"email!\", email_verification_sent, email_verified from users \
              where lower(email) = lower($1)",
             email
         )
@@ -64,6 +64,8 @@ impl AuthServer {
                 ));
             }
         }
+
+        let email = user.email;
 
         self.send_verification_email(email.clone(), user.username)
             .await?;

@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select username, email_verification_sent, email_verified from users where lower(email) = lower($1)",
+  "query": "select username, email as \"email!\", email_verification_sent, email_verified from users where lower(email) = lower($1)",
   "describe": {
     "columns": [
       {
@@ -10,11 +10,16 @@
       },
       {
         "ordinal": 1,
+        "name": "email!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
         "name": "email_verification_sent",
         "type_info": "Timestamptz"
       },
       {
-        "ordinal": 2,
+        "ordinal": 3,
         "name": "email_verified",
         "type_info": "Timestamptz"
       }
@@ -27,8 +32,9 @@
     "nullable": [
       false,
       true,
+      true,
       true
     ]
   },
-  "hash": "d95ec1a37f04ace973d1bdd5e3d13e01d6139d509a396944cbd9af4eb44cbb59"
+  "hash": "99d33db36b4277359eaed9baa2cc6b0dd8283d90f09cc4ae697deb80115adb10"
 }
