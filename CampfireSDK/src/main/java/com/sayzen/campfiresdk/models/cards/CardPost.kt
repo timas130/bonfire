@@ -502,6 +502,7 @@ class CardPost(
         val publication = xPublication.publication as PublicationPost
         if (e.publicationId == publication.id) {
             publication.pages = e.pages
+            xPublication.addUserActivityCardIfNeed()
             pages.clear()
             updatePages()
         }
