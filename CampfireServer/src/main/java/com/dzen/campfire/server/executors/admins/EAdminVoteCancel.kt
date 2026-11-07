@@ -8,6 +8,7 @@ import com.dzen.campfire.api.models.publications.events_admins.ApiEventAdminAdmi
 import com.dzen.campfire.api.models.publications.events_user.ApiEventUserAdminVoteCanceledForUser
 import com.dzen.campfire.api.models.publications.events_user.ApiEventUserAdminVoteCanceledForAdmin
 import com.dzen.campfire.api.requests.admins.RAdminVoteCancel
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
 
 class EAdminVoteCancel : RAdminVoteCancel(0, "") {
@@ -20,6 +21,7 @@ class EAdminVoteCancel : RAdminVoteCancel(0, "") {
 
         val mVote = ControllerAdminVote.getById(voteId)
         if(mVote == null) return Response()
+        if(ControllerAdminVote.isOwnVote(mVote, apiAccount.id)) throw ApiException(API.ERROR_ACCESS)
 
         ControllerAdminVote.voteCancel(apiAccount.id, voteId)
 

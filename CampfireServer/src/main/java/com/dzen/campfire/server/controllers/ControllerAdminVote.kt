@@ -10,11 +10,14 @@ object ControllerAdminVote {
 
     val map = HashMap<Long, MAdminVote>()
 
+    // an admin can't decide a vote about themselves
+    fun isOwnVote(m:MAdminVote, accountId:Long) = m is MAdminVoteAccount && m.targetAccount.id == accountId && !ControllerOptimizer.isProtoadmin(accountId)
+
     fun getCount(accountId:Long) : Long {
         var count = 0L
         synchronized(map){
             for(m in map.values)
-                if(!m.votes.contains(accountId))
+                if(!m.votes.contains(accountId) && !isOwnVote(m, accountId))
                     count++
 
         }
@@ -25,7 +28,7 @@ object ControllerAdminVote {
         synchronized(map){
             val list = ArrayList<MAdminVote>()
             for(m in map.values)
-                if(!m.votes.contains(accountId))
+                if(!m.votes.contains(accountId) && !isOwnVote(m, accountId))
                     list.add(m)
             if (list.isNotEmpty()) {
                 return list.random()
