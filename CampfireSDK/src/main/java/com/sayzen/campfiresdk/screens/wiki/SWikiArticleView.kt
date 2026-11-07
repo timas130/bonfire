@@ -60,7 +60,7 @@ class SWikiArticleView(
             .subscribe(EventWikiChanged::class) { this.onEventWikiChanged(it) }
             .subscribe(EventWikiRemove::class) { if (it.itemId == wikiTitle.itemId) Navigator.remove(this) }
             .subscribe(EventWikiHistoryStatusChanged::class) {
-                if (it.itemId == loadedPages?.itemId && it.languageId == loadedPages?.languageId) reload()
+                if (startPages == null && it.itemId == wikiTitle.itemId && it.languageId == languageId) reload()
                 if (it.itemId == startPages?.itemId && it.languageId == startPages?.languageId) Navigator.remove(this)
             }
 
@@ -78,7 +78,6 @@ class SWikiArticleView(
     private val vEdit: View = findViewById(R.id.vEdit)
 
     private val adapter = RecyclerCardAdapter()
-    private var loadedPages: WikiPages? = null
     private var pages: Array<Page> = emptyArray()
     private var isLoading = false
     private var error = false
@@ -196,7 +195,6 @@ class SWikiArticleView(
                         reload()
                     } else {
                         wasSwitchedToEnglish = true
-                        loadedPages = it.wikiPages
                         pages = it.wikiPages?.pages ?: emptyArray()
                         disposeCompositions()
                         adapter.clear()
