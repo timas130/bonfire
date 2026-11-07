@@ -241,7 +241,12 @@ class AppActivity : SActivity() {
         Navigator.setStack(stackFeed!!)
         if(stackChats != null){
             val copy = ArrayList<Screen>(stackChats!!.stack)
-            for(i in copy) if(i !is SChats && i !is SChat && i !is SChatSubscribers && i !is SChatCreate) stackChats!!.stack.remove(i)
+            for(i in copy) if(i !is SChats && i !is SChat && i !is SChatSubscribers && i !is SChatCreate) {
+                i.onPause()
+                i.onStop()
+                i.onDestroy()
+                stackChats!!.stack.remove(i)
+            }
         }
     }
 
