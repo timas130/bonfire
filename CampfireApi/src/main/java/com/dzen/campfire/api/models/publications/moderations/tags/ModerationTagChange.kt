@@ -14,6 +14,7 @@ class ModerationTagChange : Moderation {
     var tagOldImageId: Long = 0
     var tagParentName: String = ""
     var tagParentImageId: Long = 0
+    var tagImageRemoved = false
 
 
     override fun getType() = API.MODERATION_TYPE_TAG_CHANGE
@@ -41,6 +42,7 @@ class ModerationTagChange : Moderation {
         tagOldImageId = json.m(inp, "tagOldImageId", tagOldImageId)
         tagParentName = json.m(inp, "tagParentName", tagParentName)
         tagParentImageId = json.m(inp, "tagParentImageId", tagParentImageId)
+        tagImageRemoved = json.m(inp, "tagImageRemoved", tagImageRemoved)
         return super.json(inp, json)
     }
 

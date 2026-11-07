@@ -65,7 +65,7 @@ class ETagsChange : RTagsChange(0, null, "", null, false) {
                 .updateValue(TPublications.publication_json, publication!!.jsonDB(true, Json())))
 
         val loggedImageId = if (removeImage) oldImageId else publication!!.imageId
-        ControllerPublications.moderation(ModerationTagChange(comment, publication!!.id, publication!!.parentPublicationId, publication!!.name, oldName!!, loggedImageId, oldImageId, if (publicationParent != null) publicationParent!!.name else "", if (publicationParent != null) publicationParent!!.imageId else 0),
+        ControllerPublications.moderation(ModerationTagChange(comment, publication!!.id, publication!!.parentPublicationId, publication!!.name, oldName!!, loggedImageId, oldImageId, if (publicationParent != null) publicationParent!!.name else "", if (publicationParent != null) publicationParent!!.imageId else 0).apply { tagImageRemoved = removeImage },
                 apiAccount.id, publication!!.fandom.id,  publication!!.fandom.languageId, publication!!.id)
 
         return Response()

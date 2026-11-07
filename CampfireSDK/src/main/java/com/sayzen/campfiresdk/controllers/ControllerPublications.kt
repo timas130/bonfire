@@ -391,7 +391,7 @@ object ControllerPublications {
                 val isTag = m.tagParentId != 0L
                 val nameChanged = m.tagName != m.tagOldName
                 val imageAdded = m.tagImageId != 0L && m.tagOldImageId == 0L
-                val imageChanged = m.tagImageId != 0L && m.tagOldImageId != 0L
+                val imageChanged = m.tagImageId != 0L && m.tagOldImageId != 0L && (m.tagImageId != m.tagOldImageId || m.tagImageRemoved)
 
                 if (isTag && nameChanged && !imageAdded && !imageChanged) text = tCap(API_TRANSLATE.moderation_text_tag_change_tag, ToolsResources.sex(publication.creator.sex, t(API_TRANSLATE.he_changed), t(API_TRANSLATE.she_changed)), m.tagOldName, m.tagName)
                 if (!isTag && nameChanged && !imageAdded && !imageChanged) text = tCap(API_TRANSLATE.moderation_text_tag_change_category, ToolsResources.sex(publication.creator.sex, t(API_TRANSLATE.he_changed), t(API_TRANSLATE.she_changed)), m.tagOldName, m.tagName)
