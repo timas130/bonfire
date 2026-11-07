@@ -50,7 +50,7 @@ private fun Account.getLevelColor(): Color {
         ControllerApi.isBot(name) -> Color(0xFF000000)
         ControllerApi.isProtoadmin(this) -> Color(0xFFF97316)
         ControllerApi.isAdmin(this) && karma30 >= API.LVL_ADMINISTRATOR.karmaCount -> Color(0xFFD32F2F)
-        ControllerApi.isModerator(this) && karma30 >= API.LVL_MODERATOR.karmaCount -> Color(0xFF1976D2)
+        ControllerApi.isModerator(lvl, karma30) -> Color(0xFF1976D2)
         else -> Color(0xFF388E3C)
     }
 }
