@@ -134,6 +134,7 @@ class SettingsField constructor(
 
     fun setMaxLength(max: Int) {
         vFieldLayout.counterMaxLength = max
+        vFieldLayout.isCounterEnabled = max > 0
     }
 
     fun addOnTextChanged(callback: (String) -> Unit) {

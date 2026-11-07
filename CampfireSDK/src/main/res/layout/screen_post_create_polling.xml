@@ -98,22 +98,19 @@
                     android:id="@+id/vLvl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    app:Settings_maxLength="3" />
+                    android:inputType="numberDecimal" />
 
                 <com.sup.dev.android.views.settings.SettingsField
                     android:id="@+id/vKarma"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    app:Settings_maxLength="3" />
+                    android:inputType="number" />
 
                 <com.sup.dev.android.views.settings.SettingsField
                     android:id="@+id/vDays"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    app:Settings_maxLength="4" />
+                    android:inputType="number" />
 
             </LinearLayout>
 
