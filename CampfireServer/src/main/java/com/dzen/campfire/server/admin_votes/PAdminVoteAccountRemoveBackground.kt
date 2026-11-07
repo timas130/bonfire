@@ -16,11 +16,17 @@ class PAdminVoteAccountRemoveBackground {
 
         val account = ControllerAccounts.getAccount(m.targetAccount.id)!!
 
+        val v = ControllerAccounts.get(m.targetAccount.id, TAccounts.img_title_id, TAccounts.img_title_gif_id)
+        val titleImageId = v.next<Long>()
+        val titleImageGifId = v.next<Long>()
+
         Database.update("EAccountsRemoveTitleImage", SqlQueryUpdate(TAccounts.NAME)
             .where(TAccounts.id, "=", m.targetAccount.id)
-            .update(TAccounts.img_title_id, 0))
+            .update(TAccounts.img_title_id, 0)
+            .update(TAccounts.img_title_gif_id, 0))
 
-        ControllerResources.remove(account.imageId)
+        ControllerResources.remove(titleImageId)
+        ControllerResources.remove(titleImageGifId)
 
         ControllerPublications.event(ApiEventAdminUserRemoveTitleImage(m.adminAccount.id, m.adminAccount.name, m.adminAccount.imageId, m.adminAccount.sex, m.targetAccount.id, account.name, account.imageId, account.sex, m.comment), m.adminAccount.id)
         ControllerPublications.event(ApiEventUserAdminRemoveTitleImage(m.targetAccount.id, account.name, account.imageId, account.sex, m.adminAccount.id, m.adminAccount.name, m.adminAccount.imageId, m.adminAccount.sex, m.comment), m.targetAccount.id)
