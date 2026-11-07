@@ -34,6 +34,7 @@ class CardStickersPack(
             .subscribe(EventStickersPackChanged::class) {
                 if (it.stickersPack.id == publication.id) {
                     publication.imageId = it.stickersPack.imageId
+                    publication.image = it.stickersPack.image
                     publication.name = it.stickersPack.name
                     update()
                 }
