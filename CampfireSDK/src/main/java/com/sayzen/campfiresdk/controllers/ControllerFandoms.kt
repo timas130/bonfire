@@ -257,7 +257,7 @@ object ControllerFandoms {
                 .setTopTitleText(t(API_TRANSLATE.app_attention))
                 .setCancelable(false)
                 .setTitleImageBackgroundRes(R.color.blue_700)
-                .setChecker(t(API_TRANSLATE.message_closed_fandom_check))
+                .setChecker(null, t(API_TRANSLATE.message_closed_fandom_check))
                 .setOnEnter(t(API_TRANSLATE.app_continue))
                 .setOnCancel(t(API_TRANSLATE.app_cancel)) { Navigator.remove(screen) }
                 .setOnChecker { if (it) ControllerSettings.fandomNSFW = ToolsCollections.add(fandomId, ControllerSettings.fandomNSFW) }
