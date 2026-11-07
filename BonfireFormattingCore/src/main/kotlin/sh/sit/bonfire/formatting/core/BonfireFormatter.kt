@@ -64,7 +64,7 @@ object BonfireFormatter {
         node.accept(visitor)
 
         return FormattedText().apply {
-            this.text = visitor.outputString.toString().trimEnd()
+            this.text = visitor.outputString.toString().trimEnd('\n')
             this.spans = visitor.outputSpans
                 .map {
                     it.start = it.start.coerceAtMost(this.text.length)
