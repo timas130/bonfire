@@ -7,6 +7,7 @@ import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.publications.stickers.PublicationSticker
 import com.dzen.campfire.api.requests.stickers.RStickersGetAllFavorite
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.stickers.CardSticker
@@ -26,6 +27,7 @@ class SStickersViewFavorite(
 
     private val eventBus = EventBus
             .subscribe(EventStickerCollectionChanged::class) {
+                if (!ControllerApi.isCurrentAccount(accountId)) return@subscribe
                 if (it.inCollection) {
                     var found = false
                     for (c in adapter.get(CardSticker::class)) if (c.xPublication.publication.id == it.sticker.id) found = true
