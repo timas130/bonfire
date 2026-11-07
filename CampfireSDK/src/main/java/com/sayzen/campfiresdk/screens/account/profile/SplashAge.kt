@@ -3,6 +3,7 @@ package com.sayzen.campfiresdk.screens.account.profile
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
@@ -38,7 +39,7 @@ class SplashAge(
     }
 
     private fun update(){
-        vEnter.isEnabled = vField.text.length < 4 && ToolsMapper.isLongCastable(vField.text) && vField.text.toString().toLong() != currentAge
+        vEnter.isEnabled = vField.text.length < 4 && ToolsMapper.isLongCastable(vField.text) && vField.text.toString().toLong() != currentAge && vField.text.toString().toLong() <= API.ACCOUNT_AGE_MAX
     }
 
     override fun onShow() {
