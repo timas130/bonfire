@@ -268,13 +268,9 @@ class SQuestNewYear : SQuest() {
                 .addButton("Умолять идола о прощении", "6_1_2"),
             QuestItem("6_1_2")
                 .text("После вашей мольбы гроза начала утихать. В вашей голове раздался голос \"Готов ли ты принять наказание?\"")
-                .addButton("Согласиться", "6_1_3"),
+                .addButton("Согласиться", "6_1_3") { RProjectGetEffect(API.EFFECT_INDEX_HATE).send(api) },
             QuestItem("6_1_3")
-                .setOnStart {
-                    stopThunder(); RProjectGetEffect(API.EFFECT_INDEX_HATE).send(
-                    api
-                )
-                }
+                .setOnStart { stopThunder() }
                 .text("Гроза стихла. Вы почувствовали слабость. Похоже вам не стоило проявлять агрессию к богам.")
                 .addTextJump(effect_bad("Проклятие хейтера"))
                 .addButton("Раскаяться", "6_2"),
@@ -568,9 +564,8 @@ class SQuestNewYear : SQuest() {
             QuestItem("10_7_1")
                 .text("Свинья замерла и пристально на вас посмотрела. Вам кажется что она прочитала ваши мысли.")
                 .addButton("Извиниться", "10_7_3")
-                .addButton("Мерзкое созданий!", "10_7_2"),
+                .addButton("Мерзкое созданий!", "10_7_2") { RProjectGetEffect(API.EFFECT_INDEX_PIG).send(api) },
             QuestItem("10_7_2")
-                .setOnStart { RProjectGetEffect(API.EFFECT_INDEX_PIG).send(api) }
                 .text("Свинья начала чтото бормотать себе под нос. Вам кажется что вы теряете рассудок. Наверное не стоило её злить.")
                 .addTextJump(effect_bad("Проклятие свиньи"))
                 .addButton("Рассмотреть людей","10_8")
