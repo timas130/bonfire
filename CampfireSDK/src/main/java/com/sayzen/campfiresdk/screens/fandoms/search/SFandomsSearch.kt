@@ -1,6 +1,7 @@
 package com.sayzen.campfiresdk.screens.fandoms.search
 
 import android.view.View
+import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
 import com.dzen.campfire.api.models.fandoms.Fandom
@@ -12,6 +13,7 @@ import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.cards.CardFandom
+import com.sayzen.campfiresdk.models.events.fandom.EventFandomSubscribe
 import com.sayzen.campfiresdk.screens.fandoms.suggest.SFandomSuggest
 import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
@@ -19,6 +21,7 @@ import com.sup.dev.android.libs.screens.navigator.NavigationAction
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.views.cards.CardDividerTitle
 import com.sup.dev.android.views.screens.SLoadingRecycler
+import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsThreads
 
 class SFandomsSearch private constructor(
@@ -54,6 +57,12 @@ class SFandomsSearch private constructor(
 
     private var subscribedLoaded = false
     private var lockOnEmpty = false
+    private val subscribedAfterLoad = HashSet<Long>()
+
+    private val eventBus = EventBus.subscribe(EventFandomSubscribe::class) {
+        if (it.subscriptionType == API.PUBLICATION_IMPORTANT_NONE) subscribedAfterLoad.remove(it.fandomId)
+        else subscribedAfterLoad.add(it.fandomId)
+    }
 
     init {
         disableShadows()
@@ -142,6 +151,7 @@ class SFandomsSearch private constructor(
         adapter.remove(CardDividerTitle::class)
         lockOnEmpty = true
         subscribedLoaded = false
+        subscribedAfterLoad.clear()
         super.reload()
     }
 
@@ -202,7 +212,7 @@ class SFandomsSearch private constructor(
     private fun getLastUnsubscribedOffset(): Long {
         var offset = 0L
         val cards = adapter.get(CardFandom::class)
-        for (c in cards) if (!c.subscribed) {
+        for (c in cards) if (!c.subscribed && !subscribedAfterLoad.contains(c.fandom.id)) {
             offset++
         }
         return offset
