@@ -1,6 +1,7 @@
 package com.dzen.campfire.api.requests.accounts
 
 import com.dzen.campfire.api.models.fandoms.KarmaInFandom
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
 
@@ -40,6 +41,10 @@ open class RAccountsKarmaInFandomsGetAll(
 
         override fun json(inp: Boolean, json: Json) {
             karma = json.m(inp, "karma", karma, Array<KarmaInFandom>::class)
+        }
+
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            for (k in karma) k.fillImageRefs(receiver)
         }
 
     }
