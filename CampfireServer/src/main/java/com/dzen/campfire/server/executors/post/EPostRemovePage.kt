@@ -25,6 +25,7 @@ class EPostRemovePage : RPostRemovePage(0,  emptyArray()) {
         val status = v.next<Long>()
         val creatorId = v.next<Long>()
         publication = PublicationPost(Json(v.next<Object>().toString()))
+        publication.status = status
         val publicationType = v.next<Long>()
 
         if (status != API.STATUS_DRAFT && status != API.STATUS_PUBLIC && status != API.STATUS_PENDING) throw ApiException(E_BAD_STATUS)

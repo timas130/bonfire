@@ -28,6 +28,7 @@ class EPostMovePage : RPostMovePage(0, 0, 0) {
         val creatorId = v.next<Long>()
         val publicationType = v.next<Long>()
         publication = PublicationPost(Json(v.next<Object>().toString()))
+        publication!!.status = status
         val fandomId = v.next<Long>()
         val languageId = v.next<Long>()
 

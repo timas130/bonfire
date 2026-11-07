@@ -43,6 +43,7 @@ class EPostPutPage : RPostPutPage(0, emptyArray(), 0, 0, "", "") {
             val publicationType = v.next<Long>()
             publication = PublicationPost(Json(v.next<Object>().toString()))
             publication!!.id = publicationId
+            publication!!.status = status
             val creatorId = v.next<Long>()
             val fandomId = v.next<Long>()
             val languageId = v.next<Long>()
