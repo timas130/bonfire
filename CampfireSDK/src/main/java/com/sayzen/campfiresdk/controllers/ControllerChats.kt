@@ -443,7 +443,10 @@ object ControllerChats {
         if (e.notification is NotificationChatMessage) {
             removeTyping(e.notification.tag, e.notification.publicationChatMessage.creator.name)
             val n = e.notification
-            incrementMessages(n.tag, n.publicationChatMessage, n.subscribed)
+            val message = n.publicationChatMessage
+            if (message.type != PublicationChatMessage.TYPE_SYSTEM || !ControllerApi.isCurrentAccount(message.systemOwnerId)) {
+                incrementMessages(n.tag, message, n.subscribed)
+            }
             putRead(n.tag, n.dateCreate)
         }
         if (e.notification is NotificationChatAnswer) {
