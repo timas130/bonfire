@@ -307,6 +307,25 @@ class SQuestPlayer(
             vButtonContainer.addView(button)
         }
 
+        if (state.dev) vSaveState.visibility = GONE
+        updateSaveButtonIcon()
+        vSaveState.setOnClickListener {
+            val splash = ToolsView.showProgressDialog()
+            saveState {
+                splash.hide()
+            }
+        }
+
+        if (state.dev) vDebugButton.setImageResource(R.drawable.baseline_bug_report_24)
+        vDebugButton.setOnClickListener {
+            Navigator.replace(SQuestDebug(details, state, parts, index))
+        }
+    }
+
+    override fun onFirstShow() {
+        super.onFirstShow()
+        if (part !is QuestPartText) return
+
         part.effects.forEach { effect ->
             when (effect) {
                 is QuestEffectVibrate -> {
@@ -333,20 +352,6 @@ class SQuestPlayer(
                     ControllerScreenAnimations.clearAnimation()
                 }
             }
-        }
-
-        if (state.dev) vSaveState.visibility = GONE
-        updateSaveButtonIcon()
-        vSaveState.setOnClickListener {
-            val splash = ToolsView.showProgressDialog()
-            saveState {
-                splash.hide()
-            }
-        }
-
-        if (state.dev) vDebugButton.setImageResource(R.drawable.baseline_bug_report_24)
-        vDebugButton.setOnClickListener {
-            Navigator.replace(SQuestDebug(details, state, parts, index))
         }
     }
 
