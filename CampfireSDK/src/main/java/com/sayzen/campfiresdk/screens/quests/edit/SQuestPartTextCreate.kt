@@ -281,7 +281,7 @@ class SQuestPartTextCreate(
                 .setOnDone { newEffect ->
                     if (
                         newEffect is QuestEffectVibrate &&
-                        part.effects.first { it is QuestEffectVibrate } != effect
+                        part.effects.any { it is QuestEffectVibrate && it !== effect }
                     ) {
                         ToolsToast.show(t(API_TRANSLATE.quests_edit_text_effect_error_2))
                         return@setOnDone
