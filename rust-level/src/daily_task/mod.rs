@@ -87,12 +87,14 @@ impl LevelServer {
 
             let task = self.determine_task(user_id, level, &today).await?;
 
-            // if you think about it, the combo multiplier can be
-            // cheated if a user cheats through the previous level
-            // and triggers the recount only once.
-            // too bad! (it'll fix itself after a single recount anyway)
             let combo_multiplier = match task_history.last() {
-                Some(task) => Self::get_new_combo_multiplier(task.combo_multiplier, task.progress),
+                Some(task) => {
+                    let progress = self
+                        .get_task_progress(&task.task, user_id, &task.date)
+                        .await?;
+                    let progress_f = progress as f64 / task.task.get_amount() as f64;
+                    Self::get_new_combo_multiplier(task.combo_multiplier, progress_f)
+                }
                 None => 1.,
             };
             let level_multiplier = Self::get_level_multiplier(level);
