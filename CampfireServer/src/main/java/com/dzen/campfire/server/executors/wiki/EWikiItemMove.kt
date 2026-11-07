@@ -27,6 +27,13 @@ class EWikiItemMove : RWikiItemMove(0, 0, 0) {
 
             if (wikiTitleItem.fandomId != wikiTitleDest.fandomId) throw ApiException(E_BAD_PAGE_INDEX)
             if (destinationId == itemId) throw ApiException(E_BAD_PAGE_INDEX) // мне лень
+
+            val visited = hashSetOf(destinationId)
+            var ancestorId = wikiTitleDest.parentItemId
+            while (ancestorId > 0 && visited.add(ancestorId)) {
+                if (ancestorId == itemId) throw ApiException(E_BAD_PAGE_INDEX)
+                ancestorId = ControllerWiki.getTitlesByItemId(ancestorId)?.parentItemId ?: 0L
+            }
         }
 
         ControllerFandom.checkCan(apiAccount, wikiTitleItem.fandomId, 1, API.LVL_MODERATOR_WIKI_EDIT)
