@@ -2302,6 +2302,7 @@ object API_TRANSLATE {
     var quests_edit_errors = 0L
 	var quests_error_depth = 0L
     var quests_error_uninit = 0L
+    var quests_error_not_number = 0L
     var quests_no_drafts = 0L
     var quests_draft_name = 0L
     var quests_draft_enter = 0L

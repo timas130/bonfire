@@ -406,7 +406,10 @@ class SQuestPlayer(
             when (val view = vInputContainer.getChildAt(idx)) {
                 is SettingsField -> {
                     if (it.type == API.QUEST_TYPE_NUMBER) {
-                        view.getText().toLongOrNull() ?: return false
+                        view.getText().toLongOrNull() ?: run {
+                            ToolsToast.show(t(API_TRANSLATE.quests_error_not_number, it.hint))
+                            return false
+                        }
                     }
                     state.variables[it.varId] = view.getText()
                 }
