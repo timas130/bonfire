@@ -93,19 +93,15 @@ class CardFandomInfo(
 
     private fun onEventFandomInfoGalleryChanged(e: EventFandomInfGalleryChanged) {
         if (e.fandomId == xFandom.getId() && e.languageId == xFandom.getLanguageId()) {
-            if (e.gallery.isNotEmpty()) {
-                this.gallery = e.gallery
-                updateGallery()
-            }
+            this.gallery = e.gallery
+            updateGallery()
         }
     }
 
     private fun onEventFandomInfoLinksChanged(e: EventFandomInfoLinksChanged) {
         if (e.fandomId == xFandom.getId() && e.languageId == xFandom.getLanguageId()) {
-            if (e.links.isNotEmpty()) {
-                this.links = e.links
-                updateLinks()
-            }
+            this.links = e.links
+            updateLinks()
         }
     }
 
