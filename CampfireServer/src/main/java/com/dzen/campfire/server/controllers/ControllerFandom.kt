@@ -248,6 +248,7 @@ object ControllerFandom {
         if (account.id == getViceroyId(fandomId, languageId)) return true
         if (account.accessTag < moderateInfo.lvl || ControllerAccounts.isBot(account)) return false
         if (can(account, API.LVL_ADMIN_MODER)) return true
+        if (fandomId == 0L) return false
         return moderateInfo.karmaCount <= 0 || getKarma30(account.id, fandomId, languageId) >= moderateInfo.karmaCount
     }
 

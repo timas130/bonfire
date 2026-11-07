@@ -15,7 +15,8 @@ class EPublicationsAdminClearReports : RPublicationsAdminClearReports(0) {
         val publication = ControllerPublications.getPublication(publicationId, apiAccount.id)
                 ?: throw ApiException(API.ERROR_GONE)
         if (publication.creator.id == apiAccount.id) throw ApiException(E_SELF)
-        ControllerFandom.checkCan(apiAccount, publication.fandom.id, publication.fandom.languageId, API.LVL_MODERATOR_BLOCK)
+        if (publication.publicationType == API.PUBLICATION_TYPE_QUEST) ControllerFandom.checkCan(apiAccount, API.LVL_QUEST_MODERATOR)
+        else ControllerFandom.checkCan(apiAccount, publication.fandom.id, publication.fandom.languageId, API.LVL_MODERATOR_BLOCK)
     }
 
     override fun execute(): Response {
