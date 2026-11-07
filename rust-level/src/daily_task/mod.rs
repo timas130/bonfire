@@ -34,8 +34,6 @@ impl LevelServer {
     }
 
     pub(crate) async fn get_dt_level(&self, user_id: i64) -> Result<i64, LevelError> {
-        let mut tx = self.base.pool.begin().await?;
-
         struct Task {
             date: NaiveDate,
             task: DailyTask,
@@ -54,7 +52,7 @@ impl LevelServer {
             Utc::now().date_naive(),
             Utc::now().date_naive() - Days::new(3),
         )
-        .fetch(&mut *tx)
+        .fetch(&self.base.pool)
         .try_filter_map(|record| async move {
             // basically we forward any errors from sqlx
             // and filter out corrupted/outdated records
@@ -83,7 +81,7 @@ impl LevelServer {
 
         if !today_task_generated {
             let level = sqlx::query_scalar!("select lvl from accounts where id = $1", user_id)
-                .fetch_optional(&mut *tx)
+                .fetch_optional(&self.base.pool)
                 .await?
                 .unwrap_or(100);
 
@@ -113,7 +111,7 @@ impl LevelServer {
                 combo_multiplier,
                 level_multiplier,
             )
-            .execute(&mut *tx)
+            .execute(&self.base.pool)
             .await?;
 
             task_history.push(Task {
@@ -124,6 +122,7 @@ impl LevelServer {
             });
         }
 
+        let mut changed_progress = Vec::new();
         for task in &task_history {
             let progress = self
                 .get_task_progress(&task.task, user_id, &task.date)
@@ -131,17 +130,23 @@ impl LevelServer {
             let progress_f = progress as f64 / task.task.get_amount() as f64;
 
             if task.progress != progress_f {
-                sqlx::query!(
-                    "update daily_tasks
-                     set progress = $1
-                     where account_id = $2 and date = $3",
-                    progress_f,
-                    user_id,
-                    task.date,
-                )
-                .execute(&mut *tx)
-                .await?;
+                changed_progress.push((task.date, progress_f));
             }
+        }
+
+        let mut tx = self.base.pool.begin().await?;
+
+        for (date, progress_f) in changed_progress {
+            sqlx::query!(
+                "update daily_tasks
+                 set progress = $1
+                 where account_id = $2 and date = $3",
+                progress_f,
+                user_id,
+                date,
+            )
+            .execute(&mut *tx)
+            .await?;
         }
 
         let level = sqlx::query_scalar!(
