@@ -2,6 +2,7 @@ package com.dzen.campfire.server.controllers
 
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.account.AccountSettings
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.publications.post.*
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.rust.RustProfile
@@ -285,10 +286,12 @@ object ControllerPost {
             is PageImage -> {
                 page.imageId = ControllerResources.put(page.insertBytes!!, publicationId)
                 page.gifId = if (page.insertGifBytes != null) ControllerResources.put(page.insertGifBytes!!, publicationId) else 0L
+                page.gif = ImageRef()
                 page.insertBytes = null
                 page.insertGifBytes = null
             }
             is PageLinkImage -> {
+                page.image = ImageRef()
                 if(page.insertBytes != null) {
                     page.imageId = ControllerResources.put(page.insertBytes!!, publicationId)
                     page.insertBytes = null
@@ -347,6 +350,7 @@ object ControllerPost {
                 }
                 page.cells = newCells.toTypedArray()
                 for (c in page.cells) {
+                    c.image = ImageRef()
                     if (c.insertImage != null) {
                         if (c.imageId > 0) ControllerResources.remove(c.imageId)
 
