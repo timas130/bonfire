@@ -69,7 +69,8 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
                 languageId,
                 API.LVL_MODERATOR_BLOCK
         )
-        if (blockInApp) ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_BAN)
+        // quests and sticker packs have no fandom to ban from, so a ban there is app-wide
+        if (blockInApp || (fandomId == 0L && blockTime > 0L)) ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_BAN)
         if (!ControllerFandom.checkCanModerate(
                         apiAccount,
                         publication!!.creator.id,
@@ -126,7 +127,7 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
         val moderationId = createModerationAndEvents()
 
         if (blockTime > 0L) {
-            if (blockInApp || moderationId == 0L) {
+            if (blockInApp || moderationId == 0L || fandomId == 0L) {
                 banAccountInApp()
             } else {
                 banAccountInFandom()
@@ -232,7 +233,7 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
                 || publication!!.publicationType == API.PUBLICATION_TYPE_COMMENT
                 || publication!!.publicationType == API.PUBLICATION_TYPE_CHAT_MESSAGE) {
             moderationId = ControllerPublications.moderation(ModerationBlock(comment, publicationId, publication!!.getPublicationTypeConst(), publication!!.creator.id, publication!!.creator.name, publication!!.creator.imageId, blockAccountDate, blockLastPublications), apiAccount.id, fandomId, languageId, publication!!.id)
-            ControllerPublications.event(ApiEventUserAdminPublicationBlocked(publication!!.creator.id, publication!!.creator.name, publication!!.creator.imageId, publication!!.creator.sex, apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, publication!!.getPublicationTypeConst(), moderationId, blockAccountDate, blockLastPublications, blockTime == -1L, blockInApp, fandomName, fandomId, if (isSubChatMessage) languageId else publication!!.fandom.languageId), publication!!.creator.id)
+            ControllerPublications.event(ApiEventUserAdminPublicationBlocked(publication!!.creator.id, publication!!.creator.name, publication!!.creator.imageId, publication!!.creator.sex, apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, publication!!.getPublicationTypeConst(), moderationId, blockAccountDate, blockLastPublications, blockTime == -1L, blockInApp || fandomId == 0L, fandomName, fandomId, if (isSubChatMessage) languageId else publication!!.fandom.languageId), publication!!.creator.id)
         }
 
         ControllerPublicationsHistory.put(publicationId, HistoryAdminBlock(apiAccount.id, apiAccount.imageId, apiAccount.name, comment))

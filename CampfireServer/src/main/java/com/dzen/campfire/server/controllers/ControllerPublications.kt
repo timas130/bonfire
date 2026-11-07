@@ -366,7 +366,7 @@ object ControllerPublications {
         moderation.fandom.id = fandomId
         moderation.fandom.languageId = languageId
         moderation.moderation = event
-        moderation.category = ControllerFandom.getCategory(fandomId)
+        moderation.category = if (fandomId == 0L) 0L else ControllerFandom.getCategory(fandomId)
         moderation.tag_1 = event.getType()
         moderation.tag_2 = 0
         moderation.tag_3 = 0
