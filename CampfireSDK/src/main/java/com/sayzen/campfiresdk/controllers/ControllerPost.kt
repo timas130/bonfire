@@ -157,7 +157,7 @@ object ControllerPost {
                     .add(t(API_TRANSLATE.publication_menu_unset_nsfw)) { setNsfwUser(post, false) }.backgroundRes(R.color.focus)
                     .condition(post.nsfw && (post.isPublic || post.isDraft) && ControllerApi.isCurrentAccount(post.creator.id))
                     .add(t(API_TRANSLATE.post_change_rubric)) { changeRubric(post) }.backgroundRes(R.color.focus)
-                    .condition(ControllerApi.isCurrentAccount(post.creator.id) && post.dateCreate < System.currentTimeMillis() - 1000 * 3600 * 24 * 7)
+                    .condition(post.isPublic && ControllerApi.isCurrentAccount(post.creator.id) && post.dateCreate < System.currentTimeMillis() - 1000 * 3600 * 24 * 7)
                     .finishItemBuilding()
             }
         }
