@@ -181,10 +181,10 @@ object ApiRequestsSupporter {
     }
 
     fun <K : Request.Response> executeEnabledConfirm(@StringRes text: Int, @StringRes enter: Int, request: Request<K>, onComplete: (K) -> Unit): Request<K> {
-        return executeEnabledConfirm(ToolsResources.s(text), ToolsResources.s(enter), request, onComplete)
+        return executeEnabledConfirm(ToolsResources.s(text), ToolsResources.s(enter), request, onComplete = onComplete)
     }
 
-    fun <K : Request.Response> executeEnabledConfirm(text: String, enter: String, request: Request<K>, onComplete: (K) -> Unit): Request<K> {
+    fun <K : Request.Response> executeEnabledConfirm(text: String, enter: String, request: Request<K>, hideOnHandledError: Boolean = false, onComplete: (K) -> Unit): Request<K> {
         var callbacksAdded = false
         SplashAlert()
                 .setText(text)
@@ -196,6 +196,7 @@ object ApiRequestsSupporter {
                     } else {
                         callbacksAdded = true
                         executeEnabled(w, request, onComplete)
+                        if (hideOnHandledError) request.onApiError { if (request.onApiErrors.containsKey(it.code)) w.hide() }
                     }
                 }
                 .asSheetShow()

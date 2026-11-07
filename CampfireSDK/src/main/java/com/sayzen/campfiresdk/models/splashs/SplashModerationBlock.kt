@@ -169,7 +169,8 @@ class SplashModerationBlock(
         val blockInApp = if (ControllerApi.can(API.LVL_ADMIN_BAN)) vBlockInApp.isChecked() else false
 
         ApiRequestsSupporter.executeEnabledConfirm(alertText, alertAction,
-                RFandomsModerationBlock(publication.id, banTime, vRemovePublications.isChecked(), vComment.getText().trim { it <= ' ' }, blockInApp, ControllerApi.getLanguageId())) { r ->
+                RFandomsModerationBlock(publication.id, banTime, vRemovePublications.isChecked(), vComment.getText().trim { it <= ' ' }, blockInApp, ControllerApi.getLanguageId()),
+                hideOnHandledError = true) { r ->
             afterBlock(r.blockedPublicationsIds, r.publicationChatMessage)
             ToolsToast.show(finishToast)
             hide()
@@ -181,13 +182,15 @@ class SplashModerationBlock(
                 }
                 .onApiError(RFandomsModerationBlock.E_ALREADY) {
                     ToolsToast.show(t(API_TRANSLATE.error_already_blocked))
-                    afterBlock(emptyArray(), null)
+                    afterBlock(arrayOf(publication.id), null)
                     hide()
+                    onBlock.invoke()
                 }
                 .onApiError(RFandomsModerationBlock.E_DRAFT) {
                     ToolsToast.show(t(API_TRANSLATE.error_already_returned_to_drafts))
-                    afterBlock(emptyArray(), null)
+                    afterBlock(arrayOf(publication.id), null)
                     hide()
+                    onBlock.invoke()
                 }
                 .onApiError(RFandomsModerationBlock.E_BLOCKS_LIMIT) {
                     ToolsToast.show(t(API_TRANSLATE.error_publications_blocks_limit))
