@@ -62,6 +62,11 @@ class PollingResultsModel(
             }
         }
 
+    override fun shouldLoadMore(loaded: List<PollResult>): Boolean {
+        val filter = _pollItemFilter.value ?: return false
+        return loaded.none { it.itemId == filter }
+    }
+
     override suspend fun load(current: List<PollResult>): List<PollResult> {
         return RPostPagePollingGetVotes(
             sourceType = pagesSource.sourceType,
@@ -94,7 +99,11 @@ private fun PollingResultsScreenC(
             ErrorCard(text = stringResource(R.string.poll_results_error))
         },
         emptyCard = {
-            EmptyCard(text = stringResource(R.string.poll_results_empty))
+            val hasMore by model.hasMore.collectAsState()
+
+            if (hasMore != true) {
+                EmptyCard(text = stringResource(R.string.poll_results_empty))
+            }
         },
         topContent = {
             val pollItemFilter by model.pollItemFilter.collectAsState()

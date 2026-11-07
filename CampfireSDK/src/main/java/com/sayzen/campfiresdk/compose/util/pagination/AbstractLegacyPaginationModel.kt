@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 // when inheriting the class, you MUST call reload() in your constructor
@@ -36,12 +37,14 @@ abstract class AbstractLegacyPaginationModel<T> : PaginationModel<T>, ViewModel(
             loadingMore = true
 
             try {
-                val moreItems = load(_items.value ?: emptyList())
-                _items.getAndUpdate {
-                    (it ?: emptyList()) + moreItems
-                }
-                _hasMore.emit(moreItems.isNotEmpty())
-                _isError.emit(false)
+                do {
+                    val moreItems = load(_items.value ?: emptyList())
+                    _items.getAndUpdate {
+                        (it ?: emptyList()) + moreItems
+                    }
+                    _hasMore.emit(moreItems.isNotEmpty())
+                    _isError.emit(false)
+                } while (isActive && moreItems.isNotEmpty() && shouldLoadMore(moreItems))
             } catch (e: Exception) {
                 e.printStackTrace()
                 _isError.emit(true)
@@ -53,4 +56,7 @@ abstract class AbstractLegacyPaginationModel<T> : PaginationModel<T>, ViewModel(
     }
 
     abstract suspend fun load(current: List<T>): List<T>
+
+    /** Whether to load another page right away, after the page in `loaded` has been added */
+    protected open fun shouldLoadMore(loaded: List<T>): Boolean = false
 }
