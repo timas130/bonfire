@@ -303,7 +303,6 @@ class SCreatePageTable(
     private fun createImage(vCell: ViewTableCell) {
         SplashChooseImage()
                 .setCallbackInWorkerThread(true)
-                .setMaxSelectCount(API.PAGE_IMAGES_MAX_COUNT)
                 .setOnSelected { _, bytes, _ ->
                     val dialog = ToolsView.showProgressDialog()
                     ToolsThreads.thread { createImageStep2(vCell, bytes, dialog) }
