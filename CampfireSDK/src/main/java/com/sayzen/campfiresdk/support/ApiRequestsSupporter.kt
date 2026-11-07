@@ -110,7 +110,7 @@ object ApiRequestsSupporter {
                     if(vProgress.isHided()) return@onNetworkError
                     SAlert.showNetwork(action) {
                         Navigator.remove(it)
-                        executeInterstitial(action, request, onComplete)
+                        executeInterstitial(action, request, onComplete, goneText)
                     }
                 }
                 .onFinish {
