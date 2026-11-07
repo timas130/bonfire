@@ -264,7 +264,9 @@ object ToolsIntent {
                 .putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
             startIntentForResult(cameraIntent) { code, _ ->
                 if (code != Activity.RESULT_OK) {
-                    onError(RuntimeException("activity result not ok: code $code"))
+                    // the camera app didn't write anything, don't leave an empty file behind
+                    imageFile.delete()
+                    onError(IllegalAccessException("activity result not ok: code $code"))
                     return@startIntentForResult
                 }
 

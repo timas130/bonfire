@@ -191,8 +191,10 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
         ToolsIntent.getCameraImage({ bytes ->
             deliverSingleImage(bytes)
         },{
-            err(it)
-            ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
+            if (it !is IllegalAccessException) {
+                err(it)
+                ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
+            }
         })
     }
 
