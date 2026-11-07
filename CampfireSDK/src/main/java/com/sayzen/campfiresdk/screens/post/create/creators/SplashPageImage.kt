@@ -35,6 +35,7 @@ class SplashPageImage(
     private var imagesCreator = ImagesListCreator(requestPutPageTracked)
     @Volatile
     private var createAsList = false
+    private var listPromptShown = false
 
     init {
         setMaxSelectCount(10)
@@ -43,7 +44,8 @@ class SplashPageImage(
 
             if (w.getSelectedCount() > 1) {
 
-                if(index == 0) {
+                if(!listPromptShown) {
+                    listPromptShown = true
                     val waiting = Item(true)
                     ToolsThreads.main {
                         SplashAlert()
