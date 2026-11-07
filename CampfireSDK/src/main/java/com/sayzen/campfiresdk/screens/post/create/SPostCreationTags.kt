@@ -79,6 +79,7 @@ class SPostCreationTags private constructor(
                     onCreate.invoke()
                     ControllerStoryQuest.incrQuest(API.QUEST_STORY_POST)
                     ControllerActivities.reloadActivities()
+                    postParams.activity?.let { ControllerActivities.reloadRelayRace(it.id) }
                 }.onApiError(API.ERROR_VIDEO_NOT_READY) {
                     ToolsToast.show(R.string.post_error_videos_processing)
                 }.onApiError(RPostPublication.E_BAD_TAGS) {

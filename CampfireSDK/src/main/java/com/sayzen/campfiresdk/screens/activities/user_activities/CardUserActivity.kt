@@ -15,6 +15,7 @@ import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.activities.EventActivitiesChanged
 import com.sayzen.campfiresdk.models.events.activities.EventActivitiesRelayRaceMemberStatusChanged
 import com.sayzen.campfiresdk.models.events.activities.EventActivitiesRelayRaceRejected
+import com.sayzen.campfiresdk.models.events.activities.EventActivitiesRelayRaceReloaded
 import com.sayzen.campfiresdk.models.events.activities.EventActivitiesRemove
 import com.sayzen.campfiresdk.screens.activities.user_activities.relay_race.SRelayRaceInfo
 import com.sayzen.campfiresdk.screens.post.create.SPostCreate
@@ -57,6 +58,16 @@ class CardUserActivity(
                         userActivity.currentAccount = ControllerApi.account.getAccount()
                         recreateXAccount()
                     }
+                    update()
+                }
+            }
+            .subscribe(EventActivitiesRelayRaceReloaded::class) {
+                if (it.userActivity.id == userActivity.id) {
+                    userActivity.tag_2 = it.userActivity.tag_2
+                    userActivity.currentAccount = it.userActivity.currentAccount
+                    userActivity.myPostId = it.userActivity.myPostId
+                    userActivity.myMemberStatus = it.userActivity.myMemberStatus
+                    recreateXAccount()
                     update()
                 }
             }

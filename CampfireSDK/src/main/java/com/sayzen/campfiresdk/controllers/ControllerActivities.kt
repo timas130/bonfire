@@ -185,5 +185,12 @@ object ControllerActivities {
         }
     }
 
+    fun reloadRelayRace(userActivityId: Long) {
+        RActivitiesGetRelayRaceFullInfo(userActivityId)
+                .onComplete { EventBus.post(EventActivitiesRelayRaceReloaded(it.userActivity)) }
+                .onError { err(it) }
+                .send(api)
+    }
+
 
 }

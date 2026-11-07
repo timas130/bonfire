@@ -7,6 +7,7 @@ import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.models.events.activities.EventActivitiesChanged
 import com.sayzen.campfiresdk.models.events.activities.EventActivitiesRelayRaceMemberStatusChanged
 import com.sayzen.campfiresdk.models.events.activities.EventActivitiesRelayRaceRejected
+import com.sayzen.campfiresdk.models.events.activities.EventActivitiesRelayRaceReloaded
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter.sendSuspendExt
 
 open class UserActivityDataSource(data: UserActivity) : BonfireDataSource<UserActivity>(data) {
@@ -26,6 +27,14 @@ open class UserActivityDataSource(data: UserActivity) : BonfireDataSource<UserAc
                         tag_2 = System.currentTimeMillis()
                         currentAccount = ControllerApi.account.getAccount()
                     }
+                }
+            }
+            .subscribe(EventActivitiesRelayRaceReloaded::class) {
+                edit(it.userActivity.id) {
+                    tag_2 = it.userActivity.tag_2
+                    currentAccount = it.userActivity.currentAccount
+                    myPostId = it.userActivity.myPostId
+                    myMemberStatus = it.userActivity.myMemberStatus
                 }
             }
             .subscribe(EventActivitiesChanged::class) {
