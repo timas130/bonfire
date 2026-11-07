@@ -192,7 +192,7 @@ object ControllerNotifications {
         if (b1 && b2) {
             val text = parser.asString(false)
             info("ControllerNotifications text $text")
-            if (text.isNotEmpty()) {
+            if (text.isNotEmpty() || parser.getTitle().isNotEmpty()) {
 
                 val canSound = canSoundBySettings(notification)
                 val icon =
