@@ -28,7 +28,8 @@ class ViewSoundLine @JvmOverloads constructor(context: Context, attrs: Attribute
         if (soundMask.isEmpty()) return
 
         val count = maxLines
-        val w = width / count
+        val step = width.toFloat() / count
+        val w = step - 1
         val r = w / 2f
         var x = 0f
         val h = (height - r * 2f) / 2f
@@ -43,7 +44,7 @@ class ViewSoundLine @JvmOverloads constructor(context: Context, attrs: Attribute
             canvas.drawCircle(x + r, h - hh + r, r, paint)
             canvas.drawCircle(x + r, h + hh - r, r, paint)
             canvas.drawRect(x, h - hh + r, x + w, h + hh - r, paint)
-            x += w + 1
+            x += step
             if (x + w >= width) break
         }
 
