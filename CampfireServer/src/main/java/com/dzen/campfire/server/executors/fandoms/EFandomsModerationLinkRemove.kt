@@ -13,13 +13,15 @@ import com.sup.dev.java_pc.sql.SqlQuerySelect
 class EFandomsModerationLinkRemove : RFandomsModerationLinkRemove(0, "") {
 
     var fandom: Fandom? = null
+    private var languageId = 0L
 
     override fun check() {
 
         val v = Database.select("EFandomsModerationLinkRemove", SqlQuerySelect(TCollisions.NAME, TCollisions.owner_id, TCollisions.collision_id, TCollisions.collision_type)
                 .where(TCollisions.id, "=", linkIndex))
+        if (v.isEmpty) throw ApiException(API.ERROR_GONE)
         val fandomId: Long = v.next()
-        val languageId: Long = v.next()
+        languageId = v.next()
         val collisionType: Long = v.next()
 
         ControllerFandom.checkCan(apiAccount, fandomId, languageId, API.LVL_MODERATOR_LINKS)
@@ -33,7 +35,7 @@ class EFandomsModerationLinkRemove : RFandomsModerationLinkRemove(0, "") {
     override fun execute(): Response {
 
         ControllerCollisions.removeById(linkIndex)
-        ControllerPublications.moderation(ModerationLinkRemove(comment), apiAccount.id, fandom!!.id, fandom!!.languageId, 0)
+        ControllerPublications.moderation(ModerationLinkRemove(comment), apiAccount.id, fandom!!.id, languageId, 0)
 
         return Response()
     }
