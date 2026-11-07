@@ -5,9 +5,13 @@ import com.sup.dev.java.libs.debug.Debug
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsThreads
+import java.net.ConnectException
+import java.net.NoRouteToHostException
+import java.net.UnknownHostException
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.SSLHandshakeException
 
 abstract class ApiClient(
     val projectKey: String,
@@ -104,7 +108,7 @@ abstract class ApiClient(
             val resp = try {
                 networkingProvider.sendRequest(bytes, request.dataOutput.toList())
             } catch (e: Exception) {
-                if (retry > 0) {
+                if (retry > 0 && canRetry(e)) {
                     err(e)
                     err("retrying #$retry")
                     start(retry - 1)
@@ -124,6 +128,15 @@ abstract class ApiClient(
                     parseResponseData(resp)
                 }
             }
+        }
+
+        private fun canRetry(e: Exception) =
+            e is ConnectException || e is NoRouteToHostException || e is UnknownHostException ||
+                e is SSLHandshakeException || isSafeToResend()
+
+        private fun isSafeToResend(): Boolean {
+            val name = request.javaClass.simpleName
+            return name.contains("Get") || name == "RAccountsLogin"
         }
 
         private fun parseResponse(responseJson: Json) {
