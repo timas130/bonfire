@@ -88,6 +88,7 @@ class SQuestPartTextEditor(
             items.forEach { name, _ ->
                 menuSplash.add(name) {
                     items.put(name, vField.text.toString())
+                    ToolsStorage.put("quests_drafts", items)
                 }
             }
             menuSplash.asSheetShow()
