@@ -500,7 +500,7 @@ object ControllerAccounts {
         for (i in 0 until sub.rowsCount) {
             val fandomId: Long = sub.next()!!
             val languageId: Long = sub.next()!!
-            var subscriptionType: Long = sub.next()!!
+            var subscriptionType: Long = sub.next<Long>().coerceIn(API.PUBLICATION_IMPORTANT_IMPORTANT, API.PUBLICATION_IMPORTANT_NONE)
             if (i != 0) s += ","
             s += "'$fandomId-$languageId-$subscriptionType'"
             while (subscriptionType != API.PUBLICATION_IMPORTANT_IMPORTANT) s += ",'$fandomId-$languageId-${--subscriptionType}'"

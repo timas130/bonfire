@@ -13,6 +13,7 @@ class EFandomsSubscribeChange : RFandomsSubscribeChange(0, 0, 0, false) {
     @Throws(ApiException::class)
     override fun check() {
         if (! API.isLanguageExsit(languageId)) throw ApiException(E_BAD_LANGUAGE)
+        if (subscriptionType != API.PUBLICATION_IMPORTANT_IMPORTANT && subscriptionType != API.PUBLICATION_IMPORTANT_DEFAULT && subscriptionType != API.PUBLICATION_IMPORTANT_NONE) throw ApiException(E_BAD_TYPE)
     }
 
     override fun execute(): Response {

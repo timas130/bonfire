@@ -31,6 +31,7 @@ open class RFandomsSubscribeChange(
     companion object {
 
         val E_BAD_LANGUAGE = "E_BAD_LANGUAGE"
+        val E_BAD_TYPE = "E_BAD_TYPE"
     }
 
 
