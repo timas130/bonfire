@@ -157,14 +157,15 @@ class PostCreator(
     fun isMove() = actionType == ActionType.STOP
 
     private fun onFabClicked() {
+        if (actionType == ActionType.STOP) {
+            stopMove()
+            return
+        }
         if (adapter.get(CardPage::class).size >= API.POST_MAX_PAGES_COUNT) {
             ToolsToast.show(t(API_TRANSLATE.error_too_many_items))
             return
         }
-        if (actionType == ActionType.STOP)
-            stopMove()
-        else
-            widgetAdd.asSheetShow()
+        widgetAdd.asSheetShow()
     }
 
     private fun onPageAdd(screen: Screen?, pages: Array<Page>): CardPage {
