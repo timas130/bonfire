@@ -248,20 +248,31 @@ class SChat constructor(
                 for (c in adapter.get(CardChatMessage::class)) {
                     if (c.xPublication.publication.id == scrollToMessageId) {
                         scrollToMessageId = 0
+                        scrollToMessageWasLoaded = false
                         ToolsView.scrollRecycler(vRecycler, adapter.indexOf(c) + 1)
                         ToolsThreads.main(500) { c.flash() }
                     }
                 }
                 if (scrollToMessageId != 0L) {
                     if (scrollToMessageWasLoaded) {
-                        adapter.loadBottom()
+                        if (!loaded) adapter.loadBottom()
                         scrollToMessageWasLoaded = false
                         scrollToMessageId = 0
                     } else {
                         RChatMessageGet(chat.tag, scrollToMessageId)
                                 .onComplete {
-                                    adapter.loadBottom()
+                                    if (scrollToMessageId == 0L) return@onComplete
                                     scrollToMessageWasLoaded = true
+                                    if (loaded) {
+                                        // The bottom loader has nothing left to fetch, so reopen around the target
+                                        loaded = false
+                                        adapter.setShowLoadingCardBottom(true)
+                                        adapter.unlockTop()
+                                        adapter.clear()
+                                        reload()
+                                    } else {
+                                        adapter.loadBottom()
+                                    }
                                 }
                                 .onApiError(ApiClient.ERROR_GONE) {
                                     if (it.messageError == RChatMessageGet.GONE_BLOCKED) ControllerApi.showBlockedDialog(it, t(API_TRANSLATE.chat_error_gone_block))
