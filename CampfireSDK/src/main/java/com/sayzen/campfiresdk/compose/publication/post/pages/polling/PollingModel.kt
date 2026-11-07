@@ -49,6 +49,7 @@ class PollingModel(val page: PagePolling, val source: PagesSource) {
     val isTryingToLoad = _isTryingToLoad.asStateFlow()
 
     private var votingJob: Job? = null
+    private var isSendingVote = false
 
     init {
         val cached = pollCache[page.pollingId]
@@ -127,6 +128,7 @@ class PollingModel(val page: PagePolling, val source: PagesSource) {
 
     fun vote(scope: CoroutineScope, index: Int) {
         if (!getCanVote()) return
+        if (isSendingVote) return
 
         votingJob?.cancel()
         if (_votingFor.value == index) {
@@ -138,29 +140,32 @@ class PollingModel(val page: PagePolling, val source: PagesSource) {
         votingJob = scope.launch {
             delay(CampfireConstants.VOTE_TIME)
 
+            isSendingVote = true
             try {
-                RPostPagePollingVote(
-                    sourceType = source.sourceType,
-                    sourceId = source.sourceId,
-                    sourceIdSub = source.sourceSubId,
-                    pollingId = page.pollingId,
-                    itemId = index.toLong(),
-                )
-                .onApiError(RPostPagePollingVote.E_ALREADY) {
-                    ToolsToast.show(SupAndroid.appContext!!.getString(R.string.polling_already_voted))
-                }
-                .sendSuspendExt()
+                withContext(NonCancellable) {
+                    RPostPagePollingVote(
+                        sourceType = source.sourceType,
+                        sourceId = source.sourceId,
+                        sourceIdSub = source.sourceSubId,
+                        pollingId = page.pollingId,
+                        itemId = index.toLong(),
+                    )
+                    .onApiError(RPostPagePollingVote.E_ALREADY) {
+                        ToolsToast.show(SupAndroid.appContext!!.getString(R.string.polling_already_voted))
+                    }
+                    .sendSuspendExt()
 
-                edit {
-                    val existingResult = results.find { it.itemId == index.toLong() }
-                    if (existingResult != null) {
-                        existingResult.myVote = true
-                        existingResult.count++
-                    } else {
-                        results += PagePolling.Result().apply {
-                            itemId = index.toLong()
-                            count = 1
-                            myVote = true
+                    edit {
+                        val existingResult = results.find { it.itemId == index.toLong() }
+                        if (existingResult != null) {
+                            existingResult.myVote = true
+                            existingResult.count++
+                        } else {
+                            results += PagePolling.Result().apply {
+                                itemId = index.toLong()
+                                count = 1
+                                myVote = true
+                            }
                         }
                     }
                 }
@@ -168,6 +173,7 @@ class PollingModel(val page: PagePolling, val source: PagesSource) {
             } finally {
                 _votingFor.tryEmit(null)
                 votingJob = null
+                isSendingVote = false
             }
         }
     }
