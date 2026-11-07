@@ -79,9 +79,11 @@ object ToolsNotifications {
         val intentTypeIndex = intent.getIntExtra("ToolsNotification.intentType", -1)
         val notificationTag = intent.getStringExtra("ToolsNotification.notificationTag") ?: "null${SPLITER}null"
         val actionTag = intent.getStringExtra("ToolsNotification.actionTag")
+        // notifications reposted under a stable id get a separate id for replay detection
+        val clickId = intent.getIntExtra("ToolsNotification.clickId", notificationId)
 
-        if (notificationId != -1 && ToolsStorage.getInt("ToolsNotification.notificationId", -1) != notificationId) {
-            ToolsStorage.put("ToolsNotification.notificationId", notificationId)
+        if (notificationId != -1 && ToolsStorage.getInt("ToolsNotification.notificationId", -1) != clickId) {
+            ToolsStorage.put("ToolsNotification.notificationId", clickId)
 
             val intentType = when (intentTypeIndex) {
                 IntentType.ACTION.index -> IntentType.ACTION

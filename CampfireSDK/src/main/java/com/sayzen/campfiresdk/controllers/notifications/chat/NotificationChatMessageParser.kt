@@ -137,6 +137,7 @@ fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound
             Intent(SupAndroid.appContext!!, SupAndroid.activityClass!!).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 putExtra("ToolsNotification.notificationId", tag.hashCode())
+                putExtra("ToolsNotification.clickId", chatMessages.messages.last().id.hashCode())
                 putExtra("ToolsNotification.intentType", ToolsNotifications.IntentType.CLICK)
                 putExtra(ControllerNotifications.EXTRA_NOTIFICATION, Json().apply {
                     NotificationChatMessage(
