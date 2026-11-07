@@ -22,6 +22,7 @@ class EPublicationsReactionGetAccounts : RPublicationsReactionGetAccounts(0, 0) 
         val publication = ControllerPublications.getPublication(publicationId, apiAccount.id) ?: throw ApiException(API.ERROR_GONE)
 
         if (publication !is PublicationComment && publication !is PublicationChatMessage) throw ApiException(API.ERROR_ACCESS)
+        if (publication is PublicationChatMessage && !ControllerChats.hasAccessToMessage(apiAccount.id, publication)) throw ApiException(API.ERROR_ACCESS)
         if (publication.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
 
         val list = ArrayList<Long>()

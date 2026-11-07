@@ -472,6 +472,15 @@ object ControllerChats {
 
     fun hasAccessToConf(accountId: Long, chatId: Long) = getMemberStatus(accountId, chatId) != null
 
+    fun hasAccessToMessage(accountId: Long, message: PublicationChatMessage, write: Boolean = false): Boolean {
+        val tag = message.chatTag()
+        return when (tag.chatType) {
+            API.CHAT_TYPE_PRIVATE -> tag.targetId == accountId || tag.targetSubId == accountId
+            API.CHAT_TYPE_CONFERENCE -> if (write) hasAccessToConf_Write(accountId, tag.targetId) else hasAccessToConf(accountId, tag.targetId)
+            else -> true
+        }
+    }
+
     fun getMembers(chatId: Long, includeDeleted: Boolean = false): Array<ChatMember> {
         val select = SqlQuerySelect(TChatsSubscriptions.NAME,
                 TChatsSubscriptions.account_id,

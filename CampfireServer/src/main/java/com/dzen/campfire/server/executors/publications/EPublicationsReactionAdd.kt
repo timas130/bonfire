@@ -15,7 +15,9 @@ class EPublicationsReactionAdd : RPublicationsReactionAdd(0, 0) {
     var publication:Publication = PublicationComment()
 
     override fun check() {
-        publication = ControllerPublications.getPublication(publicationId, apiAccount.id) ?: throw ApiException(API.ERROR_GONE)
+        val publication = ControllerPublications.getPublication(publicationId, apiAccount.id) ?: throw ApiException(API.ERROR_GONE)
+        if (publication is PublicationChatMessage && !ControllerChats.hasAccessToMessage(apiAccount.id, publication, true)) throw ApiException(API.ERROR_ACCESS)
+        this.publication = publication
         ControllerAccounts.checkAccountBanned(apiAccount.id, publication.fandom.id, publication.fandom.languageId)
     }
 
