@@ -24,11 +24,15 @@ object RustVideo {
         val height: Int?,
     )
 
+    private val TRANSIENT_GRAPHQL_ERRORS = setOf("G_Rpc", "G_Sqlx", "G_Anyhow")
+
     private fun <T> callVideoService(block: () -> T): T {
         try {
             return block()
         } catch (e: ApiException) {
-            throw e
+            if (e.code !in TRANSIENT_GRAPHQL_ERRORS) throw e
+            err(e)
+            throw ApiException(API.ERROR_VIDEO_SERVICE_UNAVAILABLE)
         } catch (e: ApolloException) {
             err(e)
             throw ApiException(API.ERROR_VIDEO_SERVICE_UNAVAILABLE)
