@@ -213,7 +213,10 @@ class XAccount {
 
     fun setViewBig(vImage: ImageView) {
         if (titleImage.isNotEmpty()) ImageLoader.loadGif(titleImage, titleImageGif, vImage)
-        else vImage.setImageBitmap(null)
+        else {
+            vImage.tag = null
+            vImage.setImageBitmap(null)
+        }
     }
 
     fun setView(vImage: ImageView) {
@@ -229,6 +232,7 @@ class XAccount {
                 ImageLoader.load(holidayImage).into(vImage)
                 if (background != null) vImage.setBackgroundColor(background)
             } else if (account.image.isEmpty()) {
+                vImage.tag = null
                 vImage.setImageResource(R.drawable.logo_campfire_128x128)
             } else {
                 ImageLoader.load(account.image).into(vImage)

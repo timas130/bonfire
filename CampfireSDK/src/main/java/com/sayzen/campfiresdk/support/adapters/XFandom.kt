@@ -136,7 +136,10 @@ class XFandom() {
 
     fun setViewBig(vImage: ImageView) {
         if (fandom.imageTitle.isNotEmpty()) ImageLoader.loadGif(fandom.imageTitle, fandom.imageTitleGif, vImage)
-        else vImage.setImageBitmap(null)
+        else {
+            vImage.tag = null
+            vImage.setImageBitmap(null)
+        }
     }
 
     fun setView(vImage: ImageView) {
