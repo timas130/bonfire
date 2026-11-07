@@ -1,6 +1,6 @@
 use crate::get_oauth2_client::RawOAuthClient;
 use crate::AuthServer;
-use base64::prelude::BASE64_URL_SAFE;
+use base64::prelude::BASE64_URL_SAFE_NO_PAD;
 use base64::Engine;
 use c_core::prelude::anyhow::anyhow;
 use c_core::prelude::chrono;
@@ -251,11 +251,7 @@ impl AuthServer {
 
             // just in case, check code_challenge_method.
             // see oauth2_authorize_info() for details on this
-            if flow
-                .code_challenge_method
-                .map(|code| &code == "S256")
-                .unwrap_or(false)
-            {
+            if flow.code_challenge_method.as_deref() != Some("S256") {
                 tx.rollback().await?;
                 return Err(AuthError::UnsupportedCodeChallengeMethod);
             }
@@ -263,7 +259,7 @@ impl AuthServer {
             // code_challenge = base64url(sha256(initial_code_verifier))
             let code_challenge = flow.code_challenge.ok_or(anyhow!("out of sync"))?;
             // code_challenge = sha256(initial_code_verifier)
-            let code_challenge = BASE64_URL_SAFE
+            let code_challenge = BASE64_URL_SAFE_NO_PAD
                 .decode(code_challenge.as_bytes())
                 .map_err(|_| anyhow!("invalid base64"))?;
 
