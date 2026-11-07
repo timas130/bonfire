@@ -41,7 +41,7 @@ class EFandomsAdminViceroyAssign : RFandomsAdminViceroyAssign(0, 0, 0, "") {
 
         val eAdmin = ApiEventAdminFandomViceroyAssign(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, oldAccountId, "", accountId, account.name, fandom.id, fandom.name,  fandom.imageId)
         val eFandom = ApiEventFandomViceroyAssign(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, fandom.id, fandom.name, fandom.imageId, comment, oldAccountId, "", account.id, account.name)
-        val eAccount = ApiEventUserAdminViceroyAssign(account.id, account.name, account.imageId, account.sex, apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, fandom.id, fandom.imageId, fandom.name, fandom.imageId)
+        val eAccount = ApiEventUserAdminViceroyAssign(account.id, account.name, account.imageId, account.sex, apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, fandom.id, fandom.languageId, fandom.name, fandom.imageId)
         val nAccount = NotificationFandomViceroyAssign(fandom.imageId, fandom.id, fandom.languageId, fandom.name, comment, apiAccount.id, apiAccount.name, apiAccount.sex, oldAccountId, "", account.id, account.name)
 
         if (oldAccountId > 0) {

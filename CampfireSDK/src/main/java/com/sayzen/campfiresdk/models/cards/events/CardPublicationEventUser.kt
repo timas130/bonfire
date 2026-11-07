@@ -176,7 +176,7 @@ class CardPublicationEventUser(
             }
             is ApiEventUserAdminViceroyAssign -> {
                 text = tCap(API_TRANSLATE.publication_event_user_viceroy_assign, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.adminAccountSex, t(API_TRANSLATE.he_assign), t(API_TRANSLATE.she_assign)), e.fandomName)
-                view.setOnClickListener { SFandom.instance(e.fandomId, e.fandomLanguageId, Navigator.TO) }
+                view.setOnClickListener { toViceroyAssignFandom(e) }
             }
             is ApiEventUserAdminViceroyRemove -> {
                 text = tCap(API_TRANSLATE.publication_event_user_viceroy_remove, ControllerLinks.linkToAccount(e.adminAccountName), ToolsResources.sex(e.adminAccountSex, t(API_TRANSLATE.he_denied), t(API_TRANSLATE.she_denied)), e.fandomName)
@@ -225,10 +225,15 @@ class CardPublicationEventUser(
         when (e) {
             is ApiEventUserFandomMakeModerator -> ToolsView.addLink(vText, e.fandomName) { SFandom.instance(e.fandomId, Navigator.TO) }
             is ApiEventUserFandomRemoveModerator -> ToolsView.addLink(vText, e.fandomName) { SFandom.instance(e.fandomId, Navigator.TO) }
-            is ApiEventUserAdminViceroyAssign -> ToolsView.addLink(vText, e.fandomName) { SFandom.instance(e.fandomId, e.fandomLanguageId, Navigator.TO) }
+            is ApiEventUserAdminViceroyAssign -> ToolsView.addLink(vText, e.fandomName) { toViceroyAssignFandom(e) }
             is ApiEventUserAdminViceroyRemove -> ToolsView.addLink(vText, e.fandomName) { SFandom.instance(e.fandomId, e.fandomLanguageId, Navigator.TO) }
             is ApiEventUserAdminPublicationBlocked -> ToolsView.addLink(vText, e.blockFandomName) { SFandom.instance(e.blockFandomId, Navigator.TO) }
         }
+    }
+
+    private fun toViceroyAssignFandom(e: ApiEventUserAdminViceroyAssign) {
+        if (API.isLanguageExsit(e.fandomLanguageId)) SFandom.instance(e.fandomId, e.fandomLanguageId, Navigator.TO)
+        else SFandom.instance(e.fandomId, Navigator.TO)
     }
 
     override fun updateComments() {
