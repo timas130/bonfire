@@ -35,17 +35,13 @@ class EActivitiesRelayRaceReject : RActivitiesRelayRaceReject(0, 0) {
             nextAccountId = ControllerActivities.recalculateMember(activityId)?:0
         }
 
-        if (nextAccountId > 0) {
-            val account = ControllerAccounts.getAccount(nextAccountId)
-            if (account != null) {
-                return Response(account, System.currentTimeMillis())
-            }
-        }
-
         val newAccount = ControllerAccounts.getAccount(nextAccountId)
 
-        ControllerNotifications.push(apiAccount.id, NotificationActivitiesRelayRejected(apiAccount.id, apiAccount.name, apiAccount.sex, apiAccount.imageId, newAccount?.id?:0, newAccount?.name?:"", newAccount?.sex?:0, newAccount?.imageId?:0, activity.id, activity.name, activity.fandom.id, activity.fandom.imageId, activity.fandom.languageId, activity.fandom.name, true))
+        if (activity.tag_3 > 0 && activity.tag_3 != apiAccount.id) {
+            ControllerNotifications.push(activity.tag_3, NotificationActivitiesRelayRejected(apiAccount.id, apiAccount.name, apiAccount.sex, apiAccount.imageId, newAccount?.id?:0, newAccount?.name?:"", newAccount?.sex?:0, newAccount?.imageId?:0, activity.id, activity.name, activity.fandom.id, activity.fandom.imageId, activity.fandom.languageId, activity.fandom.name, false))
+        }
 
+        if (newAccount != null) return Response(newAccount, System.currentTimeMillis())
 
         return Response(Account(), 0)
     }
