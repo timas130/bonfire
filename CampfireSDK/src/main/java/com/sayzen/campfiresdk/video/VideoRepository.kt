@@ -44,7 +44,7 @@ object VideoRepository {
             val video = getVideo(videoId)
             emit(video)
             if (video == null || video.status.isTerminal) return@flow
-            if (System.currentTimeMillis() - startedAt > 5 * 60_000) return@flow
+            if (System.currentTimeMillis() - startedAt > 5 * 60_000) error("video $videoId is still not ready")
             delay(2.seconds)
             attempt++
         }
