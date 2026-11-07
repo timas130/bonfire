@@ -42,6 +42,7 @@ class ETagsMoveCategory : RTagsMoveCategory(0, 0, "") {
                 .where(TPublications.fandom_id, "=", publication!!.fandom.id)
                 .where(TPublications.language_id, "=", publication!!.fandom.languageId)
                 .where(TPublications.tag_1, ">=", newPriority)
+                .sort(TPublications.tag_1, true)
         )
 
         var parentPriority = newPriority

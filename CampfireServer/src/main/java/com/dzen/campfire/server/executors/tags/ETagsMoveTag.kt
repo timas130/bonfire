@@ -40,6 +40,7 @@ class ETagsMoveTag : RTagsMoveTag(0, 0, "") {
                 .where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_TAG)
                 .where(TPublications.parent_publication_id, "=", publication!!.parentPublicationId)
                 .where(TPublications.tag_1, ">=", newPriority)
+                .sort(TPublications.tag_1, true)
         )
 
         var parentPriority = newPriority
