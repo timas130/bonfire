@@ -74,7 +74,7 @@ object OptimizerSponsor {
                 val months = v.nextLongOrZero()
 
                 sponsorMonthsCache[accountId] = months
-                0L
+                months
             } else {
                 sponsorMonthsCache[accountId] = 0L
                 0L
