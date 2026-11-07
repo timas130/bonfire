@@ -26,7 +26,7 @@ class SFollows(
 ) : SLoadingRecycler<CardAccount, Account>() {
 
     private val eventBus = EventBus.subscribe(EventAccountsFollowsChange::class) {
-        if (!it.isFollow)
+        if (!it.isFollow && ControllerApi.isCurrentAccount(accountId))
             for (c in adapter.get(CardAccount::class)) if (c.xAccount.getId() == it.accountId) adapter.remove(c)
     }
 
