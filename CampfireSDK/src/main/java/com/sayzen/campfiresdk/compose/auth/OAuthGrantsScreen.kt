@@ -76,10 +76,10 @@ class OAuthGrantsModel(application: Application) : AbstractGQLPaginationModel<OA
                     .execute()
                 if (result.hasErrors()) {
                     _errorSnackbar.value = getApplication<Application>().getString(R.string.error_unknown)
-                }
-
-                _deletedGrants.update {
-                    it + grantId
+                } else {
+                    _deletedGrants.update {
+                        it + grantId
+                    }
                 }
             } catch (e: Exception) {
                 _errorSnackbar.value = getApplication<Application>().getString(R.string.error_network_error)
