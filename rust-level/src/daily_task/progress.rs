@@ -83,8 +83,8 @@ impl LevelServer {
             DailyTask::WriteMessages { .. } => sqlx::query_scalar!(
                 "select count(*) from campfire_db.units
                  where creator_id = $1 and status = $2 and unit_type = $3 and
-                       date_create >= $4 and date_create <= $5 and tag_1 = $6 and
-                       fandom_id != $7",
+                       date_create >= $4 and date_create <= $5 and
+                       ((tag_1 = $6 and fandom_id != $7) or tag_1 = $8)",
                 user_id,
                 i64::from(Status::Public),
                 i64::from(PublicationType::ChatMessage),
@@ -92,6 +92,7 @@ impl LevelServer {
                 date_end,
                 i64::from(ChatType::FandomRoot),
                 FANDOM_HELLO_ID,
+                i64::from(ChatType::FandomSub),
             )
             .fetch_one(&self.base.pool)
             .await?
@@ -216,13 +217,16 @@ impl LevelServer {
                  inner join units qu on (u.unit_json::json->>'quoteId')::bigint = qu.id
                  where u.creator_id = $1 and u.status = $2 and u.unit_type = $3 and
                        u.date_create >= $4 and u.date_create <= $5 and qu.status = $2 and
-                       qu.creator_id != $1 and u.tag_1 = $6",
+                       qu.creator_id != $1 and u.tag_1 = any($6)",
                 user_id,
                 i64::from(Status::Public),
                 i64::from(PublicationType::ChatMessage),
                 date_start,
                 date_end,
-                i64::from(ChatType::FandomRoot),
+                &[
+                    i64::from(ChatType::FandomRoot),
+                    i64::from(ChatType::FandomSub),
+                ],
             )
             .fetch_one(&self.base.pool)
             .await?

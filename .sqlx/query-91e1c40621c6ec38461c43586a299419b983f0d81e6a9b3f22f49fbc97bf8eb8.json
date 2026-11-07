@@ -1,0 +1,27 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(distinct qu.id) from units u\n                 inner join units qu on (u.unit_json::json->>'quoteId')::bigint = qu.id\n                 where u.creator_id = $1 and u.status = $2 and u.unit_type = $3 and\n                       u.date_create >= $4 and u.date_create <= $5 and qu.status = $2 and\n                       qu.creator_id != $1 and u.tag_1 = any($6)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8",
+        "Int8Array"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "91e1c40621c6ec38461c43586a299419b983f0d81e6a9b3f22f49fbc97bf8eb8"
+}
