@@ -23,6 +23,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 
 class PollingData(var results: Array<PagePolling.Result> = arrayOf()) : JsonParsable {
+    val loadedAt = System.currentTimeMillis()
+
     override fun json(inp: Boolean, json: Json): Json {
         results = json.m(inp, "results", results)
         return json
@@ -30,6 +32,7 @@ class PollingData(var results: Array<PagePolling.Result> = arrayOf()) : JsonPars
 }
 
 private val pollCache = Cache<Long, PollingData>(50)
+private const val POLL_CACHE_TTL = 1000L * 30
 
 fun clearPollCache() {
     pollCache.clear()
@@ -55,6 +58,7 @@ class PollingModel(val page: PagePolling, val source: PagesSource) {
         val cached = pollCache[page.pollingId]
         if (cached != null) {
             _data.tryEmit(cached)
+            if (System.currentTimeMillis() - cached.loadedAt > POLL_CACHE_TTL) reload()
         } else {
             reload()
         }
@@ -76,6 +80,8 @@ class PollingModel(val page: PagePolling, val source: PagesSource) {
             _data.tryEmit(data)
             pollCache[page.pollingId] = data
 
+            _isTryingToLoad.tryEmit(false)
+        }.onApiError {
             _isTryingToLoad.tryEmit(false)
         }
     }
@@ -114,8 +120,12 @@ class PollingModel(val page: PagePolling, val source: PagesSource) {
     }
 
     private suspend fun edit(editor: PollingData.() -> Unit) {
-        val old = withTimeout(2000) {
+        val old = withTimeoutOrNull(2000) {
             data.first { it != null }!!
+        }
+        if (old == null) {
+            reload()
+            return
         }
 
         old.editor()
@@ -152,6 +162,7 @@ class PollingModel(val page: PagePolling, val source: PagesSource) {
                     )
                     .onApiError(RPostPagePollingVote.E_ALREADY) {
                         ToolsToast.show(SupAndroid.appContext!!.getString(R.string.polling_already_voted))
+                        reload()
                     }
                     .sendSuspendExt()
 
