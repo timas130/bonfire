@@ -1,6 +1,7 @@
 package com.dzen.campfire.server.executors.post
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.activities.UserActivity
 import com.dzen.campfire.api.models.fandoms.Fandom
 import com.dzen.campfire.api.models.notifications.post.NotificationModerationPostTags
 import com.dzen.campfire.api.models.publications.history.HistoryAdminChangeTags
@@ -150,7 +151,7 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
                 val activity = ControllerActivities.getActivity(userActivityId, apiAccount.id)
                 if (activity != null && activity.currentAccount.id == apiAccount.id) {
                     ControllerActivities.setPost(publicationId, apiAccount.id, userActivityId)
-                    if (userActivityNextUserId > 0) {
+                    if (userActivityNextUserId > 0 && canPassRelayToNextUser(activity)) {
                         ControllerActivities.makeCurrentMember(apiAccount, userActivityNextUserId, activity)
                     } else {
                         ControllerActivities.recalculateMember(activity)
@@ -184,6 +185,15 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
         }
 
         return Response()
+    }
+
+    private fun canPassRelayToNextUser(activity: UserActivity): Boolean {
+        return try {
+            ControllerActivities.checkRelayNextAccount(apiAccount.id, activity.id, userActivityNextUserId, activity.fandom.id, activity.fandom.languageId)
+            true
+        } catch (e: ApiException) {
+            false
+        }
     }
 
 }
