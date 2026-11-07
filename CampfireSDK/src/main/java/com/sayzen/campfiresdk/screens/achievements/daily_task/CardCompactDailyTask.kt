@@ -34,38 +34,36 @@ import com.sup.dev.java.libs.eventBus.EventBus
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class CardCompactDailyTask : ComposeCard() {
-    init {
-        EventBus
-            .subscribe(EventPostStatusChange::class) {
-                reloadIfTypeMatches(
-                    DailyTaskType.PostInFandom,
-                    DailyTaskType.CreatePostWithPageType,
-                    DailyTaskType.CreatePosts
-                )
+    private val eventBus = EventBus
+        .subscribe(EventPostStatusChange::class) {
+            reloadIfTypeMatches(
+                DailyTaskType.PostInFandom,
+                DailyTaskType.CreatePostWithPageType,
+                DailyTaskType.CreatePosts
+            )
+        }
+        .subscribe(EventCommentAdd::class) {
+            reloadIfTypeMatches(
+                DailyTaskType.CommentInFandom,
+                DailyTaskType.PostComments,
+                DailyTaskType.CommentNewbiePost,
+                DailyTaskType.AnswerNewbieComment
+            )
+        }
+        .subscribe(EventChatNewBottomMessage::class) {
+            reloadIfTypeMatches(
+                DailyTaskType.AnswerInChat,
+                DailyTaskType.WriteMessages,
+            )
+        }
+        .subscribe(EventPublicationKarmaAdd::class) {
+            reloadIfTypeMatches(DailyTaskType.RatePublications)
+        }
+        .subscribe(EventNotification::class) {
+            if (it.notification.getType() == API.NOTIF_KARMA_ADD) {
+                reloadIfTypeMatches(DailyTaskType.EarnAnyKarma, DailyTaskType.EarnPostKarma)
             }
-            .subscribe(EventCommentAdd::class) {
-                reloadIfTypeMatches(
-                    DailyTaskType.CommentInFandom,
-                    DailyTaskType.PostComments,
-                    DailyTaskType.CommentNewbiePost,
-                    DailyTaskType.AnswerNewbieComment
-                )
-            }
-            .subscribe(EventChatNewBottomMessage::class) {
-                reloadIfTypeMatches(
-                    DailyTaskType.AnswerInChat,
-                    DailyTaskType.WriteMessages,
-                )
-            }
-            .subscribe(EventPublicationKarmaAdd::class) {
-                reloadIfTypeMatches(DailyTaskType.RatePublications)
-            }
-            .subscribe(EventNotification::class) {
-                if (it.notification.getType() == API.NOTIF_KARMA_ADD) {
-                    reloadIfTypeMatches(DailyTaskType.EarnAnyKarma, DailyTaskType.EarnPostKarma)
-                }
-            }
-    }
+        }
 
     private var _task = MutableStateFlow<DailyTaskInfo?>(null)
     private var _isError = MutableStateFlow(false)
