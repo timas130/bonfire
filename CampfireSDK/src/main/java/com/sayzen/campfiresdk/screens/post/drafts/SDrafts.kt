@@ -77,11 +77,12 @@ class SDrafts constructor(
     override fun classOfCard() = CardPostProxy::class
 
     override fun map(item: Publication): CardPostProxy {
-        val card = CardPostProxy(vRecycler, item as PublicationPost)
-        if (onSelect != null) card.onClick = {
-            Navigator.remove(this)
-            onSelect.invoke(item)
-        }
+        val card = CardPostProxy(vRecycler, item as PublicationPost, onClick = onSelect?.let { select ->
+            { _: PublicationPost ->
+                Navigator.remove(this)
+                select.invoke(item)
+            }
+        })
         card.showFandom = true
         return card
     }
