@@ -9,6 +9,7 @@ import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.publications.PagesContainer
 import com.dzen.campfire.api.models.publications.post.PageUserActivity
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.publication.post.pages.activity.hasUser
 import com.sayzen.campfiresdk.support.adapters.XAccount
 import com.sayzen.campfiresdk.controllers.ControllerActivities
 import com.sayzen.campfiresdk.controllers.ControllerApi
@@ -101,7 +102,7 @@ class CardPageUserActivity(
             SRelayRaceInfo.instance(userActivity.id, Navigator.TO)
         }
 
-        if (ControllerApi.isCurrentAccount(userActivity.currentAccount.id)) {
+        if (userActivity.hasUser && ControllerApi.isCurrentAccount(userActivity.currentAccount.id)) {
             vPageButton.setText(t(API_TRANSLATE.app_reject))
             vPageButton.setTextColor(ToolsResources.getColor(R.color.red_700))
             vPageButton.visibility = View.VISIBLE
