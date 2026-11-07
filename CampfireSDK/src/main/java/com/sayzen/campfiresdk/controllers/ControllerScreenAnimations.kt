@@ -98,6 +98,13 @@ object ControllerScreenAnimations {
         ToolsThreads.main { SupAndroid.activity!!.vActivityDrawAnimations!!.addAnimation(animation) }
     }
 
+    fun removeScreenAnimation(animation: DrawAnimation) {
+        if (currentAnimation !== animation) return
+        clearAnimation()
+        ControllerHoliday.onAppStart()
+        ControllerEffects.update()
+    }
+
     fun getAnimation() = currentAnimation
 
 }

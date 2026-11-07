@@ -726,6 +726,7 @@ class SQuestNewYear : SQuest() {
     override fun onDestroy() {
         destroyed = true
         stopThunder()
+        ControllerScreenAnimations.removeScreenAnimation(animationSnow)
         super.onDestroy()
     }
 

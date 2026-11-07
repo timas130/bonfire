@@ -1346,6 +1346,11 @@ class SQuestDanTank : SQuest()  {
 
     override fun getKey() = "dantank"
 
+    override fun onDestroy() {
+        ControllerScreenAnimations.removeScreenAnimation(animationSnow)
+        super.onDestroy()
+    }
+
     //
     //  Efects
     //
