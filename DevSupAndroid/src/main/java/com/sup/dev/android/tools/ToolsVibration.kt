@@ -45,8 +45,8 @@ object ToolsVibration {
     @RequiresPermission(android.Manifest.permission.VIBRATE)
     private fun vibratePatternWithSleeps(time: LongArray, index: Int) {
         vibrate(time[index])
-        if (index < time.size - 1)
-            ToolsThreads.main(time[index] + time[index + 1]) { vibratePattern(time, index + 2) }
+        if (index + 2 < time.size)
+            ToolsThreads.main(time[index] + time[index + 1]) { vibratePatternWithSleeps(time, index + 2) }
     }
 
 }
