@@ -193,7 +193,7 @@ CREATE TABLE campfire_db.accounts (
                                       img_title_id bigint DEFAULT '0'::bigint NOT NULL,
                                       img_title_gif_id bigint DEFAULT '0'::bigint NOT NULL,
                                       subscribes text NOT NULL,
-                                      refresh_token text NOT NULL,
+                                      refresh_token text,
                                       refresh_token_date_create bigint DEFAULT '0'::bigint NOT NULL,
                                       sex bigint DEFAULT '0'::bigint NOT NULL,
                                       reports_count bigint DEFAULT '0'::bigint NOT NULL,
