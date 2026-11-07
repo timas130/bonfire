@@ -88,6 +88,8 @@ class SChat constructor(
 
             ApiRequestsSupporter.executeInterstitial(action, RChatGet(tag, 0)) { r ->
                 onChatLoaded(r, scrollToMessageId, onShow)
+            }.onApiError(API.ERROR_ACCESS) {
+                ToolsToast.show(t(API_TRANSLATE.error_chat_access))
             }
         }
 
