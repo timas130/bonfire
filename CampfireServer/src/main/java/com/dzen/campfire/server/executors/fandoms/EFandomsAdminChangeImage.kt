@@ -34,8 +34,8 @@ class EFandomsAdminChangeImage : RFandomsAdminChangeImage(0, ByteArray(0), "") {
             .where(TFandoms.id, "=", fandomId)
             .update(TFandoms.image_id, imageId))
 
-        ControllerPublications.event(ApiEventAdminFandomChangeAvatar(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, fandomId, fandom!!.name, fandom!!.imageId), apiAccount.id)
-        ControllerPublications.event(ApiEventFandomChangeAvatar(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, fandomId, fandom!!.name, fandom!!.imageId, comment), apiAccount.id, fandom!!.id, 0)
+        ControllerPublications.event(ApiEventAdminFandomChangeAvatar(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, fandomId, fandom!!.name, imageId), apiAccount.id)
+        ControllerPublications.event(ApiEventFandomChangeAvatar(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, fandomId, fandom!!.name, imageId, comment), apiAccount.id, fandom!!.id, 0)
 
         return Response(imageId)
     }
