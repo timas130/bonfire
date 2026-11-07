@@ -199,7 +199,7 @@ class SChat constructor(
                 subscription = RChatMessageGetAll(chat.tag,
                         if (cards.isEmpty()) 0 else cards[cards.size - 1].xPublication.publication.dateCreate,
                         false,
-                        scrollToMessageId)
+                        if (cards.isEmpty()) scrollToMessageId else 0)
                         .onComplete { r ->
 
                             if (scrollToMessageId > 0) {
@@ -267,16 +267,11 @@ class SChat constructor(
                                 .onComplete {
                                     if (scrollToMessageId == 0L) return@onComplete
                                     scrollToMessageWasLoaded = true
-                                    if (loaded) {
-                                        // The bottom loader has nothing left to fetch, so reopen around the target
-                                        loaded = false
-                                        adapter.setShowLoadingCardBottom(true)
-                                        adapter.unlockTop()
-                                        adapter.clear()
-                                        reload()
-                                    } else {
-                                        adapter.loadBottom()
-                                    }
+                                    loaded = false
+                                    adapter.setShowLoadingCardBottom(true)
+                                    adapter.unlockTop()
+                                    adapter.clear()
+                                    reload()
                                 }
                                 .onApiError(ApiClient.ERROR_GONE) {
                                     if (it.messageError == RChatMessageGet.GONE_BLOCKED) ControllerApi.showBlockedDialog(it, t(API_TRANSLATE.chat_error_gone_block))
