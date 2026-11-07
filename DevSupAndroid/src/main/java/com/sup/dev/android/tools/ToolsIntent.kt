@@ -322,18 +322,39 @@ object ToolsIntent {
         intent.type = "image/*"
         try {
             startIntentForResult(Intent.createChooser(intent, null)) { resultCode, resultIntent ->
-                try {
-                    if (resultCode != Activity.RESULT_OK || resultIntent == null || resultIntent.data == null) throw IllegalAccessException("Result is null or not OK")
-                    val inp = SupAndroid.appContext!!.contentResolver.openInputStream(resultIntent.data!!)
-                    val bytes = ByteArray(inp!!.available())
-                    inp.read(bytes)
-                    inp.close()
-                    onResult.invoke(bytes)
-                } catch (e: Exception) {
+                val uri = resultIntent?.data
+                if (resultCode != Activity.RESULT_OK || uri == null) {
+                    val e = IllegalAccessException("Result is null or not OK")
                     err(e)
                     onError.invoke(e)
+                    return@startIntentForResult
                 }
 
+                val progress = ToolsView.showProgressDialog()
+                ToolsThreads.thread {
+                    val bytes = try {
+                        val inp = SupAndroid.appContext!!.contentResolver.openInputStream(uri)
+                            ?: throw IOException("Can't open input stream for $uri")
+                        inp.use { it.readBytes() }
+                    } catch (e: Throwable) {
+                        err(e)
+                        ToolsThreads.main {
+                            progress.hide()
+                            onError.invoke(e as? Exception ?: RuntimeException(e))
+                        }
+                        return@thread
+                    }
+
+                    ToolsThreads.main {
+                        try {
+                            onResult.invoke(bytes)
+                        } catch (e: Exception) {
+                            err(e)
+                            onError.invoke(e)
+                        }
+                        progress.hide()
+                    }
+                }
             }
         } catch (ex: ActivityNotFoundException) {
             err(ex)
