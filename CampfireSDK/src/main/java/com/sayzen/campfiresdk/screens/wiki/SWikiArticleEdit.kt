@@ -60,7 +60,7 @@ class SWikiArticleEdit(
     }
 
     fun backIfEmptyAndNewerAdd() {
-        if (xPostCreator.pages.isEmpty() && xPostCreator.isNewerAdd()) Navigator.back()
+        if (Navigator.getCurrent() === this && xPostCreator.pages.isEmpty() && xPostCreator.isNewerAdd()) Navigator.back()
     }
 
 
