@@ -19,6 +19,7 @@ class EPostGetAllByRubric : RPostGetAllByRubric(0, 0) {
     override fun execute(): Response {
 
         val select = ControllerPublications.instanceSelect(apiAccount.id)
+                .where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_POST)
                 .where(TPublications.tag_6, "=", rubricId)
                 .where(TPublications.status, "=", API.STATUS_PUBLIC)
                 .filterNsfw(apiAccount.id, requestApiVersion)
