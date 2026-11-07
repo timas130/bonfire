@@ -141,6 +141,7 @@ class Attach(
             val bytes2 = ToolsBitmap.decode(bytes)
             if (bytes2 == null) {
                 ToolsToast.show(t(API_TRANSLATE.error_cant_load_image))
+                ToolsThreads.main { dialog?.hide() }
                 return
             }
 
