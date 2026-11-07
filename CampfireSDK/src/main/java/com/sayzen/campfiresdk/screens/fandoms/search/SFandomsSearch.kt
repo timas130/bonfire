@@ -154,6 +154,10 @@ class SFandomsSearch private constructor(
                             subscribedLoaded = true
                             if (!adapter.isEmpty || r.fandoms.isNotEmpty()) ToolsThreads.main(true) { adapter.add(CardDividerTitle(t(API_TRANSLATE.fandoms_global))) }
                         }
+                        if (r.fandoms.isEmpty() && !adapter.isEmpty) {
+                            load(onLoad, cards)
+                            return@onComplete
+                        }
                         onLoad.invoke(Array(r.fandoms.size) { NFandom(r.fandoms[it], true) })
                         if (adapter.isEmpty) ToolsThreads.main(true) { adapter.loadBottom() }
                     }
