@@ -2,6 +2,7 @@ package com.sayzen.campfiresdk.screens.quests
 
 import android.os.Handler
 import android.os.Looper
+import android.text.InputFilter
 import android.text.InputType
 import android.view.Gravity
 import android.widget.Button
@@ -267,6 +268,7 @@ class SQuestPlayer(
                         else -> InputType.TYPE_CLASS_TEXT
                     } or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_AUTO_CORRECT
                 )
+                field.vField.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(API.QUEST_VARIABLE_MAX_VALUE_L))
                 field.setText(it.defaultValue)
             } else if (field is SettingsCheckBox) {
                 field.setTitle(it.hint)
@@ -476,7 +478,7 @@ class SQuestPlayer(
             details.id,
             Json().apply {
                 for (item in state.variables) {
-                    put(item.key.toString(), item.value)
+                    put(item.key.toString(), item.value.take(API.QUEST_VARIABLE_MAX_VALUE_L))
                 }
             },
             index,
