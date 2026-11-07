@@ -6,6 +6,7 @@ import com.dzen.campfire.api.models.publications.chat.Chat
 import com.dzen.campfire.api.models.publications.chat.PublicationChatMessage
 import com.dzen.campfire.api.requests.chat.RChatsFandomGetAll
 import com.dzen.campfire.server.controllers.ControllerChats
+import com.dzen.campfire.server.controllers.ControllerCollisions
 import com.dzen.campfire.server.controllers.ControllerFandom
 import com.dzen.campfire.server.controllers.ControllerOptimizer
 import com.dzen.campfire.server.controllers.ControllerPublications
@@ -92,6 +93,7 @@ class EChatsFandomGetAll : RChatsFandomGetAll(0, 0, 0) {
 
         chat.customName = chat.chatMessage.fandom.name
         chat.customImageId = chat.chatMessage.fandom.imageId
+        chat.backgroundImageId = ControllerCollisions.getCollisionValue1(fandomId, languageId, API.COLLISION_CHAT_BACKGROUND_IMAGE)
         chat.membersCount = ControllerOptimizer.getChatSubscribersCount(chat.tag)
 
         val chatInfoV = Database.select("EChatsFandomGetAll selectRoot",
