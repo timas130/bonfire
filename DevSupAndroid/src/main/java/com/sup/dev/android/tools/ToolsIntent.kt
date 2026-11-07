@@ -23,6 +23,7 @@ import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.io.OutputStream
 import java.io.Serializable
 import java.net.URLConnection
@@ -252,8 +253,14 @@ object ToolsIntent {
         }
 
         try {
-            val dcimFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
-            val imageFile = File.createTempFile("cam_", ".jpg", dcimFolder)
+            val imageFile = try {
+                val dcimFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+                File.createTempFile("cam_", ".jpg", dcimFolder)
+            } catch (_: IOException) {
+                // shared storage isn't writable without a permission on some Android versions
+                val fallbackFolder = SupAndroid.appContext!!.getExternalFilesDir(Environment.DIRECTORY_DCIM)
+                File.createTempFile("cam_", ".jpg", fallbackFolder)
+            }
             val imageUri = FileProvider.getUriForFile(
                 SupAndroid.activity!!,
                 "${SupAndroid.appContext!!.packageName}.fileprovider",
