@@ -402,7 +402,7 @@ class ViewMiniGame @JvmOverloads constructor(
         canvas.drawLine(0f, height / 3f * 2, width.toFloat(), height / 3f * 2, paint)
 
         if (winLine1 != -1 && winLine2 != -1) {
-            val deltaMs = animationDelta.totalTimeMs() / 2f
+            val deltaMs = animationDelta.totalTimeMs() / 2000f
 
             if (winLine1 == 0 && winLine2 == 2) {
                 canvas.drawLine(0f, height / 6f, width * deltaMs, height / 6f, paint)

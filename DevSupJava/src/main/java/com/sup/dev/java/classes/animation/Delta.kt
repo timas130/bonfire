@@ -31,7 +31,7 @@ class Delta {
         return totalTime
     }
 
-    fun totalTimeMs()= totalTime() / 1000f
+    fun totalTimeMs()= totalTime() / 1000000f
 
     fun clear() {
         totalTime = 0
