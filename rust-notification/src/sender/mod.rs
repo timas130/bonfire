@@ -13,14 +13,24 @@ use google_fcm1::FirebaseCloudMessaging;
 use std::sync::Arc;
 use std::time::Duration;
 
+struct QueueItem {
+    notification: Notification,
+    session_id: i64,
+    online_only: bool,
+}
+
 #[derive(Clone)]
 pub(crate) struct SenderQueue {
-    queue: Arc<Queue<(Notification, i64)>>,
+    queue: Arc<Queue<QueueItem>>,
 }
 impl SenderQueue {
     /// Enqueue a new notification
-    pub fn send(&self, notification: Notification, session_id: i64) {
-        self.queue.push((notification, session_id));
+    pub fn send(&self, notification: Notification, session_id: i64, online_only: bool) {
+        self.queue.push(QueueItem {
+            notification,
+            session_id,
+            online_only,
+        });
     }
 }
 
@@ -30,7 +40,7 @@ pub(crate) struct NotificationSender {
     base: ServiceBase,
     // generics: increasing compilation time since 1973
     fcm_hub: Arc<FirebaseCloudMessaging<HttpsConnector<HttpConnector>>>,
-    queue: Arc<Queue<(Notification, i64)>>,
+    queue: Arc<Queue<QueueItem>>,
 }
 impl NotificationSender {
     /// Construct a new [`SenderQueue`] using config from [`ServiceBase`]
@@ -66,19 +76,22 @@ impl NotificationSender {
 
     async fn start_one(self) -> ! {
         loop {
-            let (item, session_id) = self.queue.pop().await;
+            let queued = self.queue.pop().await;
 
             let span = span!(
                 Level::INFO,
                 "sending notification",
-                notification_id = item.id,
-                session_id = session_id,
+                notification_id = queued.notification.id,
+                session_id = queued.session_id,
             );
-            self.process_one(item, session_id).instrument(span).await;
+            self.process_one(queued).instrument(span).await;
         }
     }
 
-    async fn process_one(&self, item: Notification, session_id: i64) {
+    async fn process_one(&self, queued: QueueItem) {
+        let item = &queued.notification;
+        let session_id = queued.session_id;
+
         // check that the notification still exists and is not read
         // unless it is ephemeral
         let read = item.id != 0 && {
@@ -90,7 +103,7 @@ impl NotificationSender {
                     "error getting notification when sending {:?}",
                     read.unwrap_err()
                 );
-                self.queue.push((item, session_id));
+                self.queue.push(queued);
                 return;
             };
             read.unwrap_or(false)
@@ -110,7 +123,7 @@ impl NotificationSender {
         .await;
         let Ok(token) = token else {
             error!("error getting notification token: {:?}", token.unwrap_err());
-            self.queue.push((item, session_id));
+            self.queue.push(queued);
             return;
         };
         let Some(token) = token else {
@@ -127,7 +140,9 @@ impl NotificationSender {
 
         // send it!
         let result = match service {
-            NotificationTokenType::Fcm => self.send_fcm(&item, &token.token).await,
+            NotificationTokenType::Fcm => {
+                self.send_fcm(item, &token.token, queued.online_only).await
+            }
         };
 
         // try again if failed
@@ -140,7 +155,7 @@ impl NotificationSender {
             );
             tokio::spawn(async move {
                 sleep(Duration::from_secs(3)).await;
-                queue.push((item, session_id));
+                queue.push(queued);
             });
         }
     }

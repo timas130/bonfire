@@ -131,7 +131,8 @@ impl NotificationServer {
                 {
                     continue;
                 }
-                self.queue.send(notification.clone(), session.id);
+                self.queue
+                    .send(notification.clone(), session.id, input.online_only);
             }
         }
 

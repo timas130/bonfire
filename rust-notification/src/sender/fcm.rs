@@ -4,10 +4,13 @@ use c_core::prelude::tracing::{error, info, span, warn, Instrument, Level};
 use c_core::services::notification::{
     Notification, NotificationError, NotificationPayload, NotificationTokenType,
 };
-use google_fcm1::api::{Message, SendMessageRequest};
-use google_fcm1::Error;
+use google_fcm1::api::{AndroidConfig, Message, SendMessageRequest};
+use google_fcm1::{chrono, Error};
 use serde::Deserialize;
 use std::collections::HashMap;
+
+/// How long FCM keeps online-only notifications for a device that is offline
+const ONLINE_ONLY_TTL_SECS: i64 = 30;
 
 #[derive(Deserialize)]
 struct FcmErrorResponse {
@@ -48,10 +51,16 @@ impl NotificationSender {
         &self,
         notification: &Notification,
         token: &str,
+        online_only: bool,
     ) -> Result<(), NotificationError> {
         // create the message for fcm
         let message = Message {
             token: Some(token.to_owned()),
+            android: Some(AndroidConfig {
+                priority: Some(String::from(if online_only { "normal" } else { "high" })),
+                ttl: online_only.then(|| chrono::Duration::seconds(ONLINE_ONLY_TTL_SECS)),
+                ..Default::default()
+            }),
             data: Some({
                 let mut hm = HashMap::new();
                 #[allow(irrefutable_let_patterns)] // future-proofing, remove when unnecessary
