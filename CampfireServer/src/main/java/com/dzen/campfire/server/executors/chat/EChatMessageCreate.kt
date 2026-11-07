@@ -152,7 +152,7 @@ class EChatMessageCreate(
 
         if (quoteMessageId != 0L) {
             val quoteMessage = ControllerPublications.getPublication(quoteMessageId, apiAccount.id)
-            if (quoteMessage != null && quoteMessage is PublicationChatMessage && quoteMessage.chatTag() == tag) {
+            if (quoteMessage != null && quoteMessage is PublicationChatMessage && quoteMessage.status == API.STATUS_PUBLIC && quoteMessage.chatTag() == tag) {
                 message.quoteId = quoteMessage.id
                 message.quoteText = quoteMessage.creator.name + ": " + quoteMessage.text
                 message.quoteCreatorName = quoteMessage.creator.name

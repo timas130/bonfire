@@ -59,7 +59,7 @@ class EChatMessageChange : RChatMessageChange(0, 0, "", false) {
 
             if (quoteMessageId != 0L) {
                 val quoteUnit = ControllerPublications.getPublication(quoteMessageId, apiAccount.id)
-                if (quoteUnit != null && quoteUnit is PublicationChatMessage && quoteUnit.chatTag() == publication.chatTag()) {
+                if (quoteUnit != null && quoteUnit is PublicationChatMessage && quoteUnit.status == API.STATUS_PUBLIC && quoteUnit.chatTag() == publication.chatTag()) {
                     publication.quoteId = quoteUnit.id
                     publication.quoteText = quoteUnit.creator.name + ": " + quoteUnit.text
                     publication.quoteCreatorName = quoteUnit.creator.name
