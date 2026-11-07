@@ -171,7 +171,7 @@ object ControllerPost {
         .textColorRes(R.color.white).condition(
             ENABLED_BLOCK && ControllerApi.can(
                 post.fandom.id,
-                post.fandom.languageId,
+                if (post.fandom.languageId == -1L) ControllerApi.getLanguageId() else post.fandom.languageId,
                 API.LVL_MODERATOR_BLOCK
             ) && !ControllerApi.isCurrentAccount(post.creator.id)
         )
