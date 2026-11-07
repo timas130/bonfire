@@ -43,7 +43,7 @@ class SRelayRaceInfo(
         setTitle(userActivity.name)
         setTextEmpty("")
 
-        adapter.add(CardUserActivity(userActivity))
+        adapter.add(CardUserActivity(userActivity, opensInfoOnClick = false))
         adapter.add(CardRelayRaceButtons(userActivity.id, postsCount, waitMembersCount, rejectedMembersCount))
         adapter.setBottomLoader { onLoad, cards ->
             RActivitiesGetPosts(userActivity.id, cards.size.toLong())

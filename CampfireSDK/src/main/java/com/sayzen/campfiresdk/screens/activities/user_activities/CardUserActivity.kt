@@ -32,6 +32,7 @@ import com.sup.dev.java.tools.ToolsDate
 
 class CardUserActivity(
         val userActivity: UserActivity,
+        private val opensInfoOnClick: Boolean = true,
         val onClick: ((UserActivity) -> Unit)? = null
 ) : Card(R.layout.card_user_activity) {
 
@@ -119,7 +120,7 @@ class CardUserActivity(
 
         view.setOnClickListener {
             if (onClick != null) onClick.invoke(userActivity)
-            else SRelayRaceInfo.instance(userActivity.id, Navigator.TO)
+            else if (opensInfoOnClick) SRelayRaceInfo.instance(userActivity.id, Navigator.TO)
         }
 
 
