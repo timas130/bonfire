@@ -22,7 +22,8 @@ impl ProfileServer {
 
         let has_next = if let Some(last) = badges.last() {
             sqlx::query_scalar!(
-                "select id from badges where created_at < $1",
+                "select id from badges where user_id = $1 and created_at < $2",
+                user_id,
                 last.created_at,
             )
             .fetch_optional(&self.base.pool)
