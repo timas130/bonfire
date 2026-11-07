@@ -35,6 +35,7 @@ class LinkParsed(
 
     fun isLinkToAccount(): Boolean {
         if (link == API.LINK_PROFILE_ID.asLink()) return params.size == 1
+        if (link == API.LINK_PROFILE_ID.link) return params.size == 1
         if (link == API.LINK_TAG_PROFILE_NAME) return params.size == 1
         if (link.startsWith(API.LINK_SHORT_PROFILE) && params.isEmpty() && ToolsText.isOnly(link.substring(1, link.length - 1), ToolsText.LATIS_S + ToolsText.NUMBERS_S)) {
             return true
@@ -55,6 +56,7 @@ class LinkParsed(
         if (link == API.LINK_MODERATION.link) return params.size == 2
         if (link == API.LINK_STICKERS_PACK.asLink()) return params.size == 2
         if (link == API.LINK_STICKERS_PACK.link) return params.size == 2
+        if (link == API.LINK_QUEST.asLink()) return params.size == 2
         if (link == API.LINK_QUEST.link) return params.size == 2
         return false
     }
