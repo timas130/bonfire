@@ -47,6 +47,7 @@ class CardPublicationBlock(
 
         vAvatar.setSubtitle(publication.comment)
 
+        vInfo.text = ""
         if (publication.lastPublicationsBlocked || publication.accountBlockDate != 0L) {
             var text = ""
             if (publication.lastPublicationsBlocked) text += "\n" + t(API_TRANSLATE.publication_event_account_block_last_publications)
