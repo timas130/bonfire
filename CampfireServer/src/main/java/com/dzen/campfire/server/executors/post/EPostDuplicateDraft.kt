@@ -12,6 +12,7 @@ import com.dzen.campfire.server.controllers.ControllerResources
 import com.dzen.campfire.server.rust.RustVideo
 import com.dzen.campfire.server.tables.TFandoms
 import com.dzen.campfire.server.tables.TPublications
+import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java_pc.sql.Database
 
@@ -57,9 +58,24 @@ class EPostDuplicateDraft : RPostDuplicateDraft(0) {
             TPublications.fandom_key, "${post.fandom.id}-${post.fandom.languageId}-0",
             TPublications.nsfw, post.nsfw)
 
-        for (p in post.pages) {
-            if (p is PageVideo) p.videoId = RustVideo.duplicate(p.videoId, publication.id)
-            else p.duplicateResources(ControllerResources, publication.id)
+        val videoCopies = ArrayList<String>()
+        try {
+            for (p in post.pages) {
+                if (p is PageVideo) {
+                    p.videoId = RustVideo.duplicate(p.videoId, publication.id)
+                    videoCopies.add(p.videoId)
+                } else p.duplicateResources(ControllerResources, publication.id)
+            }
+        } catch (e: Exception) {
+            ControllerPublications.remove(publication.id)
+            for (videoId in videoCopies) {
+                try {
+                    RustVideo.release(videoId)
+                } catch (releaseError: ApiException) {
+                    err(releaseError)
+                }
+            }
+            throw e
         }
 
         publication.pages = post.pages
