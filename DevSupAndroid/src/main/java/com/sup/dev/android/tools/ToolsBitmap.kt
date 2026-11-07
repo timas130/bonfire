@@ -267,7 +267,7 @@ object ToolsBitmap {
             val inscribe = if (resizeByMinSide) ToolsMath.inscribeByMinSide(bitmap.width.toFloat(), bitmap.height.toFloat(), w.toFloat(), h.toFloat())
             else ToolsMath.inscribePinBounds(bitmap.width.toFloat(), bitmap.height.toFloat(), w.toFloat(), h.toFloat())
             if ((bitmap.width.toFloat() != inscribe.w || bitmap.height.toFloat() != inscribe.h) && inscribe.w > 0 && inscribe.h > 0)
-                bitmap = Bitmap.createScaledBitmap(bitmap, inscribe.w.toInt(), inscribe.h.toInt(), true)
+                bitmap = Bitmap.createScaledBitmap(bitmap, inscribe.w.toInt().coerceAtLeast(1), inscribe.h.toInt().coerceAtLeast(1), true)
         }
 
         return bitmap
@@ -483,7 +483,7 @@ object ToolsBitmap {
 
     fun inscribePin(bitmap: Bitmap, w: Int, h: Int, byMinSide: Boolean = false): Bitmap {
         val bounds = inscribePinBounds(bitmap, w, h, byMinSide)
-        return resize(bitmap, bounds.w.toInt(), bounds.h.toInt())
+        return resize(bitmap, bounds.w.toInt().coerceAtLeast(1), bounds.h.toInt().coerceAtLeast(1))
     }
 
     fun keepMaxSizes(bitmap: Bitmap, w: Int, h: Int): Bitmap {

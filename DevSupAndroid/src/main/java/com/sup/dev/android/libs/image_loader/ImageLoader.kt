@@ -87,7 +87,15 @@ object ImageLoader {
             if (!loader.link.noLoadFromCash) bytes = loader.link.getFromCash()
 
             if (bytes != null) {
-                if (!loader.intoCash) ToolsThreads.thread { putImage(loader, parseImage(loader, bytes), false, bytes) }
+                if (!loader.intoCash) ToolsThreads.thread {
+                    val bitmap = try {
+                        parseImage(loader, bytes)
+                    } catch (ex: Throwable) {
+                        err(ex)
+                        null
+                    }
+                    putImage(loader, bitmap, false, bytes)
+                }
                 return@thread
             }
 
