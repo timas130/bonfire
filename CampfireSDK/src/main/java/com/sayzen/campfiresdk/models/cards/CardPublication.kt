@@ -174,6 +174,7 @@ abstract class CardPublication(
 
         if (pub.blacklisted) {
             if (!ControllerSettings.hideBlacklistedPubs) {
+                view.visibility = View.VISIBLE
                 vContentContainer.visibility = View.GONE
                 vBlacklistedText.visibility = View.VISIBLE
                 vBlacklistedText.text = t(API_TRANSLATE.publication_blacklisted, "@${pub.creator.name}")
@@ -182,6 +183,7 @@ abstract class CardPublication(
                 view.visibility = View.GONE
             }
         } else {
+            view.visibility = View.VISIBLE
             vContentContainer.visibility = View.VISIBLE
             vBlacklistedText.visibility = View.GONE
         }
