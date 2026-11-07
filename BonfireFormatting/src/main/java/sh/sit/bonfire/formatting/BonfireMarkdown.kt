@@ -17,7 +17,6 @@ import io.noties.markwon.ext.tasklist.TaskListPlugin
 import io.noties.markwon.html.HtmlPlugin
 import io.noties.markwon.simple.ext.SimpleExtPlugin
 import me.saket.bettermovementmethod.BetterLinkMovementMethod
-import sh.sit.bonfire.formatting.core.BonfireFormatter
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Future
 import java.util.concurrent.LinkedBlockingQueue
@@ -25,9 +24,9 @@ import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
 object BonfireMarkdown {
-    private fun createMarkwon(context: Context, inlineOnly: Boolean = false): Markwon {
+    private fun createMarkwon(context: Context, inlineOnly: Boolean = false, shortenLinks: Boolean = false): Markwon {
         return Markwon.builder(context)
-            .usePlugin(BFMCorePlugin.create(inlineOnly))
+            .usePlugin(BFMCorePlugin.create(inlineOnly, shortenLinks))
             .usePlugin(TaskListPlugin.create(context))
             .usePlugin(SoftBreakAddsNewLinePlugin.create())
             .usePlugin(StrikethroughPlugin())
@@ -55,14 +54,14 @@ object BonfireMarkdown {
     private lateinit var markwonInline: Markwon
 
     fun init(context: Context) {
-        markwon = createMarkwon(context)
-        markwonInline = createMarkwon(context, inlineOnly = true)
+        markwon = createMarkwon(context, shortenLinks = true)
+        markwonInline = createMarkwon(context, inlineOnly = true, shortenLinks = true)
     }
 
     fun setMarkdown(view: TextView, text: String) {
         val start = System.currentTimeMillis()
         try {
-            markwon.setMarkdown(view, BonfireFormatter.replaceLongLink(text))
+            markwon.setMarkdown(view, text)
         } catch (e: StackOverflowError) {
             view.text = text
         }
@@ -79,7 +78,7 @@ object BonfireMarkdown {
 
     fun setMarkdownInline(view: TextView, text: String) {
         try {
-            markwonInline.setMarkdown(view, BonfireFormatter.replaceLongLink(text))
+            markwonInline.setMarkdown(view, text)
         } catch (e: StackOverflowError) {
             view.text = text
         }

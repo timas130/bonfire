@@ -17,6 +17,7 @@ import org.commonmark.ext.autolink.AutolinkExtension
 import org.commonmark.parser.Parser
 import sh.sit.bonfire.formatting.core.bfm.color.ColorExtension
 import sh.sit.bonfire.formatting.core.bfm.color.ColorNode
+import sh.sit.bonfire.formatting.core.bfm.mention.ShortLinkPostProcessor
 import sh.sit.bonfire.formatting.core.bfm.spoiler.SpoilerExtension
 import sh.sit.bonfire.formatting.core.bfm.spoiler.SpoilerNode
 
@@ -33,10 +34,10 @@ class GradientColorSpan(
     }
 }
 
-class BFMCorePlugin(private val inlineOnly: Boolean) : CorePlugin() {
+class BFMCorePlugin(private val inlineOnly: Boolean, private val shortenLinks: Boolean) : CorePlugin() {
     companion object {
         @JvmStatic
-        fun create(inlineOnly: Boolean): BFMCorePlugin = BFMCorePlugin(inlineOnly)
+        fun create(inlineOnly: Boolean, shortenLinks: Boolean): BFMCorePlugin = BFMCorePlugin(inlineOnly, shortenLinks)
 
         private val textWidthProp = Prop.of<Float>("bfm-text-width")
         private val colorProp = Prop.of<Int>("bfm-color")
@@ -45,6 +46,9 @@ class BFMCorePlugin(private val inlineOnly: Boolean) : CorePlugin() {
 
     override fun configureParser(builder: Parser.Builder) {
         builder.extensions(setOf(ColorExtension(), AutolinkExtension.create(), SpoilerExtension()))
+        if (shortenLinks) {
+            builder.postProcessor(ShortLinkPostProcessor())
+        }
         if (inlineOnly) {
             builder.enabledBlockTypes(setOf())
         }

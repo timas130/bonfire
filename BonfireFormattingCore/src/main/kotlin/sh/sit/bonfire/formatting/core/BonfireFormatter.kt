@@ -7,6 +7,7 @@ import org.commonmark.parser.Parser
 import sh.sit.bonfire.formatting.core.bfm.color.ColorExtension
 import sh.sit.bonfire.formatting.core.bfm.marked.MarkedExtension
 import sh.sit.bonfire.formatting.core.bfm.mention.MentionExtension
+import sh.sit.bonfire.formatting.core.bfm.mention.ShortLinkPostProcessor
 import sh.sit.bonfire.formatting.core.bfm.spoiler.SpoilerExtension
 import sh.sit.bonfire.formatting.core.bfm.subscript.SubscriptExtension
 import sh.sit.bonfire.formatting.core.bfm.superscript.SuperscriptExtension
@@ -15,12 +16,6 @@ import sh.sit.bonfire.formatting.core.model.FormattedText
 import sh.sit.bonfire.formatting.core.model.spans.ParagraphBlock
 
 object BonfireFormatter {
-    // fixme: maybe don't do this?
-    private val shortReplacerRegex: Regex = Regex("([^]][^(]|^.?)https://bonfire\\.moe/r/")
-    fun replaceLongLink(text: String): String {
-        return text.replace(shortReplacerRegex) { match -> match.groupValues[1] + "@" }
-    }
-
     private fun getParser(inlineOnly: Boolean = false): Parser {
         return Parser.builder()
             .extensions(listOf(
@@ -35,6 +30,7 @@ object BonfireFormatter {
                 TaskListItemsExtension.create(),
                 SpoilerExtension(),
             ))
+            .postProcessor(ShortLinkPostProcessor())
             .apply {
                 if (inlineOnly) enabledBlockTypes(setOf())
             }
@@ -58,7 +54,7 @@ object BonfireFormatter {
 
     private fun parseUnchecked(text: String, inlineOnly: Boolean): FormattedText {
         val parser = if (inlineOnly) inlineParser else parser
-        val node = parser.parse(replaceLongLink(text))
+        val node = parser.parse(text)
 
         val visitor = SpanVisitor(buffer = text.length)
         node.accept(visitor)
