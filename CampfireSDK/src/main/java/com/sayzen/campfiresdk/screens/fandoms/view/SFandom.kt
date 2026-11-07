@@ -60,7 +60,7 @@ class SFandom private constructor(
 
     private val eventBus = EventBus
             .subscribe(EventPostStatusChange::class) { onEventPostStatusChange(it) }
-            .subscribe(EventFandomRemove::class) { Navigator.remove(this) }
+            .subscribe(EventFandomRemove::class) { if (it.fandomId == xFandom.getId()) Navigator.remove(this) }
             .subscribe(EventPostPinedFandom::class) { if (it.fandomId == xFandom.getId() && it.languageId == xFandom.getLanguageId()) setPinnedPost(it.post) }
 
     private val vToolbarCollapsingShadow: View = findViewById(R.id.vToolbarCollapsingShadow)
