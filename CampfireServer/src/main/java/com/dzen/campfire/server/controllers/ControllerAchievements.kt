@@ -73,8 +73,11 @@ object ControllerAchievements {
         if (accountId < 1) return
         ControllerSubThread.inSub("ControllerAchievements.addAchievementWithCheck(${achievementInfo.index})") {
             if (!activeRecounts.add(accountId)) return@inSub
-            recount(accountId)
-            activeRecounts.remove(accountId)
+            try {
+                recount(accountId)
+            } finally {
+                activeRecounts.remove(accountId)
+            }
         }
     }
 }

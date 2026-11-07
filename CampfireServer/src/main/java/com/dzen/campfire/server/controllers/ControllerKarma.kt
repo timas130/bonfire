@@ -59,8 +59,12 @@ object ControllerKarma {
             val v = Database.select("ControllerKarma.recountKarma30 select", SqlQuerySelect(TAccounts.NAME, TAccounts.id))
             while (v.hasNext()) {
                 val id: Long = v.next()
-                ControllerAchievements.addAchievementWithCheck(id, API.ACHI_KARMA_30)
-                ControllerAchievements.addAchievementWithCheck(id, API.ACHI_MODERATOR_COUNT)
+                try {
+                    ControllerAchievements.addAchievementWithCheck(id, API.ACHI_KARMA_30)
+                    ControllerAchievements.addAchievementWithCheck(id, API.ACHI_MODERATOR_COUNT)
+                } catch (e: Exception) {
+                    ControllerStatistic.logError("ControllerKarma.recountKarma30", e)
+                }
             }
         }
     }

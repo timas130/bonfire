@@ -19,10 +19,12 @@ class PAdminVoteAccountRecountAchi {
         }
 
         ControllerSubThread.inSub("EAdminVoteRecountAchi") {
-            ControllerAchievements.recount(m.targetAccount.id)
-
-            synchronized(cash) {
-                cash.remove(m.targetAccount.id)
+            try {
+                ControllerAchievements.recount(m.targetAccount.id)
+            } finally {
+                synchronized(cash) {
+                    cash.remove(m.targetAccount.id)
+                }
             }
         }
 

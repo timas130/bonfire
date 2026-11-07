@@ -20,10 +20,12 @@ class PAdminVoteAccountRecountKarma {
         }
 
         ControllerSubThread.inSub("EAdminVoteRecountAchi") {
-            ControllerKarma.recountKarma30(m.targetAccount.id)
-
-            synchronized(cash) {
-                cash.remove(m.targetAccount.id)
+            try {
+                ControllerKarma.recountKarma30(m.targetAccount.id)
+            } finally {
+                synchronized(cash) {
+                    cash.remove(m.targetAccount.id)
+                }
             }
         }
 
