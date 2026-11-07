@@ -14,6 +14,8 @@ class EAccountsReport : RAccountsReport(0, "") {
 
     @Throws(ApiException::class)
     override fun check() {
+        if (comment.length > API.REPORT_COMMENT_L) throw ApiException(API.ERROR_ACCESS)
+        if (accountId == apiAccount.id) throw ApiException(API.ERROR_ACCESS)
         if (ControllerCollisions.checkCollisionExist(apiAccount.id, accountId, API.COLLISION_ACCOUNT_REPORT)) throw ApiException(E_EXIST)
         ControllerAccounts.checkAccountBanned(apiAccount.id)
     }
