@@ -25,7 +25,7 @@ class ERubricsMoveFandom : RRubricsMoveFandom(0, 0, 0, "") {
         if (rubric.fandom.id == fandomId && rubric.fandom.languageId == languageId)
             throw ApiException(E_SAME_FANDOM)
         ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_MOVE_RUBRIC)
-        if (moderatorComment.isBlank()) {
+        if (apiAccount.id != rubric.owner.id && moderatorComment.isBlank()) {
             throw ApiException(E_BAD_COMMENT, "Moderator comment is blank")
         }
 

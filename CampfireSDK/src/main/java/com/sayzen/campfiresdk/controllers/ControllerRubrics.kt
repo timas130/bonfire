@@ -37,7 +37,7 @@ object ControllerRubrics {
             .add(t(API_TRANSLATE.app_remove)) { removeRubric(rubric) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white)
             .add(t(API_TRANSLATE.rubric_change_owner)) { changeOwner(rubric) }.backgroundRes(R.color.blue_700).textColorRes(R.color.white)
             .spoiler(t(API_TRANSLATE.app_admin))
-            .add(t(API_TRANSLATE.rubric_move_fandom)) { changeFandom(rubric) }.condition(ControllerApi.can(rubric.fandom.id, rubric.fandom.languageId, API.LVL_ADMIN_MOVE_RUBRIC)).backgroundRes(R.color.red_500).textColorRes(R.color.white)
+            .add(t(API_TRANSLATE.rubric_move_fandom)) { changeFandom(rubric) }.condition(ControllerApi.can(API.LVL_ADMIN_MOVE_RUBRIC)).backgroundRes(R.color.red_500).textColorRes(R.color.white)
 
     private fun changeNotifications(rubric: Rubric){
         ApiRequestsSupporter.executeProgressDialog(RRubricsChangeNotifications(rubric.id)) { r ->
@@ -84,7 +84,12 @@ object ControllerRubrics {
                 ControllerApi.moderation(
                     t(API_TRANSLATE.rubric_move_fandom),
                     t(API_TRANSLATE.app_move),
-                    { RRubricsMoveFandom(rubric.id, fandom.id, fandom.languageId, it) }
+                    {
+                        RRubricsMoveFandom(rubric.id, fandom.id, fandom.languageId, it)
+                            .onApiError(RRubricsMoveFandom.E_SAME_FANDOM) {
+                                ToolsToast.show(t(API_TRANSLATE.error_same_fandom))
+                            }
+                    }
                 ) {
                     ToolsToast.show(t(API_TRANSLATE.app_done))
                 }
