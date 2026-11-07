@@ -14,7 +14,6 @@ import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsCryptography
 import com.sup.dev.java_pc.tools.ToolsImage
-import java.nio.ByteBuffer
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -236,30 +235,23 @@ class EChatMessageCreate(
 
         message.type = PublicationChatMessage.TYPE_VOICE
         message.voiceResourceId = ControllerResources.put(voice, API.RESOURCES_PUBLICATION_CHAT_MESSAGE)
-        message.voiceMs = (voice!!.size / 17f).toLong()
-        if (message.voiceMs > API.CHAT_MESSAGE_VOICE_MAX_MS) throw ApiException(E_BAD_DATA)
+        message.voiceMs = voice!!.size / 16L
+        if (voice!!.size / 17f > API.CHAT_MESSAGE_VOICE_MAX_MS) throw ApiException(E_BAD_DATA)
         if (voice!!.size > maxLines) {
-            val step = voice!!.size / maxLines
+            val step = maxOf(2, voice!!.size / maxLines / 2 * 2)
             message.voiceMask = Array(maxLines) { 0 }
             var index = 0
             for (i in 0 until voice!!.size step step) {
                 var sum = 0L
-                for (n in i until min(voice!!.size, i + step) step 8) {
-                    val byteBuffer = ByteBuffer.allocate(8)
-                    byteBuffer.put(voice!![i])
-                    byteBuffer.put(voice!![i + 1])
-                    byteBuffer.put(voice!![i + 2])
-                    byteBuffer.put(voice!![i + 3])
-                    byteBuffer.put(voice!![i + 4])
-                    byteBuffer.put(voice!![i + 5])
-                    byteBuffer.put(voice!![i + 6])
-                    byteBuffer.put(voice!![i + 7])
-                    sum += abs(ByteBuffer.wrap(byteBuffer.array()).long)
+                for (n in i until min(voice!!.size - 1, i + step) step 2) {
+                    sum += abs((voice!![n + 1].toInt() shl 8) or (voice!![n].toInt() and 0xFF))
                 }
-                message.voiceMask[index] = abs((sum / step).toInt())
+                message.voiceMask[index] = (sum / (step / 2)).toInt()
                 index++
                 if (index >= maxLines) break
             }
+            val peak = message.voiceMask.maxOrNull() ?: 0
+            if (peak > 0) for (i in message.voiceMask.indices) message.voiceMask[i] = (message.voiceMask[i] * Int.MAX_VALUE.toLong() / peak).toInt()
         } else {
             message.voiceMask = Array(voice!!.size) { abs(voice!![it].toInt()) }
         }
