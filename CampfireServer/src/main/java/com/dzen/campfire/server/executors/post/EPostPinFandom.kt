@@ -18,6 +18,9 @@ class EPostPinFandom : RPostPinFandom(0, 0, 0, "") {
             val publication = ControllerPublications.getPublication(postId, apiAccount.id)
             if (publication == null) throw ApiException(API.ERROR_GONE)
             if (publication !is PublicationPost) throw ApiException(API.ERROR_GONE)
+            if (publication.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_GONE)
+            if (publication.fandom.id != fandomId) throw ApiException(API.ERROR_ACCESS)
+            if (publication.fandom.languageId != -1L && publication.fandom.languageId != languageId) throw ApiException(API.ERROR_ACCESS)
 
             ControllerFandom.checkCan(apiAccount, publication.fandom.id, publication.fandom.languageId, API.LVL_MODERATOR_PIN_POST)
         } else {
