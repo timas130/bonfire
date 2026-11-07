@@ -130,11 +130,11 @@ class SProfile private constructor(
         vImage.setOnClickListener {
             if (ControllerApi.isCurrentAccount(xAccount.getId()) && ControllerApi.can(API.LVL_CAN_CHANGE_PROFILE_IMAGE)) onChangeTitleImageClicked()
             else if (xAccount.getTitleImageGif().isNotEmpty()) Navigator.to(SImageView(ImageLoader.load(xAccount.getTitleImageGif())))
-            else Navigator.to(SImageView(ImageLoader.load(xAccount.getTitleImage())))
+            else if (xAccount.getTitleImage().isNotEmpty()) Navigator.to(SImageView(ImageLoader.load(xAccount.getTitleImage())))
         }
         vImage.setOnLongClickListener {
             if (xAccount.getTitleImageGif().isNotEmpty()) Navigator.to(SImageView(ImageLoader.load(xAccount.getTitleImageGif())))
-            else Navigator.to(SImageView(ImageLoader.load(xAccount.getTitleImage())))
+            else if (xAccount.getTitleImage().isNotEmpty()) Navigator.to(SImageView(ImageLoader.load(xAccount.getTitleImage())))
             true
         }
 
