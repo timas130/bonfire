@@ -183,11 +183,16 @@ disableNavigation()
                     .setOnEnter(SupAndroid.TEXT_APP_SHARE) { _, text ->
                         ToolsThreads.thread {
                             val dialog = ToolsView.showProgressDialog()
-                            imageLoader.intoBitmap { bm ->
+                            imageLoader.intoBytes { bytes ->
                                 dialog.hide()
+                                if (bytes != null && ToolsBytes.isGif(bytes)) {
+                                    ToolsIntent.shareGif(bytes, text)
+                                    return@intoBytes
+                                }
+                                val bm = ToolsBitmap.decode(bytes)
                                 if (bm == null) {
                                     ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
-                                    return@intoBitmap
+                                    return@intoBytes
                                 }
                                 ToolsIntent.shareImage(bm, text)
                             }

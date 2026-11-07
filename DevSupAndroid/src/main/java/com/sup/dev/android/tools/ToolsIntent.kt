@@ -159,6 +159,14 @@ object ToolsIntent {
     }
 
     fun shareImage(bitmap: Bitmap, text: String, onActivityNotFound: () -> Unit = onActivityNotFoundDef) {
+        shareCashFile("png", "image/*", text, onActivityNotFound) { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+    }
+
+    fun shareGif(bytes: ByteArray, text: String, onActivityNotFound: () -> Unit = onActivityNotFoundDef) {
+        shareCashFile("gif", "image/gif", text, onActivityNotFound) { it.write(bytes) }
+    }
+
+    private fun shareCashFile(extension: String, type: String, text: String, onActivityNotFound: () -> Unit, write: (OutputStream) -> Unit) {
 
         val files = File(cashRoot).listFiles()
         if (files != null)
@@ -169,10 +177,10 @@ object ToolsIntent {
         File(cashRoot).mkdirs()
 
         val out: OutputStream
-        val file = File(cashRoot, System.currentTimeMillis().toString() + "_x_share_i.png")
+        val file = File(cashRoot, System.currentTimeMillis().toString() + "_x_share_i." + extension)
         try {
             out = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+            write(out)
             out.flush()
             out.close()
         } catch (e: Exception) {
@@ -185,7 +193,7 @@ object ToolsIntent {
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     .putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(SupAndroid.activity!!, "${SupAndroid.appId}.fileprovider", file))
                     .putExtra(Intent.EXTRA_TEXT, text)
-                    .setType("image/*"), null))
+                    .setType(type), null))
         } catch (ex: ActivityNotFoundException) {
             err(ex)
             onActivityNotFound.invoke()
