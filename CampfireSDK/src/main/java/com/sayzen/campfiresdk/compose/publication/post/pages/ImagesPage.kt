@@ -64,6 +64,8 @@ fun FixedGridPageImagesVariant(
     modifier: Modifier = Modifier,
     imagesMini: Array<ImageRef> = images,
 ) {
+    if (imagesMini.isEmpty()) return
+
     val columnCounts = imagesColumnCounts[imagesMini.size]
     if (columnCounts == null) {
         Text(
