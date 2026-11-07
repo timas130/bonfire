@@ -29,7 +29,8 @@ class EPostGet : RPostGet(0) {
         if ((publication.status == API.STATUS_BLOCKED || publication.status == API.STATUS_DEEP_BLOCKED) && !ControllerFandom.can(apiAccount, API.LVL_PROTOADMIN))
             throw ApiException.instance(API.ERROR_GONE, GONE_BLOCKED, ControllerPublications.getModerationIdForPublication(publicationId))
         if (publication.status == API.STATUS_REMOVED && !ControllerFandom.can(apiAccount, API.LVL_PROTOADMIN)) throw ApiException(API.ERROR_GONE, GONE_REMOVE)
-        if (publication.status != API.STATUS_PUBLIC) {
+        val isBlockedOrRemoved = publication.status == API.STATUS_BLOCKED || publication.status == API.STATUS_DEEP_BLOCKED || publication.status == API.STATUS_REMOVED
+        if (publication.status != API.STATUS_PUBLIC && !isBlockedOrRemoved) {
             if ((publication.status != API.STATUS_PENDING && publication.status != API.STATUS_DRAFT) || apiAccount.id != publication.creator.id) {
                 throw ApiException(API.ERROR_GONE)
             }
