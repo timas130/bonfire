@@ -82,6 +82,7 @@ class SFandom private constructor(
     private val cardViceroy = CardViceroy(xFandom.getId(), xFandom.getLanguageId())
     private val cardFandomInfo = CardFandomInfo(xFandom, fandom.karmaCof)
     private var cardPinnedPost: CardPostProxy? = null
+    private var shownImageTitle = fandom.imageTitle
 
     init {
         vToolbarCollapsingShadow.background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(0x60000000, 0x00000000))
@@ -190,6 +191,7 @@ class SFandom private constructor(
 
 
     private fun updateBackground() {
+        shownImageTitle = xFandom.getImageTitle()
         xFandom.setViewBig(vImageTitle)
         vImageTitle.setOnClickListener { Navigator.to(SImageView(ImageLoader.load(if (xFandom.getImageTitleGif().isNotEmpty()) xFandom.getImageTitleGif() else xFandom.getImageTitle()))) }
     }
@@ -198,6 +200,7 @@ class SFandom private constructor(
         xFandom.setView(vTitle)
         cardTitle.updateAvatar()
         cardTitle.update()
+        if (xFandom.getImageTitle() != shownImageTitle) updateBackground()
     }
 
     //

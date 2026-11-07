@@ -192,7 +192,7 @@ class XFandom() {
             if (e.name.isNotEmpty()) fandom.name = e.name
             if (e.image.isNotEmpty()) fandom.image = e.image
             if (e.imageTitle.isNotEmpty()) fandom.imageTitle = e.imageTitle
-            if (e.imageTitleGif.isNotEmpty()) fandom.imageTitleGif = e.imageTitleGif
+            if (e.imageTitle.isNotEmpty()) fandom.imageTitleGif = e.imageTitleGif
             onChanged.invoke()
         }
     }
