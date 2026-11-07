@@ -4,8 +4,6 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.chat.ChatTag
 import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.models.publications.chat.PublicationChatMessage
-import com.dzen.campfire.api.requests.chat.RChatMessageGet.Companion.GONE_BLOCKED
-import com.dzen.campfire.api.requests.chat.RChatMessageGet.Companion.GONE_REMOVE
 import com.dzen.campfire.api.requests.chat.RChatMessageGetAll
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerChats
@@ -28,18 +26,9 @@ class EChatMessageGetAll : RChatMessageGetAll(ChatTag(), 0, false, 0) {
 
         val targetMessage = if (messageId > 0) ControllerPublications.getPublication(messageId, apiAccount.id) else null
 
-        if (targetMessage == null) {
+        if (targetMessage !is PublicationChatMessage || targetMessage.status != API.STATUS_PUBLIC || targetMessage.chatTag() != tag) {
             val result = select(COUNT, old, offsetDate)
             return Response(result)
-        }
-
-        targetMessage as PublicationChatMessage
-        if (targetMessage.status == API.STATUS_BLOCKED || targetMessage.status == API.STATUS_DEEP_BLOCKED)
-            throw ApiException.instance(API.ERROR_GONE, GONE_BLOCKED, ControllerPublications.getModerationIdForPublication(messageId))
-        if (targetMessage.status == API.STATUS_REMOVED) throw ApiException(API.ERROR_GONE, GONE_REMOVE)
-        if (targetMessage.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_GONE)
-        if (targetMessage.chatTag() != tag) {
-            throw ApiException(API.ERROR_ACCESS)
         }
 
         val select_1 = select(COUNT / 2, true, targetMessage.dateCreate)

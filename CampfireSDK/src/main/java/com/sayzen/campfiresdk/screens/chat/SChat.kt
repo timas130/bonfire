@@ -219,6 +219,7 @@ class SChat constructor(
                             }
                         }
                         .onNetworkError { onLoad.invoke(null) }
+                        .onApiError { onLoad.invoke(null) }
                         .send(api)
             }
         }
