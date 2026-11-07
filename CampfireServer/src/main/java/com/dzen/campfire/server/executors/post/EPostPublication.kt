@@ -128,7 +128,7 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
                     .update(TPublications.tag_6, rubricId)
                     .update(TPublications.closed, if (closed) 1 else 0)
                     .update(TPublications.nsfw, nsfw)
-                    .update(TPublications.tag_3, if (pendingTime > 0L && notifyFollowers && publication!!.tag_3 == 0L) 2 else "${TPublications.NAME}.${TPublications.tag_3}")
+                    .update(TPublications.tag_3, if (!publishImmediately && notifyFollowers && publication!!.tag_3 == 0L) 2 else "${TPublications.NAME}.${TPublications.tag_3}")
                     .where(TPublications.id, "=", publicationId))
 
             if(multilingual) ControllerPost.setMultilingual(publication!!, true)
@@ -144,7 +144,7 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
                 API.ACHI_VICEROY_POSTS_COUNT
             )
 
-            if (notifyFollowers && publication!!.tag_3 == 0L && pendingTime == 0L) ControllerPublications.notifyFollowers(apiAccount, publication!!.id)
+            if (notifyFollowers && publication!!.tag_3 == 0L && publishImmediately) ControllerPublications.notifyFollowers(apiAccount, publication!!.id)
 
             if (userActivityId > 0) {
                 val activity = ControllerActivities.getActivity(userActivityId, apiAccount.id)
