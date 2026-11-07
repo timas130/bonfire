@@ -57,7 +57,7 @@ class EPublicationsGetAll : RPublicationsGetAll() {
         if (important == API.PUBLICATION_IMPORTANT_IMPORTANT) select.where(TPublications.important, "=", API.PUBLICATION_IMPORTANT_IMPORTANT)
 
         select.where(SqlWhere.WhereString("(${TPublications.publication_type}<>${API.PUBLICATION_TYPE_CHAT_MESSAGE} OR ${TPublications.tag_1}=${API.CHAT_TYPE_FANDOM_ROOT})"))
-        select.offset_count(offset, count)
+        select.offset_count(offset, count.coerceIn(0, 100))
 
         if (order == ORDER_NEW)
             select.sort(TPublications.date_create, false)
