@@ -238,7 +238,7 @@ class SChat constructor(
                     .onComplete { r ->
                         if (cards.isEmpty()) loaded = true
                         onLoad.invoke(r.publications)
-                        if (cards.isNotEmpty()) cards.get(cards.size - 1).onSameChanged()
+                        if (cards.isNotEmpty()) cards.get(0).onSameChanged()
                     }
                     .onNetworkError { onLoad.invoke(null) }
                     .send(api)
