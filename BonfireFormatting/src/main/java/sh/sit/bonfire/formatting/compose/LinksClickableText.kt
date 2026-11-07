@@ -89,6 +89,13 @@ fun LinksClickableText(
             }
 
             layoutResult.value?.let {
+                val line = it.getLineForVerticalPosition(up.position.y)
+                if (up.position.x !in it.getLineLeft(line)..it.getLineRight(line) ||
+                    up.position.y !in it.getLineTop(line)..it.getLineBottom(line)
+                ) {
+                    return@awaitEachGesture
+                }
+
                 val consume = realOnClick(it.getOffsetForPosition(up.position), up.position)
                 if (consume) {
                     down.consume()
