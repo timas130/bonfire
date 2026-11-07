@@ -3,10 +3,8 @@ package com.sayzen.campfiresdk.controllers
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.LinkParsed
-import com.dzen.campfire.api.models.chat.ChatTag
 import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.requests.accounts.RAccountsGet
-import com.dzen.campfire.api.requests.chat.RChatGet
 import com.dzen.campfire.api.requests.comments.RCommentGet
 import com.dzen.campfire.api.requests.fandoms.RFandomsGet
 import com.dzen.campfire.api.requests.post.RPostGet
@@ -84,8 +82,13 @@ object ControllerCampfireObjects {
         val targetId = link.getLongParamOrZero(0)
         val targetSubId = link.getLongParamOrZero(1)
 
-        RChatGet(ChatTag(API.CHAT_TYPE_FANDOM_ROOT, targetId, targetSubId), 0)
-            .onComplete { onComplete(link, it.chat.customName, t(API_TRANSLATE.app_chat), it.chat.customImage) }
+        if (!API.isLanguageExsit(targetSubId)) {
+            onError(link)
+            return
+        }
+
+        RFandomsGet(targetId, targetSubId, targetSubId)
+            .onComplete { onComplete(link, it.fandom.name, t(API_TRANSLATE.app_chat), it.fandom.image) }
             .onError { onError(link) }
             .send(api)
     }
