@@ -24,6 +24,7 @@ class EPublicationsKarmaAdd : RPublicationsKarmaAdd(0, false, 0, false) {
         publication = ControllerPublications.getPublication(publicationId, apiAccount.id)
 
         if (publication == null) throw ApiException(API.ERROR_GONE)
+        if (publication!!.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_GONE)
 
         if (publication!!.publicationType != API.PUBLICATION_TYPE_POST
                 && publication!!.publicationType != API.PUBLICATION_TYPE_COMMENT
@@ -35,7 +36,8 @@ class EPublicationsKarmaAdd : RPublicationsKarmaAdd(0, false, 0, false) {
         if (publication!!.myKarma != 0L) throw ApiException(E_ALREADY_EXIST)
         if (apiAccount.id == publication!!.creator.id) throw ApiException(E_SELF_PUBLICATION)
 
-        ControllerAccounts.checkAccountBanned(apiAccount.id)
+        val banLanguageId = if (publication!!.fandom.languageId == -1L) userLanguage else publication!!.fandom.languageId
+        ControllerAccounts.checkAccountBanned(apiAccount.id, publication!!.fandom.id, banLanguageId)
 
         if (anon) {
             try {
