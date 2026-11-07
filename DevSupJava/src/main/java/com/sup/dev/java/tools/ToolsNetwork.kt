@@ -14,15 +14,18 @@ object ToolsNetwork {
     fun getBytesFromURL(src: String, count: Int = 0): ByteArray? {
         val output = ByteArrayOutputStream()
         try {
-            val url = URL(src)
-            val inputStream = url.openStream()
-            var n: Int
-            while (true) {
-                val buffer = ByteArray(if (count != 0 && count < 1024) count else if (count > 1024) if (output.size() - count > 1024) 1024 else output.size() - count else 1024)
-                n = inputStream.read(buffer)
-                if (n == -1) break
-                output.write(buffer, 0, n)
-                if (count != 0 && output.size() >= count) break
+            val connection = URL(src).openConnection()
+            connection.connectTimeout = 10_000
+            connection.readTimeout = 15_000
+            connection.inputStream.use { inputStream ->
+                var n: Int
+                while (true) {
+                    val buffer = ByteArray(if (count != 0 && count < 1024) count else if (count > 1024) if (output.size() - count > 1024) 1024 else output.size() - count else 1024)
+                    n = inputStream.read(buffer)
+                    if (n == -1) break
+                    output.write(buffer, 0, n)
+                    if (count != 0 && output.size() >= count) break
+                }
             }
         } catch (e: Exception) {
             if (e !is MalformedURLException) err(e)
