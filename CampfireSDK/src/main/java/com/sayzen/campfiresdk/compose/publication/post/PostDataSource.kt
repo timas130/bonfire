@@ -17,7 +17,12 @@ class PostDataSource(post: PublicationPost, onRemoved: State<() -> Unit>) : Publ
         subscriber
             .subscribe(EventPostChanged::class) {
                 edit(it.publicationId) {
-                    pages = it.pages
+                    val activityPage = pages.find { page -> page is PageUserActivity }
+                    pages = if (activityPage != null && it.pages.none { page -> page is PageUserActivity }) {
+                        it.pages + activityPage
+                    } else {
+                        it.pages
+                    }
                 }
             }
             .subscribe(EventCommentRemove::class) {
