@@ -100,7 +100,7 @@ object ControllerChats {
                 .add(t(API_TRANSLATE.fandoms_menu_background_change)) { changeBackgroundImage(chatTag) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_SUB && ControllerApi.can(fandomId, languageId, API.LVL_MODERATOR_CHATS)).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
                 .add(t(API_TRANSLATE.fandoms_menu_background_remove)) { removeBackgroundImage(chatTag) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_SUB && ControllerApi.can(fandomId, languageId, API.LVL_MODERATOR_CHATS)).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
                 .add(t(API_TRANSLATE.app_edit)) { SFandomChatsCreate.instance(chatTag.targetId, Navigator.TO) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_SUB && ControllerApi.can(fandomId, languageId, API.LVL_MODERATOR_CHATS)).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
-                .add(t(API_TRANSLATE.app_remove)) { removeFandomChat(chatTag.targetId) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_SUB && ControllerApi.can(fandomId, languageId, API.LVL_MODERATOR_CHATS)).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
+                .add(t(API_TRANSLATE.app_remove)) { removeFandomChat(chatTag.targetId, onRemove) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_SUB && ControllerApi.can(fandomId, languageId, API.LVL_MODERATOR_CHATS)).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
     }
 
     fun showFandomChatInfo(chatTag: ChatTag, paramsJson: Json, image: ImageRef) {
@@ -115,10 +115,11 @@ object ControllerChats {
                 .asSheetShow()
     }
 
-    private fun removeFandomChat(chatId: Long) {
+    private fun removeFandomChat(chatId: Long, onRemove: () -> Unit) {
         ControllerApi.moderation(t(API_TRANSLATE.fandom_chat_remove_alert), t(API_TRANSLATE.app_remove), { RFandomsModerationChatRemove(chatId, it) }) {
             clearMessages(ChatTag(API.CHAT_TYPE_FANDOM_SUB, chatId, 0))
             EventBus.post(EventFandomChatRemove(chatId))
+            onRemove.invoke()
             ToolsToast.show(t(API_TRANSLATE.app_done))
         }
     }
