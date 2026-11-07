@@ -3,6 +3,8 @@ package com.sup.dev.java.tools
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.io.UnsupportedEncodingException
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.*
 import kotlin.experimental.and
 
@@ -195,28 +197,14 @@ object ToolsText {
         }
     }
 
-    fun numToStringRoundAndTrim(num: Float, count: Int) = numToStringRoundAndTrim(num.toDouble(), count)
+    fun numToStringRoundAndTrim(num: Float, count: Int) = numToStringRoundAndTrim(num.toString().toDouble(), count)
 
     fun numToStringRoundAndTrim(num: Double, count: Int): String {
-        var countV = count
         if (num.toInt().toDouble() == num) return num.toInt().toString() + ""
-        var s = num.toString() + ""
-        val p = s.indexOf('.')
-        countV += 1
-
-        if (p + countV > s.length)
-            s = s.substring(0, s.length)
-        else
-            s = s.substring(0, p + countV)
-
-        if (s.contains("."))
-            for (i in s.length - 1 downTo -1 + 1)
-                if (s[i] == '0')
-                    s = s.substring(0, s.length - 1)
-                else
-                    break
-
-        return s
+        if (num.isNaN() || num.isInfinite()) return num.toString()
+        val rounded = BigDecimal(num.toString()).setScale(count, RoundingMode.HALF_UP)
+        if (rounded.signum() == 0) return "0"
+        return rounded.stripTrailingZeros().toPlainString()
     }
 
     fun zeroString(count: Int): String {
