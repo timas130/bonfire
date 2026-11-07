@@ -1,5 +1,9 @@
 package com.sayzen.campfiresdk.controllers
 
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.method.LinkMovementMethod
+import android.text.style.URLSpan
 import android.text.util.Linkify
 import android.view.Gravity
 import android.widget.TextView
@@ -329,8 +333,24 @@ object ControllerLinks {
             .replace(API.LINK_PROFILE_NAME, "@")
             .replace(API.DOMEN, "@")
         ControllerApi.makeTextHtml(vText)
+        val namedLinks = (vText.text as? Spanned)?.let { html ->
+            html.getSpans(0, html.length, URLSpan::class.java)
+                .map { Triple(it.url, html.getSpanStart(it), html.getSpanEnd(it)) }
+        }.orEmpty()
         LinkifyCompat.addLinks(vText, Linkify.WEB_URLS)
         linkifyShort(vText)
+        if (namedLinks.isEmpty()) return
+
+        val spannable = SpannableString.valueOf(vText.text)
+        for ((url, start, end) in namedLinks) {
+            spannable.getSpans(start, end, URLSpan::class.java).forEach { spannable.removeSpan(it) }
+            val target = if (url.startsWith("https://@")) API.DOMEN + url.removePrefix("https://@") else url
+            spannable.setSpan(URLSpan(target), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        vText.text = spannable
+        if (vText.movementMethod !is LinkMovementMethod && vText.linksClickable) {
+            vText.movementMethod = LinkMovementMethod.getInstance()
+        }
     }
 
     val linkRegex: Pattern by lazy { Pattern.compile("(?<![\\p{L}\\p{N}])(?<![\\p{L}\\p{N}]_)[#@]((?<=_[#@])[A-Za-z0-9-_#]*[A-Za-z0-9#-]|[A-Za-z0-9-_#]+)") }
