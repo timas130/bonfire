@@ -8,6 +8,18 @@ impl NotificationServer {
         token_type: NotificationTokenType,
         token: String,
     ) -> Result<(), NotificationError> {
+        let mut tx = self.base.pool.begin().await?;
+
+        sqlx::query!(
+            "delete from notification_tokens \
+             where service = $1 and token = $2 and session_id <> $3",
+            i32::from(token_type),
+            token,
+            session_id,
+        )
+        .execute(&mut *tx)
+        .await?;
+
         sqlx::query!(
             "insert into notification_tokens (session_id, service, token) \
              values ($1, $2, $3) \
@@ -17,8 +29,10 @@ impl NotificationServer {
             i32::from(token_type),
             token,
         )
-        .execute(&self.base.pool)
+        .execute(&mut *tx)
         .await?;
+
+        tx.commit().await?;
 
         Ok(())
     }
