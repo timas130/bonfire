@@ -295,7 +295,13 @@ class SplashComment(
                     if (send) sendText(text, parentId)
                     else vText.setText(text)
                 } else {
-                    attach.attachUrl(text, dialog) {
+                    attach.attachUrl(text, dialog, onAttached = {
+                        if (send) {
+                            val caption = if (text.any { it.isWhitespace() }) text else ""
+                            vText.setText(caption)
+                            sendImage(caption, parentId)
+                        }
+                    }) {
                         if (send) sendText(text, parentId)
                         else vText.setText(text)
                     }

@@ -87,10 +87,10 @@ class Attach(
 
     }
 
-    fun attachUrl(url: String, dialog: Splash, onError: () -> Unit) {
+    fun attachUrl(url: String, dialog: Splash, onAttached: () -> Unit = {}, onError: () -> Unit) {
         ToolsThreads.thread {
             try {
-                attachBytes_inWorker(ToolsNetwork.getBytesFromURL(url), dialog)
+                attachBytes_inWorker(ToolsNetwork.getBytesFromURL(url), dialog, onAttached)
             } catch (e: Throwable) {
                 err(e)
                 ToolsThreads.main {
@@ -120,7 +120,7 @@ class Attach(
         widget?.hide()
     }
 
-    fun attachBytes_inWorker(bytes: ByteArray?, dialog: Splash?) {
+    fun attachBytes_inWorker(bytes: ByteArray?, dialog: Splash?, onAttached: () -> Unit = {}) {
         if (bytes == null) {
             ToolsToast.show(t(API_TRANSLATE.error_cant_load_image))
             ToolsThreads.main{dialog?.hide()}
@@ -136,6 +136,7 @@ class Attach(
             ToolsThreads.main {
                 dialog?.hide()
                 addBytes(bytesScaled)
+                onAttached.invoke()
             }
         } else {
             val bytes2 = ToolsBitmap.decode(bytes)
@@ -154,6 +155,7 @@ class Attach(
                     return@main
                 }
                 addBytes(bytesScaled)
+                onAttached.invoke()
             }
         }
     }
