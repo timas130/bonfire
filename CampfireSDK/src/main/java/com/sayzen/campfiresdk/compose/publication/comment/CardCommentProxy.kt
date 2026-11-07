@@ -9,8 +9,10 @@ import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerPublications
 import com.sayzen.campfiresdk.models.cards.CardComment
 import com.sayzen.campfiresdk.models.cards.CardPublication
+import com.sayzen.campfiresdk.models.events.publications.EventPublicationRemove
 import com.sayzen.campfiresdk.models.splashs.SplashComment
 import com.sup.dev.android.views.support.adapters.CardAdapter
+import com.sup.dev.java.libs.eventBus.EventBus
 
 class CardCommentProxy(
     publication: PublicationComment,
@@ -70,6 +72,11 @@ class CardCommentProxy(
     init {
         xPublication.eventBus.unsubscribe()
     }
+
+    private val removeSubscriber = EventBus
+        .subscribe(EventPublicationRemove::class) {
+            if (it.publicationId == publication.id) adapter.remove(this)
+        }
 
     override fun canCacheView(): Boolean {
         return impl.canCacheView()
