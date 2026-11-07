@@ -35,6 +35,9 @@ class ECommentsChange : RCommentsChange(0, "", 0, false) {
         publication!!.quoteId = 0
         publication!!.quoteText = ""
         publication!!.quoteImageIds = emptyArray()
+        publication!!.quoteStickerId = 0
+        publication!!.quoteStickerImageId = 0
+        publication!!.quoteCreatorName = ""
         publication!!.newFormatting = newFormatting
 
         if (quoteId != 0L) {
@@ -42,8 +45,13 @@ class ECommentsChange : RCommentsChange(0, "", 0, false) {
             if (quoteUnit != null && quoteUnit is PublicationComment && quoteUnit.status == API.STATUS_PUBLIC && quoteUnit.parentPublicationId == publication!!.parentPublicationId) {
                 publication!!.quoteId = quoteUnit.id
                 publication!!.quoteText = quoteUnit.creator.name + ": " + quoteUnit.text
-                publication!!.quoteImageIds = if (quoteUnit.imageId > 0) Array(1) { quoteUnit.imageId } else emptyArray()
                 publication!!.quoteCreatorName = quoteUnit.creator.name
+                if (quoteUnit.imageIdArray.isNotEmpty()) publication!!.quoteImageIds = quoteUnit.imageIdArray
+                else if (quoteUnit.imageId > 0) publication!!.quoteImageIds = Array(1) { quoteUnit.imageId }
+                else if (quoteUnit.stickerId > 0) {
+                    publication!!.quoteStickerId = quoteUnit.stickerId
+                    publication!!.quoteStickerImageId = quoteUnit.stickerImageId
+                }
             }
         }
         ControllerPublications.replaceJson(commentId, publication!!)
