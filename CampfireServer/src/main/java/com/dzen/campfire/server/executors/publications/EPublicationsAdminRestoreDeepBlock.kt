@@ -32,6 +32,7 @@ class EPublicationsAdminRestoreDeepBlock : RPublicationsAdminRestoreDeepBlock(0,
                     .where(TPublications.id, "=", publication!!.id)
                     .update(TPublications.status, API.STATUS_PUBLIC))
             ControllerPublications.clearReports(publication!!.id)
+            if (publication!!.status != API.STATUS_PUBLIC) ControllerPublications.onBlockRestored(publication!!)
 
 
             val notificationBlock = NotificationPublicationRestore(publication!!.id, publication!!.parentPublicationId, publication!!.parentPublicationType, publication!!.fandom.imageId, comment, publication!!.publicationType)

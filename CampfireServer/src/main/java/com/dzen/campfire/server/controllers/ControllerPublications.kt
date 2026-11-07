@@ -90,6 +90,21 @@ object ControllerPublications {
 
     }
 
+    fun onBlockRestored(publication: Publication) {
+        when (publication.publicationType) {
+            API.PUBLICATION_TYPE_COMMENT -> {
+                Database.update("ControllerPublications.onBlockRestored", SqlQueryUpdate(TPublications.NAME)
+                        .where(TPublications.id, "=", publication.parentPublicationId)
+                        .update(TPublications.subpublications_count, TPublications.subpublications_count + "+1"))
+                // Only posts keep their best comment in tag_1 and tag_2. On a moderation they hold its type and decision.
+                if (publication.parentPublicationType == API.PUBLICATION_TYPE_POST) recountBestComment(publication.parentPublicationId)
+                ControllerAccounts.updateCommentsCount(publication.creator.id, 1)
+            }
+            API.PUBLICATION_TYPE_POST -> ControllerAccounts.updatePostsCount(publication.creator.id, 1)
+            API.PUBLICATION_TYPE_CHAT_MESSAGE -> ControllerChats.updateLastMessage((publication as PublicationChatMessage).chatTag())
+        }
+    }
+
     fun parseMentions(text: String, publicationId: Long, publicationType: Long, tag1: Long, tag2: Long, tag3: Long, fromAccount: ApiAccount, exclude: Array<Long>) {
         try {
             ControllerFandom.checkCan(fromAccount, API.LVL_CAN_MENTION)

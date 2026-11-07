@@ -46,6 +46,7 @@ class EPublicationsAdminRestore : RPublicationsAdminRestore(0, "", true) {
                     .where(TPublications.id, "=", publication!!.id)
                     .update(TPublications.status, API.STATUS_PUBLIC))
             ControllerPublications.clearReports(publication!!.id)
+            if (publication!!.status != API.STATUS_PUBLIC) ControllerPublications.onBlockRestored(publication!!)
 
             val v = ControllerAccounts.get(publication!!.creator.id, TAccounts.name, TAccounts.img_id, TAccounts.sex)
             val accountName: String = v.next()
