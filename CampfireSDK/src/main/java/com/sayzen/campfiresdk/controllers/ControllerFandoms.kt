@@ -10,7 +10,6 @@ import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomCategoryChanged
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomChanged
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomClose
-import com.sayzen.campfiresdk.models.events.fandom.EventFandomRemove
 import com.sayzen.campfiresdk.screens.fandoms.view.SplashSubscription
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.adapters.XFandom
@@ -184,11 +183,9 @@ object ControllerFandoms {
                 .addChecker(t(API_TRANSLATE.error_use_english)) { ToolsText.isOnly(it, API.ENGLISH) }
                 .setOnEnter(t(API_TRANSLATE.app_remove)) { _, comment ->
                     ApiRequestsSupporter.executeEnabledConfirm(t(API_TRANSLATE.fandom_remove_confirm), t(API_TRANSLATE.app_remove), RFandomsAdminRemove(xFandom.getId(), comment)) {
-                        EventBus.post(EventFandomRemove(xFandom.getId()))
                         ToolsToast.show(t(API_TRANSLATE.app_done))
                     }
                             .onApiError(RFandomsAdminRemove.ERROR_ALREADY){
-                                EventBus.post(EventFandomRemove(xFandom.getId()))
                                 ToolsToast.show(t(API_TRANSLATE.fandom_remove_error_already))
                             }
                 }
