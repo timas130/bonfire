@@ -86,6 +86,14 @@ impl VideoServer {
             storage::delete_object_quiet(s3, bucket, &storage::upload_key(&video_id)).await;
         }
 
+        sqlx::query!(
+            "update videos set status = 6, updated_at = now() \
+             where status in (4, 5) and publication_id is null \
+               and created_at < now() - interval '7 days'"
+        )
+        .execute(&self.base.pool)
+        .await?;
+
         let deleted = sqlx::query_scalar!("select video_id from videos where status = 6")
             .fetch_all(&self.base.pool)
             .await?;

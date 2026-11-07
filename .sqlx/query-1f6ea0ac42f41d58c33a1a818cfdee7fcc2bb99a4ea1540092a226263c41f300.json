@@ -1,0 +1,12 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update videos set status = 6, updated_at = now() where status in (4, 5) and publication_id is null and created_at < now() - interval '7 days'",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": []
+  },
+  "hash": "1f6ea0ac42f41d58c33a1a818cfdee7fcc2bb99a4ea1540092a226263c41f300"
+}
