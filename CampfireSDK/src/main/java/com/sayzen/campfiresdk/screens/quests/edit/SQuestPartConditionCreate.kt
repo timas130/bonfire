@@ -98,7 +98,7 @@ class SQuestPartConditionCreate(
 
         vTitleRight.visibility = VISIBLE
         vRightVariable.visibility = VISIBLE
-        vRightVariable.showLiteral = false
+        vRightVariable.showLiteral = true
 
         when (type) {
             API.QUEST_TYPE_TEXT -> {
