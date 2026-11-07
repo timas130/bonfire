@@ -63,11 +63,11 @@ class SQuestPartConditionCreate(
         vLeftVariable.showLiteral = true
         vRightVariable.showLiteral = true
         vLeftVariable.selected = part.leftValue.getVariableOrNull(details) ?: run {
-            vLeftLiteral.setText(part.leftValue.sValue.takeIf { it.isNotEmpty() } ?: part.leftValue.value.toString())
+            vLeftLiteral.setText(literalText(part.leftValue))
             null
         }
         vRightVariable.selected = part.rightValue.getVariableOrNull(details) ?: run {
-            vRightLiteral.setText(part.rightValue.sValue.takeIf { it.isNotEmpty() } ?: part.rightValue.value.toString())
+            vRightLiteral.setText(literalText(part.rightValue))
             null
         }
 
@@ -85,6 +85,9 @@ class SQuestPartConditionCreate(
 
         update()
     }
+
+    private fun literalText(value: QuestConditionValue): String =
+        if (value.type == API.QUEST_CONDITION_VALUE_LITERAL_TEXT) value.sValue else value.value.toString()
 
     fun update() {
         val type = if (vLeftVariable.selected != null)       vLeftVariable.selected!!.type
