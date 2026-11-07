@@ -1,5 +1,6 @@
 package sh.sit.bonfire.formatting.core.bfm.mention
 
+import com.sup.dev.java.tools.ToolsText
 import org.commonmark.node.AbstractVisitor
 import org.commonmark.node.Link
 import org.commonmark.node.Node
@@ -23,6 +24,8 @@ class MentionPostProcessor : PostProcessor {
         var literalStart = 0
 
         MENTION_REGEX.findAll(literal).forEach { match ->
+            if (!isLinkable(match.groupValues[2])) return@forEach
+
             val range = match.groups[1]!!.range
             val link = Link(DESTINATION_PREFIX + match.groupValues[2], match.groupValues[1])
             link.appendChild(Text(match.groupValues[1]))
@@ -36,6 +39,11 @@ class MentionPostProcessor : PostProcessor {
 
             literalStart = range.last + 1
         }
+    }
+
+    private fun isLinkable(name: String): Boolean {
+        return ToolsText.isValidUsername(name.replace('_', 'a'))
+                || ToolsText.isValidUsername(name.replace('_', '-').substringBefore('-'))
     }
 
     private inner class MentionVisitor : AbstractVisitor() {
