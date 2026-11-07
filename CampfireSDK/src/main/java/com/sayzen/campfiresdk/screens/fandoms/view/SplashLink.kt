@@ -1,6 +1,7 @@
 package com.sayzen.campfiresdk.screens.fandoms.view
 
 
+import android.net.Uri
 import android.widget.Button
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
@@ -66,7 +67,7 @@ internal class SplashLink(
             vIcon.setOnClickListener { setSelectedIcon(index.toLong(), true) }
         }
 
-        if (icon > 0L) setSelectedIcon(icon, true)
+        if (icon > 0L || link.isNotEmpty()) setSelectedIcon(icon, true)
 
         updateFinishEnabled()
     }
@@ -95,7 +96,7 @@ internal class SplashLink(
                 vLink.getText().contains("youtube", true) -> setSelectedIcon(1L)
                 vLink.getText().contains("discord", true) -> setSelectedIcon(2L)
                 vLink.getText().contains("wikipedia", true) -> setSelectedIcon(3L)
-                vLink.getText().contains("x", true) -> setSelectedIcon(4L)
+                isXLink(vLink.getText()) -> setSelectedIcon(4L)
                 vLink.getText().contains("steam", true) -> setSelectedIcon(5L)
                 vLink.getText().contains("play.google", true) -> setSelectedIcon(6L)
                 vLink.getText().contains("itunes.apple", true) -> setSelectedIcon(7L)
@@ -103,6 +104,13 @@ internal class SplashLink(
                 else -> setSelectedIcon(0L)
             }
         }
+    }
+
+    // x, the everything app
+    private fun isXLink(link: String): Boolean {
+        val host = Uri.parse(if (link.contains("://")) link else "https://$link").host ?: return false
+        return host.equals("x.com", true) || host.endsWith(".x.com", true)
+                || host.equals("twitter.com", true) || host.endsWith(".twitter.com", true)
     }
 
     private fun setSelectedIcon(selectedIndex: Long, force: Boolean = false) {
