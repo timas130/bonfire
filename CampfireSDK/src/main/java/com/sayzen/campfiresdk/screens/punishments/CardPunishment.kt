@@ -157,10 +157,12 @@ class CardPunishment(
                     punishment.banDate <= 0
                 )
             )
-            if (it.fandomId == 0L || it.languageId == 0L)
-                EventBus.post(EventAccountBaned(punishment.ownerId, it.newBlockDate))
-            else
-                EventBus.post(EventFandomAccountBaned(punishment.ownerId, it.fandomId, it.languageId, it.newBlockDate))
+            if (punishment.banDate > 0) {
+                if (it.fandomId == 0L || it.languageId == 0L)
+                    EventBus.post(EventAccountBaned(punishment.ownerId, it.newBlockDate))
+                else
+                    EventBus.post(EventFandomAccountBaned(punishment.ownerId, it.fandomId, it.languageId, it.newBlockDate))
+            }
         }
     }
 
