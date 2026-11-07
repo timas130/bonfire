@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select fl.*, user_id, email, email_verified, username from oauth2_flows_as fl inner join sessions s on s.id = fl.session_id inner join users u on u.id = s.user_id where fl.id = $1 for update",
+  "query": "select fl.*, user_id, email, email_verified, username, hard_banned from oauth2_flows_as fl inner join sessions s on s.id = fl.session_id inner join users u on u.id = s.user_id where fl.id = $1 for update",
   "describe": {
     "columns": [
       {
@@ -117,6 +117,11 @@
         "ordinal": 22,
         "name": "username",
         "type_info": "Text"
+      },
+      {
+        "ordinal": 23,
+        "name": "hard_banned",
+        "type_info": "Bool"
       }
     ],
     "parameters": {
@@ -147,8 +152,9 @@
       false,
       true,
       true,
+      false,
       false
     ]
   },
-  "hash": "d8c2d0ca2473295beb3ce85593448bb85a25b1228dd8c29c75a62c2a2a7d19a8"
+  "hash": "a0eec961fc89da4f06bfa1e70aefe6b30c32a387d20297ede3887e1469f88d2f"
 }

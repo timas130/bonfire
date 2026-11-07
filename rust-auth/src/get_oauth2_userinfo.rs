@@ -36,9 +36,10 @@ impl AuthServer {
             .map_err(|_| AuthError::InvalidToken)?;
 
         let flow = sqlx::query!(
-            "select fl.id, grant_id, session_id, client_id, user_id, scopes \
+            "select fl.id, grant_id, session_id, client_id, user_id, scopes, hard_banned \
              from oauth2_flows_as fl \
              inner join sessions on sessions.id = fl.session_id \
+             inner join users on users.id = sessions.user_id \
              where fl.id = $1 and access_token = $2 and grant_id is not null \
                    and access_token_expires_at > now()",
             flow_id,
@@ -47,6 +48,10 @@ impl AuthServer {
         .fetch_optional(&self.base.pool)
         .await?
         .ok_or(AuthError::InvalidToken)?;
+
+        if flow.hard_banned {
+            return Err(AuthError::HardBanned);
+        }
 
         Ok(OAuthAccessTokenInfo {
             user_id: flow.user_id,

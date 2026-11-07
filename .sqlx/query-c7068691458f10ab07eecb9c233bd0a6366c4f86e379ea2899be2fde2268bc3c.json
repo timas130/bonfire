@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select fl.id, grant_id, session_id, client_id, user_id, scopes from oauth2_flows_as fl inner join sessions on sessions.id = fl.session_id where fl.id = $1 and access_token = $2 and grant_id is not null and access_token_expires_at > now()",
+  "query": "select fl.id, grant_id, session_id, client_id, user_id, scopes, hard_banned from oauth2_flows_as fl inner join sessions on sessions.id = fl.session_id inner join users on users.id = sessions.user_id where fl.id = $1 and access_token = $2 and grant_id is not null and access_token_expires_at > now()",
   "describe": {
     "columns": [
       {
@@ -32,6 +32,11 @@
         "ordinal": 5,
         "name": "scopes",
         "type_info": "TextArray"
+      },
+      {
+        "ordinal": 6,
+        "name": "hard_banned",
+        "type_info": "Bool"
       }
     ],
     "parameters": {
@@ -46,8 +51,9 @@
       false,
       false,
       false,
+      false,
       false
     ]
   },
-  "hash": "942a3c5218245b555bd062bfcdac7a24cfdec707e80d30801dab789e1722eb2e"
+  "hash": "c7068691458f10ab07eecb9c233bd0a6366c4f86e379ea2899be2fde2268bc3c"
 }

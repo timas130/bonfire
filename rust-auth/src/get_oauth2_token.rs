@@ -92,7 +92,7 @@ impl AuthServer {
         code: Option<&AuthorizationCode>,
     ) -> Result<CoreTokenResponse, AuthError> {
         let flow = sqlx::query!(
-            "select fl.*, user_id, email, email_verified, username \
+            "select fl.*, user_id, email, email_verified, username, hard_banned \
              from oauth2_flows_as fl \
              inner join sessions s on s.id = fl.session_id \
              inner join users u on u.id = s.user_id \
@@ -102,6 +102,10 @@ impl AuthServer {
         )
         .fetch_one(&mut **tx)
         .await?;
+
+        if flow.hard_banned {
+            return Err(AuthError::HardBanned);
+        }
 
         let access_token = format!("BF/{}/{}", flow.id, nanoid!(64));
         let refresh_token = if flow.scopes.iter().any(|s| s == "offline_access") {
