@@ -44,6 +44,7 @@ class EPostToDrafts : RPostToDrafts(0) {
         if (publication is PublicationPost && publication.fandom.languageId < 1) {
             if (publication.tag_5 < 1) throw ApiException(API.ERROR_ACCESS)
             update.update(TPublications.language_id, publication.tag_5)
+            update.update(TPublications.fandom_key, "'${publication.fandom.id}-${publication.tag_5}-${publication.important}'")
         }
 
         if (publication.status == API.STATUS_PENDING) {
