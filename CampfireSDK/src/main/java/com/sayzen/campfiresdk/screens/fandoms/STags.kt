@@ -49,6 +49,7 @@ class STags private constructor(
     }
 
     private val eventBus = EventBus.subscribe(EventFandomTagMove::class){
+        if (it.fandomId != fandomId || it.languageId != languageId || Navigator.getCurrent() !== this) return@subscribe
         Navigator.back()
         instance(fandomId, languageId, Navigator.TO)
     }
