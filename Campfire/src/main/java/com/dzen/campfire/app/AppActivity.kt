@@ -256,7 +256,13 @@ class AppActivity : SActivity() {
     }
 
     fun resetStacks() {
-        stackChats?.clear()
+        val stack = stackChats ?: return
+        for (i in ArrayList<Screen>(stack.stack)) {
+            i.onPause()
+            i.onStop()
+            i.onDestroy()
+        }
+        stack.clear()
     }
 
     private var labelLastAccountId = 0L
