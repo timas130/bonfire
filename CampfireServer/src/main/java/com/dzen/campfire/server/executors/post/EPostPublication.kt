@@ -167,7 +167,7 @@ class EPostPublication : RPostPublication(0, emptyArray(), "", false, 0, false, 
             if (publication!!.creator.id == apiAccount.id) ControllerPublicationsHistory.put(publicationId, HistoryChangeTags(apiAccount.id, apiAccount.imageId, apiAccount.name))
         }
 
-        if (pendingTime == 0L) {
+        if (publication!!.status == API.STATUS_DRAFT && publishImmediately) {
             for (page in publication!!.pages) {
                 if (page !is PageText) continue
                 ControllerPublications.parseMentions(
