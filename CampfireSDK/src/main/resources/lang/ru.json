@@ -2120,6 +2120,7 @@
     "stickers_message_remove_from_collection": "Стикер удалён из в избранного",
     "stickers_message_remove_from_collection_pack": "Набор стикеров удалён из в коллекции",
     "stickers_message_too_many": "Слишком много стикеров в наборе",
+    "stickers_message_too_many_favorites": "У вас слишком много стикеров в избранном",
     "stickers_message_too_many_paskc": "У вас слишком много наборов стикеров",
     "stickers_pack_view_empty": "В этом наборе еще нет стикеров",
     "stickers_packs_clear_reports_confirm": "Удалить жалобы на этот набор стикеров?",

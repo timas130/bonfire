@@ -171,6 +171,8 @@ object ControllerStickers {
                 ApiRequestsSupporter.executeEnabledConfirm(t(API_TRANSLATE.sticker_add_favorites), t(API_TRANSLATE.app_add), RStickerCollectionAdd(publication.id)) {
                     EventBus.post(EventStickerCollectionChanged(publication, true))
                     ToolsToast.show(t(API_TRANSLATE.stickers_message_add_to_collection))
+                }.onApiError(RStickerCollectionAdd.E_TOO_MANY) {
+                    ToolsToast.show(t(API_TRANSLATE.stickers_message_too_many_favorites))
                 }
             }
         }

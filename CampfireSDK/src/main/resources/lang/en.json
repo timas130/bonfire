@@ -525,5 +525,6 @@
     "app_update_complete": "Complete",
     "app_update_complete_alert": "Restart the app to complete the update?",
     "post_page_remove_last": "You can't remove the only page of a published post",
+    "stickers_message_too_many_favorites": "You have too many favorite stickers",
     "quests_error_not_number": "The \"%s\" field must contain a number"
 }

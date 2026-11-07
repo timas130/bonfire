@@ -1414,6 +1414,7 @@ object API_TRANSLATE {
     var stickers_message_remove_from_collection_pack = 0L
     var stickers_message_too_many_paskc = 0L
     var stickers_message_too_many = 0L
+    var stickers_message_too_many_favorites = 0L
     var sticker_error_gone = 0L
     var sticker_add = 0L
     var sticker_remove = 0L
