@@ -57,8 +57,8 @@ fun LinksClickableText(
     val colors = MaterialTheme.colorScheme
     val scope = rememberCoroutineScope()
 
-    var spoilerRevealPos by remember { mutableStateOf(Offset.Zero) }
-    val spoilerRevealAnim = remember { Animatable(0f) }
+    var spoilerRevealPos by remember(text) { mutableStateOf(Offset.Zero) }
+    val spoilerRevealAnim = remember(text) { Animatable(0f) }
 
     // click handler
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
