@@ -317,8 +317,12 @@ class AppActivity : SActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        if (ControllerApi.account.getId() > 0) parseIntent_X(intent)
-        setIntent(Intent())
+        if (ControllerApi.account.getId() > 0) {
+            parseIntent_X(intent)
+            setIntent(Intent())
+        } else if (intent != null && intent.action != Intent.ACTION_MAIN) {
+            setIntent(intent)
+        }
     }
 
     fun parseStartAction(): Boolean {
