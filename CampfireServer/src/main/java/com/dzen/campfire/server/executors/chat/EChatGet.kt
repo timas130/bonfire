@@ -23,6 +23,7 @@ class EChatGet : RChatGet(ChatTag(), 0) {
             val publication = ControllerPublications.getPublication(messageId, apiAccount.id)
             if (publication == null) throw ApiException(API.ERROR_GONE)
             if (publication !is PublicationChatMessage) throw ApiException(API.ERROR_ACCESS)
+            if (publication.chatType == API.CHAT_TYPE_PRIVATE && !ControllerChats.hasAccessToMessage(apiAccount.id, publication)) throw ApiException(API.ERROR_ACCESS)
             tag = publication.chatTag()
         }
 
