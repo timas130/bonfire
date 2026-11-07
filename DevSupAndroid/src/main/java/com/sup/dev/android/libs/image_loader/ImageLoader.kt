@@ -66,7 +66,7 @@ object ImageLoader {
 
         if (loader.link.fastLoad(loader.vImage)) return
 
-        if (loader.vProgressBar != null) loader.vProgressBar.visibility = View.INVISIBLE
+        if (loader.vProgressBar != null && !loader.holderSet) loader.vProgressBar.visibility = View.INVISIBLE
 
         val cashItem = if (loader.link.noLoadFromCash) null else getFromCash(loader.link.getKey())
         if (cashItem != null) {
@@ -74,11 +74,14 @@ object ImageLoader {
             return
         }
 
-        try {
-            putHolder(loader)
-        } catch (e: OutOfMemoryError) {
-            SupAndroid.onLowMemory()
-            putHolder(loader)
+        if (!loader.holderSet) {
+            loader.holderSet = true
+            try {
+                putHolder(loader)
+            } catch (e: OutOfMemoryError) {
+                SupAndroid.onLowMemory()
+                putHolder(loader)
+            }
         }
 
         ToolsThreads.thread {
@@ -112,7 +115,7 @@ object ImageLoader {
                 if(loader.loopCount > 0) {
                     for (i in processing) if (i.link.isKey(loader.link.getKey())) {
                         loader.loopCount--
-                        ToolsThreads.main(100) { load(loader) }
+                        ToolsThreads.main(100) { if (loader.vImage == null || loader == loader.vImage.tag) load(loader) }
                         return@execute
                     }
                 }
@@ -305,5 +308,6 @@ object ImageLoader {
 
         var tryCount = 2
         var loopCount = 20
+        var holderSet = false
     }
 }
