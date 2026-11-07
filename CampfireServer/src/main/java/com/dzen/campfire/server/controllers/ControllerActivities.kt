@@ -211,9 +211,10 @@ object ControllerActivities {
                 .where(TActivitiesCollisions.ACCOUNT_POST_ID, "=", 0)
                 .where(TActivitiesCollisions.ACCOUNT_LOST, "=", 0)
         )
-        if (v.hasNext()) {
-            val array = Array(v.rowsCount) { v.next<Long>() }
-            val accountId = array.random()
+        val candidates = Array(v.rowsCount) { v.next<Long>() }
+                .filter { !ControllerAccounts.isAccountBaned(it, userActivity.fandom.id, userActivity.fandom.languageId) }
+        if (candidates.isNotEmpty()) {
+            val accountId = candidates.random()
             makeCurrentMember(accountId, userActivity)
             return accountId
         } else {
