@@ -1,9 +1,10 @@
-use crate::methods::get_account_customization::NicknameColorPresetExt;
+use crate::methods::get_account_customization::{NicknameColorPresetExt, GET_LEVEL};
 use crate::ProfileServer;
 use c_core::prelude::anyhow;
 use c_core::prelude::chrono::{DateTime, Utc};
 use c_core::prelude::tarpc::context;
 use c_core::services::profile::{AccountCustomization, NicknameColorPreset, ProfileError};
+use cached::Cached;
 
 impl ProfileServer {
     pub(crate) async fn _set_nickname_color(
@@ -33,6 +34,8 @@ impl ProfileServer {
             if category < category_req {
                 return Err(ProfileError::NotEnoughLevel(category_req));
             }
+
+            GET_LEVEL.lock().await.cache_remove(&user_id);
         }
 
         if preset == NicknameColorPreset::Pink {
