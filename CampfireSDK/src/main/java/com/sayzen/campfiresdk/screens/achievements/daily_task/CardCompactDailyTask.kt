@@ -30,6 +30,7 @@ import com.sayzen.campfiresdk.models.events.publications.EventPostStatusChange
 import com.sayzen.campfiresdk.models.events.publications.EventPublicationKarmaAdd
 import com.sayzen.campfiresdk.screens.achievements.SAchievements
 import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sup.dev.android.models.EventActivityResume
 import com.sup.dev.java.libs.eventBus.EventBus
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -64,9 +65,11 @@ class CardCompactDailyTask : ComposeCard() {
                 reloadIfTypeMatches(DailyTaskType.EarnAnyKarma, DailyTaskType.EarnPostKarma)
             }
         }
+        .subscribe(EventActivityResume::class) { reloadIfDayChanged() }
 
     private var _task = MutableStateFlow<DailyTaskInfo?>(null)
     private var _isError = MutableStateFlow(false)
+    private var lastLoadDay = 0L
 
     @Composable
     override fun getBackground(): Color = Color.Transparent
@@ -102,6 +105,7 @@ class CardCompactDailyTask : ComposeCard() {
     }
 
     fun load() {
+        lastLoadDay = currentUtcDay()
         _isError.tryEmit(false)
         RAchievementsInfo(ControllerApi.account.getId())
             .onComplete {
@@ -112,6 +116,12 @@ class CardCompactDailyTask : ComposeCard() {
             }
             .send(api)
     }
+
+    private fun reloadIfDayChanged() {
+        if (lastLoadDay != currentUtcDay()) load()
+    }
+
+    private fun currentUtcDay() = System.currentTimeMillis() / (1000L * 60 * 60 * 24)
 
     private fun reloadIfTypeMatches(vararg types: DailyTaskType) {
         val taskType = _task.value?.task?.type ?: return

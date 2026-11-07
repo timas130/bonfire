@@ -17,6 +17,8 @@ class EAchievementsInfo : RAchievementsInfo(0) {
         if (!v.hasNext()) return Response()
         val karma30: Long = v.next()
 
+        if (apiAccount.id == accountId) RustDailyTask.checkIn(accountId)
+
         val report = ControllerAchievements.recount(accountId)
         for ((_, achievement) in report.achievements()) {
             indexes.add(achievement.id)

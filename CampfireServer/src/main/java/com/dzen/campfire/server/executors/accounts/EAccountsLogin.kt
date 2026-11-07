@@ -38,7 +38,7 @@ class EAccountsLogin : RAccountsLogin("", 0, 0, 0) {
         } catch (e: Exception) {
         }
 
-        RustDailyTask.checkIn(apiAccount.id)
+        if (apiAccount.id > 0) RustDailyTask.checkIn(apiAccount.id)
 
         return Response(
                 API.VERSION, API.SUPPORTED_VERSION,
