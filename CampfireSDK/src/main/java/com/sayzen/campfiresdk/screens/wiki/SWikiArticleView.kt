@@ -108,6 +108,7 @@ class SWikiArticleView(
         }
 
         vEdit.setOnClickListener { ControllerWiki.toEditArticle(wikiTitle.itemId, languageId) }
+        if (!API.LANGUAGES.any { ControllerApi.can(wikiTitle.fandomId, it.id, API.LVL_MODERATOR_WIKI_EDIT) }) vEdit.visibility = View.GONE
 
         if (startPages != null) {
             vMore.visibility = View.GONE
