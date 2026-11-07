@@ -185,9 +185,9 @@ object ControllerChats {
 
         if (!ControllerAccounts.isAccountShadowBanned(apiAccount.id)) {
             when {
-                message.chatType == API.CHAT_TYPE_FANDOM_ROOT -> parseFandom(apiAccount, message, tag)
+                message.chatType == API.CHAT_TYPE_FANDOM_ROOT || message.chatType == API.CHAT_TYPE_FANDOM_SUB -> parseFandom(apiAccount, message, tag)
                 message.chatType == API.CHAT_TYPE_CONFERENCE -> parseConf(apiAccount, message, tag)
-                else -> parsePrivate(apiAccount, message, tag)
+                message.chatType == API.CHAT_TYPE_PRIVATE -> parsePrivate(apiAccount, message, tag)
             }
             updateLastMessage(message.chatTag(), message)
         }
@@ -219,11 +219,13 @@ object ControllerChats {
             val subscribed = if (message.chatType != API.CHAT_TYPE_FANDOM_ROOT) true else isSubscribed(parentCreatorId, tag)
             if (parentCreatorId != apiAccount.id) ControllerNotifications.push(parentCreatorId, NotificationChatAnswer(message, tag, subscribed))
         }
-        ControllerNotifications.push(getFandomChatSubscribersIdsWithTokensSubscribed(tag.targetId, tag.targetSubId, message.creator.id, parentCreatorId), NotificationChatMessage(message, tag, true))
-        ControllerNotifications.push(getFandomChatSubscribersIdsWithTokensNotSubscribed(tag.targetId, tag.targetSubId, message.creator.id, parentCreatorId), NotificationChatMessage(message, tag, false))
+        ControllerNotifications.push(getChatSubscribersIdsWithTokensSubscribed(tag, message.creator.id, parentCreatorId), NotificationChatMessage(message, tag, true))
+        ControllerNotifications.push(getChatSubscribersIdsWithTokensNotSubscribed(tag, message.creator.id, parentCreatorId), NotificationChatMessage(message, tag, false))
 
-        ControllerOptimizer.putCollisionWithCheck(apiAccount.id, API.COLLISION_ACHIEVEMENT_CHAT)
-        ControllerAchievements.addAchievementWithCheck(apiAccount.id, API.ACHI_CHAT)
+        if (message.chatType == API.CHAT_TYPE_FANDOM_ROOT) {
+            ControllerOptimizer.putCollisionWithCheck(apiAccount.id, API.COLLISION_ACHIEVEMENT_CHAT)
+            ControllerAchievements.addAchievementWithCheck(apiAccount.id, API.ACHI_CHAT)
+        }
 
         ControllerPublications.parseMentions(message.text, message.id, message.publicationType, message.chatType, message.fandom.id, message.fandom.languageId, apiAccount, arrayOf(parentCreatorId))
     }

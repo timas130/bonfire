@@ -254,7 +254,7 @@ class NotificationChatMessageParser(override val n: NotificationChatMessage) : C
 
     private fun canShowNotificationChatMessage(n: NotificationChatMessage): Boolean {
         if (!n.subscribed) return false
-        if (n.tag.chatType == API.CHAT_TYPE_FANDOM_ROOT && !ControllerSettings.notificationsChatMessages) return false
+        if ((n.tag.chatType == API.CHAT_TYPE_FANDOM_ROOT || n.tag.chatType == API.CHAT_TYPE_FANDOM_SUB) && !ControllerSettings.notificationsChatMessages) return false
         if (n.tag.chatType == API.CHAT_TYPE_PRIVATE && !ControllerSettings.notificationsPM) return false
         return if (SupAndroid.activityIsVisible && Navigator.getCurrent() is SChat) {
             val screen = Navigator.getCurrent() as SChat
