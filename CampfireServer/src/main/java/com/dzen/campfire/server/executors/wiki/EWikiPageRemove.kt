@@ -49,7 +49,7 @@ class EWikiPageRemove : RWikiPageRemove(0, 0, emptyArray()) {
 
         wikiPagesNew.pages = ToolsMapper.subarray(wikiPagesOld.pages, 0, wikiPagesOld.pages.size - 1)
         var x = 0
-        for (i in wikiPagesNew.pages.indices) if (i != pageIndex) wikiPagesNew.pages[x++] = wikiPagesOld.pages[i]
+        for (i in wikiPagesOld.pages.indices) if (i != pageIndex) wikiPagesNew.pages[x++] = wikiPagesOld.pages[i]
 
         ControllerWiki.insertPages(wikiPagesNew)
     }
