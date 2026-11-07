@@ -36,11 +36,7 @@ impl NotificationServer {
 }
 
 impl NotificationService for NotificationServer {
-    async fn post(
-        self,
-        _: Context,
-        input: NotificationInput,
-    ) -> Result<Vec<Notification>, NotificationError> {
+    async fn post(self, _: Context, input: NotificationInput) -> Result<(), NotificationError> {
         self._post(input).await
     }
 

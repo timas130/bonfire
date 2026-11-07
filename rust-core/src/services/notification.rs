@@ -118,9 +118,9 @@ pub enum NotificationTokenType {
 pub trait NotificationService {
     /// Send a notification using a [`NotificationInput`]
     ///
-    /// This returns the notifications created if
-    /// multiple [`NotificationRecipient`]s are specified.
-    async fn post(input: NotificationInput) -> Result<Vec<Notification>, NotificationError>;
+    /// This doesn't return the notifications created: with thousands of recipients, they would
+    /// exceed the client's frame limit.
+    async fn post(input: NotificationInput) -> Result<(), NotificationError>;
 
     /// Get all notifications received by a user, new first
     async fn get_notifications(

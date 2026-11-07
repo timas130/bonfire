@@ -27,24 +27,22 @@ impl NotificationServer {
         .ok_or(anyhow!("out of sync"))?)
     }
 
-    pub(crate) async fn _post(
-        &self,
-        input: NotificationInput,
-    ) -> Result<Vec<Notification>, NotificationError> {
+    pub(crate) async fn _post(&self, input: NotificationInput) -> Result<(), NotificationError> {
         let payload = serde_json::to_value(&input.payload).map_err(anyhow::Error::from)?;
 
-        let mut notifications = Vec::with_capacity(input.recipients.len());
         for recipient in input.recipients {
             // get user id
             let user_id = match recipient {
                 NotificationRecipient::User(user_id) => user_id,
                 NotificationRecipient::Session(session_id) => {
-                    let session = self
-                        .auth
-                        .get_session(context::current(), session_id)
-                        .await
-                        .map_err(anyhow::Error::from)??;
-                    session.user_id
+                    let session = self.auth.get_session(context::current(), session_id).await;
+                    match session {
+                        Ok(Ok(session)) => session.user_id,
+                        err => {
+                            error!(?err, session_id, "could not get notification recipient");
+                            continue;
+                        }
+                    }
                 }
             };
 
@@ -108,16 +106,23 @@ impl NotificationServer {
 
             // identify sessions to send the notification to
             let sessions = match recipient {
-                NotificationRecipient::Session(session_id) => vec![self
+                NotificationRecipient::Session(session_id) => self
                     .auth
                     .get_session(context::current(), session_id)
                     .await
-                    .map_err(anyhow::Error::from)??],
-                NotificationRecipient::User(user_id) => self
-                    .auth
-                    .admin_get_sessions(context::current(), user_id, 0)
-                    .await
-                    .map_err(anyhow::Error::from)??,
+                    .map(|session| session.map(|session| vec![session])),
+                NotificationRecipient::User(user_id) => {
+                    self.auth
+                        .admin_get_sessions(context::current(), user_id, 0)
+                        .await
+                }
+            };
+            let sessions = match sessions {
+                Ok(Ok(sessions)) => sessions,
+                err => {
+                    error!(?err, user_id, "could not get sessions to notify");
+                    Vec::new()
+                }
             };
 
             // send!
@@ -128,10 +133,8 @@ impl NotificationServer {
                 }
                 self.queue.send(notification.clone(), session.id);
             }
-
-            notifications.push(notification);
         }
 
-        Ok(notifications)
+        Ok(())
     }
 }

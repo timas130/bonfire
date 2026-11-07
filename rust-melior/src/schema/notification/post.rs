@@ -4,9 +4,15 @@ use crate::schema::notification::GNotificationPayload;
 use crate::utils::ok::OkResp;
 use async_graphql::{Context, InputObject, Object, OneofObject};
 use c_core::prelude::tarpc::context;
+use c_core::prelude::tokio;
 use c_core::services::auth::user::PermissionLevel;
 use c_core::services::notification::{NotificationInput, NotificationRecipient};
 use o2o::o2o;
+use std::time::{Duration, Instant};
+use tracing::error;
+
+const POST_BASE_DEADLINE: Duration = Duration::from_secs(10);
+const POST_DEADLINE_PER_RECIPIENT: Duration = Duration::from_millis(100);
 
 #[derive(Default)]
 pub struct PostNotificationMutation;
@@ -57,9 +63,21 @@ impl PostNotificationMutation {
         ctx.require_permission_level(PermissionLevel::System)?;
         let req = ctx.data_unchecked::<ReqContext>();
 
-        req.notification
-            .post(context::current(), input.into())
-            .await??;
+        let input: NotificationInput = input.into();
+        input.payload.get_type()?;
+
+        let mut rpc_context = context::current();
+        rpc_context.deadline = Instant::now()
+            + POST_BASE_DEADLINE
+            + POST_DEADLINE_PER_RECIPIENT * input.recipients.len() as u32;
+
+        let notification = req.notification.clone();
+        tokio::spawn(async move {
+            let result = notification.post(rpc_context, input).await;
+            if !matches!(result, Ok(Ok(_))) {
+                error!(?result, "failed to post a notification");
+            }
+        });
 
         Ok(OkResp)
     }
