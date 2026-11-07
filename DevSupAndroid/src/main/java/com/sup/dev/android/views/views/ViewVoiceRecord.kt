@@ -103,7 +103,7 @@ class ViewVoiceRecord @JvmOverloads constructor(context: Context, attrs: Attribu
     }
 
     private fun onFinishClicked() {
-        val array = voiceRecorder.getAsArray()
+        val array = voiceRecorder.getAsArray(maxRecordingTimeMs)
         stopRecording()
         isLocked = false
         if (array.isNotEmpty()) onRecordingStop.invoke(array)

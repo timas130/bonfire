@@ -234,9 +234,9 @@ class EChatMessageCreate(
         }
 
         message.type = PublicationChatMessage.TYPE_VOICE
-        message.voiceResourceId = ControllerResources.put(voice, API.RESOURCES_PUBLICATION_CHAT_MESSAGE)
         message.voiceMs = voice!!.size / 16L
         if (voice!!.size / 17f > API.CHAT_MESSAGE_VOICE_MAX_MS) throw ApiException(E_BAD_DATA)
+        message.voiceResourceId = ControllerResources.put(voice, API.RESOURCES_PUBLICATION_CHAT_MESSAGE)
         if (voice!!.size > maxLines) {
             val step = maxOf(2, voice!!.size / maxLines / 2 * 2)
             message.voiceMask = Array(maxLines) { 0 }

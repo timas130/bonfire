@@ -70,12 +70,21 @@ class CardSending(
                     ToolsToast.show(t(API_TRANSLATE.chat_error_gone))
                     adapter.remove(this)
                 }
+                .onApiError(RChatMessageCreate.E_BAD_DATA) { onRejected() }
+                .onApiError(RChatMessageCreate.E_BAD_TEXT) { onRejected() }
+                .onApiError(RChatMessageCreate.E_BAD_IMAGE) { onRejected() }
+                .onApiError(RChatMessageCreate.E_BAD_GIF) { onRejected() }
                 .onFinish {
                     sending = false
                     ToolsThreads.main(true) { update() }
                 }
     }
 
+
+    private fun onRejected() {
+        ToolsToast.show(t(API_TRANSLATE.error_unknown))
+        adapter.remove(this)
+    }
 
     private fun afterSend(message: PublicationChatMessage) {
         EventBus.post(EventChatNewBottomMessage(message))

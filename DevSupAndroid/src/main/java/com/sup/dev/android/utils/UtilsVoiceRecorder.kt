@@ -35,9 +35,11 @@ class UtilsVoiceRecorder {
         recorder = null
     }
 
-    fun getAsArray():ByteArray{
+    fun getAsArray(maxMs: Long):ByteArray{
         synchronized(recorder!!.frames){
-            return ToolsCollections.combine(recorder!!.frames)
+            val array = ToolsCollections.combine(recorder!!.frames)
+            val maxSize = maxMs * sampleRate / 1000 * 2
+            return if (maxMs > 0 && array.size > maxSize) array.copyOf(maxSize.toInt()) else array
         }
     }
 
