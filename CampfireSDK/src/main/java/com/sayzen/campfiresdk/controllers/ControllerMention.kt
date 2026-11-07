@@ -32,7 +32,10 @@ object ControllerMention {
 
     fun updateMention(vField: EditText, addSpace: Boolean = true): Boolean {
         val filed = Field(vField, addSpace)
-        if (updateMentionAccount(filed)) return true
+        if (updateMentionAccount(filed)) {
+            wFandomSearch.hide()
+            return true
+        }
         if (updateMentionFandom(filed)) return true
         return false
     }
@@ -47,7 +50,7 @@ object ControllerMention {
     //
 
     private fun searchForAccount(field: Field): SearchResult? =
-        search(field, API.LINK_SHORT_PROFILE, API.ACCOUNT_LOGIN_CHARS, 20) ?: search(
+        search(field, API.LINK_SHORT_PROFILE, API.ACCOUNT_LOGIN_CHARS, 20)?.takeUnless { it.text.startsWith("f_") } ?: search(
             field,
             API.LINK_SHORT_PROFILE_SECOND,
             API.ACCOUNT_LOGIN_CHARS,
