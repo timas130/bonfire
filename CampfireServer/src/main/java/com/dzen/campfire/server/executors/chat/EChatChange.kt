@@ -44,6 +44,14 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
 
         oldParams = ControllerChats.getChatParams(chatId)
 
+        val hasInvites = newAccounts.any { newAccount ->
+            val status = members.find { it.account.id == newAccount }?.memberStatus
+            status != API.CHAT_MEMBER_STATUS_ACTIVE && status != API.CHAT_MEMBER_STATUS_LEAVE
+        }
+        if (hasInvites && !oldParams.allowUserInvite && myLvl == API.CHAT_MEMBER_LVL_USER) throw ApiException(API.ERROR_ACCESS)
+        if (changeAccounts.isNotEmpty() && myLvl != API.CHAT_MEMBER_LVL_ADMIN) throw ApiException(API.ERROR_ACCESS)
+        if (isParamsChanged() && myLvl != API.CHAT_MEMBER_LVL_ADMIN) throw ApiException(API.ERROR_ACCESS)
+
         val conferenceBlocks = arrayListOf<Long>()
         for (newAccount in newAccounts) {
             if (members.find { it.account.id == newAccount }?.memberStatus == API.CHAT_MEMBER_STATUS_ACTIVE) {
@@ -57,6 +65,8 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
             throw ApiException(E_CONFERENCE_BLOCK, "", conferenceBlocks.map { it.toString() }.toTypedArray())
         }
     }
+
+    private fun isParamsChanged() = oldParams.allowUserInvite != chatParams.allowUserInvite || oldParams.allowUserNameAndImage != chatParams.allowUserNameAndImage || oldParams.isPublic != chatParams.isPublic
 
     override fun execute(): Response {
         val v = ControllerChats.getChat(chatId, TChats.image_id, TChats.name)
@@ -117,7 +127,6 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
         }
 
         if (newAccounts.isNotEmpty()) {
-            if (!oldParams.allowUserInvite && myLvl == API.CHAT_MEMBER_LVL_USER) throw ApiException(API.ERROR_ACCESS)
             for (i in newAccounts) {
                 var chatMember: ChatMember? = null
                 var memberName = ""
@@ -156,7 +165,6 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
         }
 
         if (changeAccounts.isNotEmpty()) {
-            if (myLvl != API.CHAT_MEMBER_LVL_ADMIN) throw ApiException(API.ERROR_ACCESS)
             val memebersWithNew = ControllerChats.getMembers(chatId, true)
             for (i in changeAccounts.indices) {
                 var chatMember: ChatMember? = null
@@ -185,8 +193,7 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
             }
         }
 
-        if (oldParams.allowUserInvite != chatParams.allowUserInvite || oldParams.allowUserNameAndImage != chatParams.allowUserNameAndImage || oldParams.isPublic != chatParams.isPublic) {
-            if (myLvl != API.CHAT_MEMBER_LVL_ADMIN) throw ApiException(API.ERROR_ACCESS)
+        if (isParamsChanged()) {
             Database.update("EChatChange updateParams", SqlQueryUpdate(TChats.NAME)
                     .where(TChats.id, "=", chatId)
                     .updateValue(TChats.chat_params, chatParams.json(true, Json()))

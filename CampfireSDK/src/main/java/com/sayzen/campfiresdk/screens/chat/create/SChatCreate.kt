@@ -139,12 +139,12 @@ class SChatCreate(
                 c.chatMember.account.id != ControllerApi.account.getId() &&
                 c.chatMember.memberStatus == API.CHAT_MEMBER_STATUS_ACTIVE
             ) {
-                accountsList.add(c.chatMember.account.id)
                 val foundLvl = c.newLevel
                 var found: ChatMember? = null
                 for (a in accounts) if (a.account.id == c.chatMember.account.id) found = a
 
                 if (found == null) {
+                    accountsList.add(c.chatMember.account.id)
                     if (foundLvl > 0 && foundLvl != API.CHAT_MEMBER_LVL_USER) {
                         changeAccountList.add(c.chatMember.account.id)
                         changeAccountListLevels.add(foundLvl)
@@ -181,6 +181,8 @@ class SChatCreate(
             EventBus.post(EventChatChanged(chatId, cardTitle.text, r.newImage, count))
             Navigator.remove(this)
             SChat.instance(r.tag, 0, false, Navigator.TO)
+        }.onApiError(API.ERROR_ACCESS) {
+            ToolsToast.show(t(API_TRANSLATE.error_chat_access))
         }.onApiError { exception ->
             if (exception.code == RChatChange.E_CONFERENCE_BLOCK) {
                 SplashAlert()
