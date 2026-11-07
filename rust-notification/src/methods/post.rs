@@ -10,6 +10,8 @@ use c_core::services::notification::{
 use serde_json::Value;
 use std::time::Duration;
 
+const SESSIONS_PAGE_SIZE: usize = 25;
+
 impl NotificationServer {
     async fn _get_last_online_time(
         &self,
@@ -112,9 +114,23 @@ impl NotificationServer {
                     .await
                     .map(|session| session.map(|session| vec![session])),
                 NotificationRecipient::User(user_id) => {
-                    self.auth
-                        .admin_get_sessions(context::current(), user_id, 0)
-                        .await
+                    let mut sessions = Vec::new();
+                    loop {
+                        match self
+                            .auth
+                            .admin_get_sessions(context::current(), user_id, sessions.len() as i64)
+                            .await
+                        {
+                            Ok(Ok(page)) => {
+                                let is_last_page = page.len() < SESSIONS_PAGE_SIZE;
+                                sessions.extend(page);
+                                if is_last_page {
+                                    break Ok(Ok(sessions));
+                                }
+                            }
+                            err => break err,
+                        }
+                    }
                 }
             };
             let sessions = match sessions {
