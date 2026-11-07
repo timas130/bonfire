@@ -217,7 +217,11 @@ class SQuestPartActionCreate(
 
     fun submit() {
         part.devLabel = vPartDevName.getText()
-        part.sArg = vSField.getText().takeIf { it.isNotBlank() } ?: if (vSFieldBool.isChecked()) "1" else "0"
+        part.sArg = when (vVariable.selected?.type) {
+            API.QUEST_TYPE_BOOL -> if (vSFieldBool.isChecked()) "1" else "0"
+            API.QUEST_TYPE_TEXT -> vSField.getText()
+            else -> vSField.getText().takeIf { it.isNotBlank() } ?: "0"
+        }
         if (vAnotherVariable1.visibility == GONE) {
             part.lArg1 = vLField1.getText().toLongOrNull() ?: 0
         }
