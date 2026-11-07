@@ -125,6 +125,14 @@ object ControllerPublications {
                     ss += textV[i]
                     i++
                 }
+                if ((ss == "User" || ss == "Bot") && i + 1 < textV.length && textV[i] == '#' && textV[i + 1] in '0'..'9') {
+                    ss += textV[i]
+                    i++
+                    while (i < textV.length && textV[i] in '0'..'9') {
+                        ss += textV[i]
+                        i++
+                    }
+                }
                 if (ss.length > 2) {
                     if (!names.contains(ss)) {
                         val id = ControllerAccounts.getByName(ss)
