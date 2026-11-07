@@ -26,7 +26,6 @@ import com.sup.dev.java.tools.ToolsFiles
 import com.sup.dev.java.tools.ToolsNetwork
 import com.sup.dev.java.tools.ToolsThreads
 import java.io.File
-import java.io.IOException
 
 open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
 
@@ -190,13 +189,7 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
 
     private fun openCamera() {
         ToolsIntent.getCameraImage({ bytes ->
-            try {
-                onSelected.invoke(this, bytes, 0)
-                hide()
-            } catch (e: IOException) {
-                err(e)
-                ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
-            }
+            deliverSingleImage(bytes)
         },{
             err(it)
             ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
@@ -205,16 +198,25 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
 
     private fun openGallery() {
         ToolsBitmap.getFromGallery({ bytes ->
-            try {
-                onSelected.invoke(this, bytes, 0)
-                hide()
-            } catch (e: IOException) {
-                err(e)
-                ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
-            }
+            deliverSingleImage(bytes)
         }, {
             if(it !is IllegalAccessException) ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
         })
+    }
+
+    private fun deliverSingleImage(bytes: ByteArray) {
+        val deliver = {
+            try {
+                onSelected.invoke(this, bytes, 0)
+            } catch (e: Exception) {
+                err(e)
+                ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
+            }
+        }
+
+        if (callbackInWorkerThread) ToolsThreads.thread { deliver() }
+        else deliver()
+        hide()
     }
 
     private fun sendAll() {
