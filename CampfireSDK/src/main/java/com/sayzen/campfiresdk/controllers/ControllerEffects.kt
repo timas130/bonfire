@@ -22,13 +22,16 @@ import com.sup.dev.android.views.splash.SplashChooseDate
 import com.sup.dev.android.views.splash.SplashChooseTime
 import com.sup.dev.android.views.splash.SplashMenu
 import com.sup.dev.android.views.views.draw_animations.DrawAnimation
+import com.sup.dev.java.classes.Subscription
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsDate
+import com.sup.dev.java.tools.ToolsThreads
 
 object ControllerEffects {
 
     var myAnimation: DrawAnimation? = null
     var myAnimationEffectId: Long? = null
+    private var myAnimationExpiry: Subscription? = null
 
     private val eventBus = EventBus
             .subscribe(EventNotification::class) {
@@ -47,7 +50,7 @@ object ControllerEffects {
         if (myAnimationEffectId != null) {
             var found = false
             for (i in ControllerApi.account.getAccount().accountEffects) {
-                if (i.id == myAnimationEffectId) {
+                if (i.id == myAnimationEffectId && i.dateEnd > System.currentTimeMillis()) {
                     found = true
                     break
                 }
@@ -55,17 +58,18 @@ object ControllerEffects {
             if (!found) {
                 this.myAnimation = null
                 this.myAnimationEffectId = null
+                myAnimationExpiry?.unsubscribe()
                 ControllerScreenAnimations.clearAnimation()
             }
         }
 
         for (i in ControllerApi.account.getAccount().accountEffects) {
             if (i.effectIndex == API.EFFECT_INDEX_SNOW && i.dateEnd > System.currentTimeMillis()) {
-                setAnimation(DrawAnimationSnow(), i.id)
+                setAnimation(DrawAnimationSnow(), i.id, i.dateEnd)
                 return
             }
             if (i.effectIndex == API.EFFECT_INDEX_GOOSE && i.dateEnd > System.currentTimeMillis()) {
-                setAnimation(DrawAnimationGoose(), i.id)
+                setAnimation(DrawAnimationGoose(), i.id, i.dateEnd)
                 return
             }
         }
@@ -81,10 +85,18 @@ object ControllerEffects {
         return null
     }
 
-    fun setAnimation(animation: DrawAnimation, effectId: Long) {
+    fun setAnimation(animation: DrawAnimation, effectId: Long, dateEnd: Long) {
         this.myAnimation = animation
         this.myAnimationEffectId = effectId
         ControllerScreenAnimations.addAnimationWithClear(animation)
+
+        myAnimationExpiry?.unsubscribe()
+        myAnimationExpiry = ToolsThreads.timerMain(60 * 1000L) { subscription ->
+            if (dateEnd <= System.currentTimeMillis()) {
+                subscription.unsubscribe()
+                update()
+            }
+        }
     }
 
     fun isCanChangeAnimation(animation: DrawAnimation?): Boolean {
