@@ -183,7 +183,12 @@ object ControllerChats {
         if (!shadowBanned) changeNewMessagesCount(tag, 1)
         ControllerPublicationsHistory.put(message.id, HistoryCreate(apiAccount.id, message.creator.imageId, message.creator.name))
 
-        updateReadOrSubscribeIfNotExistOrRemoved(apiAccount.id, tag, if (tag.chatType == API.CHAT_TYPE_FANDOM_ROOT) 0 else 1, API.CHAT_MEMBER_LVL_USER, 0, if (tag.chatType == API.CHAT_TYPE_PRIVATE) 0 else System.currentTimeMillis())
+        val enterDate = when (tag.chatType) {
+            API.CHAT_TYPE_PRIVATE -> 0L
+            API.CHAT_TYPE_FANDOM_SUB -> 1L
+            else -> System.currentTimeMillis()
+        }
+        updateReadOrSubscribeIfNotExistOrRemoved(apiAccount.id, tag, if (tag.chatType == API.CHAT_TYPE_FANDOM_ROOT) 0 else 1, API.CHAT_MEMBER_LVL_USER, 0, enterDate)
 
         if (!shadowBanned) {
             when {
