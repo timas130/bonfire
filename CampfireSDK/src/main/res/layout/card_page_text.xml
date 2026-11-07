@@ -28,6 +28,8 @@
             android:id="@+id/vCompose"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="-12dp"
+            android:layout_marginRight="-12dp"
             android:visibility="gone" />
         <com.sup.dev.android.views.views.ViewText
             android:id="@+id/vText"

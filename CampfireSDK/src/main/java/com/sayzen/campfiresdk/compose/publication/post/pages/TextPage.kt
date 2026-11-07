@@ -82,7 +82,9 @@ private fun PageTextContent(page: PageText) {
         CompositionLocalProvider(LocalTextStyle provides textStyle) {
             LegacyFormattedText(
                 text = page.text,
-                modifier = Modifier.padding(horizontal = 12.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp)
             )
         }
     }

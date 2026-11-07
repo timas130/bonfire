@@ -6,13 +6,15 @@ import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.AbstractComposeView
+import androidx.compose.ui.unit.dp
 import com.dzen.campfire.api.models.notifications.publications.NotificationMention
 import com.dzen.campfire.api.models.publications.PagesContainer
 import com.dzen.campfire.api.models.publications.post.PageText
@@ -20,6 +22,7 @@ import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.app.CampfireConstants
 import com.sayzen.campfiresdk.compose.BonfireTheme
+import com.sayzen.campfiresdk.compose.publication.post.pages.PageTextRenderer
 import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.ControllerNotifications
 import com.sayzen.campfiresdk.controllers.ControllerSettings
@@ -28,7 +31,6 @@ import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.views.ViewText
 import kotlinx.coroutines.flow.MutableStateFlow
 import sh.sit.bonfire.formatting.BonfireMarkdown
-import sh.sit.bonfire.formatting.compose.BonfireMarkdown
 
 class CardPageText(
         pagesContainer: PagesContainer?,
@@ -42,8 +44,11 @@ class CardPageText(
         val vText: ViewText = view.findViewById(R.id.vText)
         val vTextIcon: ImageView = view.findViewById(R.id.vTextIcon)
 
+        if (pagesContainer != null) ControllerNotifications.removeNotificationFromNew(NotificationMention::class, pagesContainer.getSourceId())
+
         if (PostHog.isFeatureEnabled("compose_text_page")) {
             vText.visibility = View.GONE
+            vTextIcon.visibility = View.GONE
             vCompose.setPage(page)
             vCompose.visibility = View.VISIBLE
             return
@@ -79,8 +84,6 @@ class CardPageText(
         vText.gravity = Gravity.LEFT or Gravity.TOP
         if (page.align == PageText.ALIGN_CENTER) vText.gravity = Gravity.CENTER or Gravity.TOP
         if (page.align == PageText.ALIGN_RIGHT) vText.gravity = Gravity.RIGHT or Gravity.TOP
-
-        if (pagesContainer != null) ControllerNotifications.removeNotificationFromNew(NotificationMention::class, pagesContainer.getSourceId())
     }
 
     class ComposeCardPageText @JvmOverloads constructor(
@@ -99,8 +102,8 @@ class CardPageText(
 
             BonfireTheme {
                 CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
-                    Box {
-                        BonfireMarkdown(text = page.formattedText)
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        PageTextRenderer(page = page)
                     }
                 }
             }
