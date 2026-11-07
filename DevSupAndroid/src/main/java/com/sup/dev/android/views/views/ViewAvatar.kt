@@ -62,6 +62,7 @@ open class ViewAvatar constructor(context: Context, attrs: AttributeSet? = null)
         setChipIcon(srcIcon)
         setChipBackground(chipBackground)
 
+        vTouch.setAutoInvalidate(false)
         vTouch.setOnDraw { canvas ->
             paint.color = animationFocus.update()
             canvas.drawCircle(vTouch.width / 2f, vTouch.height / 2f, vTouch.height / 2f, paint)
