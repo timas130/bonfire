@@ -17,7 +17,7 @@ object TChats {
     val creator_id = "creator_id"
     val chat_params = "chat_params"
 
-    val MEMBERS_COUNT = "(SELECT ${Sql.COUNT} FROM ${TChatsSubscriptions.NAME} as t  WHERE t.${TChatsSubscriptions.chat_type}=$type AND t.${TChatsSubscriptions.target_id}=$id)"
+    val MEMBERS_COUNT = "(SELECT ${Sql.COUNT} FROM ${TChatsSubscriptions.NAME} as t  WHERE t.${TChatsSubscriptions.chat_type}=$NAME.$type AND t.${TChatsSubscriptions.target_id}=$NAME.$id AND t.${TChatsSubscriptions.member_status}=${API.CHAT_MEMBER_STATUS_ACTIVE})"
 
     fun SUBSCRIBED(accountId:Long) = Sql.IFNULL("(SELECT ${TChatsSubscriptions.subscribed} FROM ${TChatsSubscriptions.NAME} as t WHERE t.${TChatsSubscriptions.chat_type}=$NAME.$type AND t.${TChatsSubscriptions.target_id}=$NAME.$id AND t.${TChatsSubscriptions.account_id}=$accountId)",  0)
     fun MEMBER_STATUS(accountId:Long) = Sql.IFNULL("(SELECT ${TChatsSubscriptions.member_status} FROM ${TChatsSubscriptions.NAME} as t WHERE t.${TChatsSubscriptions.chat_type}=$NAME.$type AND t.${TChatsSubscriptions.target_id}=$NAME.$id AND t.${TChatsSubscriptions.account_id}=$accountId)",  0)
