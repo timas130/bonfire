@@ -87,13 +87,22 @@ object ToolsGif {
 
                 var index = 0
                 while (!stop) {
+                    if (!isBound(vImage, key)) break
+                    if (!isVisible(vImage)) {
+                        ToolsThreads.main {
+                            val v = vImage.get()
+                            if (v != null && isReplaced(v, lastBitmap)) stop = true
+                        }
+                        ToolsThreads.sleep(300)
+                        continue
+                    }
                     var bm = next(decoder, index)
                     val ms = decoder.delay(index).toLong()
                     if (bm == null) break
                     if (w != 0 && h != 0) bm = ToolsBitmap.inscribePin(bm, w, h, resizeByMinSide)
                     ToolsThreads.main {
                         val v = vImage.get()
-                        if (v == null || v.tag !== key || (lastBitmap != null && (v.drawable !is BitmapDrawable || (v.drawable as BitmapDrawable).bitmap != lastBitmap))) {
+                        if (v == null || v.tag !== key || isReplaced(v, lastBitmap)) {
                             stop = true
                             return@main
                         }
@@ -111,6 +120,15 @@ object ToolsGif {
                 SupAndroid.onLowMemory()
             }
         }
+    }
+
+    private fun isReplaced(v: ImageView, lastBitmap: Bitmap?) = lastBitmap != null && (v.drawable as? BitmapDrawable)?.bitmap != lastBitmap
+
+    private fun isBound(vImage: WeakReference<ImageView>, key: Any) = vImage.get()?.tag === key
+
+    private fun isVisible(vImage: WeakReference<ImageView>): Boolean {
+        val v = vImage.get() ?: return false
+        return v.isAttachedToWindow && v.isShown && SupAndroid.activityIsVisible
     }
 
     private fun next(decoder: GifDecoder, index: Int): Bitmap? {
