@@ -16,6 +16,7 @@ import com.sup.dev.android.tools.ToolsPermission
 import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.splash.SplashAlert
+import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.tools.ToolsText
 import com.sup.dev.java.tools.ToolsThreads
 
@@ -71,11 +72,17 @@ class CardPageDownload(
                         ToolsPermission.requestWritePermission {
                             val dProgress2 = ToolsView.showProgressDialog(t(API_TRANSLATE.app_downloading))
                             ToolsThreads.thread {
-                                ToolsFilesAndroid.unpackZip(page.patch, bytes)
+                                val unpacked = try {
+                                    ToolsFilesAndroid.unpackZip(page.patch, bytes)
+                                    true
+                                } catch (e: Exception) {
+                                    err(e)
+                                    false
+                                }
                                 ToolsThreads.main {
                                     dProgress2.hide()
                                     dProgress.hide()
-                                    ToolsToast.show(t(API_TRANSLATE.app_done))
+                                    ToolsToast.show(t(if (unpacked) API_TRANSLATE.app_done else API_TRANSLATE.error_unknown))
                                 }
                             }
                         }

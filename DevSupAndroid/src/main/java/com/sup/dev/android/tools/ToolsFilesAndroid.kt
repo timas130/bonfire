@@ -95,6 +95,9 @@ object ToolsFilesAndroid {
         }
     }
 
+    private fun isInside(file: File, folder: File) =
+        file == folder || file.path.startsWith(folder.path + File.separator)
+
     @Throws(IOException::class)
     fun unpackZip(path: String, zipFile: File) {
         unpackZip(path, FileInputStream(zipFile))
@@ -109,6 +112,10 @@ object ToolsFilesAndroid {
     fun unpackZip(path: String, inp: InputStream) {
         var zis: ZipInputStream? = null
         try {
+            val outputRoot = File(path + "_").canonicalFile.parentFile!!
+            if (!isInside(outputRoot, Environment.getExternalStorageDirectory().canonicalFile))
+                throw IOException("cannot unpack outside of shared storage: $path")
+
             var filename: String
             zis = ZipInputStream(BufferedInputStream(inp))
             var ze: ZipEntry?
@@ -120,6 +127,8 @@ object ToolsFilesAndroid {
                 filename = ze.name
                 val file = File(path + filename)
                 if (ze.isDirectory) continue
+                if (!isInside(file.canonicalFile, outputRoot))
+                    throw IOException("zip entry escapes the output folder: $filename")
 
                 val parentFile = file.parentFile
                 parentFile?.mkdirs()
