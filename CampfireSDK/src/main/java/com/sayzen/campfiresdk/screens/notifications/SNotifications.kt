@@ -13,7 +13,6 @@ import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.notifications.EventNotification
-import com.sayzen.campfiresdk.models.events.notifications.EventNotificationsCountChanged
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.app.SupAndroid
@@ -170,7 +169,7 @@ class SNotifications private constructor() : SLoadingRecycler<CardNotification, 
                     || oldImportant != ControllerSettings.filterImportant
                     || oldOther != ControllerSettings.filterOther
                 ) {
-                    EventBus.post(EventNotificationsCountChanged())
+                    ControllerNotifications.actualizeNewNotifications()
                     reload()
                 }
             }

@@ -294,7 +294,7 @@ object ControllerNotifications {
         actualizeNewNotifications()
     }
 
-    private fun actualizeNewNotifications() {
+    fun actualizeNewNotifications() {
         val removeList = ArrayList<NewNotificationKiller>()
         for (i in removeBuffer) {
             removeNotificationFromNew(i, false, false)
