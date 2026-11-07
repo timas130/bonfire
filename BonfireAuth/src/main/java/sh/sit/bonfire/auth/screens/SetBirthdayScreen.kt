@@ -16,6 +16,7 @@ import com.dzen.campfire.api.ApiResources
 import com.posthog.PostHog
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import kotlinx.coroutines.launch
+import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
 import sh.sit.bonfire.auth.ApolloController
 import sh.sit.bonfire.auth.AuthController
@@ -80,7 +81,7 @@ fun SetBirthdayScreen(onBirthdaySet: () -> Unit = {}) {
 
     LaunchedEffect(dateState.selectedDateMillis) {
         inputDate = dateState.selectedDateMillis?.let {
-            NaiveDate(LocalDate.fromDateFields(Date(it)))
+            NaiveDate(LocalDate(it, DateTimeZone.UTC))
         }
     }
 
