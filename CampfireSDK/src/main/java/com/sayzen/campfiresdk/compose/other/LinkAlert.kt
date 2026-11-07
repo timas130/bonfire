@@ -120,7 +120,7 @@ fun LinkAlert(
                 )
             }
 
-            if (uri.host != null) {
+            if (uri.host != null && (uri.scheme == "http" || uri.scheme == "https")) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp),

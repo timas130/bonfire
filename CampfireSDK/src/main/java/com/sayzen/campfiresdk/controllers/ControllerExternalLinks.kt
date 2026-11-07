@@ -44,8 +44,14 @@ object ControllerExternalLinks {
         try {
             val webLink = ToolsText.castToWebLink(link)
             val uri = URI(webLink)
+            val isWeb = uri.scheme == "http" || uri.scheme == "https"
 
-            if (uri.host?.let { checkTrustedDomain(it) } == true) {
+            if (isWeb && uri.rawAuthority == null) {
+                ToolsToast.show(R.string.link_parse_error)
+                return
+            }
+
+            if (isWeb && uri.host?.let { checkTrustedDomain(it) } == true) {
                 ToolsIntent.openLink(link)
                 return
             }
@@ -53,7 +59,7 @@ object ControllerExternalLinks {
             LinkAlertSplash(
                 link = webLink,
                 onVisit = fun(trust) {
-                    uri.host.takeIf { trust }?.let { addTrustedDomain(it) }
+                    uri.host.takeIf { trust && isWeb }?.let { addTrustedDomain(it) }
                     ToolsIntent.openLink(link)
                 }
             ).asSheetShow()
