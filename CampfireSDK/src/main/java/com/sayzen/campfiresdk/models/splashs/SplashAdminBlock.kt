@@ -129,7 +129,7 @@ class SplashAdminBlock(
 
         ApiRequestsSupporter.executeEnabledConfirm(t(API_TRANSLATE.app_punish_confirm), t(API_TRANSLATE.app_punish), RAccountsAdminBan(accountId, banTime, vComment.getText().trim { it <= ' ' })) {
             ToolsToast.show(t(API_TRANSLATE.app_done))
-            EventBus.post(EventAccountBaned(accountId, ControllerApi.currentTime() + banTime))
+            if (banTime > 0) EventBus.post(EventAccountBaned(accountId, ControllerApi.currentTime() + banTime))
             hide()
         }.onApiError(RAccountsAdminBan.E_LOW_KARMA_FORCE) {
             ToolsToast.show(t(API_TRANSLATE.moderation_low_karma))
