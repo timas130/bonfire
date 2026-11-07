@@ -289,8 +289,7 @@ class SQuestNewYear : SQuest() {
                 .addButton("Попросить оружие", "6_4"),
             QuestItem("6_4")
                 .text("Некий взгляд пронзает вас насквозь. Вы понимаете, что идол смотрит на вашу карму, чтобы решить какого оружия вы достойны.")
-                .addButtonParams("Увесистая палка (50)", "6_4_1")
-                .enabled { ControllerApi.account.getKarma30() >= 50 }.finish()
+                .addButton("Увесистая палка", "6_4_1")
                 .addButtonParams("Двуручный меч (180)", "6_4_2")
                 .enabled { ControllerApi.account.getKarma30() >= 180 }.finish()
                 .addButtonParams("Посох тайн (355)", "6_4_4")
