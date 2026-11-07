@@ -1,12 +1,14 @@
 package com.dzen.campfire.server.executors.post
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.publications.post.PageText
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostPendingPublish
 import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerPost
 import com.dzen.campfire.server.controllers.ControllerPublications
 import com.dzen.campfire.api.tools.ApiException
+import com.sup.dev.java.libs.debug.err
 
 class EPostPendingPublish : RPostPendingPublish(0) {
 
@@ -27,7 +29,25 @@ class EPostPendingPublish : RPostPendingPublish(0) {
     }
 
     override fun execute(): Response {
-        ControllerPost.publish(publicationId, publication.tag_3, publication.creator.id)
+        if (!ControllerPost.publish(publicationId, publication.tag_3, publication.creator.id)) return Response()
+
+        try {
+            for (page in publication.pages) {
+                if (page !is PageText) continue
+                ControllerPublications.parseMentions(
+                    text = page.text,
+                    publicationId = publication.id,
+                    publicationType = publication.publicationType,
+                    tag1 = 0,
+                    tag2 = 0,
+                    tag3 = 0,
+                    fromAccount = apiAccount,
+                    exclude = emptyArray()
+                )
+            }
+        } catch (e: Exception) {
+            err(e)
+        }
         return Response()
     }
 
