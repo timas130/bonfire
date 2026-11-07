@@ -149,7 +149,7 @@ class SFandomChatsCreate(
     }
 
     private fun notChanged(): Boolean {
-        return text == vField.text.toString()
+        return text == vField.text.toString() && name == vName.getText() && image == null
     }
 
 
