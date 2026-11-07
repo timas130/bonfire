@@ -109,7 +109,7 @@ object ToolsPermission {
 
     fun requestReadPermission(onGranted: (String) -> Unit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestPermissions(arrayOf(READ_MEDIA_IMAGES, READ_MEDIA_VIDEO), onGranted)
+            requestPermission(READ_MEDIA_IMAGES, onGranted)
         } else {
             requestPermission(READ_EXTERNAL_STORAGE, onGranted)
         }
@@ -121,7 +121,7 @@ object ToolsPermission {
 
     fun requestReadPermission(onGranted: (String) -> Unit, onPermissionRestriction: (String) -> Unit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestPermissions(arrayOf(READ_MEDIA_IMAGES, READ_MEDIA_VIDEO), onGranted, onPermissionRestriction)
+            requestPermission(READ_MEDIA_IMAGES, onGranted, onPermissionRestriction)
         } else {
             requestPermission(READ_EXTERNAL_STORAGE, onGranted, onPermissionRestriction)
         }

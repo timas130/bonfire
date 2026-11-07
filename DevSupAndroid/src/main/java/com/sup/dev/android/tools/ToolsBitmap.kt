@@ -1,5 +1,6 @@
 package com.sup.dev.android.tools
 
+import android.content.ContentResolver
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
@@ -356,14 +357,33 @@ object ToolsBitmap {
     }
 
     fun getFromUri(uri: Uri, callbackResult: (Bitmap?) -> Unit, onPermissionPermissionRestriction: (String) -> Unit) {
-        ToolsPermission.requestReadPermission({
-            try {
-                callbackResult.invoke(MediaStore.Images.Media.getBitmap(SupAndroid.activity!!.contentResolver, uri))
-            } catch (ex: IOException) {
-                err(ex)
-                callbackResult.invoke(null)
-            }
-        }, onPermissionPermissionRestriction)
+        val read = { MediaStore.Images.Media.getBitmap(SupAndroid.activity!!.contentResolver, uri) }
+        val readWithPermission = {
+            ToolsPermission.requestReadPermission({
+                val bitmap = try {
+                    read()
+                } catch (ex: Exception) {
+                    err(ex)
+                    null
+                }
+                callbackResult.invoke(bitmap)
+            }, onPermissionPermissionRestriction)
+        }
+
+        if (uri.scheme != ContentResolver.SCHEME_CONTENT) {
+            readWithPermission()
+            return
+        }
+        val bitmap = try {
+            read()
+        } catch (ex: SecurityException) {
+            readWithPermission()
+            return
+        } catch (ex: Exception) {
+            err(ex)
+            null
+        }
+        callbackResult.invoke(bitmap)
     }
 
     fun getFromFile(file: File, onComplete: (Bitmap?) -> Unit) {
