@@ -55,7 +55,6 @@ class EPostFeedGetAll : RPostFeedGetAll(0, emptyArray(), false, 0, false, false,
         }
 
         if (!noKarmaCategory) select.where(TPublications.tag_7, "=", karmaCategory)
-        if(noSubscribes)
         if (importantOnly) select.where(TPublications.important, "=", API.PUBLICATION_IMPORTANT_IMPORTANT)
         if (ignoreFandomsIds.isNotEmpty()) select.where(SqlWhere.WhereIN(TPublications.fandom_id, true, ignoreFandomsIds))
 
