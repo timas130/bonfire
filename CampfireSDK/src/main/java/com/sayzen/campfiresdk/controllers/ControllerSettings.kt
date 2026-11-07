@@ -18,10 +18,16 @@ import com.sup.dev.java.tools.ToolsThreads
 
 object ControllerSettings {
 
+    private const val KEY_UNSYNCED = "ControllerSettings_unsynced"
+
     var accountSettings = AccountSettings()
     var fastUpdateLimit = 5 // Возможность быстро обновить настройки при запуске приложения. Это важно если пользователь зашел включить режим не беспокоить и сразу закрыл приложение.
     private var updateSettingsTime = 0L
     private var updateSettingsStarted = false
+
+    @Volatile
+    var localRevision = 0L
+        private set
 
     fun init() {
         accountSettings.json(false, ToolsStorage.getJson("ControllerSettings_accountSettings") ?: Json())
@@ -31,9 +37,11 @@ object ControllerSettings {
         val settings = AccountSettings()
         settings.isStub = true
         setSettings(0, settings)
+        ToolsStorage.put(KEY_UNSYNCED, false)
     }
 
     fun onSettingsUpdated() {
+        localRevision++
         updateSettingsTime = System.currentTimeMillis() + 1000
         EventBus.post(EventStyleChanged())
         if (!updateSettingsStarted) {
@@ -56,9 +64,23 @@ object ControllerSettings {
         updateSettingsStarted = false
         ToolsStorage.put("ControllerSettings_accountSettings", accountSettings.json(true, Json()))
         if (accountSettings.isStub) return
+        ToolsStorage.put(KEY_UNSYNCED, true)
+        val revision = localRevision
         ApiRequestsSupporter.execute(RAccountSetSettings(accountSettings)) {
+            if (revision == localRevision) ToolsStorage.put(KEY_UNSYNCED, false)
             onFinish.invoke()
         }.onError { onError.invoke() }
+    }
+
+    fun setSettingsFromLogin(accountId: Long, settings: AccountSettings, revisionAtRequest: Long) {
+        val hasNewerLocal = ToolsStorage.getBoolean(KEY_UNSYNCED, false) || localRevision != revisionAtRequest
+        if (hasNewerLocal && accountId == getLastSettingsAccountId()) {
+            setSettings(accountId, accountSettings)
+            setSettingsNow()
+        } else {
+            setSettings(accountId, settings)
+            ToolsStorage.put(KEY_UNSYNCED, false)
+        }
     }
 
     var notifyDateChecked: Long

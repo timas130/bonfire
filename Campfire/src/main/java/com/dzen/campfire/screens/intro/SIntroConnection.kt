@@ -208,6 +208,7 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
     private fun sendLoginRequestNow(background: Boolean, retryDelay: Long = BACKGROUND_LOGIN_RETRY_MS) {
         setState(State.PROGRESS)
         val languageId = ControllerApi.getLanguageId()
+        val settingsRevision = ControllerSettings.localRevision
         RAccountsLogin(
             ControllerNotifications.token,
             languageId,
@@ -224,7 +225,7 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
                     Navigator.set(SIntroConnection())
                 }))
             } else {
-                ControllerSettings.setSettings(r.account!!.id, r.settings)
+                ControllerSettings.setSettingsFromLogin(r.account!!.id, r.settings, settingsRevision)
                 ControllerSettings.feedCategories = feedCategories
                 ControllerApi.setServerTime(r.serverTime)
                 ToolsThreads.main(1000) { loadInfo() }
