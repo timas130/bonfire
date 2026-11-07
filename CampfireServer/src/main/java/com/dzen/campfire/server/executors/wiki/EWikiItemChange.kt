@@ -102,6 +102,15 @@ class EWikiItemChange : RWikiItemChange(WikiTitle(), 0, null, null) {
             if(parentItem.wikiStatus != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
             if(ControllerWiki.getItem(parentItemId)?.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_GONE)
             if(parentItem.itemType != API.WIKI_TYPE_SECION) throw ApiException(API.ERROR_ACCESS)
+            if(parentItemId == oldItem.itemId) throw ApiException(API.ERROR_ACCESS)
+
+            val visited = hashSetOf(parentItemId)
+            var ancestorId = parentItem.parentItemId
+            while (ancestorId > 0 && visited.add(ancestorId)) {
+                if (ancestorId == oldItem.itemId) throw ApiException(API.ERROR_ACCESS)
+                ancestorId = ControllerWiki.getTitlesByItemId(ancestorId)?.parentItemId ?: 0L
+            }
+
             newItem.parentItemId = parentItemId
         }
     }
