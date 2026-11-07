@@ -47,6 +47,9 @@ impl AuthServer {
             CoreClaimName::new("preferred_username".to_string()),
         ]));
 
-        Ok(serde_json::to_value(provider_metadata).map_err(anyhow::Error::from)?)
+        let mut metadata = serde_json::to_value(provider_metadata).map_err(anyhow::Error::from)?;
+        metadata["code_challenge_methods_supported"] = serde_json::json!(["S256"]);
+
+        Ok(metadata)
     }
 }
