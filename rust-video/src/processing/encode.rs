@@ -18,7 +18,7 @@ pub fn encode(
 
     // FFMPEG IS D O N E. GSTREAMER IS BOOMING
     let video_branch = format!(
-        "d. ! queue ! videoconvert ! videoscale ! videorate ! \
+        "d. ! queue ! videoconvert ! videoflip video-direction=auto ! videoscale ! videorate ! \
          video/x-raw,format=I420,pixel-aspect-ratio=1/1,framerate=[24/1,30/1],width=[2,1080,2],height=[2,1080,2] ! \
          x264enc threads=4 speed-preset=veryfast pass=qual quantizer=23 key-int-max={key_int} ! \
          video/x-h264,profile=high ! h264parse ! queue ! mux."
