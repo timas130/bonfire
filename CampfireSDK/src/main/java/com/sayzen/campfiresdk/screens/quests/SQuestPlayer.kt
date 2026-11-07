@@ -179,7 +179,7 @@ class SQuestPlayer(
             val v = details.variablesMap!![varId] ?: return false
             return when (v.type) {
                 API.QUEST_TYPE_TEXT -> !variables[varId].isNullOrEmpty()
-                API.QUEST_TYPE_NUMBER -> variables[varId]?.toLong()?.takeIf { it != 0L } != null
+                API.QUEST_TYPE_NUMBER -> variables[varId]?.toLongOrNull()?.takeIf { it != 0L } != null
                 API.QUEST_TYPE_BOOL -> variables[varId] == "1"
                 else -> {
                     throw IllegalStateException()

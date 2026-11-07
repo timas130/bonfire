@@ -62,7 +62,8 @@ object ControllerUserQuests {
         if (input.hint.length > API.QUEST_INPUT_HINT_MAX_L) return false
         if (input.defaultValue.isNotEmpty() &&
             !checkVariableValue(input.type, input.defaultValue)) return false
-        if (details.variablesMap?.get(input.varId) == null) return false
+        val variable = details.variablesMap?.get(input.varId) ?: return false
+        if (variable.type != input.type) return false
         return true
     }
     private fun checkInputs(details: QuestDetails, inputs: Array<QuestInput>): Boolean {

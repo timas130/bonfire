@@ -62,6 +62,10 @@ class QuestPartText : QuestPart() {
             assert(errors, details.variablesMap!![input.varId] != null) {
                 QuestException(API_TRANSLATE.quests_edit_error_1, input.hint)
             }
+            val variable = details.variablesMap!![input.varId]
+            assert(errors, variable == null || variable.type == input.type) {
+                QuestException(API_TRANSLATE.quests_edit_text_input_error_5)
+            }
         }
 
         for (button in buttons) {
