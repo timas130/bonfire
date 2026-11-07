@@ -23,6 +23,7 @@ class EPostGetAllByTag : RPostGetAllByTag(0, 0) {
     override fun execute(): Response {
 
         val v = Database.select("EPostGetAllByTag select_1",SqlQuerySelect(TCollisions.NAME, TCollisions.owner_id)
+                .where(TCollisions.collision_type, "=", API.COLLISION_TAG)
                 .where(TCollisions.collision_id, "=", tagId)
                 .where(SqlWhere.WhereString("${API.STATUS_PUBLIC}=(SELECT ${TPublications.status} FROM ${TPublications.NAME} WHERE ${TPublications.id}=${TCollisions.owner_id})"))
                 .offset_count(offset, COUNT)
