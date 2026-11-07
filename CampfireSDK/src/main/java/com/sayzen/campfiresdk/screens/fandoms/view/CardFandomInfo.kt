@@ -72,7 +72,14 @@ class CardFandomInfo(
         .subscribe(EventFandomNamesChanged::class) { this.onEventFandomNamesChanged(it) }
         .subscribe(EventFandomParamsChanged::class) { onEventFandomParamsChanged(it) }
         .subscribe(EventFandomCategoryChanged::class) {
-            if (it.fandomId == xFandom.getId()) categoryId = it.newCategory
+            if (it.fandomId == xFandom.getId()) {
+                categoryId = it.newCategory
+                params1 = emptyArray()
+                params2 = emptyArray()
+                params3 = emptyArray()
+                params4 = emptyArray()
+                update()
+            }
         }
 
     private var expanded = false
