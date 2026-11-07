@@ -33,6 +33,7 @@ open class RecyclerCardAdapterLoading<K : Card, V>(
     private var startTopLoadOffset = 0
     private var isLockTop = false
     private var isLockBottom = false
+    private var isLockError = false
     private var isInProgress = false
     private var isLoadedAtListOneTime = false
     private var loadingTag = 0L
@@ -60,6 +61,8 @@ open class RecyclerCardAdapterLoading<K : Card, V>(
     override fun onBindViewHolder(holder: Holder, position: Int, payloads: List<Any>) {
         super.onBindViewHolder(holder, position, payloads)
 
+        if (isLockError) return
+
         if (!isLockBottom && position >= itemCount - 1 - startBottomLoadOffset) {
             ToolsThreads.main(true) {
                 loadNow(true)
@@ -76,6 +79,7 @@ open class RecyclerCardAdapterLoading<K : Card, V>(
     private fun loadNow(bottom: Boolean) {
         if (isInProgress) return
         isInProgress = true
+        isLockError = false
         if (bottom) isLockBottom = false
         else isLockTop = false
 
@@ -119,8 +123,7 @@ open class RecyclerCardAdapterLoading<K : Card, V>(
 
         if (result == null) {
 
-            lockBottom()
-            lockTop()
+            isLockError = true
 
             if (retryEnabled && (contains(cardClass) || showErrorCardIfEmpty)) {
                 if (!contains(cardLoading)) {
