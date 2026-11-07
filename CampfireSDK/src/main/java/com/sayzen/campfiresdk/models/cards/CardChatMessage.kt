@@ -235,17 +235,18 @@ open class CardChatMessage constructor(
         vSystemMessage.text = ControllerChats.getSystemText(publication)
         ControllerLinks.makeLinkable(vSystemMessage)
 
-        val vTouchModeration: ViewGroup = view.findViewById(R.id.vTouchModeration) ?: return
-
-        vTouchModeration.setOnClickListener {
-            ControllerCampfireSDK.onToModerationClicked(
-                publication.blockModerationEventId,
-                0,
-                Navigator.TO
-            )
+        if (publication.blockModerationEventId != 0L) {
+            vAlertContainer.setOnClickListener {
+                ControllerCampfireSDK.onToModerationClicked(
+                    publication.blockModerationEventId,
+                    0,
+                    Navigator.TO
+                )
+            }
+        } else {
+            vAlertContainer.setOnClickListener(null)
+            vAlertContainer.isClickable = false
         }
-        vTouchModeration.isClickable = publication.blockModerationEventId != 0L
-
     }
 
     fun updateLabel() {
