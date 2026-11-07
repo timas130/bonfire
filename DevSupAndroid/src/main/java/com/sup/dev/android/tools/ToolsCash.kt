@@ -3,7 +3,6 @@ package com.sup.dev.android.tools
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.java.libs.debug.err
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 import java.lang.Exception
@@ -32,21 +31,13 @@ object ToolsCash {
 
             val file = File(cacheDir, name)
 
-            var os: FileOutputStream? = null
+            val tmp = File.createTempFile("tmp_$name", ".tmp", cacheDir)
             try {
-                os = FileOutputStream(file)
-                os.write(data)
-                os.flush()
-            } catch (ex: IOException) {
-                err(ex)
-            } finally {
-                if (os != null)
-                    try {
-                        os.close()
-                    } catch (e: IOException) {
-                        err(e)
-                    }
-
+                FileOutputStream(tmp).use { it.write(data) }
+                if (!tmp.renameTo(file)) throw IOException("Can't move ${tmp.name} to $name")
+            } catch (e: Exception) {
+                tmp.delete()
+                throw e
             }
 
             return file
@@ -88,29 +79,21 @@ object ToolsCash {
     private fun get(name: String, cacheDir:File): ByteArray? {
         val file = File(cacheDir, name)
 
-        if (!file.exists()) return null
+        if (!file.exists() || file.length() == 0L) return null
 
-        val data = ByteArray(file.length().toInt())
-        var inputStream: FileInputStream? = null
         try {
-            inputStream = FileInputStream(file)
-            inputStream.read(data)
+            val data = file.readBytes()
             file.setLastModified(System.currentTimeMillis())
+            return data
         } catch (ex: Exception) {
             err(ex)
-        } finally {
-            try {
-                inputStream!!.close()
-            } catch (e: Exception) {
-                err(e)
-            }
-
+            return null
         }
-        return data
     }
 
     fun clear(name: String) {
         File(SupAndroid.appContext!!.cacheDir, name).delete()
+        File(SupAndroid.appContext!!.filesDir, name).delete()
     }
 
     private fun getDirSize(dir: File): Long {

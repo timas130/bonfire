@@ -91,13 +91,21 @@ object ImageLoader {
 
             if (bytes != null) {
                 if (!loader.intoCash) ToolsThreads.thread {
+                    var broken = false
                     val bitmap = try {
-                        parseImage(loader, bytes)
+                        parseImage(loader, bytes).also { broken = it == null && !loader.noBitmap && !ToolsBytes.isGif(bytes) }
                     } catch (ex: Throwable) {
                         err(ex)
                         null
                     }
-                    putImage(loader, bitmap, false, bytes)
+                    if (broken) {
+                        ToolsThreads.main {
+                            loader.link.clear()
+                            loadStart(loader)
+                        }
+                    } else {
+                        putImage(loader, bitmap, false, bytes)
+                    }
                 }
                 return@thread
             }
