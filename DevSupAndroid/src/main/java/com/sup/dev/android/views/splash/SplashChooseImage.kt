@@ -165,11 +165,7 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
         ToolsNetwork.getBytesFromURL(link, onResult = {
             progress.hide()
             if (it == null || !ToolsBytes.isImage(it)) ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
-            else {
-                if (callbackInWorkerThread) ToolsThreads.thread { onSelected.invoke(this, it, 0) }
-                else onSelected.invoke(this, it, 0)
-                hide()
-            }
+            else deliverSingleImage(it)
         })
     }
 
