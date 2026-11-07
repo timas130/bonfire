@@ -93,7 +93,7 @@ object ApiRequestsSupporter {
 
     fun <K : Request.Response> executeInterstitial(action: NavigationAction, request: Request<K>, onComplete: (K) -> Screen?,
                                                    goneText:String): Request<K> {
-        val vProgress = SplashProgressTransparent()
+        var vProgress = SplashProgressTransparent()
         vProgress.asSplashShow()
 
         return execute(request) { r ->
@@ -110,7 +110,9 @@ object ApiRequestsSupporter {
                     if(vProgress.isHided()) return@onNetworkError
                     SAlert.showNetwork(action) {
                         Navigator.remove(it)
-                        executeInterstitial(action, request, onComplete, goneText)
+                        vProgress = SplashProgressTransparent()
+                        vProgress.asSplashShow()
+                        request.send(api!!)
                     }
                 }
                 .onFinish {
