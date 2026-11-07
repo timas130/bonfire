@@ -128,4 +128,9 @@ class CardNotification(
     override fun notifyItem() {
         if (notification.image.isNotEmpty()) ImageLoader.load(notification.image).intoCash()
     }
+
+    override fun equals(other: Any?): Boolean {
+        return if (other is CardNotification) notification.id == other.notification.id
+        else super.equals(other)
+    }
 }
