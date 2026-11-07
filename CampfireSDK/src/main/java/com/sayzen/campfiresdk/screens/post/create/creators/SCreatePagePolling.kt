@@ -261,7 +261,7 @@ class SCreatePagePolling(
         page.title = vPageTitle.text.toString()
         page.options = getOptions()
         page.duration = API_TRANSLATE.postPagePollingDurations[vDuration.getCurrentIndex()].first
-        page.minLevel = if (vLvl.getText().isEmpty()) 0L else (vLvl.getText().toFloat() * 100).toLong()
+        page.minLevel = if (vLvl.getText().isEmpty()) 0L else vLvl.getText().toBigDecimal().movePointRight(2).toLong()
         page.minKarma = if (vKarma.getText().isEmpty()) 0L else vKarma.getText().toLong() * 100
         page.minDays = if (vDays.getText().isEmpty()) 0L else vDays.getText().toLong()
         page.blacklist = blackList.toTypedArray()
