@@ -199,7 +199,7 @@ object ControllerChats {
                 message.chatType == API.CHAT_TYPE_CONFERENCE -> parseConf(apiAccount, message, tag)
                 message.chatType == API.CHAT_TYPE_PRIVATE -> parsePrivate(apiAccount, message, tag)
             }
-            updateLastMessage(message.chatTag(), message)
+            updateLastMessage(message.chatTag(), message, onlyIfNewer = true)
         }
 
         if (message.chatType == API.CHAT_TYPE_FANDOM_ROOT) markRead(apiAccount.id, tag)
@@ -355,15 +355,18 @@ object ControllerChats {
         updateLastMessage(tag, getLastMessage(tag, false))
     }
 
-    fun updateLastMessage(tag: ChatTag, u: PublicationChatMessage?) {
-        Database.update("ControllerChats updateLastMessage", SqlQueryUpdate(TChatsSubscriptions.NAME)
+    fun updateLastMessage(tag: ChatTag, u: PublicationChatMessage?, onlyIfNewer: Boolean = false) {
+        val update = SqlQueryUpdate(TChatsSubscriptions.NAME)
                 .where(TChatsSubscriptions.chat_type, "=", tag.chatType)
                 .where(TChatsSubscriptions.target_id, "=", tag.targetId)
                 .where(TChatsSubscriptions.target_sub_id, "=", tag.targetSubId)
                 .where(TChatsSubscriptions.member_status, "=", API.CHAT_MEMBER_STATUS_ACTIVE)
                 .update(TChatsSubscriptions.last_message_date, u?.dateCreate ?: 0)
                 .update(TChatsSubscriptions.last_message_id, u?.id ?: 0)
-        )
+
+        if (onlyIfNewer && u != null) update.where(TChatsSubscriptions.last_message_date, "<=", u.dateCreate)
+
+        Database.update("ControllerChats updateLastMessage", update)
     }
 
     fun markRead(accountId: Long, tag: ChatTag) {
