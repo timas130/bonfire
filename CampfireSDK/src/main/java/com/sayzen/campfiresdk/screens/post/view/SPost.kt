@@ -146,6 +146,8 @@ class SPost private constructor(
             adapter.remove(ComposePostPages::class)
             if (composeMode) {
                 val post = xPublication.publication as PublicationPost
+                post.pages = e.pages
+                xPublication.addUserActivityCardIfNeed()
                 adapter.add(0, ComposePostPages(post.pages.toList(), post))
             } else {
                 for (i in 0 until e.pages.size) {

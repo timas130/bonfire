@@ -64,7 +64,7 @@ class XPublication(
         addUserActivityCardIfNeed()
     }
 
-    private fun addUserActivityCardIfNeed() {
+    fun addUserActivityCardIfNeed() {
         if (publication is PublicationPost) {
             if (publication.status == API.Companion.STATUS_PUBLIC && publication.userActivity != null) {
                 for (p in publication.pages) if (p is PageUserActivity && p.userActivity == publication.userActivity) return
