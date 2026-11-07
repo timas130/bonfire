@@ -3,6 +3,7 @@ package com.sayzen.campfiresdk.models.cards.quests
 import android.view.View
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.quests.QuestDetails
+import com.dzen.campfire.api.models.quests.QuestPartText
 import com.dzen.campfire.api.requests.quests.RQuestsGetParts
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.t
@@ -26,12 +27,14 @@ class CardQuestStart(
                     stateVariables[key.toLong()] = value as String
                 }
 
+                val canResume = resp.parts.getOrNull(resp.stateIndex) is QuestPartText
+
                 Navigator.to(SQuestPlayer(
                     details = details,
                     parts = resp.parts.toList(),
-                    index = resp.stateIndex,
+                    index = if (canResume) resp.stateIndex else 0,
                     state = SQuestPlayer.QuestState(
-                        variables = stateVariables,
+                        variables = if (canResume) stateVariables else hashMapOf(),
                     ),
                 ))
             }

@@ -13,7 +13,9 @@ import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
 import com.dzen.campfire.server.tables.TAccounts
 import com.dzen.campfire.server.tables.TPublications
+import com.dzen.campfire.server.tables.TQuestStates
 import com.sup.dev.java_pc.sql.Database
+import com.sup.dev.java_pc.sql.SqlQueryRemove
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
 
 class EFandomsModerationToDrafts : RFandomsModerationToDrafts(0, "") {
@@ -50,6 +52,10 @@ class EFandomsModerationToDrafts : RFandomsModerationToDrafts(0, "") {
             update.update(TPublications.language_id, publication!!.tag_5)
         }
         Database.update("EFandomsModerationToDrafts", update)
+        if (publication is QuestDetails) {
+            Database.remove("EFandomsModerationToDrafts quest clean", SqlQueryRemove(TQuestStates.NAME)
+                .where(TQuestStates.unit_id, "=", publicationId))
+        }
 
 
         val v = ControllerAccounts.get(publication!!.creator.id, TAccounts.name, TAccounts.img_id)
