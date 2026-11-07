@@ -286,7 +286,7 @@ class SCreatePageTable(
         SplashField()
                 .setMin(1)
                 .setHint(t(API_TRANSLATE.app_text))
-                .setText(vCell.getText())
+                .setText(oldPage?.getCell(vCell.getRowIndex(), vCell.getColumnIndex())?.text ?: "")
                 .setMax(API.PAGE_TABLE_MAX_TEXT_SIZE)
                 .setOnCancel(t(API_TRANSLATE.app_cancel))
                 .setOnEnter(t(API_TRANSLATE.app_add)) { _, text ->
