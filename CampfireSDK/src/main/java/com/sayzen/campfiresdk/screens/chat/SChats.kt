@@ -53,6 +53,7 @@ class SChats constructor(
 
     private fun instanceCard(chat: Chat):CardChat{
         val card = CardChat(chat)
+        card.hideIfNoMessage = false
         if (onSelected != null) card.onSelected = {
             Navigator.remove(this)
             onSelected!!.invoke(it)

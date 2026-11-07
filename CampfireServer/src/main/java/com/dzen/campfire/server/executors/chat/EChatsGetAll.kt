@@ -56,6 +56,13 @@ class EChatsGetAll : RChatsGetAll(0) {
         val chatsResult = ArrayList<Chat>()
 
         for (c in chats) {
+            if (messages.none { it.id == c.chatMessage.id }) {
+                c.chatMessage.id = 0
+                if (c.unreadCount > 0) {
+                    ControllerChats.updateReadDate(apiAccount.id, c.tag, c.readDate)
+                    c.unreadCount = 0
+                }
+            }
             for (i in messages) {
                 if (i.id == c.chatMessage.id) {
                     c.chatMessage = i as PublicationChatMessage
