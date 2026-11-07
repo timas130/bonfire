@@ -113,6 +113,7 @@ class SWikiArticleView(
         if (startPages != null) {
             vMore.visibility = View.GONE
             vEdit.visibility = View.GONE
+            vToolbarTitle.text = wikiTitle.getName(ControllerApi.getLanguage(languageId).code)
             pages = startPages!!.pages
             if (composeMode) {
                 adapter.add(ComposePostPages(pages.toList(), this))
@@ -130,6 +131,7 @@ class SWikiArticleView(
                     vLanguage.setOnClickListener { cancel() }
                 }
             } else {
+                vLanguage.text = ControllerApi.getLanguage(languageId).name
                 vLanguage.isEnabled = false
             }
         } else {
