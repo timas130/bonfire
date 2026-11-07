@@ -238,6 +238,13 @@ fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound
             )
         )
 
+        val currentMessages = ControllerChats.getMessages(tag)
+        if (currentMessages.isEmpty()) return@getChat
+        if (currentMessages.messages.any { current -> chatMessages.messages.none { it.id == current.id } }) {
+            sendNotification(tag, sound, failedReply)
+            return@getChat
+        }
+
         with(NotificationManagerCompat.from(SupAndroid.appContext!!)) {
             Debug.info("NotificationChatMessage", "sending $tag (${tag.hashCode()})")
             this.notify(tag.hashCode(), builder.build())
