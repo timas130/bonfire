@@ -26,20 +26,24 @@ class CardQuestInfo(
         updateReports(view)
     }
 
-    fun updateAccount(view: View = getView()!!) {
+    fun updateAccount(view: View? = getView()) {
+        view ?: return
         val vAvatar: ViewAvatarTitle = view.findViewById(R.id.vAvatar)
         details.xAccount.setView(vAvatar)
     }
 
-    fun updateKarma(view: View = getView()!!) {
+    fun updateKarma(view: View? = getView()) {
+        view ?: return
         details.xKarma.setView(view.findViewById(R.id.vKarma))
     }
 
-    fun updateComments(view: View = getView()!!) {
+    fun updateComments(view: View? = getView()) {
+        view ?: return
         details.xComments.setView(view.findViewById(R.id.vComments))
     }
 
-    fun updateReports(view: View = getView()!!) {
+    fun updateReports(view: View? = getView()) {
+        view ?: return
         val vReports: TextView = view.findViewById(R.id.vReports)
         details.xReports.setView(vReports)
         vReports.setOnClickListener {
