@@ -9,13 +9,17 @@ import com.dzen.campfire.api.models.chat.ChatParamsFandomSub
 import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatAnswer
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessage
+import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessageChange
+import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessageRemove
 import com.dzen.campfire.api.models.publications.chat.Chat
 import com.dzen.campfire.api.models.publications.chat.PublicationChatMessage
 import com.dzen.campfire.api.requests.chat.RChatGet
+import com.dzen.campfire.api.requests.chat.RChatMessageGetAll
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.ControllerChats
+import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.chat.*
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomBackgroundImageChanged
@@ -232,6 +236,27 @@ class CardChat(
             if (n.tag == chat.tag) {
                 chat.chatMessage = n.publicationChatMessage
                 update()
+            }
+        }
+        if (e.notification is NotificationChatMessageChange) {
+            val n = e.notification
+            if (n.publicationId == chat.chatMessage.id) {
+                chat.chatMessage.text = n.text
+                chat.chatMessage.changed = true
+                update()
+            }
+        }
+        if (e.notification is NotificationChatMessageRemove) {
+            val removedId = e.notification.publicationId
+            if (removedId == chat.chatMessage.id) {
+                RChatMessageGetAll(chat.tag, 0, true, 0)
+                    .onComplete { r ->
+                        if (chat.chatMessage.id == removedId) {
+                            chat.chatMessage = r.publications.lastOrNull() ?: PublicationChatMessage()
+                            update()
+                        }
+                    }
+                    .send(api)
             }
         }
     }

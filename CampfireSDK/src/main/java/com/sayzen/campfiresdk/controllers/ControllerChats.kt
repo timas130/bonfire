@@ -7,6 +7,8 @@ import com.dzen.campfire.api.models.chat.ChatTag
 import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatAnswer
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessage
+import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessageChange
+import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessageRemove
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatRead
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatTyping
 import com.dzen.campfire.api.models.publications.chat.Chat
@@ -17,6 +19,7 @@ import com.dzen.campfire.api.requests.fandoms.RFandomsModerationChatRemove
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.notifications.chat.NotificationChatMessageParser
 import com.sayzen.campfiresdk.controllers.notifications.chat.clearNotification
+import com.sayzen.campfiresdk.controllers.notifications.chat.updateNotification
 import com.sayzen.campfiresdk.models.events.chat.*
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomBackgroundImageChanged
 import com.sayzen.campfiresdk.models.events.fandom.EventFandomBackgroundImageChangedModeration
@@ -448,7 +451,29 @@ object ControllerChats {
             val n = e.notification
             putRead(n.tag, n.date)
         }
+        if (e.notification is NotificationChatMessageRemove) {
+            val n = e.notification
+            val pool = findPoolOfMessage(n.publicationId)
+            if (pool != null) {
+                pool.messages = pool.messages.filter { it.id != n.publicationId }.toTypedArray()
+                pool.count = maxOf(pool.count - 1, 0)
+                setMessages(pool)
+                ToolsThreads.thread { NotificationChatMessageParser.updateNotification(pool.chatTag) }
+            }
+        }
+        if (e.notification is NotificationChatMessageChange) {
+            val n = e.notification
+            val pool = findPoolOfMessage(n.publicationId)
+            if (pool != null) {
+                pool.messages.first { it.id == n.publicationId }.text = n.text
+                setMessages(pool)
+                ToolsThreads.thread { NotificationChatMessageParser.updateNotification(pool.chatTag) }
+            }
+        }
     }
+
+    private fun findPoolOfMessage(publicationId: Long) =
+        loadMessages().find { pool -> pool.messages.any { it.id == publicationId } }
 
     private fun onEventChatRead(e: EventChatRead) {
         setMessages(MChatMessagesPool(e.tag, false))

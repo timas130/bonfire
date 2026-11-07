@@ -116,7 +116,7 @@ private fun PublicationChatMessage.notificationText(): String = when {
 @WorkerThread
 fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound: Boolean = true) {
     val chatMessages = ControllerChats.getMessages(tag)
-    if (chatMessages.isEmpty()) {
+    if (chatMessages.isEmpty() || chatMessages.messages.isEmpty()) {
         clearNotification(tag)
         return
     }
@@ -221,6 +221,12 @@ fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound
             this.notify(tag.hashCode(), builder.build())
         }
     }
+}
+
+@WorkerThread
+fun NotificationChatMessageParser.Companion.updateNotification(tag: ChatTag) {
+    val active = NotificationManagerCompat.from(SupAndroid.appContext!!).activeNotifications
+    if (active.any { it.id == tag.hashCode() }) sendNotification(tag, false)
 }
 
 fun NotificationChatMessageParser.Companion.clearNotification(tag: ChatTag) {
