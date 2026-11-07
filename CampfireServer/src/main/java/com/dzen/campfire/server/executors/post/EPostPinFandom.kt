@@ -43,8 +43,8 @@ class EPostPinFandom : RPostPinFandom(0, 0, 0, "") {
             ControllerPublicationsHistory.put(postId, HistoryAdminPinFandom(apiAccount.id, apiAccount.imageId, apiAccount.name, comment))
         } else {
             ControllerCollisions.removeCollisions(fandomId, languageId, API.COLLISION_FANDOM_PINNED_POST)
-            if (oldPostId > 0) ControllerPublicationsHistory.put(oldPostId, HistoryAdminUnpinFandom(apiAccount.id, apiAccount.imageId, apiAccount.name, comment))
         }
+        if (oldPostId > 0) ControllerPublicationsHistory.put(oldPostId, HistoryAdminUnpinFandom(apiAccount.id, apiAccount.imageId, apiAccount.name, comment))
 
         ControllerPublications.moderation(ModerationPinPostInFandom(comment, postId, oldPostId), apiAccount.id, fandomId, languageId, postId)
 
