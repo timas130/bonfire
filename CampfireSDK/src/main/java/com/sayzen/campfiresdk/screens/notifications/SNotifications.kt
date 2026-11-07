@@ -60,9 +60,15 @@ class SNotifications private constructor() : SLoadingRecycler<CardNotification, 
         addToolbarIcon(R.drawable.ic_tune_white_24dp) { showFilters() }
 
         adapter.setBottomLoader { onLoad, cards ->
+            val filters = ControllerSettings.getNotificationFilters()
+            if (filters.isEmpty() && !ControllerSettings.filterOther) {
+                onLoad.invoke(emptyArray())
+                return@setBottomLoader
+            }
+
             subscriptionX = RAccountsNotificationsGetAll(
                 offsetDate = if (cards.isEmpty()) 0 else cards[cards.size - 1].notification.dateCreate,
-                filters = ControllerSettings.getNotificationFilters(),
+                filters = filters,
                 otherEnabled = ControllerSettings.filterOther,
             )
                 .onComplete { r ->
