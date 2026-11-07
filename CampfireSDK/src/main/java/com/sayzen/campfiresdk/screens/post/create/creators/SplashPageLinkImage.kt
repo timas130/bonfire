@@ -72,8 +72,11 @@ class SplashPageLinkImage(
 
     private fun chooseImage() {
         hide()
+        val parentScreen = Navigator.getCurrent()
+        var reopenOnHide = true
         SplashChooseImage()
                 .setOnSelectedBitmap { _, b ->
+                    reopenOnHide = false
                     Navigator.to(SCrop(b, API.PAGE_LINK_IMAGE_W, API.PAGE_LINK_IMAGE_H) { screen, b2, _, _, _, _ ->
                         this.image = ToolsBitmap.toBytes(ToolsBitmap.resize(b2, API.PAGE_LINK_IMAGE_W, API.PAGE_LINK_IMAGE_H), API.PAGE_LINK_IMAGE_WEIGHT)
                         vImage.setImageBitmap(b2)
@@ -84,6 +87,12 @@ class SplashPageLinkImage(
                             .setAutoBackOnCrop(false)
                             .setOnHide { ToolsThreads.main(100) { asSheetShow() }}
                     )
+                }
+                .setOnHide {
+                    if (reopenOnHide && Navigator.getCurrent() === parentScreen) {
+                        reopenOnHide = false
+                        ToolsThreads.main(100) { asSheetShow() }
+                    }
                 }
                 .asSheetShow()
     }
