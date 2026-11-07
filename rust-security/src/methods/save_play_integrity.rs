@@ -35,7 +35,7 @@ impl SecurityServer {
         }
 
         // intention is new enough
-        if intention.created_at.signed_duration_since(Utc::now()) > TimeDelta::seconds(120) {
+        if Utc::now().signed_duration_since(intention.created_at) > TimeDelta::seconds(120) {
             return Err(SecurityError::IntentionExpired);
         }
 
