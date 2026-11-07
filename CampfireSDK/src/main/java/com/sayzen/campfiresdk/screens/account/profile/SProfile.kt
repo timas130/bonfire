@@ -93,7 +93,7 @@ class SProfile private constructor(
     }
 
     private val eventBus = EventBus
-            .subscribe(EventPostPinedProfile::class) { if (it.accountId == xAccount.getId()) setPinnedPost(it.post) }
+            .subscribe(EventPostPinedProfile::class) { if (it.accountId == xAccount.getId()) onPinnedPostChanged(it.post) }
 
     val xAccount = XAccount().setAccount(account)
             .setOnChanged { update() }
@@ -236,6 +236,12 @@ class SProfile private constructor(
             for (c in adapter.get(CardPostProxy::class))
                 if (c.xPublication.publication.id == cardPinnedPost!!.xPublication.publication.id && !(c.xPublication.publication as PublicationPost).isPined)
                     adapter.remove(c)
+    }
+
+    private fun onPinnedPostChanged(post: PublicationPost?) {
+        val hadPinnedPost = cardPinnedPost != null
+        setPinnedPost(post)
+        if (hadPinnedPost) adapter.reloadBottom()
     }
 
     private fun setPinnedPost(post: PublicationPost?) {
