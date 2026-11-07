@@ -246,6 +246,8 @@ object ControllerPost {
                 page.imageId = 0
             }
             is PageImages -> {
+                page.images = emptyArray()
+                page.imagesMini = emptyArray()
                 page.imagesIds = emptyArray()
                 page.imagesMiniIds = emptyArray()
                 page.imagesMiniSizesW = emptyArray()

@@ -87,18 +87,18 @@ class PageImages : Page() {
         super.fillImageRefs(receiver)
 
         val size = imagesIds.size.coerceAtLeast(images.size)
-        if (images.isEmpty()) {
-            images = Array(size) { ImageRef() }
+        if (images.size != size) {
+            images = Array(size) { images.getOrNull(it) ?: ImageRef() }
         }
-        if (imagesMini.isEmpty()) {
-            imagesMini = Array(size) { ImageRef() }
+        if (imagesMini.size != size) {
+            imagesMini = Array(size) { imagesMini.getOrNull(it) ?: ImageRef() }
         }
 
         for (i in 0 until size) {
-            receiver.add(images[i], imagesIds[i])
+            receiver.add(images[i], imagesIds.getOrNull(i))
             receiver.add(
                 imagesMini[i],
-                imagesMiniIds[i],
+                imagesMiniIds.getOrNull(i),
                 imagesMiniSizesW.getOrNull(i) ?: 500,
                 imagesMiniSizesH.getOrNull(i) ?: 500
             )
