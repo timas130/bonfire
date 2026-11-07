@@ -60,7 +60,7 @@ class SGallery : Screen(R.layout.screen_other_gallery) {
 
         fill(t(API_TRANSLATE.gallery_achi_title), t(API_TRANSLATE.gallery_achi_text), array_achi, 5)
         fill(t(API_TRANSLATE.gallery_level_title), t(API_TRANSLATE.gallery_level_text), array_level, 3)
-        fill(t(API_TRANSLATE.gallery_bg_title), t(API_TRANSLATE.gallery_bg_title), array_bg, 3)
+        fill(t(API_TRANSLATE.gallery_bg_title), t(API_TRANSLATE.gallery_bg_text), array_bg, 3)
         fill(t(API_TRANSLATE.gallery_emoji_title), t(API_TRANSLATE.gallery_emoji_text), array_emoji, 7)
         fill(t(API_TRANSLATE.gallery_other_title), t(API_TRANSLATE.gallery_other_text), array_other, 3)
         fill(t(API_TRANSLATE.gallery_flags_title), t(API_TRANSLATE.gallery_flags_text), array_flags, 5)
