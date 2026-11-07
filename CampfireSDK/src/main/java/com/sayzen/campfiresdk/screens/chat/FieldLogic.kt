@@ -79,7 +79,7 @@ class FieldLogic(
         vQuoteContainer.visibility = View.GONE
         vQuoteRemove.setOnClickListener { setQuote("") }
         vSend.setOnClickListener {
-            newFormatting = true
+            newFormatting = publicationChange?.newFormatting ?: true
             onSendClicked()
         }
         vSend.setOnLongClickListener {
