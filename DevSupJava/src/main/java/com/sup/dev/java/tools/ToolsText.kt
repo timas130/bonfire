@@ -290,11 +290,12 @@ object ToolsText {
         return sw.toString()
     }
 
+    private val LINK_SCHEME = Regex("^([a-z][a-z0-9+.-]*://|mailto:)", RegexOption.IGNORE_CASE)
+
     fun castToWebLink(s: String): String {
-        return if (s.contains("https://") || s.contains("http://"))
-            s
-        else
-            "https://$s"
+        val scheme = LINK_SCHEME.find(s)?.value?.lowercase(Locale.ROOT)
+        if (scheme == null || scheme == "file://") return "https://$s"
+        return scheme + s.substring(scheme.length)
     }
 
     fun clearWebLinkPrefix(s: String): String {
