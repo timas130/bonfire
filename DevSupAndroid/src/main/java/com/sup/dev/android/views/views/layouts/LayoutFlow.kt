@@ -40,7 +40,6 @@ class LayoutFlow @MainThread
         var currentHeight = paddingTop
         var maxChildHeight = 0
         var breakLine = false
-        var newLine = false
         var spacing = 0
 
         val count = childCount
@@ -54,15 +53,12 @@ class LayoutFlow @MainThread
             if (lp.horizontalSpacing >= 1) spacing = lp.horizontalSpacing
 
             if (growHeight && (breakLine || currentWidth + child.measuredWidth > widthLimit)) {
-                newLine = true
                 currentHeight += maxChildHeight + mVerticalSpacing
 
                 width = Math.max(width, currentWidth - spacing)
 
                 currentWidth = paddingLeft
                 maxChildHeight = 0
-            } else {
-                newLine = false
             }
 
             maxChildHeight = Math.max(maxChildHeight, child.measuredHeight)
@@ -75,8 +71,7 @@ class LayoutFlow @MainThread
             breakLine = lp.breakLine
         }
 
-        if (!newLine)
-            width = Math.max(width, currentWidth - spacing)
+        width = Math.max(width, currentWidth - spacing)
         width += paddingRight
         val height = currentHeight + maxChildHeight + paddingBottom
 
