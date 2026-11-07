@@ -14,6 +14,7 @@ import com.dzen.campfire.api.requests.tags.RTagsGetAll
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerActivities
+import com.sayzen.campfiresdk.controllers.ControllerPost
 import com.sayzen.campfiresdk.controllers.ControllerPublications
 import com.sayzen.campfiresdk.controllers.ControllerStoryQuest
 import com.sayzen.campfiresdk.controllers.t
@@ -81,7 +82,7 @@ class SPostCreationTags private constructor(
                     ControllerActivities.reloadActivities()
                     postParams.activity?.let { ControllerActivities.reloadRelayRace(it.id) }
                 }.onApiError(API.ERROR_VIDEO_NOT_READY) {
-                    ToolsToast.show(R.string.post_error_videos_processing)
+                    ControllerPost.showVideoNotReadyError(it)
                 }.onApiError(RPostPublication.E_BAD_TAGS) {
                     ToolsToast.show(t(API_TRANSLATE.error_unknown))
                 }
@@ -194,7 +195,7 @@ class SPostCreationTags private constructor(
                             EventBus.post(EventPostTagsChanged(publicationId, selectedTagsWithCategories.toTypedArray()))
                             SPost.instance(publicationId, 0, NavigationAction.replace())
                         }.onApiError(API.ERROR_VIDEO_NOT_READY) {
-                            ToolsToast.show(R.string.post_error_videos_processing)
+                            ControllerPost.showVideoNotReadyError(it)
                         }.onApiError(RPostPublication.E_BAD_TAGS) {
                             ToolsToast.show(t(API_TRANSLATE.error_unknown))
                         }

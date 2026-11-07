@@ -12,6 +12,7 @@ import com.dzen.campfire.api.requests.fandoms.RFandomsAdminMakeModerator
 import com.dzen.campfire.api.requests.fandoms.RFandomsModerationImportant
 import com.dzen.campfire.api.requests.fandoms.RFandomsModerationToDrafts
 import com.dzen.campfire.api.requests.post.*
+import com.dzen.campfire.api.tools.ApiException
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPageSpoiler
@@ -391,8 +392,15 @@ object ControllerPost {
             EventBus.post(EventPostStatusChange(publications.id, API.STATUS_PUBLIC))
             ToolsToast.show(t(API_TRANSLATE.app_done))
         }.onApiError(API.ERROR_VIDEO_NOT_READY) {
-            ToolsToast.show(R.string.post_error_videos_processing)
+            showVideoNotReadyError(it)
         }
+    }
+
+    fun showVideoNotReadyError(ex: ApiException) {
+        ToolsToast.show(
+            if (ex.params.contains(API.ERROR_VIDEO_NOT_READY_PARAM_UNAVAILABLE)) R.string.post_error_videos_unavailable
+            else R.string.post_error_videos_processing
+        )
     }
 
     fun multilingual(publications: PublicationPost) {
@@ -743,7 +751,7 @@ object ControllerPost {
         )) { resp ->
             EventBus.post(EventPostDraftCreated(resp.unitId))
         }.onApiError(API.ERROR_VIDEO_NOT_READY) {
-            ToolsToast.show(R.string.post_error_videos_processing)
+            showVideoNotReadyError(it)
         }
     }
 

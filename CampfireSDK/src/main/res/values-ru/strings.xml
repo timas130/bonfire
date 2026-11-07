@@ -140,4 +140,5 @@
     <string name="video_upload_error_attach">Видео загружено, но его не удалось добавить. Попробуйте ещё раз</string>
     <string name="settings_video_autoplay">Автовоспроизведение видео</string>
     <string name="post_error_videos_processing">Видео в этом посте ещё обрабатываются. Попробуйте чуть позже</string>
+    <string name="post_error_videos_unavailable">Видео в этом посте не удалось обработать, или оно больше недоступно. Замените его и попробуйте ещё раз</string>
 </resources>

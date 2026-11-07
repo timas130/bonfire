@@ -424,11 +424,15 @@ object ControllerPost {
 
         val videos = RustVideo.getByIds(videoIds).associateBy { it.id }
         for (videoId in videoIds) {
-            val video = videos[videoId] ?: throw ApiException(API.ERROR_VIDEO_NOT_READY, "Video not found [$videoId]")
-            if (video.publicationId != publication.id) throw ApiException(API.ERROR_VIDEO_NOT_READY, "Video is not claimed by this publication [$videoId]")
+            val video = videos[videoId] ?: throw videoUnavailable("Video not found [$videoId]")
+            if (video.publicationId != publication.id) throw videoUnavailable("Video is not claimed by this publication [$videoId]")
+            if (video.status == VideoStatus.FAILED || video.status == VideoStatus.DELETED) throw videoUnavailable("Video is not ready [$videoId][${video.status}]")
             if (video.status != VideoStatus.READY) throw ApiException(API.ERROR_VIDEO_NOT_READY, "Video is not ready [$videoId][${video.status}]")
         }
     }
+
+    private fun videoUnavailable(message: String) =
+        ApiException(API.ERROR_VIDEO_NOT_READY, message, arrayOf(API.ERROR_VIDEO_NOT_READY_PARAM_UNAVAILABLE))
 
     fun hasVideosInProgress(publicationId: Long): Boolean {
         val publication = ControllerPublications.getPublication(publicationId, 0) as? PublicationPost ?: return false

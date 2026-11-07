@@ -148,4 +148,5 @@
     <string name="video_upload_error_attach">The video was uploaded but could not be added. Try again</string>
     <string name="settings_video_autoplay">Video autoplay</string>
     <string name="post_error_videos_processing">The videos in this post are still processing. Try again in a moment</string>
+    <string name="post_error_videos_unavailable">A video in this post failed to process or is no longer available. Replace it and try again</string>
 </resources>

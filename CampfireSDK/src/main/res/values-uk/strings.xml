@@ -131,4 +131,5 @@
     <string name="video_upload_error_attach">Відео завантажено, але його не вдалося додати. Спробуйте ще раз</string>
     <string name="settings_video_autoplay">Автовідтворення відео</string>
     <string name="post_error_videos_processing">Відео в цьому пості ще обробляються. Спробуйте трохи пізніше</string>
+    <string name="post_error_videos_unavailable">Відео в цьому пості не вдалося обробити, або воно більше недоступне. Замініть його та спробуйте ще раз</string>
 </resources>
