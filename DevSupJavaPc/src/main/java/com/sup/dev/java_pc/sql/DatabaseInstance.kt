@@ -32,6 +32,10 @@ class DatabaseInstance(
         }
     }
 
+    private fun restartIfClosed() {
+        if (connection?.isClosed != false) restart(databaseKey)
+    }
+
     //
     //  Insert
     //
@@ -67,7 +71,7 @@ class DatabaseInstance(
             return id
         } catch (e: Exception) {
             if (tryCount > 0) {
-                if((e.message?:"").contains("No operations allowed after connection closed")) restart(databaseKey)
+                restartIfClosed()
                 return insert(query, tryCount - 1, *values)
             } else {
                 if (!SALIENT) {
@@ -92,7 +96,7 @@ class DatabaseInstance(
             return select(preparedQuery, query.getColumnsCount())
         } catch (e: Exception) {
             if (tryCount > 0) {
-                if((e.message?:"").contains("No operations allowed after connection closed")) restart(databaseKey)
+                restartIfClosed()
                 return select(query, tryCount - 1, *values)
             } else {
                 if (!SALIENT) {
@@ -113,7 +117,7 @@ class DatabaseInstance(
             return select(preparedQuery, columnsCount)
         } catch (e: SQLException) {
             if (tryCount > 0) {
-                if((e.message?:"").contains("No operations allowed after connection closed")) restart(databaseKey)
+                restartIfClosed()
                 return select(columnsCount, query, tryCount - 1, *values)
             } else {
                 if (!SALIENT) {
@@ -158,7 +162,7 @@ class DatabaseInstance(
             return count
         } catch (e: Exception) {
             if (tryCount > 0) {
-                if((e.message?:"").contains("No operations allowed after connection closed")) restart(databaseKey)
+                restartIfClosed()
                 return update(query, tryCount - 1, *values)
             } else {
                 if (!SALIENT) {
@@ -187,7 +191,7 @@ class DatabaseInstance(
             preparedQuery.closeIfNeed()
         } catch (e: Exception) {
             if (tryCount > 0) {
-                if((e.message?:"").contains("No operations allowed after connection closed")) restart(databaseKey)
+                restartIfClosed()
                 remove(query, tryCount - 1, *values)
             } else {
                 if (!SALIENT) {
@@ -217,7 +221,7 @@ class DatabaseInstance(
             preparedQuery.closeIfNeed()
         } catch (e: Exception) {
             if (tryCount > 0) {
-                if((e.message?:"").contains("No operations allowed after connection closed")) restart(databaseKey)
+                restartIfClosed()
                 execute(query, tryCount - 1, *values)
             } else {
                 if (!SALIENT) {
