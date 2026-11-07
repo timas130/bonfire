@@ -26,6 +26,7 @@ object ControllerRubrics {
                 card.setProgress(true)
                 ApiRequestsSupporter.execute(RRubricsGetParams(rubric.id)) { r ->
                     card.setProgress(false)
+                    if (card.cards.isNotEmpty()) return@execute
                     w.spoiler(card)
                             .add(if (r.isNotification) t(API_TRANSLATE.rubric_notification_on) else t(API_TRANSLATE.rubric_notification_off)) { changeNotifications(rubric) }.backgroundRes(R.color.focus)
                             .finishItemBuilding()

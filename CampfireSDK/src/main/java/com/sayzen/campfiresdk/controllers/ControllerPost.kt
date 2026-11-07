@@ -95,6 +95,7 @@ object ControllerPost {
                     Array(ControllerSettings.bookmarksFolders.size) { ControllerSettings.bookmarksFolders[it].id })
             ) { r ->
                 card.setProgress(false)
+                if (card.cards.isNotEmpty()) return@execute
                 w.spoiler(card)
                     .add(
                         if (!r.bookmark) t(API_TRANSLATE.bookmarks_add) else if (ControllerSettings.bookmarksFolders.isEmpty()) t(
