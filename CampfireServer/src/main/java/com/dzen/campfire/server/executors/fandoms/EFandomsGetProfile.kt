@@ -17,6 +17,7 @@ class EFandomsGetProfile : RFandomsGetProfile(0, 0){
         pinExecutor.apiAccount = apiAccount
         pinExecutor.fandomId = fandomId
         pinExecutor.languageId = languageId
+        pinExecutor.requestApiVersion = requestApiVersion
         val pin = pinExecutor.execute()
 
         val subExecutor = EFandomsGetSubscribtion()

@@ -77,6 +77,7 @@ class EAccountsGetProfile : RAccountsGetProfile(0, "") {
 
         var pinnedPost: PublicationPost? = if (pinnedPostId > 0) ControllerPublications.getPublication(pinnedPostId, apiAccount.id) as PublicationPost? else null
         if (pinnedPost != null && pinnedPost.status != API.STATUS_PUBLIC) pinnedPost = null
+        if (pinnedPost != null && pinnedPost.nsfw && !ControllerPost.canSeeNsfwPosts(apiAccount.id, requestApiVersion)) pinnedPost = null
 
         return Response(
             dateCreate,

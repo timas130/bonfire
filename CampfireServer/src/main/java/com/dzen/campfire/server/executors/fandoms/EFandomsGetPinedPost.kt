@@ -23,6 +23,7 @@ class EFandomsGetPinedPost : RFandomsGetPinedPost(0, 0) {
         val pinnedPostId = ControllerCollisions.getCollisionValue1(fandomId, languageId, API.COLLISION_FANDOM_PINNED_POST)
         var pinnedPost: PublicationPost? = if(pinnedPostId > 0) ControllerPublications.getPublication(pinnedPostId, apiAccount.id) as PublicationPost? else null
         if(pinnedPost != null && pinnedPost.status != API.STATUS_PUBLIC) pinnedPost = null
+        if(pinnedPost != null && pinnedPost.nsfw && !ControllerPost.canSeeNsfwPosts(apiAccount.id, requestApiVersion)) pinnedPost = null
 
         return Response(pinnedPost)
 
