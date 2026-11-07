@@ -23,6 +23,7 @@ class EWikiItemMove : RWikiItemMove(0, 0, 0) {
             val wikiTitleDest = ControllerWiki.getTitlesByItemId(destinationId)
                     ?: throw ApiException(API.ERROR_GONE)
             if (wikiTitleDest.wikiStatus != API.STATUS_PUBLIC) throw ApiException(E_BAD_STATUS)
+            if (ControllerWiki.getItem(destinationId)?.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_GONE)
             if (wikiTitleDest.itemType != API.WIKI_TYPE_SECION) throw ApiException(E_BAD_PAGE_INDEX)
 
             if (wikiTitleItem.fandomId != wikiTitleDest.fandomId) throw ApiException(E_BAD_PAGE_INDEX)

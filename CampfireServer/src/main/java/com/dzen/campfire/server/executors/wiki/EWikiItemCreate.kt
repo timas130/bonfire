@@ -62,6 +62,7 @@ class EWikiItemCreate : RWikiItemCreate(0, 0, WikiTitle(), null, null) {
             if(parentItem == null)  throw ApiException(API.ERROR_GONE)
             if(parentItem.fandomId != fandomId) throw ApiException(API.ERROR_ACCESS)
             if(parentItem.wikiStatus != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
+            if(ControllerWiki.getItem(parentItemId)?.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_GONE)
             if(parentItem.itemType != API.WIKI_TYPE_SECION) throw ApiException(API.ERROR_ACCESS)
             newItem.parentItemId = parentItemId
         }
