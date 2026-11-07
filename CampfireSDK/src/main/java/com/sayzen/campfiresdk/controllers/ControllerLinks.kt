@@ -138,7 +138,7 @@ object ControllerLinks {
                 return true
             }
 
-            when (linkV) {
+            when (linkV.takeIf { params.isNotEmpty() }) {
                 API.LINK_STICKER.link -> SStickersView.instanceBySticker(params[0].toLong(), Navigator.TO)
                 API.LINK_STICKERS_PACK.link -> {
                     if (params.size == 1) SStickersView.instance(params[0].toLong(), Navigator.TO)
@@ -246,7 +246,7 @@ object ControllerLinks {
                 return true
             }
 
-            return when (linkV) {
+            return when (linkV.takeIf { params.isNotEmpty() }) {
                 API.LINK_STICKER.link -> true
                 API.LINK_PROFILE_ID.link -> true
                 API.LINK_TAG_PROFILE_NAME -> true
