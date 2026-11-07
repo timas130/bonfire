@@ -27,10 +27,8 @@ class HttpServerConnection(
         while (true) {
             val header = br.readLine()
             if (header.isEmpty()) break
-            val split = header.split(": ")
-            val headerKey = split[0]
-            var headerValue = split[1]
-            for (i in 2 until split.size) headerValue += ": " + split[i]
+            val headerKey = header.substringBefore(':')
+            val headerValue = header.substringAfter(':', "").trim()
             data.header[headerKey] = headerValue
             if (headerKey.lowercase() == "content-length") messageLen = headerValue.toInt()
         }
