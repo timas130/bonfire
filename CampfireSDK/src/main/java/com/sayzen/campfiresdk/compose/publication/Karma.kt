@@ -85,6 +85,8 @@ class KarmaCounterModel(
 
     private var progressJob: Job? = null
 
+    private var sent = false
+
     fun canRate(): Boolean {
         return rateButtonsEnabled() && publication.myKarma == 0L
     }
@@ -98,6 +100,11 @@ class KarmaCounterModel(
         up: Boolean,
         anon: Boolean = ControllerSettings.anonRates
     ) {
+        if (sent) {
+            ToolsToast.show(t(API_TRANSLATE.error_too_late))
+            return
+        }
+
         progressJob?.cancel()
         if (_progress.value?.up == up) {
             progressJob?.cancel()
@@ -109,6 +116,7 @@ class KarmaCounterModel(
 
         progressJob = MainScope().launch {
             delay(CampfireConstants.RATE_TIME)
+            sent = true
 
             try {
                 val resp = RPublicationsKarmaAdd(publication.id, up, ControllerApi.getLanguageId(), anon)
@@ -125,6 +133,7 @@ class KarmaCounterModel(
                     )
                 )
 
+                sent = false
                 progressJob = null
                 _progress.emit(null)
                 onFinish(up)
@@ -133,6 +142,7 @@ class KarmaCounterModel(
                 ControllerStoryQuest.incrQuest(API.QUEST_STORY_KARMA)
                 EventBus.post(EventPublicationKarmaStateChanged(publication.id))
             } catch (_: Exception) {
+                sent = false
                 progressJob = null
                 _progress.emit(null)
             }
