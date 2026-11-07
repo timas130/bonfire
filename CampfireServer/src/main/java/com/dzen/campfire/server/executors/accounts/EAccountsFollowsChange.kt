@@ -23,7 +23,7 @@ class EAccountsFollowsChange : RAccountsFollowsChange(0, false) {
     override fun execute(): Response {
 
         if (!follow) {
-            if (ControllerCollisions.checkCollisionExist(apiAccount.id, accountId, API.COLLISION_ACCOUNT_FOLLOW)) {
+            if (ControllerCollisions.checkCollisionExist(apiAccount.id, accountId, API.COLLISION_ACCOUNT_FOLLOW) && canNotify(API.COLLISION_ACCOUNT_UNFOLLOW_NOTIFY)) {
                 ControllerNotifications.push(accountId, NotificationAccountsFollowsRemove(apiAccount.imageId, apiAccount.id, apiAccount.name, apiAccount.sex))
             }
 
@@ -32,13 +32,7 @@ class EAccountsFollowsChange : RAccountsFollowsChange(0, false) {
 
             if (ControllerCollisions.putCollisionWithCheck(apiAccount.id, accountId, API.COLLISION_ACCOUNT_FOLLOW)) {
 
-                if(Database.select("EAccountsFollowsChange", SqlQuerySelect(TCollisions.NAME, TCollisions.id)
-                                .where(TCollisions.owner_id, "=", apiAccount.id)
-                                .where(TCollisions.collision_id, "=", accountId)
-                                .where(TCollisions.collision_type, "=", API.COLLISION_ACCOUNT_FOLLOW_NOTIFY)
-                                .where(TCollisions.collision_date_create, ">", System.currentTimeMillis() - 1000L * 60 * 60 * 24)).isEmpty){
-                    ControllerCollisions.removeCollisions(apiAccount.id, API.COLLISION_ACCOUNT_FOLLOW_NOTIFY)
-                    ControllerCollisions.putCollision(apiAccount.id, accountId, 0, API.COLLISION_ACCOUNT_FOLLOW_NOTIFY, System.currentTimeMillis(), 0, "")
+                if(canNotify(API.COLLISION_ACCOUNT_FOLLOW_NOTIFY)){
                     ControllerNotifications.push(accountId, NotificationAccountsFollowsAdd(apiAccount.imageId, apiAccount.id, apiAccount.name, apiAccount.sex))
                 }
 
@@ -49,6 +43,20 @@ class EAccountsFollowsChange : RAccountsFollowsChange(0, false) {
         }
 
         return Response()
+    }
+
+    private fun canNotify(markerType: Long): Boolean {
+        if (ControllerCollisions.checkCollisionExist(accountId, apiAccount.id, API.COLLISION_ACCOUNT_BLACK_LIST_ACCOUNT)) return false
+
+        if(!Database.select("EAccountsFollowsChange", SqlQuerySelect(TCollisions.NAME, TCollisions.id)
+                        .where(TCollisions.owner_id, "=", apiAccount.id)
+                        .where(TCollisions.collision_id, "=", accountId)
+                        .where(TCollisions.collision_type, "=", markerType)
+                        .where(TCollisions.collision_date_create, ">", System.currentTimeMillis() - 1000L * 60 * 60 * 24)).isEmpty) return false
+
+        ControllerCollisions.removeCollisions(apiAccount.id, accountId, markerType)
+        ControllerCollisions.putCollision(apiAccount.id, accountId, 0, markerType, System.currentTimeMillis(), 0, "")
+        return true
     }
 
 
