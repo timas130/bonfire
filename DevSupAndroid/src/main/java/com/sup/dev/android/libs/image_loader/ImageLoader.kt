@@ -261,7 +261,9 @@ object ImageLoader {
         ToolsThreads.main {
             if (!loader.link.noCash && bm != null) addToCash(loader.link.getKey(), bm, bytes)
 
-            if (loader.vImage != null && loader == loader.vImage.tag) {
+            val stillBound = loader.vImage == null || loader == loader.vImage.tag
+
+            if (loader.vImage != null && stillBound) {
                 if (loader.link.allowGif && bytes != null && ToolsBytes.isGif(bytes)) {
                     ToolsGif.iterator(bytes, WeakReference(loader.vImage), loader.link.getW(), loader.link.getH(), loader.link.resizeByMinSide) {
                         if (loader.vProgressBar != null) loader.vProgressBar.visibility = View.INVISIBLE
@@ -275,8 +277,10 @@ object ImageLoader {
             }
             loader.link.onLoadedBytes.invoke(bytes)
             loader.link.onLoadedBitmap.invoke(bm)
-            loader.onLoadedBytes?.invoke(bytes)
-            loader.onLoadedBitmap?.invoke(bm)
+            if (stillBound) {
+                loader.onLoadedBytes?.invoke(bytes)
+                loader.onLoadedBitmap?.invoke(bm)
+            }
         }
     }
 
