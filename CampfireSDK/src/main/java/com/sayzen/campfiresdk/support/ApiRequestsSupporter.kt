@@ -183,11 +183,19 @@ object ApiRequestsSupporter {
     }
 
     fun <K : Request.Response> executeEnabledConfirm(text: String, enter: String, request: Request<K>, onComplete: (K) -> Unit): Request<K> {
+        var callbacksAdded = false
         SplashAlert()
                 .setText(text)
                 .setOnCancel(SupAndroid.TEXT_APP_CANCEL)
                 .setAutoHideOnEnter(false)
-                .setOnEnter(enter) { w -> executeEnabled(w, request, onComplete) }
+                .setOnEnter(enter) { w ->
+                    if (callbacksAdded) {
+                        request.send(api!!)
+                    } else {
+                        callbacksAdded = true
+                        executeEnabled(w, request, onComplete)
+                    }
+                }
                 .asSheetShow()
         return request
     }
