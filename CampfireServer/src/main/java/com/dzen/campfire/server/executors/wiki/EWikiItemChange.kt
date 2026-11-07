@@ -38,24 +38,35 @@ class EWikiItemChange : RWikiItemChange(WikiTitle(), 0, null, null) {
         newItem.creatorName = apiAccount.name
         newItem.creatorImageId = apiAccount.imageId
 
+        val addedLanguagesIds = ArrayList<Long>()
         for(i in item.translates){
             val id = API.getLanguage(i.languageCode).id
+            val oldName = oldItem.translates.firstOrNull { it.languageCode == i.languageCode }?.name
             if(i.name.isEmpty()) {
-                if(oldItem.getName(i.languageCode).isNotEmpty())languagesIds.add(id)
+                if(oldName != null)languagesIds.add(id)
                 continue
             }
             if(i.name.length > API.WIKI_NAME_MAX) throw ApiException(API.ERROR_ACCESS)
             if(i.languageCode == "en") throw ApiException(API.ERROR_ACCESS)
-            if(languagesIds.contains(id)) throw ApiException(API.ERROR_ACCESS)
-            if(newItem.getName(i.languageCode) != i.name)languagesIds.add(id)
+            if(newItem.translates.any { it.languageCode == i.languageCode }) throw ApiException(API.ERROR_ACCESS)
+            if(oldName == null) addedLanguagesIds.add(id)
+            else if(oldName != i.name) languagesIds.add(id)
 
             val t = WikiTitle.Translate()
             t.name = i.name
             t.languageCode = i.languageCode
             newItem.translates = ToolsCollections.add(t, newItem.translates)
         }
+        for(t in oldItem.translates) if(item.translates.none { it.languageCode == t.languageCode }) languagesIds.add(API.getLanguage(t.languageCode).id)
 
-        val permissionGranted = languagesIds.any { ControllerFandom.can(apiAccount, newItem.fandomId, it, API.LVL_MODERATOR_WIKI_EDIT) }
+        if(!ControllerFandom.can(apiAccount, newItem.fandomId, API.getLanguage("en").id, API.LVL_MODERATOR_WIKI_EDIT)) {
+            languagesIds.addAll(addedLanguagesIds)
+            if(languagesIds.isEmpty()) throw ApiException(API.ERROR_ACCESS)
+            if(item.name != oldItem.name || imageMini != null || imageBig != null) throw ApiException(API.ERROR_ACCESS)
+            if(parentItemId > 0 && oldItem.parentItemId != parentItemId) throw ApiException(API.ERROR_ACCESS)
+        }
+
+        val permissionGranted = languagesIds.all { ControllerFandom.can(apiAccount, newItem.fandomId, it, API.LVL_MODERATOR_WIKI_EDIT) }
         if (!permissionGranted) throw ApiException(API.ERROR_ACCESS)
 
         if(imageMini != null) {
