@@ -48,6 +48,7 @@ object ControllerPending {
 
             try {
                 ControllerAccounts.checkAccountBanned(creatorId, fandomId, languageId)
+                if (ControllerPost.hasVideosInProgress(id)) continue
                 if (!ControllerPost.publish(id, willNotify, creatorId)) continue
 
                 try {

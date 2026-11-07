@@ -419,6 +419,16 @@ object ControllerPost {
         }
     }
 
+    fun hasVideosInProgress(publicationId: Long): Boolean {
+        val publication = ControllerPublications.getPublication(publicationId, 0) as? PublicationPost ?: return false
+        val videoIds = publication.pages.filterIsInstance<PageVideo>().map { it.videoId }
+        if (videoIds.isEmpty()) return false
+
+        return RustVideo.getByIds(videoIds).any {
+            it.status == VideoStatus.AWAITING_UPLOAD || it.status == VideoStatus.UPLOADED || it.status == VideoStatus.PROCESSING
+        }
+    }
+
     fun canSeeNsfwPosts(userId: Long, apiVersion: String, settings: AccountSettings = ControllerAccounts.getSettings(userId)): Boolean {
         if (apiVersion == "3.0") return false
         if (!settings.showNsfwPosts) return false
