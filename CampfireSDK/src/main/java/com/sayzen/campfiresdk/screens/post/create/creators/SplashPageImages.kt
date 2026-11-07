@@ -169,7 +169,7 @@ class SplashPageImages(
             oldPage = page as PageImages
             ToolsThreads.main {
                 vTextEmpty.visibility = View.GONE
-                addBytes(rawBytes, oldPage.imagesMini[oldPage.imagesMini.size - 1], replaceIndex)
+                addBytes(rawBytes, oldPage.imagesMini[if (replaceIndex == -1) oldPage.imagesMini.size - 1 else replaceIndex], replaceIndex)
                 update()
             }
         }
