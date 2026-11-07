@@ -98,8 +98,8 @@ class EChatMessageCreate(
         if (gif != null && (imageArray == null || imageArray!!.size != 1)) throw ApiException(E_BAD_DATA)
         if (imageArray != null && imageArray!!.isEmpty()) throw ApiException(E_BAD_DATA)
         if (parentMessageId > 0) {
-            val parentMessageX = ControllerPublications.getPublication(parentMessageId, apiAccount.id) as PublicationChatMessage?
-            if(parentMessageX != null) parentMessage = parentMessageX
+            val parentMessageX = ControllerPublications.getPublication(parentMessageId, apiAccount.id) as? PublicationChatMessage
+            if(parentMessageX != null && parentMessageX.status == API.STATUS_PUBLIC && parentMessageX.chatTag() == tag) parentMessage = parentMessageX
         }
         if (stickerId <= 0 && voice == null && ((imageArray == null && text.length < API.CHAT_MESSAGE_TEXT_MIN_L) || text.length > API.CHAT_MESSAGE_TEXT_MAX_L)) throw ApiException(E_BAD_TEXT)
         if ((imageArray != null || text.isNotEmpty() || gif != null) && voice != null) throw ApiException(E_BAD_DATA)
