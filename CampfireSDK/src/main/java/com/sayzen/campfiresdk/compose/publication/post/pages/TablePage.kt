@@ -26,13 +26,12 @@ internal fun PageTableRenderer(page: PageTable) {
     val colors = MaterialTheme.colorScheme
     val images = remember(page) {
         val list = mutableListOf<ImageRef>()
-        for (cell in page.cells) {
+        for (cell in page.cells.sortedWith(compareBy({ it.rowIndex }, { it.columnIndex }))) {
             if (cell.image.isEmpty()) continue
             list.add(cell.image)
         }
         list.toList()
     }
-    var imageIndex = 0
 
     TableWithBorders(
         modifier = Modifier.padding(horizontal = 12.dp),
@@ -54,8 +53,6 @@ internal fun PageTableRenderer(page: PageTable) {
                 modifier = Modifier.padding(4.dp),
             )
         } else if (cell.type == PageTable.CELL_TYPE_IMAGE) {
-            val index = imageIndex
-
             RemoteImage(
                 link = cell.image,
                 contentDescription = "",
@@ -67,10 +64,9 @@ internal fun PageTableRenderer(page: PageTable) {
                         val links = images
                             .map { ImageLoader.load(it) }
                             .toTypedArray()
-                        Navigator.to(SImageView(index, links))
+                        Navigator.to(SImageView(images.indexOf(cell.image), links))
                     }
             )
-            imageIndex += 1
         }
     }
 }
