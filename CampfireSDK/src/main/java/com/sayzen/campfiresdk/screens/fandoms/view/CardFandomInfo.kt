@@ -142,6 +142,8 @@ class CardFandomInfo(
                 }
                 .onError {
                     loading = false
+                    expanded = false
+                    ToolsToast.show(t(API_TRANSLATE.app_error))
                     updateSpoiler()
                 }
                 .send(api)
