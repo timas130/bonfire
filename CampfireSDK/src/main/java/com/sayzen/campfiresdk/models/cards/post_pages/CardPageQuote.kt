@@ -4,6 +4,7 @@ import android.view.View
 import com.dzen.campfire.api.models.publications.PagesContainer
 import com.dzen.campfire.api.models.publications.post.PageQuote
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sup.dev.android.views.views.ViewText
 import sh.sit.bonfire.formatting.BonfireMarkdown
 
@@ -25,6 +26,7 @@ class CardPageQuote(
 
         BonfireMarkdown.setMarkdownInline(vAuthor, page.author + ":")
         BonfireMarkdown.setMarkdown(vText, page.text)
+        ControllerLinks.linkifyShort(vText)
     }
 
     override fun notifyItem() {}

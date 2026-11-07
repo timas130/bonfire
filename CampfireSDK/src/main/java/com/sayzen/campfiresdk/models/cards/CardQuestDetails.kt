@@ -7,6 +7,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.quests.QuestDetails
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.controllers.ControllerLinks
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.publications.EventPostStatusChange
 import com.sayzen.campfiresdk.models.events.quests.EventQuestChanged
@@ -70,6 +71,7 @@ class CardQuestDetails(
             vDescription,
             questDetails.description.ifEmpty { t(API_TRANSLATE.quests_no_description) }
         )
+        ControllerLinks.linkifyShort(vDescription)
 
         if (showMore) vMore.visibility = View.VISIBLE
         else vMore.visibility = View.GONE
