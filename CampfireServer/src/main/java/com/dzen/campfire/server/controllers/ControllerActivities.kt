@@ -82,11 +82,12 @@ object ControllerActivities {
             val accountId = activity.currentAccount.id
             val fromAccountId = activity.tag_3
 
+            if (accountId > 0) addLost(accountId, activity.id)
+
             val newAccountId = recalculateMember(activity)
             val newAccount = ControllerAccounts.getAccount(newAccountId ?: 0)
 
             if (accountId > 0) {
-                addLost(accountId, activity.id)
                 ControllerNotifications.push(accountId, NotificationActivitiesRelayRaceLost(newAccount?.id ?: 0, newAccount?.name ?: "", newAccount?.sex ?: 0, newAccount?.imageId ?: 0, activity.id, activity.name, activity.fandom.id, activity.fandom.imageId, activity.fandom.languageId, activity.fandom.name))
             }
             if (fromAccountId > 0) {
@@ -250,6 +251,7 @@ object ControllerActivities {
 
     fun addMember(accountId: Long, activityId: Long) {
         removeRejected(accountId, activityId)
+        removeCollision(accountId, activityId, API.ACTIVITIES_COLLISION_TYPE_RELAY_RACE_LOST)
         addCollision(accountId, activityId, API.ACTIVITIES_COLLISION_TYPE_RELAY_RACE_MEMBER)
     }
 
