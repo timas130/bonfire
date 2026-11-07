@@ -6,6 +6,7 @@ import com.dzen.campfire.api.requests.activities.RActivitiesGetRelayRaceFullInfo
 import com.dzen.campfire.api.requests.activities.RActivitiesGetPosts
 import com.sayzen.campfiresdk.controllers.api
 import com.sayzen.campfiresdk.models.cards.CardPublication
+import com.sayzen.campfiresdk.models.events.activities.EventActivitiesChanged
 import com.sayzen.campfiresdk.models.events.activities.EventActivitiesRemove
 import com.sayzen.campfiresdk.screens.activities.user_activities.CardUserActivity
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
@@ -34,6 +35,7 @@ class SRelayRaceInfo(
 
     private val eventBus = EventBus
             .subscribe(EventActivitiesRemove::class) { if (it.userActivityId == userActivity.id) Navigator.remove(this) }
+            .subscribe(EventActivitiesChanged::class) { if (it.userActivity.id == userActivity.id) setTitle(it.userActivity.name) }
 
     init {
         disableNavigation()

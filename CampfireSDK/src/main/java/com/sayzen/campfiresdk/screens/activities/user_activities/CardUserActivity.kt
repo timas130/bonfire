@@ -76,6 +76,7 @@ class CardUserActivity(
                 if (it.userActivity.id == userActivity.id) {
                     userActivity.name = it.userActivity.name
                     userActivity.description = it.userActivity.description
+                    update()
                 }
             }
 
