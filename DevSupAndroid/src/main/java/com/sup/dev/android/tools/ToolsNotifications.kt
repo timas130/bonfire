@@ -321,7 +321,7 @@ object ToolsNotifications {
         var text: String? = null
         var bigText: String? = null
         var intent = Intent(SupAndroid.appContext, SupAndroid.activityClass)
-        var intentCancel = Intent("NOTIF_CANCEL")
+        var intentCancel: Intent = Intent("NOTIF_CANCEL").setPackage(SupAndroid.appContext!!.packageName)
         var tag = "tag"
         var actions = ArrayList<ActionX>()
 
@@ -353,6 +353,7 @@ object ToolsNotifications {
         fun setIntentCancel(intentCancel: Intent): NotificationX {
             this.intentCancel = intentCancel
             intentCancel.action = "NOTIF_CANCEL"
+            intentCancel.setPackage(SupAndroid.appContext!!.packageName)
             return this
         }
 
