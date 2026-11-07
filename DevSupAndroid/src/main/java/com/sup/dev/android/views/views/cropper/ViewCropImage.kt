@@ -901,12 +901,6 @@ class ViewCropImage @JvmOverloads constructor(context: Context, attrs: Attribute
         super.onLayout(changed, l, t, r, b)
 
         if (mLayoutWidth > 0 && mLayoutHeight > 0) {
-            // Gets original parameters, and creates the new parameters
-            val origParams = this.layoutParams
-            origParams.width = mLayoutWidth
-            origParams.height = mLayoutHeight
-            layoutParams = origParams
-
             if (originalBitmap != null) {
                 applyImageMatrix((r - l).toFloat(), (b - t).toFloat(), true, false)
 
