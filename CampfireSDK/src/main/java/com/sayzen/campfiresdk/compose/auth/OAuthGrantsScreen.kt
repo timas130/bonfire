@@ -142,7 +142,7 @@ fun OAuthGrantsScreenC() {
 
                         Text(
                             text = stringResource(R.string.oauth_grant_last_used_at)
-                                .format(ToolsDate.dateToString(item?.createdAt?.millis ?: 0)),
+                                .format(ToolsDate.dateToString(item?.lastUsedAt?.millis ?: 0)),
                             modifier = Modifier
                                 .shimmerExt(item == null, shimmer)
                         )
