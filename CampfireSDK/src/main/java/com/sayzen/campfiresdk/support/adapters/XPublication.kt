@@ -56,7 +56,7 @@ class XPublication(
             .setDate(publication.dateCreate)
             .setOnChanged { onChangedAccount.invoke() }
     val xKarma = XKarma(publication) { onChangedKarma.invoke() }
-    var xFandom = XFandom().setFandom(publication.fandom).setDate(publication.dateCreate).setOnChanged { onChangedFandom.invoke() }
+    var xFandom = XFandom().setFandom(publication.fandom).setPublicationId(publication.id).setDate(publication.dateCreate).setOnChanged { onChangedFandom.invoke() }
     val xComments = XComments(publication) { onChangedComments.invoke() }
     val xReports = XReports(publication) { onChangedReports.invoke() }
 
