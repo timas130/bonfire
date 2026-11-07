@@ -145,6 +145,10 @@ class ViewImagesContainer @JvmOverloads constructor(
                     onLongClick.invoke(ClickEvent(vImage, imageLoader, it.x, it.y))
                     true
                 }
+            else {
+                vImage.setOnLongClickListener(null)
+                vImage.isLongClickable = false
+            }
         }
 
     }
