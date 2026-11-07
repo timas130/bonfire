@@ -141,7 +141,7 @@ class SqlQuerySelect : SqlQueryWithWhere {
 
         sql += where
         if (groupColumn != null) sql += Sql.GROUP + groupColumn!!
-        if (sortColumn != null) sql += Sql.ORDER + sortColumn + if (sortAB) Sql.ASC else Sql.DESC + if (sortColumnSecond != null) ", $sortColumnSecond" else ""
+        if (sortColumn != null) sql += Sql.ORDER + sortColumn + (if (sortAB) Sql.ASC else Sql.DESC) + if (sortColumnSecond != null) ", $sortColumnSecond" else ""
         if (limited) sql += Sql.LIMIT + limited_count + Sql.OFFSET + limited_offset
 
         return sql
