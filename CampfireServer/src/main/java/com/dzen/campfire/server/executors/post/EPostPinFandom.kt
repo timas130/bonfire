@@ -31,13 +31,17 @@ class EPostPinFandom : RPostPinFandom(0, 0, 0, "") {
 
     override fun execute(): Response {
 
-        var oldPostId = 0L
+        val pinnedPostId = ControllerCollisions.getCollisionValue1(fandomId, languageId, API.COLLISION_FANDOM_PINNED_POST)
+
+        if (postId <= 0L && pinnedPostId <= 0L) return Response()
+
+        // pinning the post that is already pinned does not replace anything
+        val oldPostId = if (pinnedPostId == postId) 0L else pinnedPostId
 
         if (postId > 0L) {
             ControllerCollisions.updateOrCreateValue1(fandomId, languageId, API.COLLISION_FANDOM_PINNED_POST, postId)
             ControllerPublicationsHistory.put(postId, HistoryAdminPinFandom(apiAccount.id, apiAccount.imageId, apiAccount.name, comment))
         } else {
-            oldPostId = ControllerCollisions.getCollision(fandomId, languageId, API.COLLISION_FANDOM_PINNED_POST)
             ControllerCollisions.removeCollisions(fandomId, languageId, API.COLLISION_FANDOM_PINNED_POST)
             if (oldPostId > 0) ControllerPublicationsHistory.put(oldPostId, HistoryAdminUnpinFandom(apiAccount.id, apiAccount.imageId, apiAccount.name, comment))
         }
