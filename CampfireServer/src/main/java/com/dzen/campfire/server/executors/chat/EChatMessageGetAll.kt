@@ -26,7 +26,7 @@ class EChatMessageGetAll : RChatMessageGetAll(ChatTag(), 0, false, 0) {
 
         val targetMessage = if (messageId > 0) ControllerPublications.getPublication(messageId, apiAccount.id) else null
 
-        if (targetMessage !is PublicationChatMessage || targetMessage.status != API.STATUS_PUBLIC || targetMessage.chatTag() != tag) {
+        if (targetMessage !is PublicationChatMessage || targetMessage.status != API.STATUS_PUBLIC || targetMessage.chatTag() != tag || !isInMembershipWindow(targetMessage)) {
             val result = select(COUNT, old, offsetDate)
             return Response(result)
         }
@@ -43,6 +43,11 @@ class EChatMessageGetAll : RChatMessageGetAll(ChatTag(), 0, false, 0) {
         array = ControllerPublications.loadShadowBans(apiAccount.id, array)
 
         return Response(Array(array.size) { array[it] as PublicationChatMessage })
+    }
+
+    private fun isInMembershipWindow(message: PublicationChatMessage): Boolean {
+        if (tag.chatType == API.CHAT_TYPE_FANDOM_ROOT) return true
+        return message.dateCreate >= getEnterDate() && (getExitDate() == 0L || message.dateCreate <= getExitDate())
     }
 
     private fun select(count: Int, old: Boolean, offsetDate: Long): Array<PublicationChatMessage> {
