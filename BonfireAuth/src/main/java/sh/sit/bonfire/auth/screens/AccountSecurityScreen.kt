@@ -366,7 +366,13 @@ private fun LazyItemScope.SessionListItem(
                     AuthFlow.AuthException.fromError(resp.errors!!.first()).toUiString(context)
                 )
             } else {
-                scope.launch { apollo.query(AccountSecurityQuery()).execute() }
+                scope.launch {
+                    try {
+                        apollo.query(AccountSecurityQuery()).execute()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
             }
         } catch (e: Exception) {
             scope.launch {
