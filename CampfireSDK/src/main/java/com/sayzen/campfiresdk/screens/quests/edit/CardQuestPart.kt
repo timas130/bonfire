@@ -13,6 +13,7 @@ import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.cards.Card
 import com.sup.dev.java.libs.eventBus.EventBus
+import com.sup.dev.java.libs.json.Json
 
 abstract class CardQuestPart(
     layout: Int,
@@ -52,7 +53,7 @@ abstract class CardQuestPart(
                     ToolsToast.show(t(API_TRANSLATE.quests_edit_error_upload))
                 }
             }
-            when (val part = part) {
+            when (val part = QuestPart.instance(part.json(true, Json()))) {
                 is QuestPartText -> Navigator.to(
                     SQuestPartTextCreate(container.getDetails(), container, part) { submit(it) }
                 )
