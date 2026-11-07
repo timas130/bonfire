@@ -39,7 +39,7 @@ class EFandomsAdminViceroyAssign : RFandomsAdminViceroyAssign(0, 0, 0, "") {
         ControllerCollisions.removeCollisions(fandom.id, fandom.languageId, API.COLLISION_FANDOM_VICEROY)
         ControllerCollisions.putCollisionValue1(fandom.id, fandom.languageId, 0, API.COLLISION_FANDOM_VICEROY, System.currentTimeMillis(), accountId)
 
-        val eAdmin = ApiEventAdminFandomViceroyAssign(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, oldAccountId, "", accountId, account.name, fandom.id, fandom.name,  fandom.imageId)
+        val eAdmin = ApiEventAdminFandomViceroyAssign(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, oldAccountId, "", accountId, account.name, fandom.id, fandom.name,  fandom.imageId, fandom.languageId)
         val eFandom = ApiEventFandomViceroyAssign(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, fandom.id, fandom.name, fandom.imageId, comment, oldAccountId, "", account.id, account.name)
         val eAccount = ApiEventUserAdminViceroyAssign(account.id, account.name, account.imageId, account.sex, apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, fandom.id, fandom.languageId, fandom.name, fandom.imageId)
         val nAccount = NotificationFandomViceroyAssign(fandom.imageId, fandom.id, fandom.languageId, fandom.name, comment, apiAccount.id, apiAccount.name, apiAccount.sex, oldAccountId, "", account.id, account.name)

@@ -23,7 +23,8 @@ class ApiEventAdminFandomViceroyRemove : ApiEventAdmin {
                 oldAccountName: String,
                 fandomId: Long,
                 fandomName: String,
-                fandomImageId: Long
+                fandomImageId: Long,
+                fandomLanguageId: Long
     ) : super(ownerAccountId,
             ownerAccountName,
             ownerAccountImageId,
@@ -34,6 +35,7 @@ class ApiEventAdminFandomViceroyRemove : ApiEventAdmin {
         this.fandomId = fandomId
         this.fandomName = fandomName
         this.fandomImageId = fandomImageId
+        this.fandomLanguageId = fandomLanguageId
     }
 
     override fun getType() = API.PUBLICATION_EVENT_ADMIN_FANDOM_VICEROY_REMOVE
@@ -44,6 +46,7 @@ class ApiEventAdminFandomViceroyRemove : ApiEventAdmin {
         fandomId = json.m(inp, "fandomId", fandomId)
         fandomName = json.m(inp, "fandomName", fandomName)
         fandomImageId = json.m(inp, "fandomImageId", fandomImageId)
+        fandomLanguageId = json.m(inp, "fandomLanguageId", fandomLanguageId)
         return super.json(inp, json)
     }
 

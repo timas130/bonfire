@@ -37,7 +37,7 @@ class EFandomsAdminViceroyRemove : RFandomsAdminViceroyRemove(0, 0, "") {
 
 
                 ControllerPublications.event(ApiEventUserAdminViceroyRemove(oldAccount.id, oldAccount.name, oldAccount.imageId, oldAccount.sex, apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, fandom.id, fandom.languageId, fandom.name, fandom.imageId), oldAccount.id)
-                ControllerPublications.event(ApiEventAdminFandomViceroyRemove(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, oldAccount.id, oldAccount.name, fandom.id, fandom.name, fandom.imageId), apiAccount.id)
+                ControllerPublications.event(ApiEventAdminFandomViceroyRemove(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, oldAccount.id, oldAccount.name, fandom.id, fandom.name, fandom.imageId, fandom.languageId), apiAccount.id)
                 ControllerPublications.event(ApiEventFandomViceroyRemove(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, fandom.id, fandom.name, fandom.imageId, comment, oldAccount.id, oldAccount.name), apiAccount.id, fandom.id, fandom.languageId)
                 ControllerNotifications.push(oldAccount.id, NotificationFandomViceroyRemove(fandom.imageId, fandom.id, fandom.languageId, fandom.name, comment, apiAccount.id, apiAccount.name, apiAccount.sex, oldAccount.id, oldAccount.name))
             }

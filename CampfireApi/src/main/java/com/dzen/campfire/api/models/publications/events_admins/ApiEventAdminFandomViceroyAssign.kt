@@ -27,7 +27,8 @@ class ApiEventAdminFandomViceroyAssign : ApiEventAdmin {
                 newAccountName: String,
                 fandomId: Long,
                 fandomName: String,
-                fandomImageId: Long
+                fandomImageId: Long,
+                fandomLanguageId: Long
     ) : super(ownerAccountId,
             ownerAccountName,
             ownerAccountImageId,
@@ -40,6 +41,7 @@ class ApiEventAdminFandomViceroyAssign : ApiEventAdmin {
         this.fandomId = fandomId
         this.fandomName = fandomName
         this.fandomImageId = fandomImageId
+        this.fandomLanguageId = fandomLanguageId
     }
 
     override fun getType() = API.PUBLICATION_EVENT_ADMIN_FANDOM_VICEROY_ASSIGN
@@ -52,6 +54,7 @@ class ApiEventAdminFandomViceroyAssign : ApiEventAdmin {
         fandomId = json.m(inp, "fandomId", fandomId)
         fandomName = json.m(inp, "fandomName", fandomName)
         fandomImageId = json.m(inp, "fandomImageId", fandomImageId)
+        fandomLanguageId = json.m(inp, "fandomLanguageId", fandomLanguageId)
         return super.json(inp, json)
     }
 
