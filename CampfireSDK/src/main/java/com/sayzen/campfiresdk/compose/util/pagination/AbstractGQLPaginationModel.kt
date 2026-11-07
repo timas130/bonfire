@@ -38,10 +38,16 @@ abstract class AbstractGQLPaginationModel<T, D : Query.Data>(application: Applic
     }
 
     private var watchJob: Job? = null
-    private var loadingMore: Boolean = false
+    private var nextPageJob: Job? = null
+
+    private var nextPageDropped = false
 
     final override fun reload() {
         watchJob?.cancel()
+        if (nextPageJob?.isActive == true) {
+            nextPageJob?.cancel()
+            nextPageDropped = true
+        }
         if (_query.value != null) {
             _isLoading.tryEmit(true)
         }
@@ -53,15 +59,22 @@ abstract class AbstractGQLPaginationModel<T, D : Query.Data>(application: Applic
                 .collect {
                     _isLoading.emit(false)
                     _query.emit(it)
+                    if (nextPageDropped) {
+                        nextPageDropped = false
+                        loadNextPage()
+                    }
                 }
         }
     }
 
     final override fun loadNextPage() {
-        viewModelScope.launch {
-            if (_query.value == null || hasMore.value == false) return@launch
-            if (loadingMore) return@launch
-            loadingMore = true
+        if (_query.value == null || hasMore.value == false) return
+        if (_isLoading.value) {
+            nextPageDropped = true
+            return
+        }
+        if (nextPageJob?.isActive == true) return
+        nextPageJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 try {
                     ApolloController.apolloClient
@@ -69,8 +82,6 @@ abstract class AbstractGQLPaginationModel<T, D : Query.Data>(application: Applic
                         .execute()
                 } catch (e: ApolloException) {
                     e.printStackTrace()
-                } finally {
-                    loadingMore = false
                 }
             }
         }
