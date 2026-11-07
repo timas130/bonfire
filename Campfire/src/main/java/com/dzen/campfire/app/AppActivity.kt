@@ -18,6 +18,8 @@ import com.dzen.campfire.screens.intro.SIntro
 import com.dzen.campfire.screens.settings.SOther
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.app.CampfireConstants
+import com.sayzen.campfiresdk.compose.auth.AuthStartScreen
+import com.sayzen.campfiresdk.compose.auth.VerifyEmailScreen
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.events.account.EventAccountChanged
 import com.sayzen.campfiresdk.models.events.account.EventAccountCurrentChanged
@@ -409,6 +411,7 @@ class AppActivity : SActivity() {
     }
 
     override fun onLastBackPressed(screen: Screen?): Boolean {
+        if (ControllerApi.account.getId() == 0L || screen is AuthStartScreen || screen is VerifyEmailScreen) return false
 
         if(screen !is SIntro && screen !is SCampfireHello) {
 
