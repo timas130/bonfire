@@ -61,7 +61,7 @@ class CardPageCampfireObject(
                     else SProfile.instance(name, Navigator.TO)
                 }
                 link.isLinkToPost() -> SPost.instance(link.getLongParamOrZero(0), Navigator.TO)
-                link.isLinkToComment() -> SPost.instance(link.getLongParamOrZero(0), link.getLongParamOrZero(1), Navigator.TO)
+                link.isLinkToComment() -> ControllerLinks.parseLink(page.link)
                 link.isLinkToChat() -> SChat.instance(ChatTag(API.CHAT_TYPE_FANDOM_ROOT, link.getLongParamOrZero(0), link.getLongParamOrZero(1)), 0, false, Navigator.TO)
                 link.isLinkToFandom() -> SFandom.instance(link.getLongParamOrZero(0), link.getLongParamOrZero(1), Navigator.TO)
                 link.isLinkToStickersPack() -> SStickersView.instance(link.getLongParamOrZero(0), Navigator.TO)
