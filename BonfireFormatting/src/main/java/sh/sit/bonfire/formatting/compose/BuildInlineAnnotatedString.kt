@@ -100,5 +100,21 @@ fun FormattedText.buildInlineAnnotatedString(theme: ColorScheme): AnnotatedStrin
         }
     }
 
+    val underlined = spans.filter { it is UnderlineSpan || it is LinkSpan }
+    val struckThrough = spans.filter { it is StrikethroughSpan }
+    for (underline in underlined) {
+        for (strikethrough in struckThrough) {
+            val start = maxOf(underline.start, strikethrough.start)
+            val end = minOf(underline.end, strikethrough.end)
+            if (start < end) {
+                builder.addStyle(
+                    style = SpanStyle(textDecoration = TextDecoration.Underline + TextDecoration.LineThrough),
+                    start = start,
+                    end = end,
+                )
+            }
+        }
+    }
+
     return builder.toAnnotatedString()
 }
