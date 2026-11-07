@@ -334,7 +334,7 @@ class SCreatePageTable(
             return
         }
 
-        if (ToolsBytes.isGif(img) && img.size > API.PAGE_IMAGE_GIF_WEIGHT) {
+        if (ToolsBytes.isGif(img) && img.size > API.PAGE_TABLE_MAX_IMAGE_WEIGHT_GIF) {
             ToolsToast.show(t(API_TRANSLATE.error_too_long_file))
             dialog.hide()
             return
