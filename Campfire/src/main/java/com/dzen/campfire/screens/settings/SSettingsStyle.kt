@@ -259,6 +259,7 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vProfileListStyle.setChecked(ControllerSettings.isProfileListStyle)
         vRounding.progress = ControllerSettings.styleAvatarsRounding
         vRounding.isEnabled = !vCircles.isChecked()
+        vNicknameColors.setChecked(ControllerSettings.useNicknameColors)
         vChatBackground.setChecked(ControllerSettings.fandomBackground)
         vRoundingChat.progress = ControllerSettings.styleChatRounding
         vPostFontSize.progress = ControllerSettings.postFontSize
@@ -268,5 +269,6 @@ class SSettingsStyle : Screen(R.layout.screen_settings_style) {
         vThemeColor.isEnabled = ControllerTheme.getThemeHasColor()
         vActivityType.setCurrentIndex(ControllerSettings.interfaceType)
         vKarmaHotness.setChecked(ControllerSettings.karmaHotness)
+        vPostFandomFirst.setChecked(ControllerSettings.postFandomFirst)
     }
 }
