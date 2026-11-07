@@ -181,7 +181,6 @@ object ControllerActivities {
         PostHog.capture("relay_race_membership", properties = mapOf("member" to false))
         ApiRequestsSupporter.executeEnabledConfirm(t(API_TRANSLATE.activities_relay_race_member_text_no), t(API_TRANSLATE.app_participate_no), RActivitiesRelayRaceMember(userActivityId, false)) { r ->
             ToolsToast.show(t(API_TRANSLATE.app_done))
-            setRelayRacesCount(getActivitiesCount() - 1)
             EventBus.post(EventActivitiesRelayRaceMemberStatusChanged(userActivityId, 0, false))
         }
     }
