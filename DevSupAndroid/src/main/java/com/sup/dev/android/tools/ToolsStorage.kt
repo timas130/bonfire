@@ -234,18 +234,44 @@ object ToolsStorage {
         }, onPermissionPermissionRestriction)
     }
 
+    @Suppress("DEPRECATION")
     fun saveToPictures(bytes: ByteArray, mime: String) {
-        val contentValues = ContentValues()
-        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, externalFileNamePrefix + "_" + System.currentTimeMillis())
-        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, mime)
-        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+        val name = externalFileNamePrefix + "_" + System.currentTimeMillis()
         val resolver = SupAndroid.appContext!!.contentResolver
+        val contentValues = ContentValues()
+        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, mime)
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            dir.mkdirs()
+            val file = File(dir, name + "." + mime.substringAfter('/'))
+            try {
+                FileOutputStream(file).use { it.write(bytes) }
+            } catch (e: Exception) {
+                file.delete()
+                throw e
+            }
+            contentValues.put(MediaStore.MediaColumns.DATA, file.absolutePath)
+            resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            return
+        }
+
+        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+        contentValues.put(MediaStore.MediaColumns.IS_PENDING, 1)
         val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
             ?: throw RuntimeException("Can't create uri")
-        val outputStream = resolver.openOutputStream(uri)
-            ?: throw RuntimeException("Can't open output stream")
-        outputStream.write(bytes)
-        outputStream.close()
+        try {
+            val outputStream = resolver.openOutputStream(uri)
+                ?: throw RuntimeException("Can't open output stream")
+            outputStream.use { it.write(bytes) }
+        } catch (e: Exception) {
+            resolver.delete(uri, null, null)
+            throw e
+        }
+        contentValues.clear()
+        contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
+        resolver.update(uri, contentValues, null, null)
     }
 
     /**

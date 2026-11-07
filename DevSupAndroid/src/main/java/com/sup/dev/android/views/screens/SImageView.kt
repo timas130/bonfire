@@ -1,6 +1,7 @@
 package com.sup.dev.android.views.screens
 
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -147,23 +148,31 @@ disableNavigation()
                         ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
                         return@intoBytes
                     }
-                    try {
-                        val mime = when {
-                            ToolsBytes.isGif(bytes) -> "image/gif"
-                            ToolsBytes.isPng(bytes) -> "image/png"
-                            else -> "image/jpeg"
-                        }
-                        ToolsStorage.saveToPictures(bytes, mime)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        ToolsToast.show(SupAndroid.TEXT_ERROR_PERMISSION_FILES)
-                        return@intoBytes
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                        ToolsPermission.requestWritePermission({ saveToPictures(bytes) }, { ToolsToast.show(SupAndroid.TEXT_ERROR_PERMISSION_FILES) })
+                    } else {
+                        saveToPictures(bytes)
                     }
-                    ToolsToast.show(SupAndroid.TEXT_APP_DOWNLOADED)
                 }
                 dialog.hide()
             }
 
+        }
+
+        private fun saveToPictures(bytes: ByteArray) {
+            try {
+                val mime = when {
+                    ToolsBytes.isGif(bytes) -> "image/gif"
+                    ToolsBytes.isPng(bytes) -> "image/png"
+                    else -> "image/jpeg"
+                }
+                ToolsStorage.saveToPictures(bytes, mime)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                ToolsToast.show(SupAndroid.TEXT_ERROR_PERMISSION_FILES)
+                return
+            }
+            ToolsToast.show(SupAndroid.TEXT_APP_DOWNLOADED)
         }
 
         fun share() {
