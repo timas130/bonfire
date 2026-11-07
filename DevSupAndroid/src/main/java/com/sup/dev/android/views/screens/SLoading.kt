@@ -153,8 +153,7 @@ abstract class SLoading(@LayoutRes layoutRes: Int) : Screen(R.layout.screen_load
 
     fun setState(state: State) {
         //  Защита от мерцаний
-        val key = System.currentTimeMillis()
-        setStateKey = key
+        val key = ++setStateKey
         if (state == State.EMPTY) {
             ToolsThreads.main(50) { if (setStateKey == key) setStateNow(state) }
         } else {

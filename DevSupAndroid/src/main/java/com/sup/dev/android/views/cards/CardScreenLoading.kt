@@ -127,8 +127,7 @@ abstract class CardScreenLoading(@LayoutRes layoutRes: Int) : Card(0) {
 
     fun setState(state: State) {
         //  Защита от мерцаний
-        val key = System.currentTimeMillis()
-        setStateKey = key
+        val key = ++setStateKey
         if (state == State.EMPTY) {
             ToolsThreads.main(50) { if (setStateKey == key) setStateNow(state) }
         } else {

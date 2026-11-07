@@ -279,8 +279,9 @@ open class RecyclerCardAdapterLoading<K : Card, V>(
     }
 
     override fun remove(position: Int) {
+        val card = get(position)
         super.remove(position)
-        if (!contains(cardClass) && isLoadedAtListOneTime) onFinish_Empty.invoke()
+        if (ToolsClass.instanceOf(card::class, cardClass) && !contains(cardClass) && isLoadedAtListOneTime) onFinish_Empty.invoke()
     }
 
     //
