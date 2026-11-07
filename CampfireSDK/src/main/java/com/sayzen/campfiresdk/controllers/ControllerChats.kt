@@ -79,7 +79,7 @@ object ControllerChats {
 
     }
 
-    fun instanceChatPopup(chatTag: ChatTag, paramsJson: Json, image: ImageRef, memberStatus: Long?, onRemove: () -> Unit = {}): SplashMenu {
+    fun instanceChatPopup(chatTag: ChatTag, paramsJson: Json, image: ImageRef, memberStatus: Long?, fandomId: Long = 0, languageId: Long = 0, onRemove: () -> Unit = {}): SplashMenu {
         return SplashMenu()
                 .add(t(API_TRANSLATE.app_copy_link)) { ToolsAndroid.setToClipboard(ControllerLinks.linkToChat(chatTag.targetId, chatTag.targetSubId));ToolsToast.show(t(API_TRANSLATE.app_copied)) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_ROOT)
                 .add(t(API_TRANSLATE.app_copy_link)) { ToolsAndroid.setToClipboard(ControllerLinks.linkToConf(chatTag.targetId));ToolsToast.show(t(API_TRANSLATE.app_copied)) }.condition(chatTag.chatType == API.CHAT_TYPE_CONFERENCE)
@@ -94,10 +94,10 @@ object ControllerChats {
                 .spoiler(t(API_TRANSLATE.app_moderator))
                 .add(t(API_TRANSLATE.fandoms_menu_background_change)) { changeBackgroundImageModeration(chatTag.targetId, chatTag.targetSubId) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_ROOT && ControllerApi.can(chatTag.targetId, chatTag.targetSubId, API.LVL_MODERATOR_BACKGROUND_IMAGE)).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
                 .add(t(API_TRANSLATE.fandoms_menu_background_remove)) { removeBackgroundImageModeration(chatTag.targetId, chatTag.targetSubId) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_ROOT && ControllerApi.can(chatTag.targetId, chatTag.targetSubId, API.LVL_MODERATOR_BACKGROUND_IMAGE)).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
-                .add(t(API_TRANSLATE.fandoms_menu_background_change)) { changeBackgroundImage(chatTag) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_SUB && ControllerApi.can(chatTag.targetId, chatTag.targetSubId, API.LVL_MODERATOR_CHATS)).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
-                .add(t(API_TRANSLATE.fandoms_menu_background_remove)) { removeBackgroundImage(chatTag) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_SUB && ControllerApi.can(chatTag.targetId, chatTag.targetSubId, API.LVL_MODERATOR_CHATS)).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
-                .add(t(API_TRANSLATE.app_edit)) { SFandomChatsCreate.instance(chatTag.targetId, Navigator.TO) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_SUB && ControllerApi.can(chatTag.targetId, chatTag.targetSubId, API.LVL_MODERATOR_CHATS)).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
-                .add(t(API_TRANSLATE.app_remove)) { removeFandomChat(chatTag.targetId) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_SUB && ControllerApi.can(chatTag.targetId, chatTag.targetSubId, API.LVL_MODERATOR_CHATS)).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
+                .add(t(API_TRANSLATE.fandoms_menu_background_change)) { changeBackgroundImage(chatTag) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_SUB && ControllerApi.can(fandomId, languageId, API.LVL_MODERATOR_CHATS)).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
+                .add(t(API_TRANSLATE.fandoms_menu_background_remove)) { removeBackgroundImage(chatTag) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_SUB && ControllerApi.can(fandomId, languageId, API.LVL_MODERATOR_CHATS)).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
+                .add(t(API_TRANSLATE.app_edit)) { SFandomChatsCreate.instance(chatTag.targetId, Navigator.TO) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_SUB && ControllerApi.can(fandomId, languageId, API.LVL_MODERATOR_CHATS)).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
+                .add(t(API_TRANSLATE.app_remove)) { removeFandomChat(chatTag.targetId) }.condition(chatTag.chatType == API.CHAT_TYPE_FANDOM_SUB && ControllerApi.can(fandomId, languageId, API.LVL_MODERATOR_CHATS)).backgroundRes(R.color.blue_700).textColorRes(R.color.white)
     }
 
     fun showFandomChatInfo(chatTag: ChatTag, paramsJson: Json, image: ImageRef) {

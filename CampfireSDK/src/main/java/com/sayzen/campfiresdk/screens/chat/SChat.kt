@@ -161,7 +161,7 @@ class SChat constructor(
         if (chat.tag.chatType == API.CHAT_TYPE_CONFERENCE) vAvatarTitle.setOnClickListener { SChatCreate.instance(chat.tag.targetId, Navigator.TO) }
 
         vMenu = addToolbarIcon(R.drawable.ic_more_vert_white_24dp) {
-            ControllerChats.instanceChatPopup(chat.tag, chat.params, chat.customImage, chat.memberStatus) { Navigator.remove(this) }.asPopupShow(it)
+            ControllerChats.instanceChatPopup(chat.tag, chat.params, chat.customImage, chat.memberStatus, chat.fandomId, chat.languageId) { Navigator.remove(this) }.asPopupShow(it)
         }
 
         setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_5))

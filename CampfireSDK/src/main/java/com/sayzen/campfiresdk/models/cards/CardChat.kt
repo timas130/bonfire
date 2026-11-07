@@ -168,7 +168,7 @@ class CardChat(
                 ControllerChats.instanceChatPopup(chat.tag, chat.params, chat.customImage, API.CHAT_MEMBER_STATUS_DELETE_AND_LEAVE).asPopupShow(vSwipe, x, y)
             }
         } else {
-            ControllerChats.instanceChatPopup(chat.tag, Json(), ImageRef(), null).asPopupShow(vSwipe, x, y)
+            ControllerChats.instanceChatPopup(chat.tag, Json(), ImageRef(), null, chat.fandomId, chat.languageId).asPopupShow(vSwipe, x, y)
         }
     }
 

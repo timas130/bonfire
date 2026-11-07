@@ -48,6 +48,9 @@ object TChatsSubscriptions {
 
     val CHAT_PARAMS_MAY_NULL = Sql.IF(chat_type, ">", API.CHAT_TYPE_PRIVATE, "SELECT ${TChats.chat_params} FROM ${TChats.NAME} WHERE ${TChats.id}=$target_id", "")
 
+    val CHAT_FANDOM_ID_MAY_NULL = Sql.IF(chat_type, API.CHAT_TYPE_FANDOM_SUB, "SELECT ${TChats.fandom_id} FROM ${TChats.NAME} WHERE ${TChats.id}=$target_id", "0")
+    val CHAT_LANGUAGE_ID_MAY_NULL = Sql.IF(chat_type, API.CHAT_TYPE_FANDOM_SUB, "SELECT ${TChats.language_id} FROM ${TChats.NAME} WHERE ${TChats.id}=$target_id", "0")
+
     val ANOTHER_ACCOUNT_ID = Sql.IF(account_id, target_id, target_sub_id, target_id)
     val ANOTHER_ACCOUNT_IMAGE_ID = ifNotPrivate("0", "SELECT ${TAccounts.img_id} FROM ${TAccounts.NAME} WHERE ${TAccounts.id}=${ANOTHER_ACCOUNT_ID}")
     val ANOTHER_ACCOUNT_SEX = ifNotPrivate("0", "SELECT ${TAccounts.sex} FROM ${TAccounts.NAME} WHERE ${TAccounts.id}=${ANOTHER_ACCOUNT_ID}")

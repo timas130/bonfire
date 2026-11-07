@@ -32,6 +32,9 @@ class Chat : JsonParsable, ImageHolder {
     //  Fro Conf
     var params = Json()
 
+    var fandomId = 0L
+    var languageId = 0L
+
     override fun json(inp: Boolean, json: Json): Json {
         chatMessage = json.m(inp, "unitChatMessage", chatMessage, PublicationChatMessage::class)
         subscriptionId = json.m(inp, "subscriptionId", subscriptionId)
@@ -50,6 +53,8 @@ class Chat : JsonParsable, ImageHolder {
         backgroundImage = json.m(inp, "backgroundImage", backgroundImage)
         backgroundImageId = json.m(inp, "backgroundImageId", backgroundImageId)
         membersCount = json.m(inp, "membersCount", membersCount)
+        fandomId = json.m(inp, "fandomId", fandomId)
+        languageId = json.m(inp, "languageId", languageId)
 
         return json
     }

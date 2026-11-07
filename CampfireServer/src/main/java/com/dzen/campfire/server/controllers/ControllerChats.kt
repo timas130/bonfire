@@ -42,7 +42,9 @@ object ControllerChats {
             TChats.EXIT_DATE(accountId),
             if (anyAccountLastMessage) TChats.LAST_MESSAGE_ID_ANY_ACCOUNT() else TChats.LAST_MESSAGE_ID(accountId),
             TChats.MEMBERS_COUNT,
-            TChats.NEW_MESSAGES(accountId)
+            TChats.NEW_MESSAGES(accountId),
+            TChats.fandom_id,
+            TChats.language_id
     )
 
     fun instanceSelect_Subscriptions() = SqlQuerySelect(
@@ -64,6 +66,8 @@ object ControllerChats {
             TChatsSubscriptions.BACKGROUND_IMAGE_ID,
             TChatsSubscriptions.MEMBERS_COUNT,
             TChatsSubscriptions.new_messages,
+            TChatsSubscriptions.CHAT_FANDOM_ID_MAY_NULL,
+            TChatsSubscriptions.CHAT_LANGUAGE_ID_MAY_NULL,
 
             TChatsSubscriptions.ANOTHER_ACCOUNT_ID,
             TChatsSubscriptions.ANOTHER_ACCOUNT_LVL,
@@ -91,6 +95,8 @@ object ControllerChats {
             u.membersCount = v.next()
             u.unreadCount = v.next()
             if(u.unreadCount < 0) u.unreadCount = 0 // Костыль
+            u.fandomId = v.nextLongOrZero()
+            u.languageId = v.nextLongOrZero()
 
             if (u.tag.chatType == API.CHAT_TYPE_FANDOM_ROOT) u.membersCount = ControllerOptimizer.getChatSubscribersCount(u.tag)
 
@@ -119,6 +125,8 @@ object ControllerChats {
             u.membersCount = v.next()
             u.unreadCount = v.next()
             if(u.unreadCount < 0) u.unreadCount = 0 // Костыль
+            u.fandomId = v.nextLongOrZero()
+            u.languageId = v.nextLongOrZero()
 
             u.anotherAccount = ControllerAccounts.instance(v)
 
