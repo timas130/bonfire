@@ -116,7 +116,7 @@ class SQuest(
                         .textColorRes(R.color.white)
                         .condition(
                             ControllerApi.can(API.LVL_QUEST_MODERATOR) &&
-                            !ControllerApi.isCurrentAccount(details.id)
+                            !ControllerApi.isCurrentAccount(details.creator.id)
                         )
 
                 .asPopupShow(view, x, y)
