@@ -202,32 +202,37 @@ object ControllerChats {
         if (message.chatType == API.CHAT_TYPE_FANDOM_ROOT) markRead(apiAccount.id, tag)
     }
 
+    private fun getBlacklistedByIds(message: PublicationChatMessage) =
+            ControllerCollisions.getCollisionsOwnerIds(message.creator.id, API.COLLISION_ACCOUNT_BLACK_LIST_ACCOUNT).toLongArray()
+
     private fun parseConf(apiAccount: ApiAccount, message: PublicationChatMessage, tag: ChatTag) {
+        val blacklistedBy = getBlacklistedByIds(message)
         var parentCreatorId = 0L
         if (message.parentPublicationId != 0L) {
             parentCreatorId = ControllerPublications.getCreatorId(message.parentPublicationId)
             val isMember = getMemberStatus(parentCreatorId, tag.targetId) == API.CHAT_MEMBER_STATUS_ACTIVE
-            if (isMember && apiAccount.id != parentCreatorId) {
+            if (isMember && apiAccount.id != parentCreatorId && !blacklistedBy.contains(parentCreatorId)) {
                 val subscribed = isSubscribed(parentCreatorId, tag)
                 ControllerNotifications.push(parentCreatorId, NotificationChatAnswer(message, tag, subscribed))
             }
         }
 
-        ControllerNotifications.push(getConfChatSubscribersIdsWithTokensSubscribed(tag.targetId, tag.targetSubId, message.creator.id, parentCreatorId), NotificationChatMessage(message, tag, true))
-        ControllerNotifications.push(getConfChatSubscribersIdsWithTokensNotSubscribed(tag.targetId, tag.targetSubId, message.creator.id, parentCreatorId), NotificationChatMessage(message, tag, false))
+        ControllerNotifications.push(getConfChatSubscribersIdsWithTokensSubscribed(tag.targetId, tag.targetSubId, message.creator.id, parentCreatorId, *blacklistedBy), NotificationChatMessage(message, tag, true))
+        ControllerNotifications.push(getConfChatSubscribersIdsWithTokensNotSubscribed(tag.targetId, tag.targetSubId, message.creator.id, parentCreatorId, *blacklistedBy), NotificationChatMessage(message, tag, false))
 
         ControllerPublications.parseMentions(message.text, message.id, message.publicationType, message.chatType, message.fandom.id, message.fandom.languageId, apiAccount, arrayOf(parentCreatorId))
     }
 
     private fun parseFandom(apiAccount: ApiAccount, message: PublicationChatMessage, tag: ChatTag) {
+        val blacklistedBy = getBlacklistedByIds(message)
         var parentCreatorId = 0L
         if (message.parentPublicationId != 0L) {
             parentCreatorId = ControllerPublications.getCreatorId(message.parentPublicationId)
             val subscribed = if (message.chatType != API.CHAT_TYPE_FANDOM_ROOT) true else isSubscribed(parentCreatorId, tag)
-            if (parentCreatorId != apiAccount.id) ControllerNotifications.push(parentCreatorId, NotificationChatAnswer(message, tag, subscribed))
+            if (parentCreatorId != apiAccount.id && !blacklistedBy.contains(parentCreatorId)) ControllerNotifications.push(parentCreatorId, NotificationChatAnswer(message, tag, subscribed))
         }
-        ControllerNotifications.push(getChatSubscribersIdsWithTokensSubscribed(tag, message.creator.id, parentCreatorId), NotificationChatMessage(message, tag, true))
-        ControllerNotifications.push(getChatSubscribersIdsWithTokensNotSubscribed(tag, message.creator.id, parentCreatorId), NotificationChatMessage(message, tag, false))
+        ControllerNotifications.push(getChatSubscribersIdsWithTokensSubscribed(tag, message.creator.id, parentCreatorId, *blacklistedBy), NotificationChatMessage(message, tag, true))
+        ControllerNotifications.push(getChatSubscribersIdsWithTokensNotSubscribed(tag, message.creator.id, parentCreatorId, *blacklistedBy), NotificationChatMessage(message, tag, false))
 
         if (message.chatType == API.CHAT_TYPE_FANDOM_ROOT) {
             ControllerOptimizer.putCollisionWithCheck(apiAccount.id, API.COLLISION_ACHIEVEMENT_CHAT)
