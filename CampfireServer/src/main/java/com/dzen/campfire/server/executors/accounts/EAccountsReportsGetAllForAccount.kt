@@ -4,6 +4,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.PublicationReport
 import com.dzen.campfire.api.requests.accounts.RAccountsReportsGetAllForAccount
 import com.dzen.campfire.server.controllers.ControllerAccounts
+import com.dzen.campfire.server.controllers.ControllerFandom
 import com.dzen.campfire.server.tables.TAccounts
 import com.dzen.campfire.server.tables.TCollisions
 import com.sup.dev.java_pc.sql.Database
@@ -12,6 +13,7 @@ import com.sup.dev.java_pc.sql.SqlQuerySelect
 class EAccountsReportsGetAllForAccount : RAccountsReportsGetAllForAccount(0, 0) {
 
     override fun check() {
+        ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_BAN)
     }
 
     override fun execute(): Response {
