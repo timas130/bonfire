@@ -77,35 +77,39 @@ object ToolsGif {
             var lastBitmap: Bitmap? = null
             var stop = false
             val decoder = GifDecoder()
-            if (!decoder.load(f.absolutePath)) return@thread
+            try {
+                try {
+                    if (!decoder.load(f.absolutePath)) return@thread
+                } finally {
+                    // load() has already read everything it needs from the file
+                    f.delete()
+                }
 
-            var index = 0
-            while (!stop) {
-                var bm = next(decoder, index)
-                val ms = decoder.delay(index).toLong()
-                if (bm == null) {
-                    ToolsThreads.sleep(300)
-                    continue
-                }
-                if (w != 0 && h != 0) bm = ToolsBitmap.inscribePin(bm, w, h, resizeByMinSide)
-                ToolsThreads.main {
-                    val v = vImage.get()
-                    if (v == null || v.tag !== key || (lastBitmap != null && (v.drawable !is BitmapDrawable || (v.drawable as BitmapDrawable).bitmap != lastBitmap))) {
-                        stop = true
-                        return@main
+                var index = 0
+                while (!stop) {
+                    var bm = next(decoder, index)
+                    val ms = decoder.delay(index).toLong()
+                    if (bm == null) break
+                    if (w != 0 && h != 0) bm = ToolsBitmap.inscribePin(bm, w, h, resizeByMinSide)
+                    ToolsThreads.main {
+                        val v = vImage.get()
+                        if (v == null || v.tag !== key || (lastBitmap != null && (v.drawable !is BitmapDrawable || (v.drawable as BitmapDrawable).bitmap != lastBitmap))) {
+                            stop = true
+                            return@main
+                        }
+                        if (lastBitmap == null) {
+                            onStart.invoke()
+                        }
+                        lastBitmap = bm
+                        v.setImageBitmap(lastBitmap)
                     }
-                    if (lastBitmap == null) {
-                        onStart.invoke()
-                    }
-                    lastBitmap = bm
-                    v.setImageBitmap(lastBitmap)
+                    index++
+                    if (index >= decoder.frameNum()) index = 0
+                    ToolsThreads.sleep(Math.max(ms, 30))
                 }
-                index++
-                if (index >= decoder.frameNum()) index = 0
-                ToolsThreads.sleep(Math.max(ms, 30))
+            } catch (e: OutOfMemoryError) {
+                SupAndroid.onLowMemory()
             }
-
-            f.delete()
         }
     }
 
