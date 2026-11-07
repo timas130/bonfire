@@ -54,7 +54,11 @@ class EPostChangeFandom : RPostChangeFandom(0, 0, 0, "") {
                 .update(TPublications.language_id, languageId)
                 .update(TPublications.parent_fandom_closed, ControllerFandom.get(fandomId, TFandoms.fandom_closed).next<Int>())
                 .update(TPublications.fandom_key, "'$fandomId-$languageId-${publication.important}'")
+                .update(TPublications.publication_category, ControllerFandom.getCategory(fandomId))
+                .update(TPublications.tag_6, 0)
         )
+
+        ControllerCollisions.removeCollisionsValue1(publication.fandom.id, publication.fandom.languageId, publicationId, API.COLLISION_FANDOM_PINNED_POST)
 
         Database.update("EPostChangeFandom [2]",SqlQueryUpdate(TPublications.NAME)
                 .where(TPublications.parent_publication_id, "=", publicationId)
