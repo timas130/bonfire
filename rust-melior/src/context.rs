@@ -91,7 +91,10 @@ impl ReqContext {
                         user_auth_error = Some(auth_error);
                         None
                     }
-                    Err(_) => None,
+                    Err(rpc_error) => {
+                        user_auth_error = Some(AuthError::from(anyhow::Error::from(rpc_error)));
+                        None
+                    }
                 }
             }
             None => None,
