@@ -232,8 +232,7 @@ object ToolsIntent {
     fun shareText(text: String, onActivityNotFound: () -> Unit = onActivityNotFoundDef) {
         val sharingIntent = Intent(Intent.ACTION_SEND)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                .setType("vText/plain")
-                .putExtra(Intent.EXTRA_SUBJECT, "Subject Here")
+                .setType("text/plain")
                 .putExtra(Intent.EXTRA_TEXT, text)
         startIntent(Intent.createChooser(sharingIntent, null).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), onActivityNotFound)
     }
