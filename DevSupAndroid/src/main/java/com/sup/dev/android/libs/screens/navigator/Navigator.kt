@@ -10,6 +10,7 @@ object Navigator {
 
     var currentStack = NavigatorStack()
         private set
+    private var backgroundStack: NavigatorStack? = null
 
     val TO = NavigationAction.to().immutable()
     val SET = NavigationAction.set().immutable()
@@ -37,7 +38,7 @@ object Navigator {
         screen.onPause()
         screen.onStop()
         screen.onDestroy()
-        currentStack.stack.remove(screen)
+        if (!currentStack.stack.remove(screen)) backgroundStack?.stack?.remove(screen)
     }
 
     private fun removeAllScreens(screenClass: KClass<out Screen>) {
@@ -173,6 +174,7 @@ object Navigator {
         if (currentStack == stack) return
         val oldStack = currentStack
         currentStack = stack
+        backgroundStack = oldStack
         for (screen in oldStack.stack) screen.onStackChanged()
         setCurrentViewNew(Animation.ALPHA)
     }
