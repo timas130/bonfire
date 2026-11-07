@@ -196,7 +196,10 @@ object ControllerPost {
                 if (page.title.length > API.PAGE_TABLE_TITLE_MAX) throw ApiException(eBadPage, "PageTable. Bad title")
                 if (page.columnsCount > API.PAGE_TABLE_MAX_COLUMNS) throw ApiException(eBadPage, "PageTable. Bad max columns")
                 if (page.rowsCount > API.PAGE_TABLE_MAX_ROWS) throw ApiException(eBadPage, "PageTable. Bad max rows")
-                if (page.cells.size > (page.columnsCount * page.rowsCount)) throw ApiException(eBadPage, "PageTable. Bad cells count")
+                if (page.cells.size > API.PAGE_TABLE_MAX_COLUMNS * API.PAGE_TABLE_MAX_ROWS) throw ApiException(eBadPage, "PageTable. Bad cells count")
+                val capacity = page.columnsCount * page.rowsCount
+                val cellsCount = if (capacity > 0) page.cells.count { isInTable(page, it) } else page.cells.size
+                if (cellsCount > capacity) throw ApiException(eBadPage, "PageTable. Bad cells count")
 
                 for (c in page.cells) {
                     if (c.type == PageTable.CELL_TYPE_TEXT) {
@@ -322,8 +325,8 @@ object ControllerPost {
             is PageTable -> {
                 val newCells = ArrayList<PageTable.Cell>()
                 for (c in page.cells) {
-                    if (c.rowIndex >= page.rowsCount || c.columnIndex >= page.columnsCount) {
-                        if (c.imageId > 0) ControllerResources.remove(c.imageId)
+                    if (!isInTable(page, c)) {
+                        if (c.imageId > 0 && publicationId != API.RESOURCES_PUBLICATION_WIKI) ControllerResources.remove(c.imageId)
                     } else {
                         newCells.add(c)
                     }
@@ -347,6 +350,9 @@ object ControllerPost {
         }
 
     }
+
+    private fun isInTable(page: PageTable, cell: PageTable.Cell) =
+        cell.rowIndex in 0 until page.rowsCount && cell.columnIndex in 0 until page.columnsCount
 
     fun removePage(page: Page) {
         when (page) {

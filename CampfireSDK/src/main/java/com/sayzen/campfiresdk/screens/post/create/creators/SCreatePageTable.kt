@@ -54,53 +54,52 @@ class SCreatePageTable(
         vBorderLeft.setOnClickListener {
             if (removeMode)
                 checkAndConfirmRemoveColumn(0) {
-                    sendChangesMove(-1, 0)
-                    vTable.setColumnsCount(vTable.getColumnsCount() - 1, false)
-                    update()
+                    sendChangesMove(addColumns = -1, shiftColumns = -1) {
+                        vTable.setColumnsCount(vTable.getColumnsCount() - 1, false)
+                    }
                 }
             else {
-                sendChangesMove(1, 0)
-                vTable.setColumnsCount(vTable.getColumnsCount() + 1, false)
+                sendChangesMove(addColumns = 1, shiftColumns = 1) {
+                    vTable.setColumnsCount(vTable.getColumnsCount() + 1, false)
+                }
             }
-            update()
         }
         vBorderRight.setOnClickListener {
             if (removeMode)
                 checkAndConfirmRemoveColumn(vTable.getColumnsCount() - 1) {
-                    sendChangesMove(0, 0)
-                    vTable.setColumnsCount(vTable.getColumnsCount() - 1, true)
-                    update()
+                    sendChangesMove(addColumns = -1) {
+                        vTable.setColumnsCount(vTable.getColumnsCount() - 1, true)
+                    }
                 }
             else {
-                sendChangesMove(0, 0)
-                vTable.setColumnsCount(vTable.getColumnsCount() + 1, true)
+                sendChangesMove(addColumns = 1) {
+                    vTable.setColumnsCount(vTable.getColumnsCount() + 1, true)
+                }
             }
-
-            update()
         }
         vBorderTop.setOnClickListener {
             if (removeMode) checkAndConfirmRemoveRow(0) {
-                sendChangesMove(0, -1)
-                vTable.removeRow(0)
-                update()
+                sendChangesMove(addRows = -1, shiftRows = -1) {
+                    vTable.removeRow(0)
+                }
             }
             else {
-                sendChangesMove(0, 1)
-                vTable.createRow(false)
+                sendChangesMove(addRows = 1, shiftRows = 1) {
+                    vTable.createRow(false)
+                }
             }
-            update()
         }
         vBorderBottom.setOnClickListener {
             if (removeMode) checkAndConfirmRemoveRow(vTable.getRowsCount() - 1) {
-                sendChangesMove(0, 0)
-                vTable.removeRow(vTable.getRowsCount() - 1)
-                update()
+                sendChangesMove(addRows = -1) {
+                    vTable.removeRow(vTable.getRowsCount() - 1)
+                }
             }
             else {
-                sendChangesMove(0, 0)
-                vTable.createRow(true)
+                sendChangesMove(addRows = 1) {
+                    vTable.createRow(true)
+                }
             }
-            update()
         }
         vRemoveMode.setOnClickListener {
             removeMode = !removeMode
@@ -168,21 +167,35 @@ class SCreatePageTable(
     }
 
 
-    private fun sendChangesMove(addHorizontal: Int, addVertical: Int) {
-        if (oldPage == null) return
+    private fun sendChangesMove(addColumns: Int = 0, addRows: Int = 0, shiftColumns: Int = 0, shiftRows: Int = 0, onDone: () -> Unit) {
+        val old = oldPage
+        if (old == null) {
+            onDone.invoke()
+            update()
+            return
+        }
         val dialog = ToolsView.showProgressDialog()
 
-        oldPage!!.title = ""
-        oldPage!!.columnsCount = vTable.getColumnsCount() + addHorizontal
-        oldPage!!.rowsCount = vTable.getRowsCount() + addVertical
-
-        for(cell in oldPage!!.cells){
-            cell.columnIndex += addHorizontal
-            cell.rowIndex += addVertical
+        val page = PageTable()
+        page.columnsCount = vTable.getColumnsCount() + addColumns
+        page.rowsCount = vTable.getRowsCount() + addRows
+        page.cells = Array(old.cells.size) {
+            val c = old.cells[it]
+            val outside = c.rowIndex < 0 || c.columnIndex < 0
+            val moved = PageTable.Cell()
+            moved.rowIndex = if (outside) c.rowIndex else c.rowIndex + shiftRows
+            moved.columnIndex = if (outside) c.columnIndex else c.columnIndex + shiftColumns
+            moved.type = c.type
+            moved.text = c.text
+            moved.image = c.image
+            moved.imageId = c.imageId
+            moved
         }
 
-        requestChangePage.invoke(oldPage!!, card!!, null, dialog) { page ->
-            this.oldPage = page as PageTable
+        requestChangePage.invoke(page, card!!, null, dialog) { result ->
+            this.oldPage = result as PageTable
+            onDone.invoke()
+            update()
         }
     }
 
@@ -190,7 +203,11 @@ class SCreatePageTable(
 
         cell?.rowIndex = vCell.getRowIndex()
         cell?.columnIndex = vCell.getColumnIndex()
-        val page = if (oldPage == null) PageTable() else oldPage!!
+        val page = PageTable()
+        oldPage?.let {
+            page.title = it.title
+            page.cells = it.cells
+        }
 
         if (cell != null) {
             page.cells = page.cells.filterNot {
