@@ -678,6 +678,8 @@ class CardFandomInfo(
                 )
                 }
                 .add(t(API_TRANSLATE.app_change)) { changeLink(link.index, link.url, link.title, link.imageIndex) }
+                .condition(ControllerApi.can(xFandom.getId(), xFandom.getLanguageId(), API.LVL_MODERATOR_LINKS))
+                .backgroundRes(R.color.blue_700).textColorRes(R.color.white)
                 .add(t(API_TRANSLATE.app_remove)) { removeLink(link) }
                 .condition(ControllerApi.can(xFandom.getId(), xFandom.getLanguageId(), API.LVL_MODERATOR_LINKS))
                 .backgroundRes(R.color.blue_700).textColorRes(R.color.white)
