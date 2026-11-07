@@ -42,7 +42,8 @@ object ControllerWiki {
                 TWikiTitles.parent_item_id, wikiTitle.parentItemId,
                 TWikiTitles.fandom_id, wikiTitle.fandomId,
                 TWikiTitles.wiki_status, API.STATUS_PUBLIC,
-                TWikiTitles.type, wikiTitle.itemType
+                TWikiTitles.type, wikiTitle.itemType,
+                TWikiTitles.priority, wikiTitle.priority
         )
 
         Database.update("ControllerWiki.insertChanges", SqlQueryUpdate(TWikiTitles.NAME)

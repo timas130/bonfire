@@ -33,6 +33,7 @@ class EWikiItemChange : RWikiItemChange(WikiTitle(), 0, null, null) {
         newItem.itemType = oldItem.itemType
         newItem.imageId = oldItem.imageId
         newItem.imageBigId = oldItem.imageBigId
+        newItem.priority = oldItem.priority
         newItem.creatorId = apiAccount.id
         newItem.creatorName = apiAccount.name
         newItem.creatorImageId = apiAccount.imageId
