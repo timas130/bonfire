@@ -27,6 +27,7 @@ class ETagsCreate : RTagsCreate("", "", 0, 0, 0, null) {
             if (publicationParent == null) throw ApiException(E_PARENT_DONT_EXIST)
             publicationParent!!.restoreFromJsonDB()
             if (publicationParent!!.publicationType != API.PUBLICATION_TYPE_TAG || publicationParent!!.parentPublicationId != 0L) throw ApiException(E_PARENT_BAD_TYPE)
+            if (publicationParent!!.fandom.id != fandomId || publicationParent!!.fandom.languageId != languageId) throw ApiException(E_PARENT_BAD_TYPE)
         }
 
         if (image != null) {

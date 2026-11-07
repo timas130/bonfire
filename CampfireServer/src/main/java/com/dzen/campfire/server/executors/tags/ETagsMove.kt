@@ -32,7 +32,7 @@ class ETagsMove : RTagsMove(0, 0, "") {
         if (publication!!.parentPublicationId == newCategoryId) throw ApiException(E_BAD_CATEGORY)
         if (publication!!.parentPublicationId == 0L) throw ApiException(E_BAD_TYPE)
         if (publicationNewParent!!.parentPublicationId != 0L) throw ApiException(E_BAD_TYPE)
-        if (publicationNewParent!!.fandom.id != publication!!.fandom.id && publicationNewParent!!.fandom.languageId != publication!!.fandom.languageId) throw ApiException(E_BAD_CATEGORY)
+        if (publicationNewParent!!.fandom.id != publication!!.fandom.id || publicationNewParent!!.fandom.languageId != publication!!.fandom.languageId) throw ApiException(E_BAD_CATEGORY)
         ControllerFandom.checkCan(apiAccount, publication!!.fandom.id, publication!!.fandom.languageId, API.LVL_MODERATOR_TAGS)
 
     }
