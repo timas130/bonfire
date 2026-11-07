@@ -49,14 +49,13 @@ impl LevelServer {
                  ) as \"multiplier!\"
              from fandoms f
              inner join collisions sc on f.id = sc.collision_id
-             left join collisions vc on f.id = vc.owner_id
+             left join collisions vc on f.id = vc.owner_id and vc.collision_type = $8 and vc.value_1 = $3
              where
-                 f.id != any($1) and
+                 f.id != all($1) and
                  f.status = $7 and
                  sc.collision_type = $2 and
                  sc.owner_id = $3 and
-                 sc.value_1 != $4 and
-                 (vc.collision_type is null or vc.collision_type = $8)
+                 sc.value_1 != $4
              order by \"multiplier!\" desc
              limit 5",
             &[FANDOM_ANYTHING_ID, FANDOM_HELLO_ID],
