@@ -45,6 +45,7 @@ import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.screens.SImageView
 import com.sup.dev.android.views.splash.SplashMenu
+import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdapterLoading
 import com.sup.dev.android.views.views.*
 import com.sup.dev.android.views.views.layouts.LayoutCorned
 import com.sup.dev.java.classes.collections.HashList
@@ -872,12 +873,13 @@ open class CardChatMessage constructor(
             .add(t(API_TRANSLATE.app_remove)) {
                 val topCard = getTopCard()
                 val bottomCard = getBottomCard()
+                val loader = adapter as? RecyclerCardAdapterLoading<*, *>
                 ControllerApi.removePublication(
                     publication.id,
                     t(API_TRANSLATE.chat_remove_confirm),
                     t(API_TRANSLATE.chat_error_gone)
                 ) {
-                    onRemoved(topCard, bottomCard)
+                    onRemoved(topCard, bottomCard, loader)
                 }
             }
             .clearGroupCondition()
@@ -911,8 +913,9 @@ open class CardChatMessage constructor(
             .add(t(API_TRANSLATE.app_block)) {
                 val topCard = getTopCard()
                 val bottomCard = getBottomCard()
+                val loader = adapter as? RecyclerCardAdapterLoading<*, *>
                 ControllerPublications.block(publication) {
-                    onRemoved(topCard, bottomCard)
+                    onRemoved(topCard, bottomCard, loader)
                 }
             }.backgroundRes(R.color.blue_700).textColorRes(R.color.white).condition(
                 publication.chatType == API.CHAT_TYPE_FANDOM_ROOT && ControllerApi.can(
@@ -938,14 +941,15 @@ open class CardChatMessage constructor(
         }
     }
 
-    private fun onRemoved(topCard: CardChatMessage?, bottomCard: CardChatMessage?) {
+    private fun onRemoved(topCard: CardChatMessage?, bottomCard: CardChatMessage?, loader: RecyclerCardAdapterLoading<*, *>?) {
         val publication = xPublication.publication as PublicationChatMessage
         topCard?.update()
         bottomCard?.update()
+        if (bottomCard != null || loader?.isLockBottom() != true) return
         val p = topCard?.xPublication?.publication as PublicationChatMessage?
         if (p != null) {
             EventBus.post(EventChatNewBottomMessage(p))
-        } else {
+        } else if (loader?.isTopLock() == true) {
             val n = PublicationChatMessage()
             n.chatType = publication.chatType
             n.fandom = publication.fandom
