@@ -9,6 +9,7 @@ import com.dzen.campfire.server.rust.RustAchievements
 import com.dzen.campfire.server.rust.RustAchievements.achievements
 import com.dzen.campfire.server.rust.RustAchievements.serialize
 import com.dzen.campfire.server.tables.TAccounts
+import com.dzen.campfire.server.tables.TCollisions
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.SqlQueryUpdate
 import kotlinx.serialization.SerializationException
@@ -29,7 +30,24 @@ object ControllerAchievements {
         }
 
         val report = RustAchievements.getForUser(accountId)
-        for ((_, achievement) in report.achievements()) {
+        val reportS = report.serialize()
+
+        val isReportReplaced = if (previousReport != null) {
+            Database.update("ControllerAchievements.recount replaceReport", SqlQueryUpdate(TCollisions.NAME)
+                    .where(TCollisions.owner_id, "=", accountId)
+                    .where(TCollisions.collision_type, "=", API.COLLISION_ACCOUNT_ACHIEVEMENTS)
+                    .updateValue(TCollisions.value_2, reportS)
+                    .whereValue(TCollisions.value_2, "=", previousReportS)) > 0
+        } else {
+            ControllerCollisions.updateOrCreateValue2(
+                ownerId = accountId,
+                collisionType = API.COLLISION_ACCOUNT_ACHIEVEMENTS,
+                value2 = reportS,
+            )
+            false
+        }
+
+        if (isReportReplaced) for ((_, achievement) in report.achievements()) {
             val previousLvl = previousReport?.achievements()?.get(achievement.id)?.let { previous ->
                 previous.target?.let { it + 1 } ?: 0L
             }
@@ -55,12 +73,6 @@ object ControllerAchievements {
                 )
             }
         }
-
-        ControllerCollisions.updateOrCreateValue2(
-            ownerId = accountId,
-            collisionType = API.COLLISION_ACCOUNT_ACHIEVEMENTS,
-            value2 = report.serialize(),
-        )
 
         Database.update("ControllerAchievements.recount setLvl", SqlQueryUpdate(TAccounts.NAME)
                 .where(TAccounts.id, "=", accountId)
