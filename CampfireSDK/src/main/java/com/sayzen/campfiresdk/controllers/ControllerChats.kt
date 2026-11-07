@@ -315,12 +315,24 @@ object ControllerChats {
         if (chat == null) {
             ApiRequestsSupporter.execute(RChatGet(tag, 0)) {
                 saveChat(it.chat)
-                cb(it.chat)
-            }.onApiError {
-                ToolsToast.show(t(API_TRANSLATE.error_unknown))
+                ToolsThreads.thread { cb(it.chat) }
+            }.onError {
+                ToolsThreads.thread { cb(fallbackChat(tag)) }
             }
         } else {
             cb(Chat().apply { json(false, chat) })
+        }
+    }
+
+    private fun fallbackChat(tag: ChatTag): Chat {
+        val message = getMessages(tag).messages.lastOrNull()
+        return Chat().also {
+            it.tag = tag
+            it.customName = when {
+                message == null -> ""
+                tag.chatType == API.CHAT_TYPE_PRIVATE -> message.creator.name
+                else -> message.fandom.name
+            }
         }
     }
 
