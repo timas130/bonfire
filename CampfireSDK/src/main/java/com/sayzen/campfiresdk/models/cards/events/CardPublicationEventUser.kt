@@ -57,6 +57,7 @@ class CardPublicationEventUser(
         vDate.text = ToolsDate.dateToString(publication.dateCreate)
         vName.text = ""
         vAvatarTitle.vImageView.setBackgroundColor(0x00000000)  //  For achievements background
+        vAvatarTitle.setOnLongClickListener(null)
         view.setOnClickListener { }
 
         val e = publication.event!!
