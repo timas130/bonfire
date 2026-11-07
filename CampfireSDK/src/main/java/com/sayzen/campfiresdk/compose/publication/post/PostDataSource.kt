@@ -1,6 +1,7 @@
 package com.sayzen.campfiresdk.compose.publication.post
 
 import androidx.compose.runtime.State
+import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.activities.UserActivity
 import com.dzen.campfire.api.models.publications.post.PageUserActivity
 import com.dzen.campfire.api.models.publications.post.PublicationPost
@@ -57,6 +58,15 @@ class PostDataSource(post: PublicationPost, onRemoved: State<() -> Unit>) : Publ
             }
             .subscribe(EventStyleChanged::class) {
                 remove(!ControllerSettings.showNsfwPosts && data.nsfw)
+            }
+            .subscribe(EventPostStatusChange::class) {
+                remove(
+                    it.publicationId == data.id && it.status != data.status &&
+                        (data.status == API.STATUS_DRAFT || data.status == API.STATUS_PUBLIC || data.status == API.STATUS_PENDING)
+                )
+            }
+            .subscribe(EventPublicationDeepBlockRestore::class) {
+                remove(it.publicationId == data.id && data.status == API.STATUS_DEEP_BLOCKED)
             }
     }
 
