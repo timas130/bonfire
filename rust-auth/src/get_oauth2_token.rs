@@ -59,12 +59,17 @@ impl AuthServer {
         let client = self._get_raw_oauth2_client(client_id).await?;
 
         // check client_secret
-        let client_secret_hash = PasswordHash::new(&client.client_secret)
-            .map_err(|_| anyhow!("invalid password hash"))?;
+        let stored_client_secret = client.client_secret.clone();
+        let client_secret_valid = self
+            .run_scrypt(move || -> Result<bool, AuthError> {
+                let client_secret_hash = PasswordHash::new(&stored_client_secret)
+                    .map_err(|_| anyhow!("invalid password hash"))?;
 
-        let client_secret_valid = Scrypt
-            .verify_password(client_secret.as_bytes(), &client_secret_hash)
-            .is_ok();
+                Ok(Scrypt
+                    .verify_password(client_secret.as_bytes(), &client_secret_hash)
+                    .is_ok())
+            })
+            .await??;
         if !client_secret_valid {
             return Err(AuthError::InvalidClientSecret);
         }

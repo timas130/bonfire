@@ -4,6 +4,7 @@ use crate::AuthServer;
 use c_core::prelude::chrono::Utc;
 use c_core::prelude::sqlx::types::ipnetwork::IpNetwork;
 use c_core::prelude::tarpc::context;
+use c_core::prelude::tokio::task::spawn_blocking;
 use c_core::prelude::tokio::time::{sleep_until, Instant};
 use c_core::prelude::tracing::{info, warn};
 use c_core::prelude::{anyhow, chrono};
@@ -128,30 +129,59 @@ impl AuthServer {
         )
     }
 
-    pub(crate) fn verify_password(&self, password: &str, hash: &str) -> bool {
-        if hash.starts_with("FB:") {
-            let mut parts = hash.split(':').skip(1);
-            let Some(hash_part) = parts.next() else {
-                return false;
-            };
-            let Some(salt_part) = parts.next() else {
-                return false;
-            };
+    /// Run a scrypt operation on the blocking pool
+    pub(crate) async fn run_scrypt<T: Send + 'static>(
+        &self,
+        f: impl FnOnce() -> T + Send + 'static,
+    ) -> Result<T, AuthError> {
+        let permit = self
+            .scrypt_permits
+            .clone()
+            .acquire_owned()
+            .await
+            .map_err(anyhow::Error::from)?;
 
-            return self
-                .get_firebase_scrypt()
-                .verify_password_bool(password, salt_part, hash_part);
-        }
+        let result = spawn_blocking(move || {
+            let _permit = permit;
+            f()
+        })
+        .await
+        .map_err(anyhow::Error::from)?;
 
-        Scrypt
-            .verify_password(
-                password.as_bytes(),
-                &match PasswordHash::new(hash) {
-                    Ok(hash) => hash,
-                    Err(_err) => return false,
-                },
-            )
-            .is_ok()
+        Ok(result)
+    }
+
+    pub(crate) async fn verify_password(
+        &self,
+        password: String,
+        hash: String,
+    ) -> Result<bool, AuthError> {
+        let firebase_scrypt = self.get_firebase_scrypt();
+
+        self.run_scrypt(move || {
+            if hash.starts_with("FB:") {
+                let mut parts = hash.split(':').skip(1);
+                let Some(hash_part) = parts.next() else {
+                    return false;
+                };
+                let Some(salt_part) = parts.next() else {
+                    return false;
+                };
+
+                return firebase_scrypt.verify_password_bool(&password, salt_part, hash_part);
+            }
+
+            Scrypt
+                .verify_password(
+                    password.as_bytes(),
+                    &match PasswordHash::new(&hash) {
+                        Ok(hash) => hash,
+                        Err(_err) => return false,
+                    },
+                )
+                .is_ok()
+        })
+        .await
     }
 
     pub(crate) async fn _login_email(
@@ -207,7 +237,17 @@ impl AuthServer {
             }
         };
 
-        let password_correct = self.verify_password(&password, password_hash);
+        let password_correct = self
+            .verify_password(password.clone(), password_hash.clone())
+            .await;
+
+        let password_correct = match password_correct {
+            Ok(password_correct) => password_correct,
+            Err(err) => {
+                sleep_until(deadline).await;
+                return Err(err);
+            }
+        };
 
         if !password_correct {
             sleep_until(deadline).await;
@@ -217,7 +257,7 @@ impl AuthServer {
         //// Rehash password if legacy hashing used
 
         if password_hash.starts_with("FB:") {
-            let rehashed_password = Self::hash_password(&password)?;
+            let rehashed_password = self.hash_password(password).await?;
             sqlx::query!(
                 "update users set password = $1 where id = $2",
                 rehashed_password,

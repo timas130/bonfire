@@ -24,6 +24,9 @@ impl AuthServer {
             return Err(AuthError::InvalidPassword(PASSWORD_LENGTH));
         }
 
+        // before the transaction, so waiting for a scrypt permit doesn't pin a DB connection
+        let hash = self.hash_password(password).await?;
+
         let mut tx = self.base.pool.begin().await?;
 
         sqlx::query!(
@@ -42,8 +45,7 @@ impl AuthServer {
         .execute(&mut *tx)
         .await?;
 
-        self.do_change_password(user_id, Self::hash_password(&password)?)
-            .await?;
+        self.do_change_password(user_id, hash).await?;
 
         tx.commit().await?;
 

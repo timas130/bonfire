@@ -49,7 +49,7 @@ mod verify_email;
 
 use c_core::prelude::anyhow::anyhow;
 use c_core::prelude::tarpc::context::Context;
-use c_core::prelude::tokio::sync::Mutex;
+use c_core::prelude::tokio::sync::{Mutex, Semaphore};
 use c_core::prelude::*;
 use c_core::services::auth::tfa::{TfaInfo, TfaStatus};
 use c_core::services::auth::user::{AuthUser, PermissionLevel};
@@ -85,6 +85,9 @@ use {
 const GOOGLE_JWKS_URL: &str =
     "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com";
 
+// Each scrypt hash takes about 256 MiB and a full core for a second.
+const MAX_CONCURRENT_SCRYPT: usize = 4;
+
 #[derive(Clone)]
 pub struct AuthServer {
     base: ServiceBase,
@@ -94,6 +97,8 @@ pub struct AuthServer {
     google_jwks: Arc<Vec<Jwk>>,
 
     rs256_signing_key: Arc<CoreRsaPrivateSigningKey>,
+
+    scrypt_permits: Arc<Semaphore>,
 }
 impl AuthServer {
     pub async fn load() -> anyhow::Result<Self> {
@@ -144,6 +149,7 @@ impl AuthServer {
             reqwest_client: Arc::new(Mutex::new(reqwest_client)),
             google_jwks: Arc::new(google_jwks),
             rs256_signing_key: Arc::new(rs256_signing_key),
+            scrypt_permits: Arc::new(Semaphore::new(MAX_CONCURRENT_SCRYPT)),
         })
     }
 

@@ -59,13 +59,19 @@ impl AuthServer {
         .map(|token| token.claims.sub)
     }
 
-    pub(crate) fn hash_password(password: &str) -> anyhow::Result<String> {
-        let salt = SaltString::generate(&mut OsRng);
-        let params = scrypt::Params::new(18, 8, 1, 32).unwrap();
+    pub(crate) async fn hash_password(&self, password: String) -> Result<String, AuthError> {
+        let hash = self
+            .run_scrypt(move || -> anyhow::Result<String> {
+                let salt = SaltString::generate(&mut OsRng);
+                let params = scrypt::Params::new(18, 8, 1, 32).unwrap();
 
-        Ok(Scrypt
-            .hash_password_customized(password.as_bytes(), None, None, params, &salt)?
-            .to_string())
+                Ok(Scrypt
+                    .hash_password_customized(password.as_bytes(), None, None, params, &salt)?
+                    .to_string())
+            })
+            .await??;
+
+        Ok(hash)
     }
 
     pub(crate) async fn _register_email(
@@ -148,7 +154,7 @@ impl AuthServer {
 
         //// Register
 
-        let hash = Self::hash_password(&password)?;
+        let hash = self.hash_password(password).await?;
 
         let mut tx = self.base.pool.begin().await?;
 

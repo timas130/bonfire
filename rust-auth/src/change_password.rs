@@ -68,14 +68,16 @@ impl AuthServer {
         }
 
         if let Some(current_password) = &user.password {
-            let password_matches = self.verify_password(&old_password, current_password);
+            let password_matches = self
+                .verify_password(old_password, current_password.clone())
+                .await?;
 
             if !password_matches {
                 return Err(AuthError::WrongPassword);
             }
         }
 
-        let new_hash = Self::hash_password(&new_password)?;
+        let new_hash = self.hash_password(new_password).await?;
 
         self.do_change_password(access_token.user_id, new_hash)
             .await?;
