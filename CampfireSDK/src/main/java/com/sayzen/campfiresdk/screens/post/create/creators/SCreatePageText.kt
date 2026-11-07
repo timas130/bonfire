@@ -198,7 +198,7 @@ class SCreatePageText(
 
         vField.textSize = if (vTextTitle.isIconSelected) 32f else if (s.length < 200) 22f else 16f
 
-        ToolsView.setFabEnabledR(vFab, s.isNotEmpty() && s.length <= maxL, R.color.green_700)
+        ToolsView.setFabEnabledR(vFab, s.isNotBlank() && s.length <= maxL, R.color.green_700)
     }
 
     private fun onEnter() {
