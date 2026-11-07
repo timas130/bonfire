@@ -8,7 +8,6 @@ import android.widget.TextView
 import com.dzen.campfire.R
 import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.ApiResources
-import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerCampfireSDK
 import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.support.load
@@ -104,7 +103,6 @@ class Hello_Sex(
             val name = vLogin.text.toString()
             ControllerCampfireSDK.changeLoginNow(name, false) {
                 ControllerCampfireSDK.setSex(gender) {
-                    ControllerApi.account.setName(name)
                     screen.toNextScreen()
                 }
             }
