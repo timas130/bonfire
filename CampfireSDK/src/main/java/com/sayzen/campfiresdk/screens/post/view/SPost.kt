@@ -21,6 +21,7 @@ import com.sayzen.campfiresdk.compose.publication.post.pages.ComposePostPages
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
 import com.sayzen.campfiresdk.models.events.publications.EventPostChanged
+import com.sayzen.campfiresdk.models.events.publications.EventPostSetNsfw
 import com.sayzen.campfiresdk.models.events.publications.EventPostStatusChange
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter
 import com.sayzen.campfiresdk.support.adapters.AdapterComments
@@ -89,6 +90,7 @@ class SPost private constructor(
     private val eventBus: EventBusSubscriber = EventBus
             .subscribe(EventPostChanged::class) { this.onPostChanged(it) }
             .subscribe(EventPostStatusChange::class) { this.onEventPostStatusChange(it) }
+            .subscribe(EventPostSetNsfw::class) { this.onEventPostSetNsfw(it) }
 
     private val vRecycler: RecyclerView = findViewById(R.id.vRecycler)
     private val vMenu: View = findViewById(R.id.vMenu)
@@ -168,8 +170,14 @@ class SPost private constructor(
         }
     }
 
+    private fun onEventPostSetNsfw(e: EventPostSetNsfw) {
+        if (e.publicationId == xPublication.publication.id) xPublication.publication.nsfw = e.nsfw
+    }
+
     private fun onEventPostStatusChange(e: EventPostStatusChange) {
-        if (e.publicationId == xPublication.publication.id && e.status != API.STATUS_PUBLIC) Navigator.remove(this)
+        if (e.publicationId != xPublication.publication.id) return
+        if (e.status != API.STATUS_PUBLIC) Navigator.remove(this)
+        else xPublication.publication.status = e.status
     }
 
 }
