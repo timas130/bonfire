@@ -88,22 +88,14 @@ class Attach(
     }
 
     fun attachUrl(url: String, dialog: Splash, onError: () -> Unit) {
-        ToolsNetwork.getBytesFromURL(url){ bytes->
+        ToolsThreads.thread {
             try {
-                ToolsThreads.thread {
-                    attachBytes_inWorker(bytes, dialog)
-                }
-            } catch (e: Exception) {
-                ToolsBitmap.getFromURL(url) { bitmap ->
-                    try {
-                        ToolsThreads.thread {
-                            attachBytes_inWorker(ToolsBitmap.toPNGBytes(bitmap!!), dialog)
-                        }
-                    } catch (e: Exception) {
-                        err(e)
-                        dialog.hide()
-                        onError.invoke()
-                    }
+                attachBytes_inWorker(ToolsNetwork.getBytesFromURL(url), dialog)
+            } catch (e: Throwable) {
+                err(e)
+                ToolsThreads.main {
+                    dialog.hide()
+                    onError.invoke()
                 }
             }
         }
