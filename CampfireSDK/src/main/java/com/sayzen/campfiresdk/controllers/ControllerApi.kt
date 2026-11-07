@@ -268,8 +268,16 @@ object ControllerApi {
         ControllerSettings.clear()
         ControllerNotifications.setNewNotifications(emptyArray())
         if (announceLogout) {
-            runBlocking { AuthController.logout() }
+            ToolsThreads.thread {
+                runBlocking { AuthController.logout() }
+                ToolsThreads.main { finishLogout(onComplete) }
+            }
+        } else {
+            finishLogout(onComplete)
         }
+    }
+
+    private fun finishLogout(onComplete: () -> Unit) {
         setCurrentAccount(Account())
         this.fandomsKarmaCounts = null
         this.fandomsViceroy = null
