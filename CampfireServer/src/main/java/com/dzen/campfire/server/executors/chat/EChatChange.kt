@@ -104,6 +104,7 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
                 var chatMember: ChatMember? = null
                 for (m in members) if (m.account.id == i) chatMember = m
                 if (chatMember != null) {
+                    if (chatMember.memberStatus == API.CHAT_MEMBER_STATUS_DELETE || chatMember.memberStatus == API.CHAT_MEMBER_STATUS_DELETE_AND_LEAVE) continue
                     var canRemove = false
                     if (myLvl == API.CHAT_MEMBER_LVL_ADMIN) canRemove = true
                     if (myLvl == API.CHAT_MEMBER_LVL_MODERATOR && chatMember.memberLvl == API.CHAT_MEMBER_LVL_USER) canRemove = true
@@ -116,12 +117,13 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
                             .where(TChatsSubscriptions.target_id, "=", chatId)
                             .where(TChatsSubscriptions.target_sub_id, "=", 0)
                             .where(TChatsSubscriptions.account_id, "=", i)
-                            .updateValue(TChatsSubscriptions.exit_date, System.currentTimeMillis())
 
-                    if (chatMember.memberStatus == API.CHAT_MEMBER_STATUS_LEAVE)
+                    if (chatMember.memberStatus == API.CHAT_MEMBER_STATUS_LEAVE) {
                         update.updateValue(TChatsSubscriptions.member_status, API.CHAT_MEMBER_STATUS_DELETE_AND_LEAVE)
-                    else
+                    } else {
+                        update.updateValue(TChatsSubscriptions.exit_date, System.currentTimeMillis())
                         update.updateValue(TChatsSubscriptions.member_status, API.CHAT_MEMBER_STATUS_DELETE)
+                    }
 
                     Database.update("EChatChange removeMember", update)
                 }
