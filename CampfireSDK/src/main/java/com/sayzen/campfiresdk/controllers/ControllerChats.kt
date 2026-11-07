@@ -388,7 +388,10 @@ object ControllerChats {
             list = ArrayList()
             typingList[tag.asTag()] = list
         }
-        for (i in list) if (i.a2 == name) return
+        for (i in list) if (i.a2 == name) {
+            i.a1 = System.currentTimeMillis()
+            return
+        }
         list.add(ItemNullable2(System.currentTimeMillis(), name))
         EventBus.post(EventChatTypingChanged(tag, getTypingText(tag)))
         updateTyping()
