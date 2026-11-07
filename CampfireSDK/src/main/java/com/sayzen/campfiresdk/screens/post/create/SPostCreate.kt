@@ -58,7 +58,11 @@ class SPostCreate(
                     fandomImage = r.publication.fandom.image,
                     changePost = r.publication,
                     postParams = PostParams()
-                        .setTags(r.tags.filter { it.parentPublicationId != 0L }.map { it.id }.toTypedArray())
+                        .setTags(r.tags.filter {
+                            it.parentPublicationId != 0L
+                                    && it.fandom.id == r.publication.fandom.id
+                                    && it.fandom.languageId == r.publication.fandom.languageId
+                        }.map { it.id }.toTypedArray())
                         .setNsfw(r.publication.nsfw)
                         .apply {
                             if (r.publication.rubricId != 0L) {
