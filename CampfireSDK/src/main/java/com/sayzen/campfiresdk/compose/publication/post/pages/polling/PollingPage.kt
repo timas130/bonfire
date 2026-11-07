@@ -33,6 +33,7 @@ import com.sayzen.campfiresdk.controllers.t
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.java.tools.ToolsDate
 import sh.sit.bonfire.auth.components.TextLoadingButton
+import sh.sit.bonfire.formatting.compose.LinksClickableText
 import sh.sit.bonfire.formatting.compose.buildInlineAnnotatedString
 import sh.sit.bonfire.formatting.core.BonfireFormatter
 import kotlin.math.roundToInt
@@ -63,9 +64,10 @@ internal fun PagePollingRenderer(page: PagePolling, source: PagesSource = PagesS
                 .padding(top = 8.dp, bottom = 4.dp)
         ) {
             if (formattedTitle.isNotBlank()) {
-                Text(
+                LinksClickableText(
                     text = formattedTitle,
                     style = MaterialTheme.typography.titleLarge,
+                    background = MaterialTheme.colorScheme.surfaceContainerHigh,
                     modifier = Modifier.padding(bottom = 8.dp),
                 )
             }
@@ -266,9 +268,10 @@ private fun PollingItem(model: PollingModel, optionTitle: String, index: Int) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(
+            LinksClickableText(
                 text = formattedOption,
                 style = MaterialTheme.typography.bodyLarge,
+                background = colors.tertiaryContainer,
                 modifier = Modifier.weight(1f),
             )
 

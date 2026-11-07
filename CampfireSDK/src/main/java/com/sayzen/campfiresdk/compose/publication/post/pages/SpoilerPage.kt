@@ -18,6 +18,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import com.dzen.campfire.api.models.publications.post.PageSpoiler
 import com.sayzen.campfiresdk.R
+import sh.sit.bonfire.formatting.compose.LinksClickableText
 import sh.sit.bonfire.formatting.compose.buildInlineAnnotatedString
 import sh.sit.bonfire.formatting.core.BonfireFormatter
 
@@ -59,7 +60,7 @@ internal fun PageSpoilerRenderer(
                         .buildInlineAnnotatedString(colors)
                 }
 
-                Text(
+                LinksClickableText(
                     text = buildAnnotatedString {
                         append(spoilerName)
                         append(' ')

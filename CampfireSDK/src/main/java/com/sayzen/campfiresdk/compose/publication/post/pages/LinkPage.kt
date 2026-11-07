@@ -25,6 +25,7 @@ import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerExternalLinks
 import com.sup.dev.android.tools.ToolsAndroid
 import com.sup.dev.android.tools.ToolsToast
+import sh.sit.bonfire.formatting.compose.LinksClickableText
 import sh.sit.bonfire.formatting.compose.buildInlineAnnotatedString
 import sh.sit.bonfire.formatting.core.BonfireFormatter
 
@@ -80,10 +81,10 @@ internal fun PageLinkLayout(
             icon()
 
             Column(Modifier.weight(1f)) {
-                Text(
+                LinksClickableText(
                     text = formattedTitle,
-                    overflow = TextOverflow.Ellipsis,
-                    softWrap = false,
+                    background = CardDefaults.cardColors().containerColor,
+                    maxLines = 1,
                 )
                 Text(
                     text = subtitle,

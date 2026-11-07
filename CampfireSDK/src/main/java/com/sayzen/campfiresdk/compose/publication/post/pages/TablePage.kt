@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -17,6 +16,7 @@ import com.sayzen.campfiresdk.support.load
 import com.sup.dev.android.libs.image_loader.ImageLoader
 import com.sup.dev.android.libs.screens.navigator.Navigator
 import com.sup.dev.android.views.screens.SImageView
+import sh.sit.bonfire.formatting.compose.LinksClickableText
 import sh.sit.bonfire.formatting.compose.buildInlineAnnotatedString
 import sh.sit.bonfire.formatting.core.BonfireFormatter
 import sh.sit.bonfire.images.RemoteImage
@@ -49,7 +49,7 @@ internal fun PageTableRenderer(page: PageTable) {
                     .buildInlineAnnotatedString(colors)
             }
 
-            Text(
+            LinksClickableText(
                 text = formattedText,
                 modifier = Modifier.padding(4.dp),
             )
