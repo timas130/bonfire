@@ -58,6 +58,10 @@ object ControllerAppUpdate {
                 updateStatus = UpdateStatus.DOWNLOADED
                 postEvent()
                 showAlertForCompleteUpdate()
+            } else if (state.installStatus() == InstallStatus.FAILED || state.installStatus() == InstallStatus.CANCELED) {
+                updateStatus = UpdateStatus.AVAILABLE
+                postEvent()
+                refreshUpdateInfo()
             }
         }
 
@@ -68,7 +72,10 @@ object ControllerAppUpdate {
         updateManager.appUpdateInfo.addOnSuccessListener { updateInfo ->
             Log.d("ControllerAppUpdate", "updateInfo: $updateInfo")
             this.updateInfo = updateInfo
-            if (updateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+            if (updateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                updateStatus = UpdateStatus.DOWNLOADED
+                postEvent()
+            } else if (updateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                 && updateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
             ) {
                 updateStatus = UpdateStatus.AVAILABLE
