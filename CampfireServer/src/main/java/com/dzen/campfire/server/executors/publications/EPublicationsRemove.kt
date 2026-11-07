@@ -76,7 +76,8 @@ class EPublicationsRemove : RPublicationsRemove(0) {
         }
         if (publication.publicationType == API.PUBLICATION_TYPE_CHAT_MESSAGE) {
             ControllerSubThread.inSub("EPublicationsRemove updateLastMessage"){
-                ControllerChats.onMessagesRemoved((publication as PublicationChatMessage).chatTag(), 1)
+                val count = if (ControllerAccounts.isAccountShadowBanned(publication.creator.id)) 0 else 1
+                ControllerChats.onMessagesRemoved((publication as PublicationChatMessage).chatTag(), count)
             }
         }
         if (publication.publicationType == API.PUBLICATION_TYPE_POST && publication.status != API.STATUS_DRAFT) {

@@ -178,12 +178,14 @@ object ControllerChats {
     }
 
     private fun putMessageSub(apiAccount: ApiAccount, message: PublicationChatMessage, tag: ChatTag) {
-        changeNewMessagesCount(tag, 1)
+        val shadowBanned = ControllerAccounts.isAccountShadowBanned(apiAccount.id)
+
+        if (!shadowBanned) changeNewMessagesCount(tag, 1)
         ControllerPublicationsHistory.put(message.id, HistoryCreate(apiAccount.id, message.creator.imageId, message.creator.name))
 
         updateReadOrSubscribeIfNotExistOrRemoved(apiAccount.id, tag, if (tag.chatType == API.CHAT_TYPE_FANDOM_ROOT) 0 else 1, API.CHAT_MEMBER_LVL_USER, 0, if (tag.chatType == API.CHAT_TYPE_PRIVATE) 0 else System.currentTimeMillis())
 
-        if (!ControllerAccounts.isAccountShadowBanned(apiAccount.id)) {
+        if (!shadowBanned) {
             when {
                 message.chatType == API.CHAT_TYPE_FANDOM_ROOT || message.chatType == API.CHAT_TYPE_FANDOM_SUB -> parseFandom(apiAccount, message, tag)
                 message.chatType == API.CHAT_TYPE_CONFERENCE -> parseConf(apiAccount, message, tag)
