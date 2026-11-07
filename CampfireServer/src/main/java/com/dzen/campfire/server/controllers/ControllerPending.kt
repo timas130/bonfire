@@ -71,13 +71,21 @@ object ControllerPending {
             } catch (e: ApiException) {
                 if (e.code == API.ERROR_VIDEO_SERVICE_UNAVAILABLE || e.code.startsWith("G_")) continue
 
-                Database.update("ControllerPending.posts update_2", SqlQueryUpdate(TPublications.NAME)
+                val updated = Database.update("ControllerPending.posts update_2", SqlQueryUpdate(TPublications.NAME)
                         .where(TPublications.id, "=", id)
+                        .where(TPublications.status, "=", API.STATUS_PENDING)
                         .update(TPublications.status, API.STATUS_DRAFT)
                         .update(TPublications.date_create, TPublications.tag_4)
                         .update(TPublications.tag_3, 0)
                         .update(TPublications.tag_4, 0)
                 )
+                if (updated == 0) continue
+
+                if (languageId == -1L) {
+                    val post = ControllerPublications.getPublication(id, 0) as? PublicationPost
+                    if (post != null && post.tag_5 > 0) ControllerPost.setMultilingual(post, false)
+                }
+                ControllerAccounts.updatePostsCount(creatorId, -1)
             } catch (e: Exception) {
                 err(e)
             }
