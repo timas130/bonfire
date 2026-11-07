@@ -237,7 +237,7 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
 
         var moderationId = 0L
 
-        if (publication!!.publicationType == API.PUBLICATION_TYPE_STICKERS_PACK) {
+        if (publication!!.publicationType == API.PUBLICATION_TYPE_STICKERS_PACK || publication!!.publicationType == API.PUBLICATION_TYPE_STICKER) {
             ControllerPublications.event(ApiEventAdminBlockPublication(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, publication!!.creator.id, publication!!.creator.name, publication!!.creator.imageId, publication!!.creator.sex, comment, publication!!.getPublicationTypeConst(), blockAccountDate, blockLastPublications, blockTime == -1L, true, "", 0, 0), apiAccount.id)
             ControllerPublications.event(ApiEventUserAdminPublicationBlocked(publication!!.creator.id, publication!!.creator.name, publication!!.creator.imageId, publication!!.creator.sex, apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, publication!!.getPublicationTypeConst(), 0, blockAccountDate, blockLastPublications, blockTime == -1L, true, "", 0, 0), publication!!.creator.id)
         }
