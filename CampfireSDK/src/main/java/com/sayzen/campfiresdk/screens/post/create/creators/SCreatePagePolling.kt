@@ -159,7 +159,7 @@ class SCreatePagePolling(
         vBlackListAdd.text = t(API_TRANSLATE.app_add)
         vBlackListAdd.setOnClickListener {
             Navigator.to(SAccountSearch(showMyAccount = true) { account ->
-                if (blackList.find { it.id == account.id } == null) {
+                if (blackList.size < API.PAGE_POLLING_BLACKLIST_MAX && blackList.find { it.id == account.id } == null) {
                     addBlacklistItem(XAccount().setAccount(account))
                 }
                 if (vBlackListUsers.childCount >= API.PAGE_POLLING_BLACKLIST_MAX) {
@@ -167,14 +167,15 @@ class SCreatePagePolling(
                 }
             })
         }
-        vBlackListAdd.visibility = if (vBlackListUsers.childCount >= API.PAGE_POLLING_BLACKLIST_MAX)
-            INVISIBLE else VISIBLE
 
         if (oldPage != null) {
             for (account in oldPage.blacklist) {
                 addBlacklistItem(XAccount().setAccount(account))
             }
         }
+
+        vBlackListAdd.visibility = if (vBlackListUsers.childCount >= API.PAGE_POLLING_BLACKLIST_MAX)
+            INVISIBLE else VISIBLE
 
         vAdd.setOnClickListener { addItem("") }
         vCreate.setOnClickListener { onEnter() }
