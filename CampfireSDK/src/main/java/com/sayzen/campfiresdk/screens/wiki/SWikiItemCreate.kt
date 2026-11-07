@@ -158,8 +158,9 @@ class SWikiItemCreate(
             val v = vNamesContainer.getChildAt(i)
             val vFiled: EditText? = v.findViewById(R.id.vField)
             if (vFiled != null) {
-                textCheOther = vFiled.text.isNotEmpty() && vFiled.text.length <= API.WIKI_NAME_MAX
-                vFiled.error = if (textCheckMy) null else t(API_TRANSLATE.error_too_long_text)
+                val lengthOk = vFiled.text.length <= API.WIKI_NAME_MAX
+                textCheOther = textCheOther && lengthOk
+                vFiled.error = if (lengthOk) null else t(API_TRANSLATE.error_too_long_text)
             }
         }
 
@@ -191,8 +192,10 @@ class SWikiItemCreate(
         val vField: EditText = v.findViewById(R.id.vField)
         vField.tag = language.code
         vField.setText(text)
+        vField.addTextChangedListener(TextWatcherChanged { updateFinishEnabled() })
         vField.hint = t(API_TRANSLATE.wiki_item_create_name, language.name)
         vNamesContainer.addView(v, vNamesContainer.childCount - 1)
+        updateFinishEnabled()
     }
 
     private fun addLanguageToItemIfNeed(code: String) {
