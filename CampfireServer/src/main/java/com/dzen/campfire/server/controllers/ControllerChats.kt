@@ -180,7 +180,10 @@ object ControllerChats {
     private fun putMessageSub(apiAccount: ApiAccount, message: PublicationChatMessage, tag: ChatTag) {
         val shadowBanned = ControllerAccounts.isAccountShadowBanned(apiAccount.id)
 
-        if (!shadowBanned) changeNewMessagesCount(tag, 1)
+        if (!shadowBanned) {
+            if (tag.chatType == API.CHAT_TYPE_PRIVATE) createSubscriptionIfNotExistOrRemoved(tag.getAnotherId(), tag, 1, API.CHAT_MEMBER_LVL_USER, 0, 0)
+            changeNewMessagesCount(tag, 1)
+        }
         ControllerPublicationsHistory.put(message.id, HistoryCreate(apiAccount.id, message.creator.imageId, message.creator.name))
 
         val enterDate = when (tag.chatType) {
@@ -244,7 +247,6 @@ object ControllerChats {
 
     private fun parsePrivate(apiAccount: ApiAccount, message: PublicationChatMessage, tag: ChatTag) {
         ControllerNotifications.push(tag.getAnotherId(), NotificationChatMessage(message, tag, true))
-        createSubscriptionIfNotExistOrRemoved(tag.getAnotherId(), tag, 1, API.CHAT_MEMBER_LVL_USER, 0, 0)
     }
 
     //
