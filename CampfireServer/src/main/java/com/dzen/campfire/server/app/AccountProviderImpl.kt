@@ -23,7 +23,11 @@ class AccountProviderImpl : AccountProvider() {
         val account = select(instanceSelect().where(TAccounts.id, "=", user.id))
         if (account != null) return account
 
-        createAccount(user)
+        try {
+            createAccount(user)
+        } catch (e: Exception) {
+            return select(instanceSelect().where(TAccounts.id, "=", user.id)) ?: throw e
+        }
 
         return select(instanceSelect().where(TAccounts.id, "=", user.id))
     }
