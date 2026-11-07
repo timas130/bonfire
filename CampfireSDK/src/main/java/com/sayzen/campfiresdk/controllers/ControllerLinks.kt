@@ -47,7 +47,11 @@ import kotlin.system.exitProcess
 
 object ControllerLinks {
     private fun getRawLink(link: CharSequence): String {
-        return (if (link.startsWith("@") || link.startsWith("#")) {
+        return stripLinkPrefix(link).replace('_', '-').removeSuffix("-")
+    }
+
+    private fun stripLinkPrefix(link: CharSequence): String {
+        return if (link.startsWith("@") || link.startsWith("#")) {
             link.substring(1)
         } else if (link.startsWith(API.DOMEN)) {
             stripUrlExtras(link.substring(API.DOMEN.length))
@@ -55,7 +59,13 @@ object ControllerLinks {
             stripUrlExtras(link.substring(API.DOMEN_DL.length))
         } else {
             link.toString()
-        }).replace('_', '-').removeSuffix("-")
+        }
+    }
+
+    private fun getUsername(link: CharSequence, rawLink: String): String? {
+        val name = stripLinkPrefix(link)
+        if (ToolsText.isValidUsername(name.replace('_', 'a'))) return name
+        return if (ToolsText.isValidUsername(rawLink)) rawLink else null
     }
 
     private fun stripUrlExtras(path: String): String {
@@ -143,7 +153,10 @@ object ControllerLinks {
                     if (params.size == 2) SFandom.instance(params[0].toLong(), params[1].toLong(), Navigator.TO)
                 }
                 API.LINK_PROFILE_ID.link -> SProfile.instance(params[0].toLong(), Navigator.TO)
-                API.LINK_TAG_PROFILE_NAME -> SProfile.instance(params[0], Navigator.TO)
+                API.LINK_TAG_PROFILE_NAME -> SProfile.instance(
+                    stripLinkPrefix(link).substring(API.LINK_TAG_PROFILE_NAME.length + 1).substringBefore('-'),
+                    Navigator.TO
+                )
                 API.LINK_TAG.link -> SPostsSearch.instance(params[0].toLong(), Navigator.TO)
                 API.LINK_MODERATION.link -> {
                     if (params.size == 1) SModerationView.instance(params[0].toLong(), 0, Navigator.TO)
@@ -178,8 +191,9 @@ object ControllerLinks {
                     }
                 }
                 else -> {
-                    if (ToolsText.isValidUsername(t)) {
-                        SProfile.instance(t, Navigator.TO)
+                    val name = getUsername(link, t)
+                    if (name != null) {
+                        SProfile.instance(name, Navigator.TO)
                         return true
                     }
                     info("ControllerExecutorLinks link wasn't found [$link][$t]")
@@ -252,7 +266,7 @@ object ControllerLinks {
                 API.LINK_QUEST.link -> params.size == 1 || params.size == 2
                 API.LINK_EVENT.link -> params.size == 1
                 else -> {
-                    if (ToolsText.isValidUsername(t)) {
+                    if (getUsername(link, t) != null) {
                         true
                     } else {
                         info("ControllerExecutorLinks link wasn't found [$link][$t]")
