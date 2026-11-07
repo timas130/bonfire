@@ -126,9 +126,7 @@ class SQuest(
             details.id,
             t(API_TRANSLATE.quests_remove_q),
             t(API_TRANSLATE.error_gone)
-        ) {
-            Navigator.back()
-        }
+        )
     }
 
     private fun toDrafts() {
