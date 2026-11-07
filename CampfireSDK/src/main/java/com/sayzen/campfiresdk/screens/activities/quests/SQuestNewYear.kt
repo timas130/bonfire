@@ -17,7 +17,8 @@ import com.sup.dev.java.tools.ToolsThreads
 @SuppressLint("MissingPermission")
 class SQuestNewYear : SQuest() {
 
-    var weather_thunder = false
+    @Volatile var weather_thunder = false
+    private var destroyed = false
     val animationSnow = DrawAnimationSnow()
 
     init {
@@ -722,6 +723,12 @@ class SQuestNewYear : SQuest() {
 
     override fun getKey() = "new_year"
 
+    override fun onDestroy() {
+        destroyed = true
+        stopThunder()
+        super.onDestroy()
+    }
+
     //
     //  Efects
     //
@@ -735,6 +742,8 @@ class SQuestNewYear : SQuest() {
     fun titul(text: String) = "{grey [ получен титул: }{yellow _${text}_}{grey  ]}"
 
     fun startThunder() {
+        // onStart can still run after Back during the item fade
+        if (destroyed) return
         weather_thunder = true
         stepThunder()
     }
@@ -742,6 +751,7 @@ class SQuestNewYear : SQuest() {
     private fun stepThunder() {
         if (!weather_thunder) return
         ToolsThreads.thread(ToolsMath.randomLong(2000, 5000)) {
+            if (!weather_thunder) return@thread
             makeThunder()
             stepThunder()
         }
