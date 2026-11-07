@@ -189,8 +189,10 @@ class SWikiArticleView(
         updateMessage()
         vLanguage.text = ControllerApi.getLanguage(languageId).name
         vToolbarTitle.text = wikiTitle.getName(ControllerApi.getLanguage(languageId).code)
+        val requestLanguageId = languageId
         RWikiGetPages(wikiTitle.itemId, languageId)
                 .onComplete {
+                    if (requestLanguageId != languageId) return@onComplete
                     isLoading = false
                     if ((it.wikiPages == null || it.wikiPages!!.pages.isEmpty()) && languageId != 1L && !wasSwitchedToEnglish) {
                         languageId = 1L
@@ -211,6 +213,7 @@ class SWikiArticleView(
                     }
                 }
                 .onApiError {
+                    if (requestLanguageId != languageId) return@onApiError
                     isLoading = false
                     if (it.code == API.ERROR_GONE) {
                         if (languageId != 1L) {
@@ -226,6 +229,7 @@ class SWikiArticleView(
                     }
                 }
                 .onNetworkError {
+                    if (requestLanguageId != languageId) return@onNetworkError
                     isLoading = false
                     error = true
                     updateMessage()
