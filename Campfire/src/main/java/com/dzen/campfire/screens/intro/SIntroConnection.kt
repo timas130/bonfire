@@ -205,7 +205,7 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
         }
     }
 
-    private fun sendLoginRequestNow(background: Boolean) {
+    private fun sendLoginRequestNow(background: Boolean, retryDelay: Long = BACKGROUND_LOGIN_RETRY_MS) {
         setState(State.PROGRESS)
         val languageId = ControllerApi.getLanguageId()
         RAccountsLogin(
@@ -234,8 +234,17 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
                 }
             }
         }.onError {
-            setState(State.ERROR)
+            if (background) retryBackgroundLogin(retryDelay)
+            else setState(State.ERROR)
         }.send(api)
+    }
+
+    private fun retryBackgroundLogin(delay: Long) {
+        ToolsThreads.main(delay) {
+            if (ControllerApi.isCurrentAccount(0L)) return@main
+            feedCategories = ControllerSettings.feedCategories
+            sendLoginRequestNow(true, minOf(delay * 2, BACKGROUND_LOGIN_RETRY_MAX_MS))
+        }
     }
 
 
@@ -290,6 +299,8 @@ class SIntroConnection : Screen(R.layout.screen_intro_connection) {
     companion object {
         private const val LAST_UPDATE_TIME = "SIntroConnection.bg.update"
         private const val LAST_UPDATE_DATA = "SIntroConnection.bg.data"
+        private const val BACKGROUND_LOGIN_RETRY_MS = 5000L
+        private const val BACKGROUND_LOGIN_RETRY_MAX_MS = 5 * 60 * 1000L
     }
 
     private fun loadBackgroundImageData() {
