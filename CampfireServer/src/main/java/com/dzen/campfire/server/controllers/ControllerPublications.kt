@@ -321,7 +321,8 @@ object ControllerPublications {
 
         if (listIds.isEmpty()) return
 
-        val publications = parseSelect(Database.select("ControllerPublications.loadSpecDataForPosts", instanceSelect(accountId).where(SqlWhere.WhereIN(TPublications.id, listIds)).where(TPublications.status, "=", API.STATUS_PUBLIC)))
+        val publications = loadShadowBans(accountId, parseSelect(Database.select("ControllerPublications.loadSpecDataForPosts", instanceSelect(accountId).where(SqlWhere.WhereIN(TPublications.id, listIds)).where(TPublications.status, "=", API.STATUS_PUBLIC))))
+        loadBlacklists(accountId, publications)
 
         for (i in publications) for (n in list) if (n.tag_1 == i.id) n.bestComment = i as PublicationComment?
     }
