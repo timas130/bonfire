@@ -37,7 +37,11 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
         if (publication!!.creator.id == apiAccount.id) throw ApiException(E_SELF_PUBLICATION)
         if (publication!!.status == API.STATUS_DRAFT) throw ApiException(E_DRAFT)
         if (publication!!.status != API.STATUS_PUBLIC) throw ApiException(E_ALREADY)
-        if (publication!!.publicationType == API.PUBLICATION_TYPE_QUEST) throw ApiException(API.ERROR_ACCESS)
+        when (publication!!.publicationType) {
+            API.PUBLICATION_TYPE_POST, API.PUBLICATION_TYPE_COMMENT, API.PUBLICATION_TYPE_CHAT_MESSAGE -> {}
+            API.PUBLICATION_TYPE_STICKERS_PACK, API.PUBLICATION_TYPE_STICKER -> ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_BAN)
+            else -> throw ApiException(API.ERROR_ACCESS)
+        }
 
         languageId = publication!!.fandom.languageId
         if (publication!!.fandom.languageId == -1L && publication!!.publicationType == API.PUBLICATION_TYPE_POST) languageId = userLanguageId
