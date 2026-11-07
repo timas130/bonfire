@@ -95,7 +95,7 @@ disableNavigation()
         ToolsView.alpha(vBack, toAlpha)
         ToolsView.alpha(vDownload, toAlpha)
         ToolsView.alpha(vShare, toAlpha)
-        ToolsView.alpha(vCounterContainer, toAlpha)
+        ToolsView.alpha(vCounterContainer, toAlpha || adapterIn.size() < 2)
         ToolsView.alpha(vIndicator, toAlpha || adapterIn.size() < 2)
     }
 
