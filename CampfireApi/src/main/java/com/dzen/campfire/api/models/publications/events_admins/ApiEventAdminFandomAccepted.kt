@@ -19,12 +19,13 @@ class ApiEventAdminFandomAccepted : ApiEventAdmin {
                 ownerAccountSex: Long,
                 fandomId: Long,
                 fandomName: String,
-                fandomImageId: Long
+                fandomImageId: Long,
+                comment: String
     ) : super(ownerAccountId,
             ownerAccountName,
             ownerAccountImageId,
             ownerAccountSex,
-            "") {
+            comment) {
         this.fandomId = fandomId
         this.fandomName = fandomName
         this.fandomImageId = fandomImageId

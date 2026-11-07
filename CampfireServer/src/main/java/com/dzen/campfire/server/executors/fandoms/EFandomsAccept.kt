@@ -56,7 +56,7 @@ class EFandomsAccept : RFandomsAccept(0, false, "") {
                 val creatorAccountSex: Long = v.next()
 
                 ControllerPublications.event(ApiEventUserFandomSuggest(fandom.creatorId, creatorAccountName, creatorAccountImageId, creatorAccountSex, fandom.id, fandom.name, fandom.imageId), fandom.creatorId)
-                ControllerPublications.event(ApiEventAdminFandomAccepted(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, fandom.id, fandom.name, fandom.imageId), fandom.creatorId)
+                ControllerPublications.event(ApiEventAdminFandomAccepted(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, fandom.id, fandom.name, fandom.imageId, comment), apiAccount.id)
                 ControllerPublications.event(ApiEventFandomAccepted(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, fandom.id, fandom.name, fandom.imageId, comment), apiAccount.id, fandom.id, 0)
 
                 ControllerOptimizer.putCollisionWithCheck(apiAccount.id, API.COLLISION_ACHIEVEMENT_ACCEPT_FANDOM)
