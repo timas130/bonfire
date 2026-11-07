@@ -112,7 +112,11 @@ class AnimationPendulum(value: Float, to_1: Float, to_2: Float, var speedType: S
 
         this.to = to
 
-        if (to_1 == to_2) return
+        if (to_1 == to_2) {
+            value = to
+            step = 0f
+            return
+        }
 
         if (speedType == SpeedType.TIME_MS)
             step = (to_1 - to_2) / speed
