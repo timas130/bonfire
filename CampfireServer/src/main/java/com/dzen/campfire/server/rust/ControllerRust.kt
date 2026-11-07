@@ -42,7 +42,7 @@ object ControllerRust {
             .jsonPrimitive.long * 1000
 
         // whether there's less than a minute left before the token expires
-        return expiresAt - System.currentTimeMillis() < 3600
+        return expiresAt - System.currentTimeMillis() < 60_000
     }
 
     private fun refreshServiceToken() {
