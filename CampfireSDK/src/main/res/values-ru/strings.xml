@@ -137,6 +137,7 @@
     <string name="video_upload_error_daily_limit">Вы достигли дневного лимита загрузки видео</string>
     <string name="video_upload_error_network">Ошибка сети при загрузке видео</string>
     <string name="video_upload_error_unknown">Не удалось загрузить видео</string>
+    <string name="video_upload_error_attach">Видео загружено, но его не удалось добавить. Попробуйте ещё раз</string>
     <string name="settings_video_autoplay">Автовоспроизведение видео</string>
     <string name="post_error_videos_processing">Видео в этом посте ещё обрабатываются. Попробуйте чуть позже</string>
 </resources>

@@ -21,7 +21,6 @@ import com.sayzen.campfiresdk.video.VideoUploader
 import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.android.libs.screens.Screen
 import com.sup.dev.android.tools.ToolsResources
-import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.splash.Splash
 import com.sup.dev.java.libs.debug.err
 import kotlinx.coroutines.*
@@ -46,7 +45,7 @@ class VideoUploadSplash(
     private val state = MutableStateFlow<State>(State.Preparing)
     private val scope = MainScope()
     private var uploadJob: Job? = null
-    private var finished = false
+    private var uploadedPage: PageVideo? = null
 
     init {
         startUpload()
@@ -106,14 +105,30 @@ class VideoUploadSplash(
     }
 
     private fun onSuccess(page: PageVideo) {
-        finished = true
-        hide()
-        val progress = ToolsView.showProgressDialog()
+        uploadedPage = page
+        attachPage(page)
+    }
+
+    private fun attachPage(page: PageVideo) {
+        state.value = State.Finishing
         if (card == null) {
-            requestPutPage.invoke(page, null, progress) {}
+            requestPutPage.invoke(page, null, this) {}
         } else {
-            requestChangePage.invoke(page, card, null, progress) {}
+            requestChangePage.invoke(page, card, null, this) {}
         }
+    }
+
+    private fun retry() {
+        val page = uploadedPage
+        if (page != null) attachPage(page) else startUpload()
+    }
+
+    override fun setEnabled(enabled: Boolean): Splash {
+        super.setEnabled(enabled)
+        if (enabled && uploadedPage != null && isShown()) {
+            state.value = State.Error(ToolsResources.s(R.string.video_upload_error_attach))
+        }
+        return this
     }
 
     @Composable
@@ -124,7 +139,7 @@ class VideoUploadSplash(
                 hide()
             },
             state = state.collectAsState().value,
-            onRetry = { startUpload() },
+            onRetry = { retry() },
         )
     }
 
@@ -136,7 +151,7 @@ class VideoUploadSplash(
     override fun onHide() {
         super.onHide()
         isShownFlow.tryEmit(isShown())
-        if (!finished) uploadJob?.cancel()
+        if (uploadedPage == null) uploadJob?.cancel()
         scope.cancel()
     }
 }

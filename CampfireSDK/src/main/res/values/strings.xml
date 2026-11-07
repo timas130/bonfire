@@ -145,6 +145,7 @@
     <string name="video_upload_error_daily_limit">You have reached the daily video upload limit</string>
     <string name="video_upload_error_network">Network error while uploading the video</string>
     <string name="video_upload_error_unknown">Failed to upload the video</string>
+    <string name="video_upload_error_attach">The video was uploaded but could not be added. Try again</string>
     <string name="settings_video_autoplay">Video autoplay</string>
     <string name="post_error_videos_processing">The videos in this post are still processing. Try again in a moment</string>
 </resources>
