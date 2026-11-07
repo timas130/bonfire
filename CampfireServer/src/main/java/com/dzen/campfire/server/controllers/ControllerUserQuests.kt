@@ -7,6 +7,7 @@ import com.dzen.campfire.server.controllers.ControllerCensor.censorNoFormat
 import com.dzen.campfire.server.tables.TQuestParts
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java_pc.sql.Database
+import com.sup.dev.java_pc.tools.ToolsImage
 
 object ControllerUserQuests {
     private fun checkEffect(effect: QuestEffect): Boolean {
@@ -199,6 +200,11 @@ object ControllerUserQuests {
                 if (!checkInputs(details, part.inputs)) return false
                 if (!checkButtons(details, part.buttons, allParts)) return false
                 if (!checkEffects(part.effects)) return false
+                val image = part.insertBytes
+                if (image != null) {
+                    if (image.size > API.QUEST_IMAGE_WEIGHT) return false
+                    if (!ToolsImage.checkImageMaxScaleUnknownType(image, API.QUEST_IMAGE_W, API.QUEST_IMAGE_H, true, false, true)) return false
+                }
             }
             is QuestPartAction -> {
                 if (!checkQuestAction(details, part, allParts)) return false
