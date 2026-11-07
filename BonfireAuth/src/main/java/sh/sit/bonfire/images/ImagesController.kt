@@ -19,7 +19,6 @@ object ImagesController {
                 .respectCacheHeaders(false)
                 .memoryCache {
                     MemoryCache.Builder(context)
-                        .maxSizeBytes(50 * 1024)
                         .build()
                 }
                 .diskCache {
