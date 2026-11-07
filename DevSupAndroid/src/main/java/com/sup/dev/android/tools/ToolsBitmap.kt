@@ -562,7 +562,7 @@ object ToolsBitmap {
         val inscribe = ToolsMath.inscribePinBounds(bm.width.toFloat(), bm.height.toFloat(), w.toFloat(), h.toFloat())
 
         if (bm.width.toFloat() > inscribe.w || bm.height.toFloat() > inscribe.h)
-            bm = Bitmap.createScaledBitmap(bm, inscribe.w.toInt(), inscribe.h.toInt(), true)
+            bm = Bitmap.createScaledBitmap(bm, inscribe.w.toInt().coerceAtLeast(1), inscribe.h.toInt().coerceAtLeast(1), true)
 
         return bm
     }
@@ -590,7 +590,7 @@ object ToolsBitmap {
         val argW = bitmap.width / w.toFloat()
         val argH = bitmap.height / h.toFloat()
         val arg = ToolsMath.max(argW, argH)
-        return Bitmap.createScaledBitmap(bitmap, (bitmap.width / arg).toInt(), (bitmap.height / arg).toInt(), true)
+        return Bitmap.createScaledBitmap(bitmap, (bitmap.width / arg).toInt().coerceAtLeast(1), (bitmap.height / arg).toInt().coerceAtLeast(1), true)
     }
 
     fun resize(bitmap: Bitmap, w: Int) = resize(bitmap, w, w)
