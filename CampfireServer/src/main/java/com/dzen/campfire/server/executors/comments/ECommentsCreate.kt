@@ -132,7 +132,7 @@ class ECommentsCreate : RCommentsCreate(0, "", null, null, 0, false, 0, 0, false
         comment.answerName = parentComment.creator.name
         comment.creator = ControllerAccounts.instance(apiAccount.id,
                 apiAccount.accessTag,
-                apiAccount.accessTag,
+                System.currentTimeMillis(),
                 apiAccount.name,
                 apiAccount.imageId,
                 apiAccount.sex,
