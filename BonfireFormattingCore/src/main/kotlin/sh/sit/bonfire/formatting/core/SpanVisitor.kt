@@ -15,6 +15,7 @@ import sh.sit.bonfire.formatting.core.model.spans.ListBlock
 class SpanVisitor(buffer: Int = 64) : AbstractVisitor() {
     val outputString = StringBuilder(buffer)
     val outputSpans = mutableListOf<Span>()
+    private var containerDepth = 0
 
     private fun addSpan(span: Span, visit: () -> Unit) {
         val startLength = outputString.length
@@ -22,6 +23,16 @@ class SpanVisitor(buffer: Int = 64) : AbstractVisitor() {
         span.start = startLength
         span.end = outputString.length
         outputSpans.add(span)
+    }
+
+    private fun addContainerSpan(span: Span, visit: () -> Unit) {
+        containerDepth++
+        if (containerDepth > MAX_CONTAINER_DEPTH) {
+            visit()
+        } else {
+            addSpan(span, visit)
+        }
+        containerDepth--
     }
 
     override fun visit(thematicBreak: ThematicBreak) {
@@ -53,14 +64,14 @@ class SpanVisitor(buffer: Int = 64) : AbstractVisitor() {
     }
 
     override fun visit(block: BlockQuote) {
-        addSpan(QuoteBlock()) {
+        addContainerSpan(QuoteBlock()) {
             visitChildren(block)
         }
         outputString.append('\n')
     }
 
     override fun visit(block: BulletList) {
-        addSpan(ListBlock()) {
+        addContainerSpan(ListBlock()) {
             visitChildren(block)
         }
     }
@@ -106,7 +117,7 @@ class SpanVisitor(buffer: Int = 64) : AbstractVisitor() {
     }
 
     override fun visit(block: OrderedList) {
-        addSpan(ListBlock()) {
+        addContainerSpan(ListBlock()) {
             visitChildren(block)
         }
     }
@@ -114,14 +125,14 @@ class SpanVisitor(buffer: Int = 64) : AbstractVisitor() {
     override fun visit(block: ListItem) {
         val parent = block.parent
         if (parent is OrderedList) {
-            addSpan(ListItemBlock(
+            addContainerSpan(ListItemBlock(
                 ordered = true,
                 startNumber = parent.startNumber++,
             )) {
                 visitChildren(block)
             }
         } else {
-            addSpan(ListItemBlock(
+            addContainerSpan(ListItemBlock(
                 ordered = false,
                 startNumber = 0,
             )) {
@@ -151,5 +162,9 @@ class SpanVisitor(buffer: Int = 64) : AbstractVisitor() {
 
     override fun visit(node: Text) {
         outputString.append(node.literal)
+    }
+
+    private companion object {
+        const val MAX_CONTAINER_DEPTH = 32
     }
 }

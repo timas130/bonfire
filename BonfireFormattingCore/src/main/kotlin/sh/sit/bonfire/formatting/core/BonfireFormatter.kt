@@ -12,6 +12,7 @@ import sh.sit.bonfire.formatting.core.bfm.subscript.SubscriptExtension
 import sh.sit.bonfire.formatting.core.bfm.superscript.SuperscriptExtension
 import sh.sit.bonfire.formatting.core.bfm.underline.UnderlineExtension
 import sh.sit.bonfire.formatting.core.model.FormattedText
+import sh.sit.bonfire.formatting.core.model.spans.ParagraphBlock
 
 object BonfireFormatter {
     // fixme: maybe don't do this?
@@ -44,6 +45,18 @@ object BonfireFormatter {
     private val inlineParser by lazy { getParser(inlineOnly = true) }
 
     fun parse(text: String, inlineOnly: Boolean = false): FormattedText {
+        return try {
+            parseUnchecked(text, inlineOnly)
+        } catch (e: StackOverflowError) {
+            val plainText = text.trimEnd()
+            FormattedText().apply {
+                this.text = plainText
+                this.spans = arrayOf(ParagraphBlock().also { it.end = plainText.length })
+            }
+        }
+    }
+
+    private fun parseUnchecked(text: String, inlineOnly: Boolean): FormattedText {
         val parser = if (inlineOnly) inlineParser else parser
         val node = parser.parse(replaceLongLink(text))
 

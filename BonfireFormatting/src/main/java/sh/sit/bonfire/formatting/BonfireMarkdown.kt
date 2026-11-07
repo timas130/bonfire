@@ -56,7 +56,11 @@ object BonfireMarkdown {
 
     fun setMarkdown(view: TextView, text: String) {
         val start = System.currentTimeMillis()
-        markwon.setMarkdown(view, BonfireFormatter.replaceLongLink(text))
+        try {
+            markwon.setMarkdown(view, BonfireFormatter.replaceLongLink(text))
+        } catch (e: StackOverflowError) {
+            view.text = text
+        }
 
         PostHog.capture("markdown_parse", properties = mapOf(
             "length" to text.length,
@@ -69,7 +73,11 @@ object BonfireMarkdown {
     }
 
     fun setMarkdownInline(view: TextView, text: String) {
-        markwonInline.setMarkdown(view, BonfireFormatter.replaceLongLink(text))
+        try {
+            markwonInline.setMarkdown(view, BonfireFormatter.replaceLongLink(text))
+        } catch (e: StackOverflowError) {
+            view.text = text
+        }
         view.post {
             view.movementMethod = BetterLinkMovementMethod.getInstance()
         }
