@@ -23,8 +23,9 @@ object TChatsSubscriptions {
     val member_owner = "member_owner"
     val new_messages = "new_messages"
 
-    val BACKGROUND_IMAGE_ID = ifFandom(Sql.IFNULL("SELECT ${TCollisions.value_1} FROM ${TCollisions.NAME} WHERE ${TCollisions.owner_id}=$NAME.$target_id AND ${TCollisions.collision_id}=$NAME.${target_sub_id} AND ${TCollisions.collision_type}=${API.COLLISION_CHAT_BACKGROUND_IMAGE} ${Sql.LIMIT} 1", 0),
-            "SELECT ${TChats.background_id} FROM ${TChats.NAME} WHERE ${TChats.id}=$target_id")
+    val BACKGROUND_IMAGE_ID = Sql.IF(chat_type, API.CHAT_TYPE_PRIVATE, "0",
+            ifFandom(Sql.IFNULL("SELECT ${TCollisions.value_1} FROM ${TCollisions.NAME} WHERE ${TCollisions.owner_id}=$NAME.$target_id AND ${TCollisions.collision_id}=$NAME.${target_sub_id} AND ${TCollisions.collision_type}=${API.COLLISION_CHAT_BACKGROUND_IMAGE} ${Sql.LIMIT} 1", 0),
+                    "SELECT ${TChats.background_id} FROM ${TChats.NAME} WHERE ${TChats.id}=$target_id"))
     val MEMBERS_COUNT = "(SELECT ${Sql.COUNT} FROM $NAME as t WHERE t.$chat_type=$NAME.$chat_type AND t.$target_id=$NAME.$target_id AND t.$target_sub_id=$NAME.$target_sub_id AND t.$member_status=${API.CHAT_MEMBER_STATUS_ACTIVE})"
 
     val ACCOUNT_LEVEL = "(SELECT " + TAccounts.lvl + " FROM " + TAccounts.NAME + " WHERE " + TAccounts.id + "=" + account_id + ")"
