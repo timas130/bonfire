@@ -21,7 +21,7 @@ class EQuestsGetParts : RQuestsGetParts(0) {
         ).where(TPublications.id, "=", id))
         val status = v.next<Long>()
         val creator = v.next<Long>()
-        if (status != API.STATUS_PUBLIC && (creator != apiAccount.id && status != API.STATUS_DRAFT))
+        if (status != API.STATUS_PUBLIC && creator != apiAccount.id)
             throw ApiException(API.ERROR_ACCESS, "not public")
         isDraft = status == API.STATUS_DRAFT
     }
