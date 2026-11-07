@@ -424,7 +424,7 @@ class SChat constructor(
                 },
                 onChange = { publication -> fieldLogic.setChange(publication) },
                 onQuote = { publication ->
-                    if (!ControllerApi.isCurrentAccount(publication.creator.id)) fieldLogic.setAnswer(publication, false)
+                    if (fieldLogic.publicationChange == null && !ControllerApi.isCurrentAccount(publication.creator.id)) fieldLogic.setAnswer(publication, false)
                     fieldLogic.setQuote(publication)
                     ToolsView.showKeyboard(fieldLogic.vText)
                 },
