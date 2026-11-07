@@ -84,6 +84,10 @@ object AuthController : TokenProvider {
     private val _currentUserState = MutableStateFlow<Me?>(null)
     val currentUserState = _currentUserState.asStateFlow()
 
+    fun setCurrentUser(user: Me) {
+        _currentUserState.value = user
+    }
+
     suspend fun saveAuthState(authState: AuthState) {
         dataStore.edit {
             it[AUTH_STATE_KEY] = json.encodeToString(authState)

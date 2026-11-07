@@ -18,6 +18,7 @@ import com.sup.dev.android.libs.screens.navigator.Navigator
 import kotlinx.coroutines.launch
 import org.joda.time.LocalDate
 import sh.sit.bonfire.auth.ApolloController
+import sh.sit.bonfire.auth.AuthController
 import sh.sit.bonfire.auth.R
 import sh.sit.bonfire.auth.SetBirthdayMutation
 import sh.sit.bonfire.auth.components.FormScreen
@@ -70,6 +71,8 @@ fun SetBirthdayScreen(onBirthdaySet: () -> Unit = {}) {
             snackbarHostState.showSnackbar(exception.toUiString(context))
             return
         }
+
+        resp.data?.setBirthday?.me?.let { AuthController.setCurrentUser(it) }
 
         Navigator.back()
         onBirthdaySet()
