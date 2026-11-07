@@ -27,7 +27,7 @@ class EChatsFandomGetAll : RChatsFandomGetAll(0, 0, 0) {
 
         val list = ArrayList<Chat>()
         if (offset == 0L) list.add(getRoot())
-        else offset - 1
+        else offset -= 1
 
         loadChats(list)
 
