@@ -4,6 +4,7 @@ import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.client.Request
+import com.dzen.campfire.api.tools.server.IControllerResources
 import com.sup.dev.java.libs.json.Json
 
 class PageImages : Page() {
@@ -49,6 +50,11 @@ class PageImages : Page() {
         insertImagesMini = page.insertImagesMini
         removePageIndex = page.removePageIndex
         replacePageIndex = page.replacePageIndex
+    }
+
+    override fun duplicateResources(res: IControllerResources, unitId: Long) {
+        imagesIds = Array(imagesIds.size) { if (imagesIds[it] > 0) res.put(res.get(imagesIds[it]), unitId) else imagesIds[it] }
+        imagesMiniIds = Array(imagesMiniIds.size) { if (imagesMiniIds[it] > 0) res.put(res.get(imagesMiniIds[it]), unitId) else imagesMiniIds[it] }
     }
 
     override fun fillResourcesList(list: ArrayList<Long>) {
