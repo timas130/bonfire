@@ -71,7 +71,7 @@ class SChats constructor(
                     }
                     onLoad.invoke(r.publications)
                 }
-                .onNetworkError { onLoad.invoke(null) }
+                .onError { onLoad.invoke(null) }
                 .send(api)
     }
 

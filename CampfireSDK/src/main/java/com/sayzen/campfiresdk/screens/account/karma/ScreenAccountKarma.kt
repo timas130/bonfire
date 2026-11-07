@@ -32,7 +32,7 @@ class ScreenAccountKarma(
         adapter.setBottomLoader { onLoad, cards ->
             subscription = RAccountsKarmaInFandomsGetAll(xAccount.getId(), cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.karma) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

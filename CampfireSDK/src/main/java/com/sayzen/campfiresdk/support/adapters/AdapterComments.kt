@@ -96,7 +96,7 @@ class AdapterComments(
                     .onComplete { r ->
                         onLoad.invoke(r.publications)
                     }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

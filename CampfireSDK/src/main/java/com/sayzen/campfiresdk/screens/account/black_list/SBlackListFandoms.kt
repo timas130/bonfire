@@ -63,7 +63,7 @@ class SBlackListFandoms(
 
             subscription = RAccountsGetIgnoredFandoms(accountId)
                     .onComplete { r -> loadFandoms(r.fandomsIds, onLoad) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }
@@ -75,7 +75,7 @@ class SBlackListFandoms(
                     loaded = true
                     onLoad.invoke(r.fandoms)
                 }
-                .onNetworkError { onLoad.invoke(null) }
+                .onError { onLoad.invoke(null) }
                 .send(api)
     }
 

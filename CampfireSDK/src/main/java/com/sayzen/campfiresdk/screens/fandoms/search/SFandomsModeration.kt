@@ -35,7 +35,7 @@ class SFandomsModeration(
         adapter.setBottomLoader { onLoad, cards ->
             RFandomsGetAllModerated(accountId, cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.fandoms) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
 
         }

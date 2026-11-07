@@ -40,7 +40,7 @@ class SAdministrationPrison() : SLoadingRecycler<CardAccount, AccountPrison>() {
         adapter.setBottomLoader { onLoad, cards ->
             RAccountsPrisonGetAll(cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.accounts) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

@@ -107,7 +107,7 @@ abstract class APage(
                     updateQuest()
                 }
             }
-                    .onNetworkError {
+                    .onError {
                         onLoad.invoke(null)
                     }
                     .send(api)

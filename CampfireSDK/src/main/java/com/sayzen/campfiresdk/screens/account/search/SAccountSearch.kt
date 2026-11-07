@@ -75,7 +75,7 @@ class SAccountSearch(
                         setTextEmpty(t(API_TRANSLATE.app_nothing_found))
                         setBackgroundImage(ImageLoader.load(ApiResources.IMAGE_BACKGROUND_4))
                     }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
 

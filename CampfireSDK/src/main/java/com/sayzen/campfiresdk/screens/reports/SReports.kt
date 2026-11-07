@@ -21,7 +21,7 @@ class SReports(
         adapter.setBottomLoader { onLoad, cards ->
             subscription = RPublicationsReportsGetAll(publicationId, cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.reports) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

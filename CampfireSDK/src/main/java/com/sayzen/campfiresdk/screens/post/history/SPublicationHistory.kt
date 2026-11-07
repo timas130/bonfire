@@ -29,7 +29,7 @@ class SPublicationHistory(
                     .onComplete { r ->
                         onLoad.invoke(r.history)
                     }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

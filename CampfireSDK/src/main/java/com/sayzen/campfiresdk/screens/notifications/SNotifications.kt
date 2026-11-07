@@ -83,7 +83,7 @@ class SNotifications private constructor() : SLoadingRecycler<CardNotification, 
                     (vFab as View).visibility =
                         if (ControllerNotifications.getNewNotificationsCount() == 0) View.GONE else View.VISIBLE
                 }
-                .onNetworkError { onLoad.invoke(null) }
+                .onError { onLoad.invoke(null) }
                 .send(api)
         }
         adapter.setRetryMessage(t(API_TRANSLATE.error_network), t(API_TRANSLATE.app_retry))

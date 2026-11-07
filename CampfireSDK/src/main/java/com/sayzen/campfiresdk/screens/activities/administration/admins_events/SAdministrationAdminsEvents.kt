@@ -30,7 +30,7 @@ class SAdministrationAdminsEvents : SLoadingRecycler<CardPublicationEventAdmin, 
                     .setIncludeZeroLanguages(true)
                     .setIncludeMultilingual(true)
                     .onComplete { rr -> onLoad.invoke(rr.publications) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
         adapter.setRetryMessage(t(API_TRANSLATE.error_network), t(API_TRANSLATE.app_retry))

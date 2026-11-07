@@ -49,7 +49,7 @@ class SPublicationRates(
         adapter.setBottomLoader { onLoad, cards ->
             subscription = RPostRatesGetAll(publicationId, cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.rates) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }.addOnFinish {
             var sum = 0L

@@ -89,7 +89,7 @@ class SWikiList(
                     .onComplete { r ->
                         onLoad.invoke(r.items)
                     }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

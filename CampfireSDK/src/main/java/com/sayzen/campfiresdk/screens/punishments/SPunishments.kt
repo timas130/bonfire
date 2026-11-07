@@ -35,7 +35,7 @@ class SPunishments(
         adapter.setBottomLoader { onLoad, cards ->
             subscription = RAccountsPunishmentsGetAll(xAccount.getId(), cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.punishments) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

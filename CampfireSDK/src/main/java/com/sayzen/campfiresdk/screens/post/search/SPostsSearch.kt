@@ -54,7 +54,7 @@ class SPostsSearch(val tag: PublicationTag) : SLoadingRecycler<CardPublication, 
         adapter.setBottomLoader { onLoad, cards ->
             RPostGetAllByTag(tag.id, cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.publications) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

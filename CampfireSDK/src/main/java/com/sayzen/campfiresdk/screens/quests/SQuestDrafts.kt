@@ -75,7 +75,7 @@ class SQuestDrafts : SLoadingRecycler<CardQuestDetails, QuestDetails>() {
         adapter.setBottomLoader { onLoad, cards ->
             val r = RQuestsGetDrafts(cards.size.toLong())
                 .onComplete { r -> onLoad(r.quests) }
-                .onNetworkError { onLoad(null) }
+                .onError { onLoad(null) }
             r.send(api)
         }
     }

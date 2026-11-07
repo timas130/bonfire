@@ -165,7 +165,7 @@ class SProfile private constructor(
                         onLoad.invoke(resp.publications)
                         afterPackLoaded()
                     }
-                    req.onNetworkError { onLoad.invoke(null) }
+                    req.onError { onLoad.invoke(null) }
                     req.send(api)
                 }
                 .setRetryMessage(t(API_TRANSLATE.error_network), t(API_TRANSLATE.app_retry))

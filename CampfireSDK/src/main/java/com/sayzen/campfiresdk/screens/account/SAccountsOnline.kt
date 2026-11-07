@@ -24,7 +24,7 @@ class SAccountsOnline : SLoadingRecycler<CardAccount, Account>() {
         adapter.setBottomLoader { onLoad, cards ->
             subscription = RAccountsGetAllOnline(cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.accounts) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

@@ -38,7 +38,7 @@ class SFollowers(
         adapter.setBottomLoader { onLoad, cards ->
             subscription = RAccountsFollowsGetAll(xAccount.getId(), cards.size.toLong(), true)
                     .onComplete { r -> onLoad.invoke(r.accounts) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

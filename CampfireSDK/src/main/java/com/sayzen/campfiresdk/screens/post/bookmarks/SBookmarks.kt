@@ -42,7 +42,7 @@ class SBookmarks constructor() : SLoadingRecycler<CardPublication, Publication>(
 
             RBookmarksGetAll(cards.size.toLong(), "", ControllerCampfireSDK.ROOT_FANDOM_ID, 0, 0, foldersIds)
                     .onComplete { r -> onLoad.invoke(r.publications) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
 

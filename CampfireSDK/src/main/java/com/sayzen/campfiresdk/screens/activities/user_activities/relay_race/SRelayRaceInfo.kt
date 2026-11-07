@@ -48,7 +48,7 @@ class SRelayRaceInfo(
         adapter.setBottomLoader { onLoad, cards ->
             RActivitiesGetPosts(userActivity.id, cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.posts) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

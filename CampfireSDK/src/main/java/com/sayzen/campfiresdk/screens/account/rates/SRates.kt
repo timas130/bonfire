@@ -32,7 +32,7 @@ class SRates(
         adapter.setBottomLoader { onLoad, cards ->
             subscription = RAccountsRatesGetAll(xAccount.getId(), cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.rates) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

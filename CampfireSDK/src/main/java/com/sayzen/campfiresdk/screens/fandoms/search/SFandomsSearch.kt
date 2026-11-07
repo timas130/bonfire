@@ -171,21 +171,21 @@ class SFandomsSearch private constructor(
                         onLoad.invoke(Array(r.fandoms.size) { NFandom(r.fandoms[it], true) })
                         if (adapter.isEmpty) ToolsThreads.main(true) { adapter.loadBottom() }
                     }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         } else if (!isSearchMode()) {
             RFandomsGetAll(RFandomsGetAll.SUBSCRIBE_NO, getLastUnsubscribedOffset(), ControllerApi.getLanguageId(), categoryId, "", emptyArray(), emptyArray(), emptyArray(), emptyArray())
                     .onComplete { r ->
                         onLoad.invoke(Array(r.fandoms.size) { NFandom(r.fandoms[it], false) })
                     }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         } else {
             RFandomsGetAll(RFandomsGetAll.SUBSCRIBE_NONE, cards.size.toLong(), ControllerApi.getLanguageId(), categoryId, name, params1, params2, params3, params4)
                     .onComplete { r ->
                         onLoad.invoke(Array(r.fandoms.size) { NFandom(r.fandoms[it], false) })
                     }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

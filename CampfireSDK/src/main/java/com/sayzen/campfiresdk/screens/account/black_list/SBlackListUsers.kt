@@ -35,7 +35,7 @@ class SBlackListUsers(
         adapter.setBottomLoader { onLoad, cards ->
             subscription = RAccountsBlackListGetAll(accountId, cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.accounts) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

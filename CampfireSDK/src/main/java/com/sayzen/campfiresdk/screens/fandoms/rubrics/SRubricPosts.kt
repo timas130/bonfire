@@ -57,7 +57,7 @@ class SRubricPosts(
         adapter.setBottomLoader { onLoad, cards ->
             RPostGetAllByRubric(rubric.id, cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.publications) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

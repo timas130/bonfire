@@ -55,7 +55,7 @@ class SStickersPacks(
                         onLoad.invoke(r.stickersPacks)
                         adapter.add(CardSpace(124))
                     }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
 

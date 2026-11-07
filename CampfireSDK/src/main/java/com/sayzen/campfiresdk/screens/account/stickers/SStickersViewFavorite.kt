@@ -62,7 +62,7 @@ class SStickersViewFavorite(
                             onLoad.invoke(r.stickers)
                         }
                     }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

@@ -45,7 +45,7 @@ class SAdministrationFandoms private constructor(
                         ControllerActivities.setFandomsCount(adapter.get(CardFandom::class).size + r.fandoms.size.toLong())
                         onLoad.invoke(r.fandoms)
                     }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

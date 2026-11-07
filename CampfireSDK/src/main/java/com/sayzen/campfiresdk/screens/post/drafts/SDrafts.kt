@@ -68,7 +68,7 @@ class SDrafts constructor(
         adapter.setBottomLoader { onLoad, cards ->
             val r = RPublicationsDraftsGetAll(ControllerCampfireSDK.ROOT_FANDOM_ID, ControllerCampfireSDK.ROOT_PROJECT_KEY, ControllerCampfireSDK.ROOT_PROJECT_SUB_KEY, cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.publications) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
             r.tokenRequired = true
             r.send(api)
         }

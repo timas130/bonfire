@@ -43,7 +43,7 @@ class SFandomChatsList constructor(
         adapter.setBottomLoader { onLoad, cards ->
             RChatsFandomGetAll(cards.size.toLong(), fandomId, languageId)
                     .onComplete { rr -> onLoad.invoke(rr.chats) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

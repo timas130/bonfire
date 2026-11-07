@@ -33,7 +33,7 @@ class QuestPage(val screen: Screen) : CardScreenLoadingRecycler<CardQuestDetails
                 adapterX.setShowLoadingCard(true)
                 onLoad(resp.quests)
                 setTextProgress(t(API_TRANSLATE.feed_loading_35))
-            }.onNetworkError {
+            }.onError {
                 onLoad.invoke(null)
             }.send(api)
         }

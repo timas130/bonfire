@@ -21,7 +21,7 @@ class SReportsAccount(
         adapter.setBottomLoader { onLoad, cards ->
             subscription = RAccountsReportsGetAllForAccount(accountId, cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.reports) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

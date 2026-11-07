@@ -26,7 +26,7 @@ class SStickersPacksSearch() : SLoadingRecycler<CardStickersPack, PublicationSti
         adapter.setBottomLoader { onLoad, cards ->
             subscription = RStickersSearch(cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.stickersPacks) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

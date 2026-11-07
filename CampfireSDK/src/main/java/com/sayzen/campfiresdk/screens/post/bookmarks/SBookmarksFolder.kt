@@ -46,7 +46,7 @@ class SBookmarksFolder constructor(
         adapter.setBottomLoader { onLoad, cards ->
             RBookmarksGetAll(cards.size.toLong(), "", ControllerCampfireSDK.ROOT_FANDOM_ID, 0, folder.id, emptyArray())
                     .onComplete { r -> onLoad.invoke(r.publications) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
 

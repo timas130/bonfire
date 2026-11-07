@@ -24,7 +24,7 @@ class SRelayRaceInfoMembers(
         adapter.setBottomLoader { onLoad, cards ->
             subscription = RActivitiesRelayGetMembers(userActivityId, cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.accounts) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

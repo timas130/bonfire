@@ -105,7 +105,7 @@ class SFandom private constructor(
                                 onLoad.invoke(rr.publications)
                                 afterPackLoaded()
                             }
-                            .onNetworkError { onLoad.invoke(null) }
+                            .onError { onLoad.invoke(null) }
                             .send(api)
                 }
                 .setRetryMessage(t(API_TRANSLATE.error_network), t(API_TRANSLATE.app_retry))

@@ -53,7 +53,7 @@ class SRubricsList constructor(
         adapter.setBottomLoader { onLoad, cards ->
             RRubricsGetAll(fandomId, languageId, ownerId, cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.rubrics) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
                 .addOnLoadedPack {

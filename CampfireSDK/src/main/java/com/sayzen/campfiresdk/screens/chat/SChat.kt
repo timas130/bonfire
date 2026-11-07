@@ -240,7 +240,7 @@ class SChat constructor(
                         onLoad.invoke(r.publications)
                         if (cards.isNotEmpty()) cards.get(0).onSameChanged()
                     }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
         adapter.setRemoveSame(true)

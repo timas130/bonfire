@@ -22,7 +22,7 @@ class SWikiArticleHistory(
                     .onComplete { r ->
                         onLoad.invoke(r.historyList)
                     }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

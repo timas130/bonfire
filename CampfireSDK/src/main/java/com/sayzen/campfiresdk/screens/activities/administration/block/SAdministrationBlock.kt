@@ -45,7 +45,7 @@ class SAdministrationBlock : SLoadingRecycler<CardPublication, PublicationBlocke
                         onLoad.invoke(r.publications)
                         ToolsThreads.main { afterPackLoaded() }
                     }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

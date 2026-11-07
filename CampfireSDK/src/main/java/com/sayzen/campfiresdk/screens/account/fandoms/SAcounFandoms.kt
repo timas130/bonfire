@@ -30,7 +30,7 @@ class SAcounFandoms(
                     .onComplete { r ->
                         onLoad.invoke(r.fandoms)
                     }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }

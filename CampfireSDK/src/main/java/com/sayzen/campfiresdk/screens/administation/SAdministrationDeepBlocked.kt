@@ -23,7 +23,7 @@ class SAdministrationDeepBlocked(val accountId: Long) : SLoadingRecycler<CardPub
         adapter.setBottomLoader { onLoad, cards ->
             RPublicationsGetAllDeepBlocked(accountId, cards.size.toLong())
                     .onComplete { r -> onLoad.invoke(r.publications) }
-                    .onNetworkError { onLoad.invoke(null) }
+                    .onError { onLoad.invoke(null) }
                     .send(api)
         }
     }
