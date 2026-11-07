@@ -82,11 +82,9 @@ object OptimizerSponsor {
         }
     }
 
-    fun setSponsor(accountId: Long, count: Long) {
+    fun setSponsor(accountId: Long) {
         sponsorsUpdate()
-        sponsorAmountCache.compute(accountId) { _, previous ->
-            (previous ?: 0L) + count
-        }
+        sponsorAmountCache.remove(accountId)
         sponsorMonthsCache.remove(accountId) // flush cache for this one
     }
 }

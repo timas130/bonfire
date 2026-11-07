@@ -124,7 +124,7 @@ object ControllerDonates {
 
         )
 
-        OptimizerSponsor.setSponsor(accountId, sum)
+        OptimizerSponsor.setSponsor(accountId)
 
         ControllerNotifications.push(accountId, NotificationDonate(sum))
 
