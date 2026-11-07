@@ -10,6 +10,7 @@ import com.sayzen.campfiresdk.compose.publication.post.pages.activity.UserActivi
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.models.events.publications.*
 import com.sup.dev.android.models.EventStyleChanged
+import com.sup.dev.java.libs.eventBus.EventBus
 
 class PostDataSource(post: PublicationPost, onRemoved: State<() -> Unit>) : PublicationDataSource<PublicationPost>(post, onRemoved) {
     init {
@@ -82,8 +83,16 @@ class PostDataSource(post: PublicationPost, onRemoved: State<() -> Unit>) : Publ
         }
     }
 
+    private val bestCommentSubscriber = EventBus
+        .subscribe(EventPublicationRemove::class) {
+            edit(data.bestComment?.id == it.publicationId) {
+                bestComment = null
+            }
+        }
+
     override fun destroy() {
         super.destroy()
         userActivityDataSource?.destroy()
+        bestCommentSubscriber.unsubscribe()
     }
 }
