@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.pointer.PointerEventTimeoutCancellationException
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -462,6 +463,8 @@ class ComposeCardPost(
 
     @Composable
     override fun Content() {
+        val view = LocalView.current
+
         Post(
             initialPost = post,
             onRemoved = { adapter.remove(proxy) },
@@ -474,7 +477,7 @@ class ComposeCardPost(
             onClick = onClick,
             isVisible = {
                 val current = Navigator.getCurrent()
-                current is PostList && current.contains(proxy)
+                current is PostList && current.contains(proxy) && view.isAttachedToWindow
             },
         )
     }
