@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.API_TRANSLATE
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.quests.*
 import com.sayzen.campfiresdk.R
 import com.sayzen.campfiresdk.controllers.ControllerLinks
@@ -133,6 +134,7 @@ class SQuestPartTextCreate(
         vImageRemove.setOnClickListener {
             part.insertBytes = null
             part.imageId = 0
+            part.image = ImageRef()
             vImage.setImageResource(R.color.focus_dark)
             vImageRemove.visibility = GONE
             vImageIcon.visibility = VISIBLE
