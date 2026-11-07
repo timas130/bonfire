@@ -49,7 +49,7 @@ class EPublicationsAdminRemove : RPublicationsAdminRemove(0) {
 
         ControllerOptimizer.putCollisionWithCheck(apiAccount.id, API.COLLISION_ACHIEVEMENT_REVIEW_MODER_ACTION)
         ControllerAchievements.addAchievementWithCheck(apiAccount.id, API.ACHI_REVIEW_MODER_ACTION)
-        ControllerPublicationsHistory.put(publication!!.id, HistoryAdminDeepBlock(apiAccount.id, apiAccount.imageId, apiAccount.name, ""))
+        if (publication != null) ControllerPublicationsHistory.put(publication!!.id, HistoryAdminDeepBlock(apiAccount.id, apiAccount.imageId, apiAccount.name, ""))
         return Response()
     }
 

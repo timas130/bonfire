@@ -35,7 +35,7 @@ class EPublicationsAdminRestore : RPublicationsAdminRestore(0, "", true) {
         if (publicationModeration!!.tag_2 != 0L) throw ApiException(API.ERROR_GONE)
         if (apiAccount.id != 1L && publicationModeration!!.creator.id == apiAccount.id) throw ApiException(E_SELF)
         publication = ControllerPublications.getPublication(((publicationModeration as PublicationModeration).moderation as ModerationBlock).publicationId, apiAccount.id)
-        if (apiAccount.id != 1L && publication!!.creator.id == apiAccount.id) throw ApiException(E_SELF)
+        if (apiAccount.id != 1L && publication?.creator?.id == apiAccount.id) throw ApiException(E_SELF)
         ControllerModeration.parseComment(comment, apiAccount.id)
     }
 
@@ -78,8 +78,8 @@ class EPublicationsAdminRestore : RPublicationsAdminRestore(0, "", true) {
         val moderatorSex: Long = v.next()
 
         ControllerPublications.event(ApiEventAdminModerationRejected(apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, publicationModeration!!.creator.id, moderatorName, moderatorImageId, moderatorSex, comment, publicationModeration!!.id), apiAccount.id)
-        ControllerPublications.event(ApiEventUserAdminModerationRejected(publicationModeration!!.creator.id, moderatorName, moderatorImageId, moderatorSex, apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, publicationModeration!!.id, publication!!.fandom.name), publicationModeration!!.creator.id)
-        ControllerPublications.event(ApiEventUserAdminPublicationRestored(publication!!.creator.id, publication!!.creator.name, publication!!.creator.imageId, publication!!.creator.sex, apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, publicationModeration!!.id), publication!!.creator.id)
+        ControllerPublications.event(ApiEventUserAdminModerationRejected(publicationModeration!!.creator.id, moderatorName, moderatorImageId, moderatorSex, apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, publicationModeration!!.id, publicationModeration!!.fandom.name), publicationModeration!!.creator.id)
+        if (publication != null) ControllerPublications.event(ApiEventUserAdminPublicationRestored(publication!!.creator.id, publication!!.creator.name, publication!!.creator.imageId, publication!!.creator.sex, apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, publicationModeration!!.id), publication!!.creator.id)
 
         val notificationBlock = NotificationModerationRejected(publicationModeration!!.id, publicationModeration!!.fandom.id, publicationModeration!!.fandom.languageId, publicationModeration!!.fandom.imageId, comment, apiAccount.name, apiAccount.sex)
         ControllerNotifications.push(publicationModeration!!.creator.id, notificationBlock)
@@ -87,7 +87,7 @@ class EPublicationsAdminRestore : RPublicationsAdminRestore(0, "", true) {
         ControllerOptimizer.putCollisionWithCheck(apiAccount.id, API.COLLISION_ACHIEVEMENT_REVIEW_MODER_ACTION)
         ControllerAchievements.addAchievementWithCheck(apiAccount.id, API.ACHI_REVIEW_MODER_ACTION)
 
-        ControllerPublicationsHistory.put(publication!!.id, HistoryAdminNotBlock(apiAccount.id, apiAccount.imageId, apiAccount.name, comment))
+        if (publication != null) ControllerPublicationsHistory.put(publication!!.id, HistoryAdminNotBlock(apiAccount.id, apiAccount.imageId, apiAccount.name, comment))
 
         return Response()
     }
