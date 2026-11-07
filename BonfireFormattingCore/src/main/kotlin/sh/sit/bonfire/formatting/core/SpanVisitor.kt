@@ -164,6 +164,17 @@ class SpanVisitor(buffer: Int = 64) : AbstractVisitor() {
         outputString.append(node.literal)
     }
 
+    override fun visit(node: HtmlInline) {
+        outputString.append(node.literal)
+    }
+
+    override fun visit(block: HtmlBlock) {
+        addSpan(ParagraphBlock()) {
+            outputString.append((block.literal as CharSequence).trim { it == '\n' })
+        }
+        outputString.append('\n')
+    }
+
     private companion object {
         const val MAX_CONTAINER_DEPTH = 32
     }
