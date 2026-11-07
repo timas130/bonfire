@@ -233,7 +233,7 @@ class SQuestPartActionCreate(
         when (part.actionType) {
             API.QUEST_ACTION_SET_LITERAL -> {}
             API.QUEST_ACTION_SET_RANDOM -> {
-                if (part.lArg1 >= part.lArg2) {
+                if (vVariable.selected?.type != API.QUEST_TYPE_BOOL && part.lArg1 >= part.lArg2) {
                     ToolsToast.show(t(API_TRANSLATE.quests_edit_action_error_1))
                     return
                 }
