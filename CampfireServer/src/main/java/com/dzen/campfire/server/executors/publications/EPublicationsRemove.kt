@@ -88,6 +88,7 @@ class EPublicationsRemove : RPublicationsRemove(0) {
             for (i in stickers) {
                 i as PublicationSticker
                 ControllerPublications.remove(i.id)
+                ControllerStickers.removeCollisionsSticker(i.id)
                 ControllerResources.remove(i.imageId)
                 ControllerResources.remove(i.gifId)
             }

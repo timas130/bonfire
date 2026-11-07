@@ -13,6 +13,7 @@ class EStickersPackCollectionAdd : RStickersPackCollectionAdd(0) {
         val publication = ControllerPublications.getPublication(stickersPackId, apiAccount.id)
         if (publication == null) throw ApiException(API.ERROR_GONE)
         if (publication.publicationType != API.PUBLICATION_TYPE_STICKERS_PACK) throw ApiException(API.ERROR_ACCESS)
+        if (publication.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_GONE)
         if (ControllerStickers.getStickersPacksCount(apiAccount.id) >= API.STICKERS_PACK_MAX_COUNT_ON_ACCOUNT) throw ApiException(E_TOO_MANY)
     }
 

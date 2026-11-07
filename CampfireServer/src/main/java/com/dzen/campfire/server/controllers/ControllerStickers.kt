@@ -3,11 +3,13 @@ package com.dzen.campfire.server.controllers
 import com.dzen.campfire.api.API
 import com.dzen.campfire.server.tables.TAccounts
 import com.dzen.campfire.server.tables.TCollisions
+import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java.libs.debug.info
 import com.sup.dev.java_pc.sql.Database
 import com.sup.dev.java_pc.sql.Sql
 import com.sup.dev.java_pc.sql.SqlQueryRemove
 import com.sup.dev.java_pc.sql.SqlQuerySelect
+import com.sup.dev.java_pc.sql.SqlWhere
 
 object ControllerStickers {
 
@@ -20,7 +22,11 @@ object ControllerStickers {
     fun getStickersCount(accountId:Long):Long{
        return Database.select("ControllerStickers select_stickers_count", SqlQuerySelect(TCollisions.NAME, Sql.COUNT)
                 .where(TCollisions.collision_type, "=", API.COLLISION_ACCOUNT_STICKERS)
-                .where(TCollisions.owner_id, "=", accountId)).nextLongOrZero()
+                .where(TCollisions.owner_id, "=", accountId)
+                .where(SqlWhere.WhereString("EXISTS (SELECT 1 FROM ${TPublications.NAME} s" +
+                        " JOIN ${TPublications.NAME} p ON p.${TPublications.id}=s.${TPublications.tag_1}" +
+                        " WHERE s.${TPublications.id}=${TCollisions.NAME}.${TCollisions.collision_id}" +
+                        " AND s.${TPublications.status}=${API.STATUS_PUBLIC} AND p.${TPublications.status}=${API.STATUS_PUBLIC})"))).nextLongOrZero()
     }
 
     fun getStickersPacksIds(accountId:Long):Array<Long>{
