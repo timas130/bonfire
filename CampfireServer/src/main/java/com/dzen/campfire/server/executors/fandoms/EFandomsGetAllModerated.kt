@@ -30,7 +30,7 @@ class EFandomsGetAllModerated : RFandomsGetAllModerated(0, 0) {
                 .where(TCollisions.value_1, ">=", API.LVL_MODERATOR_BLOCK.karmaCount)
                 .where(TCollisions.collision_type, "=", API.COLLISION_KARMA_30)
                 .where(TFandoms.NAME + "." + TFandoms.status, "=", API.STATUS_PUBLIC)
-                .sort(TFandoms.subscribers_count, false)
+                .sort(TFandoms.subscribers_count, false, TCollisions.NAME + "." + TCollisions.id)
                 .offset_count(offset, COUNT)
         
         val v = Database.select("EFandomsGetAllModerated",select)

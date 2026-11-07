@@ -25,7 +25,7 @@ class EPublicationsReportedGetAll : RPublicationsReportedGetAll(0, emptyArray(),
                 .where(TPublications.status, "=", API.STATUS_PUBLIC)
                 .where(TPublications.creator_id, "<>", apiAccount.id)
                 .where(TPublications.publication_reports_count, ">", 0)
-                .sort(TPublications.publication_reports_count, false)
+                .sort(TPublications.publication_reports_count, false, TPublications.NAME + "." + TPublications.id)
                 .offset_count(offset, COUNT)
 
         if (fandomId > 0 && languagesIds.size == 1) {

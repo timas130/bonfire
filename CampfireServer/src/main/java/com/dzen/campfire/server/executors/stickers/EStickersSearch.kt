@@ -19,7 +19,7 @@ class EStickersSearch : RStickersSearch(0) {
                 .where(TPublications.status, "=", API.STATUS_PUBLIC)
                 .count(COUNT)
                 .offset(offset)
-                .sort(TPublications.NAME + "." + TPublications.karma_count, false)
+                .sort(TPublications.NAME + "." + TPublications.karma_count, false, TPublications.NAME + "." + TPublications.id)
 
         val stickersPacks = ControllerPublications.parseSelect(Database.select("EStickersSearch", select))
 

@@ -39,7 +39,7 @@ class EFandomsRatingGet : RFandomsRatingGet(0, 0, 0) {
         select.where(TCollisions.value_1, "<>", 0)
         select.where(TCollisions.collision_type, "=", API.COLLISION_KARMA_30)
         select.offset_count(offset, COUNT)
-        select.sort(TCollisions.value_1, false)
+        select.sort(TCollisions.value_1, false, TCollisions.id)
         val v = Database.select("EFandomsRatingGet.loadK",select)
 
         if (v.isEmpty) {

@@ -29,7 +29,7 @@ class EAccountsReportsGetAll : RAccountsReportsGetAll(0) {
                 TAccounts.karma_count_30,
                 TAccounts.reports_count)
                 .where(TAccounts.reports_count, ">", 0)
-                .sort(TAccounts.reports_count, false)
+                .sort(TAccounts.reports_count, false, TAccounts.id)
                 .offset_count(offset, COUNT))
 
         return Response(Array(v.rowsCount){

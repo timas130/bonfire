@@ -32,7 +32,7 @@ class EAccountsKarmaInFandomsGetAll : RAccountsKarmaInFandomsGetAll(0, 0) {
                 .where(TCollisions.owner_id, "=", accountId)
                 .where(TCollisions.value_1, "<>", 0)
                 .where(Sql.IFNULL("(SELECT ${TFandoms.image_id} FROM ${TFandoms.NAME} WHERE ${TFandoms.id}=${TCollisions.collision_id})", 0), "<>", 0)
-                .sort(TCollisions.value_1, false)
+                .sort(TCollisions.value_1, false, TCollisions.id)
                 .offset_count(offset, COUNT)
         )
 
