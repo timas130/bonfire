@@ -41,7 +41,7 @@ impl AuthServer {
             .execute(&mut *tx)
             .await?;
 
-        self.do_change_password(user_id, hash).await?;
+        self.do_change_password(user_id, hash, None).await?;
 
         tx.commit().await?;
 

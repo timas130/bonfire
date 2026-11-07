@@ -174,7 +174,7 @@ impl RawTfaFlow {
             .map_err(|_| anyhow!("invalid tfa action"))?;
 
         if let TfaAction::PasswordChange(pwd) = action {
-            server.do_change_password(self.user_id, pwd).await?;
+            server.do_change_password(self.user_id, pwd, None).await?;
         }
 
         Ok(())

@@ -11,6 +11,7 @@ impl AuthServer {
         &self,
         user_id: i64,
         hashed_password: String,
+        revoke_sessions_except: Option<i64>,
     ) -> Result<(), AuthError> {
         let mut tx = self.base.pool.begin().await?;
 
@@ -36,6 +37,16 @@ impl AuthServer {
                 .await
                 .map_err(anyhow::Error::from)?
                 .map_err(anyhow::Error::from)?;
+        }
+
+        if let Some(session_id) = revoke_sessions_except {
+            sqlx::query!(
+                "delete from sessions where user_id = $1 and id != $2",
+                user_id,
+                session_id,
+            )
+            .execute(&mut *tx)
+            .await?;
         }
 
         tx.commit().await?;
@@ -79,8 +90,12 @@ impl AuthServer {
 
         let new_hash = self.hash_password(new_password).await?;
 
-        self.do_change_password(access_token.user_id, new_hash)
-            .await?;
+        self.do_change_password(
+            access_token.user_id,
+            new_hash,
+            user.password.is_some().then_some(access_token.session_id),
+        )
+        .await?;
 
         Ok(None)
     }
