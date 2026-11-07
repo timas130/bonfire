@@ -104,6 +104,7 @@ abstract class Splash(layoutRes: Int) {
 
     @CallSuper
     open fun onHide() {
+        if (isHided) return
         isHided = true
         onHide.invoke(this)
     }
