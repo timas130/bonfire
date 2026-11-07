@@ -307,7 +307,7 @@ class TextFormatter(
             val name = text.substring(i + 1, nextClose)
             val link = text.substring(nextClose + 1, nextSpace)
 
-            if (ToolsText.isWebLink(link) || link.startsWith(char_protector_word)) {
+            if (isNamedLinkTarget(link) || link.startsWith(char_protector_word)) {
                 result.append("<a href=\"${ToolsText.castToWebLink(link)}\">$name</a>")
                 i = nextSpace
                 return true
@@ -317,6 +317,14 @@ class TextFormatter(
             err(e)
             return false
         }
+    }
+
+    private fun isNamedLinkTarget(link: String): Boolean {
+        if (!ToolsText.isWebLink(link)) return false
+        if (link.startsWith("http://", ignoreCase = true) || link.startsWith("https://", ignoreCase = true)) return true
+        val host = link.substringBefore('/').substringBefore('?').substringBefore('#').substringBefore(':')
+        val tld = host.substringAfterLast('.', "")
+        return !host.startsWith(".") && tld.length >= 2 && tld[0].isLetter() && tld.all { it.isLetterOrDigit() || it == '-' }
     }
 
     private fun nextColorChar(i: Int): Char? {
