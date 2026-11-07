@@ -83,6 +83,12 @@ object ControllerChatBot {
                 return
             }
 
+            if (text.isBlank()) {
+                respondTo(fromAccount, "Опишите запрос текстом. Картинки можно отправлять " +
+                        "*только* по ссылке. Если вы передумали, напишите `отмена`.")
+                return
+            }
+
             try {
                 sendBug(state, text)
                 respondTo(fromAccount, "Ваш запрос был успешно отправлен.\n" +
