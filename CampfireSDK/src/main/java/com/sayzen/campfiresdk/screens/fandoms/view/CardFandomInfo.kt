@@ -174,8 +174,8 @@ class CardFandomInfo(
             .setTitle(
                 t(
                     API_TRANSLATE.fandoms_menu_set_cof_hint,
-                    API.FANDOM_KARMA_COF_MIN / 100,
-                    API.FANDOM_KARMA_COF_MAX / 100
+                    API.FANDOM_KARMA_COF_MIN / 100.0,
+                    API.FANDOM_KARMA_COF_MAX / 100.0
                 )
             )
             .setOnCancel(t(API_TRANSLATE.app_cancel))
@@ -187,7 +187,7 @@ class CardFandomInfo(
                     return@addChecker_1 false
                 }
                 try {
-                    val v = (it.toDouble() * 100).toLong()
+                    val v = Math.round(it.toDouble() * 100)
                     if (v < API.FANDOM_KARMA_COF_MIN || v > API.FANDOM_KARMA_COF_MAX) {
                         return@addChecker_1 false
                     }
@@ -199,7 +199,7 @@ class CardFandomInfo(
             }
             .addChecker_1("") {
                 try {
-                    val v = (it.toDouble() * 100).toLong()
+                    val v = Math.round(it.toDouble() * 100)
                     if (v == karmaCof) {
                         return@addChecker_1 false
                     }
@@ -216,7 +216,7 @@ class CardFandomInfo(
             .setHint_2(t(API_TRANSLATE.comments_hint))
             .addChecker_2(t(API_TRANSLATE.error_use_english)) { ToolsText.isOnly(it, API.ENGLISH) }
             .setOnEnter(t(API_TRANSLATE.app_change)) { w, cof, comment ->
-                val v = (cof.toDouble() * 100).toLong()
+                val v = Math.round(cof.toDouble() * 100)
 
                 ApiRequestsSupporter.executeEnabled(w, RFandomsAdminSetCof(xFandom.getId(), v, comment)) {
                     EventBus.post(EventFandomKarmaCofChanged(xFandom.getId(), v))
