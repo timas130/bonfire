@@ -24,7 +24,7 @@ impl AuthServer {
         // Get the user ID and username
 
         let user = sqlx::query!(
-            "select id, username, email_verified from users \
+            "select id, username from users \
              where lower(email) = lower($1) \
              limit 1",
             email,
@@ -32,8 +32,7 @@ impl AuthServer {
         .fetch_optional(&self.base.pool)
         .await?;
         let user = match user {
-            Some(user) if user.email_verified.is_some() => user,
-            Some(_) => return Err(AuthError::NotVerified),
+            Some(user) => user,
             _ => return Err(AuthError::UserNotFound),
         };
 

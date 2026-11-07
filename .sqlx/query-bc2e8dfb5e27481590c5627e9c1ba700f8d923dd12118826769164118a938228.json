@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select id, username, email_verified from users where lower(email) = lower($1) limit 1",
+  "query": "select id, username from users where lower(email) = lower($1) limit 1",
   "describe": {
     "columns": [
       {
@@ -12,11 +12,6 @@
         "ordinal": 1,
         "name": "username",
         "type_info": "Text"
-      },
-      {
-        "ordinal": 2,
-        "name": "email_verified",
-        "type_info": "Timestamptz"
       }
     ],
     "parameters": {
@@ -26,9 +21,8 @@
     },
     "nullable": [
       false,
-      false,
-      true
+      false
     ]
   },
-  "hash": "a1d4172cc72f427926778b8f5df886b7ea1dbdc04f280392bad29250d45e2fcb"
+  "hash": "bc2e8dfb5e27481590c5627e9c1ba700f8d923dd12118826769164118a938228"
 }
