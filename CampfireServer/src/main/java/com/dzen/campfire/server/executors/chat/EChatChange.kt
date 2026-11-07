@@ -9,6 +9,7 @@ import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerAccounts
 import com.dzen.campfire.server.controllers.ControllerCensor
 import com.dzen.campfire.server.controllers.ControllerChats
+import com.dzen.campfire.server.controllers.ControllerCollisions
 import com.dzen.campfire.server.controllers.ControllerResources
 import com.dzen.campfire.server.tables.TAccounts
 import com.dzen.campfire.server.tables.TChats
@@ -57,7 +58,8 @@ class EChatChange : RChatChange(0, "", null, emptyArray(), emptyArray(), emptyAr
             if (members.find { it.account.id == newAccount }?.memberStatus == API.CHAT_MEMBER_STATUS_ACTIVE) {
                 continue
             }
-            if (! ControllerAccounts.getSettings(newAccount).allowAddingToConferences) {
+            if (! ControllerAccounts.getSettings(newAccount).allowAddingToConferences ||
+                ControllerCollisions.checkCollisionExist(newAccount, apiAccount.id, API.COLLISION_ACCOUNT_BLACK_LIST_ACCOUNT)) {
                 conferenceBlocks.add(newAccount)
             }
         }
