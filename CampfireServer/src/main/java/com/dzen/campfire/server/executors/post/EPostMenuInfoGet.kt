@@ -16,16 +16,12 @@ class EPostMenuInfoGet : RPostMenuInfoGet(0, emptyArray()) {
 
         var folderId = 0L
 
-        var bookmark = ControllerCollisions.checkCollisionExist(publicationId, apiAccount.id, API.COLLISION_BOOKMARK)
+        val bookmark = ControllerCollisions.checkCollisionExist(publicationId, apiAccount.id, API.COLLISION_BOOKMARK)
 
         if (bookmark) {
             folderId = ControllerCollisions.getCollisionValue1(publicationId, apiAccount.id, API.COLLISION_BOOKMARK)
 
-            if(folderId > 0 && !foldersIds.contains(folderId)){
-                ControllerCollisions.removeCollisions(publicationId, apiAccount.id, API.COLLISION_BOOKMARK)
-                folderId = 0L
-                bookmark = false
-            }
+            if(folderId > 0 && !foldersIds.contains(folderId)) folderId = 0L
         }
 
         val follow = ControllerCollisions.checkCollisionExist(apiAccount.id, publicationId, API.COLLISION_COMMENTS_WATCH)
