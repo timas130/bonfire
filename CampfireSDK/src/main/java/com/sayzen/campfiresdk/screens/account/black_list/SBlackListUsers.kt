@@ -54,6 +54,7 @@ class SBlackListUsers(
     //
 
     private fun onEventAccountRemoveFromBlackList(e: EventAccountRemoveFromBlackList) {
+        if (accountId != ControllerApi.account.getId()) return
         val cards = adapter.get(CardAccount::class)
         for (c in cards) if (c.xAccount.getId() == e.accountId) adapter.remove(c)
     }

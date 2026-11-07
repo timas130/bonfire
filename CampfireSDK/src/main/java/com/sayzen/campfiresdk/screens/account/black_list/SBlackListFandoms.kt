@@ -34,7 +34,7 @@ class SBlackListFandoms(
 
     val eventBud = EventBus
             .subscribe(EventFandomBlackListChange::class) {
-                if (!it.inBlackList)
+                if (!it.inBlackList && accountId == ControllerApi.account.getId())
                     for (c in adapter.get(CardFandom::class)) if (c.fandom.id == it.fandomId) adapter.remove(c)
             }
 
