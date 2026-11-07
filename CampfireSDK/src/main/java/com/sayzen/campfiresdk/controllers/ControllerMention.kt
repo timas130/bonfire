@@ -21,12 +21,12 @@ object ControllerMention {
 
     fun startFor(vField: EditText, addSpace: Boolean = true) {
         var firstTime = true
-        ToolsView.onSelectionChanged(vField) {
+        ToolsView.onSelectionChanged(vField) { field ->
             if (firstTime) {
                 firstTime = false
                 return@onSelectionChanged
             }
-            updateMention(vField, addSpace)
+            updateMention(field, addSpace)
         }
     }
 

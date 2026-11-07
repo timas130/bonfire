@@ -78,11 +78,11 @@ object ToolsView {
         return point
     }
 
-    fun onSelectionChanged(vFiled: EditText,onChanged: () -> Unit) {
+    fun onSelectionChanged(vFiled: EditText,onChanged: (EditText) -> Unit) {
         onSelectionChanged(WeakReference(vFiled), onChanged)
     }
 
-    private fun onSelectionChanged(vFiled: WeakReference<EditText>, onChanged: () -> Unit) {
+    private fun onSelectionChanged(vFiled: WeakReference<EditText>, onChanged: (EditText) -> Unit) {
 
         val item = Item(vFiled.get()?.selectionEnd?:0)
         vFiled.get()?.addTextChangedListener(object : TextWatcher {
@@ -90,7 +90,7 @@ object ToolsView {
                 val get = vFiled.get()?:return
                 if(item.a != get.selectionEnd){
                     item.a = get.selectionEnd
-                    onChanged.invoke()
+                    onChanged.invoke(get)
                 }
             }
 
@@ -110,7 +110,7 @@ object ToolsView {
             }
             if(item.a != get.selectionEnd){
                 item.a = get.selectionEnd
-                onChanged.invoke()
+                onChanged.invoke(get)
             }
         }
 
