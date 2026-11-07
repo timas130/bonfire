@@ -522,13 +522,14 @@ object ControllerChats {
     }
 
     fun enter(apiAccount: ApiAccount, tag: ChatTag) {
+        val enterDate = if (tag.chatType == API.CHAT_TYPE_CONFERENCE && getChatParams(tag.targetId).isPublic) 1L else System.currentTimeMillis()
         Database.update("EChatEnter", SqlQueryUpdate(TChatsSubscriptions.NAME)
                 .where(TChatsSubscriptions.account_id, "=", apiAccount.id)
                 .where(TChatsSubscriptions.chat_type, "=", tag.chatType)
                 .where(TChatsSubscriptions.target_id, "=", tag.targetId)
                 .where(TChatsSubscriptions.target_sub_id, "=", tag.targetSubId)
                 .update(TChatsSubscriptions.exit_date, 0)
-                .update(TChatsSubscriptions.enter_date, System.currentTimeMillis())
+                .update(TChatsSubscriptions.enter_date, enterDate)
                 .update(TChatsSubscriptions.member_status, API.CHAT_MEMBER_STATUS_ACTIVE)
         )
     }
