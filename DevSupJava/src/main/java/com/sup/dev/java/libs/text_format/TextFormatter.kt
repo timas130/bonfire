@@ -50,9 +50,9 @@ class TextFormatter(
             val thisChar = text[i]
 
             if (skipToSpace) {
-                if (thisChar == ' ') {
+                if (thisChar.isWhitespace()) {
                     skipToSpace = false
-                    if (text[i - 1] != char_protector_word && chars_spec.contains(text[i - 1])) i--
+                    if (thisChar == ' ' && text[i - 1] != char_protector_word && chars_spec.contains(text[i - 1])) i--
                 } else {
                     result.append(thisChar)
                     i++
@@ -155,7 +155,7 @@ class TextFormatter(
                 continue
             }
             if (skipToSpace) {
-                if (text[n] == ' ') {
+                if (text[n].isWhitespace()) {
                     skipToSpace = false
                     if (text[n - 1] != char_protector_word && chars_spec.contains(text[n - 1])) {
                         n--
