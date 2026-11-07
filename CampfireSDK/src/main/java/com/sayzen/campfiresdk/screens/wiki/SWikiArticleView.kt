@@ -24,6 +24,7 @@ import com.sayzen.campfiresdk.compose.ComposeCard
 import com.sayzen.campfiresdk.compose.publication.post.pages.ComposePostPages
 import com.sayzen.campfiresdk.controllers.*
 import com.sayzen.campfiresdk.models.cards.post_pages.CardPage
+import com.sayzen.campfiresdk.models.events.wiki.EventWikiChanged
 import com.sayzen.campfiresdk.models.events.wiki.EventWikiPagesChanged
 import com.sayzen.campfiresdk.models.events.wiki.EventWikiRemove
 import com.sayzen.campfiresdk.screens.wiki.history.EventWikiHistoryStatusChanged
@@ -39,7 +40,7 @@ import com.sup.dev.android.views.support.adapters.recycler_view.RecyclerCardAdap
 import com.sup.dev.java.libs.eventBus.EventBus
 
 class SWikiArticleView(
-        val wikiTitle: WikiTitle,
+        var wikiTitle: WikiTitle,
         var languageId: Long,
         var startPages: WikiPages? = null
 ) : Screen(R.layout.screen_wiki_article), PagesContainer {
@@ -56,6 +57,7 @@ class SWikiArticleView(
 
     private val eventBus = EventBus
             .subscribe(EventWikiPagesChanged::class) { this.onEventWikiPagesChanged(it) }
+            .subscribe(EventWikiChanged::class) { this.onEventWikiChanged(it) }
             .subscribe(EventWikiRemove::class) { if (it.itemId == wikiTitle.itemId) Navigator.remove(this) }
             .subscribe(EventWikiHistoryStatusChanged::class) {
                 if (it.itemId == loadedPages?.itemId && it.languageId == loadedPages?.languageId) reload()
@@ -262,6 +264,14 @@ class SWikiArticleView(
     //
     //  EventBus
     //
+
+    private fun onEventWikiChanged(e: EventWikiChanged) {
+        if (e.item.itemId != wikiTitle.itemId) return
+        wikiTitle = e.item
+        ImageLoader.load(wikiTitle.image).into(vAvatar)
+        ImageLoader.load(wikiTitle.imageBig).into(vImageTitle)
+        vToolbarTitle.text = wikiTitle.getName(ControllerApi.getLanguage(languageId).code)
+    }
 
     private fun onEventWikiPagesChanged(e: EventWikiPagesChanged) {
         if (e.itemId == wikiTitle.itemId) {
