@@ -57,6 +57,7 @@ class SDonate private constructor(
     val pageDonates = PageDonates(this)
     val pageRating30 = PageRating30(this)
     val pageRatingTotal = PageRatingTotal(this)
+    private var scrolledToAccount = false
 
     init {
         disableNavigation()
@@ -89,8 +90,9 @@ class SDonate private constructor(
 
     override fun onResume() {
         super.onResume()
-        if (accountId > 0) {
-            vPager.setCurrentItem(1)
+        if (accountId > 0 && !scrolledToAccount) {
+            scrolledToAccount = true
+            vPager.setCurrentItem(2)
             pageRatingTotal.scrollTo(accountId)
         }
     }
