@@ -178,7 +178,7 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
 
     private fun blockLastPublications(ids: ArrayList<Long>) {
         val v = Database.select("EFandomsModerationBlock.blockLastPublications select",
-                SqlQuerySelect(TPublications.NAME, TPublications.id, TPublications.publication_type, TPublications.parent_publication_id, TPublications.tag_1, TPublications.tag_2, TPublications.tag_3)
+                SqlQuerySelect(TPublications.NAME, TPublications.id, TPublications.publication_type, TPublications.parent_publication_id, TPublications.tag_1, TPublications.fandom_id, TPublications.language_id)
                         .where(TPublications.fandom_id, "=", publication!!.fandom.id)
                         .where(TPublications.language_id, "=", if (isSubChatMessage) publication!!.fandom.languageId else languageId)
                         .where(TPublications.creator_id, "=", publication!!.creator.id)
@@ -197,8 +197,8 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
             val type: Long = v.next()
             val parentPublicationId: Long = v.next()
             val tag1: Long = v.next()
-            val tag2: Long = v.next()
-            val tag3: Long = v.next()
+            val targetId: Long = v.next()
+            val targetSubId: Long = v.next()
             if (!ids.contains(id)) {
                 ids.add(id)
                 ControllerPublications.changeStatus(id, API.STATUS_BLOCKED)
@@ -213,7 +213,7 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
                     ControllerPublications.recountBestComment(parentPublicationId, id)
                 }
                 if (type == API.PUBLICATION_TYPE_CHAT_MESSAGE) {
-                    ControllerChats.onMessagesRemoved(ChatTag(tag1, tag2, tag3), 1)
+                    ControllerChats.onMessagesRemoved(ChatTag(tag1, targetId, targetSubId), 1)
                 }
             }
         }
