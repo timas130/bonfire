@@ -39,6 +39,7 @@ import com.sup.dev.java.classes.collections.HashList
 import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.libs.text_format.TextFormatter
 import com.sup.dev.java.tools.ToolsDate
+import com.sup.dev.java.tools.ToolsThreads
 import sh.sit.bonfire.formatting.BonfireMarkdown
 
 open class CardComment(
@@ -59,7 +60,7 @@ open class CardComment(
         private val viewCash = HashList<String, View>()
 
         init {
-            SupAndroid.addOnLowMemory { viewCash.clear() }
+            SupAndroid.addOnLowMemory { ToolsThreads.main { viewCash.clear() } }
             SupAndroid.addOnActivityDestroy { viewCash.clear() }
         }
 

@@ -62,7 +62,7 @@ class CardPost(
 
         init {
             SupAndroid.addOnLowMemory {
-                pagesCash.clear()
+                ToolsThreads.main { pagesCash.clear() }
             }
             SupAndroid.addOnActivityDestroy {
                 pagesCash.clear()

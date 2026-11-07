@@ -53,6 +53,7 @@ import com.sup.dev.java.libs.eventBus.EventBus
 import com.sup.dev.java.tools.ToolsColor
 import com.sup.dev.java.tools.ToolsDate
 import com.sup.dev.java.tools.ToolsText
+import com.sup.dev.java.tools.ToolsThreads
 import sh.sit.bonfire.formatting.BonfireMarkdown
 
 open class CardChatMessage constructor(
@@ -69,7 +70,7 @@ open class CardChatMessage constructor(
         private val viewCash = HashList<String, View>()
 
         init {
-            SupAndroid.addOnLowMemory { viewCash.clear() }
+            SupAndroid.addOnLowMemory { ToolsThreads.main { viewCash.clear() } }
             SupAndroid.addOnActivityDestroy { viewCash.clear() }
         }
 

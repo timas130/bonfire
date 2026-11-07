@@ -183,42 +183,49 @@ object ImageLoader {
     //
 
     fun addToCash(key: String, bitmap: Bitmap?, bytes: ByteArray?) {
-        removeFromCash(key)
-        if (bitmap == null && bytes == null) return
-        val size = cashItemSize(bitmap, bytes)
-        if (size > maxCashItemSize) return
+        synchronized(cash) {
+            removeFromCash(key)
+            if (bitmap == null && bytes == null) return
+            val size = cashItemSize(bitmap, bytes)
+            if (size > maxCashItemSize) return
 
-        cashSize += size
-        cash.add(Item3(key, bitmap, bytes))
+            cashSize += size
+            cash.add(Item3(key, bitmap, bytes))
 
-        while (cashSize > maxCashSize && cash.isNotEmpty()) removeFromCash(cash[0].a1)
+            while (cashSize > maxCashSize && cash.isNotEmpty()) removeFromCash(cash[0].a1)
+        }
     }
 
     fun getFromCash(key: String): Item3<String, Bitmap?, ByteArray?>? {
         var item: Item3<String, Bitmap?, ByteArray?>? = null
-        for (i in cash) if (i.a1 == key) {
-            item = i
-            break
+        synchronized(cash) {
+            for (i in cash) if (i.a1 == key) {
+                item = i
+                break
+            }
         }
         return item
     }
 
     fun removeFromCash(key: String) {
-        val item = getFromCash(key) ?: return
+        synchronized(cash) {
+            val item = getFromCash(key) ?: return
 
-        cashSize -= cashItemSize(item.a2, item.a3)
+            cashSize -= cashItemSize(item.a2, item.a3)
 
-        var i = 0
-        while (i in 0 until cash.size) {
-            if (cash[i].a1 == key) cash.removeAt(i--)
-            i++
+            var i = 0
+            while (i in 0 until cash.size) {
+                if (cash[i].a1 == key) cash.removeAt(i--)
+                i++
+            }
         }
-
     }
 
     fun clearCash() {
-        cash.clear()
-        cashSize = 0
+        synchronized(cash) {
+            cash.clear()
+            cashSize = 0
+        }
     }
 
     private fun cashItemSize(bitmap: Bitmap?, bytes: ByteArray?) = (bitmap?.byteCount ?: 0) + (bytes?.size ?: 0)
