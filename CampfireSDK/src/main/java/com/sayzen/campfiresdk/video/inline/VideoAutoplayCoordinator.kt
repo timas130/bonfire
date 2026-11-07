@@ -33,6 +33,10 @@ class VideoAutoplayCoordinator {
 
     fun update(key: Long, url: String, visible: Boolean, topY: Float) {
         val candidate = candidates.getOrPut(key) { Candidate(url, topY, visible) }
+        if (candidate.url != url && attachedKey == key) {
+            player?.setMediaItem(MediaItem.fromUri(url))
+            player?.prepare()
+        }
         candidate.url = url
         candidate.topY = topY
         candidate.visible = visible
@@ -85,7 +89,10 @@ class VideoAutoplayCoordinator {
     }
 
     fun resume() {
-        if (attachedKey != null) player?.play()
+        if (attachedKey == null) return
+        val p = player ?: return
+        if (p.playbackState == Player.STATE_IDLE) p.prepare()
+        p.play()
     }
 
     fun release() {

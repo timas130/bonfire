@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
@@ -48,6 +49,7 @@ import sh.sit.schema.type.VideoStatus
 import kotlin.time.Duration.Companion.milliseconds
 
 private const val MIN_VISIBLE_FRACTION = 0.5f
+private const val PLAYBACK_RETRY_INTERVAL_MS = 60_000L
 
 @Composable
 internal fun PageVideoRenderer(page: PageVideo) {
@@ -55,6 +57,7 @@ internal fun PageVideoRenderer(page: PageVideo) {
     var notFound by remember(page.videoId) { mutableStateOf(false) }
     var pollFailed by remember(page.videoId) { mutableStateOf(false) }
     var retryNonce by remember(page.videoId) { mutableIntStateOf(0) }
+    var lastPlaybackRetryAt by remember(page.videoId) { mutableLongStateOf(0L) }
 
     // cancels automatically once the page scrolls out of composition
     LaunchedEffect(page.videoId, retryNonce) {
@@ -84,7 +87,17 @@ internal fun PageVideoRenderer(page: PageVideo) {
                 icon = { Icon(Icons.Default.ErrorOutline, contentDescription = null) },
                 text = stringResource(R.string.video_failed),
             )
-            status == VideoStatus.READY -> VideoReadyContent(page = page, video = video!!)
+            status == VideoStatus.READY -> VideoReadyContent(
+                page = page,
+                video = video!!,
+                onPlaybackError = {
+                    val now = System.currentTimeMillis()
+                    if (now - lastPlaybackRetryAt >= PLAYBACK_RETRY_INTERVAL_MS) {
+                        lastPlaybackRetryAt = now
+                        retryNonce++
+                    }
+                },
+            )
             pollFailed -> VideoUnavailableOverlay(
                 icon = { Icon(Icons.Default.ErrorOutline, contentDescription = null) },
                 text = stringResource(R.string.video_player_error),
@@ -101,7 +114,7 @@ internal fun PageVideoRenderer(page: PageVideo) {
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
-private fun BoxScope.VideoReadyContent(page: PageVideo, video: VideoState) {
+private fun BoxScope.VideoReadyContent(page: PageVideo, video: VideoState, onPlaybackError: () -> Unit) {
     val context = LocalContext.current
     val coordinator = LocalVideoAutoplayCoordinator.current
     val autoplayEnabled = ControllerVideos.autoplayEnabled
@@ -172,6 +185,11 @@ private fun BoxScope.VideoReadyContent(page: PageVideo, video: VideoState) {
             val listener = object : Player.Listener {
                 override fun onRenderedFirstFrame() {
                     firstFrameRendered = true
+                }
+
+                override fun onPlayerError(error: PlaybackException) {
+                    firstFrameRendered = false
+                    onPlaybackError()
                 }
             }
             p.addListener(listener)
