@@ -347,7 +347,7 @@ object ControllerChats {
                 .where(TChatsSubscriptions.target_sub_id, "=", tag.targetSubId)
                 .where(TChatsSubscriptions.enter_date, "<", System.currentTimeMillis())
                 .where(TChatsSubscriptions.exit_date, "=", 0)
-                .update(TChatsSubscriptions.new_messages, (TChatsSubscriptions.new_messages + "+$changeCount"))
+                .update(TChatsSubscriptions.new_messages, "GREATEST(GREATEST(${TChatsSubscriptions.new_messages},0)+$changeCount,0)")
         )
     }
 
