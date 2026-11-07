@@ -49,7 +49,10 @@ fun SetBirthdayScreen(onBirthdaySet: () -> Unit = {}) {
         }
     )
 
-    var inputDate by remember { mutableStateOf<NaiveDate?>(null) }
+    var confirmedDateMillis by remember { mutableStateOf<Long?>(null) }
+    val inputDate = confirmedDateMillis?.let {
+        NaiveDate(LocalDate(it, DateTimeZone.UTC))
+    }
     var showDialog by remember { mutableStateOf(false) }
 
     suspend fun submit() {
@@ -79,22 +82,24 @@ fun SetBirthdayScreen(onBirthdaySet: () -> Unit = {}) {
         onBirthdaySet()
     }
 
-    LaunchedEffect(dateState.selectedDateMillis) {
-        inputDate = dateState.selectedDateMillis?.let {
-            NaiveDate(LocalDate(it, DateTimeZone.UTC))
-        }
+    val cancelDialog = {
+        dateState.selectedDateMillis = confirmedDateMillis
+        showDialog = false
     }
 
     if (showDialog) {
         DatePickerDialog(
-            onDismissRequest = { showDialog = false },
+            onDismissRequest = cancelDialog,
             confirmButton = {
-                Button(onClick = { showDialog = false }) {
+                Button(onClick = {
+                    confirmedDateMillis = dateState.selectedDateMillis
+                    showDialog = false
+                }) {
                     Text(stringResource(R.string.ok))
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDialog = false }) {
+                TextButton(onClick = cancelDialog) {
                     Text(stringResource(R.string.cancel))
                 }
             }
