@@ -2,7 +2,6 @@ package com.sup.dev.android.views.splash
 
 import android.graphics.Bitmap
 import android.provider.MediaStore
-import android.util.SparseArray
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -42,7 +41,7 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
     private var maxSelectCount = 1
     private var selectedList = ArrayList<File>()
     private var callbackInWorkerThread = false
-    private val addedHash = SparseArray<Boolean>()
+    private val addedFiles = HashSet<File>()
     private val vFabDoneContainer: View
     private var inited = false
 
@@ -148,12 +147,13 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
         cursor?.use {
             while (it.moveToNext()) {
                 val file = File(it.getString(0))
-                val hash = file.hashCode()
 
-                if (addedHash.get(hash) != null) break
+                if (!addedFiles.add(file)) {
+                    if (offset > 0) break
+                    continue
+                }
 
                 addCount++
-                addedHash.put(hash, true)
                 myAdapter.add(myAdapter.size() - offset, CardImage(file))
             }
         }
