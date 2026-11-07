@@ -174,7 +174,7 @@ class BadgeShelfModel(
                             showBadgeShelf = SetBadgeShelfVisibleMutation.ShowBadgeShelf(
                                 userId = userId,
                                 badgeShelf = null,
-                                __typename = "Badge"
+                                __typename = "ProfileCustomization"
                             )
                         )
                     )
