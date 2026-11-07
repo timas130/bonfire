@@ -176,7 +176,7 @@ class SQuestNewYear : SQuest() {
         //  Акт 1. Сцена 4:
         //
 
-        var item_5_1_showed = false
+        var item_5_1_showed by questFlag("item_5_1_showed")
         var item_5_2_showed = false
 
         var cold = false
@@ -200,9 +200,8 @@ class SQuestNewYear : SQuest() {
                 .addButton("Толкнуть дверь", "5_1")
                 .addButton("Попытаться обойти", "5_2"),
             QuestItem("5_1")
-                .setOnStart { item_5_1_showed = true }
+                .setOnStart { item_5_1_showed = true; makeThunder() }
                 .text("Вы толкаете дверь, но она неподвижна, только немного снега осыпалось с крыши над стеной.")
-                .setOnStart { makeThunder() }
                 .addButtonParams("Попытаться обойти", "5_2")
                 .visible { !item_5_2_showed }.finish()
                 .addButton("Изучить ворота", "5_3"),
@@ -248,7 +247,7 @@ class SQuestNewYear : SQuest() {
         //  Акт 2. Сцена 1:
         //
 
-        var item_6_1_1_showed = false
+        var item_6_1_1_showed by questFlag("item_6_1_1_showed")
 
         addQuest(
             QuestItem("6")
@@ -264,9 +263,8 @@ class SQuestNewYear : SQuest() {
                 .addButton("Ударить идола", "6_1_1")
                 .addButton("Столкнуть идола с алтаря", "6_1_1"),
             QuestItem("6_1_1")
-                .setOnStart { item_6_1_1_showed = true }
+                .setOnStart { item_6_1_1_showed = true; makeThunderBig(); startThunder() }
                 .text("Как только вы прикоснулись к идолу, раздался оглушительный грохот. Вы сразу отдернули руку.\nНебо затянуло тучами, началась гроза, вы пожалели о своих действиях")
-                .setOnStart { makeThunderBig(); startThunder() }
                 .addButton("Умолять идола о прощении", "6_1_2"),
             QuestItem("6_1_2")
                 .text("После вашей мольбы гроза начала утихать. В вашей голове раздался голос \"Готов ли ты принять наказание?\"")
