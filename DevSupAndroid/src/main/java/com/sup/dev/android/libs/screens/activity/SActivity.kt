@@ -330,8 +330,9 @@ abstract class SActivity : AppCompatActivity() {
     }
 
     private fun removeViews(views: ArrayList<View>) {
+        val current = Navigator.getCurrent()
         for (v in views)
-            try {
+            if (v !== current) try {
                 vActivityContainer!!.removeView(v)
             } catch (e: IndexOutOfBoundsException) {
                 err(e)
@@ -384,6 +385,8 @@ abstract class SActivity : AppCompatActivity() {
             if (animation == Navigator.Animation.OUT) animateOut(screen, old, oldViews)
             if (animation == Navigator.Animation.IN) animateIn(screen, oldViews)
             if (animation == Navigator.Animation.ALPHA) animateAlpha(screen, old, oldViews)
+        } else {
+            removeViews(oldViews)
         }
 
         if (subscriptionTouchLock != null) subscriptionTouchLock!!.unsubscribe()
