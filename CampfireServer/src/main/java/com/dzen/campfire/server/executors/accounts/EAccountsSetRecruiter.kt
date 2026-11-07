@@ -13,6 +13,7 @@ class EAccountsSetRecruiter : RAccountsSetRecruiter(0) {
 
     @Throws(ApiException::class)
     override fun check() {
+        if (accountId == apiAccount.id) throw ApiException(API.ERROR_ACCESS)
         if (!ControllerAccounts.checkExist(accountId)) throw ApiException(API.ERROR_GONE)
         val next = ControllerAccounts.get(apiAccount.id, TAccounts.recruiter_id).next<Any>()
         if (next as Long != 0L) throw ApiException(E_ALREADY_SET)
