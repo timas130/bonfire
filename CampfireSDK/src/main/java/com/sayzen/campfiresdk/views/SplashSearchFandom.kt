@@ -26,7 +26,10 @@ open class SplashSearchFandom(
                     onLoad.invoke(r.fandoms)
                     vProgress.visibility = View.GONE
                 }
-                .onNetworkError { onLoad.invoke(null) }
+                .onError {
+                    onLoad.invoke(null)
+                    vProgress.visibility = View.GONE
+                }
                 .send(api)
     }
 

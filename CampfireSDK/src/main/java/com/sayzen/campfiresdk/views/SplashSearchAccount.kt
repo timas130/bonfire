@@ -28,7 +28,10 @@ open class SplashSearchAccount(
                             onLoad.invoke(r.accounts)
                             vProgress.visibility = View.GONE
                         }
-                        .onNetworkError { onLoad.invoke(null) }
+                        .onError {
+                            onLoad.invoke(null)
+                            vProgress.visibility = View.GONE
+                        }
                         .send(api)
             }
 
