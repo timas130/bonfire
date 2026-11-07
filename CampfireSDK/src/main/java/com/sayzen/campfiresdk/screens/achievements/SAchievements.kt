@@ -74,6 +74,8 @@ class SAchievements private constructor(
 
         if (toPrev) {
             vPager.setCurrentItem(2, false)
+        } else if (scrollToId != 0L) {
+            vPager.setCurrentItem(1, false)
         }
 
         vPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
