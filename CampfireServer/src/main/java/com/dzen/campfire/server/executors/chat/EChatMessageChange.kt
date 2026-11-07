@@ -1,6 +1,7 @@
 package com.dzen.campfire.server.executors.chat
 
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.models.notifications.chat.NotificationChatMessageChange
 import com.dzen.campfire.api.models.publications.chat.PublicationChatMessage
 import com.dzen.campfire.api.models.publications.history.HistoryEditPublic
@@ -43,26 +44,36 @@ class EChatMessageChange : RChatMessageChange(0, 0, "", false) {
         val oldText = publication.text
         publication.text = text
         publication.changed = true
-        publication.quoteId = 0
-        publication.quoteText = ""
-        publication.quoteImagesIds = emptyArray()
-        publication.quoteImagesPwd = emptyArray()
-        publication.quoteCreatorName = ""
-        publication.quoteStickerId = 0
-        publication.quoteStickerImageId = 0
         publication.newFormatting = newFormatting
 
-        if (quoteMessageId != 0L) {
-            val quoteUnit = ControllerPublications.getPublication(quoteMessageId, apiAccount.id)
-            if (quoteUnit != null && quoteUnit is PublicationChatMessage && quoteUnit.chatTag() == publication.chatTag()) {
-                publication.quoteId = quoteUnit.id
-                publication.quoteText = quoteUnit.creator.name + ": " + quoteUnit.text
-                publication.quoteCreatorName = quoteUnit.creator.name
-                publication.quoteImagesIds = if (quoteUnit.resourceId > 0) Array(1) { quoteUnit.resourceId } else quoteUnit.imageIdArray
-                publication.quoteImagesPwd = if (quoteUnit.resourceId > 0) arrayOf(quoteUnit.imagePwd) else quoteUnit.imagePwdArray
-                if (quoteUnit.stickerId > 0) {
-                    publication.quoteStickerId = quoteUnit.stickerId
-                    publication.quoteStickerImageId = quoteUnit.stickerImageId
+        if (quoteMessageId != publication.quoteId) {
+            publication.quoteId = 0
+            publication.quoteText = ""
+            publication.quoteCreatorName = ""
+            publication.quoteImages = emptyArray()
+            publication.quoteImagesIds = emptyArray()
+            publication.quoteImagesPwd = emptyArray()
+            publication.quoteStickerId = 0
+            publication.quoteStickerImage = ImageRef()
+            publication.quoteStickerImageId = 0
+
+            if (quoteMessageId != 0L) {
+                val quoteUnit = ControllerPublications.getPublication(quoteMessageId, apiAccount.id)
+                if (quoteUnit != null && quoteUnit is PublicationChatMessage && quoteUnit.chatTag() == publication.chatTag()) {
+                    publication.quoteId = quoteUnit.id
+                    publication.quoteText = quoteUnit.creator.name + ": " + quoteUnit.text
+                    publication.quoteCreatorName = quoteUnit.creator.name
+                    if (publication.quoteText.length > API.CHAT_MESSAGE_QUOTE_MAX_SIZE) publication.quoteText = publication.quoteText.substring(0, API.CHAT_MESSAGE_QUOTE_MAX_SIZE) + "..."
+                    if (quoteUnit.imageIdArray.isNotEmpty()) {
+                        publication.quoteImagesIds = quoteUnit.imageIdArray
+                        publication.quoteImagesPwd = quoteUnit.imagePwdArray
+                    } else if (quoteUnit.resourceId > 0) {
+                        publication.quoteImagesIds = Array(1) { quoteUnit.resourceId }
+                        publication.quoteImagesPwd = arrayOf(quoteUnit.imagePwd)
+                    } else if (quoteUnit.stickerId > 0) {
+                        publication.quoteStickerId = quoteUnit.stickerId
+                        publication.quoteStickerImageId = quoteUnit.stickerImageId
+                    }
                 }
             }
         }
