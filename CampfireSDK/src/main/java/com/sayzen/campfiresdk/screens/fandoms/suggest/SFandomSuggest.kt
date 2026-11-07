@@ -293,7 +293,10 @@ class SFandomSuggest(
         if (subscription != null) subscription!!.unsubscribe()
         vFandomsContainer.visibility = View.GONE
         vFandomsContainer.removeAllViews()
-        if (vName.getText().isEmpty()) return
+        if (vName.getText().isEmpty()) {
+            vSearchProgress.visibility = View.INVISIBLE
+            return
+        }
         vSearchProgress.visibility = View.VISIBLE
         subscription = ToolsThreads.main(1000) {
             searchNow()
@@ -315,6 +318,7 @@ class SFandomSuggest(
                     }
                     vSearchProgress.visibility = View.INVISIBLE
                 }
+                .onError { vSearchProgress.visibility = View.INVISIBLE }
                 .send(api)
     }
 
