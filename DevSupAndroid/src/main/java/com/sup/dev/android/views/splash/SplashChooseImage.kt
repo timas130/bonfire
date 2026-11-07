@@ -35,6 +35,7 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
     private val fabs = ArrayList<View>()
 
     private var onSelected: (SplashChooseImage, ByteArray, Int) -> Unit = { _, _, _ -> }
+    private var onSendAllFinished: () -> Unit = {}
     private var imagesLoaded: Boolean = false
     private var spanCount = 3
     private var maxSelectCount = 1
@@ -253,6 +254,12 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
                     ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
                 }
             }
+            try {
+                onSendAllFinished.invoke()
+            } catch (e: Exception) {
+                err(e)
+                ToolsToast.show(SupAndroid.TEXT_ERROR_CANT_LOAD_IMAGE)
+            }
             ToolsThreads.main {
                 hide()
                 d.hide()
@@ -316,6 +323,11 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
 
     fun setOnSelected(onSelected: (SplashChooseImage, ByteArray, Int) -> Unit): SplashChooseImage {
         this.onSelected = onSelected
+        return this
+    }
+
+    fun setOnSendAllFinished(onSendAllFinished: () -> Unit): SplashChooseImage {
+        this.onSendAllFinished = onSendAllFinished
         return this
     }
 

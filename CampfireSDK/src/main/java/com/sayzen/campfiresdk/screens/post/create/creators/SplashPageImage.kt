@@ -58,15 +58,7 @@ class SplashPageImage(
                 }
 
                 if(createAsList){
-                    try {
-                        imagesCreator.addImage(ToolsBitmap.decode(bytes)!!, bytes)
-                    } finally {
-                        if(index == w.getSelectedCount() - 1){
-                            val sent = Item(false)
-                            imagesCreator.send{sent.a = true}
-                            while (!sent.a) ToolsThreads.sleep(20)
-                        }
-                    }
+                    imagesCreator.addImage(ToolsBitmap.decode(bytes)!!, bytes)
                 }else{
                     val sent = Item(false)
                     createNow(bytes, null, { p, _, s, _ -> requestPutPageTracked(p, s) { sent.a = true } }, requestChangePage, null) {
@@ -85,6 +77,13 @@ class SplashPageImage(
             }
 
 
+        }
+        setOnSendAllFinished {
+            if(createAsList){
+                val sent = Item(false)
+                imagesCreator.send{sent.a = true}
+                while (!sent.a) ToolsThreads.sleep(20)
+            }
         }
     }
 
