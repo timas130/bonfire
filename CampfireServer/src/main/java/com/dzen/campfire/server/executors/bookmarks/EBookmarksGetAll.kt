@@ -41,6 +41,7 @@ class EBookmarksGetAll : RBookmarksGetAll(0, "", 0, 0, 0, emptyArray()) {
         val ids = Array(v.rowsCount) { items[it].a1 }
 
         val select = ControllerPublications.instanceSelect(apiAccount.id)
+                .where(TPublications.publication_type, "=", API.PUBLICATION_TYPE_POST)
                 .where(TPublications.status, "=", API.STATUS_PUBLIC)
                 .where(SqlWhere.WhereIN(TPublications.id, ids))
 
