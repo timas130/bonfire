@@ -65,6 +65,10 @@ class Attach(
     }
 
     private fun addBytes(bytes: ByteArray) {
+        if (adapter.size() >= API.CHAT_MESSAGE_MAX_IMAGES_COUNT) {
+            ToolsToast.show(t(API_TRANSLATE.error_max_items_count))
+            return
+        }
         adapter.add(ItemCard(bytes))
         vAttachRecycler.scrollToPosition(adapter.size() - 1)
         updateAttach()
@@ -103,7 +107,7 @@ class Attach(
 
     private fun onAttachClicked() {
         val widget = SplashChooseImage()
-        widget.setMaxSelectCount(API.CHAT_MESSAGE_MAX_IMAGES_COUNT)
+        widget.setMaxSelectCount(API.CHAT_MESSAGE_MAX_IMAGES_COUNT - adapter.size())
                 .setCallbackInWorkerThread(true)
                 .setOnSelected { _, bytes, _ ->
                     attachBytes_inWorker(bytes, null)
