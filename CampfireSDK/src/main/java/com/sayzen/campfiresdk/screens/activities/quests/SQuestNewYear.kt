@@ -704,7 +704,19 @@ class SQuestNewYear : SQuest() {
             QuestItem("12")
                 .text("Конец. У нас много планов на счет квестов, но все зависит только от вас, самое время создать пост с вашими пожеланиями насчет этой системы. С новым годом. :)")
                 .addButton("В ленту") { SupAndroid.activity!!.toMainScreen() }
-                .addButton("Повторить квест") { toFirstItem() }
+                .addButton("Повторить квест") {
+                    longSleep = false
+                    sleepCounter = 3
+                    item_3_1_showed = false
+                    item_3_2_showed = false
+                    item_3_3_showed = false
+                    item_5_2_showed = false
+                    item_9_1_showed = false
+                    item_9_2_showed = false
+                    item_9_3_showed = false
+                    sleepCounter_10 = 3
+                    toFirstItem()
+                }
         )
 
     }
