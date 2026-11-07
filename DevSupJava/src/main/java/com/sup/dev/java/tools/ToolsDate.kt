@@ -89,6 +89,16 @@ object ToolsDate {
         return calendar.timeInMillis
     }
 
+    fun getTimeOfDay_GlobalTimeZone(date: Long, hours: Int, minutes: Int): Long {
+        val calendar = GregorianCalendar.getInstance()
+        calendar.timeInMillis = date
+        calendar.set(Calendar.HOUR_OF_DAY, hours)
+        calendar.set(Calendar.MINUTE, minutes)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        return calendar.timeInMillis
+    }
+
     fun format_yyyy_MM_dd(date: Long): String {
         return SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(date))
     }
