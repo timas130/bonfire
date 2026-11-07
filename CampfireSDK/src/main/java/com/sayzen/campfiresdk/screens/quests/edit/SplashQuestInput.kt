@@ -22,6 +22,7 @@ class SplashQuestInput(
     private val vDefaultValue: SettingsField = view.findViewById(R.id.vDefaultValue)
     private val vDefaultValueBool: SettingsCheckBox = findViewById(R.id.vDefaultValueBool)
     private val vVariable: SettingsVariableSelector = view.findViewById(R.id.vVariable)
+    private val defaultValueTextInputType = vDefaultValue.vField.inputType
 
     init {
         setTitle(t(API_TRANSLATE.quests_part_text_input))
@@ -107,7 +108,7 @@ class SplashQuestInput(
         when (vSelect.getCurrentIndex()) {
             1 -> {
                 vDefaultValue.visibility = View.VISIBLE
-                vDefaultValue.vField.inputType = vDefaultValue.vField.inputType or InputType.TYPE_CLASS_NUMBER
+                vDefaultValue.vField.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
             }
             2 -> {
                 vDefaultValueBool.setTitle(t(API_TRANSLATE.quests_edit_text_input_default))
@@ -116,7 +117,7 @@ class SplashQuestInput(
             }
             else -> {
                 vDefaultValue.visibility = View.VISIBLE
-                vDefaultValue.vField.inputType = vDefaultValue.vField.inputType and (InputType.TYPE_CLASS_NUMBER.inv())
+                vDefaultValue.vField.inputType = defaultValueTextInputType
             }
         }
     }
