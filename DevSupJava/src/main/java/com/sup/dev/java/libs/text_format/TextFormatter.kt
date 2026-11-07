@@ -12,6 +12,8 @@ class TextFormatter(
         private const val char_no_format = "[noFormat]"
         private const val char_no_format_end = "[/noFormat]"
         private val chars_spec = arrayOf(char_protector, char_protector_word, '*', '^', '~', '_', '{', '}')
+        private const val chars_format_close = "*^~_}"
+        private const val chars_url_trailing = "$chars_format_close.,\"'!?:;)"
         private val colors = hashMapOf(
             "red" to "D32F2F", "pink" to "C2185B", "purple" to "7B1FA2", "indigo" to "303F9F",
             "blue" to "1976D2", "cyan" to "0097A7", "teal" to "00796B", "green" to "388E3C",
@@ -25,6 +27,7 @@ class TextFormatter(
     private var i = 0
     private var skipToSpace = false
     private var skipToNextNoFormat = false
+    private var urlEnd = 0
 
     fun parseHtml(): String {
         if (result.length == 0) parseText()
@@ -79,6 +82,13 @@ class TextFormatter(
                 continue
             }
 
+            if (i >= urlEnd && isUrlStart(i)) urlEnd = findUrlEnd(i)
+            if (i < urlEnd) {
+                result.append(thisChar)
+                i++
+                continue
+            }
+
             if (thisChar == char_protector_word) {
                 skipToSpace = true
                 result.append(thisChar)
@@ -130,6 +140,7 @@ class TextFormatter(
         var next = -1
         var skip = false
         var skipToSpace = false
+        val skipUrls = chars_format_close.contains(c)
         var n = i + 1 + offset
         while (n < text.length) {
             if (skip) {
@@ -148,6 +159,10 @@ class TextFormatter(
                     continue
                 }
             }
+            if (skipUrls && isUrlStart(n)) {
+                n = findUrlEnd(n)
+                continue
+            }
             if (text[n] == c) {
                 next = n
                 break
@@ -159,6 +174,26 @@ class TextFormatter(
             n++
         }
         return next
+    }
+
+    private fun isUrlStart(n: Int): Boolean {
+        if (n > 0 && text[n - 1].isLetterOrDigit()) return false
+        return text.startsWith("http://", n, ignoreCase = true)
+                || text.startsWith("https://", n, ignoreCase = true)
+                || text.startsWith("www.", n, ignoreCase = true)
+    }
+
+    private fun findUrlEnd(start: Int): Int {
+        var end = start
+        while (end < text.length && !text[end].isWhitespace() && !isMarkerBeforeTypography(end)) end++
+        while (chars_url_trailing.contains(text[end - 1]) && text[end - 2] != char_protector) end--
+        return end
+    }
+
+    private fun isMarkerBeforeTypography(n: Int): Boolean {
+        if (!chars_format_close.contains(text[n]) || text[n - 1] == char_protector || n + 1 >= text.length) return false
+        val next = text[n + 1]
+        return next.code > 127 && !next.isLetterOrDigit()
     }
 
     private fun parseColorName(name: String, hash: String): Boolean {
