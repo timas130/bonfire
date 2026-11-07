@@ -18,6 +18,7 @@ import com.sup.dev.android.tools.ToolsStorage
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.java.libs.debug.err
+import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsThreads
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -46,6 +47,8 @@ abstract class SQuest : Screen(R.layout.screen_quest) {
 
         ToolsThreads.main(true) {
             val saveItem = ToolsStorage.getString(getSaveKey(), "") ?: ""
+            globalLabel = ToolsStorage.getString(getSaveKey() + ":label", "") ?: ""
+            ToolsStorage.getJson(getSaveKey() + ":image")?.let { globalImage.json(false, it) }
             if (!toScreen(saveItem)) {
                 PostHog.capture("quest started", properties = mapOf("key" to getKey()))
                 toFirstItem()
@@ -143,6 +146,9 @@ abstract class SQuest : Screen(R.layout.screen_quest) {
         currentItem?.onFinish?.invoke()
         this.currentItem = item
         currentItem?.onStart?.invoke()
+
+        ToolsStorage.put(getSaveKey() + ":label", globalLabel)
+        ToolsStorage.put(getSaveKey() + ":image", globalImage.json(true, Json()))
 
         ImageLoader.load(globalImage).into(vTitleImage)
 
