@@ -76,7 +76,7 @@ class EBookmarksGetAll : RBookmarksGetAll(0, "", 0, 0, 0, emptyArray()) {
                 if (u1Date != 0L && u2Date != 0L) break
             }
 
-            (u2Date - u1Date).toInt()
+            u2Date.compareTo(u1Date)
         })
 
         ControllerPublications.loadSpecDataForPosts(apiAccount.id, publications)
