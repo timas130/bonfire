@@ -329,12 +329,14 @@ object ControllerPost {
                     } else page.imagesMiniIds[it]
                 }
                 if (page.removePageIndex != -1) {
-                    ControllerResources.remove(page.imagesIds[page.removePageIndex])
-                    ControllerResources.remove(page.imagesMiniIds[page.removePageIndex])
+                    val removedImageId = page.imagesIds[page.removePageIndex]
+                    val removedImageMiniId = page.imagesMiniIds[page.removePageIndex]
                     page.imagesIds = ToolsCollections.remove(page.removePageIndex, page.imagesIds)
                     page.imagesMiniIds = ToolsCollections.remove(page.removePageIndex, page.imagesMiniIds)
-                    page.imagesMiniSizesW = ToolsCollections.remove(page.removePageIndex, page.imagesMiniSizesW)
-                    page.imagesMiniSizesH = ToolsCollections.remove(page.removePageIndex, page.imagesMiniSizesH)
+                    if (page.removePageIndex in page.imagesMiniSizesW.indices) page.imagesMiniSizesW = ToolsCollections.remove(page.removePageIndex, page.imagesMiniSizesW)
+                    if (page.removePageIndex in page.imagesMiniSizesH.indices) page.imagesMiniSizesH = ToolsCollections.remove(page.removePageIndex, page.imagesMiniSizesH)
+                    ControllerResources.remove(removedImageId)
+                    ControllerResources.remove(removedImageMiniId)
                 }
                 page.removePageIndex = -1
                 page.replacePageIndex = -1
