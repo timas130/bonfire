@@ -9,6 +9,7 @@ import com.dzen.campfire.api.models.account.Account
 import com.dzen.campfire.api.models.activities.UserActivity
 import com.posthog.PostHog
 import com.sayzen.campfiresdk.R
+import com.sayzen.campfiresdk.compose.publication.post.pages.activity.hasUser
 import com.sayzen.campfiresdk.controllers.ControllerActivities
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.t
@@ -125,7 +126,7 @@ class CardUserActivity(
 
 
 
-        if (ControllerApi.isCurrentAccount(userActivity.currentAccount.id)) {
+        if (userActivity.hasUser && ControllerApi.isCurrentAccount(userActivity.currentAccount.id)) {
             vButton.setText(t(API_TRANSLATE.app_reject))
             vButton.setTextColor(ToolsResources.getColor(R.color.red_700))
             vButton.visibility = View.VISIBLE
@@ -177,6 +178,9 @@ class CardUserActivity(
             vTimer.text = ToolsDate.dayTimeToString_Ms_HH_MM_SS(date - System.currentTimeMillis())
             vTimer.setTextColor(colorWhite)
         }
+
+        val vButton_2: Button = getView()!!.findViewById(R.id.vButton_2)
+        if (vButton_2.visibility == View.VISIBLE && !userActivity.hasUser) update()
     }
 
 
