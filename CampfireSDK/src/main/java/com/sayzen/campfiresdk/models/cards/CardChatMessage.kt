@@ -1004,8 +1004,7 @@ open class CardChatMessage constructor(
         if (e.notification is NotificationChatMessageChange) {
             val n = e.notification
             if (n.publicationId == publication.id) {
-                publication.text = n.text
-                publication.changed = true
+                n.applyTo(publication)
                 update()
             }
         } else if (e.notification is NotificationChatMessageRemove) {

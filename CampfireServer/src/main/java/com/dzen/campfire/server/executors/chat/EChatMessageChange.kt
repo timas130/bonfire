@@ -59,7 +59,7 @@ class EChatMessageChange : RChatMessageChange(0, 0, "", false) {
 
         ControllerPublications.replaceJson(publicationId, publication)
 
-        val n = NotificationChatMessageChange(publicationId, text)
+        val n = NotificationChatMessageChange(publication)
         ControllerNotifications.push(ControllerChats.getChatSubscribersIdsWithTokensNotDeleted(publication.chatTag(), apiAccount.id), n)
         ControllerNotifications.push(ControllerChats.getChatSubscribersIdsWithTokensNotSubscribed(publication.chatTag(), apiAccount.id), n)
         ControllerPublicationsHistory.put(publication.id, HistoryEditPublic(apiAccount.id, apiAccount.imageId, apiAccount.name, oldText))
