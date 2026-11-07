@@ -98,7 +98,7 @@ object ToolsIntent {
     fun startIntent(intent: Intent, onActivityNotFound: () -> Unit = onActivityNotFoundDef) {
         try {
             SupAndroid.appContext!!.startActivity(intent)
-        } catch (ex: ActivityNotFoundException) {
+        } catch (ex: RuntimeException) {
             err(ex)
             onActivityNotFound.invoke()
         }
