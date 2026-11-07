@@ -61,7 +61,7 @@ class SFandom private constructor(
     private val eventBus = EventBus
             .subscribe(EventPostStatusChange::class) { onEventPostStatusChange(it) }
             .subscribe(EventFandomRemove::class) { if (it.fandomId == xFandom.getId()) Navigator.remove(this) }
-            .subscribe(EventPostPinedFandom::class) { if (it.fandomId == xFandom.getId() && it.languageId == xFandom.getLanguageId()) setPinnedPost(it.post) }
+            .subscribe(EventPostPinedFandom::class) { if (it.fandomId == xFandom.getId() && it.languageId == xFandom.getLanguageId()) onEventPostPined(it) }
 
     private val vToolbarCollapsingShadow: View = findViewById(R.id.vToolbarCollapsingShadow)
     private val vTitle: TextView = findViewById(R.id.vToolbarTitle)
@@ -209,6 +209,12 @@ class SFandom private constructor(
 
     private fun onEventPostStatusChange(e: EventPostStatusChange) {
         if (e.status == API.STATUS_PUBLIC) reload()
+    }
+
+    private fun onEventPostPined(e: EventPostPinedFandom) {
+        val previousId = cardPinnedPost?.xPublication?.publication?.id
+        setPinnedPost(e.post)
+        if (previousId != null && previousId != e.post?.id) reload()
     }
 
 
