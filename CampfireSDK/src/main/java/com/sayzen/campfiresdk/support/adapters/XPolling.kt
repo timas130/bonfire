@@ -132,6 +132,9 @@ class XPolling(
         vContainer.tag = tag
         vContainer.removeAllViews()
 
+        val vPollResults: ViewButton = view.findViewById(R.id.vPollResults)
+        vPollResults.visibility = View.GONE
+
         for (s in page.options) {
             val vItem: View = ToolsView.inflate(R.layout.card_page_polling_item)
             val vText: TextView = vItem.findViewById(R.id.vText)
@@ -145,7 +148,6 @@ class XPolling(
 
                 val showResults = result.voted || !canVote()
 
-                val vPollResults: ViewButton = view.findViewById(R.id.vPollResults)
                 vPollResults.visibility = if (showResults) View.VISIBLE else View.GONE
 
                 var percentSum = 0
