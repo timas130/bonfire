@@ -212,6 +212,7 @@ class CardPost(
 
     private fun addPage(card: CardPage) {
         if (card is CardPageSpoiler && !isShowFull) {
+            card.pages = null
             card.onClick = {
                 toggleShowFull()
                 update()
