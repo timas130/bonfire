@@ -128,12 +128,14 @@ class SFandom private constructor(
 
         if (fandom.closed) ToolsThreads.main(true) { ControllerFandoms.showAlertIfNeed(this, xFandom.getId(), false) }
 
-        ApiRequestsSupporter.executeWithRetry(RFandomsGetProfile(fandom.id, fandom.languageId)) { r ->
+        ApiRequestsSupporter.executeWithRetry(5, RFandomsGetProfile(fandom.id, fandom.languageId), { onProfileLoadFailed() }) { r ->
             setPinnedPost(r.pinnedPost)
             xFandom.setImageTitle(r.imageTitle)
             xFandom.setImageTitleGif(r.imageTitleGif)
             cardTitle.setParams(r.subscriptionType)
             cardViceroy.setParams(r.viceroyAccount, r.viceroyDate)
+        }.onApiError {
+            onProfileLoadFailed()
         }.onFinish{
             updateBackground()
         }
@@ -152,6 +154,11 @@ class SFandom private constructor(
 
     private fun reload() {
         adapter.reloadBottom()
+    }
+
+    private fun onProfileLoadFailed() {
+        cardTitle.setFailed()
+        cardViceroy.setError()
     }
 
     private fun afterPackLoaded() {

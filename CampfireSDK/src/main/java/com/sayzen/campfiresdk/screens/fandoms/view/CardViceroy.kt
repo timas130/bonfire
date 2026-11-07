@@ -69,6 +69,12 @@ class CardViceroy(
         update()
     }
 
+    fun setError() {
+        loading = false
+        error = true
+        update()
+    }
+
     private fun load(tryCount: Int = 5) {
         error = false
         loading = true

@@ -48,6 +48,7 @@ class CardTitle(
 
     private var subscriptionType: Long = 0
     private var loaded = false
+    private var failed = false
 
     private val eventBus = EventBus
             .subscribe(EventFandomCategoryChanged::class) { onEventFandomCategoryChanged(it) }
@@ -71,13 +72,15 @@ class CardTitle(
         val vSubscription: ComposeSubscribeButton = view.findViewById(R.id.vSubscription)
 
         vSubscription.setSubscriptionType(subscriptionType)
+        vSubscription.setFailed(failed)
         if (loaded) {
             vSubscription.setLoaded()
         }
 
         vSubscription.onClick = fun(_) {
             if (!loaded) {
-                ToolsToast.show(t(API_TRANSLATE.fandom_loading_in_profess))
+                if (failed) retryLoad()
+                else ToolsToast.show(t(API_TRANSLATE.fandom_loading_in_profess))
                 return
             }
 
@@ -126,12 +129,26 @@ class CardTitle(
         updateSubscription()
     }
 
+    fun setFailed() {
+        failed = true
+        updateSubscription()
+    }
+
+    private fun retryLoad() {
+        failed = false
+        updateSubscription()
+        ApiRequestsSupporter.execute(RFandomsGetSubscribtion(xFandom.getId(), xFandom.getLanguageId())) { r ->
+            setParams(r.subscriptionType)
+        }.onError { setFailed() }
+    }
+
     class ComposeSubscribeButton @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null
     ) : AbstractComposeView(context, attrs) {
         private val _subscriptionType = MutableStateFlow(API.PUBLICATION_IMPORTANT_DEFAULT)
         private val _loaded = MutableStateFlow(false);
+        private val _failed = MutableStateFlow(false)
         var onClick: (View) -> Unit = { }
 
         fun setSubscriptionType(type: Long) {
@@ -142,10 +159,15 @@ class CardTitle(
             _loaded.value = true
         }
 
+        fun setFailed(failed: Boolean) {
+            _failed.value = failed
+        }
+
         @Composable
         override fun Content() {
             val subscriptionType = _subscriptionType.collectAsState().value
             val loaded = _loaded.collectAsState().value
+            val failed = _failed.collectAsState().value
 
             BonfireTheme {
                 FilledTonalButton(
@@ -171,7 +193,7 @@ class CardTitle(
                             }
 
                             if (!it.second) {
-                                Text(stringResource(R.string.fandom_subscribe_loading))
+                                Text(if (failed) t(API_TRANSLATE.app_retry) else stringResource(R.string.fandom_subscribe_loading))
                             } else if (it.first == API.PUBLICATION_IMPORTANT_NONE) {
                                 Text(stringResource(R.string.fandom_subscribe))
                             } else {
