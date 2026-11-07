@@ -8,6 +8,7 @@ import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.ControllerChats
 import com.dzen.campfire.server.controllers.ControllerFandom
 import com.dzen.campfire.server.controllers.ControllerPublications
+import com.dzen.campfire.server.tables.TChats
 import com.dzen.campfire.server.tables.TChatsSubscriptions
 import com.dzen.campfire.server.tables.TFandoms
 import com.sup.dev.java_pc.sql.Database
@@ -47,6 +48,10 @@ class EChatGet : RChatGet(ChatTag(), 0) {
         )
 
         if (myChats.isEmpty && !isRetry) {
+            if (tag.chatType == API.CHAT_TYPE_CONFERENCE || tag.chatType == API.CHAT_TYPE_FANDOM_SUB) {
+                if (ControllerChats.getChat(tag.targetId, TChats.id).isEmpty()) throw ApiException(API.ERROR_GONE)
+            }
+
             if (tag.chatType == API.CHAT_TYPE_CONFERENCE) {
                 if (!ControllerChats.getChatParams(tag.targetId).isPublic) {
                     throw ApiException(API.ERROR_ACCESS)
@@ -64,6 +69,8 @@ class EChatGet : RChatGet(ChatTag(), 0) {
             isRetry = true
             return execute()
         }
+
+        if (myChats.isEmpty) throw ApiException(API.ERROR_GONE)
 
         val chat = ControllerChats.parseSelect_Sunscriptions(apiAccount.id, myChats)[0]
 
