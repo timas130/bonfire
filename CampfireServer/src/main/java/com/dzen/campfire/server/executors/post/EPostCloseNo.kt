@@ -16,7 +16,7 @@ class EPostCloseNo : RPostCloseNo(0) {
     override fun check() {
         val publication = ControllerPublications.getPublication(publicationId, apiAccount.id)
         if(publication == null) throw ApiException(API.ERROR_GONE)
-        if(publication.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_GONE)
+        if(publication.status != API.STATUS_PUBLIC && publication.status != API.STATUS_DRAFT) throw ApiException(API.ERROR_GONE)
         if(publication.creator.id != apiAccount.id) throw ApiException(API.ERROR_ACCESS)
         if(publication.publicationType != API.PUBLICATION_TYPE_POST) throw ApiException(API.ERROR_ACCESS)
     }
