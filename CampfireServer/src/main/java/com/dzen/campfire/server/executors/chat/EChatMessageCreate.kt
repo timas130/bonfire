@@ -31,6 +31,7 @@ class EChatMessageCreate(
     private var sticker = PublicationSticker()
     private var message = PublicationChatMessage()
     private var parentMessage = PublicationChatMessage()
+    private var reenterConf = false
 
     @Throws(ApiException::class)
     override fun check() {
@@ -66,13 +67,9 @@ class EChatMessageCreate(
         } else if (message.chatType == API.CHAT_TYPE_CONFERENCE) {
             ControllerAccounts.checkAccountBanned(apiAccount.id)
 
-            val memberStatus = ControllerChats.getMemberStatus(apiAccount.id, tag.targetId)
-            if (memberStatus == API.CHAT_MEMBER_STATUS_LEAVE) {
-                ControllerChats.enter(apiAccount, tag)
-                ControllerChats.putEnter(apiAccount, tag)
-            }
+            reenterConf = ControllerChats.getMemberStatus(apiAccount.id, tag.targetId) == API.CHAT_MEMBER_STATUS_LEAVE
 
-            if (!ControllerChats.hasAccessToConf_Write(apiAccount.id, tag.targetId)) throw ApiException(API.ERROR_ACCESS)
+            if (!reenterConf && !ControllerChats.hasAccessToConf_Write(apiAccount.id, tag.targetId)) throw ApiException(API.ERROR_ACCESS)
             val v = ControllerChats.getChat(message.fandom.id, TChats.name, TChats.image_id)
             message.fandom.name = v.next()
             message.fandom.imageId = v.next()
@@ -191,6 +188,11 @@ class EChatMessageCreate(
         message.creator.lastOnlineDate = System.currentTimeMillis()
 
         message.jsonDB = message.jsonDB(true, Json())
+
+        if (reenterConf) {
+            ControllerChats.enter(apiAccount, tag)
+            ControllerChats.putEnter(apiAccount, tag)
+        }
 
         ControllerChats.putMessage(apiAccount, message, tag)
 
