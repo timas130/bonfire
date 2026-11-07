@@ -39,7 +39,7 @@ class CardKarmaLvl(
             vCorned.setBackgroundColor(ToolsResources.getColor(moderateInfo.colorRes))
         }
 
-        if (accountLvl > moderateInfo.lvl.lvl) {
+        if (accountLvl >= moderateInfo.lvl.lvl) {
             vKarma.setTextColor(ToolsResources.getColor(R.color.green_700))
         } else {
             vKarma.setTextColor(ToolsResources.getColor(R.color.grey_200))
