@@ -123,7 +123,7 @@ class SplashPageImages(
     private fun addImage() {
         SplashChooseImage()
                 .setCallbackInWorkerThread(true)
-                .setMaxSelectCount(API.PAGE_IMAGES_MAX_COUNT)
+                .setMaxSelectCount(API.PAGE_IMAGES_MAX_COUNT - adapter.size())
                 .setOnSelected { _, bytes, _ ->
                     sendImage(ToolsBitmap.decode(bytes), bytes, null)
                 }
