@@ -16,6 +16,10 @@ class EFandomsChange : RFandomsChange(0, null, null, null, null, null, null, nul
 
     @Throws(ApiException::class)
     override fun check() {
+        ControllerFandom.checkCan(apiAccount, API.LVL_ADMIN_FANDOMS_ACCEPT)
+        val fandom = ControllerFandom.getFandom(fandomId) ?: throw ApiException(API.ERROR_GONE)
+        if (fandom.status != API.STATUS_DRAFT) throw ApiException(API.ERROR_ACCESS)
+
         if (name != null) name = ControllerCensor.cens(name!!)
         if (image != null && image!!.size > API.FANDOM_TITLE_IMG_WEIGHT) throw ApiException(E_BAD_IMG_WEIGHT)
         if (imageMini != null && imageMini!!.size > API.FANDOM_IMG_WEIGHT) throw ApiException(E_BAD_IMG_MINI_WEIGHT)
