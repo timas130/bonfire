@@ -20,6 +20,7 @@ import com.sup.dev.android.app.SupAndroid
 import com.sup.dev.java.classes.items.Item2
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.tools.ToolsText
+import com.sup.dev.java.tools.ToolsThreads
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -267,36 +268,45 @@ object ToolsIntent {
                     return@startIntentForResult
                 }
 
-                val bytes = if (allowReEncode) {
-                    val exif = ExifInterface(imageFile)
-                    val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
-
-                    val bitmap = ToolsBitmap.decode(imageFile.readBytes())!!
-                    val matrix = Matrix()
-                    when (orientation) {
-                        ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
-                        ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
-                        ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
-                        else -> {}
+                ToolsThreads.thread {
+                    val bytes = try {
+                        if (allowReEncode) reEncodeCameraImage(imageFile) else imageFile.readBytes()
+                    } catch (e: Throwable) {
+                        ToolsThreads.main { onError(e as? Exception ?: RuntimeException(e)) }
+                        return@thread
                     }
 
-                    val transformedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-                    bitmap.recycle()
-
-                    ToolsBitmap.toBytes(transformedBitmap)!!
-                } else {
-                    imageFile.readBytes()
-                }
-
-                try {
-                    onResult(bytes)
-                } catch (e: Exception) {
-                    onError(e)
+                    ToolsThreads.main {
+                        try {
+                            onResult(bytes)
+                        } catch (e: Exception) {
+                            onError(e)
+                        }
+                    }
                 }
             }
         } catch (e: Exception) {
             onError(e)
         }
+    }
+
+    private fun reEncodeCameraImage(imageFile: File): ByteArray {
+        val exif = ExifInterface(imageFile)
+        val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+
+        val bitmap = ToolsBitmap.decode(imageFile.readBytes())!!
+        val matrix = Matrix()
+        when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+            ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+            else -> {}
+        }
+
+        val transformedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        if (transformedBitmap !== bitmap) bitmap.recycle()
+
+        return ToolsBitmap.toBytes(transformedBitmap)!!
     }
 
     fun getGalleryImage(onResult: (ByteArray) -> Unit, onError: (Exception) -> Unit = {}) {
