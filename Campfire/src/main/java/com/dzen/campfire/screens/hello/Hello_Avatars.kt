@@ -105,13 +105,13 @@ class Hello_Avatars(
                         ToolsToast.show(t(API_TRANSLATE.error_unknown))
                     } else {
                         RAccountsChangeAvatar(it)
-                            .onComplete {
+                            .onComplete { r ->
                                 ImageLoader.clear(ControllerApi.account.getImage())
                                 EventBus.post(
                                     EventAccountChanged(
                                         ControllerApi.account.getId(),
                                         ControllerApi.account.getName(),
-                                        ControllerApi.account.getImage()
+                                        r.newAvatar
                                     )
                                 )
                                 screen.toNextScreen()

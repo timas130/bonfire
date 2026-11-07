@@ -102,9 +102,9 @@ abstract class CardTitle(
     }
 
     private fun changeAvatarNow(dialog: SplashProgressTransparent, bytes: ByteArray) {
-        ApiRequestsSupporter.executeProgressDialog(dialog, RAccountsChangeAvatar(bytes)) { _ ->
+        ApiRequestsSupporter.executeProgressDialog(dialog, RAccountsChangeAvatar(bytes)) { r ->
             ImageLoader.clear(xAccount.getImage())
-            EventBus.post(EventAccountChanged(xAccount.getId(), xAccount.getName(), xAccount.getImage()))
+            EventBus.post(EventAccountChanged(xAccount.getId(), xAccount.getName(), r.newAvatar))
         }
     }
 

@@ -1,5 +1,6 @@
 package com.dzen.campfire.api.requests.accounts
 
+import com.dzen.campfire.api.models.images.ImageHolderReceiver
 import com.dzen.campfire.api.models.images.ImageRef
 import com.dzen.campfire.api.tools.client.Request
 import com.sup.dev.java.libs.json.Json
@@ -42,6 +43,10 @@ open class RAccountsChangeAvatar(
 
         override fun json(inp: Boolean, json: Json) {
             newAvatar = json.m(inp, "newAvatar", newAvatar)
+        }
+
+        override fun fillImageRefs(receiver: ImageHolderReceiver) {
+            receiver.add(newAvatar, newAvatar.imageId)
         }
     }
 }
