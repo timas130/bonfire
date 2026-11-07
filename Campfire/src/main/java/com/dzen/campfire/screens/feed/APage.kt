@@ -32,6 +32,7 @@ abstract class APage(
             .subscribe(EventStoryQuestUpdated::class) { updateQuest() }
 
     var wasLoaded = false
+    private var pendingBottomLoad = false
 
     abstract fun getTitle(): String
 
@@ -59,7 +60,13 @@ abstract class APage(
     }
 
     fun load() {
-        if (wasLoaded) return
+        if (wasLoaded) {
+            if (pendingBottomLoad) {
+                pendingBottomLoad = false
+                adapterSub?.loadBottom()
+            }
+            return
+        }
         PostHog.capture("load_feed", properties = mapOf("type" to javaClass.simpleName))
         markLoaded()
         reload()
@@ -84,6 +91,7 @@ abstract class APage(
         adapterX.addOnFinish {  }
         adapterX.setBottomLoader { onLoad, cards ->
             if (screen.pagerCardAdapter.get(screen.vPager.currentItem) != this) {
+                pendingBottomLoad = wasLoaded
                 onLoad.invoke(emptyArray())
                 return@setBottomLoader
             }
