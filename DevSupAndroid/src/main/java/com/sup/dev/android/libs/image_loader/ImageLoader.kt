@@ -173,7 +173,7 @@ object ImageLoader {
     fun addToCash(key: String, bitmap: Bitmap?, bytes: ByteArray?) {
         removeFromCash(key)
         if (bitmap == null && bytes == null) return
-        val size = bitmap?.byteCount ?: bytes!!.size
+        val size = cashItemSize(bitmap, bytes)
         if (size > maxCashItemSize) return
 
         cashSize += size
@@ -194,7 +194,7 @@ object ImageLoader {
     fun removeFromCash(key: String) {
         val item = getFromCash(key) ?: return
 
-        cashSize -= item.a2?.byteCount ?: item.a3!!.size
+        cashSize -= cashItemSize(item.a2, item.a3)
 
         var i = 0
         while (i in 0 until cash.size) {
@@ -208,6 +208,8 @@ object ImageLoader {
         cash.clear()
         cashSize = 0
     }
+
+    private fun cashItemSize(bitmap: Bitmap?, bytes: ByteArray?) = (bitmap?.byteCount ?: 0) + (bytes?.size ?: 0)
 
     //
     //  Methods
@@ -227,9 +229,12 @@ object ImageLoader {
         var bytes = loadedBytes
         var bitmap: Bitmap? = null
 
-        if (loader.link.allowGif && !ToolsBytes.isGif(loadedBytes)) {
+        val isGif = ToolsBytes.isGif(loadedBytes)
+        if (loader.link.allowGif && !isGif) {
             bitmap = parseImage(loader, loadedBytes)
             if (loader.link.cashScaledBytes && bitmap != null) bytes = ToolsBitmap.toJPGBytes(bitmap, 100)
+        } else if (isGif && loader.onLoadedBitmap != null) {
+            bitmap = parseImage(loader, loadedBytes)
         }
 
         ToolsThreads.main { putImage(loader, bitmap, true, bytes) }

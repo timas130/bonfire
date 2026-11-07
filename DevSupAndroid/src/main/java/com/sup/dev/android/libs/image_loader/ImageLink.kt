@@ -8,6 +8,7 @@ import com.sup.dev.android.tools.ToolsCash
 import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.views.ViewAvatar
 import com.sup.dev.android.views.views.ViewAvatarTitle
+import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsMath
 
 abstract class ImageLink {
@@ -41,6 +42,7 @@ abstract class ImageLink {
     internal var fromCash = false
     internal var noLoadFromCash = false
     internal var autoDiskCashMaxSize = 1024 * 1024 * 2
+    private val autoDiskCashMaxGifSize = 1024 * 1024 * 8
     internal var resizeByMinSide = false
     internal var autocropIfLostBounds = true
     internal var immortalCash = false
@@ -89,7 +91,7 @@ abstract class ImageLink {
         if (bytes != null) return bytes
         if (fromCash) return null
         val data = load()
-        if (data != null && !noCash && data.size <= autoDiskCashMaxSize) ToolsCash.put(
+        if (data != null && !noCash && data.size <= (if (ToolsBytes.isGif(data)) autoDiskCashMaxGifSize else autoDiskCashMaxSize)) ToolsCash.put(
             data,
             "" + getKey().replace("/", "_").hashCode(),
             immortalCash

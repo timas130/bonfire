@@ -351,7 +351,7 @@ open class SplashChooseImage : SplashRecycler(R.layout.splash_choose_image) {
                 vNumContainerTouch.setOnClickListener { select() }
             }
 
-            ImageLoader.load(file).size(420, 420).cropSquare().into(vImage)
+            ImageLoader.load(file).size(420, 420).cropSquare().cashScaledBytes().into(vImage)
             val index = adapter.indexOf(this)
             val arg = index % spanCount
             view.setPadding(if (arg == 0) 0 else DP, if (index < spanCount) 0 else DP, if (arg == spanCount - 1) 0 else DP, DP)
