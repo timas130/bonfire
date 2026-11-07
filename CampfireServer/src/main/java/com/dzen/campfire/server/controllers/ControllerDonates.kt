@@ -34,6 +34,8 @@ object ControllerDonates {
 
     private fun parseMessage(array:Array<String>){
 
+        if(secretField.isBlank() || secretValue.isBlank()) return
+
         var sum:Long? = null
         var accountId:Long? = null
         var donateId = 0L
