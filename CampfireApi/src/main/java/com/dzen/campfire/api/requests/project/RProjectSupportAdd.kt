@@ -5,12 +5,14 @@ import com.sup.dev.java.libs.json.Json
 
 open class RProjectSupportAdd(
         var accountId:Long,
-        var sum:Long
+        var sum:Long,
+        var draftId:Long = 0
 ) : Request<RProjectSupportAdd.Response>() {
 
     override fun jsonSub(inp: Boolean, json: Json) {
         accountId = json.m(inp, "accountId", accountId)
         sum = json.m(inp, "sum", sum)
+        draftId = json.m(inp, "draftId", draftId)
     }
 
     override fun instanceResponse(json: Json): Response {

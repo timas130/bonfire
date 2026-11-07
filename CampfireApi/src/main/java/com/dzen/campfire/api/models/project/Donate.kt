@@ -13,8 +13,11 @@ class Donate : JsonParsable, ImageHolder {
     var comment = ""
     var isSum = false
     var isDraft = false
+    // Only filled in for drafts
+    var id = 0L
 
     override fun json(inp: Boolean, json: Json): Json {
+        id = json.m(inp, "id", id)
         account = json.m(inp, "account", account)
         sum = json.m(inp, "sum", sum)
         dateCreate = json.m(inp, "dateCreate", dateCreate)

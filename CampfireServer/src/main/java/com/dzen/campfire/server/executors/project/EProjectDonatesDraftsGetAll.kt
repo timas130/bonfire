@@ -35,7 +35,8 @@ class EProjectDonatesDraftsGetAll : RProjectDonatesDraftsGetAll(0) {
                 TSupport.ACCOUNT_IMAGE_ID,
                 TSupport.ACCOUNT_SEX,
                 TSupport.ACCOUNT_KARMA_30,
-                TSupport.comment
+                TSupport.comment,
+                TSupport.id
         )
                 .where(TSupport.date, "=", date)
                 .where(TSupport.status, "=", API.STATUS_DRAFT)
@@ -51,6 +52,7 @@ class EProjectDonatesDraftsGetAll : RProjectDonatesDraftsGetAll(0) {
             donate.dateCreate = v.next()
             donate.account = ControllerAccounts.instance(v)
             donate.comment = v.next()
+            donate.id = v.next()
             donate.isDraft = true
             donates.add(donate)
         }

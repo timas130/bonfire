@@ -25,7 +25,7 @@ class PageDrafts(
 
     private val adapterX = RecyclerCardAdapterLoading<CardDonate, Donate>(CardDonate::class) {
         CardDonate(it, false){ donate->
-            ApiRequestsSupporter.executeEnabledConfirm("Записать донат от ${donate.account.name} на сумму ${ToolsText.numToStringRoundAndTrim(donate.sum / 100.0, 2)} \u20BD?", "Записать", RProjectSupportAdd(donate.account.id, donate.sum)) {
+            ApiRequestsSupporter.executeEnabledConfirm("Записать донат от ${donate.account.name} на сумму ${ToolsText.numToStringRoundAndTrim(donate.sum / 100.0, 2)} \u20BD?", "Записать", RProjectSupportAdd(donate.account.id, donate.sum, donate.id)) {
                 ToolsToast.show(t(API_TRANSLATE.app_done))
                 onReloadClicked()
             }

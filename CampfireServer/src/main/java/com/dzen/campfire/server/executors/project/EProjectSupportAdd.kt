@@ -16,7 +16,7 @@ class EProjectSupportAdd : RProjectSupportAdd(0,0) {
 
     override fun execute(): Response {
 
-        ControllerDonates.addDonate(accountId, sum, "mobile", 0)
+        ControllerDonates.addDonate(accountId, sum, "mobile", draftId)
 
         return Response()
     }
