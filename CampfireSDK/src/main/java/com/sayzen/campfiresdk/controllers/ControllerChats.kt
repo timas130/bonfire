@@ -219,9 +219,7 @@ object ControllerChats {
 
     fun readRequest(chatTag: ChatTag) {
         setMessages(MChatMessagesPool(chatTag, false))
-        putRead(chatTag, System.currentTimeMillis())
-        ApiRequestsSupporter.execute(RChatRead(chatTag)) { r ->
-            putRead(chatTag, r.date)
+        ApiRequestsSupporter.execute(RChatRead(chatTag)) {
             EventBus.post(EventChatRead(chatTag))
         }
     }
