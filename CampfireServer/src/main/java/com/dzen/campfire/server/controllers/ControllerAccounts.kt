@@ -19,7 +19,6 @@ import com.dzen.campfire.server.optimizers.OptimizerSponsor
 import com.dzen.campfire.server.rust.RustProfile
 import com.dzen.campfire.server.tables.*
 import com.sup.dev.java.classes.collections.AnyArray
-import com.sup.dev.java.classes.collections.Cache
 import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java_pc.sql.*
 import java.util.*
@@ -653,19 +652,12 @@ object ControllerAccounts {
         return getAccountBanDate(accountId) > System.currentTimeMillis()
     }
 
-    private val shadowBansCache = Cache<Long, Boolean>(1000)
-
     fun isAccountShadowBanned(accountId: Long): Boolean {
-        val cache = shadowBansCache[accountId]
-        if (cache != null) return cache
-
-        val ret = Database.select(
+        return Database.select(
             "ControllerAccounts.isAccountShadowBanned",
             SqlQuerySelect(TShadowBans.NAME, TShadowBans.account_id)
                 .where(TShadowBans.account_id, "=", accountId)
         ).hasNext()
-        shadowBansCache.put(accountId, ret)
-        return ret
     }
 
     //
