@@ -127,6 +127,11 @@ private fun PublicationChatMessage.notificationText(): String = when {
     else -> ""
 }
 
+// Separate from notificationText, as asString being empty is what stops system messages from alerting
+private fun PublicationChatMessage.notificationLine(): String =
+    if (type == PublicationChatMessage.TYPE_SYSTEM) ControllerChats.getSystemText(this)
+    else notificationText()
+
 @WorkerThread
 fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound: Boolean = true, failedReply: CharSequence? = null) {
     val chatMessages = ControllerChats.getMessages(tag)
@@ -176,7 +181,7 @@ fun NotificationChatMessageParser.Companion.sendNotification(tag: ChatTag, sound
             it.conversationTitle = chat.customName
             for (message in chatMessages.messages) {
                 it.addMessage(NotificationCompat.MessagingStyle.Message(
-                    TextFormatter(message.notificationText()).parseNoTags(),
+                    TextFormatter(message.notificationLine()).parseNoTags(),
                     message.dateCreate,
                     Person.Builder()
                         .setKey(message.creator.id.toString())
