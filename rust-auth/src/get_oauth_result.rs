@@ -167,6 +167,22 @@ impl AuthServer {
         let email = claims.email().map(|email| email.as_str());
         let email_verified = claims.email_verified().unwrap_or(true);
 
+        if let Some(email) = email {
+            Self::lock_email(&mut tx, email).await?;
+            let same_email_account_exists = sqlx::query_scalar!(
+                "select count(*) > 0 from users where lower(email) = lower($1)",
+                email
+            )
+            .fetch_one(&mut *tx)
+            .await?
+            .unwrap_or(false);
+
+            if same_email_account_exists {
+                tx.rollback().await?;
+                return Ok(OAuthResult::SameEmailDifferentAccount);
+            }
+        }
+
         let temp_name = nanoid!(32);
         let new_user_id = sqlx::query_scalar!(
             "insert into users (username, email, email_verification_sent, email_verified)

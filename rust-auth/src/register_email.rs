@@ -10,6 +10,7 @@ use nanoid::nanoid;
 use scrypt::password_hash::rand_core::OsRng;
 use scrypt::password_hash::{PasswordHasher, SaltString};
 use scrypt::Scrypt;
+use sqlx::{Postgres, Transaction};
 use std::ops::RangeInclusive;
 use std::time::Duration;
 
@@ -36,6 +37,21 @@ impl AuthServer {
     }
     pub(crate) fn is_password_valid(password: &str) -> bool {
         PASSWORD_LENGTH.contains(&password.len())
+    }
+
+    /// Lock an address until the end of `tx`
+    pub(crate) async fn lock_email(
+        tx: &mut Transaction<'_, Postgres>,
+        email: &str,
+    ) -> Result<(), AuthError> {
+        sqlx::query!(
+            "select pg_advisory_xact_lock(hashtextextended('user_email:' || lower($1), 0))",
+            email,
+        )
+        .execute(&mut **tx)
+        .await?;
+
+        Ok(())
     }
 
     pub(crate) fn create_verify_token(&self, address: String) -> Result<String, AuthError> {
@@ -157,6 +173,21 @@ impl AuthServer {
         let hash = self.hash_password(password).await?;
 
         let mut tx = self.base.pool.begin().await?;
+
+        Self::lock_email(&mut tx, &email).await?;
+        let email_taken = sqlx::query_scalar!(
+            "select count(*) from users where lower(email) = lower($1)",
+            &email
+        )
+        .fetch_one(&mut *tx)
+        .await?
+        .unwrap_or(0);
+
+        if email_taken > 0 {
+            tx.rollback().await?;
+            sleep_until(deadline).await;
+            return Err(AuthError::EmailTaken);
+        }
 
         let temp_username = nanoid!(32);
         let user_id = sqlx::query_scalar!(

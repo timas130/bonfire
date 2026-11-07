@@ -50,6 +50,7 @@ impl AuthServer {
         };
 
         if let Some(email) = email {
+            Self::lock_email(&mut tx, email.as_str()).await?;
             let updated = sqlx::query!(
                 "update users set email = $1 where id = $2 and email is null and not exists (select 1 from users where lower(email) = lower($1))",
                 email.as_str(),

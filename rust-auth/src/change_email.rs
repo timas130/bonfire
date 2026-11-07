@@ -31,6 +31,7 @@ impl AuthServer {
 
         let mut tx = self.base.pool.begin().await?;
 
+        Self::lock_email(&mut tx, &new_email).await?;
         let email_taken = sqlx::query_scalar!(
             "select count(*) from users where lower(email) = lower($1)",
             &new_email
