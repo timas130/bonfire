@@ -240,12 +240,32 @@ object ControllerPost {
 
     }
 
+    fun stripClientResourceIds(page: Page) {
+        when (page) {
+            is PageLinkImage -> {
+                page.imageId = 0
+            }
+            is PageImages -> {
+                page.imagesIds = emptyArray()
+                page.imagesMiniIds = emptyArray()
+                page.imagesMiniSizesW = emptyArray()
+                page.imagesMiniSizesH = emptyArray()
+                page.replacePageIndex = -1
+                page.removePageIndex = -1
+            }
+            is PageTable -> {
+                for (c in page.cells) c.imageId = 0
+            }
+            else -> {}
+        }
+    }
+
     fun insertPage(page: Page, publicationId: Long) {
 
         when (page) {
             is PageImage -> {
                 page.imageId = ControllerResources.put(page.insertBytes!!, publicationId)
-                if (page.insertGifBytes != null) page.gifId = ControllerResources.put(page.insertGifBytes!!, publicationId)
+                page.gifId = if (page.insertGifBytes != null) ControllerResources.put(page.insertGifBytes!!, publicationId) else 0L
                 page.insertBytes = null
                 page.insertGifBytes = null
             }

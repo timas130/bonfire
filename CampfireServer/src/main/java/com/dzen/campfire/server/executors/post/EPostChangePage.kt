@@ -44,6 +44,7 @@ class EPostChangePage : RPostChangePage(0, null, 0) {
         val oldVideoId = (publication!!.pages[pageIndex] as? PageVideo)?.videoId
 
         if (publication!!.pages[pageIndex].isRemoveOnChange()) {
+            ControllerPost.stripClientResourceIds(page!!)
             page!!.copyChangeData(publication!!.pages[pageIndex])
             ControllerPost.checkPage(page, E_BAD_PAGE, true, API.PAGES_SOURCE_TYPE_POST, apiAccount.id, publicationId)
             ControllerPost.removePage(publication!!.pages[pageIndex])

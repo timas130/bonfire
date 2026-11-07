@@ -63,7 +63,10 @@ class EPostPutPage : RPostPutPage(0, emptyArray(), 0, 0, "", "") {
                 (publication?.pages?.filterIsInstance<PageVideo>()?.map { it.videoId } ?: emptyList())
         if (videoIds.size != videoIds.distinct().size) throw ApiException(E_BAD_PAGE, "Duplicate videoId")
 
-        for (p in pages) ControllerPost.checkPage(p, E_BAD_PAGE, false, API.PAGES_SOURCE_TYPE_POST, apiAccount.id, publicationId)
+        for (p in pages) {
+            ControllerPost.stripClientResourceIds(p)
+            ControllerPost.checkPage(p, E_BAD_PAGE, false, API.PAGES_SOURCE_TYPE_POST, apiAccount.id, publicationId)
+        }
     }
 
     override fun execute(): Response {

@@ -33,7 +33,10 @@ class EWikiPagePut : RWikiPagePut(0, emptyArray(), 0) {
         val fandom = ControllerFandom.getFandom(wikiTitle.fandomId)
         if (fandom!!.status != API.STATUS_PUBLIC) throw ApiException(API.ERROR_ACCESS)
 
-        for (p in pages) ControllerPost.checkPage(p, E_BAD_PAGE, false, API.PAGES_SOURCE_TYPE_WIKI, apiAccount.id, API.RESOURCES_PUBLICATION_WIKI)
+        for (p in pages) {
+            ControllerPost.stripClientResourceIds(p)
+            ControllerPost.checkPage(p, E_BAD_PAGE, false, API.PAGES_SOURCE_TYPE_WIKI, apiAccount.id, API.RESOURCES_PUBLICATION_WIKI)
+        }
     }
 
     override fun execute(): Response {

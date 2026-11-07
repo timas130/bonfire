@@ -74,6 +74,8 @@ class PageTable : Page() {
 
     override fun prepareForServer(page: Page) {
         page as PageTable
+        val ownImageIds = cells.map { it.imageId }.toSet()
+        for (c in page.cells) if (c.imageId !in ownImageIds) c.imageId = 0
         columnsCount = page.columnsCount
         rowsCount = page.rowsCount
         title = page.title

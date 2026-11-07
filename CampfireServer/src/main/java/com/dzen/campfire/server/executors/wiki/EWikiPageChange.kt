@@ -40,6 +40,7 @@ class EWikiPageChange : RWikiPageChange(0, 0, null, 0) {
         val resultPage: Page
 
         if (wikiPagesOld.pages[pageIndex].isRemoveOnChange()) {
+            page?.let { ControllerPost.stripClientResourceIds(it) }
             ControllerPost.checkPage(page, E_BAD_PAGE, true, API.PAGES_SOURCE_TYPE_WIKI, apiAccount.id, API.RESOURCES_PUBLICATION_WIKI)
             ControllerPost.removePage(wikiPagesOld.pages[pageIndex])
             resultPage = page!!
