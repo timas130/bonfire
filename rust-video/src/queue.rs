@@ -3,6 +3,7 @@ use c_core::prelude::tokio;
 use c_core::prelude::tokio::time::sleep;
 use c_core::prelude::tracing::{error, span, Instrument, Level};
 use c_core::services::video::VideoError;
+use std::path::Path;
 use std::time::Duration;
 
 const GC_INTERVAL: Duration = Duration::from_secs(3600);
@@ -29,9 +30,28 @@ impl VideoServer {
     }
 
     pub(crate) async fn startup_sweep(&self) -> Result<(), VideoError> {
-        sqlx::query!("update videos set status = 2, updated_at = now() where status = 3")
-            .execute(&self.base.pool)
-            .await?;
+        let crashed = sqlx::query_scalar!(
+            "update videos \
+             set status = 5, error = 'processing was interrupted twice', updated_at = now() \
+             where status = 3 and error = 'interrupted' \
+             returning video_id"
+        )
+        .fetch_all(&self.base.pool)
+        .await?;
+        if let Some((s3, bucket)) = &self.s3 {
+            for video_id in crashed {
+                storage::delete_object_quiet(s3, bucket, &storage::upload_key(&video_id)).await;
+                let job_dir = Path::new(&self.base.config.video.work_dir).join(&video_id);
+                let _ = tokio::fs::remove_dir_all(job_dir).await;
+            }
+        }
+
+        sqlx::query!(
+            "update videos set status = 2, error = 'interrupted', updated_at = now() \
+             where status = 3"
+        )
+        .execute(&self.base.pool)
+        .await?;
         let pending = sqlx::query_scalar!("select video_id from videos where status = 2")
             .fetch_all(&self.base.pool)
             .await?;

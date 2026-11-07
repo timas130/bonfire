@@ -1,0 +1,20 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update videos set status = 5, error = 'processing was interrupted twice', updated_at = now() where status = 3 and error = 'interrupted' returning video_id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "video_id",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "7dd366e3e72b99208e0534a35624658a3560a570829b1a969dfb018439c2bc84"
+}
