@@ -51,6 +51,8 @@ class SStickersPackCreate(
             vImageIcon.visibility = View.GONE
             vCreate.text = t(API_TRANSLATE.app_change)
         }
+
+        updateFinishEnabled()
     }
 
     private fun updateFinishEnabled() {
