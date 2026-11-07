@@ -14,6 +14,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.posthog.PostHog
 import com.sup.dev.android.tools.ToolsIntent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -50,11 +51,11 @@ class ConsentControllerState {
         _isOpen.emit(false)
         if (status) {
             AuthController.setConsent(true)
-            //AuthController.setAnalyticsConsent(_allowAnalytics.value)
-            AuthController.setAnalyticsConsent(true)
+            AuthController.setAnalyticsConsent(_allowAnalytics.value)
         } else {
             AuthController.setConsent(false)
-            AuthController.setAnalyticsConsent(false)
+            // not saved as the analytics choice, because dismissing the sheet also ends up here
+            PostHog.optOut()
             throw NoConsentException()
         }
     }
