@@ -168,6 +168,7 @@ class SPost private constructor(
                 for (i in 0 until e.pages.size) {
                     adapter.add(i, CardPage.instance(xPublication.publication as PublicationPost, e.pages[i]))
                 }
+                ControllerPost.updateSpoilers(adapter)
             }
         }
     }
