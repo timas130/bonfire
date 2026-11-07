@@ -3,6 +3,7 @@ package com.dzen.campfire.server.executors.post
 import com.dzen.campfire.api.API
 import com.dzen.campfire.api.models.publications.history.HistoryEditPublic
 import com.dzen.campfire.api.models.publications.post.Page
+import com.dzen.campfire.api.models.publications.post.PageLinkImage
 import com.dzen.campfire.api.models.publications.post.PageVideo
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.post.RPostChangePage
@@ -47,7 +48,9 @@ class EPostChangePage : RPostChangePage(0, null, 0) {
             ControllerPost.stripClientResourceIds(page!!)
             page!!.copyChangeData(publication!!.pages[pageIndex])
             ControllerPost.checkPage(page, E_BAD_PAGE, true, API.PAGES_SOURCE_TYPE_POST, apiAccount.id, publicationId)
-            ControllerPost.removePage(publication!!.pages[pageIndex])
+            val newLinkImage = page as? PageLinkImage
+            val keepsOldImage = publication!!.pages[pageIndex] is PageLinkImage && newLinkImage != null && newLinkImage.insertBytes == null
+            if (!keepsOldImage) ControllerPost.removePage(publication!!.pages[pageIndex])
             resultPage = page!!
         } else {
             publication!!.pages[pageIndex].prepareForServer(page!!)
