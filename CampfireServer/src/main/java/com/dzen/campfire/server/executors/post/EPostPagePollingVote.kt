@@ -10,6 +10,8 @@ import com.dzen.campfire.server.controllers.*
 
 class EPostPagePollingVote : RPostPagePollingVote(0, 0, 0, 0, 0) {
     companion object {
+        private val voteLock = Any()
+
         fun getPolling(sourceType: Long, sourceId: Long, sourceIdSub: Long, pollingId: Long, rejectDrafts: Boolean = false): Pair<PagePolling, Long>? {
             var pages: Array<Page> = emptyArray()
             var dateCreate = 0L
@@ -60,9 +62,11 @@ class EPostPagePollingVote : RPostPagePollingVote(0, 0, 0, 0, 0) {
     @Throws(ApiException::class)
     override fun execute(): Response {
 
-        if (ControllerCollisions.checkCollisionExist(apiAccount.id, pollingId, API.COLLISION_PAGE_POLLING_VOTE))
-            throw ApiException(E_ALREADY)
-        ControllerCollisions.putCollisionValue1(apiAccount.id, pollingId, itemId, API.COLLISION_PAGE_POLLING_VOTE, System.currentTimeMillis())
+        synchronized(voteLock) {
+            if (ControllerCollisions.checkCollisionExist(apiAccount.id, pollingId, API.COLLISION_PAGE_POLLING_VOTE))
+                throw ApiException(E_ALREADY)
+            ControllerCollisions.putCollisionValue1(apiAccount.id, pollingId, itemId, API.COLLISION_PAGE_POLLING_VOTE, System.currentTimeMillis())
+        }
 
         return Response()
     }
