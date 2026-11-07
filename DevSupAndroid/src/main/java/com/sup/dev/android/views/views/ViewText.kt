@@ -86,16 +86,19 @@ class ViewText constructor(context: Context, attrs: AttributeSet) : androidx.app
     override fun onTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, lengthAfter: Int) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter)
         if (spoilerRevealed && text?.toString() != revealedText) spoilerRevealed = false
+        spoilerPathDirty = true
     }
 
     private val tempPath = Path()
     private val spoilerPath = Path()
+    private var spoilerPathDirty = true
     private val colorPaint = Paint()
     private val spoilerPaint = Paint()
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
+        if (spoilerPathDirty) buildSpoilerPath()
         if (spoilerPath.isEmpty || spoilerRevealed) return
 
         // What other option is there?
@@ -141,19 +144,22 @@ class ViewText constructor(context: Context, attrs: AttributeSet) : androidx.app
             setMeasuredDimension(width, height)
         }
 
-        // build spoilerPath
-        val text = text as? Spanned
-        if (text != null) {
-            spoilerPath.reset()
+        spoilerPathDirty = true
+    }
 
-            val spoilerSpans = text.getSpans<SpoilerSpan>()
-            for (span in spoilerSpans) {
-                val start = text.getSpanStart(span)
-                val end = text.getSpanEnd(span)
-                tempPath.reset()
-                layout.getSelectionPath(start, end, tempPath)
-                spoilerPath.addPath(tempPath)
-            }
+    private fun buildSpoilerPath() {
+        val layout = layout ?: return
+        spoilerPathDirty = false
+        spoilerPath.reset()
+
+        val text = text as? Spanned ?: return
+        val spoilerSpans = text.getSpans<SpoilerSpan>()
+        for (span in spoilerSpans) {
+            val start = text.getSpanStart(span)
+            val end = text.getSpanEnd(span)
+            tempPath.reset()
+            layout.getSelectionPath(start, end, tempPath)
+            spoilerPath.addPath(tempPath)
         }
     }
 
