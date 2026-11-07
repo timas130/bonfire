@@ -41,7 +41,7 @@ impl LevelServer {
             level_multiplier: task_record.level_multiplier,
             possible_reward: ((task_record.combo_multiplier + task_record.level_multiplier)
                 * BASE_DT_LVL_REWARD as f64)
-                .round() as u64,
+                .round_ties_even() as u64, // same as the `::int` in get_dt_level()
             fandom_name,
         })
     }
