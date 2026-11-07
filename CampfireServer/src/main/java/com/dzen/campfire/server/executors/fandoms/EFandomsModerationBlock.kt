@@ -14,7 +14,9 @@ import com.dzen.campfire.api.models.publications.moderations.publications.Modera
 import com.dzen.campfire.api.requests.fandoms.RFandomsModerationBlock
 import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.controllers.*
+import com.dzen.campfire.server.tables.TChats
 import com.dzen.campfire.server.tables.TCollisions
+import com.dzen.campfire.server.tables.TFandoms
 import com.dzen.campfire.server.tables.TPublications
 import com.sup.dev.java.tools.ToolsCollections
 import com.sup.dev.java.tools.ToolsMapper
@@ -29,6 +31,9 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
     private var blockAccountDate = 0L
     private var punishmentId = 0L
     private var languageId = userLanguageId
+    private var fandomId = 0L
+    private var fandomName = ""
+    private var isSubChatMessage = false
     private var publicationChatMessage: PublicationChatMessage? = null
 
     override fun check() {
@@ -45,10 +50,22 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
 
         languageId = publication!!.fandom.languageId
         if (publication!!.fandom.languageId == -1L && publication!!.publicationType == API.PUBLICATION_TYPE_POST) languageId = userLanguageId
+        fandomId = publication!!.fandom.id
+        fandomName = publication!!.fandom.name
+        isSubChatMessage = (publication as? PublicationChatMessage)?.chatType == API.CHAT_TYPE_FANDOM_SUB
+        if (isSubChatMessage) {
+            val chat = ControllerChats.getChat(publication!!.fandom.id, TChats.fandom_id, TChats.language_id)
+            if (chat.isEmpty()) throw ApiException(API.ERROR_GONE)
+            fandomId = chat.next()
+            languageId = chat.next()
+            val fandom = ControllerFandom.get(fandomId, TFandoms.name)
+            if (fandom.isEmpty()) throw ApiException(API.ERROR_GONE)
+            fandomName = fandom.next()
+        }
 
         ControllerFandom.checkCan(
                 apiAccount,
-                publication!!.fandom.id,
+                fandomId,
                 languageId,
                 API.LVL_MODERATOR_BLOCK
         )
@@ -56,7 +73,7 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
         if (!ControllerFandom.checkCanModerate(
                         apiAccount,
                         publication!!.creator.id,
-                        publication!!.fandom.id,
+                        fandomId,
                         languageId
                 )
         ) throw ApiException(E_LOW_KARMA_FORCE)
@@ -125,7 +142,7 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
     }
 
     private fun postChatMessage(moderationId: Long) {
-        val tag = ChatTag(API.CHAT_TYPE_FANDOM_ROOT, publication!!.fandom.id, publication!!.fandom.languageId)
+        val tag = (publication!! as PublicationChatMessage).chatTag()
 
         publicationChatMessage = PublicationChatMessage()
         publicationChatMessage!!.type = PublicationChatMessage.TYPE_SYSTEM
@@ -147,19 +164,19 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
     }
 
     private fun banAccountInFandom() {
-        punishmentId = ControllerCollisions.putCollision(publication!!.creator.id, publication!!.fandom.id, languageId, API.COLLISION_PUNISHMENTS_BAN, System.currentTimeMillis(), blockAccountDate, AccountPunishment.createSupportString(comment, apiAccount.id, apiAccount.imageId, apiAccount.name, apiAccount.sex, blockAccountDate))
-        ControllerActivities.dropActivities(publication!!.creator.id, publication!!.fandom.id, languageId)
+        punishmentId = ControllerCollisions.putCollision(publication!!.creator.id, fandomId, languageId, API.COLLISION_PUNISHMENTS_BAN, System.currentTimeMillis(), blockAccountDate, AccountPunishment.createSupportString(comment, apiAccount.id, apiAccount.imageId, apiAccount.name, apiAccount.sex, blockAccountDate))
+        ControllerActivities.dropActivities(publication!!.creator.id, fandomId, languageId)
     }
 
     private fun warnAccount() {
-        punishmentId = ControllerCollisions.putCollision(publication!!.creator.id, publication!!.fandom.id, languageId, API.COLLISION_PUNISHMENTS_WARN, System.currentTimeMillis(), 0, AccountPunishment.createSupportString(comment, apiAccount.id, apiAccount.imageId, apiAccount.name, apiAccount.sex, -1))
+        punishmentId = ControllerCollisions.putCollision(publication!!.creator.id, fandomId, languageId, API.COLLISION_PUNISHMENTS_WARN, System.currentTimeMillis(), 0, AccountPunishment.createSupportString(comment, apiAccount.id, apiAccount.imageId, apiAccount.name, apiAccount.sex, -1))
     }
 
     private fun blockLastPublications(ids: ArrayList<Long>) {
         val v = Database.select("EFandomsModerationBlock.blockLastPublications select",
                 SqlQuerySelect(TPublications.NAME, TPublications.id, TPublications.publication_type, TPublications.parent_publication_id, TPublications.tag_1, TPublications.tag_2, TPublications.tag_3)
                         .where(TPublications.fandom_id, "=", publication!!.fandom.id)
-                        .where(TPublications.language_id, "=", languageId)
+                        .where(TPublications.language_id, "=", if (isSubChatMessage) publication!!.fandom.languageId else languageId)
                         .where(TPublications.creator_id, "=", publication!!.creator.id)
                         .where(TPublications.date_create, ">", publication!!.dateCreate - 1000L * 60 * 60)
                         .where(TPublications.date_create, "<=", publication!!.dateCreate)
@@ -210,8 +227,8 @@ class EFandomsModerationBlock : RFandomsModerationBlock(0, 0, false, "", false, 
         if (publication!!.publicationType == API.PUBLICATION_TYPE_POST
                 || publication!!.publicationType == API.PUBLICATION_TYPE_COMMENT
                 || publication!!.publicationType == API.PUBLICATION_TYPE_CHAT_MESSAGE) {
-            moderationId = ControllerPublications.moderation(ModerationBlock(comment, publicationId, publication!!.getPublicationTypeConst(), publication!!.creator.id, publication!!.creator.name, publication!!.creator.imageId, blockAccountDate, blockLastPublications), apiAccount.id, publication!!.fandom.id, languageId, publication!!.id)
-            ControllerPublications.event(ApiEventUserAdminPublicationBlocked(publication!!.creator.id, publication!!.creator.name, publication!!.creator.imageId, publication!!.creator.sex, apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, publication!!.getPublicationTypeConst(), moderationId, blockAccountDate, blockLastPublications, blockTime == -1L, blockInApp, publication!!.fandom.name, publication!!.fandom.id, publication!!.fandom.languageId), publication!!.creator.id)
+            moderationId = ControllerPublications.moderation(ModerationBlock(comment, publicationId, publication!!.getPublicationTypeConst(), publication!!.creator.id, publication!!.creator.name, publication!!.creator.imageId, blockAccountDate, blockLastPublications), apiAccount.id, fandomId, languageId, publication!!.id)
+            ControllerPublications.event(ApiEventUserAdminPublicationBlocked(publication!!.creator.id, publication!!.creator.name, publication!!.creator.imageId, publication!!.creator.sex, apiAccount.id, apiAccount.name, apiAccount.imageId, apiAccount.sex, comment, publication!!.getPublicationTypeConst(), moderationId, blockAccountDate, blockLastPublications, blockTime == -1L, blockInApp, fandomName, fandomId, if (isSubChatMessage) languageId else publication!!.fandom.languageId), publication!!.creator.id)
         }
 
         ControllerPublicationsHistory.put(publicationId, HistoryAdminBlock(apiAccount.id, apiAccount.imageId, apiAccount.name, comment))
