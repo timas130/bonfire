@@ -225,7 +225,7 @@ class AccountSettings() : JsonParsable {
     fun notificationsFilterEnabled(type: Long): Boolean {
         return when (type) {
             API.NOTIF_FOLLOWS_PUBLICATION -> notificationsFilterFollowsPublications
-            API.NOTIF_ACCOUNT_FOLLOWS_ADD -> notificationsFilterFollows
+            API.NOTIF_ACCOUNT_FOLLOWS_ADD, API.NOTIF_ACCOUNT_FOLLOWS_REMOVE -> notificationsFilterFollows
             API.NOTIF_ACHI -> notificationsFilterAchievements
             API.NOTIF_COMMENT -> notificationsFilterComments
             API.NOTIF_COMMENT_ANSWER -> notificationsFilterAnswers
@@ -238,7 +238,10 @@ class AccountSettings() : JsonParsable {
     fun getNotificationFilters(allowlist: Boolean = !notificationsFilterOther): Array<Long> {
         val list = mutableListOf<Long>()
         if (allowlist == notificationsFilterFollowsPublications) list.add(API.NOTIF_FOLLOWS_PUBLICATION)
-        if (allowlist == notificationsFilterFollows) list.add(API.NOTIF_ACCOUNT_FOLLOWS_ADD)
+        if (allowlist == notificationsFilterFollows) {
+            list.add(API.NOTIF_ACCOUNT_FOLLOWS_ADD)
+            list.add(API.NOTIF_ACCOUNT_FOLLOWS_REMOVE)
+        }
         if (allowlist == notificationsFilterAchievements) list.add(API.NOTIF_ACHI)
         if (allowlist == notificationsFilterComments) list.add(API.NOTIF_COMMENT)
         if (allowlist == notificationsFilterAnswers) list.add(API.NOTIF_COMMENT_ANSWER)
