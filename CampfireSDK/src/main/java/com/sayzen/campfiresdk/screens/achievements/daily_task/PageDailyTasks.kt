@@ -203,6 +203,7 @@ class PageDailyTasks(private val taskInfo: DailyTaskInfo) : ComposeCard() {
     @Composable
     override fun Content() {
         var events by remember { mutableStateOf<Array<ProjectEvent>?>(null) }
+        var eventsFailed by remember { mutableStateOf(false) }
 
         LaunchedEffect(Unit) {
             RProjectGetEvents()
@@ -210,6 +211,7 @@ class PageDailyTasks(private val taskInfo: DailyTaskInfo) : ComposeCard() {
                     events = it.events
                 }
                 .onError {
+                    eventsFailed = true
                     ToolsToast.show(t(API_TRANSLATE.app_error))
                 }
                 .send(api)
@@ -238,6 +240,8 @@ class PageDailyTasks(private val taskInfo: DailyTaskInfo) : ComposeCard() {
                     Text(
                         if (events?.isEmpty() == true) {
                             t(API_TRANSLATE.events_empty)
+                        } else if (eventsFailed) {
+                            t(API_TRANSLATE.events_error)
                         } else if (events == null) {
                             t(API_TRANSLATE.app_loading_dots)
                         } else {
