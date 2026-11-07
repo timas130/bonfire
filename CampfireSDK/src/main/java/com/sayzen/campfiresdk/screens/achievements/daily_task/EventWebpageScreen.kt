@@ -15,10 +15,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.dzen.campfire.api.models.project.ProjectEvent
 import com.sayzen.campfiresdk.compose.ComposeScreen
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import sh.sit.bonfire.auth.AuthController
 import sh.sit.bonfire.auth.components.BackButton
 
@@ -26,6 +31,8 @@ class EventWebpageScreen(val event: ProjectEvent) : ComposeScreen() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
+        val scope = rememberCoroutineScope()
+
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -57,14 +64,20 @@ class EventWebpageScreen(val event: ProjectEvent) : ComposeScreen() {
                                     return false
                                 }
 
-                                val redirectUri = target
-                                    .buildUpon()
-                                    .appendQueryParameter("state", state)
-                                    .appendQueryParameter("code", AuthController.getAccessToken())
-                                    .build()
+                                scope.launch {
+                                    val token = withContext(NonCancellable) { AuthController.getAccessTokenSuspend() }
+                                    ensureActive()
 
-                                Log.d("EventWebpageScreen", "redirecting authentication")
-                                view.loadUrl(redirectUri.toString())
+                                    val redirectUri = target
+                                        .buildUpon()
+                                        .appendQueryParameter("state", state)
+                                        .appendQueryParameter("code", token)
+                                        .build()
+
+                                    Log.d("EventWebpageScreen", "redirecting authentication")
+                                    view.loadUrl(redirectUri.toString())
+                                }
+                                return true
                             }
                             return false
                         }
