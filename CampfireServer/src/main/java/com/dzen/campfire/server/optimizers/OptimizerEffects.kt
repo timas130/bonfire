@@ -40,7 +40,7 @@ object OptimizerEffects {
         cache.compute(effect.accountId) { _, effects ->
             val time = System.currentTimeMillis()
             val newList = effects
-                ?.filter { it.dateEnd < time }
+                ?.filter { it.dateEnd > time }
                 ?.toMutableList()
                 ?: mutableListOf()
 
