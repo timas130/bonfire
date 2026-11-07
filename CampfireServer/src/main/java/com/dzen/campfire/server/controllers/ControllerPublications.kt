@@ -23,6 +23,7 @@ import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.models.publications.tags.PublicationTag
 import com.dzen.campfire.api.models.quests.QuestDetails
 import com.dzen.campfire.api.tools.ApiAccount
+import com.dzen.campfire.api.tools.ApiException
 import com.dzen.campfire.server.optimizers.OptimizerEffects
 import com.dzen.campfire.server.tables.*
 import com.sup.dev.java.classes.collections.AnyArray
@@ -465,7 +466,9 @@ object ControllerPublications {
     }
 
     fun getType(id: Long): Long {
-        return get(id, TPublications.publication_type).next()
+        val v = get(id, TPublications.publication_type)
+        if (v.isEmpty()) throw ApiException(API.ERROR_GONE)
+        return v.next()
     }
 
     fun replaceJson(publicationId: Long, publication: Publication) {

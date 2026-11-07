@@ -24,6 +24,7 @@ class ETagsGet : RTagsGet(0) {
         val v = Database.select("ETagsGet", select)
 
         val publications = ControllerPublications.parseSelect(v)
+        if (publications.isEmpty()) throw ApiException(API.ERROR_GONE)
 
         return Response(publications[0] as PublicationTag)
     }

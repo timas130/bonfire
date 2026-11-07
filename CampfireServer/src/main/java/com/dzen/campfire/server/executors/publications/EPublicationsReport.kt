@@ -19,6 +19,7 @@ class EPublicationsReport : RPublicationsReport(0, "") {
             throw ApiException(E_ALREADY_EXIST)
 
         val v = ControllerPublications[publicationId, TPublications.publication_type]
+        if (v.isEmpty()) throw ApiException(API.ERROR_GONE)
         val publicationType = v.next<Long>()
 
         if(comment.length > API.REPORT_COMMENT_L) throw ApiException(API.ERROR_ACCESS)
