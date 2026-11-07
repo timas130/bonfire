@@ -210,7 +210,7 @@ object VideoUploader {
             .url(uploadUrl)
             .put(ContentUriRequestBody(resolver, uri, sizeBytes, onProgress))
             .build()
-        val call = ControllerVideos.client.newCall(request)
+        val call = ControllerVideos.uploadClient.newCall(request)
         continuation.invokeOnCancellation { call.cancel() }
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
