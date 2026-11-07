@@ -97,6 +97,7 @@ class SChatCreate(
                 m.account = it
                 m.memberLvl = API.CHAT_MEMBER_LVL_USER
                 m.memberStatus = API.CHAT_MEMBER_STATUS_ACTIVE
+                m.memberOwner = ControllerApi.account.getId()
                 adapter.add(adapter.size() - 2, CardChatMember(m, myLvl))
             })
         })
