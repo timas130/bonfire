@@ -19,9 +19,9 @@ class SQuestDanTank : SQuest()  {
 
     override fun createQuest() {
 
-        var sword = false
-        var matches = false // спички
-        var mushrooms = false
+        var sword by questFlag("sword")
+        var matches by questFlag("matches") // спички
+        var mushrooms by questFlag("mushrooms")
 
         addQuest(
             QuestItem("1")
@@ -1340,6 +1340,7 @@ class SQuestDanTank : SQuest()  {
     }
 
     override fun toFirstItem() {
+        clearQuestFlags()
         toScreen("1")
     }
 

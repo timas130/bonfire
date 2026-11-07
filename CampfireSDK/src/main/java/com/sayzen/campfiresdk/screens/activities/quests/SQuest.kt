@@ -19,6 +19,8 @@ import com.sup.dev.android.tools.ToolsView
 import com.sup.dev.android.views.views.ViewText
 import com.sup.dev.java.libs.debug.err
 import com.sup.dev.java.tools.ToolsThreads
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 abstract class SQuest : Screen(R.layout.screen_quest) {
 
@@ -35,6 +37,7 @@ abstract class SQuest : Screen(R.layout.screen_quest) {
     var currentItem: QuestItem? = null
     var globalLabel = ""
     var globalImage = ImageRef()
+    private val flagKeys = ArrayList<String>()
 
     init {
         isNavigationAllowed = false
@@ -71,7 +74,25 @@ abstract class SQuest : Screen(R.layout.screen_quest) {
 
     abstract fun getKey(): String
 
-    private fun getSaveKey() = "SQuest.item:" + ControllerApi.account.getId() + ":" + getKey()
+    private fun getSaveKey() = "SQuest.item.v2:" + ControllerApi.account.getId() + ":" + getKey()
+
+    protected fun questFlag(name: String): ReadWriteProperty<Any?, Boolean> {
+        val key = getSaveKey() + ":flag:" + name
+        flagKeys.add(key)
+        return object : ReadWriteProperty<Any?, Boolean> {
+            override fun getValue(thisRef: Any?, property: KProperty<*>): Boolean {
+                return ToolsStorage.getBoolean(key, false)
+            }
+
+            override fun setValue(thisRef: Any?, property: KProperty<*>, value: Boolean) {
+                ToolsStorage.put(key, value)
+            }
+        }
+    }
+
+    protected fun clearQuestFlags() {
+        for (key in flagKeys) ToolsStorage.clear(key)
+    }
 
     fun addQuest(vararg items: QuestItem) {
         for (i in items) {

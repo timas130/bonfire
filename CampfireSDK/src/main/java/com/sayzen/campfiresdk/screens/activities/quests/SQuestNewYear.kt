@@ -89,8 +89,8 @@ class SQuestNewYear : SQuest() {
         //  Акт 1. Сцена 2:
         //
 
-        var phisic = false
-        var stick = false
+        var phisic by questFlag("phisic")
+        var stick by questFlag("stick")
 
         addQuest(
             QuestItem("2")
@@ -711,12 +711,13 @@ class SQuestNewYear : SQuest() {
             QuestItem("12")
                 .text("Конец. У нас много планов на счет квестов, но все зависит только от вас, самое время создать пост с вашими пожеланиями насчет этой системы. С новым годом. :)")
                 .addButton("В ленту") { SupAndroid.activity!!.toMainScreen() }
-                .addButton("Повторить квест") { toScreen("0") }
+                .addButton("Повторить квест") { toFirstItem() }
         )
 
     }
 
     override fun toFirstItem() {
+        clearQuestFlags()
         toScreen("0")
     }
 

@@ -84,7 +84,7 @@ class SQuestWilson : SQuest() {
         //// Локация 1
         //// Акт 2
 
-        var slept = false
+        var slept by questFlag("slept")
 
         addQuest(
             QuestItem("2")
@@ -144,7 +144,7 @@ class SQuestWilson : SQuest() {
 
         //// Локация 2 - Подарок на снегу
 
-        var packageOpened = false
+        var packageOpened by questFlag("packageOpened")
 
         addQuest(
             // Прочитать сначала что написано на бумаге
@@ -264,7 +264,7 @@ class SQuestWilson : SQuest() {
         //// Локация 4 - "Землянка Гимлина"
         //// Акт 1
 
-        var giftsAccepted = false
+        var giftsAccepted by questFlag("giftsAccepted")
 
         addQuest(
             QuestItem("5.1")
@@ -388,7 +388,7 @@ class SQuestWilson : SQuest() {
         //// Локация 5
         //// Акт 1
 
-        var late = false
+        var late by questFlag("late")
         fun toAct10() {
             if (late) {
                 if (giftsAccepted) {
@@ -827,6 +827,7 @@ class SQuestWilson : SQuest() {
     }
 
     override fun toFirstItem() {
+        clearQuestFlags()
         toScreen("1")
     }
 
