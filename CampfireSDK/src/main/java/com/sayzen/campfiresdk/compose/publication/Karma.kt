@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.graphics.ColorUtils
 import com.dzen.campfire.api.API
+import com.dzen.campfire.api.API_TRANSLATE
 import com.dzen.campfire.api.models.publications.Publication
 import com.dzen.campfire.api.models.publications.post.PublicationPost
 import com.dzen.campfire.api.requests.publications.RPublicationsKarmaAdd
@@ -47,11 +48,13 @@ import com.sayzen.campfiresdk.compose.util.KonfettiViewExt
 import com.sayzen.campfiresdk.controllers.ControllerApi
 import com.sayzen.campfiresdk.controllers.ControllerSettings
 import com.sayzen.campfiresdk.controllers.ControllerStoryQuest
+import com.sayzen.campfiresdk.controllers.t
 import com.sayzen.campfiresdk.models.events.publications.EventPublicationKarmaAdd
 import com.sayzen.campfiresdk.models.events.publications.EventPublicationKarmaStateChanged
 import com.sayzen.campfiresdk.screens.rates.SPublicationRates
 import com.sayzen.campfiresdk.support.ApiRequestsSupporter.sendSuspendExt
 import com.sup.dev.android.libs.screens.navigator.Navigator
+import com.sup.dev.android.tools.ToolsToast
 import com.sup.dev.java.libs.eventBus.EventBus
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
@@ -107,6 +110,8 @@ class KarmaCounterModel(
 
             try {
                 val resp = RPublicationsKarmaAdd(publication.id, up, ControllerApi.getLanguageId(), anon)
+                    .onApiError(RPublicationsKarmaAdd.E_SELF_PUBLICATION) { ToolsToast.show(t(API_TRANSLATE.error_rate_self_publication)) }
+                    .onApiError(RPublicationsKarmaAdd.E_CANT_DOWN) { ToolsToast.show(t(API_TRANSLATE.error_rate_cant_down)) }
                     .sendSuspendExt()
 
                 PostHog.capture(
