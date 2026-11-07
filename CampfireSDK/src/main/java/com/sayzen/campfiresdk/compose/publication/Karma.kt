@@ -73,9 +73,11 @@ import kotlin.math.pow
 import kotlin.math.sign
 
 class KarmaCounterModel(
-    val publication: Publication,
+    publicationState: State<Publication>,
     val onFinish: (up: Boolean) -> Unit,
 ) {
+    val publication: Publication by publicationState
+
     data class KarmaProgress(val up: Boolean)
 
     private val _progress = MutableStateFlow<KarmaProgress?>(null)
@@ -204,9 +206,10 @@ internal fun KarmaCounter(
         )
     }
 
-    val model = remember(publication) {
+    val publicationState = rememberUpdatedState(publication)
+    val model = remember(publication.id) {
         KarmaCounterModel(
-            publication = publication,
+            publicationState = publicationState,
             onFinish = {
                 if (Math.random() > 0.95) {
                     PostHog.capture("lucky_karma_confetti")
@@ -425,9 +428,10 @@ private fun KarmaCounterAmount(model: KarmaCounterModel, onLongClick: () -> Unit
             )
         }
 
-        var karmaCof = model.publication.fandom.karmaCof / 100f
-        if (model.publication.publicationType == API.PUBLICATION_TYPE_POST && (model.publication as PublicationPost).rubricKarmaCof != 0L) {
-            karmaCof *= model.publication.rubricKarmaCof / 100f
+        val publication = model.publication
+        var karmaCof = publication.fandom.karmaCof / 100f
+        if (publication.publicationType == API.PUBLICATION_TYPE_POST && (publication as PublicationPost).rubricKarmaCof != 0L) {
+            karmaCof *= publication.rubricKarmaCof / 100f
         }
         if (karmaCof != 1f && karmaCof != 0f) {
             Text(
