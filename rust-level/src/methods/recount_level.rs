@@ -73,6 +73,7 @@ impl LevelServer {
             (AchiIndex::RelayRaceFirstPost, collisions::COLLISION_ACHIEVEMENT_RELAY_RACE_FIRST_POST),
             (AchiIndex::RelayRaceFirstNextMember, collisions::COLLISION_ACHIEVEMENT_RELAY_RACE_FIRST_NEXT_MEMBER),
             (AchiIndex::RelayRaceFirstCreate, collisions::COLLISION_ACHIEVEMENT_RELAY_RACE_FIRST_CREATE),
+            (AchiIndex::ViceroyAssign, collisions::COLLISION_ACHIEVEMENT_VICEROY_ASSIGN),
             (AchiIndex::ViceroyLink, collisions::COLLISION_ACHIEVEMENT_VICEROY_LINK),
             (AchiIndex::ViceroyImages, collisions::COLLISION_ACHIEVEMENT_VICEROY_IMAGES),
             (AchiIndex::ViceroyDescription, collisions::COLLISION_ACHIEVEMENT_VICEROY_DESCRIPTIONS),
@@ -362,21 +363,19 @@ impl LevelServer {
             .await?
             .unwrap_or(0),
         );
-        hm.insert(
-            AchiIndex::ViceroyAssign,
-            i64::from(
-                sqlx::query_scalar!(
-                    "select collision_id from collisions
-                     where value_1 = $1 and collision_type = $2
-                     limit 1",
-                    user_id,
-                    collisions::COLLISION_FANDOM_VICEROY,
-                )
-                .fetch_optional(&self.base.pool)
-                .await?
-                .is_some(),
-            ),
-        );
+        if sqlx::query_scalar!(
+            "select collision_id from collisions
+             where value_1 = $1 and collision_type = $2
+             limit 1",
+            user_id,
+            collisions::COLLISION_FANDOM_VICEROY,
+        )
+        .fetch_optional(&self.base.pool)
+        .await?
+        .is_some()
+        {
+            hm.insert(AchiIndex::ViceroyAssign, 1);
+        }
         hm.insert(
             AchiIndex::ViceroyPostsCount,
             sqlx::query_scalar!(
