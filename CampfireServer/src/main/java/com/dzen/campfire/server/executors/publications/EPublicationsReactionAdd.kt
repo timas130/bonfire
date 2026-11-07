@@ -31,6 +31,7 @@ class EPublicationsReactionAdd : RPublicationsReactionAdd(0, 0) {
         ControllerPublications.replaceJson(publication.id, publication)
 
         if (apiAccount.id != publication.creator.id
+                && !ControllerCollisions.checkCollisionExist(publication.creator.id, apiAccount.id, API.COLLISION_ACCOUNT_BLACK_LIST_ACCOUNT)
                 && !ControllerCollisions.checkCollisionExist(apiAccount.id, publication.id, API.COLLISION_PUBLICATION_REACTION)) {
             ControllerCollisions.putCollision(apiAccount.id, publication.id, API.COLLISION_PUBLICATION_REACTION)
             val notification = NotificationPublicationReaction(apiAccount.imageId, publication.id, publication.publicationType, publication.parentPublicationId, reactionIndex, apiAccount.id, apiAccount.sex, publication.parentPublicationType, apiAccount.name, publication.tag_s_1, ControllerPublications.getMaskText(publication), ControllerPublications.getMaskPageType(publication))
