@@ -119,6 +119,7 @@ object ImageLoader {
 
     private fun loadStart(loader: Loader) {
         threadPool.execute {
+            if (loader.vImage != null && loader.vImage.tag !== loader && loader.onLoadedBytes == null && loader.onLoadedBitmap == null) return@execute
             synchronized(processing) {
                 if(loader.loopCount > 0) {
                     for (i in processing) if (i.link.isKey(loader.link.getKey())) {
