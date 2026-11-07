@@ -29,11 +29,10 @@ class EFandomsModerationGalleryAdd : RFandomsModerationGalleryAdd(0, 0, null, ""
         ControllerCollisions.putCollisionValue1(fandomId, languageId, API.COLLISION_FANDOM_GALLERY, imageId)
 
         ControllerPublications.moderation(ModerationGalleryAdd(comment, imageId), apiAccount.id, fandomId, languageId, 0)
-        ControllerCollisions.putCollisionWithCheck(apiAccount.id, 1, API.COLLISION_ACHIEVEMENT_VICEROY_IMAGES)
-        ControllerAchievements.addAchievementWithCheck(
-            ControllerViceroy.getViceroyId(fandomId, languageId),
-            API.ACHI_VICEROY_IMAGES
-        )
+        if (ControllerViceroy.getViceroyId(fandomId, languageId) == apiAccount.id) {
+            ControllerCollisions.putCollisionWithCheck(apiAccount.id, 1, API.COLLISION_ACHIEVEMENT_VICEROY_IMAGES)
+            ControllerAchievements.addAchievementWithCheck(apiAccount.id, API.ACHI_VICEROY_IMAGES)
+        }
 
         return Response(imageId)
     }

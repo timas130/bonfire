@@ -29,11 +29,10 @@ class EFandomsModerationLinkAdd : RFandomsModerationLinkAdd(0, 0, "", "", 0, "")
         val linkIndex = ControllerCollisions.putCollision(fandomId, languageId, 0, API.COLLISION_FANDOM_LINK, System.currentTimeMillis(), iconIndex, title+ FandomLink.SPLITER+url)
 
         ControllerPublications.moderation(ModerationLinkAdd(comment, title, url, iconIndex), apiAccount.id, fandomId, languageId, 0)
-        ControllerCollisions.putCollisionWithCheck(apiAccount.id, 1, API.COLLISION_ACHIEVEMENT_VICEROY_LINK)
-        ControllerAchievements.addAchievementWithCheck(
-            ControllerViceroy.getViceroyId(fandomId, languageId),
-            API.ACHI_VICEROY_LINK
-        )
+        if (ControllerViceroy.getViceroyId(fandomId, languageId) == apiAccount.id) {
+            ControllerCollisions.putCollisionWithCheck(apiAccount.id, 1, API.COLLISION_ACHIEVEMENT_VICEROY_LINK)
+            ControllerAchievements.addAchievementWithCheck(apiAccount.id, API.ACHI_VICEROY_LINK)
+        }
 
         return Response(linkIndex)
     }
