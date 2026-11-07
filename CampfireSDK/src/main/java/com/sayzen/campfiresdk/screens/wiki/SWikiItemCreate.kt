@@ -34,6 +34,7 @@ import com.sup.dev.android.views.support.watchers.TextWatcherChanged
 import com.sup.dev.android.views.views.ViewButton
 import com.sup.dev.android.views.views.ViewChip
 import com.sup.dev.java.libs.eventBus.EventBus
+import com.sup.dev.java.libs.json.Json
 import com.sup.dev.java.tools.ToolsBytes
 import com.sup.dev.java.tools.ToolsCollections
 import com.sup.dev.java.tools.ToolsText
@@ -43,8 +44,10 @@ import java.lang.ref.WeakReference
 class SWikiItemCreate(
         val fandomId: Long,
         val parentItemId: Long,
-        val item: WikiTitle = WikiTitle()
+        sourceItem: WikiTitle = WikiTitle()
 ) : Screen(R.layout.screen_wiki_item_create) {
+
+    private val item = WikiTitle().apply { json(false, sourceItem.json(true, Json())) }
 
     private val vNameEnglish: EditText = findViewById(R.id.vNameEnglish)
     private val vNameMyLanguage: EditText = findViewById(R.id.vNameMyLanguage)
