@@ -44,8 +44,11 @@ abstract class ApiClient(
         const val REQUEST_TYPE_DATA_LOAD = 2L
     }
 
-    private val threadPool: ThreadPoolExecutor =
-        ThreadPoolExecutor(1, 4, 1, TimeUnit.MINUTES, LinkedBlockingQueue())
+    private val writePool: ThreadPoolExecutor =
+        ThreadPoolExecutor(1, 1, 1, TimeUnit.MINUTES, LinkedBlockingQueue())
+    private val readPool: ThreadPoolExecutor =
+        ThreadPoolExecutor(4, 4, 1, TimeUnit.MINUTES, LinkedBlockingQueue())
+            .apply { allowCoreThreadTimeOut(true) }
 
     lateinit var networkingProvider: NetworkingProvider
 
@@ -59,7 +62,8 @@ abstract class ApiClient(
 
     fun <K : Request.Response> sendRequest(request: Request<K>) {
         val stackTrace = Throwable("Stack trace of calling thread")
-        threadPool.execute { sendRequestNow(request, stackTrace, true) }
+        val pool = if (request.javaClass.simpleName.contains("Get")) readPool else writePool
+        pool.execute { sendRequestNow(request, stackTrace, true) }
     }
 
     fun <K : Request.Response> sendRequestNow(request: Request<K>) {
