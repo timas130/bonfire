@@ -305,7 +305,7 @@ impl LevelServer {
                  where owner_id = $1 and collision_type = $2 and value_1 >= $3",
                 user_id,
                 collisions::COLLISION_KARMA_30,
-                lvl::MODERATOR_BLOCK_KARMA,
+                lvl::ACTIVE_FANDOM_KARMA_30,
             )
             .fetch_one(&self.base.pool)
             .await?

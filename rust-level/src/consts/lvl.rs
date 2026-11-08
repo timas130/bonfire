@@ -1,6 +1,6 @@
 use c_core::services::level::LevelCategory;
 
-pub const MODERATOR_BLOCK_KARMA: i64 = 30000;
+pub const ACTIVE_FANDOM_KARMA_30: i64 = 30000;
 
 pub trait LevelCategoryExt {
     fn from_level(level: u64) -> Self;
