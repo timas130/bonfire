@@ -80,9 +80,6 @@ use {
     c_email::EmailServer,
 };
 
-const GOOGLE_JWKS_URL: &str =
-    "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com";
-
 // Each scrypt hash takes about 256 MiB and a full core for a second.
 const MAX_CONCURRENT_SCRYPT: usize = 4;
 
